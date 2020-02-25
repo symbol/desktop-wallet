@@ -75,7 +75,7 @@ export class NamespacesModel extends DatabaseModel {
         )
       }
 
-      return new EmptyAlias
+      return new EmptyAlias()
     }
 
     return {
