@@ -17,27 +17,18 @@ import {
   MosaicId, 
   Mosaic,
   MultisigAccountInfo,
-  TransferTransaction,
   Transaction,
-  TransactionType,
   MosaicInfo,
-  Address,
-  Message,
   PublicAccount,
-  RawUInt64,
   NamespaceId,
-  UInt64,
   NetworkType,
 } from 'nem2-sdk'
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {Formatters} from '@/core/utils/Formatters'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
-import {NotificationType} from '@/core/utils/NotificationType'
 import {WalletService} from '@/services/WalletService'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
@@ -50,14 +41,14 @@ import {ValidationObserver} from 'vee-validate'
     defaultFee: 'app/defaultFee',
     currentWallet: 'wallet/currentWallet',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
-    currentMultisigInfo: 'wallet/currentMultisigInfo',
     isCosignatoryMode: 'wallet/isCosignatoryMode',
     networkMosaic: 'mosaic/networkMosaic',
     stagedTransactions: 'wallet/stagedTransactions',
     mosaicsInfo: 'mosaic/mosaicsInfoList',
     mosaicsNames: 'mosaic/mosaicsNames',
     namespacesNames: 'namespace/namespacesNames',
-  })}
+    currentSignerMultisigInfo: 'wallet/currentSignerMultisigInfo',
+  })},
 })
 export class FormTransactionBase extends Vue {
 /// region store getters
@@ -146,6 +137,12 @@ export class FormTransactionBase extends Vue {
   public currentSigner: PublicAccount
 
   /**
+   * Current signer multisig info
+   * @var {MultisigAccountInfo}
+   */
+  public currentSignerMultisigInfo: MultisigAccountInfo
+
+  /**
    * Type the ValidationObserver refs 
    * @type {{
    *     observer: InstanceType<typeof ValidationObserver>
@@ -215,19 +212,24 @@ export class FormTransactionBase extends Vue {
     return this.getSigners()
   }
 
-  get multisigs(): {publicKey: string, label: string}[] {
+  /**
+   * Current signer's multisig accounts
+   * @readonly
+   * @type {{publicKey: string, label: string}[]}
+   */
+  get multisigAccounts(): {publicKey: string, label: string}[] {
     const signers = this.getSigners()
     if (!signers.length || !this.currentWallet) {
       return []
     }
 
     // in case current wallet is multisig..
-    if (this.currentMultisigInfo && this.currentMultisigInfo.isMultisig()) {
+    if (this.currentSignerMultisigInfo && this.currentSignerMultisigInfo.isMultisig()) {
       return signers
     }
 
     // all signers except current wallet
-    return signers.splice(1)
+    return [...signers].splice(1)
   }
 
   get hasConfirmationModal(): boolean {
@@ -448,11 +450,11 @@ export class FormTransactionBase extends Vue {
       },
     ]
 
-    if (!this.currentMultisigInfo) {
+    if (!this.currentSignerMultisigInfo) {
       return self
     }
 
-    const multisig = this.currentMultisigInfo
+    const multisig = this.currentSignerMultisigInfo
 
     // in case "self" is a multi-signature account
     if (multisig && multisig.isMultisig()) {

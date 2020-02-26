@@ -24,7 +24,7 @@ import {WalletsModel} from '@/core/database/entities/WalletsModel'
 @Component({computed: {...mapGetters({
   currentWallet: 'wallet/currentWallet',
   networkMosaic: 'mosaic/networkMosaic',
-  multisigInfo: 'wallet/currentMultisigInfo',
+  multisigInfo: 'wallet/currentSignerMultisigInfo',
 })}})
 export class DisabledFormOverlayTs extends Vue {
   

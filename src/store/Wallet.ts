@@ -161,7 +161,6 @@ export default {
     currentWalletAddress: null,
     currentWalletInfo: null,
     currentWalletMosaics: [],
-    currentMultisigInfo: null,
     currentWalletOwnedMosaics: [],
     currentWalletOwnedNamespaces: [],
     isCosignatoryMode: false,
@@ -206,7 +205,6 @@ export default {
     currentWalletMosaics: state => state.currentWalletMosaics,
     currentWalletOwnedMosaics: state => state.currentWalletOwnedMosaics,
     currentWalletOwnedNamespaces: state => state.currentWalletOwnedNamespaces,
-    currentMultisigInfo: state => state.currentMultisigInfo,
     isCosignatoryMode: state => state.isCosignatoryMode,
     currentSignerInfo: state => state.currentSignerInfo,
     currentSignerMultisigInfo: state => {
@@ -281,38 +279,27 @@ export default {
     currentSignerOwnedNamespaces: (state, currentSignerOwnedNamespaces) => Vue.set(state, 'currentSignerOwnedNamespaces', currentSignerOwnedNamespaces),
     setKnownWallets: (state, wallets) => Vue.set(state, 'knownWallets', wallets),
     addWalletInfo: (state, walletInfo) => {
-      // update storage
-      let wallets = state.otherWalletsInfo
-      wallets[walletInfo.address.plain()] = walletInfo
-
       // update state
-      Vue.set(state, 'otherWalletsInfo', wallets)
+      Vue.set(state.otherWalletsInfo, walletInfo.address.plain(), walletInfo)
     },
     addOtherMultisigInfo: (state, multisigInfo: MultisigAccountInfo) => {
-      const address = multisigInfo.account.address.plain()
-
-      // update storage
-      let othersInfo = state.otherMultisigsInfo
-      othersInfo[address] = multisigInfo
-
-      // update state
-      Vue.set(state, 'otherMultisigsInfo', othersInfo)
+      Vue.set(state.otherMultisigsInfo, multisigInfo.account.address.plain(), multisigInfo)
     },
-    setMultisigInfo: (state, multisigInfo) => Vue.set(state, 'currentMultisigInfo', multisigInfo),
     transactionHashes: (state, hashes) => Vue.set(state, 'transactionHashes', hashes),
     confirmedTransactions: (state, transactions) => Vue.set(state, 'confirmedTransactions', transactions),
     unconfirmedTransactions: (state, transactions) => Vue.set(state, 'unconfirmedTransactions', transactions),
     partialTransactions: (state, transactions) => Vue.set(state, 'partialTransactions', transactions),
     setSubscriptions: (state, data) => Vue.set(state, 'subscriptions', data),
     addSubscriptions: (state, payload) => {
-      const subscriptions = state.subscriptions
-
-      if (!subscriptions.hasOwnProperty(payload.address)) {
-        subscriptions[payload.address] = []
-      }
-
-      subscriptions[payload.address].push(payload.subscriptions)
-      Vue.set(state, 'subscriptions', subscriptions)
+      const {address, subscriptions} = payload
+      // skip when subscriptions is an empty array
+      if (!subscriptions.length) return
+      // get current subscriptions from state
+      const oldSubscriptions = state.subscriptions[address] || []
+      // update subscriptions
+      const newSubscriptions = oldSubscriptions.push(subscriptions)
+      // update state
+      Vue.set(state.subscriptions, address, newSubscriptions)
     },
     addTransactionToCache: (state, payload) => {
       if (payload === undefined) {
@@ -349,7 +336,6 @@ export default {
     addSignedTransaction: (state, transaction: SignedTransaction) => {
       // - get previously signed transactions
       const signed = state.signedTransactions
-      const staged = state.stagedTransactions
 
       // - update state
       signed.push(transaction)
@@ -802,17 +788,10 @@ export default {
 
         // store multisig info
         commit('addOtherMultisigInfo', multisigInfo)
-        if (currentWallet && currentWallet.values.get('address') === address) {
-          commit('setMultisigInfo', multisigInfo)
-        }
 
         return multisigInfo
       }
       catch (e) {
-        if (currentWallet && currentWallet.values.get('address') === address) {
-          commit('setMultisigInfo', null)
-        }
-
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch multisig information: ' + e, {root: true})
         return false
       }
