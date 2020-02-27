@@ -145,20 +145,18 @@ interface WalletState {
   initialized: boolean
   currentWallet: WalletsModel
   currentWalletAddress: Address
-  currentWalletInfo: AccountInfo
   currentWalletMosaics: Mosaic[]
   currentWalletOwnedMosaics: MosaicInfo[]
   currentWalletOwnedNamespaces: NamespaceInfo[]
   isCosignatoryMode: boolean
   currentSigner: {networkType: NetworkType, publicKey: string}
-  currentSignerInfo: AccountInfo
   currentSignerAddress: Address
   currentSignerMosaics: Mosaic[]
   currentSignerOwnedMosaics: MosaicInfo[]
   currentSignerOwnedNamespaces: NamespaceInfo[]
   // Known wallet database identifiers
   knownWallets: string[]
-  knownWalletsInfo: Record<string, MultisigAccountInfo> 
+  knownWalletsInfo: Record<string, AccountInfo> 
   knownMultisigsInfo: Record<string, MultisigAccountInfo> 
   transactionHashes: string[]
   confirmedTransactions: Transaction[]
@@ -177,13 +175,11 @@ const walletState: WalletState = {
   initialized: false,
   currentWallet: null,
   currentWalletAddress: null,
-  currentWalletInfo: null,
   currentWalletMosaics: [],
   currentWalletOwnedMosaics: [],
   currentWalletOwnedNamespaces: [],
   isCosignatoryMode: false,
   currentSigner: null,
-  currentSignerInfo: null,
   currentSignerAddress: null,
   currentSignerMosaics: [],
   currentSignerOwnedMosaics: [],
@@ -225,7 +221,11 @@ export default {
       return getWalletByPayload(state.currentSigner)
     },
     currentWalletAddress: (state: WalletState) => state.currentWalletAddress,
-    currentWalletInfo: (state: WalletState) => state.currentWalletInfo,
+    currentWalletInfo: (state: WalletState): AccountInfo | null => {
+      const plainAddress = state.currentWalletAddress ? state.currentWalletAddress.plain() : null
+      if(!plainAddress) return null
+      return state.knownWalletsInfo[plainAddress] || null
+    },
     currentWalletMosaics: (state: WalletState) => state.currentWalletMosaics,
     currentWalletOwnedMosaics: (state: WalletState) => state.currentWalletOwnedMosaics,
     currentWalletOwnedNamespaces: (state: WalletState) => state.currentWalletOwnedNamespaces,
@@ -234,13 +234,17 @@ export default {
       return state.knownMultisigsInfo[state.currentWalletAddress.plain()]
     },
     isCosignatoryMode: (state: WalletState) => state.isCosignatoryMode,
-    currentSignerInfo: (state: WalletState) => state.currentSignerInfo,
+    currentSignerAddress: (state: WalletState) => state.currentSignerAddress,
+    currentSignerInfo: (state: WalletState): AccountInfo | null => {
+      const plainAddress = state.currentSignerAddress ? state.currentSignerAddress.plain() : null
+      if(!plainAddress) return null
+      return state.knownWalletsInfo[plainAddress] || null
+    },
     currentSignerMultisigInfo: (state: WalletState) => {
       const plainAddress = state.currentSignerAddress ? state.currentSignerAddress.plain() : null
       if(!plainAddress) return null
       return state.knownMultisigsInfo[plainAddress] || null
     } ,
-    currentSignerAddress: (state: WalletState) => state.currentSignerAddress,
     currentSignerMosaics: (state: WalletState) => state.currentSignerMosaics,
     currentSignerOwnedMosaics: (state: WalletState) => state.currentSignerOwnedMosaics,
     currentSignerOwnedNamespaces: (state: WalletState) => state.currentSignerOwnedNamespaces,
@@ -289,12 +293,10 @@ export default {
     currentWallet: (state, walletModel) => Vue.set(state, 'currentWallet', walletModel),
     isCosignatoryMode: (state, mode) => Vue.set(state, 'isCosignatoryMode', mode),
     currentWalletAddress: (state, walletAddress) => Vue.set(state, 'currentWalletAddress', walletAddress),
-    currentWalletInfo: (state, currentWalletInfo) => Vue.set(state, 'currentWalletInfo', currentWalletInfo),
     currentWalletMosaics: (state, currentWalletMosaics) => Vue.set(state, 'currentWalletMosaics', currentWalletMosaics),
     currentWalletOwnedMosaics: (state, currentWalletOwnedMosaics) => Vue.set(state, 'currentWalletOwnedMosaics', currentWalletOwnedMosaics),
     currentWalletOwnedNamespaces: (state, currentWalletOwnedNamespaces) => Vue.set(state, 'currentWalletOwnedNamespaces', currentWalletOwnedNamespaces),
     currentSigner: (state, signerPayload) => Vue.set(state, 'currentSigner', signerPayload),
-    currentSignerInfo: (state, currentSignerInfo) => Vue.set(state, 'currentSignerInfo', currentSignerInfo),
     currentSignerAddress: (state, signerAddress) => Vue.set(state, 'currentSignerAddress', signerAddress),
     currentSignerMosaics: (state, currentSignerMosaics) => Vue.set(state, 'currentSignerMosaics', currentSignerMosaics),
     currentSignerOwnedMosaics: (state, currentSignerOwnedMosaics) => Vue.set(state, 'currentSignerOwnedMosaics', currentSignerOwnedMosaics),
@@ -706,12 +708,10 @@ export default {
 
         // update current wallet state if necessary
         if (currentWallet && address === getters.currentWalletAddress.plain()) {
-          commit('currentWalletInfo', accountInfo)
           dispatch('SET_BALANCES', {mosaics: accountInfo.mosaics, which: 'currentWalletMosaics'})
         }
         // update current signer state if not current wallet
         else if (currentSigner && address === getters.currentSignerAddress.plain()) {
-          commit('currentSignerInfo', accountInfo)
           dispatch('SET_BALANCES', {mosaics: accountInfo.mosaics, which: 'currentSignerMosaics'})
         }
 
@@ -719,11 +719,9 @@ export default {
       }
       catch (e) {
         if (!!currentWallet && address === getters.currentWalletAddress.plain()) {
-          commit('currentWalletInfo', null)
           dispatch('SET_BALANCES', {mosaics: [], which: 'currentWalletMosaics'})
         }
         else if (!!getters.currentSigner && address === getters.currentSignerAddress.plain()) {
-          commit('currentSignerInfo', null)
           dispatch('SET_BALANCES', {mosaics: [], which: 'currentSignerMosaics'})
         }
 
@@ -741,7 +739,6 @@ export default {
 
       // read store
       const currentPeer = rootGetters['network/currentPeer'].url
-      const currentWallet = getters['currentWallet']
 
       try {
         // fetch account info from REST gateway
@@ -755,8 +752,8 @@ export default {
         const currentWalletInfo = accountsInfo.find(
           info => info.address.equals(getters.currentWalletAddress),
         )
+
         if (currentWalletInfo !== undefined) {
-          commit('currentWalletInfo', currentWalletInfo)
           dispatch('SET_BALANCES', {mosaics: currentWalletInfo.mosaics, which: 'currentWalletMosaics'})
         }
 
@@ -764,8 +761,8 @@ export default {
         const currentSignerInfo = accountsInfo.find(
           info => info.address.equals(getters.currentSignerAddress),
         )
+
         if (currentSignerInfo !== undefined) {
-          commit('currentSignerInfo', currentWalletInfo)
           dispatch('SET_BALANCES', {mosaics: currentWalletInfo.mosaics, which: 'currentSignerMosaics'})
         }
 
