@@ -41,6 +41,7 @@ import {ValidationObserver} from 'vee-validate'
     defaultFee: 'app/defaultFee',
     currentWallet: 'wallet/currentWallet',
     currentWalletMosaics: 'wallet/currentWalletMosaics',
+    currentWalletMultisigInfo: 'wallet/currentWalletMultisigInfo',
     isCosignatoryMode: 'wallet/isCosignatoryMode',
     networkMosaic: 'mosaic/networkMosaic',
     stagedTransactions: 'wallet/stagedTransactions',
@@ -89,10 +90,10 @@ export class FormTransactionBase extends Vue {
   public currentMultisigAccountMosaics: Mosaic[] = []
 
   /**
-   * Currently active wallet's multisig info
-   * @var {MultisigAccountInfo}
+   * Current wallet multisig info
+   * @type {MultisigAccountInfo}
    */
-  public currentMultisigInfo: MultisigAccountInfo
+  public currentWalletMultisigInfo: MultisigAccountInfo
 
   /**
    * Whether the form is in cosignatory mode (cosigner selected)
@@ -223,9 +224,9 @@ export class FormTransactionBase extends Vue {
       return []
     }
 
-    // in case current wallet is multisig..
-    if (this.currentSignerMultisigInfo && this.currentSignerMultisigInfo.isMultisig()) {
-      return signers
+    // Signers are irrelevant to multisig accounts as they can't initiate transactions
+    if (this.currentWalletMultisigInfo && this.currentWalletMultisigInfo.isMultisig()) {
+      return []
     }
 
     // all signers except current wallet
