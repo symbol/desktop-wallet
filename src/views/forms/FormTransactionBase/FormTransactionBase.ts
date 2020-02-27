@@ -440,9 +440,7 @@ export class FormTransactionBase extends Vue {
    * @return {{publicKey: string, label:string}[]}
    */
   protected getSigners(): {publicKey: string, label: string}[] {
-    if (!this.currentWallet) {
-      return []
-    }
+    if (!this.currentWallet) return []
 
     const self = [
       {
@@ -451,21 +449,19 @@ export class FormTransactionBase extends Vue {
       },
     ]
 
-    if (!this.currentSignerMultisigInfo) {
-      return self
-    }
+    const multisigInfo = this.currentWalletMultisigInfo
 
-    const multisig = this.currentSignerMultisigInfo
+    if (!multisigInfo) return self
 
     // in case "self" is a multi-signature account
-    if (multisig && multisig.isMultisig()) {
+    if (multisigInfo && multisigInfo.isMultisig()) {
       self[0].label = self[0].label + this.$t('label_postfix_multisig')
     }
 
     // add multisig accounts of which "self" is a cosignatory
-    if (multisig) {
+    if (multisigInfo) {
       const service = new WalletService(this.$store)
-      return self.concat(...multisig.multisigAccounts.map(
+      return self.concat(...multisigInfo.multisigAccounts.map(
         ({publicKey}) => ({
           publicKey,
           label: service.getWalletLabel(publicKey, this.networkType) + this.$t('label_postfix_multisig'),
