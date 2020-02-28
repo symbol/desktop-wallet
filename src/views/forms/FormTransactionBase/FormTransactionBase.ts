@@ -218,9 +218,7 @@ export class FormTransactionBase extends Vue {
 
 /// region computed properties getter/setter
   get signers(): {publicKey: string, label: string}[] {
-    const s =  this.getSigners()
-    console.log("TCL:  s",  s)
-    return s
+    return this.getSigners()
     // return this.getSigners()
   }
 
