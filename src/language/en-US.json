@@ -1173,5 +1173,6 @@
   "transaction_needs_cosignature_explain": "This transaction needs multiple parties to approve by sending co-signature. Please, unlock your account to send a co-signature transaction now.",
   "transaction_needs_cosignature_explain_signed": "This transaction needs multiple parties to approve by sending co-signature. You have already send a co-signature for this transaction. Please, wait until other co-signatories approve.",
   "transaction_has_cosignature": "Co-signatures received",
-  "label_signed_by": "Signed by co-signatory: "
+  "label_signed_by": "Signed by co-signatory: ",
+  "warning_already_a_cosignatory": "This account is already a cosignatory!"
 }

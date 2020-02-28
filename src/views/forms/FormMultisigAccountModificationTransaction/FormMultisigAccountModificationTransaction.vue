@@ -86,11 +86,16 @@
           :multisig="currentMultisigInfo"
         />
 
+        <!-- global form input validation -->
+        <ValidationProvider rules="required|is:OK">
+          <input v-show="false" v-model="areInputsValid">
+        </ValidationProvider>
+
         <!-- Transaction fee selector -->
         <MaxFeeAndSubmit
           v-model="formItems.maxFee"
           :disable-submit="disableSubmit"
-          @button-clicked="handleSubmit(onSubmit)"
+          @button-clicked="handleSubmit(onSubmit); showErrorNotification()"
         />
       </form>
     </ValidationObserver>

@@ -26,7 +26,7 @@ import {
 } from '@/core/transactions/ViewMultisigAccountModificationTransaction'
 
 // child components
-import {ValidationObserver} from 'vee-validate'
+import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
@@ -38,15 +38,13 @@ import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
-import ApprovalAndRemovalInput from '@/components/ApprovalAndRemovalInput/ApprovalAndRemovalInput.vue'
-// @ts-ignore
 import AddCosignatoryInput from '@/components/AddCosignatoryInput/AddCosignatoryInput.vue'
 // @ts-ignore
 import RemoveCosignatoryInput from '@/components/RemoveCosignatoryInput/RemoveCosignatoryInput.vue'
 // @ts-ignore
 import CosignatoryModificationsDisplay from '@/components/CosignatoryModificationsDisplay/CosignatoryModificationsDisplay.vue'
 // @ts-ignore
-import ApprovalAndRemovalInputDisplay from '@/components/ApprovalAndRemovalInputDisplay/ApprovalAndRemovalInputDisplay.vue'
+import ApprovalAndRemovalInput from '@/components/ApprovalAndRemovalInput/ApprovalAndRemovalInput.vue'
 // @ts-ignore
 import MultisigCosignatoriesDisplay from '@/components/MultisigCosignatoriesDisplay/MultisigCosignatoriesDisplay.vue'
 
@@ -54,15 +52,15 @@ import MultisigCosignatoriesDisplay from '@/components/MultisigCosignatoriesDisp
   components: {
     FormWrapper,
     ValidationObserver,
+    ValidationProvider,
     FormRow,
     SignerSelector,
-    ApprovalAndRemovalInput,
     AddCosignatoryInput,
     RemoveCosignatoryInput,
     CosignatoryModificationsDisplay,
     MaxFeeAndSubmit,
     ModalTransactionConfirmation,
-    ApprovalAndRemovalInputDisplay,
+    ApprovalAndRemovalInput,
     MultisigCosignatoriesDisplay,
   },
 })
@@ -96,6 +94,13 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     cosignatoryModifications: {},
     maxFee: 0,
   }
+
+  /**
+   * Max number of cosignatories per account
+   * @private
+   * @type {number}
+   */
+  private maxCosignatoriesPerAccount: number = this.$store.getters['network/properties'].maxCosignatoriesPerAccount
 
   public get multisigOperationType(): 'conversion' | 'modification' {
     if (this.isCosignatoryMode) {
@@ -259,15 +264,18 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
 
     // - in case public key is part of "modifications"
     if (modifications.hasOwnProperty(publicKey)) {
-      delete modifications[publicKey]
+      Vue.delete(this.formItems.cosignatoryModifications, publicKey)
+      return
     }
     // - in case public key is part of "cosignatories", register modification
     else {
       const publicAccount = PublicAccount.createFromPublicKey(publicKey, this.networkType)
-      modifications[publicKey] = {cosignatory: publicAccount, addOrRemove: 'remove'}
+      Vue.set(
+        this.formItems.cosignatoryModifications,
+        publicKey,
+        {cosignatory: publicAccount, addOrRemove: 'remove'},
+      )
     }
-
-    Vue.set(this.formItems, 'cosignatoryModifications', modifications)
   }
 
   /**
@@ -277,18 +285,108 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @param {PublicAccount} publicAccount 
    */
   public onClickAdd(publicAccount: PublicAccount) {
-    const modifications = this.formItems.cosignatoryModifications
-    modifications[publicAccount.publicKey] = {cosignatory: publicAccount, addOrRemove: 'add'}
-
-    Vue.set(this.formItems, 'cosignatoryModifications', modifications)
+    Vue.set(
+      this.formItems.cosignatoryModifications,
+      publicAccount.publicKey,
+      {cosignatory: publicAccount, addOrRemove: 'add'},
+    )
   }
 
   public onClickUndo(publicKey: string) {
-    const modifications = this.formItems.cosignatoryModifications
+    Vue.delete(this.formItems.cosignatoryModifications, publicKey)
+  }
 
-    // - in case public key is part of "modifications"
-    if (modifications.hasOwnProperty(publicKey)) {
-      delete modifications[publicKey]
+  /// region validation handling
+  /**
+   * Calculation of the new multisig properties
+   * For input validation purposes
+   * @readonly
+   * @private
+   * @type {{
+   *     minApproval: number,
+   *     minRemoval: number,
+   *     cosignatoryNumber: number,
+   *   }}
+   */
+  private get newMultisigProperties(): {
+    minApproval: number
+    minRemoval: number
+    cosignatoryNumber: number
+  } {
+    // calculate new min approval
+    const newMinApproval = this.currentMultisigInfo
+      ? this.currentMultisigInfo.minApproval + this.formItems.minApprovalDelta
+      : this.formItems.minApprovalDelta 
+
+    // calculate new min approval
+    const newMinRemoval = this.currentMultisigInfo
+      ? this.currentMultisigInfo.minRemoval + this.formItems.minRemovalDelta
+      : this.formItems.minRemovalDelta
+
+    // calculate the delta of added cosigners
+    const modificationNumber = Object.keys(this.formItems.cosignatoryModifications).length
+    const removalsNumber = Object.values(this.formItems.cosignatoryModifications).filter(({addOrRemove}) => addOrRemove === 'remove').length
+    const numberOfAddedCosigners = modificationNumber - removalsNumber
+
+    const newCosignatoryNumber = this.currentMultisigInfo
+      ? this.currentMultisigInfo.cosignatories.length + numberOfAddedCosigners
+      : numberOfAddedCosigners
+    
+    return {
+      minApproval: newMinApproval,
+      minRemoval: newMinRemoval,
+      cosignatoryNumber: newCosignatoryNumber,
     }
   }
+
+  /**
+   * Whether the new multisig configuration is correct
+   * @readonly
+   * @protected
+   * @return {'OK' | false}
+   */
+  protected get areInputsValid(): 'OK' | false {
+    const {minApproval, minRemoval, cosignatoryNumber} = this.newMultisigProperties
+    
+    return cosignatoryNumber >= minApproval
+      && cosignatoryNumber >= minRemoval 
+      && cosignatoryNumber <= this.maxCosignatoriesPerAccount
+      ? 'OK' : false
+  }
+
+  protected showErrorNotification(): void {
+    // no message if inputs are OK
+    if (this.areInputsValid === 'OK') return
+
+    this.$store.dispatch('notification/ADD_ERROR', this.errorMessage)
+  }
+
+  /**
+   * Error message shown in the notice
+   * @readonly
+   * @protected
+   * @return {string}
+   */
+  protected get errorMessage(): string {
+    const {minApproval, minRemoval, cosignatoryNumber} = this.newMultisigProperties
+    const {maxCosignatoriesPerAccount} = this
+
+    // no message if inputs are OK
+    if (this.areInputsValid === 'OK') return
+
+    if(cosignatoryNumber < minApproval) {
+      return `${this.$t('approval_greater_than_cosignatories', {delta: minApproval - cosignatoryNumber})}`
+    }
+
+    if(cosignatoryNumber < minRemoval) {
+      return `${this.$t('removal_greater_than_cosignatories', {delta: minRemoval - cosignatoryNumber})}`
+    }
+    
+    if(cosignatoryNumber > maxCosignatoriesPerAccount) {
+      return `${this.$t('too_many_cosignatories'), {
+        maxCosignatoriesPerAccount, delta: cosignatoryNumber - maxCosignatoriesPerAccount,
+      }}`
+    }
+  }
+  /// end-region validation handling
 }
