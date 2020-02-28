@@ -1168,6 +1168,7 @@
   "inner_transaction_hash": "inner transaction hash",
   "locked_mosaic": "locked mosaic",
   "label_multisig_operation_conversion": "Converting account to multi-signature",
+  "label_multisig_operation_modification": "Modifying account multisig properties",
   "label_add_cosignatory": "Add a cosignatory",
   "transaction_needs_cosignature": "Transaction awaiting co-signature(s)",
   "transaction_needs_cosignature_explain": "This transaction needs multiple parties to approve by sending co-signature. Please, unlock your account to send a co-signature transaction now.",
