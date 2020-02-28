@@ -1,0 +1,136 @@
+@import '../../views/resources/css/variables.less';
+
+.step-bar-wrapper {
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+  color: #cccccc;
+  font-size: 20px;
+
+  .node-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .step-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+  
+      .line-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 3px #CCCCCC solid;
+        width: 100%;
+      }
+      
+      .node-box {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        .node-circle {
+          width: 40px;
+          height: 40px;
+          border-radius: 20px;
+          border: 3px #CCCCCC solid;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .node-text {
+          margin-top: 13px;
+          min-width: 150px;
+          max-width: 200px;
+          text-align: center;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .child-node {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 60%;
+  
+      .line-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 3px #CCCCCC solid;
+        width: 100%;
+      }
+      
+      .node-box {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        .node-circle {
+          width: 20px;
+          height: 20px;
+          border-radius: 10px;
+          border: 3px #CCCCCC solid;
+          flex-shrink: 0;
+          background-color: #cccccc;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .node-text {
+          margin-top: 23px;
+          min-width: 150px;
+          max-width: 200px;
+          text-align: center;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  
+    .line-box {
+      display: flex;
+      border-bottom: 3px #CCCCCC solid;
+      width: 100%;
+    }
+
+    .isActive {
+      color: #5200C6;
+
+      .line-box {
+        border-color: #5200C6;
+      }
+
+      .node-box {
+        .node-circle {
+          border-color: #5200C6;
+        }
+      }
+    }
+
+    .child-node.isActive {
+      .node-box {
+        .node-circle {
+          background-color: #5200C6;
+        }
+      }
+    }
+  }
+}

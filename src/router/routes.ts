@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {createStepImage, importStepImage} from '@/views/resources/Images'
-import {AppRoute} from './AppRoute'
 import i18n from '@/language'
+import { AppRoute } from './AppRoute'
 
 export const routes: AppRoute[] = [
   {
@@ -42,107 +41,120 @@ export const routes: AppRoute[] = [
             name: 'accounts.importAccount.importStrategy',
             meta: { protected: false },
             // @ts-ignore
-            component: () => import('@/views/pages/accounts/import-account/import-strategy/ImportStrategy.vue'),
+            component: () => import('@/views/pages/accounts/ImportPage/ImportStrategy/ImportStrategy.vue'),
           },
           {
-            path: 'create',
-            name: 'accounts.createAccount',
-            meta: { protected: false },
+            path: 'creationPage',
+            name: 'accounts.creation.home',
+            meta: { protected: false },
             // @ts-ignore
-            component: () => import('@/views/pages/accounts/create-account/CreateAccount.vue'),
+            component: () => import('@/views/pages/accounts/CreationPage/CreationPage.vue'),
             children: [
               {
-                path: 'info',
-                name: 'accounts.createAccount.info',
-                meta: {
-                  protected: false,
-                  icon: createStepImage.createStepImage1,
-                  nextPage:'accounts.createAccount.generateMnemonic',
-                },
-                // @ts-ignore
-                component: () => import('@/views/forms/FormAccountCreation/FormAccountCreation.vue'),
-              }, {
                 path: 'generateMnemonic',
-                name: 'accounts.createAccount.generateMnemonic',
-                meta: {
+                name: 'accounts.creation.generateMnemonic',
+                meta: { 
                   protected: false,
-                  icon: createStepImage.createStepImage2
+                  extension: '1',
+                  nextPage: 'accounts.creation.backupMnemonic',
                 },
                 // @ts-ignore
-                component: () => import('@/views/pages/accounts/create-account/generate-mnemonic/GenerateMnemonic.vue'),
-              }, {
-                path: 'showMnemonic',
-                name: 'accounts.createAccount.showMnemonic',
+                component: () => import('@/views/pages/accounts/CreationPage/GenerateMnemonic/GenerateMnemonic.vue'),
+              },
+              {
+                path: 'backupMnemonic',
+                name: 'accounts.creation.backupMnemonic',
                 meta: {
                   protected: false,
-                  icon: createStepImage.createStepImage3
+                  title: 'bar_step_one_two',
+                  extension: '2',
+                  nextPage: 'accounts.creation.verifyMnemonic',
                 },
                 // @ts-ignore
-                component: () => import('@/views/pages/accounts/create-account/show-mnemonic/ShowMnemonic.vue'),
-              }, {
+                component: () => import('@/views/pages/accounts/CreationPage/BackupMnemonic/BackupMnemonic.vue'),
+              },
+              {
                 path: 'verifyMnemonic',
-                name: 'accounts.createAccount.verifyMnemonic',
+                name: 'accounts.creation.verifyMnemonic',
                 meta: {
                   protected: false,
-                  icon: createStepImage.createStepImage4
+                  title: 'bar_step_one_three',
+                  extension: '3',
+                  nextPage: 'accounts.creation.accountInfo',
                 },
                 // @ts-ignore
-                component: () => import('@/views/pages/accounts/create-account/verify-mnemonic/VerifyMnemonic.vue'),
-              }, {
-                path: 'finishCreate',
-                name: 'accounts.createAccount.finalize',
+                component: () => import('@/views/pages/accounts/CreationPage/VerifyMnemonic/VerifyMnemonic.vue'),
+              },
+              {
+                path: 'accountInfo',
+                name: 'accounts.creation.accountInfo',
                 meta: {
                   protected: false,
-                  icon: createStepImage.createStepImage5
+                  title: 'bar_step_two',
+                  extension: '4',
+                  nextPage: 'accounts.creation.generateWallet',
                 },
                 // @ts-ignore
-                component: () => import('@/views/pages/accounts/create-account/finalize/Finalize.vue'),
-              }],
+                component: () => import('@/views/pages/accounts/CreationPage/AccountInfo/AccountInfo.vue'),
+              },
+              {
+                path: 'generateWallet',
+                name: 'accounts.creation.generateWallet',
+                meta: {
+                  protected: false,
+                  title: 'bar_step_three',
+                  extension: '5',
+                  nextPage: 'dashboard',
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/accounts/CreationPage/GenerateWallet/GenerateWallet.vue'),
+              },
+            ],
           },
           {
-            path: 'import',
-            name: 'accounts.importAccount',
-            meta: { protected: false },
+            path: 'importPage',
+            name: 'accounts.import.home',
+            meta: { protected: false },
             // @ts-ignore
-            component: () => import('@/views/pages/accounts/import-account/ImportAccount.vue'),
-            children: [{
-              path: 'inputAccountInfo',
-              name: 'accounts.importAccount.info',
-              meta: {
-                protected: false,
-                icon: importStepImage.importStepImage1,
-                nextPage:'accounts.importAccount.importMnemonic',
+            component: () => import('@/views/pages/accounts/ImportPage/ImportPage.vue'),
+            children: [
+              {
+                path: 'importMnemonic',
+                name: 'accounts.import.importMnemonic',
+                meta: {
+                  protected: false,
+                  title: 'bar_step_one',
+                  extension: '1',
+                  nextPage: 'accounts.import.accountInfo',
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/accounts/ImportPage/ImportMnemonic/ImportMnemonic.vue'),
               },
-              // @ts-ignore
-              component: () => import('@/views/forms/FormAccountCreation/FormAccountCreation.vue'),
-            },{
-              path: 'importMnemonic',
-              name: 'accounts.importAccount.importMnemonic',
-              meta: {
-                protected: false,
-                icon: importStepImage.importStepImage2
+              {
+                path: 'accountInfo',
+                name: 'accounts.import.accountInfo',
+                meta: {
+                  protected: false,
+                  title: 'bar_step_two',
+                  extension: '2',
+                  nextPage: 'accounts.import.generateWallet',
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/accounts/ImportPage/AccountInfo/AccountInfo.vue'),
               },
-              // @ts-ignore
-              component: () => import('@/views/pages/accounts/import-account/import-mnemonic/ImportMnemonic.vue'),
-            }, {
-              path: 'walletChoose',
-              name: 'accounts.importAccount.walletSelection',
-              meta: {
-                protected: false,
-                icon: importStepImage.importStepImage3
+              {
+                path: 'generateWallet',
+                name: 'accounts.import.generateWallet',
+                meta: {
+                  protected: false,
+                  title: 'bar_step_three',
+                  extension: '3',
+                  nextPage: 'dashboard',
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/accounts/ImportPage/GenerateWallet/GenerateWallet.vue'),
               },
-              // @ts-ignore
-              component: () => import('@/views/pages/accounts/import-account/wallet-selection/WalletSelection.vue'),
-            }, {
-              path: 'finishImport',
-              name: 'accounts.importAccount.finalize',
-              meta: {
-                protected: false,
-                icon: importStepImage.importStepImage4
-              },
-              // @ts-ignore
-              component: () => import('@/views/pages/accounts/import-account/finalize/Finalize.vue'),
-            }],
+            ],
           },
         ],
       },

@@ -1,0 +1,45 @@
+@import '../../views/resources/css/variables.less';
+
+.mnemonic-tag-wrapper {
+
+  .tag-box-container {
+    display: block;
+    padding: 5px;  
+  }
+
+  .ivu-tag {
+    background-color: @purple;
+    height: 50px;
+    border-radius: 5px;
+    vertical-align: middle;
+
+    .ivu-tag-text {
+      margin: 0px 10px 0px 10px;
+      height: 100%;
+      line-height: 50px;
+      font-size: 24px;
+      color: #F2F2F2;
+    }
+
+    .ivu-icon {
+      font-size: 28px;
+      margin-top: 5px;
+      margin-left: -5px;
+      color: #F2F2F2;
+    }
+  }
+
+  .ivu-tag:hover {
+    color: rgba(34, 34, 34, 0.8);
+    background: @purpleLight;
+    cursor: pointer;
+  }
+
+  .active-tag {
+    background-color: #999999;
+  }
+
+  .active-tag:hover {
+    background: rgba(153,153,153,.8);;
+  }
+}

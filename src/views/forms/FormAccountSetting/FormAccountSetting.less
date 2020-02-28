@@ -1,0 +1,77 @@
+@import "../../../views/resources/css/variables.less";
+
+.form-account-setting-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 28px;
+
+  .form-row-item {
+    color: #333333;
+    display        : flex;
+    align-items: center;
+    margin-bottom: 0.11rem;
+
+    .form-label {
+      font-weight: 400;
+      min-width      : 2rem;
+      font-size: 0.2rem;
+      text-align: left;
+      padding-right: 0.15rem;
+    }
+
+    .form-value {
+      font-size: 0.2rem;
+      height: 0.42rem;
+      width          : 7.6rem;
+      display        : flex;
+      align-items: center;
+
+      .input-size {
+        width: 7.6rem;
+        height: 0.42rem;
+      }
+
+      .inline-container {
+        height: 100%;
+
+        .ivu-tooltip {
+          height: 100%;
+
+          .ivu-tooltip-rel {
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  .form-button-row {
+    width: 9.75rem;
+    display: flex;
+    align-self: flex-end;
+    justify-content: flex-end;
+    flex-grow: 1;
+    
+    .form-button-container {
+      height: 0.56rem;
+      display: flex;
+      justify-content: flex-end;  
+      align-self: flex-end;    
+    }
+  }
+}
+
+.form-account-setting-wrapper>span {
+  display: block;
+  height: 100%;
+
+  form {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

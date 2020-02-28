@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import draggable from 'vuedraggable'
-
+// @ts-ignore
+import MnemonicTag from '@/components/MnemonicTag/MnemonicTag.vue'
 // internal dependencies
-import {NotificationType} from '@/core/utils/NotificationType'
+import { NotificationType } from '@/core/utils/NotificationType'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import draggable from 'vuedraggable'
+// @ts-ignore
+import ButtonStep from '@/components/ButtonStep/ButtonStep.vue'
+
 
 /// region helpers
 /**
@@ -26,10 +30,10 @@ import {NotificationType} from '@/core/utils/NotificationType'
  */
 const shuffle = (a) => {
   for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
+    const j = Math.floor(Math.random() * (i + 1));
+    [ a[i], a[j] ] = [ a[j], a[i] ]
   }
-  return a;
+  return a
 }
 /// end-region helpers
 
@@ -37,11 +41,15 @@ const shuffle = (a) => {
  * Emits: success, error, canceled
  */
 @Component({
-  components:{draggable},
+  components:{
+    draggable,
+    MnemonicTag,
+    ButtonStep,
+  },
 })
 export class MnemonicVerificationTs extends Vue {
   @Prop({
-    default: []
+    default: [],
   })
   words: string[]
 
@@ -97,12 +105,11 @@ export class MnemonicVerificationTs extends Vue {
   public processVerification(): boolean {
     const origin = this.words.join(' ')
     const rebuilt = this.selectedWords.join(' ')
-
     // - origin words list does not match
     if (origin !== rebuilt) {
       const errorMsg = this.selectedWords.length < 1 ? 
-              NotificationType.PLEASE_ENTER_MNEMONIC_INFO
-            : NotificationType.MNEMONIC_INCONSISTENCY_ERROR
+        NotificationType.PLEASE_ENTER_MNEMONIC_INFO
+        : NotificationType.MNEMONIC_INCONSISTENCY_ERROR
       this.$store.dispatch('notification/ADD_WARNING', errorMsg)
       this.$emit('error', errorMsg)
       return false

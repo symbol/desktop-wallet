@@ -1,0 +1,33 @@
+@import '../../views/resources/css/variables.less';
+
+.step-button {
+    width: 210px;
+    height: 100%;
+    margin-left: 16px;
+    line-height: 0.5rem;
+    text-align: center;
+    background: @white;
+    border: 2px solid @purple;
+
+    .content {
+        font-size: 20px;
+        font-weight: 400;
+        color: @purple;
+    }
+    &:hover {
+        cursor: pointer;
+        background: rgba(82,0,198, .07);
+    }
+}
+
+.primary-button {
+    background: @secondary;
+
+    .content {
+        color: @white;
+    }
+    &:hover {
+        cursor: pointer;
+        background: #693371;
+    }
+}

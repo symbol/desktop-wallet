@@ -18,7 +18,8 @@ import Vue from 'vue'
 
 // internal dependencies
 import {LogLevels} from '@/core/utils/LogLevels'
-import {AwaitLock} from './AwaitLock';
+import {AwaitLock} from './AwaitLock'
+import { AccountsModel } from '@/core/database/entities/AccountsModel'
 const Lock = AwaitLock.create();
 
 export default {
@@ -27,16 +28,19 @@ export default {
     initialized: false,
     password: null,
     mnemonic: null,
+    account:AccountsModel,
   },
   getters: {
     getInitialized: state => state.initialized,
     password: state => state.password,
     mnemonic: state => state.mnemonic,
+    account: state => state.account,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
     setPassword: (state, password) => Vue.set(state, 'password', password),
     setMnemonic: (state, mnemonic) => Vue.set(state, 'mnemonic', mnemonic),
+    setAccount: (state, account) => Vue.set(state, 'account', account),
   },
   actions: {
     async initialize({ commit, dispatch, getters }) {
@@ -58,6 +62,7 @@ export default {
     RESET_STATE({commit}) {
       commit('setPassword', null)
       commit('setMnemonic', null)
+      commit('setAccount', null)
     },
     async SET_PASSWORD({commit, dispatch}, password) {
       commit('setPassword', new Password(password))
@@ -65,6 +70,9 @@ export default {
     async SET_MNEMONIC({commit, dispatch}, mnemonic) {
       commit('setMnemonic', mnemonic)
     },
+    async SET_ACCOUNT({commit,dispatch},account) {
+      commit('setAccount', account)
+    }
 /// end-region scoped actions
   }
 }

@@ -1,0 +1,80 @@
+@import '../../../../resources/css/variables.less';
+
+.generate-wallet-page-wrapper {
+  height: calc(100% - 72px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .generate-wallet-page-container {
+    .import-wallet {
+      margin-bottom: 30px;
+      width: 100%;
+      height: 1rem;
+    
+      .select-network {
+        margin-left: 0.75rem;
+        display: grid;
+        width: 100%;
+        height: 0.40rem;
+        margin-bottom: 0.1rem;
+        grid-template-columns: 1.2rem auto;
+        grid-template-rows: 100%;
+    
+        .title {
+          font-size: 20px;
+          font-weight: 400;
+          line-height: 40px;
+          text-align: right;
+          padding-right: 10px;
+          color: rgba(51, 51, 51, 1);
+        }
+    
+        input {
+          border: none;
+          width: 7.6rem;
+          padding-left: 10px;
+          background: rgba(242, 242, 242, 1);
+          border: 1px solid rgba(204, 204, 204, 1);
+          border-radius: 5px;
+        }
+    
+        .ivu-select-selection {
+          height: 0.4rem;
+          width: 7.6rem;
+          border-color: rgba(204, 204, 204, 1);
+        }
+    
+        .ivu-select-placeholder {
+          height: 0.4rem;
+          line-height: 0.4rem;
+        }
+    
+        .ivu-select-dropdown {
+          min-width: 7.6rem !important;
+        }
+    
+        .ivu-select-selected-value {
+          height: 0.4rem;
+          line-height: 0.4rem;
+        }
+      }
+    }
+  
+    .blank {
+      height: 0.35rem;
+      width: 1.8rem;
+      float: left;
+      background-color: #f8f8f9;
+    }
+  }
+
+  .button-container {
+    margin-top: 0.2rem;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+}
+

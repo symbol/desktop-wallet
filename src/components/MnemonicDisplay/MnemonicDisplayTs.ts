@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import draggable from 'vuedraggable'
+import {Component, Vue, Prop} from 'vue-property-decorator'
+// @ts-ignore
+import MnemonicTag from '@/components/MnemonicTag/MnemonicTag.vue'
 
 @Component({
-  components:{draggable},
+  components: {
+    MnemonicTag,
+  },
 })
 export class MnemonicDisplayTs extends Vue {
   @Prop({
-    default: []
+    required: true,
   })
-  words: string[]
+  mnemonicList: string[]
 }

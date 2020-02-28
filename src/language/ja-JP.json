@@ -593,7 +593,7 @@
     "Restrictable": "制限可",
     "Please_enter_mosaic_hex_or_alias": "モザイクIDまたは@モザイクエイリアス(@nem.xem)を入力してください",
     "mosaic_alias_not_exist": "モザイクエイリアスは存在しません",
-    "Create_an_account_and_password": "アカウントとパスワードの作成",
+    "Set_account_password": "アカウントとパスワードの作成",
     "set_the_account_name": "アカウント名を設定",
     "set_password_8_char": "パスワードの設定 (8文字以上)",
     "back_to_home_page": "戻る",

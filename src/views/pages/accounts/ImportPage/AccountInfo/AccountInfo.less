@@ -1,0 +1,39 @@
+@import '../../../../resources/css/variables.less';
+
+.account-info-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 44px);
+
+  .account-info-container {
+    display: inline-block;
+    width: 100%;
+    clear: both;
+    min-height: 1rem;
+    .form-row {
+      width: 100%;
+      margin-top: 20px;
+      display: flex;
+    }
+    .label {
+      display: inline-block;
+      font-size: @normalFont;
+      text-align: right;
+      width: 100%;
+      margin-right: 25px;
+      margin-top: 10px;
+    }
+    .value {
+      float: left;
+      font-size: @smallerFont;
+      font-weight: bolder;
+    }
+  }
+  .page-tip-container {
+    width: 100%;
+    min-height: 100px;
+  }
+}
+.input-size{
+  width: 6.3rem;
+}

@@ -35,4 +35,5 @@ export interface RouteMeta {
   active?: boolean
   nextPage?: string
   hideFromMenu?: boolean
+  extension?: any
 }
