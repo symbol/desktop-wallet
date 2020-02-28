@@ -16,7 +16,6 @@
 // external dependencies
 import {TransactionType, MultisigAccountModificationTransaction, PublicAccount, MultisigAccountInfo} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
@@ -224,13 +223,21 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @param {string} signerPublicKey 
    */
   public async onChangeSigner(signerPublicKey: string) {
+    // whether the new signer is a multisig account
+    const signerIsMultisigAccount = this.currentWallet.values.get('publicKey') !== signerPublicKey
+
+    // force update form fields
+    this.formItems.minApprovalDelta = signerIsMultisigAccount ? 0 : 1
+    this.formItems.minRemovalDelta = signerIsMultisigAccount ? 0 : 1
+    this.formItems.signerPublicKey = signerPublicKey
+    this.formItems.cosignatoryModifications = {}
+
     /// region super.onChangeSigner
     this.currentSigner = PublicAccount.createFromPublicKey(signerPublicKey, this.networkType)
 
-    const isCosig = this.currentWallet.values.get('publicKey') !== signerPublicKey
-    const payload = !isCosig ? this.currentWallet : {
+    const payload = !signerIsMultisigAccount ? this.currentWallet : {
       networkType: this.networkType,
-      publicKey: signerPublicKey
+      publicKey: signerPublicKey,
     }
 
     await this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: payload})
@@ -238,11 +245,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
 
     // force fetch of multisig info for current signer
     const address = this.currentSigner.address
-    const multisigInfo: MultisigAccountInfo = await this.$store.dispatch('wallet/REST_FETCH_MULTISIG', address.plain())
-
-    // force update signerPublicKey field
-    this.formItems.signerPublicKey = signerPublicKey
-    this.formItems.cosignatoryModifications = {}
+    this.$store.dispatch('wallet/REST_FETCH_MULTISIG', address.plain())
   }
 
   /**
@@ -288,85 +291,4 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
       delete modifications[publicKey]
     }
   }
-
-
-  // /**
-  //  * New number of cosignatories
-  //  * @readonly
-  //  * @protected
-  //  * @type {number}
-  //  */
-  // protected get newNumberOfCosignatories(): number {
-  //   const currentNumberOfCosignatories = this.currentSignerMultisigInfo
-  //     ? this.currentSignerMultisigInfo.cosignatories.length : 0
-
-  //   const newModifications = Object.values(this.formItems.cosignatoryModifications)
-  //   if (!newModifications.length) return currentNumberOfCosignatories
-  //   const numberOfModifications = newModifications.length
-  //   const numberOfRemovals = [...newModifications]
-  //     .filter(({addOrRemove}) => addOrRemove === 'remove')
-  //     .length
-
-  //   const cosignatoriesDelta = numberOfModifications - numberOfRemovals
-  //   return currentNumberOfCosignatories + cosignatoriesDelta
-  // }
-
-  // /**
-  //  * New min approval value
-  //  * @readonly
-  //  * @protected
-  //  * @type {number}
-  //  */
-  // protected get newMinApproval(): number {
-  //   const {minApprovalDelta} = this.formItems 
-  //   if(!this.currentSignerMultisigInfo) return minApprovalDelta
-  //   return this.currentSignerMultisigInfo.minApproval + minApprovalDelta
-  // }
-
-  // /**
-  //  * New min removal value
-  //  * @readonly
-  //  * @protected
-  //  * @type {number}
-  //  */
-  // protected get newMinRemoval(): number {
-  //   const {minRemovalDelta} = this.formItems 
-  //   if(!this.currentSignerMultisigInfo) return minRemovalDelta
-  //   return this.currentSignerMultisigInfo.minRemoval + minRemovalDelta
-  // }
-
-  // /**
-  //  * Hook called by AddCosignatoryInput button
-  //  * @param {PublicAccount} publicAccount
-  //  * @return {void}
-  //  */
-  // protected onAddCosignatory(publicAccount: PublicAccount): void {
-  //   const modification = {cosignatory: publicAccount, addOrRemove: 'add'}
-  //   Vue.set(this.formItems.cosignatoryModifications, publicAccount.publicKey, modification)
-  // }
-
-  // /**
-  //  * Hook called by RemoveCosignatoryInput button
-  //  * @protected
-  //  * @param {string} publicKey
-  //  * @return {void}
-  //  */
-  // protected onRemoveCosignatory(publicKey: string): void {
-  //   if (!publicKey) return 
-  //   const publicAccount = PublicAccount.createFromPublicKey(publicKey, this.networkType)
-  //   const modification = {cosignatory: publicAccount, addOrRemove: 'remove'}
-  //   Vue.set(this.formItems.cosignatoryModifications, publicAccount.publicKey, modification)
-  // }
-
-  // /**
-  //  * Hook called from CosignatoryModificationsDisplay delete button
-  //  * @param {string} publicKey to remove
-  //  * @return {void}
-  //  */
-  // protected onRemoveCosignatoryModification(publicKey: string): void {
-  //   if (!publicKey) return 
-  //   const newCosignatoryModifications = {...this.formItems.cosignatoryModifications}
-  //   delete newCosignatoryModifications[publicKey]
-  //   Vue.set(this.formItems, 'cosignatoryModifications', newCosignatoryModifications)
-  // }
 }
