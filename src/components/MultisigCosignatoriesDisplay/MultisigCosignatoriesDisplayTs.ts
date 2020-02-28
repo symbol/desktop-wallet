@@ -18,9 +18,6 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {Address, NetworkType, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
 
-// internal dependencies
-import {CosignatoryModifications} from '@/core/transactions/ViewMultisigAccountModificationTransaction'
-
 // child components
 import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
