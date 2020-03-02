@@ -21,14 +21,17 @@ describe('store/Account ==>', () => {
     test('mutate currentAccount and isAuthenticated', () => {
       // prepare
       const commit = jest.fn()
+      const dispatch = jest.fn()
 
       // act
-      AccountStore.actions.RESET_STATE({commit})
+      AccountStore.actions.RESET_STATE({commit, dispatch})
 
       // assert
       expect(commit).toHaveBeenCalledTimes(2)
+      expect(dispatch).toHaveBeenCalledTimes(1)
       expect(commit).toHaveBeenNthCalledWith(1, 'currentAccount', null)
       expect(commit).toHaveBeenNthCalledWith(2, 'setAuthenticated', false)
+      expect(dispatch).toHaveBeenNthCalledWith(1, 'wallet/SET_KNOWN_WALLETS', [], {root: true})
     })
   })
 

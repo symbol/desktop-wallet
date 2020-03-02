@@ -58,9 +58,10 @@ export default {
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
 /// region scoped actions
-    RESET_STATE({commit}) {
+    RESET_STATE({commit, dispatch}) {
       commit('currentAccount', null)
       commit('setAuthenticated', false)
+      dispatch('wallet/SET_KNOWN_WALLETS', [], {root:true})
     },
     LOG_OUT({dispatch}) {
       return dispatch('RESET_STATE')
