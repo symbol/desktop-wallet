@@ -31,6 +31,20 @@ export default class DisabledFormOverlay extends Vue {
   public currentWalletMultisigInfo: MultisigAccountInfo
 
 /// region computed properties getter/setter
+  /**
+   * Whether a form should not have any overlay
+   * @returns {boolean}
+   */
+  get isFormWhitelisted(): boolean {
+    const whitelisted = ['accounts.importAccount.info']
+
+    if (whitelisted.some(
+      a => this.$route.matched.map(({name}) => name).some(b => b === a))) {
+      return true
+    }
+
+    return false
+  }
 
   /**
    * Whether a form should be disabled to a multisig account
@@ -55,6 +69,7 @@ export default class DisabledFormOverlay extends Vue {
    * @returns {string}
    */
   get alert(): string {
+    if (this.isFormWhitelisted) return ''
     if (!this.networkMosaic) return NotificationType.NO_NETWORK_CURRENCY
     if (this.disableToMultisig) {
       return NotificationType.MULTISIG_ACCOUNTS_NO_TX
