@@ -1,5 +1,5 @@
 <template>
-<div :class="[isConnected ? 'point_healthy' : 'point_unhealthy']">
+<div :class="[isConnected ? 'endpoint-healthy' : 'endpoint-unhealthy']">
   <Poptip placement="bottom-end">
     <i class="pointer point" />
     <span v-if="isConnected" class="network_type_text">
