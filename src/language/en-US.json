@@ -682,7 +682,7 @@
   "supplyMutable": "Mutable supply",
   "Increase": "Increase",
   "transferable": "Transferable",
-  "no_network_currency_alert": "The wallet could not load data about the network currency (eg. nem:xem), please connect to a valid node.",
+  "no_network_currency_alert": "The wallet could not load data about the network currency (eg. symbol:xym), please connect to a valid node.",
   "cosign_transactions": "Co-sign transactions",
   "User_aborted_transaction_confirmation": "User aborted transaction confirmation",
   "Expired": "Expired",
