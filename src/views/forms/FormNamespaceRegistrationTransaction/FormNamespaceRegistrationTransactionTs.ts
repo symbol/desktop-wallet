@@ -105,7 +105,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    * @private
    * @type {number}
    */
-  private maxNamespaceDepth: number = networkConfig.networks['testnet-publicTest'].properties.maxNamespaceDepth
+  private maxNamespaceDepth: number = networkConfig.networks['testnet-publicTest2'].properties.maxNamespaceDepth
 
   /**
    * Namespaces that can have children

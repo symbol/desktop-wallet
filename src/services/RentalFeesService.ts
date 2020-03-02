@@ -20,7 +20,7 @@ import {AbstractService} from './AbstractService'
 
 //XXX network config store getter
 import networkConfig from '../../config/network.conf.json'
-const {defaultDynamicFeeMultiplier} = networkConfig.networks['testnet-publicTest'].properties
+const {defaultDynamicFeeMultiplier} = networkConfig.networks['testnet-publicTest2'].properties
 
 export class RentalFeesService extends AbstractService {
   /**

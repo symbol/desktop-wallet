@@ -24,7 +24,7 @@ const Lock = AwaitLock.create();
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'
-const networkCurrencyName = networkConfig.networks['testnet-publicTest'].currencyMosaic
+const networkCurrencyName = networkConfig.networks['testnet-publicTest2'].currencyMosaic
 
 export default {
   namespaced: true,
@@ -54,7 +54,6 @@ export default {
     setNetworkMosaicId: (state, mosaic) => Vue.set(state, 'networkMosaicId', mosaic),
     setNetworkMosaicName: (state, name) => Vue.set(state, 'networkMosaicName', name),
     setNetworkMosaicTicker: (state, ticker) => Vue.set(state, 'networkMosaicTicker', ticker),
-    setNemesisTransactions: (state, transactions) => Vue.set(state, 'nemesisTransactions', transactions),
     addMosaicInfo: (state, mosaicInfo: MosaicInfo) => {
       Vue.set(state.mosaicsInfoByHex, mosaicInfo.id.toHex(), mosaicInfo)
     },
@@ -144,7 +143,7 @@ export default {
         knownMosaics: withFeed.mosaics
       }
     },
-    async INITIALIZE_FROM_NEMESIS({commit, dispatch, rootGetters}, nodeUrl) {
+    async INITIALIZE_FROM_NEMESIS({commit, dispatch}, nodeUrl) {
       // read first network block to identify currency mosaic
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action mosaic/INITIALIZE_FROM_NEMESIS dispatched with nodeUrl: ' + nodeUrl, {root: true})

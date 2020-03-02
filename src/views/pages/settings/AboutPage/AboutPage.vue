@@ -36,7 +36,7 @@
 
       <div class="form-row">
         <div class="label">{{ $t('about_generation_hash') }}</div>
-        <div class="value">{{ configs.network.networks['testnet-publicTest'].generationHash }}</div>
+        <div class="value">{{ configs.network.networks['testnet-publicTest2'].generationHash }}</div>
       </div>
       <div class="form-row"></div>
 

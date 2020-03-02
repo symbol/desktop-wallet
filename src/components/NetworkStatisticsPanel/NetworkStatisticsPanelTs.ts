@@ -19,7 +19,7 @@ import {mapGetters} from 'vuex'
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'
-const currentNetworkConfig = networkConfig.networks['testnet-publicTest']
+const currentNetworkConfig = networkConfig.networks['testnet-publicTest2']
 
 // child components
 // @ts-ignore

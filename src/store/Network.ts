@@ -76,8 +76,8 @@ export default {
     currentPeer: URLHelpers.formatUrl(networkConfig.defaultNode.url),
     explorerUrl: networkConfig.explorerUrl,
     networkType: NetworkType.MIJIN_TEST,
-    generationHash: networkConfig.networks['testnet-publicTest'].generationHash,
-    properties: networkConfig.networks['testnet-publicTest'].properties,
+    generationHash: networkConfig.networks['testnet-publicTest2'].generationHash,
+    properties: networkConfig.networks['testnet-publicTest2'].properties,
     isConnected: false,
     nemesisTransactions: [],
     knownPeers: [],
@@ -154,7 +154,6 @@ export default {
           break;
       }
     },
-    setNemesisTransactions: (state, transactions) => Vue.set(state, 'nemesisTransactions', transactions),
     setSubscriptions: (state, data) => Vue.set(state, 'subscriptions', data),
     addSubscriptions: (state, payload) => {
       const subscriptions = state.subscriptions
@@ -228,7 +227,7 @@ export default {
         nodeUrl: nodeUrl
       }
     },
-    async INITIALIZE_FROM_CONFIG({commit, dispatch}, nodeUrl) {
+    async INITIALIZE_FROM_CONFIG({dispatch}, nodeUrl) {
       try {
         const payload = await dispatch('REST_FETCH_PEER_INFO', nodeUrl)
 
