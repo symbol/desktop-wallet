@@ -18,7 +18,7 @@
               @click="switchPeer(nodeUrl)"
           >
             <img :src="currentPeer.url === nodeUrl ? imageResources.selected : imageResources.unselected">
-            <span class="node_url text_select">{{ nodeUrl }}</span>
+            <span class="node_url">{{ nodeUrl }}</span>
             <img
               class="remove_icon" src="@/views/resources/img/service/multisig/multisigDelete.png"
               @click.stop="removePeer(nodeUrl)">
