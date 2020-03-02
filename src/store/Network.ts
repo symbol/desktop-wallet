@@ -75,7 +75,7 @@ export default {
     defaultPeer: URLHelpers.formatUrl(networkConfig.defaultNode.url),
     currentPeer: URLHelpers.formatUrl(networkConfig.defaultNode.url),
     explorerUrl: networkConfig.explorerUrl,
-    networkType: NetworkType.MIJIN_TEST,
+    networkType: NetworkType.TEST_NET,
     generationHash: networkConfig.networks['testnet-publicTest2'].generationHash,
     properties: networkConfig.networks['testnet-publicTest2'].properties,
     isConnected: false,
