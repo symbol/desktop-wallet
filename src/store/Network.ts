@@ -150,7 +150,7 @@ export default {
           break;
 
         default:
-          Vue.set(state, 'networkType', NetworkType.MIJIN_TEST)
+          Vue.set(state, 'networkType', NetworkType.TEST_NET)
           break;
       }
     },
@@ -253,6 +253,7 @@ export default {
       }
     },
     async OPEN_PEER_CONNECTION({state, commit, dispatch}, payload) {
+      // @TODO: handle the case when the payload is undefined
       commit('currentPeer', payload.url)
       commit('networkType', payload.networkType)
       commit('setConnected', true)

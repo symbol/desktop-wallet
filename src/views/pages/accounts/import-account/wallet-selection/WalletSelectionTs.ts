@@ -15,7 +15,7 @@
  */
 import {Vue, Component} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, Password, MosaicId, Address, SimpleWallet} from 'nem2-sdk'
+import {Password, MosaicId, Address, SimpleWallet} from 'nem2-sdk'
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 
 // internal dependencies
@@ -52,12 +52,6 @@ export default class WalletSelectionTs extends Vue {
    */
   protected formatters = Formatters
 
-  /**
-   * Currently active networkType
-   * @see {Store.Network}
-   * @var {NetworkType}
-   */
-  public networkType: NetworkType
   /**
    * Network's currency mosaic id
    * @see {Store.Mosaic}
@@ -212,7 +206,7 @@ export default class WalletSelectionTs extends Vue {
     // - generate addresses
     this.addressesList = this.walletService.getAddressesFromMnemonic(
       new MnemonicPassPhrase(this.currentMnemonic),
-      this.networkType,
+      this.currentAccount.values.get('networkType'),
       10,
     )
 
@@ -247,7 +241,7 @@ export default class WalletSelectionTs extends Vue {
 
     const accounts = this.walletService.generateAccountsFromPaths(
       new MnemonicPassPhrase(this.currentMnemonic),
-      this.networkType,
+      this.currentAccount.values.get('networkType'),
       paths,
     )
 
@@ -256,7 +250,7 @@ export default class WalletSelectionTs extends Vue {
         'SeedWallet',
         this.currentPassword,
         account.privateKey,
-        this.networkType,
+        this.currentAccount.values.get('networkType'),
       ))
 
     return simpleWallets.map((simpleWallet, i) =>
