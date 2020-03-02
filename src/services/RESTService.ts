@@ -142,7 +142,10 @@ export class RESTService extends AbstractService {
 
     // unconfirmed listeners
     const unconfirmedAdded = listener.unconfirmedAdded(address).subscribe(
-      transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'unconfirmed', transaction}, {root: true}),
+      transaction => {
+        context.dispatch('wallet/ADD_TRANSACTION', {group: 'unconfirmed', transaction}, {root: true})
+        context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_UNCONFIRMED_TRANSACTION, {root: true})
+      },
       err => context.dispatch('diagnostic/ADD_ERROR', err, {root: true}))
 
     const unconfirmedRemoved = listener.unconfirmedRemoved(address).subscribe(
@@ -153,12 +156,15 @@ export class RESTService extends AbstractService {
     const cosignatureAdded = listener.cosignatureAdded(address).subscribe(
       cosignature => {
         context.dispatch('wallet/ADD_COSIGNATURE', cosignature, {root: true})
-        context.dispatch('notification/ADD_SUCCESS', NotificationType.COSIGNATURE_ADDED, {root: true})
+        context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_AGGREGATE_BONDED, {root: true})
       },
       err => context.dispatch('diagnostic/ADD_ERROR', err, {root: true}))
 
     const partialAdded = listener.aggregateBondedAdded(address).subscribe(
-      transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'partial', transaction}, {root: true}),
+      transaction => {
+        context.dispatch('wallet/ADD_TRANSACTION', {group: 'partial', transaction}, {root: true})
+        context.dispatch('notification/ADD_SUCCESS', NotificationType.COSIGNATURE_ADDED, {root: true})
+      },
       err => context.dispatch('diagnostic/ADD_ERROR', err, {root: true}))
 
     const partialRemoved = listener.aggregateBondedRemoved(address).subscribe(
@@ -167,7 +173,10 @@ export class RESTService extends AbstractService {
 
     // confirmed listener
     const confirmed = listener.confirmed(address).subscribe(
-      transaction => context.dispatch('wallet/ADD_TRANSACTION', {group: 'confirmed', transaction}, {root: true}),
+      transaction => {
+        context.dispatch('wallet/ADD_TRANSACTION', {group: 'confirmed', transaction}, {root: true})
+        context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_CONFIRMED_TRANSACTION, {root: true})
+      },
       err => context.dispatch('diagnostic/ADD_ERROR', err, {root: true}))
 
     return {listener, subscriptions: [
