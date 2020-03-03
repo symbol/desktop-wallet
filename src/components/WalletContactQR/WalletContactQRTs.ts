@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {ContactQR} from 'nem2-qr-library'
+import {ContactQR} from 'symbol-qr-library'
 import {PublicAccount} from 'symbol-sdk'
 import {of, Observable} from 'rxjs'
 import {pluck, concatMap} from 'rxjs/operators'

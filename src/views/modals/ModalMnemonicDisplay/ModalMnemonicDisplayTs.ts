@@ -16,8 +16,8 @@
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {Account, Password, NetworkType} from 'symbol-sdk'
-import {MnemonicPassPhrase} from 'nem2-hd-wallets'
-import {QRCodeGenerator, MnemonicQR} from 'nem2-qr-library'
+import {MnemonicPassPhrase} from 'symbol-hd-wallets'
+import {QRCodeGenerator, MnemonicQR} from 'symbol-qr-library'
 import {pluck, concatMap} from 'rxjs/operators'
 import {of, Observable} from 'rxjs'
 

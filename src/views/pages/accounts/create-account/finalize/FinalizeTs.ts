@@ -16,7 +16,7 @@
 import {Vue, Component} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {NetworkType, SimpleWallet, Password} from 'symbol-sdk'
-import {MnemonicPassPhrase} from 'nem2-hd-wallets'
+import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'

@@ -20,7 +20,7 @@ import {
   Address,
   PublicAccount,
 } from 'symbol-sdk'
-import {Wallet} from 'nem2-hd-wallets'
+import {Wallet} from 'symbol-hd-wallets'
 
 // internal dependencies
 import {AbstractService} from '@/services/AbstractService'

@@ -20,7 +20,7 @@ import {
   MnemonicPassPhrase,
   NodeEd25519,
   Wallet,
-} from 'nem2-hd-wallets'
+} from 'symbol-hd-wallets'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'

@@ -15,7 +15,7 @@
  */
 import {NetworkType, Account} from 'symbol-sdk'
 import {WalletService} from '@/services/WalletService'
-import {MnemonicPassPhrase} from 'nem2-hd-wallets'
+import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 
 // Sample mnemonic passphrase
 const mnemonic = new MnemonicPassPhrase('limit sing post cross matrix pizza topple rack cigar skirt girl hurt outer humble fancy elegant bunker pipe ensure grain regret bulk renew trim')

@@ -1,6 +1,6 @@
 {
-  "explorerUrl": "http://explorer-xym.nemtech.network",
-  "faucetUrl": "http://faucet-xym-01.nemtech.network",
+  "explorerUrl": "http://explorer.symboldev.network",
+  "faucetUrl": "http://faucet-01.symboldev.network",
   "defaultNetworkType": 152,
   "defaultNode": {
     "protocol": "http",
