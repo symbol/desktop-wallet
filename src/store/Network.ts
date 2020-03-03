@@ -408,7 +408,6 @@ export default {
 
         // - read nemesis from REST
         const nemesis = await blockHttp.getBlockByHeight(UInt64.fromUint(1)).toPromise()
-        console.log("REST_FETCH_PEER_INFO -> nemesis", nemesis)
 
         // - read peer info from REST
         const peerInfo = await nodeHttp.getNodeInfo().toPromise()

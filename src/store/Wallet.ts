@@ -965,7 +965,6 @@ export default {
               return resolve(new BroadcastResult(signedPartial, true))
             },
             (error) => {
-              console.log("error QQQQQQQQQQ", error)
               commit('removeSignedTransaction', signedLock)
               commit('removeSignedTransaction', signedPartial)
               reject(new BroadcastResult(signedPartial, false))
@@ -974,7 +973,6 @@ export default {
         })
       }
       catch(e) {
-        console.log("WWWWWWWWWWWWWWWW e", e)
         return new BroadcastResult(signedPartial, false, e.toString())
       }
     },
@@ -982,8 +980,6 @@ export default {
       {commit, dispatch, rootGetters},
       signedTransaction: SignedTransaction
     ): Promise<BroadcastResult> {
-      console.log("signedTransaction REST_ANNOUNCE_TRANSACTION", signedTransaction)
-
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_ANNOUNCE_TRANSACTION dispatched with: ' + JSON.stringify({
         hash: signedTransaction.hash,
         payload: signedTransaction.payload

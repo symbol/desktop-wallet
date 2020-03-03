@@ -368,7 +368,6 @@ export class FormTransactionBase extends Vue {
     // - case 1 "announce partial"
     if (options.isMultisig) {
       results = await service.announcePartialTransactions(issuer)
-      console.log("onConfirmationSuccess -> results", results)
     }
     // - case 2 "announce complete"
     else {
