@@ -22,10 +22,6 @@ import {MosaicService} from '@/services/MosaicService'
 import {AwaitLock} from './AwaitLock';
 const Lock = AwaitLock.create();
 
-// configuration
-import networkConfig from '@/../config/network.conf.json'
-const networkCurrencyName = networkConfig.networks['testnet-publicTest'].currencyMosaic
-
 export default {
   namespaced: true,
   state: {
@@ -149,7 +145,7 @@ export default {
       dispatch('diagnostic/ADD_DEBUG', 'Store action mosaic/INITIALIZE_FROM_NEMESIS dispatched with nodeUrl: ' + nodeUrl, {root: true})
 
       const blockHttp = RESTService.create('BlockHttp', nodeUrl)
-      blockHttp.getBlockTransactions(UInt64.fromUint(1)).subscribe(
+      blockHttp.getBlockTransactions(UInt64.fromUint(1), new QueryParams({pageSize: 100})).subscribe(
         async (transactions: Transaction[]) => {
           const payload = await dispatch('GET_CURRENCY_MOSAIC_FROM_NEMESIS', transactions)
 
@@ -168,8 +164,11 @@ export default {
             mosaicId: payload.mosaicId,
           })
         },
-        err => console.log("INITIALIZE_FROM_NEMESIS -> err", err),
-      )
+        err => dispatch(
+          'diagnostic/ADD_DEBUG',
+          `Store action mosaic/INITIALIZE_FROM_NEMESIS error: ${JSON.stringify(err)}`,
+          {root: true},
+        ))
     },
     SET_NETWORK_CURRENCY_MOSAIC({commit}, payload) {
       commit('setNetworkMosaicName', payload.name)
