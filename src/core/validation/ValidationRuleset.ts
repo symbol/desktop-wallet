@@ -19,7 +19,7 @@ import appConfig from '../../../config/app.conf.json'
 const {MIN_PASSWORD_LENGTH} = appConfig.constants
 
 // XXX network store config getter
-const currentNetwork = networkConfig.networks['testnet-publicTest2']
+const currentNetwork = networkConfig.networks['testnet-publicTest']
 
 export const ValidationRuleset = {
   address: 'required|address|addressNetworkType:currentAccount',

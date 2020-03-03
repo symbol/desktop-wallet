@@ -12,7 +12,7 @@ import {AppStore} from '@/app/AppStore'
 
 // configuration
 import networkConfig from '../../../config/network.conf.json'
-const currentNetwork = networkConfig.networks['testnet-publicTest2']
+const currentNetwork = networkConfig.networks['testnet-publicTest']
 
 import {
   AddressValidator,

@@ -50,7 +50,7 @@ export class FormExtendNamespaceDurationTransactionTs extends FormNamespaceRegis
    * @private
    * @type {number}
    */
-  private namespaceGracePeriodDuration: number = networkConfig.networks['testnet-publicTest2'].properties.namespaceGracePeriodDuration
+  private namespaceGracePeriodDuration: number = networkConfig.networks['testnet-publicTest'].properties.namespaceGracePeriodDuration
 
   /**
    * Network current height
@@ -134,7 +134,7 @@ export class FormExtendNamespaceDurationTransactionTs extends FormNamespaceRegis
   ): {expiration: string, expired: boolean} {
     const {currentHeight} = this
     const networkConfig = this.$store.getters['network/config']
-    const {namespaceGracePeriodDuration} = networkConfig.networks['testnet-publicTest2']
+    const {namespaceGracePeriodDuration} = networkConfig.networks['testnet-publicTest']
 
     const expired = currentHeight > endHeight - namespaceGracePeriodDuration
     const expiredIn = endHeight - namespaceGracePeriodDuration - currentHeight

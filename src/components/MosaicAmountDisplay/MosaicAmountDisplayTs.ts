@@ -23,7 +23,7 @@ import {MosaicService} from '@/services/MosaicService'
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'
-const currentNetworkConfig = networkConfig.networks['testnet-publicTest2']
+const currentNetworkConfig = networkConfig.networks['testnet-publicTest']
 
 // child components
 // @ts-ignore

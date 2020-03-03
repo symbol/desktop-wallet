@@ -16,7 +16,7 @@
 import networkConfig from '../../../config/network.conf.json';
 
 //XXX network store getters
-const {targetBlockTime} = networkConfig.networks['testnet-publicTest2'].properties
+const {targetBlockTime} = networkConfig.networks['testnet-publicTest'].properties
 
 export class TimeHelpers {
   public static addZero = function (number: number): string {

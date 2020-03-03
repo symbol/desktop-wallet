@@ -101,7 +101,7 @@ export const formDataConfig = {
     feeSpeed: 'NORMAL',
   },
   rootNamespaceForm: {
-    duration: networkConfig.networks['testnet-publicTest2'].properties.maxNamespaceDuration,
+    duration: networkConfig.networks['testnet-publicTest'].properties.maxNamespaceDuration,
     rootNamespaceName: '',
     multisigPublicKey: '',
     feeSpeed: 'NORMAL',

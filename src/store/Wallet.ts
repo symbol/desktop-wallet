@@ -30,6 +30,7 @@ import {
   Mosaic,
   MosaicInfo,
   CosignatureSignedTransaction,
+  TransactionType,
 } from 'symbol-sdk'
 import {Subscription} from 'rxjs'
 
@@ -920,6 +921,10 @@ export default {
       {commit, dispatch, rootGetters},
       {issuer, signedLock, signedPartial}
     ): Promise<BroadcastResult> {
+      console.log("issuer REST_ANNOUNCE_PARTIAL", issuer)
+      console.log("signedLock REST_ANNOUNCE_PARTIAL", signedLock)
+      console.log("signedPartial REST_ANNOUNCE_PARTIAL", signedPartial)
+      
       if (!issuer || issuer.length !== 40) {
         return ;
       }
@@ -940,21 +945,27 @@ export default {
         const listener = new Listener(wsEndpoint, WebSocket)
         await listener.open()
 
+        
         // - announce hash lock transaction and await confirmation
         transactionHttp.announce(signedLock)
 
+        console.log("SIGNED LOCK HASH", signedLock.hash)
+        
         // - listen for hash lock confirmation
         return new Promise((resolve, reject) => {
           const address = Address.createFromRawAddress(issuer)
-          return listener.confirmed(address, signedLock.hash).subscribe(
+          return listener.confirmed(address).subscribe(
             async (success) => {
+              console.log("SUCCESS", success)
               // - hash lock confirmed, now announce partial
               const response = await transactionHttp.announceAggregateBonded(signedPartial)
+              console.log("response", response)
               commit('removeSignedTransaction', signedLock)
               commit('removeSignedTransaction', signedPartial)
               return resolve(new BroadcastResult(signedPartial, true))
             },
             (error) => {
+              console.log("error QQQQQQQQQQ", error)
               commit('removeSignedTransaction', signedLock)
               commit('removeSignedTransaction', signedPartial)
               reject(new BroadcastResult(signedPartial, false))
@@ -963,6 +974,7 @@ export default {
         })
       }
       catch(e) {
+        console.log("WWWWWWWWWWWWWWWW e", e)
         return new BroadcastResult(signedPartial, false, e.toString())
       }
     },
@@ -970,6 +982,7 @@ export default {
       {commit, dispatch, rootGetters},
       signedTransaction: SignedTransaction
     ): Promise<BroadcastResult> {
+      console.log("signedTransaction REST_ANNOUNCE_TRANSACTION", signedTransaction)
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_ANNOUNCE_TRANSACTION dispatched with: ' + JSON.stringify({
         hash: signedTransaction.hash,

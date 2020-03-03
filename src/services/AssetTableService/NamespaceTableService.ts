@@ -108,7 +108,7 @@ export class NamespaceTableService extends AssetTableService {
     const {currentHeight} = this
     const endHeight = namespaceInfo.endHeight.compact()
     const networkConfig = this.$store.getters['network/config']
-    const {namespaceGracePeriodDuration} = networkConfig.networks['testnet-publicTest2']
+    const {namespaceGracePeriodDuration} = networkConfig.networks['testnet-publicTest']
     
     const expired = currentHeight > endHeight - namespaceGracePeriodDuration
     const expiredIn = endHeight - namespaceGracePeriodDuration - currentHeight

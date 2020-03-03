@@ -20,7 +20,7 @@ import {MosaicId} from 'symbol-sdk'
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'
-const currentNetworkConfig = networkConfig.networks['testnet-publicTest2']
+const currentNetworkConfig = networkConfig.networks['testnet-publicTest']
 
 @Component({
   computed: {...mapGetters({

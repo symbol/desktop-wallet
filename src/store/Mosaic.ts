@@ -24,7 +24,7 @@ const Lock = AwaitLock.create();
 
 // configuration
 import networkConfig from '@/../config/network.conf.json'
-const networkCurrencyName = networkConfig.networks['testnet-publicTest2'].currencyMosaic
+const networkCurrencyName = networkConfig.networks['testnet-publicTest'].currencyMosaic
 
 export default {
   namespaced: true,
