@@ -16,9 +16,8 @@
 @import "../../../views/resources/css/variables.less";
 
 @headerHeight: 0.35rem;
-@rowHeight: 0.65rem;
-@rowGap: 0.1rem;
-@maxDisplayedRow: 10;
+@rowHeight: 0.75rem;
+@maxDisplayedRow: 8;
 
 .transaction-tab-inner-container {
   display: block;
@@ -43,14 +42,13 @@
     overflow: hidden;
     overflow-y: scroll;
     width: 100%;
-    padding-top: 0.1rem;
   }
 
   .transaction-rows-inner-container {
     display: grid;
     grid-auto-rows: @rowHeight;
     width: 100%;
-    height: (@maxDisplayedRow) * (@rowHeight + @rowGap);
+    height: (@maxDisplayedRow) * (@rowHeight);
     position: relative;
   }
 
@@ -126,7 +124,8 @@
   .no-data-container {
     display: grid;
     grid-auto-rows: @rowHeight;
-    grid-row-gap: @rowGap;
+    width: 100%;
+    height: 100%;
     
     >div {
       border-bottom: 1px solid @line;
