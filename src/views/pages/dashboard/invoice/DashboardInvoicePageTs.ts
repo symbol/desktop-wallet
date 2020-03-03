@@ -19,7 +19,7 @@ import {mapGetters} from 'vuex'
 import {pluck, concatMap} from 'rxjs/operators'
 import {of, Observable} from 'rxjs'
 import {QRCodeGenerator, TransactionQR} from 'nem2-qr-library'
-import {NetworkType, TransferTransaction, Address, MosaicId, Transaction} from 'nem2-sdk'
+import {NetworkType, TransferTransaction, Address, MosaicId, Transaction} from 'symbol-sdk'
 
 // child components
 // @ts-ignore

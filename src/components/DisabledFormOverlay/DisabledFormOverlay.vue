@@ -10,7 +10,7 @@
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {MosaicId, MultisigAccountInfo} from 'nem2-sdk'
+import {MosaicId, MultisigAccountInfo} from 'symbol-sdk'
 import {NotificationType} from '@/core/utils/NotificationType'
 
 @Component({computed: {...mapGetters({

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {Account, Address, NetworkType, SimpleWallet, Password} from 'nem2-sdk'
+import {Account, Address, NetworkType, SimpleWallet, Password} from 'symbol-sdk'
 import {
   ExtendedKey,
   MnemonicPassPhrase,

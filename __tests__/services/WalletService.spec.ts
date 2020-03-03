@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NetworkType, Account} from 'nem2-sdk'
+import {NetworkType, Account} from 'symbol-sdk'
 import {WalletService} from '@/services/WalletService'
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 

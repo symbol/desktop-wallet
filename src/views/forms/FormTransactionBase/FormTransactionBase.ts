@@ -22,7 +22,7 @@ import {
   PublicAccount,
   NamespaceId,
   NetworkType,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 

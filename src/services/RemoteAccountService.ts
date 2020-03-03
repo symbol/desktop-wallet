@@ -19,7 +19,7 @@ import {
   AccountType,
   Address,
   PublicAccount,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {Wallet} from 'nem2-hd-wallets'
 
 // internal dependencies

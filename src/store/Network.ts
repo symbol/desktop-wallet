@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import Vue from 'vue';
-import {NetworkType, Listener, BlockInfo, UInt64} from 'nem2-sdk';
+import {NetworkType, Listener, BlockInfo, UInt64} from 'symbol-sdk';
 import {Subscription} from 'rxjs'
 
 // internal dependencies
@@ -408,6 +408,7 @@ export default {
 
         // - read nemesis from REST
         const nemesis = await blockHttp.getBlockByHeight(UInt64.fromUint(1)).toPromise()
+        console.log("REST_FETCH_PEER_INFO -> nemesis", nemesis)
 
         // - read peer info from REST
         const peerInfo = await nodeHttp.getNodeInfo().toPromise()

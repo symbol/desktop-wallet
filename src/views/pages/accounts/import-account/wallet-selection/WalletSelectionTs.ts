@@ -15,7 +15,7 @@
  */
 import {Vue, Component} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Password, MosaicId, Address, SimpleWallet} from 'nem2-sdk'
+import {Password, MosaicId, Address, SimpleWallet} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 
 // internal dependencies

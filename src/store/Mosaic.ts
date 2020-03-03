@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicInfo, QueryParams, Transaction, TransactionType, NamespaceRegistrationType, UInt64} from 'nem2-sdk'
+import {MosaicInfo, QueryParams, Transaction, TransactionType, NamespaceRegistrationType, UInt64} from 'symbol-sdk'
 import Vue from 'vue'
 
 // internal dependencies
@@ -149,7 +149,7 @@ export default {
       dispatch('diagnostic/ADD_DEBUG', 'Store action mosaic/INITIALIZE_FROM_NEMESIS dispatched with nodeUrl: ' + nodeUrl, {root: true})
 
       const blockHttp = RESTService.create('BlockHttp', nodeUrl)
-      blockHttp.getBlockTransactions(UInt64.fromUint(1), new QueryParams().setPageSize(100)).subscribe(
+      blockHttp.getBlockTransactions(UInt64.fromUint(1)).subscribe(
         async (transactions: Transaction[]) => {
           const payload = await dispatch('GET_CURRENCY_MOSAIC_FROM_NEMESIS', transactions)
 
@@ -167,7 +167,9 @@ export default {
             ticker: payload.ticker,
             mosaicId: payload.mosaicId,
           })
-        })
+        },
+        err => console.log("INITIALIZE_FROM_NEMESIS -> err", err),
+      )
     },
     SET_NETWORK_CURRENCY_MOSAIC({commit}, payload) {
       commit('setNetworkMosaicName', payload.name)

@@ -21,7 +21,7 @@ import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {NotificationType} from '@/core/utils/NotificationType'
-import {Password} from 'nem2-sdk'
+import {Password} from 'symbol-sdk'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
 
 @Component({computed: {...mapGetters({

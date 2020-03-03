@@ -30,7 +30,7 @@ import {
   Mosaic,
   MosaicInfo,
   CosignatureSignedTransaction,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {Subscription} from 'rxjs'
 
 // internal dependencies
@@ -658,7 +658,7 @@ export default {
       try {
         // prepare REST parameters
         const currentPeer = rootGetters['network/currentPeer'].url
-        const queryParams = new QueryParams().setPageSize(pageSize).setId(id)
+        const queryParams = new QueryParams({ pageSize: 100, id })
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch transactions from REST gateway
@@ -891,7 +891,7 @@ export default {
 
         // @TODO: Handle more than 100 namespaces
         const ownedNamespaces = await namespaceHttp.getNamespacesFromAccount(
-          addressObject, new QueryParams().setPageSize(100).setOrder(Order.ASC), 
+          addressObject, new QueryParams({pageSize: 100, order: Order.ASC}), 
         ).toPromise()
 
         // store multisig info
@@ -981,7 +981,7 @@ export default {
         const currentPeer = rootGetters['network/currentPeer'].url
         const transactionHttp = RESTService.create('TransactionHttp', currentPeer)
 
-        // prepare nem2-sdk TransactionService
+        // prepare symbol-sdk TransactionService
         const response = await transactionHttp.announce(signedTransaction)
         commit('removeSignedTransaction', signedTransaction)
         return new BroadcastResult(signedTransaction, true)
@@ -1007,7 +1007,7 @@ export default {
         const currentPeer = rootGetters['network/currentPeer'].url
         const transactionHttp = RESTService.create('TransactionHttp', currentPeer)
 
-        // prepare nem2-sdk TransactionService
+        // prepare symbol-sdk TransactionService
         const response = await transactionHttp.announceAggregateBondedCosignature(cosignature)
         return new BroadcastResult(cosignature, true)
       }

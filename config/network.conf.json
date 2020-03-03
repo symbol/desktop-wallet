@@ -15,7 +15,7 @@
       "harvestMosaic": "symbol.xym",
       "networkType": 152,
       "nodes": [
-        {"friendly": "Dual US West 1", "roles": 3, "url": "http://test-api-xym-931-01.us-west-1.nemtech.network:3000"},
+        {"friendly": "Dual US West 1", "roles": 3, "url": "http://api-harvest-2-01.us-west-1.symboldev.network:3000"},
         {"friendly": "Dual US West 2", "roles": 3, "url": "http://api-harvest-01.us-west-1.symboldev.network:3000"},
         {"friendly": "Dual EU Central 1", "roles": 3, "url": "http://api-harvest-01.eu-central-1.symboldev.network:3000"},
         {"friendly": "Dual EU West 1", "roles": 3, "url": "http://api-harvest-01.eu-west-1.symboldev.network:3000"},
@@ -29,7 +29,7 @@
       "properties": {
         "mosaicRentalFeeSinkPublicKey": "4428A4DA56362C2293A277159F7C1E270FE7BD6CED461877494006C7D69F1172",
         "namespaceRentalFeeSinkPublicKey": "4428A4DA56362C2293A277159F7C1E270FE7BD6CED461877494006C7D69F1172",
-        "reservedRootNamespaceNames": ["xem", "nem", "user", "account", "org", "com", "biz", "net", "edu", "mil", "gov", "info", "symbol", "symbl", "xym"],
+        "reservedRootNamespaceNames": ["xem", "nem", "user", "account", "org", "com", "biz", "net", "efMosaicDefinitionTransaction du", "mil", "gov", "info", "symbol", "symbl", "xym"],
         "targetBlockTime": 15,
         "defaultDynamicFeeMultiplier": 1000,
         "mosaicRentalFee": 500,
