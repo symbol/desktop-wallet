@@ -28,8 +28,8 @@
   display: grid;
   width: 100%;
   grid-template-columns: 100%;
-  grid-template-rows: @headerHeight 4.6rem;
-  overflow: hidden;
+  grid-template-rows: @headerHeight auto;
+  overflow: auto;
   padding-top: 0.2rem;
 
   .transaction-table-columns {
@@ -40,7 +40,7 @@
     display: block;
     position: relative;
     overflow: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     width: 100%;
   }
 
@@ -50,6 +50,7 @@
     width: 100%;
     height: (@maxDisplayedRow) * (@rowHeight);
     position: relative;
+    overflow-y: auto;
   }
 
   .transaction-row-container:hover {
