@@ -61,7 +61,7 @@
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding: 0.05rem 0;
     cursor: pointer;
     border-bottom: 1px solid @line;
 
@@ -87,32 +87,30 @@
       width: 100%;
       height: 100%;
       grid-template-columns: 100%;
-      grid-template-rows: repeat(2, 38%);
-      padding-left: 0.1rem;
-      padding-top: 0.08rem;
+      grid-template-rows: repeat(2, 50%);
+      padding: 0.1rem 0 0.1rem 0.1rem;
       overflow: hidden;
     }
 
     .amount-cell {
       text-align: left;
-      padding: .13rem;
-      padding-left: 0.3rem;
+      padding: .2rem .13rem .2rem .3rem;
     }
 
     .confirmation-cell {
       font-size: @smallerFont;
       text-align: left;
-      padding: .13rem;
+      padding: .2rem .13rem;
     }
 
     .hash-cell {
       font-size: @smallerFont;
       text-align: left;
-      padding: 0.08rem 0.1rem 0 0.1rem;
+      padding: 0.1rem 0 0.1rem 0.1rem;
       overflow: hidden;
       display: grid;
       grid-template-columns: 100%;
-      grid-template-rows: repeat(2, 40%);
+      grid-template-rows: repeat(2, 50%);
 
       .hash-cell-transaction-hash {
         overflow: hidden;
