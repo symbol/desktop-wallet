@@ -61,7 +61,7 @@ export class TransactionListTs extends Vue {
   }) address: string
 
   @Prop({
-    default: 6,
+    default: 8,
   }) pageSize: number
 
   /**
@@ -183,7 +183,7 @@ export class TransactionListTs extends Vue {
   /// region computed properties getter/setter
   public get countPages(): number {
     if (!this.confirmedTransactions) return 0
-    return Math.ceil([...this.confirmedTransactions].length / 6)
+    return Math.ceil([...this.confirmedTransactions].length / 8)
   }
 
   public get totalCountItems(): number {
