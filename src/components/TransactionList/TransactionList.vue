@@ -12,7 +12,7 @@
             :label="$t('transactions_tab_confirmed')"
             :tab="'confirmed'"
             :name="'confirmed'"
-            :icon="'md-checkmark-circle-outline'"
+            :icon="''"
             class="transaction-tab-inner-container"
             @input="currentTab = 'confirmed'"
           >
@@ -26,7 +26,7 @@
             :label="$t('transactions_tab_unconfirmed')"
             :tab="'unconfirmed'"
             :name="'unconfirmed'"
-            :icon="'ios-remove-circle-outline'"
+            :icon="''"
             @input="currentTab = 'unconfirmed'"
           >
 
@@ -39,7 +39,7 @@
             :label="$t('transactions_tab_partial')"
             :tab="'partial'"
             :name="'partial'"
-            :icon="'ios-people-outline'"
+            :icon="''"
             @input="currentTab = 'partial'"
           >
 
@@ -52,7 +52,6 @@
       </div>
 
       <div class="transaction-list-pagination-container">
-        <!-- <span>{{ $t('total_transactions') }}：{{ totalCountItems }}</span> -->
         <Page
           :total="totalCountItems"
           class="page_content"
