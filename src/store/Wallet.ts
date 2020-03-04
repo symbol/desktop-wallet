@@ -31,6 +31,7 @@ import {
   MosaicInfo,
   CosignatureSignedTransaction,
   TransactionType,
+  UInt64,
 } from 'symbol-sdk'
 import {Subscription} from 'rxjs'
 
@@ -503,8 +504,16 @@ export default {
       if (!which) which = 'currentWalletMosaics'
       dispatch('SET_BALANCES', {which, mosaics: []})
     },
-    SET_BALANCES({commit}, {mosaics, which}) {
-      commit(which, mosaics.length ? mosaics : [])
+    SET_BALANCES({commit, rootGetters}, {mosaics, which}) {
+      // if no mosaics, set the mosaics to 0 networkCurrency for reactivity purposes
+      if (!mosaics.length) {
+        const networkMosaic = rootGetters['mosaic/networkMosaic']
+        const defaultMosaic = new Mosaic(networkMosaic, UInt64.fromUint(0))
+        commit(which, [defaultMosaic])
+        return
+      }
+
+      commit(which, mosaics)
     },
     RESET_SUBSCRIPTIONS({commit}) {
       commit('setSubscriptions', [])
