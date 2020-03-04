@@ -165,7 +165,8 @@ export class FormTransactionBase extends Vue {
 /// region property watches
   @Watch('currentWallet')
   onCurrentWalletChange() {
-    this.resetForm()
+    // Reset form validation
+    this.resetFormValidation()
   }
 /// end-region property watches
 
@@ -387,7 +388,15 @@ export class FormTransactionBase extends Vue {
       : 'success_transactions_announced'
     this.$store.dispatch('notification/ADD_SUCCESS', message)
 
-    // resets form validation
+    // Reset form validation
+    this.resetFormValidation()
+  }
+
+  /**
+   * Reset form validation
+   * @private
+   */
+  private resetFormValidation(): void {
     this.$nextTick(() => {
       this.$refs.observer.reset()
     })
