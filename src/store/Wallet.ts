@@ -836,10 +836,11 @@ export default {
         return false
       }
     },
-    async REST_FETCH_OWNED_MOSAICS({commit, dispatch, getters, rootGetters}, address) {
-      if (!address || address.length !== 40) {
-        return ;
-      }
+    async REST_FETCH_OWNED_MOSAICS(
+      {commit, dispatch, getters, rootGetters},
+      address,
+    ): Promise<MosaicInfo[]> {
+      if (!address || address.length !== 40) return
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_OWNED_MOSAICS dispatched with : ' + address, {root: true})
 
@@ -876,7 +877,7 @@ export default {
         }
 
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch owned mosaics: ' + e, {root: true})
-        return false
+        return null
       }
     },
     async REST_FETCH_OWNED_NAMESPACES({commit, dispatch, getters, rootGetters}, address): Promise<NamespaceInfo[]> {
@@ -930,9 +931,6 @@ export default {
       {commit, dispatch, rootGetters},
       {issuer, signedLock, signedPartial}
     ): Promise<BroadcastResult> {
-      console.log("issuer REST_ANNOUNCE_PARTIAL", issuer)
-      console.log("signedLock REST_ANNOUNCE_PARTIAL", signedLock)
-      console.log("signedPartial REST_ANNOUNCE_PARTIAL", signedPartial)
       
       if (!issuer || issuer.length !== 40) {
         return ;
@@ -958,17 +956,14 @@ export default {
         // - announce hash lock transaction and await confirmation
         transactionHttp.announce(signedLock)
 
-        console.log("SIGNED LOCK HASH", signedLock.hash)
         
         // - listen for hash lock confirmation
         return new Promise((resolve, reject) => {
           const address = Address.createFromRawAddress(issuer)
           return listener.confirmed(address).subscribe(
             async (success) => {
-              console.log("SUCCESS", success)
               // - hash lock confirmed, now announce partial
               const response = await transactionHttp.announceAggregateBonded(signedPartial)
-              console.log("response", response)
               commit('removeSignedTransaction', signedLock)
               commit('removeSignedTransaction', signedPartial)
               return resolve(new BroadcastResult(signedPartial, true))
