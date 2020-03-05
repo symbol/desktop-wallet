@@ -931,7 +931,7 @@ export default {
       {commit, dispatch, rootGetters},
       {issuer, signedLock, signedPartial}
     ): Promise<BroadcastResult> {
-      
+
       if (!issuer || issuer.length !== 40) {
         return ;
       }
@@ -956,7 +956,6 @@ export default {
         // - announce hash lock transaction and await confirmation
         transactionHttp.announce(signedLock)
 
-        
         // - listen for hash lock confirmation
         return new Promise((resolve, reject) => {
           const address = Address.createFromRawAddress(issuer)
