@@ -29,7 +29,7 @@
           </div>
 
           <!-- Add mosaic button -->
-          <div class="form-row align-right action-link">
+          <div v-if="mosaicInputsManager.hasFreeSlots()" class="form-row align-right action-link">
             <a @click="addMosaicAttachmentInput">{{ $t('add_mosaic') }}</a>
           </div>
 
