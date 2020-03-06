@@ -39,22 +39,22 @@ export class MosaicInputsManager {
   }
 
   /**
-   * Affects a mosaic hex to a slot
+   * Allocates a mosaic hex to a slot
    * @param {string} hexId
    * @param {number} index
    */
   public setSlot(hexId: string, index: number): void {
-    // get the entry
+    // get the slot
     const slot = this.mosaicMap[hexId]
 
-    // throw if an entry does not exist for the provided mosaic id
+    // throw if a slot does not exist for the provided mosaic id
     if (slot === undefined) {
       throw new Error(`${hexId} does not exist in ${JSON.stringify(this.mosaicMap)}`)
     }
 
-    // throw if the entry is already affected to another input
+    // throw if the slot is already allocated to another input
     if (slot !== null && slot !== index) {
-      throw new Error(`${hexId} is already affected to input ${slot}`)
+      throw new Error(`${hexId} is already allocated to input ${slot}`)
     }
 
     // unset the current slot allocation
@@ -72,7 +72,7 @@ export class MosaicInputsManager {
     // get the slot entry
     const entry = this.getEntryBySlot(index)
 
-    // ignore if the slot had no affected entry
+    // ignore if the slot had no allocated entry
     if (entry === undefined) return
 
     // unset the entry slot allocation
@@ -82,22 +82,21 @@ export class MosaicInputsManager {
 
   /**
    * Returns mosaics that can be used by a slot
-   *
    * @param {number} index
    * @returns {string[]}
    */
   public getMosaicsBySlot(index: number): string[] {
-    // get affected mosaic
-    const affectedEntry = this.getEntryBySlot(index)
+    // get allocated mosaic
+    const allocatedEntry = this.getEntryBySlot(index)
 
-    // get non-affected entries
-    const nonAffectedEntries = Object.entries(this.mosaicMap)
+    // get non-allocated entries
+    const nonAllocatedEntries = Object.entries(this.mosaicMap)
       .filter(([, slot]) => slot === null)
       .map(([hex]) => hex)
 
-    return affectedEntry
-      ? [affectedEntry[0], ...nonAffectedEntries]
-      : nonAffectedEntries
+    return allocatedEntry
+      ? [allocatedEntry[0], ...nonAllocatedEntries]
+      : nonAllocatedEntries
   }
 
   /**
