@@ -12,8 +12,12 @@
             <span class="address-balance">{{ $t('Balance') }}</span>
           </div>
           <div>
-            <div v-for="(a, index) in addressesList" :key="index" @click="selectedAccounts.push(index)">
-              <div v-if="!(index in selectedAccounts)" class="table-item pointer">
+            <div
+              v-for="(a, index) in addressesList"
+              :key="index"
+              @click="onAddAddress(index)"
+            >
+              <div v-if="!(selectedAccounts.includes(index))" class="table-item pointer">
                 <span class="address-id">{{ index + 1 }}</span>
                 <span class="address-value">{{ formatters.miniAddress(a) }}</span>
                 <span v-if="addressMosaicMap[a.plain()]" class="address-balance overflow_ellipsis">
@@ -46,8 +50,8 @@
           </div>
           <div class="radius">
             <div
-              v-for="(index, key) in selectedAccounts" :key="key" class="table-item pointer"
-              @click="selectedAccounts = selectedAccounts.splice(selectedAccounts.indexOf(index), 1)"
+              v-for="index in selectedAccounts" :key="index" class="table-item pointer"
+              @click="onRemoveAddress(index)"
             >
               <span class="address-id"> {{ index + 1 }} </span>
               <span class="address-value">{{ formatters.miniAddress(addressesList[index]) }}</span>
