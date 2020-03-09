@@ -41,6 +41,7 @@ import {RESTService} from '@/services/RESTService'
 import {AwaitLock} from './AwaitLock';
 import {BroadcastResult} from '@/core/transactions/BroadcastResult';
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import { RESTDispatcher } from '@/core/utils/RESTDispatcher';
 
 /**
  * Helper to format transaction group in name of state variable.
@@ -227,27 +228,32 @@ export default {
     currentWalletInfo: (state: WalletState): AccountInfo | null => {
       const plainAddress = state.currentWalletAddress ? state.currentWalletAddress.plain() : null
       if(!plainAddress) return null
-      return state.knownWalletsInfo[plainAddress] || null
+      if(!state.knownWalletsInfo.hasOwnProperty(plainAddress)) return null
+      return state.knownWalletsInfo[plainAddress]
     },
     currentWalletMosaics: (state: WalletState) => state.currentWalletMosaics,
     currentWalletOwnedMosaics: (state: WalletState) => state.currentWalletOwnedMosaics,
     currentWalletOwnedNamespaces: (state: WalletState) => state.currentWalletOwnedNamespaces,
     currentWalletMultisigInfo: (state: WalletState) => {
-      if (!state.currentWalletAddress) return null
-      return state.knownMultisigsInfo[state.currentWalletAddress.plain()]
+      const plainAddress = state.currentWalletAddress ? state.currentWalletAddress.plain() : null
+      if(!plainAddress) return null
+      if(!state.knownMultisigsInfo.hasOwnProperty(plainAddress)) return null
+      return state.knownMultisigsInfo[plainAddress]
     },
     isCosignatoryMode: (state: WalletState) => state.isCosignatoryMode,
     currentSignerAddress: (state: WalletState) => state.currentSignerAddress,
     currentSignerInfo: (state: WalletState): AccountInfo | null => {
       const plainAddress = state.currentSignerAddress ? state.currentSignerAddress.plain() : null
       if(!plainAddress) return null
-      return state.knownWalletsInfo[plainAddress] || null
+      if(!state.knownWalletsInfo.hasOwnProperty(plainAddress)) return null
+      return state.knownWalletsInfo[plainAddress]
     },
     currentSignerMultisigInfo: (state: WalletState) => {
       const plainAddress = state.currentSignerAddress ? state.currentSignerAddress.plain() : null
       if(!plainAddress) return null
-      return state.knownMultisigsInfo[plainAddress] || null
-    } ,
+      if(!state.knownMultisigsInfo.hasOwnProperty(plainAddress)) return null
+      return state.knownMultisigsInfo[plainAddress]
+    },
     currentSignerMosaics: (state: WalletState) => state.currentSignerMosaics,
     currentSignerOwnedMosaics: (state: WalletState) => state.currentSignerOwnedMosaics,
     currentSignerOwnedNamespaces: (state: WalletState) => state.currentSignerOwnedNamespaces,
@@ -311,6 +317,7 @@ export default {
     addKnownMultisigInfo: (state, multisigInfo: MultisigAccountInfo) => {
       Vue.set(state.knownMultisigsInfo, multisigInfo.account.address.plain(), multisigInfo)
     },
+    setKnownMultisigInfo: (state, payload) => Vue.set(state, 'knownMultisigsInfo', payload),
     transactionHashes: (state, hashes) => Vue.set(state, 'transactionHashes', hashes),
     confirmedTransactions: (state, transactions) => Vue.set(state, 'confirmedTransactions', transactions),
     unconfirmedTransactions: (state, transactions) => Vue.set(state, 'unconfirmedTransactions', transactions),
@@ -405,6 +412,7 @@ export default {
         // close websocket connections
         await dispatch('UNSUBSCRIBE', address)
         await dispatch('RESET_BALANCES', which)
+        await dispatch('RESET_MULTISIG')
         await dispatch('RESET_TRANSACTIONS')
         commit('setInitialized', false)
       }
@@ -412,25 +420,31 @@ export default {
     },
 /// region scoped actions
     async REST_FETCH_WALLET_DETAILS({dispatch}, {address, options}) {
-      try { await dispatch('REST_FETCH_INFO', address) } catch (e) {}
+      const dispatcher = new RESTDispatcher(dispatch)
 
+      // - blocking first action
+      dispatcher.add('REST_FETCH_INFO', address, null, true)
+
+      // - other actions are all optional and can be disabled
       if (!options || !options.skipMultisig) {
-        try { dispatch('REST_FETCH_MULTISIG', address) } catch (e) {}
+        dispatcher.add('REST_FETCH_MULTISIG', address)
       }
 
       if (!options || !options.skipTransactions) {
-        try { await dispatch('REST_FETCH_TRANSACTIONS', {
+        dispatcher.add('REST_FETCH_TRANSACTIONS', {
           group: 'confirmed',
           pageSize: 100,
           address: address,
-        }) } catch(e) {}
+        })
       }
 
-      // must be non-blocking
       if (!options || !options.skipOwnedAssets) {
-        try { dispatch('REST_FETCH_OWNED_MOSAICS', address) } catch (e) {}
-        try { dispatch('REST_FETCH_OWNED_NAMESPACES', address) } catch (e) {}
+        dispatcher.add('REST_FETCH_OWNED_MOSAICS', address)
+        dispatcher.add('REST_FETCH_OWNED_NAMESPACES', address)
       }
+
+      // - delays of 1000ms will be added every second request
+      dispatcher.throttle_dispatch()
     },
     /**
      * Possible `options` values include: 
@@ -448,6 +462,9 @@ export default {
       // set current wallet
       commit('currentWallet', model)
       commit('currentWalletAddress', address)
+
+      // reset current wallet mosaics 
+      commit('currentWalletMosaics', [])
 
       // reset current signer
       dispatch('SET_CURRENT_SIGNER', {model, options: {skipDetails: true}})
@@ -523,6 +540,9 @@ export default {
       commit('unconfirmedTransactions', [])
       commit('partialTransactions', [])
     },
+    RESET_MULTISIG({commit}) {
+      commit('setKnownMultisigInfo', {})
+    },
     ADD_COSIGNATURE({commit, dispatch, getters}, cosignatureMessage) {
       if (!cosignatureMessage || !cosignatureMessage.parentHash) {
         throw Error('Missing mandatory field \'parentHash\' for action wallet/ADD_COSIGNATURE.')
@@ -573,6 +593,7 @@ export default {
       return commit('transactionHashes', hashes)
     },
     REMOVE_TRANSACTION({commit, getters}, transactionMessage) {
+
       if (!transactionMessage || !transactionMessage.group) {
         throw Error('Missing mandatory field \'group\' for action wallet/removeTransaction.')
       }
@@ -588,17 +609,22 @@ export default {
       const transactionHash = transactionMessage.transaction
 
       // find transaction in storage
-      const findHashIt = hashes.find(hash => hash === transactionHash)
-      const findIterator = transactions.find(tx => tx.transactionInfo.hash === transactionHash)
+      const findIterator = transactions.findIndex(tx => tx.transactionInfo.hash === transactionHash)
       if (findIterator === undefined) {
         return ; // not found, do nothing
       }
 
-      // remove transaction
-      delete transactions[findIterator]
-      delete hashes[findHashIt]
-      commit(transactionGroup, transactions)
-      return commit('transactionHashes', hashes)
+      // commit empty array
+      if (transactions.length === 1) {
+        return commit(transactionGroup, [])
+      }
+
+      // skip `idx`
+      const remaining = transactions.splice(0, findIterator).concat(
+        transactions.splice(findIterator+1, transactions.length - findIterator - 1)
+      )
+
+      commit(transactionGroup, Array.from(remaining))
     },
     ADD_STAGED_TRANSACTION({commit}, stagedTransaction: Transaction) {
       commit('addStagedTransaction', stagedTransaction)
@@ -777,9 +803,13 @@ export default {
         // fetch account info from REST gateway
         const accountHttp = RESTService.create('AccountHttp', currentPeer)
         const accountsInfo = await accountHttp.getAccountsInfo(addresses).toPromise()
-        
+
         // add accounts to the store
         accountsInfo.forEach(info => commit('addKnownWalletsInfo', info))
+
+        // if no current wallet address is available, skip and return accountsInfo
+        // (used in account import process)
+        if (!getters.currentWalletAddress) return accountsInfo
 
         // set current wallet info
         const currentWalletInfo = accountsInfo.find(
@@ -836,10 +866,11 @@ export default {
         return false
       }
     },
-    async REST_FETCH_OWNED_MOSAICS({commit, dispatch, getters, rootGetters}, address) {
-      if (!address || address.length !== 40) {
-        return ;
-      }
+    async REST_FETCH_OWNED_MOSAICS(
+      {commit, dispatch, getters, rootGetters},
+      address,
+    ): Promise<MosaicInfo[]> {
+      if (!address || address.length !== 40) return
 
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_OWNED_MOSAICS dispatched with : ' + address, {root: true})
 
@@ -876,7 +907,7 @@ export default {
         }
 
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch owned mosaics: ' + e, {root: true})
-        return false
+        return null
       }
     },
     async REST_FETCH_OWNED_NAMESPACES({commit, dispatch, getters, rootGetters}, address): Promise<NamespaceInfo[]> {
@@ -930,10 +961,7 @@ export default {
       {commit, dispatch, rootGetters},
       {issuer, signedLock, signedPartial}
     ): Promise<BroadcastResult> {
-      console.log("issuer REST_ANNOUNCE_PARTIAL", issuer)
-      console.log("signedLock REST_ANNOUNCE_PARTIAL", signedLock)
-      console.log("signedPartial REST_ANNOUNCE_PARTIAL", signedPartial)
-      
+
       if (!issuer || issuer.length !== 40) {
         return ;
       }
@@ -958,17 +986,13 @@ export default {
         // - announce hash lock transaction and await confirmation
         transactionHttp.announce(signedLock)
 
-        console.log("SIGNED LOCK HASH", signedLock.hash)
-        
         // - listen for hash lock confirmation
         return new Promise((resolve, reject) => {
           const address = Address.createFromRawAddress(issuer)
           return listener.confirmed(address).subscribe(
             async (success) => {
-              console.log("SUCCESS", success)
               // - hash lock confirmed, now announce partial
               const response = await transactionHttp.announceAggregateBonded(signedPartial)
-              console.log("response", response)
               commit('removeSignedTransaction', signedLock)
               commit('removeSignedTransaction', signedPartial)
               return resolve(new BroadcastResult(signedPartial, true))
