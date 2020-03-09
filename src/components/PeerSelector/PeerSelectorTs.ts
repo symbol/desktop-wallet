@@ -195,14 +195,14 @@ export class PeerSelectorTs extends Vue {
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$store.dispatch('diagnostic/ADD_DEBUG', 'PeerSelector added peer: '+ nodeUrl)
 
-      // reset the form
+      // reset the form input
       this.formItems.nodeUrl = ''
-      this.$nextTick(() => {
-        this.$refs.observer.reset()
-      })
 
-      // scroll to the bottom of the node list container
       Vue.nextTick().then(() =>{
+        // reset the form validation
+        this.$refs.observer.reset()
+
+        // scroll to the bottom of the node list
         const container = this.$el.querySelector('#node-list-container')
         container.scrollTop = container.scrollHeight
       })
