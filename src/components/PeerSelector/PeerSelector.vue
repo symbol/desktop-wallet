@@ -13,13 +13,14 @@
               v-for="(nodeUrl, index) in peersList"
               :key="`sep${index}`"
               class="point_item pointer"
-              @click="switchPeer(nodeUrl)"
+              @click="currentPeer.url !== nodeUrl ? switchPeer(nodeUrl) : ''"
             >
               <img
                 :src="currentPeer.url === nodeUrl ? imageResources.selected : imageResources.unselected"
               >
               <span class="node_url">{{ nodeUrl }}</span>
               <img
+                v-if="currentPeer.url !== nodeUrl"
                 class="remove_icon"
                 src="@/views/resources/img/service/multisig/multisigDelete.png"
                 @click.stop="removePeer(nodeUrl)"

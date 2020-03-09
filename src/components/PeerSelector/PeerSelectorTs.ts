@@ -216,9 +216,6 @@ export class PeerSelectorTs extends Vue {
       return
     }
 
-    // don't allow deleting the active node
-    // @TODO
-
     // get full node URL
     const nodeUrl = service.getNodeUrl(url)
 
