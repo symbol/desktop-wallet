@@ -39,6 +39,7 @@ const getNetworkTypeText = (networkType: NetworkType) => {
 }
 
 // child components
+import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 
@@ -53,7 +54,7 @@ import {dashboardImages} from '@/views/resources/Images'
     generationHash: 'network/generationHash',
     knownPeers: 'network/knownPeers',
   })},
-  components: {ErrorTooltip},
+  components: {ValidationObserver, ValidationProvider, ErrorTooltip},
 })
 export class PeerSelectorTs extends Vue {
   /**
@@ -85,7 +86,7 @@ export class PeerSelectorTs extends Vue {
   public generationHash: string
 
   /**
-   * Knwown peers
+   * Known peers
    * @see {Store.Network}
    * @var {string[]}
    */
@@ -141,7 +142,6 @@ export class PeerSelectorTs extends Vue {
    * @return {void}
    */
   public async addPeer() {
-    // @TODO: scroll to bottom when adding peer
     const service = new PeerService(this.$store)
     const repository = new PeersRepository()
 
@@ -189,6 +189,12 @@ export class PeerSelectorTs extends Vue {
       this.formItems.nodeUrl = ''
       // @VVV
       // this.$validator.reset()
+
+      // scroll to the bottom of the node list container
+      Vue.nextTick().then(() =>{
+        const container = this.$el.querySelector('#node-list-container')
+        container.scrollTop = container.scrollHeight
+      })
     }
     catch(e) {
       this.$store.dispatch('diagnostic/ADD_ERROR', 'PeerSelector unreachable host with URL: '+ nodeUrl)

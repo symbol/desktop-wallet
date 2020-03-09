@@ -1177,5 +1177,6 @@
   "notification_new_unconfirmed_transaction": "New unconfirmed transaction",
   "notification_new_aggregate_bonded": "A new aggregate partial transaction has been announced",
   "notification_new_cosignature": "An aggregate transaction has been co-signed",
-  "info_connecting_peer": "Connecting to the node {peerUrl}..."
+  "info_connecting_peer": "Connecting to the node {peerUrl} ...",
+  "error_incorrect_url": "This is not a valid URL"
 }

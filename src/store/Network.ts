@@ -29,6 +29,7 @@ const Lock = AwaitLock.create();
 // configuration
 import networkConfig from '../../config/network.conf.json';
 import { PeersRepository } from '@/repositories/PeersRepository';
+import {UrlValidator} from '@/core/validation/validators';
 
 /// region internal helpers
 /**
@@ -267,7 +268,7 @@ export default {
       dispatch('SUBSCRIBE')
     },
     async SET_CURRENT_PEER({ dispatch, rootGetters }, currentPeerUrl) {
-      if (!URLHelpers.isValidURL(currentPeerUrl)) {
+      if (!UrlValidator.validate(currentPeerUrl)) {
         throw Error('Cannot change node. URL is not valid: ' + currentPeerUrl)
       }
 
@@ -318,7 +319,7 @@ export default {
       }
     },
     ADD_KNOWN_PEER({commit}, peerUrl) {
-      if (!URLHelpers.isValidURL(peerUrl)) {
+      if (!UrlValidator.validate(peerUrl)) {
         throw Error('Cannot add node. URL is not valid: ' + peerUrl)
       }
 
