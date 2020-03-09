@@ -159,6 +159,15 @@ export class PeerSelectorTs extends Vue {
     const nodeUrl = service.getNodeUrl(this.formItems.nodeUrl)
     const node = URLHelpers.formatUrl(nodeUrl)
 
+    // return if node already exists in the database
+    if (service
+      .getEndpoints()
+      .map(model => model.values.get('rest_url'))
+      .findIndex(url => url === nodeUrl) > -1) {
+      this.$store.dispatch('notification/ADD_ERROR', NotificationType.NODE_EXISTS_ERROR)
+      return
+    }
+
     // show loading overlay
     this.$store.dispatch('app/SET_LOADING_OVERLAY', {
       show: true,
