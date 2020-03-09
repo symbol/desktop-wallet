@@ -28,10 +28,6 @@
   .ivu-tabs-bar {
     border: 0;
     margin-bottom: 0.2rem;
-    .ivu-tabs-nav{
-      padding-left: 0.3rem;
-      font-size: 0.24rem;
-    }
   }
 
   .ivu-tabs-content {
@@ -91,7 +87,7 @@
     display: grid;
     height: 100%;
     width: 100%;
-    overflow: auto;
+    overflow: hidden;
     grid-template-rows: auto 0.5rem;
     grid-template-columns: 100%;
 
@@ -107,8 +103,7 @@
       text-align: right;
       width: 100%;
       display: block;
-      overflow: auto;
-      padding-right: 0.5rem;
+      overflow: hidden;
 
       .ivu-page-item {
         width: 31px;
@@ -141,13 +136,7 @@
       .page_content {
         display: inline-block;
         vertical-align: middle;
-        .ivu-page-prev,.ivu-page-next{
-          border:none;
-        }
-      }
-
-      .ivu-page-item-active {
-        border: 0.01rem solid @primary;
+        padding-right: 0.45rem;
       }
     }
   }

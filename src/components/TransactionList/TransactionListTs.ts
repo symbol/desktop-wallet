@@ -15,7 +15,7 @@
  */
 import {mapGetters} from 'vuex'
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {Transaction, MosaicId, AggregateTransaction} from 'nem2-sdk'
+import {Transaction, MosaicId, AggregateTransaction} from 'symbol-sdk'
 import {of, Observable} from 'rxjs'
 import {pluck, concatMap} from 'rxjs/operators'
 
@@ -61,7 +61,7 @@ export class TransactionListTs extends Vue {
   }) address: string
 
   @Prop({
-    default: 8,
+    default: 10,
   }) pageSize: number
 
   /**
@@ -183,7 +183,7 @@ export class TransactionListTs extends Vue {
   /// region computed properties getter/setter
   public get countPages(): number {
     if (!this.confirmedTransactions) return 0
-    return Math.ceil([...this.confirmedTransactions].length / 8)
+    return Math.ceil([...this.confirmedTransactions].length / 10)
   }
 
   public get totalCountItems(): number {

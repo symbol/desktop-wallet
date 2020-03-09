@@ -52,6 +52,7 @@
       </div>
 
       <div class="transaction-list-pagination-container">
+        <!-- <span>{{ $t('total_transactions') }}：{{ totalCountItems }}</span> -->
         <Page
           :total="totalCountItems"
           class="page_content"
