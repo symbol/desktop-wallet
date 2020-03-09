@@ -118,6 +118,16 @@ export class PeerSelectorTs extends Vue {
    */
   public imageResources = dashboardImages
 
+ /**
+  * Type the ValidationObserver refs 
+  * @type {{
+  *     observer: InstanceType<typeof ValidationObserver>
+  *   }}
+  */
+  public $refs!: {
+    observer: InstanceType<typeof ValidationObserver>
+  }
+
 /// region computed properties getter/setter
   get peersList(): string[] {
     return this.knownPeers
@@ -185,10 +195,11 @@ export class PeerSelectorTs extends Vue {
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$store.dispatch('diagnostic/ADD_DEBUG', 'PeerSelector added peer: '+ nodeUrl)
 
-      // reset
+      // reset the form
       this.formItems.nodeUrl = ''
-      // @VVV
-      // this.$validator.reset()
+      this.$nextTick(() => {
+        this.$refs.observer.reset()
+      })
 
       // scroll to the bottom of the node list container
       Vue.nextTick().then(() =>{
