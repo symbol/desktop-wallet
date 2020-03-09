@@ -133,11 +133,7 @@ export class PeerSelectorTs extends Vue {
    * @param peer 
    */
   public switchPeer(url: string) {
-    const peer = URLHelpers.formatUrl(url)
     this.$store.dispatch('network/SET_CURRENT_PEER', url)
-
-    // update inner state
-    //this.currentPeer = this.peers.read(peer.hostname)
   }
 
   /**
@@ -145,8 +141,7 @@ export class PeerSelectorTs extends Vue {
    * @return {void}
    */
   public async addPeer() {
-    // @VVV
-
+    // @TODO: scroll to bottom when adding peer
     const service = new PeerService(this.$store)
     const repository = new PeersRepository()
 
@@ -154,7 +149,11 @@ export class PeerSelectorTs extends Vue {
     const nodeUrl = service.getNodeUrl(this.formItems.nodeUrl)
     const node = URLHelpers.formatUrl(nodeUrl)
 
-    // - XXX set loading
+    // show loading overlay
+    this.$store.dispatch('app/SET_LOADING_OVERLAY', {
+      show: true,
+      message: `${this.$t('info_connecting_peer', {peerUrl: node.url})}`,
+    })
 
     // read network type from node pre-saving
     try {
@@ -164,7 +163,8 @@ export class PeerSelectorTs extends Vue {
         peerInfo,
       } = await this.$store.dispatch('network/REST_FETCH_PEER_INFO', nodeUrl)
 
-      // - XXX remove loading
+      // hide loading overlay
+      this.$store.dispatch('app/SET_LOADING_OVERLAY', {show: false})
 
       // prepare model
       const peer = new PeersModel(new Map<string, any>([
