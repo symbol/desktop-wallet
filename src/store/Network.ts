@@ -30,6 +30,7 @@ const Lock = AwaitLock.create();
 import networkConfig from '../../config/network.conf.json';
 import { PeersRepository } from '@/repositories/PeersRepository';
 import {UrlValidator} from '@/core/validation/validators';
+import {PeerService} from '@/services/PeerService';
 
 /// region internal helpers
 /**
@@ -306,6 +307,9 @@ export default {
 
         // - re-open listeners
         dispatch('wallet/initialize', {address: currentWallet.values.get('address')}, {root: true})
+        
+        // - set chosen endpoint as the new default in the database
+        new PeerService().setDefaultNode(currentPeerUrl)
       } catch (e) {
         dispatch(
           'notification/ADD_ERROR',
