@@ -77,4 +77,22 @@ export class PeerService extends AbstractService {
     const url = URLHelpers.formatUrl(fixedUrl)
     return url.protocol + '//' + url.hostname + (url.port ? ':' + url.port : ':3000')
   }
+
+  public deleteEndpoint(url: string): void {
+    // get full node url
+    const fullUrl = this.getNodeUrl(url)
+
+    // find node model in database
+    const endpoint = this.getEndpoints().find(
+      model => model.values.get('rest_url') === fullUrl,
+    )
+
+    // throw if node is not found in the database
+    if (endpoint === undefined) {
+      throw new Error('This url was not found in the peer repository: ' + url)
+    }
+
+    // delete the node from the database
+    new PeersRepository().delete(endpoint.getIdentifier())
+  }
 }

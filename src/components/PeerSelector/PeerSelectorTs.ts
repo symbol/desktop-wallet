@@ -207,15 +207,27 @@ export class PeerSelectorTs extends Vue {
    * @return {void}
    */
   public removePeer(url: string) {
-
-    //XXX currently not removing from storage
-
+    // get peer service
     const service = new PeerService(this.$store)
+
+    // don't allow deleting all the nodes
+    if (service.getEndpoints().length === 1) {
+      this.$store.dispatch('notification/ADD_ERROR', NotificationType.ERROR_DELETE_ALL_PEERS)
+      return
+    }
+
+    // don't allow deleting the active node
+    // @TODO
+
+    // get full node URL
     const nodeUrl = service.getNodeUrl(url)
 
-    // removes only from vuex store
+    // remove the mode from the vuex store
     this.$store.dispatch('network/REMOVE_KNOWN_PEER', nodeUrl)
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+
+    // remove the node from the storage
+    service.deleteEndpoint(url)
   }
 
   /**

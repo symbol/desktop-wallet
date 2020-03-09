@@ -955,6 +955,8 @@
   "error_peer_unreachable": "This node is unreachable.",
   "error_unknown": "An unknown error happened. Please, try again later.",
   "error_peer_connection_went_wrong": "Something went wrong when connecting to the node {peerUrl} timed out",
+  "error_incorrect_url": "This is not a valid URL",
+  "error_delete_all_peers": "You can not delete all the nodes",
   "success_account_unlocked": "Account unlocked successfully",
   "success_password_changed": "Your password was updated successfully. You will now be logged out.",
   "success_settings_updated": "Your settings have been updated successfully.",
@@ -1177,6 +1179,5 @@
   "notification_new_unconfirmed_transaction": "New unconfirmed transaction",
   "notification_new_aggregate_bonded": "A new aggregate partial transaction has been announced",
   "notification_new_cosignature": "An aggregate transaction has been co-signed",
-  "info_connecting_peer": "Connecting to the node {peerUrl} ...",
-  "error_incorrect_url": "This is not a valid URL"
+  "info_connecting_peer": "Connecting to the node {peerUrl} ..."
 }
