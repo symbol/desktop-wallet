@@ -208,6 +208,8 @@ export class PeerSelectorTs extends Vue {
       })
     }
     catch(e) {
+      // hide loading overlay
+      this.$store.dispatch('app/SET_LOADING_OVERLAY', {show: false})
       this.$store.dispatch('diagnostic/ADD_ERROR', 'PeerSelector unreachable host with URL: '+ nodeUrl)
       this.$store.dispatch('notification/ADD_ERROR', NotificationType.ERROR_PEER_UNREACHABLE)
     }
