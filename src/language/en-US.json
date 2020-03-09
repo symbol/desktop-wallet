@@ -60,7 +60,7 @@
   "date": "Date",
   "block_height": "Height",
   "block_time": "Block Time",
-  "point": "Node",
+  "endpoint": "Node",
   "number_of_transactions": "Transactions",
   "transfer_type": "Type",
   "payment": "Payment",

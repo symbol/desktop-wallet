@@ -37,8 +37,8 @@
               <ValidationProvider
                 v-slot="{ errors }"
                 mode="lazy"
-                vid="explorerUrl"
-                :name="$t('Explorer_Url')"
+                vid="endpoint"
+                :name="$t('endpoint')"
                 :rules="validationRules.url"
                 tag="div"
                 class="inputs-container select-container"
@@ -46,8 +46,8 @@
                 <ErrorTooltip :errors="errors">
                   <input
                     v-model="formItems.nodeUrl"
-                    :data-vv-as="$t('node')"
-                    data-vv-name="friendlyNodeUrl"
+                    :data-vv-as="$t('endpoint')"
+                    data-vv-name="endpoint"
                     :placeholder="$t('please_enter_a_custom_nod_address')"
                     style="height: 100%"
                   >
