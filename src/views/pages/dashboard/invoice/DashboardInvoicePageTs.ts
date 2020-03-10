@@ -260,7 +260,6 @@ export class DashboardInvoicePageTs extends Vue {
 
     // - read TransferTransaction instance
     const transfer = this.transactions.shift() as TransferTransaction
-    console.log('invoice transfer: ', transfer)
 
     try {
       return QRCodeGenerator.createTransactionRequest(

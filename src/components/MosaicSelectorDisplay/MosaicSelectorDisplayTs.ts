@@ -24,9 +24,9 @@ import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 // child components
 import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
-import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
-import FormLabel from '@/components//FormLabel/FormLabel.vue'
+import FormLabel from '@/components/FormLabel/FormLabel.vue'
 
 @Component({
   components: {
