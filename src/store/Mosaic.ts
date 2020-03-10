@@ -152,6 +152,9 @@ export default {
         // - populate known mosaics
         commit('addMosaicInfo', model.objects.mosaicInfo)
 
+        // - set hidden state
+        if (model.values.get('isHidden')) commit('hideMosaic', new MosaicId(model.getIdentifier))
+
         // - populate known mosaic names
         const name = model.values.get('name')
         if (name !== '') commit('addMosaicName', { hex: model.getIdentifier(), name })
@@ -203,9 +206,11 @@ export default {
       })
     },
     HIDE_MOSAIC({commit}, mosaicId) {
+      new MosaicService().toggleHiddenState(mosaicId, true)
       commit('hideMosaic', mosaicId)
     },
     SHOW_MOSAIC({commit}, mosaicId) {
+      new MosaicService().toggleHiddenState(mosaicId, false)
       commit('showMosaic', mosaicId)
     },
     GET_CURRENCY_MOSAIC_FROM_NEMESIS({commit, dispatch}, transactions) {
