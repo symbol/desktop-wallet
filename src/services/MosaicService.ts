@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {MosaicId, AccountInfo, NamespaceId, Mosaic, MosaicInfo} from 'symbol-sdk'
+import {MosaicId, AccountInfo, NamespaceId, Mosaic, MosaicInfo, UInt64} from 'symbol-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
@@ -198,10 +198,10 @@ export class MosaicService extends AbstractService {
           [ 'hexId', mosaicId.toHex() ],
           [ 'name', name ],
           [ 'flags', mosaicInfo.flags.toDTO().flags ],
-          [ 'startHeight', mosaicInfo.height ],
-          [ 'duration', mosaicInfo.duration.compact() ],
+          [ 'startHeight', mosaicInfo.height.toHex() ],
+          [ 'duration', mosaicInfo.duration.toHex() ],
           [ 'divisibility', mosaicInfo.divisibility ],
-          [ 'supply', mosaicInfo.supply ],
+          [ 'supply', mosaicInfo.supply.toHex() ],
           [ 'ownerPublicKey', mosaicInfo.owner.publicKey ],
           [ 'generationHash', generationHash ],
           [ 'isCurrencyMosaic', mosaicId.equals(networkMosaic) ],
@@ -255,10 +255,10 @@ export class MosaicService extends AbstractService {
         [ 'hexId', mosaicId.toHex() ],
         [ 'name', mosaicNames && mosaicNames.length ? mosaicNames.shift().name : '' ],
         [ 'flags', mosaicInfo.flags.toDTO().flags ],
-        [ 'startHeight', mosaicInfo.height ],
-        [ 'duration', mosaicInfo.duration.compact() ],
+        [ 'startHeight', mosaicInfo.height.toHex() ],
+        [ 'duration', mosaicInfo.duration.toHex() ],
         [ 'divisibility', mosaicInfo.divisibility ],
-        [ 'supply', mosaicInfo.supply ],
+        [ 'supply', mosaicInfo.supply.toHex() ],
         [ 'ownerPublicKey', mosaicInfo.owner.publicKey ],
         [ 'generationHash', generationHash ],
         [ 'isCurrencyMosaic', isCurrencyMosaic ],
@@ -281,10 +281,10 @@ export class MosaicService extends AbstractService {
         [ 'hexId', mosaicId.toHex() ],
         [ 'name', mosaicId.toHex() ],
         [ 'flags', null ],
-        [ 'startHeight', 0 ],
-        [ 'duration', 0 ],
+        [ 'startHeight', UInt64.fromUint(0).toHex() ],
+        [ 'duration', UInt64.fromUint(0).toHex() ],
         [ 'divisibility', 0 ],
-        [ 'supply', 0 ],
+        [ 'supply', UInt64.fromUint(0).toHex() ],
         [ 'ownerPublicKey', '' ],
         [ 'generationHash', generationHash ],
         [ 'isCurrencyMosaic', isCurrencyMosaic ],

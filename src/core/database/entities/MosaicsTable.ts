@@ -34,7 +34,7 @@ export class MosaicsTable extends DatabaseTable {
       'generationHash',
       'isCurrencyMosaic',
       'isHarvestMosaic',
-    ], 4) // version=4
+    ], 5) // version=5
   }
 
   /**
@@ -58,6 +58,7 @@ export class MosaicsTable extends DatabaseTable {
       {version: 2, callback: MosaicsMigrations.version2_addGenHash},
       {version: 3, callback: MosaicsMigrations.version3_newSymbol},
       {version: 4, callback: MosaicsMigrations.version4_flagsAsNumber},
+      {version: 5, callback: MosaicsMigrations.version5_uint_as_hex},
     ]
   }
 }
