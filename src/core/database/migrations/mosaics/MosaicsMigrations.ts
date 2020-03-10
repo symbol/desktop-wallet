@@ -121,4 +121,23 @@ export class MosaicsMigrations {
 
     return migrated
   }
+
+  /**
+   * Version 6 migration
+   * @description add isHidden field
+   * @param {Map<string, MosaicsModel>} rows
+   * @returns {Map<string, MosaicsModel>}
+   */
+  public static version6_isHidden(
+    rows: Map<string, MosaicsModel>,
+  ): Map<string, MosaicsModel> {
+    const entities = Array.from(rows.values())
+    const migrated = new Map<string, MosaicsModel>()
+    entities.forEach((outOfDate: MosaicsModel) => {
+      outOfDate.values.set('isHidden', false)
+      migrated.set(outOfDate.getIdentifier(), outOfDate)
+    })
+
+    return migrated
+  }
 }

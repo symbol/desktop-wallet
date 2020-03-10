@@ -187,17 +187,23 @@ export class MosaicService extends AbstractService {
 
       // Create and store models
       mosaicIds.forEach(mosaicId => {
+        const hexId = mosaicId.toHex()
+
         // get mosaic info
         const mosaicInfo = mosaicsInfo.find(({id}) => id.equals(mosaicId))
         if (mosaicsInfo === undefined) return
 
         // get mosaic name
-        const nameEntry = mosaicNames.find(({hex}) => hex === mosaicId.toHex())
+        const nameEntry = mosaicNames.find(({hex}) => hex === hexId)
         const name = nameEntry ? nameEntry.name : ''
+
+        
+        // - find eventual existing model
+        const existingModel = repository.find(hexId) ? repository.read(hexId) : null
 
         // create model
         const model = repository.createModel(new Map<string, any>([
-          [ 'hexId', mosaicId.toHex() ],
+          [ 'hexId', hexId ],
           [ 'name', name ],
           [ 'flags', mosaicInfo.flags.toDTO().flags ],
           [ 'startHeight', mosaicInfo.height.toHex() ],
@@ -208,10 +214,11 @@ export class MosaicService extends AbstractService {
           [ 'generationHash', generationHash ],
           [ 'isCurrencyMosaic', mosaicId.equals(networkMosaic) ],
           [ 'isHarvestMosaic', false ], // @TODO: not managed
+          [ 'isHidden', existingModel ? existingModel.values.get('isHidden') : false ],
         ]))
         
         // - update model if found
-        if (repository.find(mosaicId.toHex())) {
+        if (existingModel) {
           repository.update(mosaicId.toHex(), model.values)
           return
         }
@@ -243,6 +250,8 @@ export class MosaicService extends AbstractService {
     const generationHash = this.$store.getters['network/generationHash']
 
     try {
+      const hexId = mosaicId.toHex()
+
       // - fetch INFO from REST
       const mosaicInfo = await this.$store.dispatch('mosaic/REST_FETCH_INFO', mosaicId)
 
@@ -252,9 +261,12 @@ export class MosaicService extends AbstractService {
       // - use repository for storage
       const repository = new MosaicsRepository()
 
-      // - CREATE
+      // - find eventual existing model
+      const existingModel = repository.find(hexId) ? repository.read(hexId) : null
+      
+      // - CREATE model
       const mosaic = repository.createModel(new Map<string, any>([
-        [ 'hexId', mosaicId.toHex() ],
+        [ 'hexId', hexId ],
         [ 'name', mosaicNames && mosaicNames.length ? mosaicNames.shift().name : '' ],
         [ 'flags', mosaicInfo.flags.toDTO().flags ],
         [ 'startHeight', mosaicInfo.height.toHex() ],
@@ -265,10 +277,11 @@ export class MosaicService extends AbstractService {
         [ 'generationHash', generationHash ],
         [ 'isCurrencyMosaic', isCurrencyMosaic ],
         [ 'isHarvestMosaic', isHarvestMosaic ],
+        [ 'isHidden', existingModel ? existingModel.values.get('isHidden') : false ],
       ]))
 
       // - update the model if it exists in the repository
-      if (repository.find(mosaicId.toHex())) {
+      if (existingModel) {
         repository.update(mosaicId.toHex(), mosaic.values)
       } else {
         // - create a new entry in the repository
@@ -291,6 +304,7 @@ export class MosaicService extends AbstractService {
         [ 'generationHash', generationHash ],
         [ 'isCurrencyMosaic', isCurrencyMosaic ],
         [ 'isHarvestMosaic', isHarvestMosaic ],
+        [ 'isHidden', false ],
       ]))
     }
   }
@@ -399,5 +413,33 @@ export class MosaicService extends AbstractService {
 
     // number of blocks remaining
     return expiresIn.toLocaleString()
+  }
+
+  /**
+   * Set the hidden state of a mosaic
+   * If no param is provided, the hidden state will be toggled
+   * @param {(MosaicId | NamespaceId)} mosaicId
+   * @param {boolean} [hide] Should the mosaic be hidden?
+   */
+  public toggleHiddenState(mosaicId: MosaicId | NamespaceId, hide?: boolean): void {
+    const hexId = mosaicId.toHex()
+
+    // get repository
+    const repository = new MosaicsRepository()
+    
+    // return if the mosaic is not found in the database
+    if (!repository.find(hexId)) return
+
+    // get model
+    const model = repository.read(hexId)
+
+    // get next visibility state
+    const nextVisibilityState = hide === undefined ? !model.values.get('isHidden') : hide
+    
+    // update visibility state
+    model.values.set('isHidden', nextVisibilityState)
+
+    // persist change
+    repository.update(hexId, model.values)
   }
 }
