@@ -211,19 +211,19 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     const mosaicService = new MosaicService(this.$store)
 
     // filter out expired mosaics
-    const currentMosaicList = defaultedMosaicList.map(mosaic => {
+    const currentMosaicList = defaultedMosaicList.filter(mosaic => {
       // get mosaic info
       const mosaicInfo = this.mosaicsInfoByHex[mosaic.id.toHex()]
       // skip if mosaic info is not available
-      if (!mosaicInfo) return null
+      if (!mosaicInfo) return false
 
       // calculate expiration
       const expiration = mosaicService.getExpiration(mosaicInfo)
       // skip if mosaic is expired
-      if (expiration === 'expired') return null
+      if (expiration === 'expired') return false
 
-      return mosaic
-    }).filter(x => x) // filter out null values
+      return true
+    })
 
     // add eventual new mosaics in the mosaic inputs manager
     if (this.mosaicInputsManager) this.mosaicInputsManager.addMosaics(currentMosaicList)
