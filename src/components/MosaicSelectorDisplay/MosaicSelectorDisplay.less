@@ -1,0 +1,58 @@
+
+  // .asset {
+  //   .title {
+  //     position: relative;
+  //     bottom: 15px;
+  //   }
+
+  //   .type {
+  //     width: 190px;
+  //     display: inline-block;
+  //   }
+
+  //   .amount {
+  //     width: 300px;
+  //     display: inline-block;
+  //     margin-left: 20px;
+
+  //   }
+  // }
+@import '../../views/resources/css/variables.less';
+
+.mosaic-selector-display-wrapper {
+  width: 2.1rem;
+
+  .ivu-tooltip {
+    height: 100%;
+    width: 100%;
+
+    .ivu-tooltip-rel {
+
+      .select-style {
+        border: 0px;
+        padding-left: 0.07rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .ivu-select-selection {
+          padding-top: 0;
+
+          .ivu-select-placeholder,
+          .ivu-select-selected-value {
+            padding-left: 0;
+            font-size: @normalFont;
+          }
+
+          .ivu-select-selected-value {
+            font-size: @normalFont!important;
+          }
+
+          .ivu-select-arrow {
+            top: 50%;
+          }
+        }
+      }
+    }
+  }
+}

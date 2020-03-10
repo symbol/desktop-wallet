@@ -19,6 +19,7 @@ import VueRx from 'vue-rx'
 import moment from 'vue-moment'
 import iView from 'view-design'
 import locale from 'view-design/dist/locale/en-US'
+import VueClipboard from 'vue-clipboard2'
 import 'view-design/dist/styles/iview.css'
 
 // internal dependencies
@@ -37,6 +38,7 @@ Vue.use(moment as any)
 Vue.use(Router)
 Vue.use(VueRx)
 Vue.use(VueNumber)
+Vue.use(VueClipboard)
 VeeValidateSetup.initialize()
 /// end-region UI plugins
 

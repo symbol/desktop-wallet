@@ -1,0 +1,52 @@
+@import '../../views/resources/css/variables.less';
+
+.editable-span-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size: @normalFont;
+
+  .input-box {
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 1.5rem;
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none!important;
+    }
+
+    input {
+      padding-top: 0;
+      font-size: @normalFont;
+      padding-bottom: 0;
+    }
+
+    .ivu-input {
+      height: auto;
+    }
+  }
+
+  .display-box {
+    padding: 0 0.07rem;
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 1.5rem;
+
+    span {
+      line-height: 1.5;
+    }
+  }
+
+  .icon-box {
+    font-size: @smallFont;
+    margin-left: 0.1rem;
+
+    .ivu-icon:hover {
+      cursor: pointer;
+      color: @grayDark;
+    }
+  }
+}

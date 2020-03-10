@@ -352,7 +352,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         const div = info ? info.divisibility : 0
         // amount will be converted to RELATIVE
         return {
-          id: mosaic.id as MosaicId, //XXX resolve mosaicId from namespaceId
+          id: mosaic.id as MosaicId, // XXX resolve mosaicId from namespaceId
           mosaicHex: mosaic.id.toHex(), // XXX resolve mosaicId from namespaceId
           name: this.getMosaicName(mosaic.id),
           amount: mosaic.amount.compact() / Math.pow(10, div),

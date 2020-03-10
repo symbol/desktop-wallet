@@ -1183,5 +1183,7 @@
   "info_connecting_peer": "Connecting to the node {peerUrl} ...",
   "no_data_transactions": "No transactions were found for this account",
   "no_data_namespaces": "No namespaces were found for this account",
-  "no_data_mosaics": "No mosaics were found for this account"
+  "no_data_mosaics": "No mosaics were found for this account",
+  "reset": "Reset",
+  "download": "Download"
 }

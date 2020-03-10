@@ -16,18 +16,42 @@
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {pluck, concatMap} from 'rxjs/operators'
+import {pluck, concatMap, debounceTime, map, mergeMap} from 'rxjs/operators'
 import {of, Observable} from 'rxjs'
 import {QRCodeGenerator, TransactionQR} from 'symbol-qr-library'
-import {NetworkType, TransferTransaction, Address, MosaicId, Transaction} from 'symbol-sdk'
+import {
+  NetworkType,
+  TransferTransaction,
+  Address,
+  MosaicId,
+  Transaction,
+  Mosaic,
+  MosaicInfo,
+  NamespaceId,
+  MultisigAccountInfo,
+  PublicAccount,
+  Deadline,
+  UInt64,
+  PlainMessage,
+} from 'symbol-sdk'
+import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletService} from '@/services/WalletService'
 
 // child components
 // @ts-ignore
 import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue'
+// @ts-ignore
+import QRMessageInput from '@/components/QRMessageInput/QRMessageInput.vue'
+// @ts-ignore
+import MosaicSelectorDisplay from '@/components/MosaicSelectorDisplay/MosaicSelectorDisplay.vue'
+// @ts-ignore
+import EditableSpan from '@/components/EditableSpan/EditableSpan.vue'
+// @ts-ignore
+import SignerSelectorDisplay from '@/components/SignerSelectorDisplay/SignerSelectorDisplay.vue'
 
 // resources
 // @ts-ignore
-import failureIcon from '@/views/resources/img/monitor/failure.png'
+import failureIcon from '@/views/resources/img/monitor/qr_failure.png'
 
 // @TODO: to move out
 /**
@@ -58,27 +82,74 @@ export interface BalanceEntry {
   amount: number
 }
 
+type MosaicAttachmentType = {id: MosaicId, mosaicHex: string, name: string, amount: number}
+
+
 @Component({
   components: {
     FormTransferTransaction,
+    QRMessageInput,
+    MosaicSelectorDisplay,
+    EditableSpan,
+    SignerSelectorDisplay,
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',
     generationHash: 'network/generationHash',
     currentWalletAddress: 'wallet/currentWalletAddress',
+    mosaicsNames: 'mosaic/mosaicsNames',
+    namespacesNames: 'namespace/namespacesNames',
+    currentWalletMosaics: 'wallet/currentWalletMosaics',
+    currentWallet: 'wallet/currentWallet',
+
   })},
   subscriptions() {
-    const qrCode$ = this
+    const result$ = this
       .$watchAsObservable('transactionQR', {immediate: true})
-      .pipe(pluck('newValue'),
+      .pipe(
+        debounceTime(500), // throttle. Only the last one thing in a 500ms will be called
+        pluck('newValue'),
         concatMap((args) => {
-          if (args instanceof TransactionQR) return args.toBase64()
-          return of(failureIcon)
-        }))
-    return {qrCode$}
+          if (args instanceof TransactionQR) {     
+            return of({
+              img: args.toBase64(),
+              message: JSON.stringify(args),
+            })
+          } else {
+            return of({
+              img: of(failureIcon),
+              message: '',
+            })
+          }
+        }),
+      )
+
+    const qrCode$ = result$.pipe(
+      pluck('img'),
+      mergeMap(item => {
+        return item
+      }),
+    )
+    const copyMessage$ = result$.pipe(
+      pluck('message'),
+    )
+
+    return {qrCode$, copyMessage$}
   },
 })
 export class DashboardInvoicePageTs extends Vue {
+  /**
+   * Failure icon
+   */
+  public failureIcon: string = failureIcon
+
+
+  /**
+   * message for copying
+   * @type {Observable<string>}
+   */
+  public copyMessage$: Observable<string>
+
   /**
    * Network type
    * @see {Store.Network}
@@ -110,8 +181,61 @@ export class DashboardInvoicePageTs extends Vue {
    * @type {BalanceEntry[]}
    */
   public balanceEntries: BalanceEntry[] = []
+  
+  /**
+   * form items
+   * @var {any}
+   */
+  public formItems = {
+    signerPublicKey: '',
+    mosaicHex: '',
+    message: '',
+    amount: 0,
+  }
 
-/// region computed properties getter/setter
+  /**
+   * List of known mosaics
+   * @var {MosaicInfo[]}
+   */
+  public mosaicsInfo: MosaicInfo[]
+
+  /**
+   * List of known mosaics names
+   * @var {any}
+   */
+  public mosaicsNames: any
+
+  /**
+   * List of known namespaces names
+   * @var {any}
+   */
+  public namespacesNames: any
+
+  /**
+   * Currently active wallet's balances
+   * @var {Mosaic[]}
+   */
+  public currentWalletMosaics: Mosaic[]
+
+  /**
+   * Currently active wallet
+   * @var {WalletsModel}
+   */
+  public currentWallet: WalletsModel
+
+  /**
+   * Current wallet multisig info
+   * @type {MultisigAccountInfo}
+   */
+  public currentWalletMultisigInfo: MultisigAccountInfo
+
+  /**
+   * Public key of the current signer
+   * @var {any}
+   */
+  public currentSigner: PublicAccount
+
+  /// region computed properties getter/setter
   /**
    * Recipient to be shown in the view
    * @readonly
@@ -136,7 +260,7 @@ export class DashboardInvoicePageTs extends Vue {
 
     // - read TransferTransaction instance
     const transfer = this.transactions.shift() as TransferTransaction
-    console.log("invoice transfer: ", transfer)
+    console.log('invoice transfer: ', transfer)
 
     try {
       return QRCodeGenerator.createTransactionRequest(
@@ -150,7 +274,29 @@ export class DashboardInvoicePageTs extends Vue {
       return null
     }
   }
-/// end-region computed properties getter/setter
+
+  /**
+   * Get a list of known signers given a `currentWallet`
+   * @return {{publicKey: string, label:string}[]}
+   */
+  get signers(): {publicKey: string, label: string}[] {
+    return this.getSigners()
+  }
+
+  /**
+   * Get current selected mosaic
+   */
+  get selectedMosaic(): string {
+    return this.formItems.mosaicHex
+  }
+
+  /**
+   * Set new selected mosaic
+   */
+  set selectedMosaic(hex: string) {
+    this.formItems.mosaicHex = hex
+  }
+  /// end-region computed properties getter/setter
 
   /**
    * Hook called when the child component FormInvoiceCreation
@@ -181,5 +327,167 @@ export class DashboardInvoicePageTs extends Vue {
 
     // - start download
     a.dispatchEvent(event)
+  }  
+
+  /**
+   * Hook called when a signer is selected.
+   * @param {string} signerPublicKey 
+   */
+  public async onChangeSigner(signerPublicKey: string) {
+    this.currentSigner = PublicAccount.createFromPublicKey(signerPublicKey, this.networkType)
+
+    const isCosig = this.currentWallet.values.get('publicKey') !== signerPublicKey
+    const payload = !isCosig ? this.currentWallet : {
+      networkType: this.networkType,
+      publicKey: signerPublicKey,
+    }
+
+    await this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: payload})
+    this.generateQRCode()
   }
+
+  /**
+   * Reset invoice form data. Clear all transaction list
+   */
+  public reset() {
+    this.formItems.signerPublicKey = ''
+    this.formItems.message = ''
+    this.formItems.amount = 0
+    this.transactions = []
+  }
+
+  /**
+   * change amount value
+   * @param {number} value - new amount value
+   */
+  public changeAmount(value: string) {
+    this.formItems.amount = Number(value)
+    this.generateQRCode()
+  }
+
+  /**
+   * change mosaic choose
+   * @param {string} hex - new chosen mosaic hex
+   */
+  public changeMosaic(hex: string) {
+    this.formItems.mosaicHex = hex
+    this.generateQRCode()
+  }
+
+  /**
+   * change message content
+   * @param {string} msg - new message value
+   */
+  public changeMessage(msg: string) {
+    this.formItems.message = msg
+    this.generateQRCode()
+  }
+
+  /**
+   * generate QR code
+   */
+  public generateQRCode() {
+    const transfer = TransferTransaction.create(
+      Deadline.create(),
+      Address.createFromRawAddress(this.currentWallet.values.get('address')),
+      [new Mosaic(new MosaicId(this.formItems.mosaicHex), UInt64.fromUint(this.formItems.amount))],
+      PlainMessage.create(this.formItems.message),
+      this.networkType,
+    )
+    this.transactions.push(transfer)
+  }
+
+  /**
+   * finish copying event handler
+   */
+  public onCopy() {
+    this.$Message.success('内容已复制到剪切板！')
+  }
+
+  /**
+   * copy error event handler
+   */
+  public onError() {
+    this.$Message.error('复制失败')
+  }
+
+  /// region of protected methods
+  /**
+   * Internal helper to format a {Mosaic} entry into
+   * an array of MosaicAttachmentType used in this form.
+   * @internal
+   * @param {Mosaic[]} mosaics 
+   * @return {MosaicAttachmentType[]}
+   */
+  protected mosaicsToAttachments(mosaics: Mosaic[]): MosaicAttachmentType[] {
+    return mosaics.map(
+      mosaic => {
+        const info = this.mosaicsInfo.find(i => i.id.equals(mosaic.id))
+        const div = info ? info.divisibility : 0
+        // amount will be converted to RELATIVE
+        return {
+          id: mosaic.id as MosaicId, // XXX resolve mosaicId from namespaceId
+          mosaicHex: mosaic.id.toHex(), // XXX resolve mosaicId from namespaceId
+          name: this.getMosaicName(mosaic.id),
+          amount: mosaic.amount.compact() / Math.pow(10, div),
+        }
+      })
+  }
+
+  /**
+   * internal helper for mosaic names
+   * @param {Mosaic} mosaic 
+   * @return {string}
+   */
+  protected getMosaicName(mosaicId: MosaicId | NamespaceId): string {
+    if (this.mosaicsNames.hasOwnProperty(mosaicId.toHex())) {
+      return this.mosaicsNames[mosaicId.toHex()]
+    }
+    else if (this.namespacesNames.hasOwnProperty(mosaicId.toHex())) {
+      return this.namespacesNames[mosaicId.toHex()]
+    }
+
+    return mosaicId.toHex()
+  }
+
+  /**
+   * Get a list of known signers given a `currentWallet`
+   * @return {{publicKey: string, label:string}[]}
+   */
+  protected getSigners(): {publicKey: string, label: string}[] {
+    if (!this.currentWallet) return []
+
+    const self = [
+      {
+        publicKey: this.currentWallet.values.get('publicKey'),
+        label: this.currentWallet.values.get('name'),
+      },
+    ]
+
+    const multisigInfo = this.currentWalletMultisigInfo
+    // if it is a single wallet, set the public key as the signer public key directly
+    if (!multisigInfo) {
+      this.formItems.signerPublicKey = self[0].publicKey
+      this.currentSigner = PublicAccount.createFromPublicKey(self[0].publicKey, this.networkType)
+      return self
+    }
+
+    // in case "self" is a multi-signature account
+    if (multisigInfo && multisigInfo.isMultisig()) {
+      self[0].label = self[0].label + this.$t('label_postfix_multisig')
+    }
+
+    // add multisig accounts of which "self" is a cosignatory
+    if (multisigInfo) {
+      const service = new WalletService(this.$store)
+      return self.concat(...multisigInfo.multisigAccounts.map(
+        ({publicKey}) => ({
+          publicKey,
+          label: service.getWalletLabel(publicKey, this.networkType) + this.$t('label_postfix_multisig'),
+        })))
+    }
+
+    return self
+  }
+  /// end-region of protected methods
 }
