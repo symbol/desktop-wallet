@@ -169,8 +169,7 @@ export class MosaicBalanceListTs extends Vue {
    * @return {boolean}
    */
   public isMosaicHidden(mosaicId: MosaicId | NamespaceId): boolean {
-    const test = this.hiddenMosaics.indexOf(mosaicId.toHex()) > -1
-    return test
+    return this.hiddenMosaics.indexOf(mosaicId.toHex()) > -1
   }
 
   /**
@@ -189,9 +188,7 @@ export class MosaicBalanceListTs extends Vue {
     // - clicked singular checkbox
     if (mosaicId !== undefined) {
       const isHidden = this.isMosaicHidden(mosaicId)
-      console.log("MosaicBalanceListTs -> toggleMosaicDisplay -> isHidden", isHidden)
       const action = isHidden ? 'SHOW_MOSAIC' : 'HIDE_MOSAIC'
-      console.log("MosaicBalanceListTs -> toggleMosaicDisplay -> action", action)
       return this.$store.dispatch('mosaic/' + action, mosaicId)
     }
 
