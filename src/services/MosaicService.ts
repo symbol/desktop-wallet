@@ -22,6 +22,8 @@ import {MosaicsRepository} from '@/repositories/MosaicsRepository'
 import {MosaicsModel} from '@/core/database/entities/MosaicsModel'
 import {NamespaceService} from './NamespaceService'
 
+// custom types
+export type ExpirationStatus = 'unlimited' | 'expired' | string
 
 export interface AttachedMosaic {
   id: MosaicId | NamespaceId
@@ -373,5 +375,29 @@ export class MosaicService extends AbstractService {
           amount: mosaic.amount.compact() / Math.pow(10, divisibility),
         })
       })
+  }
+
+  /**
+   * Returns a view of a mosaic expiration info
+   * @private
+   * @param {MosaicsInfo} mosaic
+   * @returns {ExpirationStatus}
+   */
+  public getExpiration(mosaicInfo: MosaicInfo): ExpirationStatus {
+    const duration = mosaicInfo.duration.compact()
+    const startHeight = mosaicInfo.height.compact()
+
+    // unlimited duration mosaics are flagged as duration == 0
+    if (duration === 0) return 'unlimited'
+
+    // get current height
+    const currentHeight = this.$store.getters['network/currentHeight'] || 0
+
+    // calculate expiration
+    const expiresIn = startHeight + duration - currentHeight
+    if (expiresIn <= 0) return 'expired'
+
+    // number of blocks remaining
+    return expiresIn.toLocaleString()
   }
 }
