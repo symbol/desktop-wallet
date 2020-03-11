@@ -35,14 +35,6 @@ import {AddressValidator} from '@/core/validation/validators'
 import {MosaicInputsManager} from './MosaicInputsManager'
 import {MosaicService} from '@/services/MosaicService'
 
-interface MosaicAttachment {
-  mosaicHex: string
-  /**
-   * Relative amount
-   */
-  amount: number
-}
-
 // child components
 import {ValidationObserver} from 'vee-validate'
 // @ts-ignore
@@ -65,6 +57,14 @@ import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
+
+interface MosaicAttachment {
+  mosaicHex: string
+  /**
+   * Relative amount
+   */
+  amount: number
+}
 
 type MosaicAttachmentType = {
   id: MosaicId,
@@ -243,9 +243,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         recipient: this.instantiatedRecipient,
         mosaics: this.formItems.attachedMosaics
           .filter(({uid}) => uid) // filter out null values
-          .map((spec: {
-            mosaicHex: string, amount: number,
-          }): {mosaicHex: string, amount: number} => ({
+          .map((spec: MosaicAttachment): MosaicAttachment => ({
             mosaicHex: spec.mosaicHex,
             amount: spec.amount // amount is relative
           })),
@@ -341,6 +339,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     const indexToUpdate = newAttachedMosaics.findIndex(({uid}) => uid == inputIndex)
     newAttachedMosaics[indexToUpdate] = mosaicAttachment
     Vue.set(this.formItems, 'attachedMosaics', newAttachedMosaics)
+    this.triggerChange()
   }
 
   /**
@@ -355,6 +354,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     // update formItems, set input uid to null
     const indexToUpdate = this.formItems.attachedMosaics.findIndex(({uid}) => uid == index)
     Vue.set(this.formItems.attachedMosaics, indexToUpdate, {uid: null})
+    this.triggerChange()
   }
 
   /**
@@ -394,6 +394,33 @@ export class FormTransferTransactionTs extends FormTransactionBase {
       amount: 0,
       uid,
     })
+  }
+
+  /**
+   * Handler when changing message
+   */
+  onChangeMessage() {
+    this.triggerChange()
+  }
+
+  /**
+   * Handler when changing recipient
+   */
+  onChangeRecipient() {
+    this.triggerChange()
+  }
+
+  /**
+   * Handler when changing max fee
+   */
+  onChangeMaxFee() {
+    if (this.formItems.recipientRaw && this.formItems.recipientRaw !== '') {
+      this.triggerChange()
+    }
+  }
+
+  triggerChange() {
+    this.$emit('onTransactionsChange', this.getTransactions())
   }
 
   /**
