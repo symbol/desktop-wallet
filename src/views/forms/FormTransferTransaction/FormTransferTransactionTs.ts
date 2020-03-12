@@ -34,14 +34,7 @@ import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {AddressValidator} from '@/core/validation/validators'
 import {MosaicInputsManager} from './MosaicInputsManager'
 import {MosaicService} from '@/services/MosaicService'
-
-interface MosaicAttachment {
-  mosaicHex: string
-  /**
-   * Relative amount
-   */
-  amount: number
-}
+import {ITransaction} from '@/views/pages/dashboard/invoice/DashboardInvoicePageTs'
 
 // child components
 import {ValidationObserver} from 'vee-validate'
@@ -66,12 +59,20 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
 
-type MosaicAttachmentType = {
-  id: MosaicId,
-  mosaicHex: string,
-  name: string,
-  amount: number,
-  uid: number,
+interface MosaicAttachment {
+  mosaicHex: string
+  /**
+   * Relative amount
+   */
+  amount: number
+}
+
+export interface MosaicAttachmentType {
+  id: MosaicId
+  mosaicHex: string
+  name: string
+  amount: number
+  uid: number
 }
 
 @Component({
@@ -243,9 +244,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         recipient: this.instantiatedRecipient,
         mosaics: this.formItems.attachedMosaics
           .filter(({uid}) => uid) // filter out null values
-          .map((spec: {
-            mosaicHex: string, amount: number,
-          }): {mosaicHex: string, amount: number} => ({
+          .map((spec: MosaicAttachment): MosaicAttachment => ({
             mosaicHex: spec.mosaicHex,
             amount: spec.amount // amount is relative
           })),
@@ -341,6 +340,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     const indexToUpdate = newAttachedMosaics.findIndex(({uid}) => uid == inputIndex)
     newAttachedMosaics[indexToUpdate] = mosaicAttachment
     Vue.set(this.formItems, 'attachedMosaics', newAttachedMosaics)
+    this.triggerChange()
   }
 
   /**
@@ -355,6 +355,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     // update formItems, set input uid to null
     const indexToUpdate = this.formItems.attachedMosaics.findIndex(({uid}) => uid == index)
     Vue.set(this.formItems.attachedMosaics, indexToUpdate, {uid: null})
+    this.triggerChange()
   }
 
   /**
@@ -394,6 +395,44 @@ export class FormTransferTransactionTs extends FormTransactionBase {
       amount: 0,
       uid,
     })
+  }
+
+  /**
+   * Handler when changing message
+   */
+  onChangeMessage() {
+    this.triggerChange()
+  }
+
+  /**
+   * Handler when changing recipient
+   */
+  onChangeRecipient() {
+    this.triggerChange()
+  }
+
+  /**
+   * Handler when changing max fee
+   */
+  onChangeMaxFee() {
+    if (this.formItems.recipientRaw && this.formItems.recipientRaw !== '') {
+      this.triggerChange()
+    }
+  }
+
+  triggerChange() {
+    if (this.formItems.recipientRaw && this.formItems.recipientRaw !== '') {
+      const transactions = this.getTransactions()
+      const data: ITransaction[] = []
+      transactions.map((item: TransferTransaction) => {
+        data.push({
+          transaction: item,
+          mosaicAttachment: this.mosaicsToAttachments(item.mosaics),
+        })
+      })
+
+      this.$emit('onTransactionsChange', data)
+    }
   }
 
   /**
