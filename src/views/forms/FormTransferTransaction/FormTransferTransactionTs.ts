@@ -34,6 +34,7 @@ import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {AddressValidator} from '@/core/validation/validators'
 import {MosaicInputsManager} from './MosaicInputsManager'
 import {MosaicService} from '@/services/MosaicService'
+import {ITransaction} from '@/views/pages/dashboard/invoice/DashboardInvoicePageTs'
 
 // child components
 import {ValidationObserver} from 'vee-validate'
@@ -66,12 +67,12 @@ interface MosaicAttachment {
   amount: number
 }
 
-type MosaicAttachmentType = {
-  id: MosaicId,
-  mosaicHex: string,
-  name: string,
-  amount: number,
-  uid: number,
+export interface MosaicAttachmentType {
+  id: MosaicId
+  mosaicHex: string
+  name: string
+  amount: number
+  uid: number
 }
 
 @Component({
@@ -420,7 +421,18 @@ export class FormTransferTransactionTs extends FormTransactionBase {
   }
 
   triggerChange() {
-    this.$emit('onTransactionsChange', this.getTransactions())
+    if (this.formItems.recipientRaw && this.formItems.recipientRaw !== '') {
+      const transactions = this.getTransactions()
+      const data: ITransaction[] = []
+      transactions.map((item: TransferTransaction) => {
+        data.push({
+          transaction: item,
+          mosaicAttachment: this.mosaicsToAttachments(item.mosaics),
+        })
+      })
+
+      this.$emit('onTransactionsChange', data)
+    }
   }
 
   /**
