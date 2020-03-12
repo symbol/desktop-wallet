@@ -352,7 +352,7 @@ export const routes: AppRoute[] = [
           protected: true,
           clickable: true,
           title: 'sidebar_item_community',
-          icon: officialIcons.newspaper,
+          icon: officialIcons.news,
         },
         // @ts-ignore
         component: () => import('@/views/pages/community/Community.vue'),

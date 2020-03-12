@@ -159,7 +159,7 @@ import nem2Cli from '@/views/resources/img/icons/nem2-cli.png'
 // @ts-ignore
 import nem2Sdk from '@/views/resources/img/icons/nem2-sdk.png'
 // @ts-ignore
-import newspaper from '@/views/resources/img/icons/newspaper.png'
+import news from '@/views/resources/img/icons/news.png'
 // @ts-ignore
 import nodeReputation from '@/views/resources/img/icons/node-reputation.png'
 // @ts-ignore
@@ -299,7 +299,7 @@ export const officialIcons = {
   namespace,
   nem2Cli,
   nem2Sdk,
-  newspaper,
+  news,
   nodeReputation,
   nodes,
   notMultisig,
