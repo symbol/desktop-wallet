@@ -317,7 +317,7 @@ export const routes: AppRoute[] = [
           protected: true,
           clickable: true,
           title: 'sidebar_item_multisig',
-          icon: officialIcons.multipleParties,
+          icon: officialIcons.multisig,
         },
         redirect: '/multisigManagement',
         // @ts-ignore
@@ -352,7 +352,7 @@ export const routes: AppRoute[] = [
           protected: true,
           clickable: true,
           title: 'sidebar_item_community',
-          icon: officialIcons.news,
+          icon: officialIcons.newspaper,
         },
         // @ts-ignore
         component: () => import('@/views/pages/community/Community.vue'),
@@ -374,7 +374,7 @@ export const routes: AppRoute[] = [
           protected: true,
           clickable: true,
           title: 'sidebar_item_settings',
-          icon: officialIcons.apiNode,
+          icon: officialIcons.settings,
         },
         // @ts-ignore
         component: () => import('@/views/pages/settings/Settings.vue'),

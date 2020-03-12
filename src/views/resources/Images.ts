@@ -159,7 +159,7 @@ import nem2Cli from '@/views/resources/img/icons/nem2-cli.png'
 // @ts-ignore
 import nem2Sdk from '@/views/resources/img/icons/nem2-sdk.png'
 // @ts-ignore
-import news from '@/views/resources/img/icons/news.png'
+import newspaper from '@/views/resources/img/icons/newspaper.png'
 // @ts-ignore
 import nodeReputation from '@/views/resources/img/icons/node-reputation.png'
 // @ts-ignore
@@ -188,6 +188,8 @@ import receive from '@/views/resources/img/icons/receive.png'
 import send from '@/views/resources/img/icons/send.png'
 // @ts-ignore
 import sent from '@/views/resources/img/icons/sent.png'
+// @ts-ignore
+import settings from '@/views/resources/img/icons/settings.png'
 // @ts-ignore
 import signatureRequired from '@/views/resources/img/icons/signature-required.png'
 // @ts-ignore
@@ -297,7 +299,7 @@ export const officialIcons = {
   namespace,
   nem2Cli,
   nem2Sdk,
-  news,
+  newspaper,
   nodeReputation,
   nodes,
   notMultisig,
@@ -312,6 +314,7 @@ export const officialIcons = {
   receive,
   send,
   sent,
+  settings,
   signatureRequired,
   signCosign,
   spamThrottle,
