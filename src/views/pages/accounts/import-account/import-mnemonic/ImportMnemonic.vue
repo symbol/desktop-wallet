@@ -5,15 +5,13 @@
     </p>
     <div class="create-mnemonic-col">
       <div class="create-mnemonic-left">
-       <!--  <MnemonicInput ref="mnemonicInput"></MnemonicInput> -->
         <MnemonicInput @handle-words='setSeed'></MnemonicInput>
-      <!--   <textarea v-model="formItems.seed" class="show-mnemonic" /> -->
         <div class="button-container">
           <div class="flex-container mt-3">
             <button type="button" class="button-style back-button" @click="deleteAccountAndBack">
               {{ $t('Return_password_setting') }}
             </button>
-            <button type="submit" class="button-style validation-button"  @click="processVerification" :disabled="isAllow">
+            <button type="submit" class="button-style validation-button"  @click="processVerification" :disabled="!(wordsArray.length==12||wordsArray.length==24)">
               {{ $t('Import_mnemonic') }}
             </button>
           </div>

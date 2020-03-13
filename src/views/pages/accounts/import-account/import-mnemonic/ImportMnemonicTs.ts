@@ -23,7 +23,8 @@ import { AccountsRepository } from '@/repositories/AccountsRepository'
 import { NotificationType } from '@/core/utils/NotificationType'
 import { Password } from 'symbol-sdk'
 import { AESEncryptionService } from '@/services/AESEncryptionService'
-import MnemonicInput from "@/components/MnemonicInput/MnemonicInput.vue"
+//@ts-ignore
+import MnemonicInput from '@/components/MnemonicInput/MnemonicInput.vue'
 
 
 @Component({
@@ -63,7 +64,11 @@ export default class ImportMnemonicTs extends Vue {
   public formItems = {
     seed: ''
   }
-  public wordsArray=[]
+  /**
+   * @description: Receive the Input words
+   * @type: Array<string> 
+   */
+  public wordsArray:Array<string>=[]
   /**
    * Hook called when the component is mounted
    * @return {void}
@@ -84,13 +89,14 @@ export default class ImportMnemonicTs extends Vue {
     // - back to previous page
     this.$router.push({ name: 'accounts.importAccount.info' })
   }
-  public isAllow:boolean=true;
+ /**
+   * @description: receive input words and control the ui
+   * @return: void
+   */
   public setSeed(wordsArray){
+    this.wordsArray=wordsArray
     if(wordsArray.length>0){
       this.formItems.seed=wordsArray.join(" ");
-      this.isAllow=false
-    }else{
-      this.isAllow=true
     }
   }
   /**
