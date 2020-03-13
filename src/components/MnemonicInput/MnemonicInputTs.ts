@@ -26,21 +26,31 @@ export class MnemonicInputTs extends Vue {
    */
   @Watch('inputWord')
   watchFormItems(newVal, oldVal) {
-    //control the keyboard input rules
-    this.inputWord = newVal.replace(/[^a-zA-Z]/g, '')
-    //determine if the input is editing status
-    if (!this.isEditing && !!this.inputWord) {
-      this.isEditing = true
+    //when the ad
+    if (this.wordsArray.length >= 24) {
+      this.inputWord = '';
+      this.initInput();
+    } else {
+      //control the keyboard input rules
+      this.inputWord = newVal.replace(/[^a-zA-Z]/g, '')
+      //determine if the input is editing status
+      if (!this.isEditing && !!this.inputWord) {
+        this.isEditing = true
+      }
     }
+
   }
   /**
    * @description: add word to the wordsArray
    */
   addWord() {
     if (this.inputWord.length >= 2 && this.inputWord.length <= 50) {
-      this.handleWordsArray(this.inputWord);
-      this.inputWord = '';
-      this.initInput();
+      if (this.wordsArray.length < 24) {
+        this.handleWordsArray(this.inputWord);
+        this.inputWord = '';
+        this.initInput();
+      }
+
     }
   }
 
