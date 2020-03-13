@@ -13,21 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Vue, Component} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {MnemonicPassPhrase} from 'symbol-hd-wallets'
+import { Vue, Component, Watch } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 
 // internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {AccountsRepository} from '@/repositories/AccountsRepository'
-import {NotificationType} from '@/core/utils/NotificationType'
-import {Password} from 'symbol-sdk'
-import {AESEncryptionService} from '@/services/AESEncryptionService'
+import { AccountsModel } from '@/core/database/entities/AccountsModel'
+import { AccountsRepository } from '@/repositories/AccountsRepository'
+import { NotificationType } from '@/core/utils/NotificationType'
+import { Password } from 'symbol-sdk'
+import { AESEncryptionService } from '@/services/AESEncryptionService'
+import MnemonicInput from "@/components/MnemonicInput/MnemonicInput.vue"
 
-@Component({computed: {...mapGetters({
-  currentAccount: 'account/currentAccount',
-  currentPassword: 'temporary/password',
-})}})
+
+@Component({
+  components:{MnemonicInput},
+  computed: {
+    ...mapGetters({
+      currentAccount: 'account/currentAccount',
+      currentPassword: 'temporary/password',
+    })
+  }
+})
 export default class ImportMnemonicTs extends Vue {
   /**
    * Currently active account
@@ -56,7 +63,7 @@ export default class ImportMnemonicTs extends Vue {
   public formItems = {
     seed: ''
   }
-
+  public wordsArray=[]
   /**
    * Hook called when the component is mounted
    * @return {void}
@@ -75,22 +82,30 @@ export default class ImportMnemonicTs extends Vue {
     this.accounts.delete(identifier)
 
     // - back to previous page
-    this.$router.push({name: 'accounts.importAccount.info'})
+    this.$router.push({ name: 'accounts.importAccount.info' })
   }
-
+  public isAllow:boolean=true;
+  public setSeed(wordsArray){
+    if(wordsArray.length>0){
+      this.formItems.seed=wordsArray.join(" ");
+      this.isAllow=false
+    }else{
+      this.isAllow=true
+    }
+  }
   /**
    * Process to mnemonic pass phrase verification
    * @return {void}
    */
   public processVerification() {
-    if (!this.formItems.seed || !this.formItems.seed.length) {
+    if (!this.formItems.seed || !this.formItems.seed.length) {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.INPUT_EMPTY_ERROR)
     }
 
     try {
       // - verify validity of mnemonic
       const mnemonic = new MnemonicPassPhrase(this.formItems.seed)
-    
+
       if (!mnemonic.isValid()) {
         throw new Error('Invalid mnemonic pass phrase')
       }
@@ -110,9 +125,9 @@ export default class ImportMnemonicTs extends Vue {
       this.$store.dispatch('temporary/SET_MNEMONIC', mnemonic.plain)
 
       // redirect
-      return this.$router.push({name: 'accounts.importAccount.walletSelection'})
+      return this.$router.push({ name: 'accounts.importAccount.walletSelection' })
     }
-    catch(e) {
+    catch (e) {
       return this.$store.dispatch('notification/ADD_ERROR', this.$t('invalid_mnemonic_input'))
     }
   }
