@@ -26,7 +26,7 @@ export class MnemonicInputTs extends Vue {
    */
   @Watch('inputWord')
   watchFormItems(newVal, oldVal) {
-    //when the ad
+    //add the limit
     if (this.wordsArray.length >= 24) {
       this.inputWord = '';
       this.initInput();
