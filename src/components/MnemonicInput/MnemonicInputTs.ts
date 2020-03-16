@@ -25,7 +25,7 @@ export class MnemonicInputTs extends Vue {
    * @description: watch the inputform
    */
   @Watch('inputWord')
-  watchFormItems(newVal, oldVal) {
+  watchFormItems(newVal:string, oldVal:string) {
     //add the limit
     if (this.wordsArray.length >= 24) {
       this.inputWord = '';
@@ -84,6 +84,10 @@ export class MnemonicInputTs extends Vue {
     } else {
       this.wordsArray.pop()
     }
+    //transform to lower case
+    this.wordsArray.forEach((item:string,index)=>{
+      this.wordsArray[index]=item.toLowerCase();
+    })
     this.$emit('handle-words', this.wordsArray)
   }
 
