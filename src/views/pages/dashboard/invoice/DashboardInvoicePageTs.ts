@@ -16,10 +16,10 @@
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {pluck, concatMap, debounceTime, throttleTime} from 'rxjs/operators'
+import {pluck, concatMap} from 'rxjs/operators'
 import {of, Observable} from 'rxjs'
 import {QRCodeGenerator, TransactionQR} from 'symbol-qr-library'
-import {NetworkType, TransferTransaction, Address, MosaicId, Transaction} from 'symbol-sdk'
+import {NetworkType, TransferTransaction, Address} from 'symbol-sdk'
 import {MosaicAttachmentType} from '@/views/forms/FormTransferTransaction/FormTransferTransactionTs.ts'
 
 // child components
@@ -30,9 +30,9 @@ import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormT
 // @ts-ignore
 import failureIcon from '@/views/resources/img/monitor/failure.png'
 
-export interface ITransaction {
+export interface ITransactionEntry {
   transaction: TransferTransaction
-  mosaicAttachment: MosaicAttachmentType[]
+  attachments: MosaicAttachmentType[]
 }
 
 @Component({
@@ -48,7 +48,6 @@ export interface ITransaction {
     const qrCode$ = this
       .$watchAsObservable('transactionQR', {immediate: true})
       .pipe(
-        debounceTime(500),
         pluck('newValue'),
         concatMap((args) => {
           if (args instanceof TransactionQR) return args.toBase64()
@@ -80,9 +79,9 @@ export class DashboardInvoicePageTs extends Vue {
 
   /**
    * The transaction to be translated to a QR code
-   * @type {ITransaction[]}
+   * @type {ITransactionEntry[]}
    */
-  public transactions: ITransaction[] = []
+  public transactions: ITransactionEntry[] = []
 
 /// region computed properties getter/setter
   /**
@@ -134,18 +133,18 @@ export class DashboardInvoicePageTs extends Vue {
    * @type {TransferTransaction | undefined}
    */
   get currentTransaction(): TransferTransaction | undefined {
-    if (this.shiftTransaction) {
-      return this.shiftTransaction.transaction as TransferTransaction
+    if (this.transactionEntry) {
+      return this.transactionEntry.transaction as TransferTransaction
     }
   }
 
   /**
    * The first transaction in the list stack
-   * @type {ITransaction}
+   * @type {ITransactionEntry}
    */
-  get shiftTransaction(): ITransaction {
+  get transactionEntry(): ITransactionEntry {
     if (this.transactions.length) {
-      return this.transactions.shift()
+      return this.transactions[0]
     }
   }
 
@@ -154,8 +153,8 @@ export class DashboardInvoicePageTs extends Vue {
    * @type {MosaicAttachmentType[]}
    */
   get balanceEntries(): MosaicAttachmentType[] {
-    if (!this.shiftTransaction) return []
-    return this.shiftTransaction.mosaicAttachment
+    if (!this.transactionEntry) return []
+    return this.transactionEntry.attachments
   }
 
 /// end-region computed properties getter/setter
@@ -163,9 +162,9 @@ export class DashboardInvoicePageTs extends Vue {
   /**
    * Hook called when the child component FormTransferTransaction
    * emits the 'onTransactionsChange' event with its new transactions.
-   * @param {ITransaction} transactions
+   * @param {ITransactionEntry} transactions
    */
-  public onInvoiceChange(transactions: ITransaction[]) {
+  public onInvoiceChange(transactions: ITransactionEntry[]) {
     
     Vue.set(this, 'transactions', transactions)
   }
