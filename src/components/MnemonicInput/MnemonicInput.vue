@@ -1,6 +1,10 @@
 <template>
     <div v-click-focus class="show-mnemonic">
+<<<<<<< HEAD
         <div class="input-already" v-for="(word,index) in wordsArray" :key="index">{{word}}</div>
+=======
+        <div class="input-already" v-for="word in wordsArray" :key="word">{{word}}</div>
+>>>>>>> enhance the mnemonic input
         <div class="mnemonic-input-container">
             <input  class="mnemonic-input" v-on:paste.prevent='handlePaste($event)'  v-on:keyup.space='addWord' v-on:keyup.delete="deleteWord"
                 v-model.trim="inputWord" type="text" maxlength="50">
