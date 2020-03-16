@@ -19,20 +19,6 @@ import draggable from 'vuedraggable'
 // internal dependencies
 import {NotificationType} from '@/core/utils/NotificationType'
 
-/// region helpers
-/**
- * Shuffles array in place. ES6 version
- * @param {Array} a items An array containing the items.
- */
-const shuffle = (a) => {
-  for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-/// end-region helpers
-
 /**
  * Emits: success, error, canceled
  */
@@ -65,7 +51,7 @@ export class MnemonicVerificationTs extends Vue {
    * @return {void}
    */
   public created() {
-    const shuffledWordsArray: string[] = shuffle([...this.words])
+    const shuffledWordsArray: string[] = [...this.words].sort((a, b) => a.localeCompare(b))
     this.shuffledWords = shuffledWordsArray.reduce(
       (acc, word, index) => ({...acc, ...{[index]: word}}), {}
     )
