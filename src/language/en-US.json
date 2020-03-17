@@ -799,7 +799,7 @@
   "Input_mnemonic": "Enter a mnemonic passphrase",
   "Return_password_setting": "Return to password settings",
   "Select_public_key": "Select the imported wallets",
-  "Input_mnemonic_tips": "Enter the 12 or 24 words of your mnemonic passphrase separated by space.  The mnemonic passphrase is composed of 24 randomly chosen words. After setting the words, your assets will be restored.",
+  "Input_mnemonic_tips": "Enter the 12 or 24 words of your mnemonic passphrase separated by space.  The mnemonic passphrase is composed of 12 or 24 randomly chosen words. After setting the words, your assets will be restored.",
   "Import_successful": "Congratulations, the account was imported successfully!",
   "Create_successful": "Congratulations, the account was created successfully!",
   "Import_your_account_successful": "The account was imported successfully!",
@@ -1186,9 +1186,6 @@
   "no_data_transactions": "No transactions were found for this account",
   "no_data_namespaces": "No namespaces were found for this account",
   "no_data_mosaics": "No mosaics were found for this account",
-<<<<<<< HEAD
-  "clear_staged_transactions": "Discard all transactions"
-=======
-  "Copy_to_Clipboard":"Copy to Clipboard"
->>>>>>> 8d25c6a1d42198ba8e7bea5132f0ef877de16640
+  "clear_staged_transactions": "Discard all transactions",
+  "mnemonic_copy":"Copy"
 }
