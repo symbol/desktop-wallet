@@ -56,7 +56,7 @@
   "Please_enter_a_correct_number": "请输入正确金额",
   "Please_enter_the_amount_of_transfer": "请输入转账金额",
   "Please_enter_notes": "请输入备注信息",
-  "transaction_details": "事务详情",
+  "inner_transactions": "内部事务",
   "XEM_market_trend_nearly_7_days": "XEM行情走势（近7天）",
   "The_total_market_capitalization": "市场总值",
   "account": "账户",
@@ -161,7 +161,7 @@
   "save": "保存",
   "cancel": "取消",
   "general_settings": "常规设置",
-  "form_label_password": "锁密码",
+  "form_label_password": "确认密码",
   "network_settings": "网络设置",
   "about": "关于",
   "setting": "设置",
@@ -1011,5 +1011,6 @@
   "page_title_multisig_cosign": "签名",
   "approval_greater_than_cosignatories": "最小批准所需余项比可用余项多 {delta}。请添加余数或减少最小批准号。",
   "removal_greater_than_cosignatories": "最小删除所需余弦比可用余弦多{delta}。请添加余弦或减少最小删除数。",
-  "page_title_transfer": "转账"
+  "page_title_transfer": "转账",
+  "modal_title_transaction_confirmation":"事务确认"
 }

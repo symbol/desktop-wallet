@@ -8,7 +8,7 @@
     >
       <FormRow>
         <template v-slot:label>
-          {{ $t('form_label_password') }}:
+          {{ $t('form_label_password') }}
         </template>
         <template v-slot:inputs>
           <div class="row-75-25 inputs-container">

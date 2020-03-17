@@ -4,14 +4,15 @@
       <TransactionDetailsHeader :view="views[0]" />
     </div>
     <div class="transaction-details-detail-section-title-container">
+      <img src="@/views/resources/img/modal/modal-transaction-list.png"/>
       <span class="transaction-details-detail-section-title">
-        {{ $t('transaction_details') }}
+        {{ $t('inner_transactions') }}
       </span>
     </div>
     <div class="transaction-details-outer-container">
       <div
         v-for="(view, key) in views"
-        :key="key"
+       
       >
         <AccountAddressRestriction v-if="isType(types.ACCOUNT_ADDRESS_RESTRICTION, view)" :view="view" />
         <AccountLink v-if="isType(types.ACCOUNT_LINK, view)" :view="view" />
@@ -41,6 +42,6 @@ import { TransactionDetailsTs } from './TransactionDetailsTs'
 export default class TransactionDetails extends TransactionDetailsTs {}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import "./TransactionDetails.less";
 </style>

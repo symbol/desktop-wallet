@@ -912,7 +912,7 @@
   "Harvested_Block_Hash": "Harvested Block Hash",
   "test_node": "Test node",
   "Choose_Wallets": "Select Wallets",
-  "transaction_details": "Transaction details",
+  "inner_transactions": "Inner Transactions",
   "generate": "Generate",
   "Enter_your_password_to_create_a_remote_account": "Enter your password to create a remote account",
   "Please_set_transaction_fee": "Please set transaction fee",

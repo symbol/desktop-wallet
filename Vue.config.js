@@ -22,7 +22,7 @@ module.exports = {
     // ExtractTextPlugin
     extract: false,
     //  CSS source maps?
-    sourceMap: false,
+    sourceMap: true,
     // css loader
     loaderOptions: {
       postcss: {

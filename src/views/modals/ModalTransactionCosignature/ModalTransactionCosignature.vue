@@ -5,6 +5,7 @@
       :title="$t('modal_title_transaction_details')"
       :transfer="false"
       @close="show = false"
+      :footer-hide="true"
     >
       <TransactionDetails :transaction="transaction" />
 
