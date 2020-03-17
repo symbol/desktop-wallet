@@ -5,7 +5,7 @@
             <input  class="mnemonic-input" v-on:paste.prevent='handlePaste($event)'  v-on:keyup.space='addWord' v-on:keyup.delete="deleteWord"
                 v-model.trim="inputWord" type="text" maxlength="50">
         </div>
-        <div class="copy-button" v-on:click="copyToClipboard"><Button  type="text" >{{$t('Copy_to_Clipboard')}}</Button></div>
+        <!-- <div class="copy-button" v-on:click="copyToClipboard"><Button  type="text" >{{$t('Copy_to_Clipboard')}}</Button></div>  -->
     </div>
 </template>
 <script lang="ts">
