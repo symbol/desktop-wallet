@@ -1,4 +1,7 @@
+import { UIHelpers } from '@/core/utils/UIHelpers.ts';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+// internal dependencies
+
 @Component
 export class MnemonicInputTs extends Vue {
   /**
@@ -91,23 +94,25 @@ export class MnemonicInputTs extends Vue {
     this.$emit('handle-words', this.wordsArray)
   }
   handlePaste(e: ClipboardEvent) {
-    let pasteDataArr:Array<string>= e.clipboardData.getData('text').toString().trim().split(/\s+/g)
-    pasteDataArr.forEach((pasteData)=>{
-      if (!!pasteData&&this.wordsArray.length < 24) {
+    let pasteDataArr: Array<string> = e.clipboardData.getData('text').toString().trim().split(/\s+/g)
+    pasteDataArr.forEach((pasteData) => {
+      if (!!pasteData && this.wordsArray.length < 24) {
         this.handleWordsArray(pasteData);
       }
     })
   }
-  copyToClipboard(){
-    let pasteDataStr=this.wordsArray.join(' ');
-    console.log(window.Clipboard);
+  copyToClipboard() {
+    let pasteDataStr: string = this.wordsArray.join(' ');
+    if(pasteDataStr){
+      UIHelpers.copyToClipboard(pasteDataStr);
+    }
   }
   /**
    * @description: init input
    */
   initInput() {
     this.isNeedPressDelTwice = true;
-    this.isEditing = false
+    this.isEditing = false;
   }
 
 }
