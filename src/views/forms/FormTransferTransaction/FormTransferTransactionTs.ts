@@ -59,20 +59,12 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
 
-interface MosaicAttachment {
+export interface MosaicAttachment {
   mosaicHex: string
-  /**
-   * Relative amount
-   */
-  amount: number
-}
-
-export interface MosaicAttachmentType {
-  id: MosaicId
-  mosaicHex: string
-  name: string
-  amount: number
-  uid: number
+  amount: number // Relative amount
+  id?: MosaicId
+  name?: string
+  uid?: number
 }
 
 @Component({
@@ -360,12 +352,12 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
   /**
    * Internal helper to format a {Mosaic} entry into
-   * an array of MosaicAttachmentType used in this form.
+   * an array of MosaicAttachment used in this form.
    * @internal
    * @param {Mosaic[]} mosaics 
-   * @return {MosaicAttachmentType[]}
+   * @return {MosaicAttachment[]}
    */
-  protected mosaicsToAttachments(mosaics: Mosaic[]): MosaicAttachmentType[] {
+  protected mosaicsToAttachments(mosaics: Mosaic[]): MosaicAttachment[] {
     return mosaics.map(
       mosaic => {
         const info = this.mosaicsInfo.find(i => i.id.equals(mosaic.id))

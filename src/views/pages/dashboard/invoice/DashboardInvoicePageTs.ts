@@ -20,7 +20,7 @@ import {pluck, concatMap} from 'rxjs/operators'
 import {of, Observable} from 'rxjs'
 import {QRCodeGenerator, TransactionQR} from 'symbol-qr-library'
 import {NetworkType, TransferTransaction, Address} from 'symbol-sdk'
-import {MosaicAttachmentType} from '@/views/forms/FormTransferTransaction/FormTransferTransactionTs.ts'
+import {MosaicAttachment} from '@/views/forms/FormTransferTransaction/FormTransferTransactionTs.ts'
 
 // child components
 // @ts-ignore
@@ -32,7 +32,7 @@ import failureIcon from '@/views/resources/img/monitor/failure.png'
 
 export interface ITransactionEntry {
   transaction: TransferTransaction
-  attachments: MosaicAttachmentType[]
+  attachments: MosaicAttachment[]
 }
 
 @Component({
@@ -150,9 +150,9 @@ export class DashboardInvoicePageTs extends Vue {
 
   /**
    * The transaction's mosaics to be displayed
-   * @type {MosaicAttachmentType[]}
+   * @type {MosaicAttachment[]}
    */
-  get balanceEntries(): MosaicAttachmentType[] {
+  get balanceEntries(): MosaicAttachment[] {
     if (!this.transactionEntry) return []
     return this.transactionEntry.attachments
   }
