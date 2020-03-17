@@ -5,11 +5,12 @@
       v-model="selectedSigner"
       :signers="signers"
       :no-label="true"
+      @change="onSignerSelectorChange"
     />
     <div v-if="currentTab === 'partial'" class="transaction-list-options-button-container">
       <button
         class="button-style validation-button submit-button"
-        @click="refresh"
+        @click="refresh(chosenSigner)"
       >
         {{ $t('refresh') }}
       </button>
