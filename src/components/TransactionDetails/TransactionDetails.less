@@ -9,8 +9,8 @@
 
 .transaction-row-inner-container {
   display              : grid;
-  grid-template-columns: 1.42rem auto;
-  grid-column-gap      : .08rem;
+  grid-template-columns: 1.26rem auto;
+  grid-column-gap      : .11rem;
 
   .transaction-details-row-label-container {
     font-size  : @smallerFont;
@@ -49,6 +49,14 @@
   }
 }
 .transaction-details-outer-container{
+  height: 2.45rem;
+  overflow-y: auto;
+  &>div{
+    margin-bottom: .1rem;
+  }
+  .transfer{
+    margin-bottom:.15rem ;
+  }
   .transaction-details-item-inner-container{
     display: grid;
     grid-row-gap:.1rem;
