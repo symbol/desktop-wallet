@@ -1,10 +1,11 @@
 <template>
     <div v-click-focus class="show-mnemonic">
-        <div class="input-already" v-for="word in wordsArray" :key="word">{{word}}</div>
+        <div class="input-already" v-for="(word,index) in wordsArray" :key="index">{{word}}</div>
         <div class="mnemonic-input-container">
-            <input  class="mnemonic-input" v-on:keyup.space='addWord' v-on:keyup.delete="deleteWord"
+            <input  class="mnemonic-input" v-on:paste.prevent='handlePaste($event)'  v-on:keyup.space='addWord' v-on:keyup.delete="deleteWord"
                 v-model.trim="inputWord" type="text" maxlength="50">
         </div>
+        <div class="copy-button" v-on:click="copyToClipboard"><Button  type="text" >{{$t('Copy_to_Clipboard')}}</Button></div>
     </div>
 </template>
 <script lang="ts">
