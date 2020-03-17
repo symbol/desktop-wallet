@@ -5,7 +5,7 @@
       :key="index"
       class="transaction-row-outer-container"
     >
-      <TransactionDetailRow :label="key" :value="value" :is-mosaic="isMosaic" />
+      <TransactionDetailRow :label="key" :value="value" :is-mosaic="isMosaic"/>
     </div>
   </div>
 </template>
@@ -78,5 +78,5 @@ export default class Transfer extends Vue {
 </script>
 
 <style lang="less" scoped>
-@import "../TransactionDetails.less";
+@import "./Transfer.less";
 </style>

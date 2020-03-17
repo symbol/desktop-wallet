@@ -13,19 +13,5 @@ export default class AmountDisplay extends AmountDisplayTs {}
 </script>
 
 <style scoped lang="less">
-@import "../../views/resources/css/variables.less";
-
-.amount-display-container {
-  .normal {font-size: @normalFont;}
-  .smaller {font-size: @smallerFont;}
-  .bigger {font-size: @biggerFont;}
-  .biggest {font-size: @biggestFont;}
-
-  .integer-part {
-    opacity: 1;
-  }
-  .fractional-part {
-    opacity: .4;
-  }
-}
+@import "./AmountDisplay.less";
 </style>

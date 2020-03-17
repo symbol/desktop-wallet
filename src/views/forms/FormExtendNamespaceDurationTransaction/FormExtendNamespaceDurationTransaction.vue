@@ -25,7 +25,7 @@
           target-asset="namespace"
           label="form_label_additional_duration"
         />
-
+ 
         <FormRow>
           <template v-slot:label>
             {{ currentExpirationInfoView.expired ? $t('Expired_for') : $t('Expires_in') }}:
@@ -53,17 +53,17 @@
               :immediate="true"
               slim
             >
-              <input v-show="false" v-model="newDuration" @change="validate">
-              <ErrorTooltip :errors="errors">
+              <!-- <input v-show="false" v-model="newDuration" @change="validate"> -->
+               <ErrorTooltip :errors="errors">
                 <div class="row-left-message">
                   <span :class="[errors.length ? 'red' : '', 'pl-2']">
                     {{ newExpirationInfoView }} ({{ $t('at_block', {blockNumber: newEndHeight}) }})
                   </span>
                 </div>
-              </ErrorTooltip>
+              </ErrorTooltip> 
             </ValidationProvider>
           </template>
-        </FormRow>
+        </FormRow> 
 
 
         <MaxFeeAndSubmit

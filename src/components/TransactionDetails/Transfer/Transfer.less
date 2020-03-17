@@ -1,0 +1,55 @@
+@import "../../../views/resources/css/variables.less";
+.transaction-details-outer-container{
+    max-height: 2.8rem;
+    overflow-y: scroll;
+  }
+  .transaction-details-item-inner-container {
+    display              : grid;
+    grid-row-gap         : .1rem;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows   : 1fr 1fr 1fr;
+    grid-template-areas  : 'a b'
+      'c c'
+      'd d';
+    
+  
+    .transaction-row-outer-container:nth-child(1) {
+      grid-area: a;
+    }
+  
+    .transaction-row-outer-container:nth-child(2) {
+      grid-area: b;
+    }
+  
+    .transaction-row-outer-container:nth-child(3) {
+      grid-area: c;
+    }
+  
+    .transaction-row-outer-container:nth-child(4) {
+      grid-area: d;
+    }
+  
+    margin-top: .1rem;
+  
+    .transaction-row-inner-container {
+      display              : grid;
+      grid-template-columns: 1.42rem auto;
+      grid-column-gap      : .08rem;
+  
+      .transaction-details-row-label-container {
+        font-size  : @smallerFont;
+        color      : @modalRowColor;
+        font-weight: 300;
+        line-height: .22rem;
+        text-align : right;
+      }
+  
+      .transaction-details-row-value-container {
+        font-size  : @smallerFont;
+        color      : @modalRowColor;
+        font-weight: 400;
+        line-height: .22rem;
+        text-align : left;
+      }
+    }
+  }

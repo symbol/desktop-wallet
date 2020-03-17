@@ -93,6 +93,7 @@
       @close="closeModal('extendNamespaceDurationTransaction')"
     >
       <template v-slot:form>
+     
         <FormExtendNamespaceDurationTransaction
           :namespace-id="modalFormsProps.namespaceId"
           @on-confirmation-success="closeModal('extendNamespaceDurationTransaction')"

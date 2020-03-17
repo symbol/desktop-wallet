@@ -124,7 +124,7 @@ export class TransactionDetailsHeaderTs extends Vue {
       },
       {
         key: 'deadline',
-        value: `${this.view.values.get('deadline').value.toLocalDate()} ${this.view.values.get('deadline').value.toLocalTime()}`,
+        value: `${this.view.values.get('deadline').value.toLocalDate()} ${this.view.values.get('deadline').value.toLocalTime().toString().substr(0,8)}`,
       },
     ]
   }
