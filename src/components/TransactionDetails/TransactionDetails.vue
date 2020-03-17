@@ -31,7 +31,7 @@
         <NamespaceRegistration v-if="isType(types.NAMESPACE_REGISTRATION, view)" :view="view" />
         <SecretLock v-if="isType(types.SECRET_LOCK, view)" :view="view" />
         <SecretProof v-if="isType(types.SECRET_PROOF, view)" :view="view" />
-        <Transfer v-if="isType(types.TRANSFER, view)" :view="view" />
+        <div v-if="isType(types.TRANSFER, view)" class="transfer"><Transfer :view="view" /></div>      
       </div>
     </div>
   </div>
