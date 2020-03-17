@@ -25,7 +25,7 @@ export class MnemonicInputTs extends Vue {
    * @description: watch the inputform
    */
   @Watch('inputWord')
-  watchFormItems(newVal:string, oldVal:string) {
+  watchFormItems(newVal: string, oldVal: string) {
     //add the limit
     if (this.wordsArray.length >= 24) {
       this.inputWord = '';
@@ -43,7 +43,7 @@ export class MnemonicInputTs extends Vue {
   /**
    * @description: add word to the wordsArray
    */
-  addWord() {
+  addWord(isFromClipBoard?: false) {
     if (this.inputWord.length >= 2 && this.inputWord.length <= 50) {
       if (this.wordsArray.length < 24) {
         this.handleWordsArray(this.inputWord);
@@ -76,7 +76,7 @@ export class MnemonicInputTs extends Vue {
   }
 
   /**
-   * @description: add one word  or reduce on word
+   * @description: add one word  or reduce one word
    */
   handleWordsArray(item?) {
     if (!!item) {
@@ -85,12 +85,23 @@ export class MnemonicInputTs extends Vue {
       this.wordsArray.pop()
     }
     //transform to lower case
-    this.wordsArray.forEach((item:string,index)=>{
-      this.wordsArray[index]=item.toLowerCase();
+    this.wordsArray.forEach((item: string, index) => {
+      this.wordsArray[index] = item.toLowerCase();
     })
     this.$emit('handle-words', this.wordsArray)
   }
-
+  handlePaste(e: ClipboardEvent) {
+    let pasteDataArr:Array<string>= e.clipboardData.getData('text').toString().trim().split(/\s+/g)
+    pasteDataArr.forEach((pasteData)=>{
+      if (!!pasteData&&this.wordsArray.length < 24) {
+        this.handleWordsArray(pasteData);
+      }
+    })
+  }
+  copyToClipboard(){
+    let pasteDataStr=this.wordsArray.join(' ');
+    console.log(window.Clipboard);
+  }
   /**
    * @description: init input
    */

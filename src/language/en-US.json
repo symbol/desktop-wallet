@@ -1183,5 +1183,6 @@
   "info_connecting_peer": "Connecting to the node {peerUrl} ...",
   "no_data_transactions": "No transactions were found for this account",
   "no_data_namespaces": "No namespaces were found for this account",
-  "no_data_mosaics": "No mosaics were found for this account"
+  "no_data_mosaics": "No mosaics were found for this account",
+  "Copy_to_Clipboard":"Copy to Clipboard"
 }
