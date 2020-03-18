@@ -2,11 +2,14 @@
   <div class="transaction_modal">
     <Modal
       v-model="show"
-      :title="$t('modal_title_transaction_details')"
       :transfer="false"
       @close="show = false"
       :footer-hide="true"
     >
+    <div class="modal-header" slot="header">
+      <img src="@/views/resources/img/modal/modal-confirm-header.png" />
+      <span>{{$t('modal_title_transaction_details')}}</span>
+    </div>
       <TransactionDetails :transaction="transaction" />
     </Modal>
   </div>
