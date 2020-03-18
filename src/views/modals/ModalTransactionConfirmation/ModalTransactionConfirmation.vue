@@ -8,8 +8,10 @@
       </div>
       <div class="transactionConfirmationBody">
         <div class="stepItem1">
-          <div v-if="!!stagedTransactions" v-for="(transaction, index) in stagedTransactions" class="info_container">
-            <TransactionDetails :transaction="transaction" />
+          <div v-for="(transaction, index) in stagedTransactions" :key="index" class="info_container">
+            <div v-if="!!stagedTransactions">
+              <TransactionDetails :transaction="transaction" />
+            </div>
           </div>
           <div class="confirm-form">
             <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onTransactionsSigned" @error="onError" />
