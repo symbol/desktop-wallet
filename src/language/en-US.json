@@ -912,7 +912,7 @@
   "Harvested_Block_Hash": "Harvested Block Hash",
   "test_node": "Test node",
   "Choose_Wallets": "Select Wallets",
-  "inner_transactions": "Inner Transactions",
+  "transaction_details": "Transaction details",
   "generate": "Generate",
   "Enter_your_password_to_create_a_remote_account": "Enter your password to create a remote account",
   "Please_set_transaction_fee": "Please set transaction fee",
@@ -1185,5 +1185,6 @@
   "info_connecting_peer": "Connecting to the node {peerUrl} ...",
   "no_data_transactions": "No transactions were found for this account",
   "no_data_namespaces": "No namespaces were found for this account",
-  "no_data_mosaics": "No mosaics were found for this account"
+  "no_data_mosaics": "No mosaics were found for this account",
+  "inner_transactions": "Inner Transactions"
 }
