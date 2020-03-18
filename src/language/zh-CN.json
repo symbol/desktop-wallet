@@ -1014,5 +1014,6 @@
   "removal_greater_than_cosignatories": "最小删除所需余弦比可用余弦多{delta}。请添加余弦或减少最小删除数。",
   "page_title_transfer": "转账",
   "modal_title_transaction_confirmation":"事务确认",
-  "modal_title_transaction_details":"事务详情"
+  "modal_title_transaction_details":"事务详情",
+  "modal_title_debug_console":"信息诊断"
 }
