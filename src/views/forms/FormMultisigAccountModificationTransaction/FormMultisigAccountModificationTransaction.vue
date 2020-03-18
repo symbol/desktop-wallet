@@ -33,7 +33,7 @@
               v-model="formItems.signerPublicKey"
               :signers="signers"
               :no-label="true"
-              @change="onChangeSigner"
+              @input="onChangeSigner"
             />
           </template>
         </FormRow>

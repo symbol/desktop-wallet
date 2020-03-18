@@ -11,7 +11,7 @@
             v-if="!hideSigner"
             v-model="formItems.signerPublicKey"
             :signers="signers"
-            @change="onChangeSigner"
+            @input="onChangeSigner"
           />
 
           <!-- Transfer recipient input field --> 
