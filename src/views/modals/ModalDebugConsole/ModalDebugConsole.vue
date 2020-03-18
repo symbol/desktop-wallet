@@ -7,14 +7,14 @@
       </div>
       <div class="diagnostic-container">
         <div class="form-container">
-          <div id="logs-container" class="logger">
+          <div id="logs-container" class="logs-container" class="logger">
               <div v-for="(entry, index) in logs"
               :key="index"
               :class="{
                   'normal': entry.level === 1 || entry.level === 2,
                   'warning': entry.level === 3,
                   'error': entry.level === 4,
-              }"><pre>{{ '\n' }} ({{ getTime(entry) }}) [{{ getLevel(entry) }}] {{ entry.message }}</pre></div>
+              }"><p>{{ '\n' }} ({{ getTime(entry) }}) [{{ getLevel(entry) }}] {{ entry.message }}</p></div>
             </div>
         </div>
       </div>
@@ -26,9 +26,6 @@
 // external dependencies
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
-
-// resources
-import './ModalDebugConsole.less'
 
 @Component({
   computed: {...mapGetters({
@@ -88,3 +85,6 @@ export default class ModalDebugConsole extends Vue {
   }
 }
 </script>
+<style scoped lang="less">
+  @import "./ModalDebugConsole.less";
+</style>
