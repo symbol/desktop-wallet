@@ -1,17 +1,21 @@
 <template>
   <div class="debug-console-wrapper">
-    <Modal v-model="show" :title="`${$t(title)}`" :transfer="false">
+    <Modal v-model="show" :title="`${$t(title)}`" :transfer="false" :footer-hide="true">
+      <div class="modal-header" slot="header">
+        <img src="@/views/resources/img/modal/modal-confirm-header.png" />
+        <span>{{$t(title)}}</span>
+      </div>
       <div class="diagnostic-container">
         <div class="form-container">
-          <pre id="logs-container" class="logger">
-              <span v-for="(entry, index) in logs"
+          <div id="logs-container" class="logger">
+              <div v-for="(entry, index) in logs"
               :key="index"
               :class="{
                   'normal': entry.level === 1 || entry.level === 2,
                   'warning': entry.level === 3,
                   'error': entry.level === 4,
-              }">{{ '\n' }} ({{ getTime(entry) }}) [{{ getLevel(entry) }}] {{ entry.message }}</span>
-          </pre>
+              }"><pre>{{ '\n' }} ({{ getTime(entry) }}) [{{ getLevel(entry) }}] {{ entry.message }}</pre></div>
+            </div>
         </div>
       </div>
     </Modal>
