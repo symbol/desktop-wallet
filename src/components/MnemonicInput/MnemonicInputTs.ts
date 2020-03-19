@@ -1,14 +1,9 @@
 import { UIHelpers } from '@/core/utils/UIHelpers.ts';
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 // internal dependencies
 
 @Component
 export class MnemonicInputTs extends Vue {
-  /**
-   * @description:bind the input
-   */
-  public inputWord: string = '';
-
   /**
    * @description: wordsArray
    */
@@ -27,26 +22,32 @@ export class MnemonicInputTs extends Vue {
   /**
    * @description: watch the inputform
    */
-  @Watch('inputWord')
-  watchFormItems(newVal: string, oldVal: string) {
+  public inputWord: string = "";
+  
+  public get userInput(): string {
+    return this.inputWord;
+  }
+  public set userInput(input:string) {
+    //avoid cache
+    this.inputWord=input;
     //add the limit
     if (this.wordsArray.length >= 24) {
       this.inputWord = '';
       this.initInput();
     } else {
       //control the keyboard input rules
-      this.inputWord = newVal.replace(/[^a-zA-Z]/g, '')
+      this.inputWord = input.replace(/[^a-zA-Z]/g, '')
       //determine if the input is editing status
       if (!this.isEditing && !!this.inputWord) {
         this.isEditing = true
       }
     }
-
   }
+
   /**
    * @description: add word to the wordsArray
    */
-  addWord(isFromClipBoard?: false) {
+  addWord() {
     if (this.inputWord.length >= 2 && this.inputWord.length <= 50) {
       if (this.wordsArray.length < 24) {
         this.handleWordsArray(this.inputWord);
