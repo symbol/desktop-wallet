@@ -18,7 +18,7 @@ import {
   Account,
   AccountType,
   Address,
-  PublicAccount,
+  PublicAccount, RepositoryFactory,
 } from 'symbol-sdk'
 import {Wallet} from 'symbol-hd-wallets'
 
@@ -85,9 +85,9 @@ export class RemoteAccountService extends AbstractService {
 
     try {
       // prepare discovery process
-      const currentPeer = this.$store.getters['network/currentPeer'].url
+      const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
       const networkType = this.$store.getters['network/networkType']
-      const accountHttp = RESTService.create('AccountHttp', currentPeer)
+      const accountHttp = repositoryFactory.createAccountRepository();
 
       // generate 10 remote accounts
       let nextPath: string = path
