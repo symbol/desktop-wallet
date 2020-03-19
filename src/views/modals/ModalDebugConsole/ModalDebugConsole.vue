@@ -7,7 +7,7 @@
       </div>
       <div class="diagnostic-container">
         <div class="form-container">
-          <div id="logs-container" class="logs-container" class="logger">
+          <div id="logs-container" class="logger">
               <div v-for="(entry, index) in logs"
               :key="index"
               :class="{

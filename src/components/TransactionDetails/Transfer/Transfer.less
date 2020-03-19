@@ -6,27 +6,20 @@
   .transaction-details-item-inner-container {
     display              : grid;
     grid-row-gap         : .1rem;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows   : 1fr 1fr 1fr;
-    grid-template-areas  : 'a b'
-      'c c'
-      'd d';
-    
+    grid-template-columns:  50% 50%;
+
+    .transaction-row-outer-container{
+      grid-column-start: 1;
+      grid-column-end: 3;
+    }
   
     .transaction-row-outer-container:nth-child(1) {
-      grid-area: a;
+      grid-column-start: 1;
+      grid-column-end: 2;
     }
-  
-    .transaction-row-outer-container:nth-child(2) {
-      grid-area: b;
-    }
-  
-    .transaction-row-outer-container:nth-child(3) {
-      grid-area: c;
-    }
-  
     .transaction-row-outer-container:nth-child(4) {
-      grid-area: d;
+      grid-column-start: 1;
+      grid-column-end: 3;
     }
   
     margin-top: .1rem;
