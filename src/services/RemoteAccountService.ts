@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 import {Store} from 'vuex'
-import {
-  Account,
-  AccountType,
-  Address,
-  PublicAccount, RepositoryFactory,
-} from 'symbol-sdk'
+import {Account, AccountType, Address, PublicAccount, RepositoryFactory,} from 'symbol-sdk'
 import {Wallet} from 'symbol-hd-wallets'
-
 // internal dependencies
 import {AbstractService} from '@/services/AbstractService'
 import {WalletService} from '@/services/WalletService'
-import {RESTService} from '@/services/RESTService'
-import {DerivationService, DerivationPathLevels} from '@/services/DerivationService'
+import {DerivationPathLevels, DerivationService} from '@/services/DerivationService'
 
 export class RemoteAccountService extends AbstractService {
   /**

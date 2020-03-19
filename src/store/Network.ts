@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 import Vue from 'vue';
-import {NetworkType, Listener, BlockInfo, UInt64, RepositoryFactoryHttp, RepositoryFactory} from 'symbol-sdk';
+import {BlockInfo, IListener, NetworkType, RepositoryFactory, UInt64} from 'symbol-sdk';
 import {Subscription} from 'rxjs'
-
 // internal dependencies
 import {$eventBus} from '../events'
 import {RESTService} from '@/services/RESTService'
@@ -24,19 +23,19 @@ import {PeersModel} from '@/core/database/entities/PeersModel'
 import {URLHelpers} from '@/core/utils/URLHelpers'
 import app from '@/main'
 import {AwaitLock} from './AwaitLock'
-const Lock = AwaitLock.create();
-
 // configuration
 import networkConfig from '../../config/network.conf.json';
-import { PeersRepository } from '@/repositories/PeersRepository';
+import {PeersRepository} from '@/repositories/PeersRepository';
 import {UrlValidator} from '@/core/validation/validators';
 import {PeerService} from '@/services/PeerService';
+
+const Lock = AwaitLock.create();
 
 /// region internal helpers
 /**
  * Recursive function helper to determine block ranges
  * needed to fetch data about all block \a heights
- * @param {number[]} heights 
+ * @param {number[]} heights
  * @return {BlockRangeType[]}
  */
 const getBlockRanges = (heights: number[], ranges: BlockRangeType[] = []): BlockRangeType[] => {
@@ -60,7 +59,7 @@ const getBlockRanges = (heights: number[], ranges: BlockRangeType[] = []): Block
  * Type SubscriptionType for Wallet Store
  * @type {SubscriptionType}
  */
-type SubscriptionType = {listener: Listener, subscriptions: Subscription[]}
+type SubscriptionType = {listener: IListener, subscriptions: Subscription[]}
 
 /**
  * Type BlockRangeType for Wallet Store
@@ -73,7 +72,6 @@ export default {
   namespaced: true,
   state: {
     initialized: false,
-    wsEndpoint: '',
     config: networkConfig,
     defaultPeer: URLHelpers.formatUrl(networkConfig.defaultNode.url),
     currentPeer: URLHelpers.formatUrl(networkConfig.defaultNode.url),
@@ -81,6 +79,7 @@ export default {
     networkType: NetworkType.TEST_NET,
     generationHash: networkConfig.networks['testnet-publicTest'].generationHash,
     properties: networkConfig.networks['testnet-publicTest'].properties,
+    repositoryFactory: RESTService.createRepositoryFactory(networkConfig.defaultNode.url),
     isConnected: false,
     nemesisTransactions: [],
     knownPeers: [],
@@ -92,7 +91,6 @@ export default {
   getters: {
     getInitialized: state => state.initialized,
     getSubscriptions: state => state.subscriptions,
-    wsEndpoint: state => state.wsEndpoint,
     networkType: state => state.networkType,
     generationHash: state => state.generationHash,
     repositoryFactory: state => state.repositoryFactory,
@@ -112,12 +110,12 @@ export default {
     setConnected: (state, connected) => { state.isConnected = connected },
     currentHeight: (state, height) => Vue.set(state, 'currentHeight', height),
     currentPeerInfo: (state, info) => Vue.set(state, 'currentPeerInfo', info),
+    repositoryFactory: (state, repositoryFactory) => Vue.set(state, 'repositoryFactory', repositoryFactory),
     currentPeer: (state, payload) => {
       if (undefined !== payload) {
         let currentPeer = URLHelpers.formatUrl(payload)
-        let wsEndpoint = URLHelpers.httpToWsUrl(currentPeer.url)
         Vue.set(state, 'currentPeer', currentPeer)
-        Vue.set(state, 'wsEndpoint', wsEndpoint)
+        Vue.set(state, 'repositoryFactory', RESTService.createRepositoryFactory(currentPeer.url))
       }
     },
     addPeer: (state, peerUrl) => {
@@ -200,7 +198,7 @@ export default {
     async INITIALIZE_FROM_DB({dispatch}, withFeed) {
       const defaultPeer = withFeed.endpoints.find(m => m.values.get('is_default'))
       const nodeUrl = defaultPeer.values.get('rest_url')
-      const repositoryFactory: RepositoryFactory = new RepositoryFactoryHttp(nodeUrl)
+      const repositoryFactory: RepositoryFactory = RESTService.createRepositoryFactory(nodeUrl)
 
       // - height always from network
       const chainHttp = repositoryFactory.createChainRepository();
@@ -247,7 +245,7 @@ export default {
       commit('networkType', payload.networkType)
       commit('setConnected', true)
       $eventBus.$emit('newConnection', payload.url)
- 
+
       commit('currentHeight', payload.currentHeight.compact())
       commit('currentPeerInfo', payload.peerInfo)
 
@@ -287,7 +285,7 @@ export default {
 
         // - re-open listeners
         dispatch('wallet/initialize', {address: currentWallet.values.get('address')}, {root: true})
-        
+
         // - set chosen endpoint as the new default in the database
         new PeerService().setDefaultNode(currentPeerUrl)
       } catch (e) {
@@ -336,10 +334,10 @@ export default {
     // Subscribe to latest account transactions.
     async SUBSCRIBE({ commit, dispatch, getters }) {
       // use RESTService to open websocket channel subscriptions
-      const websocketUrl = getters['wsEndpoint']
+      const repositoryFactory = getters['repositoryFactory'] as RepositoryFactory;
       const subscriptions: SubscriptionType  = await RESTService.subscribeBlocks(
         {commit, dispatch},
-        websocketUrl,
+        repositoryFactory,
       )
 
       // update state of listeners & subscriptions
@@ -414,7 +412,7 @@ export default {
       dispatch('diagnostic/ADD_DEBUG', 'Store action network/REST_FETCH_PEER_INFO dispatched with: ' + nodeUrl, {root: true})
 
       try {
-        const repositoryFactory: RepositoryFactory = new RepositoryFactoryHttp(nodeUrl)
+        const repositoryFactory: RepositoryFactory = RESTService.createRepositoryFactory(nodeUrl)
         const chainHttp = repositoryFactory.createChainRepository()
         const nodeHttp = repositoryFactory.createNodeRepository()
 
