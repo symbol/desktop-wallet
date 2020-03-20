@@ -133,7 +133,7 @@ export class TransactionListOptionsTs extends Vue {
    * @type {{publicKey: string, label: string}[]}
    */
   protected get signers(): {publicKey: string, label: string}[] {
-    return new MultisigService(this.$store).getSigners(`${this.$t('label_postfix_multisig')}`)
+    return new MultisigService(this.$store, this.$i18n).getSigners()
   }
 
   /**

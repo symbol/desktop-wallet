@@ -15,6 +15,7 @@
  */
 import {Store} from 'vuex'
 import {MultisigAccountGraphInfo, MultisigAccountInfo} from 'symbol-sdk'
+import VueI18n from 'vue-i18n'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
@@ -33,13 +34,19 @@ export class MultisigService extends AbstractService {
    */
   public $store: Store<any>
 
+    /**
+   * i18n translation
+   * @var {VueI18n}
+   */
+  public $i18n: VueI18n
   /**
    * Construct a service instance around \a store
    * @param store
    */
-  constructor(store?: Store<any>) {
+  constructor(store?: Store<any>, i18n?:  VueI18n) {
     super()
     this.$store = store
+    this.$i18n = i18n
   }
 
   /**
@@ -66,9 +73,9 @@ export class MultisigService extends AbstractService {
    * @param {string} label_postfix_multisig
    * @returns {{publicKey: any; label: any;}[]}
    */
-  public getSigners(labelPostfixMultisig: string): {publicKey: any; label: any;}[] {
-    if (!this.$store) {
-      throw new Error('multisig service getSigners method needs the store')
+  public getSigners(): {publicKey: any; label: any;}[] {
+    if (!this.$store || !this.$i18n) {
+      throw new Error('multisig service getSigners method needs the store and i18n')
     }
 
     // get the current wallet from the store
@@ -88,7 +95,7 @@ export class MultisigService extends AbstractService {
 
     // in case "self" is a multi-signature account
     if (multisigInfo && multisigInfo.isMultisig()) {
-      self[0].label = self[0].label + labelPostfixMultisig
+      self[0].label = self[0].label + `${this.$i18n.t('label_postfix_multisig')}`
     }
 
     // add multisig accounts of which "self" is a cosignatory
@@ -98,7 +105,7 @@ export class MultisigService extends AbstractService {
       return self.concat(...multisigInfo.multisigAccounts.map(
         ({publicKey}) => ({
           publicKey,
-          label: service.getWalletLabel(publicKey, networkType) + labelPostfixMultisig,
+          label: service.getWalletLabel(publicKey, networkType) + `${this.$i18n.t('label_postfix_multisig')}`,
         })))
     }
 

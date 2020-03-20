@@ -224,7 +224,6 @@ export class FormTransactionBase extends Vue {
 /// region computed properties getter/setter
   get signers(): {publicKey: string, label: string}[] {
     return this.getSigners()
-    // return this.getSigners()
   }
 
   /**
@@ -477,6 +476,6 @@ export class FormTransactionBase extends Vue {
    * @return {{publicKey: string, label:string}[]}
    */
   protected getSigners(): {publicKey: string, label: string}[] {
-    return new MultisigService(this.$store).getSigners(`${this.$t('label_postfix_multisig')}`)
+    return new MultisigService(this.$store, this.$i18n).getSigners()
   }
 }
