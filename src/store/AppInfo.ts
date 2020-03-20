@@ -41,7 +41,7 @@ export default {
     faucetUrl: networkConfig.faucetUrl,
     defaultFee: feesConfig.normal,
     defaultWallet: '',
-    fetchingTransactons: false,
+    fetchingTransactions: false,
   },
   getters: {
     getInitialized: (state) => state.initialized,
@@ -57,7 +57,7 @@ export default {
     faucetUrl: (state) => state.faucetUrl,
     defaultFee: (state) => state.defaultFee,
     defaultWallet: (state) => state.defaultWallet,
-    fetchingTransactons: (state) => state.fetchingTransactons,
+    fetchingTransactions: (state) => state.fetchingTransactions,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
@@ -76,7 +76,7 @@ export default {
     },
     setDefaultFee: (state, maxFee) => Vue.set(state, 'defaultFee', maxFee),
     setDefaultWallet: (state, defaultWallet) => Vue.set(state, 'defaultWallet', defaultWallet),
-    setFetchingTransactions: (state, bool: boolean) => Vue.set(state, 'fetchingTransactons', bool),
+    setFetchingTransactions: (state, bool: boolean) => Vue.set(state, 'fetchingTransactions', bool),
   },
   actions: {
     async initialize({ commit, dispatch, getters }) {
