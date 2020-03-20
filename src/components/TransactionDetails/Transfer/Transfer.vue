@@ -78,5 +78,6 @@ export default class Transfer extends Vue {
 </script>
 
 <style lang="less" scoped>
+@import "../TransactionDetails.less";
 @import "./Transfer.less";
 </style>
