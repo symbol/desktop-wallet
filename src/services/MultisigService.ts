@@ -22,29 +22,14 @@ import {AbstractService} from './AbstractService'
 import {WalletService} from './WalletService'
 
 export class MultisigService extends AbstractService {
-  /**
-   * Service name
-   * @var {string}
-   */
-  public name: string = 'multisig'
 
-  /**
-   * Vuex Store 
-   * @var {Vuex.Store}
-   */
-  public $store: Store<any>
-
-    /**
-   * i18n translation
-   * @var {VueI18n}
-   */
-  public $i18n: VueI18n
   /**
    * Construct a service instance around \a store
    * @param store
    */
   constructor(store?: Store<any>, i18n?:  VueI18n) {
     super()
+    this.name = 'multisig'
     this.$store = store
     this.$i18n = i18n
   }
