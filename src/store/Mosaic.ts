@@ -122,7 +122,9 @@ export default {
         }
         // - initialize CURRENCY from nemesis transactions
         else {
-          await dispatch('INITIALIZE_FROM_NEMESIS', rootGetters['network/repositoryFactory'])
+          const nodeUrl = rootGetters['network/currentPeer'].url;
+          const repositoryFactory = rootGetters['network/repositoryFactory'];
+          await dispatch('INITIALIZE_FROM_NEMESIS', {nodeUrl, repositoryFactory})
         }
 
         // update store
@@ -172,10 +174,10 @@ export default {
         knownMosaics: withFeed.mosaics
       }
     },
-    async INITIALIZE_FROM_NEMESIS({commit, dispatch}, repositoryFactory: RepositoryFactory) {
+    async INITIALIZE_FROM_NEMESIS({commit, dispatch}, {repositoryFactory, nodeUrl}) {
       // read first network block to identify currency mosaic
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action mosaic/INITIALIZE_FROM_NEMESIS dispatched', {root: true})
+      dispatch('diagnostic/ADD_DEBUG', 'Store action mosaic/INITIALIZE_FROM_NEMESIS dispatched with nodeUrl: ' + nodeUrl, {root: true})
 
       const blockHttp = repositoryFactory.createBlockRepository();
       blockHttp.getBlockTransactions(UInt64.fromUint(1), new QueryParams({pageSize: 100})).subscribe(
