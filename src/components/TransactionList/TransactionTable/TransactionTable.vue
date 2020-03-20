@@ -2,7 +2,7 @@
   <div class="transaction-table-container">
     <TransactionListHeader />
     <Spin
-      v-if="fetchingTransactions" size="large" fix
+      v-if="isFetchingTransactions" size="large" fix
       class="absolute"
     />
     <div v-if="transactions.length" class="transaction-rows-outer-container">
@@ -15,7 +15,7 @@
         />
       </div>
     </div>
-    <div v-if="!transactions.length && !fetchingTransactions" class="no-data-outer-container">
+    <div v-if="!transactions.length && !isFetchingTransactions" class="no-data-outer-container">
       <div class="no-data">
         <div class="no-data-message-container">
           <div>{{ $t(emptyMessage) }}</div>
@@ -45,7 +45,7 @@ import TransactionListHeader from '@/components/TransactionList/TransactionListH
     TransactionRow,
     TransactionListHeader,
   },
-  computed: mapGetters({ fetchingTransactions: 'app/fetchingTransactions' }),
+  computed: mapGetters({ isFetchingTransactions: 'app/isFetchingTransactions' }),
 })
 export default class TransactionTable extends Vue {
   @Prop({ default: [] }) transactions: Transaction[]
@@ -57,7 +57,7 @@ export default class TransactionTable extends Vue {
    * @protected
    * @type {boolean}
    */
-  protected fetchingTransactions: boolean
+  protected isFetchingTransactions: boolean
 
   get transactionsList(): Transaction[] {
     return this.transactions
