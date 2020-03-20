@@ -18,6 +18,7 @@ import {MultisigAccountGraphInfo, MultisigAccountInfo} from 'symbol-sdk'
 
 // internal dependencies
 import {AbstractService} from './AbstractService'
+import {WalletService} from './WalletService'
 
 export class MultisigService extends AbstractService {
   /**
@@ -58,5 +59,49 @@ export class MultisigService extends AbstractService {
         .filter((x) => x.length > 0)
 
     return [].concat(...multisigsInfo).map(item => item) // flatten
+  }
+
+  /**
+   * Returns self and signer to be injected in SignerSelector
+   * @param {string} label_postfix_multisig
+   * @returns {{publicKey: any; label: any;}[]}
+   */
+  public getSigners(labelPostfixMultisig: string): {publicKey: any; label: any;}[] {
+    if (!this.$store) {
+      throw new Error('multisig service getSigners method needs the store')
+    }
+
+    // get the current wallet from the store
+    const currentWallet = this.$store.getters['wallet/currentWallet']
+
+    if (!currentWallet) return []
+
+    const self = [
+      {
+        publicKey: currentWallet.values.get('publicKey'),
+        label: currentWallet.values.get('name'),
+      },
+    ]
+
+    const multisigInfo = this.$store.getters['wallet/currentWalletMultisigInfo']
+    if (!multisigInfo) return self
+
+    // in case "self" is a multi-signature account
+    if (multisigInfo && multisigInfo.isMultisig()) {
+      self[0].label = self[0].label + labelPostfixMultisig
+    }
+
+    // add multisig accounts of which "self" is a cosignatory
+    if (multisigInfo) {
+      const service = new WalletService(this.$store)
+      const networkType = this.$store.getters['wallet/currentWalletMultisigInfo']
+      return self.concat(...multisigInfo.multisigAccounts.map(
+        ({publicKey}) => ({
+          publicKey,
+          label: service.getWalletLabel(publicKey, networkType) + labelPostfixMultisig,
+        })))
+    }
+
+    return self
   }
 }

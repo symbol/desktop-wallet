@@ -1,20 +1,28 @@
 <template>
   <div class="transaction-list-options-container">
-    <SignerSelector
-      v-if="currentTab === 'partial'"
-      v-model="selectedSigner"
-      :signers="signers"
-      :no-label="true"
-      @input="refresh"
-    />
-    <div v-if="currentTab === 'partial'" class="transaction-list-options-button-container">
-      <button
-        class="button-style validation-button submit-button"
-        @click="refresh"
-      >
-        {{ $t('refresh') }}
-      </button>
+    <div v-if="signers && signers.length > 1">
+      <div v-if="!showSignerSelector" class="show-signer-selector">
+        <span @click="showSignerSelector = true">
+          {{ $t('see_transactions_other_account', { transactionType: currentTab }) }}
+        </span>
+      </div>
+      <SignerSelector
+        v-else
+        v-model="selectedSigner"
+        :signers="signers"
+        :no-label="true"
+        @input="onSignerSelectorChange"
+      />
     </div>
+    <div v-else>
+      &nbsp;
+    </div>
+    <button
+      class="button-style validation-button submit-button"
+      @click="refresh"
+    >
+      {{ $t('refresh') }}
+    </button>
   </div>
 </template>
 
@@ -27,6 +35,8 @@ export default class TransactionListOptions extends TransactionListOptionsTs {}
 </script>
 
 <style lang="less">
+@import '../../views/resources/css/variables.less';
+
 .ivu-tabs-nav-right {
   width: 5.8rem;
   display: grid;
@@ -49,6 +59,15 @@ export default class TransactionListOptions extends TransactionListOptionsTs {}
 
     .inputs-container {
       width: 100%;
+    }
+
+    .show-signer-selector {
+      display: grid;
+      align-content: center;
+      text-align: center;
+      cursor: pointer;
+      font-size: @smallFont;
+      height: 100%;
     }
   }
 }
