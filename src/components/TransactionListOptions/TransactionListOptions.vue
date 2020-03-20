@@ -3,7 +3,7 @@
     <div v-if="signers && signers.length > 1">
       <div v-if="!showSignerSelector" class="show-signer-selector">
         <span @click="showSignerSelector = true">
-          {{ $t('see_transactions_other_account', { transactionType: currentTab }) }}
+          {{ $t('see_transactions_other_account') }}
         </span>
       </div>
       <SignerSelector
