@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 @Component({computed: {...mapGetters({
-  currentLanguage: 'app/currentLanguage',
+  language: 'app/currentLanguage',
   languageList: 'app/languages',
 })}})
 export class LanguageSelectorTs extends Vue {
   @Prop({
-    default: ''
+    default: '',
   }) value: string
 
   @Prop({
-    default: false
+    default: false,
   }) defaultFormStyle: boolean
 
   @Prop({
-    default: true
+    default: true,
   }) autoSubmit: boolean
 
   /**

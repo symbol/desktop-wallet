@@ -70,7 +70,7 @@
             >
           </span>
           <span class="mosaic_name">
-            {{ entry.name !== '' ? entry.name : entry.id.toHex() }}
+            {{ entry.name }}
           </span>
           <span class="mosaic_value">
             <MosaicAmountDisplay
@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts">
-import { MosaicBalanceListTs } from './MosaicBalanceListTs'
+import {MosaicBalanceListTs} from './MosaicBalanceListTs'
 import './MosaicBalanceList.less'
 
 export default class MosaicBalanceList extends MosaicBalanceListTs {}

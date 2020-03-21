@@ -20,7 +20,6 @@ import moment from 'vue-moment'
 import iView from 'view-design'
 import locale from 'view-design/dist/locale/en-US'
 import 'view-design/dist/styles/iview.css'
-
 // internal dependencies
 import {UIBootstrapper} from '@/app/UIBootstrapper'
 import {AppStore} from '@/app/AppStore'
@@ -44,7 +43,6 @@ const app = new Vue({
   router,
   store: AppStore,
   i18n,
-  render: h => h(App),
   created: function () {
     // This will execute following processes:
     // - configure $Notice
@@ -52,6 +50,7 @@ const app = new Vue({
     // - configure Vue directives
     UIBootstrapper.configure(this)
   },
+  render: h => h(App),
 })
 
 app.$mount('#app')

@@ -2,7 +2,7 @@
   "name": "symbol-desktop-wallet",
   "description": "Symbol Wallet",
   "homepage": "https://github.com/nemfoundation/symbol-desktop-wallet",
-  "version": "0.9.6-beta1",
+  "version": "0.9.6-beta2",
   "scripts": {
     "dev": "vue-cli-service serve ",
     "build": "rm -rf dist && mkdir dist && tsc && vue-cli-service build",
@@ -10,11 +10,12 @@
     "lint:all": "npm run lint:ts && npm run lint:vue && npm run lint:tests",
     "lint:ts": "eslint src/ --ext .ts",
     "lint:vue": "eslint src/ --ext .vue",
-    "lint:tests": "eslint tests/ --ext .ts",
-    "lint:all:fix": "eslint src/ --ext .ts --fix && eslint src/ --ext .vue --fix && eslint tests/ --ext .ts --fix"
+    "lint:tests": "eslint __tests__/ --ext .ts",
+    "lint:all:fix": "eslint src/ --ext .ts --fix && eslint src/ --ext .vue --fix && eslint __tests__/ --ext .ts --fix"
   },
   "dependencies": {
     "@types/crypto-js": "^3.1.43",
+    "@types/lodash": "^4.14.149",
     "@types/vue-moment": "^4.0.0",
     "animate.css": "^3.7.2",
     "await-lock": "^2.0.1",
@@ -35,7 +36,7 @@
     "rxjs": "^6.5.2",
     "symbol-hd-wallets": "^0.9.2",
     "symbol-qr-library": "^0.9.0",
-    "symbol-sdk": "^0.17.3",
+    "symbol-sdk": "0.17.4-alpha-202003201053\n",
     "trezor-connect": "^7.0.5",
     "typescript": "^3.7.2",
     "utf-8-validate": "^5.0.2",

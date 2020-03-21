@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {MosaicId, MultisigAccountInfo} from 'symbol-sdk'
 import {NotificationType} from '@/core/utils/NotificationType'
@@ -36,7 +36,7 @@ export default class DisabledFormOverlay extends Vue {
    */
   public currentWalletMultisigInfo: MultisigAccountInfo
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Whether a form should be disabled to a multisig account
    * @returns {boolean}

@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 // external dependencies
-import {UInt64, NamespaceRegistrationTransaction, NamespaceRegistrationType, TransactionType, Transaction, NamespaceInfo, NamespaceId} from 'symbol-sdk'
+import {NamespaceId, NamespaceRegistrationTransaction, NamespaceRegistrationType, Transaction, UInt64} from 'symbol-sdk'
 import {Component, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
-import {ViewNamespaceRegistrationTransaction, NamespaceRegistrationFormFieldsType} from '@/core/transactions/ViewNamespaceRegistrationTransaction'
+import {NamespaceRegistrationFormFieldsType, ViewNamespaceRegistrationTransaction} from '@/core/transactions/ViewNamespaceRegistrationTransaction'
 import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -41,9 +39,9 @@ import DurationInput from '@/components/DurationInput/DurationInput.vue'
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
-
 // configuration
-import networkConfig from '@/../config/network.conf.json'
+import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 @Component({
   components: {
@@ -58,22 +56,26 @@ import networkConfig from '@/../config/network.conf.json'
     ModalTransactionConfirmation,
     MaxFeeAndSubmit,
   },
-  computed: {...mapGetters({
-    ownedNamespaces: 'wallet/currentWalletOwnedNamespaces',
-  })},
+  computed: {
+    ...mapGetters({
+      ownedNamespaces: 'namespace/ownedNamespaces',
+      networkConfiguration: 'network/networkConfiguration',
+    }),
+  },
 })
 export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase {
-  @Prop({ default: null }) signer: string
-  @Prop({ default: null }) registrationType: NamespaceRegistrationType
-  @Prop({ default: null }) namespaceId: NamespaceId
-  @Prop({ default: null }) parentNamespaceId: NamespaceId
-  @Prop({ default: null }) duration: number
+  @Prop({default: null}) signer: string
+  @Prop({default: null}) registrationType: NamespaceRegistrationType
+  @Prop({default: null}) namespaceId: NamespaceId
+  @Prop({default: null}) parentNamespaceId: NamespaceId
+  @Prop({default: null}) duration: number
 
+
+  protected networkConfiguration: NetworkConfigurationModel
   /**
    * Current wallet's owned namespaces
-   * @var {NamespaceInfo[]}
    */
-  public ownedNamespaces: NamespaceInfo[]
+  public ownedNamespaces: NamespaceModel[]
 
   /**
    * Root namespace type exposed to view
@@ -101,20 +103,13 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   }
 
   /**
-   * Max namespace depth allowed by the network
-   * @private
-   * @type {number}
-   */
-  private maxNamespaceDepth: number = networkConfig.networks['testnet-publicTest'].properties.maxNamespaceDepth
-
-  /**
    * Namespaces that can have children
    * @readonly
    * @protected
-   * @type {NamespaceInfo[]}
    */
-  protected get fertileNamespaces(): NamespaceInfo[] {
-    return this.ownedNamespaces.filter(({depth}) => depth < this.maxNamespaceDepth)
+  protected get fertileNamespaces(): NamespaceModel[] {
+    const maxNamespaceDepth = this.networkConfiguration.maxNamespaceDepth
+    return this.ownedNamespaces.filter(({depth}) => depth < maxNamespaceDepth)
   }
 
   /**
@@ -122,16 +117,8 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    * @return {void}
    */
   protected resetForm() {
-    // - re-populate form if transaction staged
-    // if (this.stagedTransactions.length) {
-    //   const transaction = this.stagedTransactions.find(staged => staged.type === TransactionType.NAMESPACE_REGISTRATION)
-    //   this.setTransactions([transaction as NamespaceRegistrationTransaction])
-    //   this.isAwaitingSignature = true
-    //   return 
-    // }
-
     // - set default form values
-    this.formItems.signerPublicKey = this.currentWallet.values.get('publicKey')
+    this.formItems.signerPublicKey = this.currentWallet.publicKey
     this.formItems.registrationType = this.registrationType || NamespaceRegistrationType.RootNamespace
     this.formItems.newNamespaceName = this.namespaceId ? this.namespaceId.fullName : ''
     this.formItems.parentNamespaceName = this.parentNamespaceId ? this.parentNamespaceId.fullName : ''
@@ -161,27 +148,27 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
       // - read form for definition
       const data: NamespaceRegistrationFormFieldsType = {
         registrationType: this.formItems.registrationType,
-        rootNamespaceName: NamespaceRegistrationType.RootNamespace === this.formItems.registrationType 
+        rootNamespaceName: NamespaceRegistrationType.RootNamespace === this.formItems.registrationType
           ? this.formItems.newNamespaceName
           : this.formItems.parentNamespaceName,
-        subNamespaceName: NamespaceRegistrationType.SubNamespace === this.formItems.registrationType 
+        subNamespaceName: NamespaceRegistrationType.SubNamespace === this.formItems.registrationType
           ? this.formItems.newNamespaceName
           : '',
         duration: this.formItems.duration,
         maxFee: UInt64.fromUint(this.formItems.maxFee),
       }
-      
+
       // - prepare transaction
       let view = new ViewNamespaceRegistrationTransaction(this.$store)
       view = view.parse(data)
-      
+
       // - return instantiated Transaction
       return [this.factory.build(view)]
     } catch (error) {
       console.error('Error happened in FormNamespaceRegistrationTransaction.transactions(): ', error)
     }
   }
-  
+
   /**
    * Setter for TRANSFER transactions that will be staged
    * @see {FormTransactionBase}
@@ -191,13 +178,13 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   protected setTransactions(transactions: Transaction[]) {
     // - this form creates 2 transaction
     const transaction = transactions.shift() as NamespaceRegistrationTransaction
-    
+
     // - populate from transaction
     this.formItems.registrationType = transaction.registrationType
     this.formItems.newNamespaceName = transaction.namespaceName
     this.formItems.parentNamespaceName = transaction.parentId ? transaction.parentId.toHex() : ''
     this.formItems.duration = transaction.duration ? transaction.duration.compact() : 0
-    
+
     // - populate maxFee
     this.formItems.maxFee = transaction.maxFee.compact()
   }

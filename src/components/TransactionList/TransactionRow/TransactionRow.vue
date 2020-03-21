@@ -1,6 +1,8 @@
 <template>
-  <div class="transaction-row-container transaction-table-columns"
-       @click="$emit('click', transaction)">
+  <div
+    class="transaction-row-container transaction-table-columns"
+    @click="$emit('click', transaction)"
+  >
     <!-- FIRST COLUMN -->
     <div class="icon-cell">
       <img :src="getIcon()" class="icon-cell-image">
@@ -55,7 +57,7 @@
 
 <script lang="ts">
 // @ts-ignore
-import { TransactionRowTs } from './TransactionRowTs'
+import {TransactionRowTs} from './TransactionRowTs'
 
 export default class TransactionRow extends TransactionRowTs {}
 </script>

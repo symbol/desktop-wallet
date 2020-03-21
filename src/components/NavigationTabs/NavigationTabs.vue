@@ -1,5 +1,5 @@
 <template>
-  <div :class="[direction==='horizontal'?'tabs':'',direction]">
+  <div :class="[ direction === 'horizontal' ? 'tabs' : '',direction ]">
     <span
       v-for="(tabEntry, index) in tabEntries"
       :key="index"
@@ -17,6 +17,7 @@
 
 <script lang="ts">
 import {NavigationTabsTs} from './NavigationTabsTs'
+
 export default class NavigationTabs extends NavigationTabsTs {}
 </script>
 

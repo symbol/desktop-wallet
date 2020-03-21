@@ -14,20 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, UInt64, MosaicDefinitionTransaction, MosaicFlags, MosaicNonce} from 'symbol-sdk'
-
+import {MosaicDefinitionTransaction, MosaicFlags, MosaicId, MosaicNonce, UInt64} from 'symbol-sdk'
 // internal dependencies
 import {TransactionView} from './TransactionView'
 
 /// region custom types
 export type MosaicDefinitionFormFieldsType = {
-  nonce: MosaicNonce,
-  mosaicId: MosaicId,
-  mosaicFlags: MosaicFlags,
-  divisibility: number,
-  permanent: boolean,
-  duration: number,
-  maxFee: UInt64,
+  nonce: MosaicNonce
+  mosaicId: MosaicId
+  mosaicFlags: MosaicFlags
+  divisibility: number
+  permanent: boolean
+  duration: number
+  maxFee: UInt64
 }
 /// end-region custom types
 

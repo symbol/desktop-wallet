@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Vue, Component} from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 
 @Component
 export default class CreateAccountTs extends Vue {
@@ -39,12 +39,12 @@ export default class CreateAccountTs extends Vue {
 
   public getCurrentStep(): number {
     switch(this.$route.name) {
-    default:
-    case 'accounts.createAccount.info': return 0
-    case 'accounts.createAccount.generateMnemonic': return 1
-    case 'accounts.createAccount.showMnemonic': return 2
-    case 'accounts.createAccount.verifyMnemonic': return 3
-    case 'accounts.createAccount.finalize': return 4
+      default:
+      case 'accounts.createAccount.info': return 0
+      case 'accounts.createAccount.generateMnemonic': return 1
+      case 'accounts.createAccount.showMnemonic': return 2
+      case 'accounts.createAccount.verifyMnemonic': return 3
+      case 'accounts.createAccount.finalize': return 4
     }
   }
 

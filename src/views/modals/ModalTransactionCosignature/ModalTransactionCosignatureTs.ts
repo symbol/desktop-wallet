@@ -13,21 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Transaction, CosignatureSignedTransaction, Account, AggregateTransaction, AggregateTransactionCosignature} from 'symbol-sdk'
+import {Component, Prop, Vue} from 'vue-property-decorator'
+import {
+  Account,
+  AggregateTransaction,
+  AggregateTransactionCosignature,
+  CosignatureSignedTransaction,
+} from 'symbol-sdk'
 import {mapGetters} from 'vuex'
 
-import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
+import {WalletModel, WalletType} from '@/core/database/entities/WalletModel'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
-
 // child components
 // @ts-ignore
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue'
 // @ts-ignore
 import FormAccountUnlock from '@/views/forms/FormAccountUnlock/FormAccountUnlock.vue'
 // @ts-ignore
-import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue'
+import HardwareConfirmationButton
+  from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue'
 
 @Component({
   components: {
@@ -41,21 +46,21 @@ import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/
 })
 export class ModalTransactionCosignatureTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   @Prop({
-    default: null
+    default: null,
   }) transaction: AggregateTransaction
 
   /**
    * Currently active wallet
    * @see {Store.Wallet}
-   * @var {WalletsModel}
+   * @var {WalletModel}
    */
-  public currentWallet: WalletsModel
+  public currentWallet: WalletModel
 
-/// region computed properties
+  /// region computed properties
   /**
    * Visibility state
    * @type {boolean}
@@ -78,19 +83,19 @@ export class ModalTransactionCosignatureTs extends Vue {
    * @return {boolean}
    */
   public get isUsingHardwareWallet(): boolean {
-    //XXX should use "stagedTransaction.signer" to identify wallet
-    return WalletType.TREZOR === this.currentWallet.values.get('type')
+    // XXX should use "stagedTransaction.signer" to identify wallet
+    return WalletType.TREZOR === this.currentWallet.type
   }
 
   public get needsCosignature(): boolean {
-    const currentPubAccount = this.currentWallet.objects.publicAccount
+    const currentPubAccount = WalletModel.getObjects(this.currentWallet).publicAccount
     return !this.transaction.signedByAccount(currentPubAccount)
   }
 
   public get cosignatures(): AggregateTransactionCosignature[] {
     return this.transaction.cosignatures
   }
-/// end-region computed properties
+  /// end-region computed properties
 
   /**
    * Hook called when child component HardwareConfirmationButton emits

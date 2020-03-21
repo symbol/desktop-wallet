@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {Formatters} from '@/core/utils/Formatters'
-
 // child components
 import VueNumber from 'vue-number-animation'
 
@@ -23,11 +22,11 @@ import VueNumber from 'vue-number-animation'
 export class AnimatedNumberTs extends Vue {
 
   @Prop({
-    default: 2
+    default: 2,
   }) time: number
 
   @Prop({
-    default: 0
+    default: 0,
   }) value: number
 
   /**

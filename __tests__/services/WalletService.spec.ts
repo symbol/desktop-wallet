@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NetworkType, Account} from 'symbol-sdk'
+import {Account, NetworkType} from 'symbol-sdk'
 import {WalletService} from '@/services/WalletService'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 
@@ -39,19 +39,16 @@ const expectedAccounts = Object.values(expectedPrivateKeys).map(
   key => Account.createFromPrivateKey(key, NetworkType.TEST_NET),
 )
 
-// Addresses from Accounts
-const expectedAddresses = expectedAccounts.map(({address}) => address)
-
 // max 2+2 generations
 const generatedAccounts = new WalletService().generateAccountsFromMnemonic(
   mnemonic,
   NetworkType.TEST_NET,
-  2
+  2,
 )
 const generatedAddresses = new WalletService().getAddressesFromMnemonic(
   mnemonic,
   NetworkType.TEST_NET,
-  2
+  2,
 )
 
 describe('services/WalletServices', () => {

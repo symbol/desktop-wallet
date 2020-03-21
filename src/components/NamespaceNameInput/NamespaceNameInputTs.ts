@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, NamespaceRegistrationType} from 'symbol-sdk'
-
+import {NamespaceRegistrationType, NetworkType} from 'symbol-sdk'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-
 // child components
 import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -36,7 +34,7 @@ import FormRow from '@/components/FormRow/FormRow.vue'
   },
   computed: {...mapGetters({
     networkType: 'network/networkType',
-  })}
+  })},
 })
 export class NamespaceNameInputTs extends Vue {
   @Prop({ default: null }) value: string
@@ -56,7 +54,7 @@ export class NamespaceNameInputTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get chosenValue(): string {
     return this.value
   }

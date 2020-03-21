@@ -1,22 +1,20 @@
 <template>
   <div class="multisig-outer-container">
     <div class="multisig-inner-container xym-outline">
-    <div class="bottom-container">
-      <NavigationTabs direction="horizontal" :parent-route-name="'multisig'" />
-      <router-view />
+      <div class="bottom-container">
+        <NavigationTabs direction="horizontal" :parent-route-name="'multisig'" />
+        <router-view />
+      </div>
     </div>
-    </div>
-    
   </div>
 </template>
 <script>
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
-
 // child components
 import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
 
-@Component({ 
+@Component({
   components: {NavigationTabs},
   data() {return {}},
 })

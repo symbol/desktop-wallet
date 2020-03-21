@@ -11,20 +11,20 @@
     >
       <div class="wallet_address">
         <span class="address">
-          {{ currentSignerAddress }}
+          {{ currentSignerAddress.plain() }}
         </span>
         <img
           class="pointer"
           src="@/views/resources/img/monitor/monitorCopyAddress.png"
-          @click="uiHelpers.copyToClipboard(currentWallet.objects.address.plain())"
+          @click="uiHelpers.copyToClipboard(currentWallet.address)"
         >
       </div>
 
-      <div class="XEM_amount overflow_ellipsis">
-        <div>{{ networkMosaicTicker }}</div>
+      <div v-if="networkCurrency" class="XEM_amount overflow_ellipsis">
+        <div>{{ networkCurrency.ticker }}</div>
         <div class="amount">
           <MosaicAmountDisplay
-            :id="networkMosaic"
+            :id="networkMosaicId"
             :relative-amount="networkMosaicBalance"
             :absolute="false"
             :size="'biggest'"
@@ -40,10 +40,10 @@
     <div class="bottom_account_info radius xym-outline">
       <div class="mosaicListWrap">
         <Spin
-          v-if="!currentWallet || !currentMosaics.length" size="large" fix
+          v-if="!currentWallet || !balanceMosaics.length" size="large" fix
           class="absolute"
         />
-        <MosaicBalanceList :mosaics="currentMosaics" />
+        <MosaicBalanceList />
       </div>
     </div>
   </div>

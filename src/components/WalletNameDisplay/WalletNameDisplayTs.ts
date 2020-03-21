@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {ValidationProvider} from 'vee-validate'
-
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-
 // child components
 // @ts-ignore
-import ModalFormWalletNameUpdate from '@/views/modals/ModalFormWalletNameUpdate/ModalFormWalletNameUpdate.vue'
+import ModalFormWalletNameUpdate
+  from '@/views/modals/ModalFormWalletNameUpdate/ModalFormWalletNameUpdate.vue'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
@@ -34,16 +33,16 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
     ValidationProvider,
     ErrorTooltip,
     FormLabel,
-  }
+  },
 })
 export class WalletNameDisplayTs extends Vue {
 
   @Prop({
-    default: null
-  }) wallet: WalletsModel
+    default: null,
+  }) wallet: WalletModel
 
   @Prop({
-    default: false
+    default: false,
   }) editable: boolean
 
   /**
@@ -58,7 +57,7 @@ export class WalletNameDisplayTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get hasNameFormModal(): boolean {
     return this.editable && this.isEditingName
   }

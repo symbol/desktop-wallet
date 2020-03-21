@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-
+import {AccountModel} from '@/core/database/entities/AccountModel'
 // child components
 // @ts-ignore
 import FormSubWalletCreation from '@/views/forms/FormSubWalletCreation/FormSubWalletCreation.vue'
@@ -29,11 +27,11 @@ import FormSubWalletCreation from '@/views/forms/FormSubWalletCreation/FormSubWa
   },
   computed: {...mapGetters({
     currentAccount: 'account/currentAccount',
-  })}
+  })},
 })
 export class ModalFormSubWalletCreationTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   /**
@@ -58,15 +56,13 @@ export class ModalFormSubWalletCreationTs extends Vue {
    * @see {Store.Account}
    * @var {AccountsModel}
    */
-  public currentAccount: AccountsModel
+  public currentAccount: AccountModel
 
   /**
    * Hook called when child component FormSubWalletCreation emits
    * the 'submit' event.
-   * @param {Password} password 
-   * @return {void}
    */
-  public onSubmit(formItems: any) {
+  public onSubmit() {
     this.show = false
   }
 }

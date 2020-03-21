@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
-
 // child components
 // @ts-ignore
 import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemonicExport.vue'
@@ -36,8 +34,8 @@ import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemoni
 })
 export class ProtectedMnemonicQRButtonTs extends Vue {
   @Prop({
-    default: null
-  }) wallet: WalletsModel
+    default: null,
+  }) wallet: WalletModel
 
   /**
    * UI Helpers
@@ -51,7 +49,7 @@ export class ProtectedMnemonicQRButtonTs extends Vue {
    */
   public isViewingExportModal: boolean = false
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get hasMnemonicExportModal(): boolean {
     return this.isViewingExportModal
   }
@@ -59,7 +57,7 @@ export class ProtectedMnemonicQRButtonTs extends Vue {
   public set hasMnemonicExportModal(f: boolean) {
     this.isViewingExportModal = f
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Hook called when the account unlock modal must open

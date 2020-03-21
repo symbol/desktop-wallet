@@ -55,11 +55,14 @@
     </FormWrapper>
 
     <!-- force mosaic list reactivity -->
-    <div v-show="false">{{ currentMosaicList() }}</div>
+    <div v-show="false">
+      {{ currentMosaicList() }}
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { FormTransferTransactionTs } from './FormTransferTransactionTs'
+import {FormTransferTransactionTs} from './FormTransferTransactionTs'
+
 export default class FormTransferTransaction extends FormTransferTransactionTs {}
 </script>

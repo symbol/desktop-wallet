@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {DerivationService, DerivationPathLevels} from '@/services/DerivationService'
+import {DerivationPathLevels, DerivationService} from '@/services/DerivationService'
 import {WalletService} from '@/services/WalletService'
+
 const {DEFAULT_WALLET_PATH} = WalletService
 
 // Standard account paths
@@ -56,22 +57,22 @@ describe('services/DerivationService ==>', () => {
     })
 
     test('return the first missing consecutive path when it is the default one', () => {
-      const paths = [standardPaths[2], standardPaths[3]]
+      const paths = [ standardPaths[2], standardPaths[3] ]
       expect(new DerivationService().getNextAccountPath(paths)).toBe(DEFAULT_WALLET_PATH)
     })
 
     test('return the first missing consecutive path when it is the second one', () => {
-      const paths = [standardPaths[3], standardPaths[5], DEFAULT_WALLET_PATH]
+      const paths = [ standardPaths[3], standardPaths[5], DEFAULT_WALLET_PATH ]
       expect(new DerivationService().getNextAccountPath(paths)).toBe(standardPaths[2])
     })
 
     test('return the first missing consecutive path when it is in the middle', () => {
-      const paths = [standardPaths[2], DEFAULT_WALLET_PATH, standardPaths[4],]
+      const paths = [ standardPaths[2], DEFAULT_WALLET_PATH, standardPaths[4] ]
       expect(new DerivationService().getNextAccountPath(paths)).toBe(standardPaths[3])
     })
 
     test('return the next path when all paths are consecutive', () => {
-      const paths = [standardPaths[2], standardPaths[3], DEFAULT_WALLET_PATH]
+      const paths = [ standardPaths[2], standardPaths[3], DEFAULT_WALLET_PATH ]
       expect(new DerivationService().getNextAccountPath(paths)).toBe(standardPaths[4])
     })
   })
