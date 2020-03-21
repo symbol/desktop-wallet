@@ -13,15 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Address,
-  BlockInfo,
-  IListener,
-  Listener,
-  RepositoryFactory,
-  RepositoryFactoryHttp,
-  TransactionStatusError,
-} from 'symbol-sdk'
+import {Address, IListener, Listener, RepositoryFactory, RepositoryFactoryHttp, TransactionStatusError} from 'symbol-sdk'
 import {Subscription} from 'rxjs'
 // internal dependencies
 import {AddressValidator} from '@/core/validation/validators'
@@ -124,29 +116,5 @@ export class RESTService {
       return new Listener(wsUrl, WebSocket)
     }
     return repositoryFactory
-  }
-
-  /**
-   * Subscribe to blocks websocket channels
-   * @param {Context} context the context
-   * @param {RepositoryFactory} repositoryFactory the repository factory used to create the listener
-   */
-  public static async subscribeBlocks(
-    context: { dispatch: any, commit: any },
-    repositoryFactory: RepositoryFactory,
-  ): Promise<{ listener: IListener, subscriptions: Subscription[] }> {
-    // open websocket connection
-    const listener = repositoryFactory.createListener()
-    await listener.open()
-
-    context.dispatch('diagnostic/ADD_DEBUG', 'Opening REST block websocket channel connection', {root: true})
-
-    const newBlock = listener.newBlock().subscribe((block: BlockInfo) => {
-      context.dispatch('SET_CURRENT_HEIGHT', block.height.compact())
-      context.dispatch('ADD_BLOCK', block)
-      context.dispatch('diagnostic/ADD_INFO', `New block height: ${block.height.compact()}`, {root: true})
-    })
-
-    return {listener, subscriptions: [newBlock]}
   }
 }

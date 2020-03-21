@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,16 +28,16 @@ import NamespaceStore from '@/store/Namespace'
 import StatisticsStore from '@/store/Statistics'
 import CommunityStore from '@/store/Community'
 import {onPeerConnection} from '@/store/plugins/onPeerConnection'
-
 // use AwaitLock for initialization routines
 import {AwaitLock} from '@/store/AwaitLock'
+
 const Lock = AwaitLock.create()
 
 Vue.use(Vuex)
 
 /**
  * Application Store
- * 
+ *
  * This store initializes peer connection
  */
 const AppStore = new Vuex.Store({
@@ -60,22 +60,22 @@ const AppStore = new Vuex.Store({
     onPeerConnection,
   ],
   actions: {
-    async initialize({ dispatch, getters }) {
+    async initialize({dispatch, getters}) {
       const callback = async () => {
         await dispatch('app/initialize')
         await dispatch('db/initialize')
         await dispatch('diagnostic/initialize')
         await dispatch('notification/initialize')
-        await dispatch('network/initialize', getters['db/feed'])
-        await dispatch('mosaic/initialize', getters['db/feed'])
-        await dispatch('namespace/initialize', getters['db/feed'])
+        await dispatch('network/initialize')
+        await dispatch('mosaic/initialize')
+        await dispatch('namespace/initialize')
       }
 
       // aquire async lock until initialized
       await Lock.initialize(callback, {getters})
     },
     // Uninitialize the stores (call on app destroyed).
-    async uninitialize({ dispatch }) {
+    async uninitialize({dispatch}) {
       await Promise.all([
         dispatch('app/uninitialize'),
         dispatch('network/uninitialize'),

@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 import {mapGetters} from 'vuex'
-import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Transaction, MosaicId, AggregateTransaction} from 'symbol-sdk'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
+import {AggregateTransaction, MosaicId, Transaction} from 'symbol-sdk'
 // internal dependencies
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {TransactionService} from '@/services/TransactionService'
-
 // child components
 // @ts-ignore
 import ModalTransactionCosignature from '@/views/modals/ModalTransactionCosignature/ModalTransactionCosignature.vue'
@@ -45,18 +43,20 @@ type TabName = 'confirmed' | 'unconfirmed' | 'partial'
     TransactionListOptions,
     TransactionTable,
   },
-  computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
-    currentWallet: 'wallet/currentWallet',
-    knownWallets: 'wallet/knownWallets',
-    networkMosaic: 'mosaic/networkMosaic',
-    currentHeight: 'network/currentHeight',
-    // use partial+unconfirmed from store because
-    // of ephemeral nature (websocket only here)
-    confirmedTransactions: 'wallet/confirmedTransactions',
-    partialTransactions: 'wallet/partialTransactions',
-    unconfirmedTransactions: 'wallet/unconfirmedTransactions',
-  })},
+  computed: {
+    ...mapGetters({
+      currentAccount: 'account/currentAccount',
+      currentWallet: 'wallet/currentWallet',
+      knownWallets: 'wallet/knownWallets',
+      networkMosaic: 'mosaic/networkMosaic',
+      currentHeight: 'network/currentHeight',
+      // use partial+unconfirmed from store because
+      // of ephemeral nature (websocket only here)
+      confirmedTransactions: 'wallet/confirmedTransactions',
+      partialTransactions: 'wallet/partialTransactions',
+      unconfirmedTransactions: 'wallet/unconfirmedTransactions',
+    }),
+  },
 })
 export class TransactionListTs extends Vue {
 
@@ -73,21 +73,21 @@ export class TransactionListTs extends Vue {
    * @see {Store.Account}
    * @var {AccountsModel}
    */
-  public currentAccount: AccountsModel
+  public currentAccount: AccountModel
 
   /**
    * Currently active wallet
    * @see {Store.Wallet}
-   * @var {WalletsModel}
+   * @var {WalletModel}
    */
-  public currentWallet: WalletsModel
+  public currentWallet: WalletModel
 
   /**
    * Active account's wallets
    * @see {Store.Wallet}
-   * @var {WalletsModel[]}
+   * @var {WalletModel[]}
    */
-  public knownWallets: WalletsModel[]
+  public knownWallets: WalletModel[]
 
   /**
    * Network block height
@@ -197,7 +197,7 @@ export class TransactionListTs extends Vue {
     // get pagination params
     const start = (this.currentPage - 1) * this.pageSize
     const end = this.currentPage * this.pageSize
-    
+
     // slice and return
     return [...transactions].reverse().slice(start, end)
   }
@@ -230,6 +230,7 @@ export class TransactionListTs extends Vue {
   public set hasCosignatureModal(f: boolean) {
     this.isAwaitingCosignature = f
   }
+
   /// end-region computed properties getter/setter
 
   /**
@@ -241,21 +242,20 @@ export class TransactionListTs extends Vue {
 
     this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
       group: group,
-      address: this.currentWallet.objects.address.plain(),
+      address: this.currentWallet.address,
       pageSize: 100,
     })
   }
 
   /**
    * Hook called when a transaction is clicked
-   * @param {Transaction} transaction 
+   * @param {Transaction} transaction
    */
   public onClickTransaction(transaction: Transaction | AggregateTransaction) {
     if (transaction.hasMissingSignatures()) {
       this.activePartialTransaction = transaction as AggregateTransaction
       this.hasCosignatureModal = true
-    }
-    else {
+    } else {
       this.activeTransaction = transaction
       this.hasDetailModal = true
     }

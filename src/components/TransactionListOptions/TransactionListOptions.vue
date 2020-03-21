@@ -8,7 +8,7 @@
       </div>
       <SignerSelector
         v-else
-        v-model="selectedSigner"
+        v-model="formItems.currentSignerPubicKey"
         :signers="signers"
         :no-label="true"
         @input="onSignerSelectorChange"
