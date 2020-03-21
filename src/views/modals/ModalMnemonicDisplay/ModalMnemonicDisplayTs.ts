@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, Password, NetworkType} from 'symbol-sdk'
+import {Account, Password} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
-import {QRCodeGenerator, MnemonicQR} from 'symbol-qr-library'
-import {pluck, concatMap} from 'rxjs/operators'
-import {of, Observable} from 'rxjs'
-
 // internal dependencies
 import {AESEncryptionService} from '@/services/AESEncryptionService'
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-
+import {AccountModel} from '@/core/database/entities/AccountModel'
 // child components
 // @ts-ignore
 import FormAccountUnlock from '@/views/forms/FormAccountUnlock/FormAccountUnlock.vue'
@@ -42,7 +37,7 @@ import MnemonicDisplay from '@/components/MnemonicDisplay/MnemonicDisplay.vue'
 })
 export class ModalMnemonicDisplayTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   /**
@@ -50,7 +45,7 @@ export class ModalMnemonicDisplayTs extends Vue {
    * @see {Store.Account}
    * @var {AccountsModel}
    */
-  public currentAccount: AccountsModel
+  public currentAccount: AccountModel
   
   public hasMnemonicInfo: boolean = false
   public mnemonic: MnemonicPassPhrase
@@ -85,7 +80,7 @@ export class ModalMnemonicDisplayTs extends Vue {
   public onAccountUnlocked(payload: {account: Account, password: Password}): boolean {
 
     // decrypt seed + create QR
-    const encSeed = this.currentAccount.values.get('seed')
+    const encSeed = this.currentAccount.seed
     const plnSeed = AESEncryptionService.decrypt(encSeed, payload.password)
 
     try {
@@ -96,7 +91,7 @@ export class ModalMnemonicDisplayTs extends Vue {
       return true
     }
     catch (e) {
-      console.error("error mnemonic: ", e)
+      console.error('error mnemonic: ', e)
     }
 
     return false

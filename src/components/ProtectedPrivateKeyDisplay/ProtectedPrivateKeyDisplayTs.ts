@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Account, EncryptedPrivateKey} from 'symbol-sdk'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Account} from 'symbol-sdk'
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
-
 // child components
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
@@ -27,12 +25,12 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
 @Component({
   components: {
     ModalFormAccountUnlock,
-  }
+  },
 })
 export class ProtectedPrivateKeyDisplayTs extends Vue {
   @Prop({
-    default: null
-  }) wallet: WalletsModel
+    default: null,
+  }) wallet: WalletModel
 
   /**
    * UI Helpers
@@ -66,7 +64,7 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
    */
   public secondsCounter: number = 10
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get hasPlainPrivateKey(): boolean {
     return this.isDisplayingPrivateKey
   }
@@ -76,10 +74,10 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
 
     if (f === true) {
       // "countdown" for hiding message
-      let cntInterval = this.onStartCounter()
+      const cntInterval = this.onStartCounter()
 
       // - private key hidden after 10 seconds
-      let hideInterval = this.onHideTimeout(this.secondsCounter, cntInterval)
+      this.onHideTimeout(this.secondsCounter, cntInterval)
     }
   }
 
@@ -90,7 +88,7 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
   public set hasAccountUnlockModal(f: boolean) {
     this.isUnlockingAccount = f
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Hook called when the seconds counter starts

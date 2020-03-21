@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,19 +15,17 @@
  */
 // external dependencies
 import {mapGetters} from 'vuex'
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {MultisigAccountInfo, NetworkType, Address} from 'symbol-sdk'
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import {Address, NetworkType} from 'symbol-sdk'
 import {asyncScheduler, Subject} from 'rxjs'
 import {throttleTime} from 'rxjs/operators'
-
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-
 // child components
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
 import {RESTDispatcher} from '@/core/utils/RESTDispatcher'
-import {MultisigService} from '@/services/MultisigService'
+import {Signer} from '@/store/Wallet'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 
 // custom types
 type group = 'confirmed' | 'unconfirmed' | 'partial'
@@ -36,11 +34,12 @@ type group = 'confirmed' | 'unconfirmed' | 'partial'
   components: {SignerSelector},
   computed: {
     ...mapGetters({
+      currentSigner: 'wallet/currentSigner',
       currentWallet: 'wallet/currentWallet',
-      currentWalletMultisigInfo: 'wallet/currentWalletMultisigInfo',
       networkType: 'network/networkType',
-    })
-  }
+      signers: 'wallet/signers',
+    }),
+  },
 })
 export class TransactionListOptionsTs extends Vue {
   @Prop({default: 'confirmed'}) currentTab: group
@@ -53,29 +52,23 @@ export class TransactionListOptionsTs extends Vue {
   private REFRESH_CALLS_THROTTLING: number = 500
 
   /**
-   * Observable of public keys to fetch for 
+   * Observable of public keys to fetch for
    *
    * @private
    * @type {Observable<string>}
    */
-  private refreshStream$: Subject<{publicKey: string, group: group}> = new Subject
+  private refreshStream$: Subject<{ publicKey: string, group: group }> = new Subject
 
   /**
    * Currently active wallet
-   * @var {WalletsModel}
+   * @var {WalletModel}
    */
-  protected currentWallet: WalletsModel
+  protected currentWallet: WalletModel
 
   /**
-   * Current wallet multisig info
-   * @type {MultisigAccountInfo}
+   * Network type
+   * @var {NetworkType}
    */
-  protected currentWalletMultisigInfo: MultisigAccountInfo
-
-  /**
- * Network type
- * @var {NetworkType}
- */
   protected networkType: NetworkType
 
   /**
@@ -83,7 +76,15 @@ export class TransactionListOptionsTs extends Vue {
    * @protected
    * @type {string}
    */
-  protected selectedSigner: string = this.$store.getters['wallet/currentWallet'].values.get('publicKey')
+  public currentSigner: Signer
+
+  /**
+   * Form fields
+   * @var {Object}
+   */
+  public formItems = {
+    currentSignerPubicKey: this.currentSigner && this.currentSigner.publicKey || '',
+  }
 
   /**
    * Whether to show the signer selector
@@ -92,24 +93,22 @@ export class TransactionListOptionsTs extends Vue {
    */
   protected showSignerSelector: boolean = false
 
+  public signers: Signer[]
+
   /**
    * Hook called when the signer selector has changed
    * @protected
    */
   protected onSignerSelectorChange(publicKey: string): void {
     // set selected signer if the chosen account is a multisig one
-    const isCosig = this.currentWallet.values.get('publicKey') !== publicKey
-    const payload = !isCosig ? this.currentWallet : {
-      networkType: this.networkType,
-      publicKey: publicKey
-    }
+    this.formItems.currentSignerPubicKey = publicKey
 
     // clear previous account transactions
-    this.$store.dispatch('wallet/RESET_TRANSACTIONS', {model: payload})
+    this.$store.dispatch('wallet/RESET_TRANSACTIONS')
 
     // dispatch actions using the rest dispatcher
     const dispatcher = new RESTDispatcher(this.$store.dispatch)
-    dispatcher.add('wallet/SET_CURRENT_SIGNER', {model: payload})
+    dispatcher.add('wallet/SET_CURRENT_SIGNER', {publicKey})
     dispatcher.add('wallet/REST_FETCH_TRANSACTIONS', {
       group: this.currentTab,
       address: Address.createFromPublicKey(publicKey, this.networkType).plain(),
@@ -118,22 +117,13 @@ export class TransactionListOptionsTs extends Vue {
 
     dispatcher.throttle_dispatch()
   }
+
   /**
    * Hook called when refresh button is clicked
    * @protected
    */
   protected refresh(): void {
-    this.refreshStream$.next({publicKey: this.selectedSigner, group: this.currentTab})
-  }
-
-  /**
-   * Addresses to be shown in the selector
-   * @TODO: Not DRY since the same function is in FormTransactionBase
-   * @readonly
-   * @type {{publicKey: string, label: string}[]}
-   */
-  protected get signers(): {publicKey: string, label: string}[] {
-    return new MultisigService(this.$store, this.$i18n).getSigners()
+    this.refreshStream$.next({publicKey: this.currentSigner.publicKey, group: this.currentTab})
   }
 
   /**
@@ -146,7 +136,7 @@ export class TransactionListOptionsTs extends Vue {
         throttleTime(this.REFRESH_CALLS_THROTTLING, asyncScheduler, {leading: true, trailing: true}),
       )
       .subscribe(({publicKey, group}) => {
-        // dispatch REST call
+      // dispatch REST call
         this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
           group,
           address: Address.createFromPublicKey(publicKey, this.networkType).plain(),
@@ -155,14 +145,18 @@ export class TransactionListOptionsTs extends Vue {
       })
   }
 
+  public mounted(): void {
+    this.formItems.currentSignerPubicKey = this.currentSigner && this.currentSigner.publicKey || ''
+  }
+
   /**
    * Watch for currentWallet changes
-   * Necessary to set the default signer in the selector 
-   * @param {*} newCurrentWallet
+   * Necessary to set the default signer in the selector
+   * @param currentSigner the new signer
    */
-  @Watch('currentWallet')
-  onCurrentWalletChange(newCurrentWallet: WalletsModel): void {
-    this.selectedSigner = newCurrentWallet.values.get('publicKey')
+  @Watch('currentSigner')
+  onCurrentSignerChange(currentSigner: Signer): void {
+    this.formItems.currentSignerPubicKey = currentSigner.publicKey
   }
 
   /**
@@ -170,6 +164,6 @@ export class TransactionListOptionsTs extends Vue {
    */
   beforeDestroy(): void {
     // reset the selected signer if it is not the current wallet
-    this.onSignerSelectorChange(this.currentWallet.values.get('publicKey'))
+    this.onSignerSelectorChange(this.currentWallet.publicKey)
   }
 }

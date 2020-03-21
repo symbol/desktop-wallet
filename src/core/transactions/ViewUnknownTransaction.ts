@@ -14,14 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Address, Mosaic, MosaicId, NamespaceId, UInt64, RawUInt64, PlainMessage, EmptyMessage, Transaction} from 'symbol-sdk'
-
+import {Transaction, UInt64} from 'symbol-sdk'
 // internal dependencies
 import {TransactionView} from './TransactionView'
 
 /// region custom types
 export type UnknownTransactionFormFields = {
-  maxFee: UInt64,
+  maxFee: UInt64
 }
 /// end-region custom types
 

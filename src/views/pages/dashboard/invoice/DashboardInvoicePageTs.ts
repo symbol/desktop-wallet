@@ -16,16 +16,15 @@
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {pluck, concatMap} from 'rxjs/operators'
-import {of, Observable} from 'rxjs'
+import {concatMap, pluck} from 'rxjs/operators'
+import {Observable, of} from 'rxjs'
 import {QRCodeGenerator, TransactionQR} from 'symbol-qr-library'
-import {NetworkType, TransferTransaction, Address} from 'symbol-sdk'
+import {Address, NetworkType, TransferTransaction} from 'symbol-sdk'
 import {MosaicAttachment} from '@/views/forms/FormTransferTransaction/FormTransferTransactionTs.ts'
-
 // child components
 // @ts-ignore
-import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue'
-
+import FormTransferTransaction
+  from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue'
 // resources
 // @ts-ignore
 import failureIcon from '@/views/resources/img/monitor/failure.png'
@@ -42,7 +41,6 @@ export interface ITransactionEntry {
   computed: {...mapGetters({
     networkType: 'network/networkType',
     generationHash: 'network/generationHash',
-    currentWalletAddress: 'wallet/currentWalletAddress',
   })},
   subscriptions() {
     const qrCode$ = this
@@ -83,7 +81,7 @@ export class DashboardInvoicePageTs extends Vue {
    */
   public transactions: ITransactionEntry[] = []
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Recipient to be shown in the view
    * @readonly
@@ -157,7 +155,7 @@ export class DashboardInvoicePageTs extends Vue {
     return this.transactionEntry.attachments
   }
 
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Hook called when the child component FormTransferTransaction

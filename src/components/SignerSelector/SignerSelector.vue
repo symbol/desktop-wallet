@@ -17,13 +17,14 @@
             :key="item.publicKey"
             :value="item.publicKey"
           >
-            {{ item.label }}
+            {{ item.label }} {{ item.multisig ? $t('label_postfix_multisig') : '' }}
           </option>
         </select>
       </div>
       <div v-else class="signer-selector-single-signer-container">
         <span>
           {{ signers[0] ? signers[0].label : '' }}
+          {{ (signers[0] && signers[0].multisig) ? $t('label_postfix_multisig') : '' }}
         </span>
       </div>
     </template>
@@ -32,6 +33,7 @@
 
 
 <script lang="ts">
-import { SignerSelectorTs } from './SignerSelectorTs'
+import {SignerSelectorTs} from './SignerSelectorTs'
+
 export default class SignerSelector extends SignerSelectorTs {}
 </script>

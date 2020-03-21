@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
-
 // child components
 // @ts-ignore
 import {ValidationProvider} from 'vee-validate'
@@ -36,7 +34,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 export class MessageInputTs extends Vue {
 
   @Prop({
-    default: ''
+    default: '',
   }) value: string
 
   /**
@@ -45,7 +43,7 @@ export class MessageInputTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   get plain(): string {
     return this.value
   }

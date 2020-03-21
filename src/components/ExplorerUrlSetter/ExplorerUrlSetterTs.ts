@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-
 // child components
-import {ValidationProvider, ValidationObserver} from 'vee-validate'
+import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
-
 // configuration
 import networkConfig from '@/../config/network.conf.json'
 
@@ -44,11 +41,11 @@ import networkConfig from '@/../config/network.conf.json'
 })
 export class ExplorerUrlSetterTs extends Vue {
   @Prop({
-    default: ''
+    default: '',
   }) value: string
 
   @Prop({
-    default: true
+    default: true,
   }) autoSubmit: boolean
 
   /**

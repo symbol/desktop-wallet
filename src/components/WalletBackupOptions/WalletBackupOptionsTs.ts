@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
-
+import {WalletModel} from '@/core/database/entities/WalletModel'
 // child components
 // @ts-ignore
-import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
+import ModalFormAccountUnlock
+  from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
 // @ts-ignore
-import ProtectedMnemonicQRButton from '@/components/ProtectedMnemonicQRButton/ProtectedMnemonicQRButton.vue'
+import ProtectedMnemonicQRButton
+  from '@/components/ProtectedMnemonicQRButton/ProtectedMnemonicQRButton.vue'
 // @ts-ignore
-import ProtectedMnemonicDisplayButton from '@/components/ProtectedMnemonicDisplayButton/ProtectedMnemonicDisplayButton.vue'
+import ProtectedMnemonicDisplayButton
+  from '@/components/ProtectedMnemonicDisplayButton/ProtectedMnemonicDisplayButton.vue'
 
 @Component({
   components: {
@@ -35,8 +36,8 @@ import ProtectedMnemonicDisplayButton from '@/components/ProtectedMnemonicDispla
 export class WalletBackupOptionsTs extends Vue {
 
   @Prop({
-    default: null
-  }) wallet: WalletsModel
+    default: null,
+  }) wallet: WalletModel
 
   /**
    * Whether account is currently being unlocked
@@ -44,7 +45,7 @@ export class WalletBackupOptionsTs extends Vue {
    */
   public isUnlockingAccount: boolean = false
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get hasAccountUnlockModal(): boolean {
     return this.isUnlockingAccount
   }
@@ -52,6 +53,6 @@ export class WalletBackupOptionsTs extends Vue {
   public set hasAccountUnlockModal(f: boolean) {
     this.isUnlockingAccount = f
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
 }

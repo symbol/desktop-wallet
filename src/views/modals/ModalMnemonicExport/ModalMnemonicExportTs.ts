@@ -1,49 +1,46 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, Password, NetworkType} from 'symbol-sdk'
+import {Account, NetworkType, Password} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
-import {QRCodeGenerator, MnemonicQR} from 'symbol-qr-library'
-import {pluck, concatMap} from 'rxjs/operators'
-import {of, Observable} from 'rxjs'
-
+import {MnemonicQR, QRCodeGenerator} from 'symbol-qr-library'
 // internal dependencies
 import {AESEncryptionService} from '@/services/AESEncryptionService'
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-
+import {AccountModel} from '@/core/database/entities/AccountModel'
 // child components
 // @ts-ignore
 import FormAccountUnlock from '@/views/forms/FormAccountUnlock/FormAccountUnlock.vue'
-
 // resources
 // @ts-ignore
 import failureIcon from '@/views/resources/img/monitor/failure.png'
 
 @Component({
   components: {FormAccountUnlock},
-  computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
-    networkType: 'network/networkType',
-    generationHash: 'network/generationHash',
-  })},
+  computed: {
+    ...mapGetters({
+      currentAccount: 'account/currentAccount',
+      networkType: 'network/networkType',
+      generationHash: 'network/generationHash',
+    }),
+  },
 })
 export class ModalMnemonicExportTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   /**
@@ -51,7 +48,7 @@ export class ModalMnemonicExportTs extends Vue {
    * @see {Store.Account}
    * @var {AccountsModel}
    */
-  public currentAccount: AccountsModel
+  public currentAccount: AccountModel
 
   /**
    * Current networkType
@@ -66,16 +63,16 @@ export class ModalMnemonicExportTs extends Vue {
    * @var {string}
    */
   public generationHash: string
-  
+
   public qrBase64: string = failureIcon
   public hasMnemonicInfo: boolean = false
   public exportMnemonicQR: MnemonicQR
 
   public created() {
     this.$eventToObservable('onAccountUnlocked').subscribe(
-      async (event) => {
+      async () => {
         this.qrBase64 = await this.exportMnemonicQR.toBase64().toPromise()
-      }
+      },
     )
   }
 
@@ -98,13 +95,13 @@ export class ModalMnemonicExportTs extends Vue {
 
   /**
    * Hook called when the account has been unlocked
-   * @param {Account} account 
+   * @param {Account} account
    * @return {boolean}
    */
-  public onAccountUnlocked(payload: {account: Account, password: Password}): boolean {
+  public onAccountUnlocked(payload: { account: Account, password: Password }): boolean {
 
     // decrypt seed + create QR
-    const encSeed = this.currentAccount.values.get('seed')
+    const encSeed = this.currentAccount.seed
     const plnSeed = AESEncryptionService.decrypt(encSeed, payload.password)
 
     try {
@@ -120,9 +117,8 @@ export class ModalMnemonicExportTs extends Vue {
       // display mnemonic
       this.hasMnemonicInfo = true
       return true
-    }
-    catch (e) {
-      console.error("error mnemonic: ", e)
+    } catch (e) {
+      console.error('error mnemonic: ', e)
     }
 
     return false
@@ -136,12 +132,5 @@ export class ModalMnemonicExportTs extends Vue {
    */
   public onError(error: string) {
     this.$emit('error', error)
-  }
-
-  /**
-   * 
-   */
-  public onDownloadQR() {
-
   }
 }

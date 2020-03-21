@@ -12,13 +12,11 @@
 
 <script lang="ts">
 // external dependencies
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { TransferTransaction, NamespaceId, Address, Message } from 'symbol-sdk'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Address, Message, NamespaceId, TransferTransaction} from 'symbol-sdk'
 // internal dependencies
-import { ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction'
-import { AttachedMosaic } from '@/services/MosaicService'
-
+import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
+import {AttachedMosaic} from '@/services/MosaicService'
 // child components
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
 

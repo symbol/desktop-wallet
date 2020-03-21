@@ -12,11 +12,9 @@
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
-
 // internal dependencies
-import { ViewHashLockTransaction } from '../../../core/transactions/ViewHashLockTransaction'
-import { AttachedMosaic } from '@/services/MosaicService'
-
+import {ViewHashLockTransaction} from '../../../core/transactions/ViewHashLockTransaction'
+import {AttachedMosaic} from '@/services/MosaicService'
 // child components
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
 

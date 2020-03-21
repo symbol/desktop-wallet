@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Transaction, TransactionType, MosaicId} from 'symbol-sdk'
-
+import {MosaicId, Transaction, TransactionType} from 'symbol-sdk'
 // internal dependencies
 import {TransactionService, TransactionViewType} from '@/services/TransactionService'
 import {Formatters} from '@/core/utils/Formatters'
 import {TimeHelpers} from '@/core/utils/TimeHelpers'
-
 // child components
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
@@ -30,12 +28,10 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue'
 // @ts-ignore
 import ActionDisplay from '@/components/ActionDisplay/ActionDisplay.vue'
-
 // configuration
 import networkConfig from '@/../config/network.conf.json'
-
 // resources
-import {transactionTypeToIcon, officialIcons} from '@/views/resources/Images'
+import {officialIcons, transactionTypeToIcon} from '@/views/resources/Images'
 
 @Component({
   components: {
@@ -63,7 +59,7 @@ export class TransactionRowTs extends Vue {
    * @type {MosaicId}
    */
   protected networkMosaic: MosaicId
-  
+
   /**
    * Transaction type from SDK
    * @type {TransactionType}
@@ -92,12 +88,12 @@ export class TransactionRowTs extends Vue {
   public get view(): TransactionViewType {
     return this.service.getView(this.transaction as any)
   }
+
   /// end-region computed properties getter/setter
 
   /**
    * Get icon per-transaction
-   * @param {Transaction} transaction 
-   * @return {string}
+   * @return an icon.
    */
   public getIcon() {
     // - read per-transaction-type details@
@@ -130,14 +126,15 @@ export class TransactionRowTs extends Vue {
   public getFeeAmount(): number {
     this.view.values
 
-    if (this.view.values.get('effectiveFee') !== undefined) return this.view.values.get('effectiveFee')
+    if (this.view.values.get('effectiveFee') !== undefined) {return this.view.values.get(
+      'effectiveFee')}
     if (this.view.values.get('maxFee') !== undefined) return this.view.values.get('maxFee')
     return 0
   }
 
   /**
    * Returns the transaction height or number of confirmations
-   * @param transaction 
+   * @param transaction
    */
   public getHeight(): string {
     return this.view.info?.height.compact().toLocaleString()

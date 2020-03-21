@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,13 +15,12 @@
  */
 // external dependencies
 import Router from 'vue-router'
-
 // internal dependencies
 import {routes} from '@/router/routes'
-import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {AppRoute} from './AppRoute'
 import {TabEntry} from './TabEntry'
 import {AppStore} from '@/app/AppStore'
+import {AccountService} from '@/services/AccountService'
 
 /**
  * Extension of Vue Router
@@ -38,8 +37,8 @@ export class AppRouter extends Router {
     super(options)
     this.routes = options.routes
     this.beforeEach((to, from, next) => {
-      const repository = new AccountsRepository()
-      const hasAccounts = repository.entries().size > 0
+      const service = new AccountService()
+      const hasAccounts = service.getAccounts().length > 0
 
       // No account when app is opened: redirect to create account page
       const skipRedirect: string[] = ['accounts.importAccount.importStrategy']
@@ -92,10 +91,10 @@ export class AppRouter extends Router {
     const routes = [...this.routes]
 
     // - read custom route configuration
-    // - first top level route contain all app routes
+    // - first top level route contains all app routes
     // - second top level route contains login
     const appRoute = routes.shift()
-    const loginRoute = routes.shift()
+    /* const loginRoute =*/routes.shift()
 
     if (!parentRouteName.length) {
       return appRoute
@@ -114,7 +113,7 @@ export class AppRouter extends Router {
 
     // - app modules
     const moduleRoutes = appRoute.children.filter(
-      ({name}) => modules.includes(name)
+      ({name}) => modules.includes(name),
     )
 
     // - find by name
@@ -122,7 +121,7 @@ export class AppRouter extends Router {
 
     // - name does not represent a top level route
     if (undefined === module) {
-      throw new Error('Top level (module) route with name \'' + parentRouteName + '\' does not exist.')
+      throw new Error(`Top level (module) route with name '${parentRouteName}' does not exist.`)
     }
 
     return module
@@ -136,7 +135,7 @@ export class AppRouter extends Router {
    */
   private getChildRoutes(parentRoute: AppRoute): AppRoute[] {
     if (!parentRoute.children) return []
-    return [...parentRoute.children].filter(({meta}) => !meta.hideFromMenu)  
+    return [...parentRoute.children].filter(({meta}) => !meta.hideFromMenu)
   }
 }
 

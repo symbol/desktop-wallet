@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Deadline, NetworkType, PlainMessage, TransferTransaction, UInt64, TransactionType} from 'symbol-sdk'
+import {Deadline, NetworkType, PlainMessage, TransactionType, TransferTransaction, UInt64} from 'symbol-sdk'
 import {createStore} from '@MOCKS/Store'
 import {getTestAccount} from '@MOCKS/accounts'
 import {getFakeTransaction} from '@MOCKS/Transactions'
@@ -31,7 +31,7 @@ describe('transactions/ViewTransferTransaction', () => {
         networkType: NetworkType.TEST_NET,
         recipient: getTestAccount('cosigner1').address,
         mosaics: [],
-        message: PlainMessage.create('ViewTransferTransaction')
+        message: PlainMessage.create('ViewTransferTransaction'),
       }) as TransferTransaction
 
       // act
@@ -45,8 +45,8 @@ describe('transactions/ViewTransferTransaction', () => {
       expect(view.values.has('message')).toBe(true)
     })
 
-    //XXX test recognition of Namespace vs Address for recipient
-    //XXX test recognition of Namespace vs MosaicId for mosaics
+    // XXX test recognition of Namespace vs Address for recipient
+    // XXX test recognition of Namespace vs MosaicId for mosaics
   })
 
   describe('parse() should', () => {

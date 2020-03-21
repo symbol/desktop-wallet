@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,13 +16,10 @@
 import {NetworkType} from 'symbol-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
 import {Electron} from '@/core/utils/Electron'
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {WalletService} from '@/services/WalletService'
-
 // child components
 // @ts-ignore
 import AppLogo from '@/components/AppLogo/AppLogo.vue'
@@ -40,6 +37,7 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 import WalletSelectorField from '@/components/WalletSelectorField/WalletSelectorField.vue'
 // @ts-ignore
 import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue'
+import {URLInfo} from '@/core/utils/URLInfo'
 
 @Component({
   components: {
@@ -75,14 +73,14 @@ export class PageLayoutTs extends Vue {
    * @see {Store.Account}
    * @var {string}
    */
-  public currentAccount: AccountsModel
+  public currentAccount: AccountModel
 
   /**
    * Currently active peer
    * @see {Store.Network}
    * @var {Object}
    */
-  public currentPeer: Object
+  public currentPeer: URLInfo
 
   /**
    * Whether the connection is up
@@ -118,28 +116,28 @@ export class PageLayoutTs extends Vue {
    */
   public isDisplayingDebugConsole: boolean = false
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Holds alert message
    * @var {Object}
    */
-  get alert(): {show: boolean, message: string} {
-    if (! this.currentPeer || ! this.isConnected) {
+  get alert(): { show: boolean, message: string } {
+    if (!this.currentPeer || !this.isConnected) {
       return {show: true, message: 'Node_not_available_please_check_your_node_or_network_settings'}
     }
 
-    if (this.currentAccount && this.currentAccount.values.get('networkType') !== this.networkType) {
+    if (this.currentAccount && this.currentAccount.networkType !== this.networkType) {
       return {show: true, message: 'Wallet_network_type_does_not_match_current_network_type'}
     }
 
-    if (this.currentAccount && this.currentAccount.values.get('generationHash') !== this.generationHash) {
+    if (this.currentAccount && this.currentAccount.generationHash !== this.generationHash) {
       return {show: true, message: 'Wallet_network_type_does_not_match_current_network_type'}
     }
 
     return {show: false, message: ''}
   }
 
-  get info(): {show: boolean, message: string} {
+  get info(): { show: boolean, message: string } {
     if (this.isCosignatoryMode) {
       return {show: true, message: 'info_active_cosignatory_mode'}
     }
@@ -154,25 +152,25 @@ export class PageLayoutTs extends Vue {
   set hasDebugConsoleModal(f: boolean) {
     this.isDisplayingDebugConsole = f
   }
-/// end-region computed properties getter/setter
+
+  /// end-region computed properties getter/setter
 
   /**
    * Hook called when the layout is created (used)
    * @return {void}
    */
   created() {
-    if (process.platform === 'win32')
-      Electron.windowSizeChange()
+    if (process.platform === 'win32') {Electron.windowSizeChange()}
   }
 
   public async onChangeWallet(walletId: string) {
-    const service = new WalletService(this.$store)
+    const service = new WalletService()
     const wallet = service.getWallet(walletId)
     if (!wallet) {
-      console.log("Wallet not found: ", walletId)
-      return ;
+      console.log('Wallet not found: ', walletId)
+      return
     }
 
-    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})
+    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
   }
 }

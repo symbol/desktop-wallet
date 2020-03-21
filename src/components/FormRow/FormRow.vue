@@ -1,9 +1,11 @@
 <template>
-  <div :class="['form-row', className ]">
-    <div :class="{
-      'form-row-inner-container': !noLabel,
-      'form-row-inner-container-value-only': noLabel,
-    }">
+  <div :class="[ 'form-row', className ]">
+    <div
+      :class="{
+        'form-row-inner-container': !noLabel,
+        'form-row-inner-container-value-only': noLabel,
+      }"
+    >
       <div v-if="!noLabel" class="label-container">
         <FormLabel>
           <slot name="label" />
@@ -17,8 +19,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop} from 'vue-property-decorator'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
 // child components
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
 

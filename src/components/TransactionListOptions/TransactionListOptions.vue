@@ -8,7 +8,7 @@
       </div>
       <SignerSelector
         v-else
-        v-model="selectedSigner"
+        v-model="formItems.currentSignerPubicKey"
         :signers="signers"
         :no-label="true"
         @input="onSignerSelectorChange"
@@ -17,13 +17,16 @@
     <div v-else>
       &nbsp;
     </div>
-    <Icon @click="refresh" type="md-refresh" class="refresh-button" size="30" />
+    <Icon
+      type="md-refresh" class="refresh-button" size="30"
+      @click="refresh"
+    />
   </div>
 </template>
 
 <script lang="ts">
 // @ts-ignore
-import { TransactionListOptionsTs } from './TransactionListOptionsTs'
+import {TransactionListOptionsTs} from './TransactionListOptionsTs'
 import './TransactionListOptions.less'
 
 export default class TransactionListOptions extends TransactionListOptionsTs {}

@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,24 +16,27 @@
 // external dependencies
 import {
   MosaicDefinitionTransaction,
-  MosaicSupplyChangeTransaction,
-  MosaicNonce,
-  MosaicId,
   MosaicFlags,
-  UInt64,
+  MosaicId,
+  MosaicNonce,
   MosaicSupplyChangeAction,
-  TransactionType,
-  Transaction,
+  MosaicSupplyChangeTransaction,
   PublicAccount,
+  Transaction,
+  UInt64,
 } from 'symbol-sdk'
 import {Component} from 'vue-property-decorator'
-
 // internal dependencies
-import {ViewMosaicDefinitionTransaction, MosaicDefinitionFormFieldsType} from '@/core/transactions/ViewMosaicDefinitionTransaction'
-import {ViewMosaicSupplyChangeTransaction, MosaicSupplyChangeFormFieldsType} from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
+import {
+  MosaicDefinitionFormFieldsType,
+  ViewMosaicDefinitionTransaction,
+} from '@/core/transactions/ViewMosaicDefinitionTransaction'
+import {
+  MosaicSupplyChangeFormFieldsType,
+  ViewMosaicSupplyChangeTransaction,
+} from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
 import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -47,7 +50,8 @@ import DivisibilityInput from '@/components/DivisibilityInput/DivisibilityInput.
 // @ts-ignore
 import DurationInput from '@/components/DurationInput/DurationInput.vue'
 // @ts-ignore
-import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
+import ModalTransactionConfirmation
+  from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 // @ts-ignore
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
@@ -103,7 +107,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     // }
 
     // - set default form values
-    this.formItems.signerPublicKey = this.currentWallet.values.get('publicKey')
+    this.formItems.signerPublicKey = this.currentWallet.publicKey
     this.formItems.supplyMutable = false
     this.formItems.restrictable = false
     this.formItems.permanent = false
@@ -122,7 +126,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     return true
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Getter for MOSAIC DEFINITION and SUPPLY CHANGE transactions that will be staged
    * @see {FormTransactionBase}
@@ -131,7 +135,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
   protected getTransactions(): Transaction[] {
     this.factory = new TransactionFactory(this.$store)
     try {
-      const publicAccount = this.currentSigner
+      const publicAccount = PublicAccount.createFromPublicKey(this.selectedSigner.publicKey, this.networkType)
       const randomNonce = MosaicNonce.createRandom()
 
       // - read form for definition
@@ -142,7 +146,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
         mosaicFlags: MosaicFlags.create(
           this.formItems.supplyMutable,
           this.formItems.transferable,
-          this.formItems.restrictable
+          this.formItems.restrictable,
         ),
         divisibility: this.formItems.divisibility,
         permanent: this.formItems.permanent,

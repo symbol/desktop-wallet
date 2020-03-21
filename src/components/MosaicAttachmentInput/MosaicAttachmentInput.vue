@@ -5,7 +5,7 @@
     </template>
     <template v-slot:inputs>
       <div class="row-mosaic-attachment-input inputs-container">
-        <MosaicSelector v-model="chosenValue.mosaicHex" :mosaics="mosaics" @input="onChangeMosaic" />
+        <MosaicSelector v-model="chosenValue.mosaicHex" :mosaic-hex-ids="mosaicHexIds" @input="onChangeMosaic" />
         <AmountInput v-model="relativeAmount" class="pl-2" @input="onChangeAmount" />
         <div class="delete-mosaic-container">
           <span class="delete-mosaic-icon" @click="$emit('input-deleted', uid)" />
@@ -16,7 +16,8 @@
 </template>
 
 <script lang="ts">
-import { MosaicAttachmentInputTs } from './MosaicAttachmentInputTs'
+import {MosaicAttachmentInputTs} from './MosaicAttachmentInputTs'
+
 export default class MosaicAttachmentInput extends MosaicAttachmentInputTs {}
 </script>
 

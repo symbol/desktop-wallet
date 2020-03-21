@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
-
+import {Component, Prop, Vue} from 'vue-property-decorator'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-
 // child components
 import {ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -52,7 +50,7 @@ export class SupplyInputTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get chosenValue(): number {
     return this.value
   }

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import {multisigGraphInfo1, multisigEntries1, multisigEntries2} from '@MOCKS/multisigGraphInfo'
+import {multisigEntries1, multisigEntries2, multisigGraphInfo1} from '@MOCKS/multisigGraphInfo'
 import {MultisigService} from '@/services/MultisigService'
 
 describe('services/MultisigService', () => {
- describe('getMultisigInfoFromMultisigGraphInfo() should', () => {
-  test('return multisig info contained in a multisig graph', () => {
-   const multisigsInfo = MultisigService.getMultisigInfoFromMultisigGraphInfo(multisigGraphInfo1)
-   expect(multisigsInfo).toStrictEqual([...multisigEntries1, ...multisigEntries2])
+  describe('getMultisigInfoFromMultisigGraphInfo() should', () => {
+    test('return multisig info contained in a multisig graph', () => {
+      const multisigsInfo = MultisigService.getMultisigInfoFromMultisigGraphInfo(multisigGraphInfo1)
+      expect(multisigsInfo).toStrictEqual([ ...multisigEntries1, ...multisigEntries2 ])
+    })
   })
- })
 })
 
