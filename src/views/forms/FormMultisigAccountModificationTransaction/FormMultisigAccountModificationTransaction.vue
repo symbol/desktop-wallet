@@ -1,10 +1,7 @@
 <template>
   <FormWrapper>
     <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
-      <form
-        onsubmit="event.preventDefault()"
-        @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"
-      >
+      <form onsubmit="event.preventDefault()">
         <FormRow :class-name="'emphasis'">
           <template v-slot:label>
             {{ $t('form_label_multisig_operation_type') }}
@@ -33,7 +30,7 @@
               v-model="formItems.signerPublicKey"
               :signers="signers"
               :no-label="true"
-              @change="onChangeSigner"
+              @input="onChangeSigner"
             />
           </template>
         </FormRow>
@@ -96,7 +93,7 @@
         <MaxFeeAndSubmit
           v-model="formItems.maxFee"
           :disable-submit="disableSubmit"
-          @button-clicked="handleSubmit(onSubmit); showErrorNotification()"
+          @button-clicked="disableSubmit ? '' : handleSubmit(onSubmit); showErrorNotification()"
         />
       </form>
     </ValidationObserver>

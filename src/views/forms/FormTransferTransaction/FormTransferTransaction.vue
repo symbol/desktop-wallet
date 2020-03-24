@@ -2,16 +2,13 @@
   <div class="FormTransferTransaction">
     <FormWrapper>
       <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
-        <form
-          onsubmit="event.preventDefault()"
-          @keyup.enter="disableSubmit ? '' : handleSubmit(onSubmit)"
-        >
+        <form onsubmit="event.preventDefault()">
           <!-- Transaction signer selector -->
           <SignerSelector 
             v-if="!hideSigner"
             v-model="formItems.signerPublicKey"
             :signers="signers"
-            @change="onChangeSigner"
+            @input="onChangeSigner"
           />
 
           <!-- Transfer recipient input field --> 

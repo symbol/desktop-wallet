@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,27 +15,27 @@
  */
 import Vue from 'vue';
 import {
-  Address,
-  NamespaceInfo,
-  QueryParams,
-  Listener,
-  Transaction,
-  SignedTransaction,
-  Order,
-  AccountInfo,
-  PublicAccount,
   Account,
-  NetworkType,
-  MultisigAccountInfo,
+  AccountInfo,
+  Address,
+  AggregateTransaction,
+  CosignatureSignedTransaction,
+  IListener,
   Mosaic,
   MosaicInfo,
-  CosignatureSignedTransaction,
-  UInt64,
+  MultisigAccountInfo,
+  NamespaceInfo,
+  NetworkType,
+  Order,
+  PublicAccount,
+  QueryParams,
+  RepositoryFactory,
+  SignedTransaction,
+  Transaction,
   TransactionType,
-  AggregateTransaction,
+  UInt64,
 } from 'symbol-sdk'
 import {Subscription} from 'rxjs'
-
 // internal dependencies
 import {$eventBus} from '../events'
 import {RESTService} from '@/services/RESTService'
@@ -50,7 +50,7 @@ import {MultisigService} from '@/services/MultisigService';
  * Helper to format transaction group in name of state variable.
  *
  * @internal
- * @param {string} group 
+ * @param {string} group
  * @return {string} One of 'confirmedTransactions', 'unconfirmedTransactions' or 'partialTransactions'
  */
 const transactionGroupToStateVariable = (
@@ -143,7 +143,7 @@ const Lock = AwaitLock.create();
  * @type {SubscriptionType}
  */
 type SubscriptionType = {
-  listener: Listener,
+  listener: IListener,
   subscriptions: Subscription[]
 }
 
@@ -163,8 +163,8 @@ interface WalletState {
   currentSignerOwnedNamespaces: NamespaceInfo[]
   // Known wallet database identifiers
   knownWallets: string[]
-  knownWalletsInfo: Record<string, AccountInfo> 
-  knownMultisigsInfo: Record<string, MultisigAccountInfo> 
+  knownWalletsInfo: Record<string, AccountInfo>
+  knownMultisigsInfo: Record<string, MultisigAccountInfo>
   transactionHashes: string[]
   confirmedTransactions: Transaction[]
   unconfirmedTransactions: Transaction[]
@@ -389,7 +389,7 @@ export default {
   },
   actions: {
     /**
-     * Possible `options` values include: 
+     * Possible `options` values include:
      * @type {
      *    skipTransactions: boolean,
      *    skipOwnedAssets: boolean,
@@ -451,17 +451,18 @@ export default {
       dispatcher.throttle_dispatch()
     },
     /**
-     * Possible `options` values include: 
+     * Possible `options` values include:
      * @type {
       *    isCosignatoryMode: boolean,
       * }
       */
     async SET_CURRENT_WALLET({commit, dispatch, getters}, {model, options}) {
-
       const previous = getters.currentWallet
-
-      let address: Address = getAddressByPayload(model)
+      const address: Address = getAddressByPayload(model)
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/SET_CURRENT_WALLET dispatched with ' + address.plain(), {root: true})
+
+      // skip if the wallet has not changed
+      if (!!previous && previous.values.get('address') === address.plain()) return
 
       // set current wallet
       commit('currentWallet', model)
@@ -558,7 +559,7 @@ export default {
       if (!transactions.length) return
 
       const index = transactions.findIndex(t => t.transactionInfo.hash === cosignatureMessage.parentHash)
-      
+
       // partial tx unknown, @TODO: handle this case (fetch partials)
       if (index === -1) return
 
@@ -650,10 +651,10 @@ export default {
       }
 
       // use RESTService to open websocket channel subscriptions
-      const websocketUrl = rootGetters['network/wsEndpoint']
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
       const subscriptions: SubscriptionType  = await RESTService.subscribeTransactionChannels(
         {commit, dispatch},
-        websocketUrl,
+        repositoryFactory,
         address,
       )
 
@@ -689,6 +690,8 @@ export default {
  * REST API
  */
     async REST_FETCH_TRANSACTIONS({dispatch, getters, rootGetters}, {group, address, pageSize, id}) {
+      dispatch('app/SET_FETCHING_TRANSACTIONS', true, {root: true})
+
       if (!group || ! ['partial', 'unconfirmed', 'confirmed'].includes(group)) {
         group = 'confirmed'
       }
@@ -701,12 +704,12 @@ export default {
 
       try {
         // prepare REST parameters
-        const currentPeer = rootGetters['network/currentPeer'].url
+        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
         const queryParams = new QueryParams({ pageSize: 100, id })
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch transactions from REST gateway
-        const accountHttp = RESTService.create('AccountHttp', currentPeer)
+        const accountHttp = repositoryFactory.createAccountRepository()
         let transactions: Transaction[] = []
         let blockHeights: number[] = []
 
@@ -739,6 +742,8 @@ export default {
       catch (e) {
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch transactions: ' + e, {root: true})
         return false
+      } finally {
+        dispatch('app/SET_FETCHING_TRANSACTIONS', false, {root: true})
       }
     },
     async REST_FETCH_BALANCES({dispatch}, address) {
@@ -763,14 +768,14 @@ export default {
 
       const currentWallet = getters.currentWallet
       const currentSigner = getters.currentSigner
-      const currentPeer = rootGetters['network/currentPeer'].url
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
 
       try {
         // prepare REST parameters
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch account info from REST gateway
-        const accountHttp = RESTService.create('AccountHttp', currentPeer)
+        const accountHttp = repositoryFactory.createAccountRepository()
         const accountInfo = await accountHttp.getAccountInfo(addressObject).toPromise()
         commit('addKnownWalletsInfo', accountInfo)
 
@@ -805,11 +810,11 @@ export default {
       )
 
       // read store
-      const currentPeer = rootGetters['network/currentPeer'].url
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
 
       try {
         // fetch account info from REST gateway
-        const accountHttp = RESTService.create('AccountHttp', currentPeer)
+        const accountHttp = repositoryFactory.createAccountRepository()
         const accountsInfo = await accountHttp.getAccountsInfo(addresses).toPromise()
 
         // add accounts to the store
@@ -853,15 +858,14 @@ export default {
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_MULTISIG dispatched with : ' + address, {root: true})
 
       // read store
-      const currentPeer = rootGetters['network/currentPeer'].url
-      const networkType = rootGetters['network/networkType']
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
 
       try {
         // prepare REST parameters
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch multisig graph info from REST gateway
-        const multisigHttp = RESTService.create('MultisigHttp', currentPeer, networkType)
+        const multisigHttp = repositoryFactory.createMultisigRepository()
         const multisigGraphInfo = await multisigHttp.getMultisigAccountGraphInfo(addressObject).toPromise()
 
         // extract all available multisigInfo from multisigGraphInfo
@@ -872,7 +876,7 @@ export default {
       }
       catch (e) {
         dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch multisig information: ' + e, {root: true})
-        return ; 
+        return ;
       }
     },
     async REST_FETCH_OWNED_MOSAICS(
@@ -884,17 +888,16 @@ export default {
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_OWNED_MOSAICS dispatched with : ' + address, {root: true})
 
       // read store
-      const currentPeer = rootGetters['network/currentPeer'].url
       const currentWallet = getters['currentWallet']
       const currentSigner = getters['currentSigner']
-      const networkType = rootGetters['network/networkType']
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
 
       try {
         // prepare REST parameters
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch account info from REST gateway
-        const mosaicHttp = RESTService.create('MosaicHttp', currentPeer, networkType)
+        const mosaicHttp = repositoryFactory.createMosaicRepository()
         const ownedMosaics = await mosaicHttp.getMosaicsFromAccount(addressObject).toPromise()
 
         // store multisig info
@@ -929,21 +932,20 @@ export default {
       dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_OWNED_NAMESPACES dispatched with : ' + address, {root: true})
 
       // read store
-      const currentPeer = rootGetters['network/currentPeer'].url
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
       const currentWallet = getters['currentWallet']
       const currentSigner = getters['currentSigner']
-      const networkType = rootGetters['network/networkType']
 
       try {
         // prepare REST parameters
         const addressObject = Address.createFromRawAddress(address)
 
         // fetch account info from REST gateway
-        const namespaceHttp = RESTService.create('NamespaceHttp', currentPeer, networkType)
+        const namespaceHttp = repositoryFactory.createNamespaceRepository()
 
         // @TODO: Handle more than 100 namespaces
         const ownedNamespaces = await namespaceHttp.getNamespacesFromAccount(
-          addressObject, new QueryParams({pageSize: 100, order: Order.ASC}), 
+          addressObject, new QueryParams({pageSize: 100, order: Order.ASC}),
         ).toPromise()
 
         // return if no namespace found
@@ -951,6 +953,9 @@ export default {
 
         // update namespaces in database
         new NamespaceService(this).updateNamespaces(ownedNamespaces)
+
+        // update namespaces info in the store
+        dispatch('namespace/ADD_NAMESPACE_INFOS', ownedNamespaces, { root: true })
 
         // store multisig info
         // @TODO: all namespaces should be stored in the same object
@@ -993,15 +998,14 @@ export default {
 
       try {
         // - prepare REST parameters
-        const currentPeer = rootGetters['network/currentPeer'].url
-        const wsEndpoint = rootGetters['network/wsEndpoint']
-        const transactionHttp = RESTService.create('TransactionHttp', currentPeer)
+        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+        const transactionHttp = repositoryFactory.createTransactionRepository()
 
         // - prepare scoped *confirmation listener*
-        const listener = new Listener(wsEndpoint, WebSocket)
+        const listener = repositoryFactory.createListener();
         await listener.open()
 
-        
+
         // - announce hash lock transaction and await confirmation
         transactionHttp.announce(signedLock)
 
@@ -1039,8 +1043,8 @@ export default {
 
       try {
         // prepare REST parameters
-        const currentPeer = rootGetters['network/currentPeer'].url
-        const transactionHttp = RESTService.create('TransactionHttp', currentPeer)
+        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+        const transactionHttp = repositoryFactory.createTransactionRepository()
 
         // prepare symbol-sdk TransactionService
         const response = await transactionHttp.announce(signedTransaction)
@@ -1065,8 +1069,8 @@ export default {
 
       try {
         // prepare REST parameters
-        const currentPeer = rootGetters['network/currentPeer'].url
-        const transactionHttp = RESTService.create('TransactionHttp', currentPeer)
+        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+        const transactionHttp = repositoryFactory.createTransactionRepository()
 
         // prepare symbol-sdk TransactionService
         const response = await transactionHttp.announceAggregateBondedCosignature(cosignature)
@@ -1078,7 +1082,7 @@ export default {
     },
     ON_NEW_TRANSACTION({dispatch, rootGetters}, transaction: Transaction): void {
       if (!transaction) return
-      
+
       // get current wallet address from store
       const address: Address = rootGetters['wallet/currentWalletAddress']
       if (!address) return
@@ -1086,9 +1090,9 @@ export default {
 
       // instantiate a dispatcher
       const dispatcher = new RESTDispatcher(dispatch)
-      
+
       // always refresh wallet balances
-      dispatcher.add(dispatch('REST_FETCH_INFO', plainAddress))
+      dispatcher.add('REST_FETCH_INFO', plainAddress)
 
       // extract transaction types from the transaction
       const transactionTypes: TransactionType[] = transaction instanceof AggregateTransaction
@@ -1103,11 +1107,18 @@ export default {
         TransactionType.MOSAIC_ALIAS,
         TransactionType.ADDRESS_ALIAS,
       ].some(a => transactionTypes.some(b => b === a))) {
-        dispatcher.add(dispatch('REST_FETCH_OWNED_NAMESPACES', plainAddress))
+        dispatcher.add('REST_FETCH_OWNED_NAMESPACES', plainAddress)
       }
-  
+
+      if ([
+        TransactionType.MOSAIC_DEFINITION,
+        TransactionType.MOSAIC_SUPPLY_CHANGE,
+      ].some(a => transactionTypes.some(b => b === a))) {
+        dispatcher.add('REST_FETCH_OWNED_MOSAICS', plainAddress)
+      }
+
       if (transactionTypes.includes(TransactionType.MULTISIG_ACCOUNT_MODIFICATION)) {
-        dispatcher.add(dispatch('REST_FETCH_MULTISIG', plainAddress))
+        dispatcher.add('REST_FETCH_MULTISIG', plainAddress)
       }
 
       // dispatch actions

@@ -2,7 +2,7 @@
   <div class="form-account-creation-container">
     <FormWrapper :whitelisted="true">
       <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
-        <form onsubmit="event.preventDefault()" @keyup.enter="handleSubmit(submit)">
+        <form onsubmit="event.preventDefault()">
           <div class="form-row">
             <div class="form-headline">
               {{ $t('Create_an_account_and_password') }}
@@ -146,7 +146,7 @@
               <button
                 type="button"
                 class="button-style back-button" 
-                @click="$router.push({name: 'accounts.login'})"
+                @click="$router.back(-1)"
               >
                 {{ $t('back') }}
               </button>

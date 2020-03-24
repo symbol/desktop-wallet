@@ -1,11 +1,8 @@
 <template>
   <FormWrapper>
     <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
-      <form
-        onsubmit="event.preventDefault()"
-        @keyup.enter="handleSubmit(onSubmit)"
-      >
-        <SignerSelector v-model="formItems.signerPublicKey" :signers="signers" @change="onChangeSigner" />
+      <form onsubmit="event.preventDefault()">
+        <SignerSelector v-model="formItems.signerPublicKey" :signers="signers" @input="onChangeSigner" />
 
         <SupplyInput v-model="formItems.supply" />
 

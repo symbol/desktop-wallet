@@ -4,9 +4,8 @@
       <form
         onsubmit="event.preventDefault()"
         class="form-container mt-3"
-        @keyup.enter="handleSubmit(onSubmit)"
       >
-        <SignerSelector v-model="formItems.signerPublicKey" :signers="signers" @change="onChangeSigner" />
+        <SignerSelector v-model="formItems.signerPublicKey" :signers="signers" @input="onChangeSigner" />
 
         <FormRow>
           <template v-slot:label>

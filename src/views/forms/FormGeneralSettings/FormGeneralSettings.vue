@@ -6,7 +6,6 @@
           class="form-container mt-3"
           onsubmit="event.preventDefault()"
           autocomplete="off"
-          @keyup.enter="handleSubmit(onSubmit)"
         >
           <FormRow>
             <template v-slot:label>
@@ -48,7 +47,6 @@
               <div class="inputs-container select-container">
                 <WalletSelectorField
                   v-model="formItems.defaultWallet"
-                  :auto-submit="false"
                   :default-form-style="true"
                 />
               </div>
