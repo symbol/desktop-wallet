@@ -39,14 +39,14 @@ export const routes: AppRoute[] = [
           {
             path: 'create',
             name: 'accounts.importAccount.importStrategy',
-            meta: { protected: false },
+            meta: { protected: false },
             // @ts-ignore
             component: () => import('@/views/pages/accounts/import-account/import-strategy/ImportStrategy.vue'),
           },
           {
             path: 'create',
             name: 'accounts.createAccount',
-            meta: { protected: false },
+            meta: { protected: false },
             // @ts-ignore
             component: () => import('@/views/pages/accounts/create-account/CreateAccount.vue'),
             children: [
@@ -101,7 +101,7 @@ export const routes: AppRoute[] = [
           {
             path: 'import',
             name: 'accounts.importAccount',
-            meta: { protected: false },
+            meta: { protected: false },
             // @ts-ignore
             component: () => import('@/views/pages/accounts/import-account/ImportAccount.vue'),
             children: [{
@@ -333,16 +333,6 @@ export const routes: AppRoute[] = [
             // @ts-ignore
             component: () => import('@/views/pages/multisig/ManageAccountPage/ManageAccountPage.vue'),
           },
-          // {
-          //   path: '/multisigCosign',
-          //   name: 'multisig.cosign',
-          //   meta: {
-          //     protected: true,
-          //     title: 'page_title_multisig_cosign',
-          //   },
-          //   // @ts-ignore
-          //   component: () => import('@/views/pages/multisig/PartialTransactionDashboardPage/PartialTransactionDashboardPage.vue'),
-          // },
         ],
       }, {
         path: '/communityPanel',
@@ -418,7 +408,7 @@ export const routes: AppRoute[] = [
   }, {
     path: '/login',
     name: 'accounts.login',
-    meta: { protected: false },
+    meta: { protected: false },
     // @ts-ignore
     component: () => import('@/views/pages/accounts/LoginPage.vue'),
   },

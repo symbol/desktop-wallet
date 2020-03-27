@@ -67,7 +67,7 @@ implements IStorageAdapter {
 
   /**
    * Find schema by *alias* or by *table name*.
-   * @param {string} schemaId 
+   * @param {string} schemaId 
    * @return {DatabaseTable}
    */
   public getSchema(schemaId: string): DatabaseTable {
@@ -99,7 +99,7 @@ implements IStorageAdapter {
 
     // read from storage
     const data = this.storage.getItem(schema.tableName)
-    if (!data || data === null || !data.length) {
+    if (!data || data === null || !data.length) {
       return new Map<string, DatabaseModel>()
     }
 

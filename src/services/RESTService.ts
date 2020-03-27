@@ -37,8 +37,8 @@ export class RESTService {
   /**
    * Subscribe to transactions websocket channels
    * @param {Context} dispatch context the context
-   * @param {RepositoryFactory} repositoryFactory the factory used to create the listener.
-   * @param {Address} address the listened account.
+   * @param {RepositoryFactory} repositoryFactory the factory used to create the listener.
+   * @param {Address} address the listened account.
    */
   public static async subscribeTransactionChannels(
     context: { dispatch: any, commit: any },
@@ -129,7 +129,7 @@ export class RESTService {
   /**
    * Subscribe to blocks websocket channels
    * @param {Context} context the context
-   * @param {RepositoryFactory} repositoryFactory the repository factory used to create the listener
+   * @param {RepositoryFactory} repositoryFactory the repository factory used to create the listener
    */
   public static async subscribeBlocks(
     context: { dispatch: any, commit: any },

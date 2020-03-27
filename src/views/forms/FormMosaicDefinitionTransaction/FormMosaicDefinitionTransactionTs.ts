@@ -22,9 +22,7 @@ import {
   MosaicFlags,
   UInt64,
   MosaicSupplyChangeAction,
-  TransactionType,
   Transaction,
-  PublicAccount,
 } from 'symbol-sdk'
 import {Component} from 'vue-property-decorator'
 

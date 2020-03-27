@@ -103,7 +103,7 @@ export class WalletService extends AbstractService {
       value: WalletsModel,
       index: number,
       array: WalletsModel[]
-    ) => boolean = (e) => true,
+    ) => boolean = () => true,
   ): WalletsModel[] {
     const repository = new WalletsRepository()
     return repository.collect().filter(filterFn)
@@ -113,7 +113,7 @@ export class WalletService extends AbstractService {
    * Derive \a path using \a mnemonic pass phrase
    * @param {MnemonicPassPhrase} mnemonic 
    * @param {string} path 
-   * @param {NetworkType} networkType 
+   * @param {NetworkType} networkType 
    * @return {Account}
    */
   public getAccountByPath(
@@ -138,7 +138,7 @@ export class WalletService extends AbstractService {
   /**
    * Get extended key around \a mnemonic for \a networkTypw
    * @param {MnemonicPassPhrase} mnemonic 
-   * @param {NetworkType} networkType 
+   * @param {NetworkType} networkType 
    * @return {ExtendedKey}
    */
   public getExtendedKeyFromMnemonic(
@@ -152,7 +152,7 @@ export class WalletService extends AbstractService {
   /**
    * Get extended key around \a account for \a networkTypw
    * @param {MnemonicPassPhrase} mnemonic 
-   * @param {NetworkType} networkType 
+   * @param {NetworkType} networkType 
    * @return {ExtendedKey}
    */
   public getExtendedKeyFromAccount(

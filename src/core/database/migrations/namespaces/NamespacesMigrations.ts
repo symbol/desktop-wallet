@@ -32,7 +32,7 @@ export class NamespacesMigrations {
     const entities = Array.from(rows.values())
     const migrated = new Map<string, NamespacesModel>()
 
-    entities.forEach((outOfDate: NamespacesModel, i: number) => {
+    entities.forEach((outOfDate: NamespacesModel) => {
       const oldStartHeight = outOfDate.values.get('startHeight')
       const newStartHeight = UInt64.fromUint(oldStartHeight)
       outOfDate.values.set('startHeight', newStartHeight.toHex())

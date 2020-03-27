@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Account, EncryptedPrivateKey} from 'symbol-sdk'
+import {Account} from 'symbol-sdk'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
@@ -79,7 +79,7 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
       const cntInterval = this.onStartCounter()
 
       // - private key hidden after 10 seconds
-      const hideInterval = this.onHideTimeout(this.secondsCounter, cntInterval)
+      this.onHideTimeout(this.secondsCounter, cntInterval)
     }
   }
 

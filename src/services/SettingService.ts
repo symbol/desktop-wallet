@@ -23,7 +23,6 @@ import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import i18n from '@/language'
 
 // configuration
-import appConfig from '@/../config/app.conf.json'
 import feesConfig from '@/../config/fees.conf.json'
 import networkConfig from '@/../config/network.conf.json'
 
@@ -59,7 +58,7 @@ export class SettingService extends AbstractService {
       value: SettingsModel,
       index: number,
       array: SettingsModel[]
-    ) => boolean = (e) => true,
+    ) => boolean = () => true,
   ): SettingsModel[] {
     const repository = new SettingsRepository()
     return repository.collect().filter(filterFn)

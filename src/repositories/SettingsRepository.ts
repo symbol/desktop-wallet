@@ -68,7 +68,7 @@ export class SettingsRepository
       value: SettingsModel,
       index: number,
       array: SettingsModel[]
-    ) => boolean = (e) => true,
+    ) => boolean = () => true,
   ): Map<string, SettingsModel> {
     const filtered = this.collect().filter(filterFn)
     const mapped = new Map<string, SettingsModel>()

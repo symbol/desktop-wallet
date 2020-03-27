@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NodeInfo} from 'symbol-sdk'
-
 // internal dependencies
 import {PeersTable} from '@/core/database/entities/PeersTable'
 import {PeersModel} from '@/core/database/entities/PeersModel'
@@ -75,7 +73,7 @@ export class PeersRepository
       value: PeersModel,
       index: number,
       array: PeersModel[]
-    ) => boolean = (e) => true,
+    ) => boolean = () => true,
   ): Map<string, PeersModel> {
     const filtered = this.collect().filter(filterFn)
     const mapped = new Map<string, PeersModel>()
@@ -178,7 +176,7 @@ export class PeersRepository
 
   /**
    * Populates the database from configuration file network.conf.json
-   * @param {string} generationHash 
+   * @param {string} generationHash 
    * @return {PeersModel[]}
    */
   public repopulateFromConfig(

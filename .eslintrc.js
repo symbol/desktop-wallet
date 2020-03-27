@@ -55,7 +55,7 @@ module.exports = {
      ignoreStrings: true,
      ignoreTemplateLiterals: true,
    }],
-   "no-console": ["error", { allow: ["info", "error"] }],
+   "no-console": ["error", { allow: ["log", "info", "error"] }],
    "no-ex-assign": "error",
    "no-extra-boolean-cast": 0,
    "no-loop-func": "error",

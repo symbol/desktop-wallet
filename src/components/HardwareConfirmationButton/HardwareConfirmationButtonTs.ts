@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Transaction, SignedTransaction, NetworkType, TransactionType} from 'symbol-sdk'
+import {Transaction, SignedTransaction, NetworkType} from 'symbol-sdk'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'

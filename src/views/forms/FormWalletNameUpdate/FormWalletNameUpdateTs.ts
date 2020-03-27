@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, Password, Account} from 'symbol-sdk'
+import {NetworkType, Password} from 'symbol-sdk'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
@@ -79,7 +79,7 @@ export class FormWalletNameUpdateTs extends Vue {
 
   /**
    * Wallets repository
-   * @var {WalletsRepository}
+   * @var {WalletsRepository}
    */
   public walletsRepository: WalletsRepository
 
@@ -150,7 +150,7 @@ export class FormWalletNameUpdateTs extends Vue {
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public onAccountUnlocked(account: Account, password: Password) {
+  public onAccountUnlocked() {
     // - interpret form items
     const values = this.formItems
 

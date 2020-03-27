@@ -101,7 +101,7 @@ export abstract class DatabaseTable {
 
     console.log(`migrating ${migratees.length} rows for table ${this.tableName} to version ${this.version}`)
 
-    if (!migratees.length || !migrations.length) {
+    if (!migratees.length || !migrations.length) {
       // no migration needed
       return rows
     }

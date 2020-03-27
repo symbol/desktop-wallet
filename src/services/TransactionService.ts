@@ -221,10 +221,9 @@ export class TransactionService extends AbstractService {
         view = view.use(transaction as AddressAliasTransaction)
         break
       default:
-      // - throw on transaction view not implemented 
-        const errorMessage = `View not implemented for transaction type '${transaction.type} '`
-        this.$store.dispatch('diagnostic/ADD_ERROR', errorMessage)
-        throw new Error(errorMessage)
+      // - throw on transaction view not implemented
+        this.$store.dispatch('diagnostic/ADD_ERROR', `View not implemented for transaction type '${transaction.type}'`)
+        throw new Error(`View not implemented for transaction type '${transaction.type}'`)
     }
 
     // - try to find block for fee information
@@ -517,7 +516,9 @@ export class TransactionService extends AbstractService {
    * @return {Observable<BroadcastResult[]>}
    * @throws {Error}  On missing signed hash lock transaction.
    */
-  public async announceCosignatureTransactions(cosignatures: CosignatureSignedTransaction[]): Promise<BroadcastResult[]> {
+  public async announceCosignatureTransactions(
+    cosignatures: CosignatureSignedTransaction[],
+  ): Promise<BroadcastResult[]> {
     const results: BroadcastResult[] = []
     for (let i = 0, m = cosignatures.length; i < m; i ++) {
       const cosignature = cosignatures[i]

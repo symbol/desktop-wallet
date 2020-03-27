@@ -185,14 +185,14 @@ export default {
       }
 
       // acquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
     async uninitialize({ commit, dispatch, getters }) {
       const callback = async () => {
         dispatch('UNSUBSCRIBE')
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
     /// region scoped actions
     async INITIALIZE_FROM_DB({dispatch}, withFeed) {
@@ -240,7 +240,7 @@ export default {
         dispatch('diagnostic/ADD_ERROR', `Store action network/initialize default peer unreachable: ${e.toString()}`, {root: true})
       }
     },
-    async OPEN_PEER_CONNECTION({state, commit, dispatch}, payload) {
+    async OPEN_PEER_CONNECTION({commit, dispatch}, payload) {
       commit('currentPeer', payload.url)
       commit('networkType', payload.networkType)
       commit('setConnected', true)
@@ -369,8 +369,8 @@ export default {
 
       // - filter out known blocks
       const knownBlocks: {[h: number]: BlockInfo} = getters['knownBlocks']
-      const unknownHeights = blockHeights.filter(height => !knownBlocks.hasOwnProperty(height))
-      const knownHeights = blockHeights.filter(height => knownBlocks.hasOwnProperty(height))
+      const unknownHeights = blockHeights.filter(height => !knownBlocks || !knownBlocks[height])
+      const knownHeights = blockHeights.filter(height => knownBlocks && knownBlocks[height])
 
       // - initialize blocks list with known blocks
       let blocks: BlockInfo[] = knownHeights.map(known => knownBlocks[known])
@@ -408,7 +408,7 @@ export default {
         return false
       }
     },
-    async REST_FETCH_PEER_INFO({commit, dispatch}, nodeUrl: string) {
+    async REST_FETCH_PEER_INFO({dispatch}, nodeUrl: string) {
       dispatch('diagnostic/ADD_DEBUG', `Store action network/REST_FETCH_PEER_INFO dispatched with: ${nodeUrl}`, {root: true})
 
       try {

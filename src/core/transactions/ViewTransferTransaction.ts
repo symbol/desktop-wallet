@@ -55,7 +55,7 @@ export class ViewTransferTransaction extends TransactionView<TransferFormFieldsT
 
     // - set mosaics from form fields (requires divisibility info)
     const mosaics: Mosaic[] = []
-    if (!!formItems.mosaics && formItems.mosaics.length) {
+    if (!!formItems.mosaics && formItems.mosaics.length) {
 
       // - get known mosaics
       const mosaicsInfo = this.$store.getters['mosaic/mosaicsInfoList']

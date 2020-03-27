@@ -94,13 +94,13 @@ export class FormSubWalletCreationTs extends Vue {
 
   /**
    * Accounts repository
-   * @var {AccountsRepository}
+   * @var {AccountsRepository}
    */
   public accountsRepository: AccountsRepository
 
   /**
    * Wallets repository
-   * @var {WalletsRepository}
+   * @var {WalletsRepository}
    */
   public walletsRepository: WalletsRepository
 

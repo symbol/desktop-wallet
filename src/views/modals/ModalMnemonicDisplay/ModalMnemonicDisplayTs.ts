@@ -15,11 +15,8 @@
  */
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, Password, NetworkType} from 'symbol-sdk'
+import {Account, Password} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
-import {QRCodeGenerator, MnemonicQR} from 'symbol-qr-library'
-import {pluck, concatMap} from 'rxjs/operators'
-import {of, Observable} from 'rxjs'
 
 // internal dependencies
 import {AESEncryptionService} from '@/services/AESEncryptionService'

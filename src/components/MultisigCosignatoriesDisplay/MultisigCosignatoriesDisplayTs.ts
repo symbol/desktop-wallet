@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {Address, NetworkType, MultisigAccountInfo, PublicAccount} from 'symbol-sdk'
 

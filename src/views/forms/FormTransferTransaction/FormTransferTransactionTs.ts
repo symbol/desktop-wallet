@@ -197,7 +197,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     // get mosaic list according to the multisig status
     const mosaics = this.isCosignatoryMode ? this.currentSignerMosaics : this.currentWalletMosaics
-    const defaultedMosaicList = mosaics && mosaics.length ? mosaics : [new Mosaic(this.networkMosaic, UInt64.fromUint(0))]
+    const defaultedMosaicList = mosaics && mosaics.length 
+      ? mosaics
+      : [new Mosaic(this.networkMosaic, UInt64.fromUint(0))]
 
     // get mosaicService
     const mosaicService = new MosaicService(this.$store)

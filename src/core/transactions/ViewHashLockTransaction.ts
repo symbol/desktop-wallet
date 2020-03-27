@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 // external dependencies
-import { HashLockTransaction, SignedTransaction, MosaicId, UInt64, RawUInt64, Mosaic, MosaicInfo } from 'symbol-sdk'
+import {HashLockTransaction, SignedTransaction, MosaicId, UInt64, RawUInt64, Mosaic} from 'symbol-sdk'
 
 // internal dependencies
-import { TransactionView } from './TransactionView'
-import { AttachedMosaic, MosaicService } from '@/services/MosaicService'
+import {TransactionView} from './TransactionView'
+import {AttachedMosaic, MosaicService} from '@/services/MosaicService'
 
 export type HashLockTransactionFormFieldsType = {
   mosaic: { mosaicHex: string, amount: number }

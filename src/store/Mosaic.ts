@@ -30,6 +30,36 @@ import {AwaitLock} from './AwaitLock'
 
 const Lock = AwaitLock.create()
 
+const getCurrencyMosaicFromNemesis = (transactions) => {
+  // - read first root namespace
+  const rootNamespaceTx = transactions.filter(
+    tx => tx.type === TransactionType.NAMESPACE_REGISTRATION
+       && tx.registrationType === NamespaceRegistrationType.RootNamespace).shift()
+
+  // - read sub namespace
+  const subNamespaceTx = transactions.filter(
+    tx => tx.type === TransactionType.NAMESPACE_REGISTRATION 
+       && tx.registrationType === NamespaceRegistrationType.SubNamespace
+       && tx.parentId.equals(rootNamespaceTx.namespaceId)).shift()
+
+  // - read alias
+  const aliasTx = transactions.filter(
+    tx => tx.type === TransactionType.MOSAIC_ALIAS 
+       && tx.namespaceId.equals(subNamespaceTx.namespaceId)).shift()
+
+  // - build network mosaic name
+  const mosaicName = [
+    rootNamespaceTx.namespaceName,
+    subNamespaceTx.namespaceName,
+  ].join('.')
+
+  return {
+    name: mosaicName,
+    mosaicId: aliasTx.mosaicId,
+    ticker: subNamespaceTx.namespaceName.toUpperCase(),
+  }
+}
+
 // mosaic state typing
 interface MosaicState {
   initialized: boolean
@@ -63,7 +93,9 @@ export default {
     networkMosaicTicker: (state: MosaicState) => state.networkMosaicTicker,
     nemesisTransactions: (state: MosaicState) => state.nemesisTransactions,
     mosaicsInfo: (state: MosaicState) => state.mosaicsInfoByHex,
-    mosaicsInfoList: (state: MosaicState) => Object.keys(state.mosaicsInfoByHex).map(hex => state.mosaicsInfoByHex[hex]),
+    mosaicsInfoList: (state: MosaicState) => Object.keys(state.mosaicsInfoByHex).map(
+      hex => state.mosaicsInfoByHex[hex],
+    ),
     mosaicsNames: (state: MosaicState) => state.mosaicsNamesByHex,
     hiddenMosaics: (state: MosaicState) => state.hiddenMosaics,
     networkMosaicName: (state: MosaicState) => state.networkMosaicName,
@@ -132,13 +164,13 @@ export default {
       }
 
       // acquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
-    async uninitialize({ commit, dispatch, getters }) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
     /// region scoped actions
     async INITIALIZE_FROM_DB({commit, dispatch, rootGetters}, withFeed) {
@@ -182,7 +214,7 @@ export default {
       const blockHttp = repositoryFactory.createBlockRepository()
       blockHttp.getBlockTransactions(UInt64.fromUint(1), new QueryParams({pageSize: 100})).subscribe(
         async (transactions: Transaction[]) => {
-          const payload = await dispatch('GET_CURRENCY_MOSAIC_FROM_NEMESIS', transactions)
+          const payload = getCurrencyMosaicFromNemesis(transactions)
 
           // - will dispatch REST_FETCH_INFO+REST_FETCH_NAMES
           const service = new MosaicService(this)
@@ -222,35 +254,6 @@ export default {
     SHOW_MOSAIC({commit}, mosaicId) {
       new MosaicService().toggleHiddenState(mosaicId, false)
       commit('showMosaic', mosaicId)
-    },
-    GET_CURRENCY_MOSAIC_FROM_NEMESIS({commit, dispatch}, transactions) {
-      // - read first root namespace
-      const rootNamespaceTx = transactions.filter(
-        tx => tx.type === TransactionType.NAMESPACE_REGISTRATION
-           && tx.registrationType === NamespaceRegistrationType.RootNamespace).shift()
-
-      // - read sub namespace
-      const subNamespaceTx = transactions.filter(
-        tx => tx.type === TransactionType.NAMESPACE_REGISTRATION 
-           && tx.registrationType === NamespaceRegistrationType.SubNamespace
-           && tx.parentId.equals(rootNamespaceTx.namespaceId)).shift()
-
-      // - read alias
-      const aliasTx = transactions.filter(
-        tx => tx.type === TransactionType.MOSAIC_ALIAS 
-           && tx.namespaceId.equals(subNamespaceTx.namespaceId)).shift()
-
-      // - build network mosaic name
-      const mosaicName = [
-        rootNamespaceTx.namespaceName,
-        subNamespaceTx.namespaceName,
-      ].join('.')
-
-      return {
-        name: mosaicName,
-        mosaicId: aliasTx.mosaicId,
-        ticker: subNamespaceTx.namespaceName.toUpperCase(),
-      }
     },
     async REST_FETCH_INFO({commit, rootGetters}, mosaicId): Promise<MosaicInfo> {
       const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory

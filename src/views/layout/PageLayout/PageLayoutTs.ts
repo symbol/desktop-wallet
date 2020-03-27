@@ -20,7 +20,6 @@ import {mapGetters} from 'vuex'
 // internal dependencies
 import {Electron} from '@/core/utils/Electron'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
 import {WalletService} from '@/services/WalletService'
 
 // child components
@@ -124,7 +123,7 @@ export class PageLayoutTs extends Vue {
    * @var {Object}
    */
   get alert(): {show: boolean, message: string} {
-    if (!this.currentPeer || !this.isConnected) {
+    if (!this.currentPeer || !this.isConnected) {
       return {show: true, message: 'Node_not_available_please_check_your_node_or_network_settings'}
     }
 

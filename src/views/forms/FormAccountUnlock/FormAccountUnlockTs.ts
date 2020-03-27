@@ -78,17 +78,6 @@ export class FormAccountUnlockTs extends Vue {
   }
 
   /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  public mounted() {
-    
-  }
-
-  /// region computed properties getter/setter
-  /// end-region computed properties getter/setter
-
-  /**
    * Attempt decryption of private key to unlock
    * account.
    * @return {void}

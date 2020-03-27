@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NetworkHttp, NetworkType} from 'symbol-sdk'
 import {Store} from 'vuex'
 
 // internal dependencies
@@ -54,7 +53,7 @@ export class PeerService extends AbstractService {
       value: PeersModel,
       index: number,
       array: PeersModel[]
-    ) => boolean = (e) => true,
+    ) => boolean = () => true,
   ): PeersModel[] {
     const repository = new PeersRepository()
     return repository.collect().filter(filterFn)

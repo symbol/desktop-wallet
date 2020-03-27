@@ -46,7 +46,7 @@ export class NamespaceService extends AbstractService {
   /**
    * Read the collection of known namespaces from database.
    *
-   * @param {Function} filterFn
+   * @param {Function} filterFn
    * @return {MosaicsModel[]}
    */
   public getNamespaces(
@@ -54,7 +54,7 @@ export class NamespaceService extends AbstractService {
       value: NamespacesModel,
       index: number,
       array: NamespacesModel[]
-    ) => boolean = (e) => true,
+    ) => boolean = () => true,
   ): NamespacesModel[] {
     const repository = new NamespacesRepository()
     return repository.collect().filter(filterFn)
@@ -183,8 +183,8 @@ export class NamespaceService extends AbstractService {
   private async getNamespaceFullName(namespaceInfo: NamespaceInfo): Promise<string> {
     const namespaceIds: NamespaceId[] = namespaceInfo.levels.map(id => id)
     const namespaceNames: {
-      hex: string,
-      name: string,
+      hex: string
+      name: string
     }[] = await this.$store.dispatch('namespace/REST_FETCH_NAMES', namespaceIds)
     return namespaceNames.find(({hex}) => hex === namespaceInfo.id.toHex()).name
   }

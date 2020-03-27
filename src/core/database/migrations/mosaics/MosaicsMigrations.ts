@@ -39,7 +39,7 @@ export class MosaicsMigrations {
     const migrated = new Map<string, MosaicsModel>()
 
     // each row must be migrated (added table columns)
-    entities.map((outOfDate: MosaicsModel, i: number) => {
+    entities.map((outOfDate: MosaicsModel) => {
       outOfDate.values.set('generationHash', '45870419226A7E51D61D94AD728231EDC6C9B3086EF9255A8421A4F26870456A')
       outOfDate.values.set('isCurrencyMosaic', outOfDate.values.get('name') === 'symbol.xym')
       outOfDate.values.set('isHarvestMosaic', outOfDate.values.get('name') === 'symbol.xym')
@@ -63,7 +63,7 @@ export class MosaicsMigrations {
     const migrated = new Map<string, MosaicsModel>()
 
     // each row must be migrated (added table columns)
-    entities.map((outOfDate: MosaicsModel, i: number) => {
+    entities.map((outOfDate: MosaicsModel) => {
       if ('symbol.xym' === outOfDate.values.get('name')) {
         outOfDate.values.set('isCurrencyMosaic', true)
         outOfDate.values.set('isHarvestMosaic', true)

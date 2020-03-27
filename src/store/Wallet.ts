@@ -58,8 +58,8 @@ const transactionGroupToStateVariable = (
 ): string => {
   let transactionGroup = group.toLowerCase()
   if (transactionGroup === 'unconfirmed'
-      || transactionGroup === 'confirmed'
-      || transactionGroup === 'partial') {
+      || transactionGroup === 'confirmed'
+      || transactionGroup === 'partial') {
     transactionGroup = `${transactionGroup}Transactions`
   }
   else {
@@ -74,7 +74,7 @@ const transactionGroupToStateVariable = (
  * @param payload
  */
 const getAddressByPayload = (
-  payload: WalletsModel | Account | PublicAccount | Address | {networkType: NetworkType, publicKey?: string, name?: string},
+  payload: WalletPayloadType,
 ): Address => {
   if (payload instanceof WalletsModel) {
     return Address.createFromRawAddress(payload.values.get('address'))
@@ -100,7 +100,7 @@ const getAddressByPayload = (
  * @param payload
  */
 const getWalletByPayload = (
-  payload: WalletsModel | Account | PublicAccount | Address | {networkType: NetworkType, publicKey?: string, name?: string},
+  payload: WalletPayloadType,
 ): WalletsModel => {
   if (payload instanceof WalletsModel) {
     return payload
@@ -145,6 +145,12 @@ const Lock = AwaitLock.create()
 type SubscriptionType = {
   listener: IListener
   subscriptions: Subscription[]
+}
+
+type WalletPayloadType = WalletsModel | Account | PublicAccount | Address | {
+  networkType: NetworkType
+  publicKey?: string
+  name?: string
 }
 
 // wallet state typing
@@ -231,7 +237,7 @@ export default {
     currentWalletInfo: (state: WalletState): AccountInfo | null => {
       const plainAddress = state.currentWalletAddress ? state.currentWalletAddress.plain() : null
       if(!plainAddress) return null
-      if(!state.knownWalletsInfo.hasOwnProperty(plainAddress)) return null
+      if(!state.knownWalletsInfo || !state.knownWalletsInfo[plainAddress]) return null
       return state.knownWalletsInfo[plainAddress]
     },
     currentWalletMosaics: (state: WalletState) => state.currentWalletMosaics,
@@ -240,7 +246,7 @@ export default {
     currentWalletMultisigInfo: (state: WalletState) => {
       const plainAddress = state.currentWalletAddress ? state.currentWalletAddress.plain() : null
       if(!plainAddress) return null
-      if(!state.knownMultisigsInfo.hasOwnProperty(plainAddress)) return null
+      if(!state.knownMultisigsInfo || !state.knownMultisigsInfo[plainAddress]) return null
       return state.knownMultisigsInfo[plainAddress]
     },
     isCosignatoryMode: (state: WalletState) => state.isCosignatoryMode,
@@ -248,13 +254,13 @@ export default {
     currentSignerInfo: (state: WalletState): AccountInfo | null => {
       const plainAddress = state.currentSignerAddress ? state.currentSignerAddress.plain() : null
       if(!plainAddress) return null
-      if(!state.knownWalletsInfo.hasOwnProperty(plainAddress)) return null
+      if(!state.knownWalletsInfo || !state.knownWalletsInfo[plainAddress]) return null
       return state.knownWalletsInfo[plainAddress]
     },
     currentSignerMultisigInfo: (state: WalletState) => {
       const plainAddress = state.currentSignerAddress ? state.currentSignerAddress.plain() : null
       if(!plainAddress) return null
-      if(!state.knownMultisigsInfo.hasOwnProperty(plainAddress)) return null
+      if(!state.knownMultisigsInfo || !state.knownMultisigsInfo[plainAddress]) return null
       return state.knownMultisigsInfo[plainAddress]
     },
     currentSignerMosaics: (state: WalletState) => state.currentSignerMosaics,
@@ -409,7 +415,7 @@ export default {
         dispatch('SUBSCRIBE', address)
         commit('setInitialized', true)
       }
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
     async uninitialize({ commit, dispatch, getters }, {address, which}) {
       const callback = async () => {
@@ -420,7 +426,7 @@ export default {
         await dispatch('RESET_TRANSACTIONS')
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
     /// region scoped actions
     async REST_FETCH_WALLET_DETAILS({dispatch}, {address, options}) {
@@ -456,7 +462,7 @@ export default {
       *    isCosignatoryMode: boolean,
       * }
       */
-    async SET_CURRENT_WALLET({commit, dispatch, getters}, {model, options}) {
+    async SET_CURRENT_WALLET({commit, dispatch, getters}, {model}) {
       const previous = getters.currentWallet
       const address: Address = getAddressByPayload(model)
       dispatch('diagnostic/ADD_DEBUG', `Store action wallet/SET_CURRENT_WALLET dispatched with ${address.plain()}`, {root: true})
@@ -548,7 +554,7 @@ export default {
     RESET_MULTISIG({commit}) {
       commit('setKnownMultisigInfo', {})
     },
-    ADD_COSIGNATURE({commit, dispatch, getters}, cosignatureMessage) {
+    ADD_COSIGNATURE({commit, getters}, cosignatureMessage) {
       if (!cosignatureMessage || !cosignatureMessage.parentHash) {
         throw Error('Missing mandatory field \'parentHash\' for action wallet/ADD_COSIGNATURE.')
       }
@@ -566,13 +572,10 @@ export default {
       transactions[index] = transactions[index].addCosignatures(cosignatureMessage)
       commit('partialTransactions', transactions)
     },
-    ADD_TRANSACTION({commit, dispatch, getters}, transactionMessage) {
+    ADD_TRANSACTION({commit, getters}, transactionMessage) {
       if (!transactionMessage || !transactionMessage.group) {
         throw Error('Missing mandatory field \'group\' for action wallet/ADD_TRANSACTION.')
       }
-
-      // const message = 'Adding transaction to ' + transactionMessage.group + ' Type: ' + transactionMessage.transaction.type
-      // dispatch('diagnostic/ADD_DEBUG', message, {root: true})
 
       // format transactionGroup to store variable name
       const transactionGroup = transactionGroupToStateVariable(transactionMessage.group)
@@ -608,7 +611,6 @@ export default {
       const transactionGroup = transactionGroupToStateVariable(transactionMessage.group)
 
       // read from store
-      const hashes = getters['transactionHashes']
       const transactions = getters[transactionGroup]
 
       // prepare search
@@ -635,7 +637,7 @@ export default {
     ADD_STAGED_TRANSACTION({commit}, stagedTransaction: Transaction) {
       commit('addStagedTransaction', stagedTransaction)
     },
-    CLEAR_STAGED_TRANSACTIONS({commit}, stagedTransaction: Transaction) {
+    CLEAR_STAGED_TRANSACTIONS({commit}) {
       commit('clearStagedTransaction')
     },
     RESET_TRANSACTION_STAGE({commit}) {
@@ -671,7 +673,7 @@ export default {
         address = currentWallet.values.get('address')
       }
 
-      const subsByAddress = subscriptions.hasOwnProperty(address) ? subscriptions[address] : []
+      const subsByAddress = subscriptions && subscriptions[address] ? subscriptions[address] : []
       for (let i = 0, m = subsByAddress.length; i < m; i ++) {
         const subscription = subsByAddress[i]
 
@@ -689,7 +691,7 @@ export default {
     /**
  * REST API
  */
-    async REST_FETCH_TRANSACTIONS({dispatch, getters, rootGetters}, {group, address, pageSize, id}) {
+    async REST_FETCH_TRANSACTIONS({dispatch, rootGetters}, {group, address, id}) {
       dispatch('app/SET_FETCHING_TRANSACTIONS', true, {root: true})
 
       if (!group || ![ 'partial', 'unconfirmed', 'confirmed' ].includes(group)) {
@@ -700,7 +702,11 @@ export default {
         return 
       }
 
-      dispatch('diagnostic/ADD_DEBUG', `Store action wallet/REST_FETCH_TRANSACTIONS dispatched with : ${JSON.stringify({address: address, group})}`, {root: true})
+      dispatch(
+        'diagnostic/ADD_DEBUG',
+        `Store action wallet/REST_FETCH_TRANSACTIONS dispatched with : ${JSON.stringify({address: address, group})}`,
+        {root: true},
+      )
 
       try {
         // prepare REST parameters
@@ -756,8 +762,9 @@ export default {
         const accountInfo = await dispatch('REST_FETCH_INFO', address)
         return accountInfo.mosaics
       }
-      catch(e) {}
-      return []
+      catch(e) {
+        return []
+      }
     },
     async REST_FETCH_INFO({commit, dispatch, getters, rootGetters}, address) {
       if (!address || address.length !== 40) {
@@ -850,7 +857,7 @@ export default {
         throw new Error(e)
       }
     },
-    async REST_FETCH_MULTISIG({commit, dispatch, getters, rootGetters}, address): Promise<void> {
+    async REST_FETCH_MULTISIG({commit, dispatch, rootGetters}, address): Promise<void> {
       if (!address || address.length !== 40) {
         return 
       }
@@ -1013,14 +1020,14 @@ export default {
         return new Promise((resolve, reject) => {
           const address = Address.createFromRawAddress(issuer)
           return listener.confirmed(address).subscribe(
-            async (success) => {
+            async () => {
               // - hash lock confirmed, now announce partial
-              const response = await transactionHttp.announceAggregateBonded(signedPartial)
+              await transactionHttp.announceAggregateBonded(signedPartial)
               commit('removeSignedTransaction', signedLock)
               commit('removeSignedTransaction', signedPartial)
               return resolve(new BroadcastResult(signedPartial, true))
             },
-            (error) => {
+            () => {
               commit('removeSignedTransaction', signedLock)
               commit('removeSignedTransaction', signedPartial)
               reject(new BroadcastResult(signedPartial, false))
@@ -1047,7 +1054,7 @@ export default {
         const transactionHttp = repositoryFactory.createTransactionRepository()
 
         // prepare symbol-sdk TransactionService
-        const response = await transactionHttp.announce(signedTransaction)
+        await transactionHttp.announce(signedTransaction)
         commit('removeSignedTransaction', signedTransaction)
         return new BroadcastResult(signedTransaction, true)
       }
@@ -1057,7 +1064,7 @@ export default {
       }
     },
     async REST_ANNOUNCE_COSIGNATURE(
-      {commit, dispatch, rootGetters},
+      {dispatch, rootGetters},
       cosignature: CosignatureSignedTransaction,
     ): Promise<BroadcastResult> {
 
@@ -1073,7 +1080,7 @@ export default {
         const transactionHttp = repositoryFactory.createTransactionRepository()
 
         // prepare symbol-sdk TransactionService
-        const response = await transactionHttp.announceAggregateBondedCosignature(cosignature)
+        await transactionHttp.announceAggregateBondedCosignature(cosignature)
         return new BroadcastResult(cosignature, true)
       }
       catch(e) {

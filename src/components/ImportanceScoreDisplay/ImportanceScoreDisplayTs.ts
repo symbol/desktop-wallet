@@ -18,8 +18,7 @@ import {AccountInfo} from 'symbol-sdk'
 
 // internal dependencies
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {UIHelpers} from '@/core/utils/UIHelpers'
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 
 @Component({
   computed: {...mapGetters({

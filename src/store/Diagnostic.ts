@@ -64,20 +64,20 @@ export default {
     },
   },
   actions: {
-    async initialize({ commit, dispatch, getters }) {
+    async initialize({ commit, getters }) {
       const callback = async () => {
         // update store
         commit('setInitialized', true)
       }
 
       // acquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
-    async uninitialize({ commit, dispatch, getters }) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
     /// region scoped actions
     ADD_LOG({commit}, {level, message}) {

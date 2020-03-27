@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Password, Account} from 'symbol-sdk'
+import {Password} from 'symbol-sdk'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
@@ -113,7 +113,7 @@ export class FormAccountPasswordUpdateTs extends Vue {
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public async onAccountUnlocked(account: Account, password: Password) {
+  public async onAccountUnlocked() {
     try {
       const service = new AccountService(this.$store)
       const repository = new AccountsRepository()

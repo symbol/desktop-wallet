@@ -55,20 +55,20 @@ export default {
         commit('currentArticle', [...state.articles].shift())
         commit('setInitialized', true)
       }
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
-    async uninitialize({ commit, dispatch, getters }) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         // close websocket connections
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
     /// region scoped actions
     SET_CURRENT_ARTICLE({commit}, article) {
       commit('currentArticle', article)
     },
-    async FETCH_ARTICLES({commit, dispatch}) {
+    async FETCH_ARTICLES({commit}) {
       // fetch articles from external feed
       try {
         const service = new CommunityService()

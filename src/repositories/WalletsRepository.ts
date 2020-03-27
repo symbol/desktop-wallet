@@ -68,7 +68,7 @@ export class WalletsRepository
       value: WalletsModel,
       index: number,
       array: WalletsModel[]
-    ) => boolean = (e) => true,
+    ) => boolean = () => true,
   ): Map<string, WalletsModel> {
     const filtered = this.collect().filter(filterFn)
     const mapped = new Map<string, WalletsModel>()

@@ -27,7 +27,7 @@ export abstract class AbstractFormatter {
 
   /**
    * Setter for active database table (schema)
-   * @param {DatabaseTable} schema 
+   * @param {DatabaseTable} schema 
    * @return {AbstractFormatter}
    */
   public setSchema(schema: DatabaseTable): AbstractFormatter {

@@ -68,7 +68,7 @@ export class MosaicsRepository
       value: MosaicsModel,
       index: number,
       array: MosaicsModel[]
-    ) => boolean = (e) => true,
+    ) => boolean = () => true,
   ): Map<string, MosaicsModel> {
     const filtered = this.collect().filter(filterFn)
     const mapped = new Map<string, MosaicsModel>()

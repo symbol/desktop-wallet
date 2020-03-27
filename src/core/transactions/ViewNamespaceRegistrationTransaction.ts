@@ -80,7 +80,7 @@ export class ViewNamespaceRegistrationTransaction extends TransactionView<Namesp
       // - try to identify root namespace by id
       const parentId = transaction.parentId
       const namespaceNames = this.$store.getters['namespace/namespacesNames']
-      if (namespaceNames.hasOwnProperty(parentId.toHex())) {
+      if (namespaceNames && namespaceNames[parentId.toHex()]) {
         this.values.set('rootNamespaceName', namespaceNames[parentId.toHex()])
       }
     }

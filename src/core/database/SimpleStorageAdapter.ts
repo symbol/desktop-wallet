@@ -17,7 +17,6 @@ import {Password} from 'symbol-sdk'
 import CryptoJS from 'crypto-js'
 
 // internal dependencies
-import {DatabaseModel} from './DatabaseModel'
 import {BaseStorageAdapter} from './BaseStorageAdapter'
 import {AbstractFormatter} from './formatters/AbstractFormatter'
 import {JSONFormatter} from './formatters/JSONFormatter'

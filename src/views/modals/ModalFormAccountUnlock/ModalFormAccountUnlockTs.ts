@@ -19,7 +19,6 @@ import {Account, Password} from 'symbol-sdk'
 
 // internal dependencies
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {AESEncryptionService} from '@/services/AESEncryptionService'
 
 // child components
 // @ts-ignore
@@ -39,7 +38,7 @@ export class ModalFormAccountUnlockTs extends Vue {
   }) visible: boolean
 
   @Prop({
-    default: (a: Account, p: Password) => true,
+    default: () => true,
   }) onSuccess: (a: Account, p: Password) => boolean
 
   /**

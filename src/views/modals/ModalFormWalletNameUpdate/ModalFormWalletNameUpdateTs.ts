@@ -52,7 +52,7 @@ export class ModalFormWalletNameUpdateTs extends Vue {
    * @param {Password} password 
    * @return {void}
    */
-  public onSubmit(formItems: any) {
+  public onSubmit() {
     this.show = false
   }
 }

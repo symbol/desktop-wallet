@@ -15,7 +15,7 @@
  */
 import {Vue, Component} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, SimpleWallet, Password} from 'symbol-sdk'
+import {NetworkType, Password} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 
 // internal dependencies

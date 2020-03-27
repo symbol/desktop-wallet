@@ -40,7 +40,7 @@ export default {
     initialized: false,
     hasFeed: false,
     dataFeed: {
-      accounts: [],
+      accounts: [],
       mosaics: [],
       namespaces: [],
       wallets: [],
@@ -67,13 +67,13 @@ export default {
       }
 
       // aquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
-    async uninitialize({ commit, dispatch, getters }) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
     async SYNCHRONIZE({commit}) {
       // - sync with database (this will run migrations if needed)

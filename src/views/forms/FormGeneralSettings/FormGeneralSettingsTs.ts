@@ -15,7 +15,6 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Password, Account} from 'symbol-sdk'
 
 // internal dependencies
 import {SettingService} from '@/services/SettingService'
@@ -154,8 +153,7 @@ export class FormGeneralSettingsTs extends Vue {
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public onAccountUnlocked(account: Account, password: Password) {
-
+  public onAccountUnlocked() {
     try {
       // - use service to bridge between database and store
       const service = new SettingService(this.$store)

@@ -70,7 +70,7 @@ export class AccountsRepository
       value: AccountsModel,
       index: number,
       array: AccountsModel[]
-    ) => boolean = (e) => true,
+    ) => boolean = () => true,
   ): Map<string, AccountsModel> {
     const filtered = this.collect().filter(filterFn)
     const mapped = new Map<string, AccountsModel>()

@@ -42,20 +42,20 @@ export default {
     setAuthenticated: (state, authState) => Vue.set(state, 'isAuthenticated', authState === true),
   },
   actions: {
-    async initialize({ commit, dispatch, getters }) {
+    async initialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', true)
       }
 
       // aquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
     async uninitialize({ commit, dispatch, getters }) {
       const callback = async () => {
         await dispatch('RESET_STATE')
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
     /// region scoped actions
     RESET_STATE({commit}) {
@@ -85,9 +85,9 @@ export default {
       await dispatch('initialize')
       $eventBus.$emit('onAccountChange', currentAccountModel.getIdentifier())
     },
-    ADD_WALLET({dispatch, getters, state}, walletModel) {
+    ADD_WALLET({dispatch, getters}, walletModel) {
       const resolvedAccount = getters['currentAccount'] 
-      if (!resolvedAccount || !resolvedAccount.values) {
+      if (!resolvedAccount || !resolvedAccount.values) {
         return
       }
 

@@ -64,7 +64,7 @@ export default {
     timezone: (state, timezone) => Vue.set(state, 'timezone', timezone),
     toggleControlsDisabled: (state, {disable, message}) => {
       Vue.set(state, 'hasControlsDisabled', disable)
-      Vue.set(state, 'controlsDisabledMessage', message || '')
+      Vue.set(state, 'controlsDisabledMessage', message || '')
     },
     toggleLoadingOverlay: (state, display) => Vue.set(state, 'hasLoadingOverlay', display),
     setLoadingOverlayMessage: (state, message) => Vue.set(state, 'loadingOverlayMessage', message),
@@ -79,20 +79,20 @@ export default {
     setFetchingTransactions: (state, bool: boolean) => Vue.set(state, 'isFetchingTransactions', bool),
   },
   actions: {
-    async initialize({ commit, dispatch, getters }) {
+    async initialize({ commit, getters }) {
       const callback = async () => {
         // update store
         commit('setInitialized', true)
       }
 
       // acquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
-    async uninitialize({ commit, dispatch, getters }) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
     /// region scoped actions
     SET_TIME_ZONE({commit}, timezone: number): void {

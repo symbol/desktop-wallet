@@ -134,8 +134,7 @@ export class MosaicAttachmentInputTs extends Vue {
   }
 
   get canClickAdd(): boolean {
-    if (!this.formItems.selectedMosaicHex
-        || undefined === this.formItems.relativeAmount) {
+    if (!this.formItems.selectedMosaicHex || undefined === this.formItems.relativeAmount) {
       return false
     }
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 

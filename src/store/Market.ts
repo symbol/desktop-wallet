@@ -35,23 +35,23 @@ export default {
     currentPrice: (state, price) => Vue.set(state, 'lastPriceUSD', price),
   },
   actions: {
-    async initialize({ commit, dispatch, getters }) {
+    async initialize({ commit, getters }) {
       const callback = async () => {
         // update store
         commit('setInitialized', true)
       }
 
       // aquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
-    async uninitialize({ commit, dispatch, getters }) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {commit, dispatch, getters})
+      await Lock.uninitialize(callback, {getters})
     },
     /// region scoped actions
-    async SET_CURRENT_PRICE({commit, dispatch}, currentPrice) {
+    async SET_CURRENT_PRICE({commit}, currentPrice) {
       // XXX validate correct price
       commit('currentPrice', currentPrice)
       $eventBus.$emit('onPriceChange', currentPrice)

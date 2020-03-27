@@ -66,7 +66,7 @@ export class ModalFormSubWalletCreationTs extends Vue {
    * @param {Password} password 
    * @return {void}
    */
-  public onSubmit(formItems: any) {
+  public onSubmit() {
     this.show = false
   }
 }

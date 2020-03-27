@@ -190,7 +190,8 @@ export class FormTransactionBase extends Vue {
   public async mounted() {
     if (this.currentWallet) {
       const address = this.currentWallet.objects.address.plain()
-      try { this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', address) } catch(e) {}
+      try { this.$store.dispatch('wallet/REST_FETCH_OWNED_NAMESPACES', address) }
+      catch(e) { console.log('Error fetching namespaces') }
 
       if (!this.isCosignatoryMode) {
         this.currentSigner = this.currentWallet.objects.publicAccount
@@ -233,7 +234,7 @@ export class FormTransactionBase extends Vue {
    */
   get multisigAccounts(): {publicKey: string, label: string}[] {
     const signers = this.getSigners()
-    if (!signers.length || !this.currentWallet) {
+    if (!signers.length || !this.currentWallet) {
       return []
     }
 
@@ -293,7 +294,9 @@ export class FormTransactionBase extends Vue {
    * @throws {Error} If not overloaded in derivate component
    */
   protected setTransactions(transactions: Transaction[]) {
-    throw new Error('Setter method \'setTransactions()\' must be overloaded in derivate components.')
+    const error = 'Setter method \'setTransactions()\' must be overloaded in derivate components. '
+                + 'Call got ' + transactions.length + ' transactions.'
+    throw new Error(error)
   }
 
   /**
@@ -436,11 +439,11 @@ export class FormTransactionBase extends Vue {
    * @param {Mosaic} mosaic 
    * @return {string}
    */
-  protected getMosaicName(mosaicId: MosaicId | NamespaceId): string {
-    if (this.mosaicsNames.hasOwnProperty(mosaicId.toHex())) {
+  protected getMosaicName(mosaicId: MosaicId | NamespaceId): string {
+    if (this.mosaicsNames && this.mosaicsNames[mosaicId.toHex()]) {
       return this.mosaicsNames[mosaicId.toHex()]
     }
-    else if (this.namespacesNames.hasOwnProperty(mosaicId.toHex())) {
+    else if (this.namespacesNames && this.namespacesNames[mosaicId.toHex()]) {
       return this.namespacesNames[mosaicId.toHex()]
     }
 

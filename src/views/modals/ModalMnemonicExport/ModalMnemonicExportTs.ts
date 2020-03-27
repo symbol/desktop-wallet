@@ -18,8 +18,6 @@ import {mapGetters} from 'vuex'
 import {Account, Password, NetworkType} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import {QRCodeGenerator, MnemonicQR} from 'symbol-qr-library'
-import {pluck, concatMap} from 'rxjs/operators'
-import {of, Observable} from 'rxjs'
 
 // internal dependencies
 import {AESEncryptionService} from '@/services/AESEncryptionService'
@@ -73,7 +71,7 @@ export class ModalMnemonicExportTs extends Vue {
 
   public created() {
     this.$eventToObservable('onAccountUnlocked').subscribe(
-      async (event) => {
+      async () => {
         this.qrBase64 = await this.exportMnemonicQR.toBase64().toPromise()
       },
     )
@@ -136,12 +134,5 @@ export class ModalMnemonicExportTs extends Vue {
    */
   public onError(error: string) {
     this.$emit('error', error)
-  }
-
-  /**
-   * 
-   */
-  public onDownloadQR() {
-
   }
 }

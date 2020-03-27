@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Mosaic, MosaicId, NetworkType, AccountInfo, Address, RawUInt64, UInt64} from 'symbol-sdk'
+import {MosaicId, NetworkType, AccountInfo, Address} from 'symbol-sdk'
 import {ValidationProvider} from 'vee-validate'
 
 // internal dependencies
@@ -193,7 +193,7 @@ export class WalletSelectorPanelTs extends Vue {
   }
 
   public set currentWalletIdentifier(identifier: string) {
-    if (!identifier || !identifier.length) {
+    if (!identifier || !identifier.length) {
       return 
     }
 

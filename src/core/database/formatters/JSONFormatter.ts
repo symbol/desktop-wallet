@@ -114,15 +114,18 @@ export class JSONFormatter
    * @return {boolean}
    */
   public validate(data: string): boolean {
-    try {
-      if (!data || data === null || !data.length) {
+    try {
+      if (!data || data === null || !data.length) {
         return false
       }
 
       JSON.parse(data)
       return true
     }
-    catch (e) {}
+    catch (e) {
+      return false
+    }
+
     return false
   }
 }

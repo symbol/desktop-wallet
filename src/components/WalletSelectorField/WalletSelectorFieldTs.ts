@@ -69,7 +69,7 @@ export class WalletSelectorFieldTs extends Vue {
   }
 
   public set currentWalletIdentifier(identifier: string) {
-    if (!identifier || !identifier.length) return
+    if (!identifier || !identifier.length) return
 
     this.$emit('input', identifier)
 

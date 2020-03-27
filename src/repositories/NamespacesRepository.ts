@@ -68,7 +68,7 @@ export class NamespacesRepository
       value: NamespacesModel,
       index: number,
       array: NamespacesModel[]
-    ) => boolean = (e) => true,
+    ) => boolean = () => true,
   ): Map<string, NamespacesModel> {
     const filtered = this.collect().filter(filterFn)
     const mapped = new Map<string, NamespacesModel>()

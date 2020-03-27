@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {mapGetters} from 'vuex'
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Transaction, MosaicId, AggregateTransaction} from 'symbol-sdk'
 
 // internal dependencies

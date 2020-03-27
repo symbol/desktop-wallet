@@ -36,7 +36,7 @@ export class AccountsMigrations {
     const migrated = new Map<string, AccountsModel>()
 
     // each row must be migrated (added table columns)
-    entities.map((outOfDate: AccountsModel, i: number) => {
+    entities.map((outOfDate: AccountsModel) => {
       outOfDate.values.set('generationHash', '45870419226A7E51D61D94AD728231EDC6C9B3086EF9255A8421A4F26870456A')
       migrated.set(outOfDate.getIdentifier(), outOfDate)
     })

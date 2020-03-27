@@ -92,10 +92,10 @@ export class AppRouter extends Router {
     const routes = [...this.routes]
 
     // - read custom route configuration
-    // - first top level route contain all app routes
+    // - first top level route contains all app routes
     // - second top level route contains login
     const appRoute = routes.shift()
-    const loginRoute = routes.shift()
+    /* const loginRoute =*/routes.shift()
 
     if (!parentRouteName.length) {
       return appRoute

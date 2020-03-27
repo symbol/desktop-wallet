@@ -60,7 +60,7 @@ const AppStore = new Vuex.Store({
     onPeerConnection,
   ],
   actions: {
-    async initialize({ commit, dispatch, getters }) {
+    async initialize({ dispatch, getters }) {
       const callback = async () => {
         await dispatch('app/initialize')
         await dispatch('db/initialize')
@@ -72,7 +72,7 @@ const AppStore = new Vuex.Store({
       }
 
       // aquire async lock until initialized
-      await Lock.initialize(callback, {commit, dispatch, getters})
+      await Lock.initialize(callback, {getters})
     },
     // Uninitialize the stores (call on app destroyed).
     async uninitialize({ dispatch }) {
