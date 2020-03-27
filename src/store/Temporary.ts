@@ -18,8 +18,8 @@ import Vue from 'vue'
 
 // internal dependencies
 import {LogLevels} from '@/core/utils/LogLevels'
-import {AwaitLock} from './AwaitLock';
-const Lock = AwaitLock.create();
+import {AwaitLock} from './AwaitLock'
+const Lock = AwaitLock.create()
 
 export default {
   namespaced: true,
@@ -54,7 +54,7 @@ export default {
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
-/// region scoped actions
+    /// region scoped actions
     RESET_STATE({commit}) {
       commit('setPassword', null)
       commit('setMnemonic', null)
@@ -65,6 +65,6 @@ export default {
     SET_MNEMONIC({commit}, mnemonic) {
       commit('setMnemonic', mnemonic)
     },
-/// end-region scoped actions
-  }
+    /// end-region scoped actions
+  },
 }

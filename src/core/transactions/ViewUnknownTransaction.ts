@@ -21,7 +21,7 @@ import {TransactionView} from './TransactionView'
 
 /// region custom types
 export type UnknownTransactionFormFields = {
-  maxFee: UInt64,
+  maxFee: UInt64
 }
 /// end-region custom types
 

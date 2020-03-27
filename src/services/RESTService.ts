@@ -26,7 +26,7 @@ import {Subscription} from 'rxjs'
 // internal dependencies
 import {AddressValidator} from '@/core/validation/validators'
 import {NotificationType} from '@/core/utils/NotificationType'
-import {URLHelpers} from "@/core/utils/URLHelpers";
+import {URLHelpers} from '@/core/utils/URLHelpers'
 
 
 /**
@@ -43,17 +43,17 @@ export class RESTService {
   public static async subscribeTransactionChannels(
     context: { dispatch: any, commit: any },
     repositoryFactory: RepositoryFactory,
-    addressStr: string
+    addressStr: string,
   ): Promise<{ listener: IListener, subscriptions: Subscription[] }> {
-    if (! AddressValidator.validate(addressStr)) {
+    if (!AddressValidator.validate(addressStr)) {
       throw new Error('Invalid address for subscribing to websocket connections')
     }
 
-    context.dispatch('diagnostic/ADD_DEBUG', 'Opening REST websocket channel connections with ' + addressStr, {root: true})
+    context.dispatch('diagnostic/ADD_DEBUG', `Opening REST websocket channel connections with ${addressStr}`, {root: true})
 
     // open websocket connection
     const address = Address.createFromRawAddress(addressStr)
-    const listener = repositoryFactory.createListener();
+    const listener = repositoryFactory.createListener()
     await listener.open()
 
     // error listener
@@ -116,14 +116,14 @@ export class RESTService {
    * @param url the url.
    */
   public static createRepositoryFactory(url: string): RepositoryFactory {
-    //TODO Extend RepositoryFactoryHttp in tha TS SDK to allow ws:// kind of urls.
-    //TODO Why the WebSocket as webSocketInjected? Can we avoid this?
-    const repositoryFactory = new RepositoryFactoryHttp(url);
-    const wsUrl = URLHelpers.httpToWsUrl(url);
+    // TODO Extend RepositoryFactoryHttp in tha TS SDK to allow ws:// kind of urls.
+    // TODO Why the WebSocket as webSocketInjected? Can we avoid this?
+    const repositoryFactory = new RepositoryFactoryHttp(url)
+    const wsUrl = URLHelpers.httpToWsUrl(url)
     repositoryFactory.createListener = () => {
-      return new Listener(wsUrl, WebSocket);
+      return new Listener(wsUrl, WebSocket)
     }
-    return repositoryFactory;
+    return repositoryFactory
   }
 
   /**
@@ -136,7 +136,7 @@ export class RESTService {
     repositoryFactory: RepositoryFactory,
   ): Promise<{ listener: IListener, subscriptions: Subscription[] }> {
     // open websocket connection
-    const listener = repositoryFactory.createListener();
+    const listener = repositoryFactory.createListener()
     await listener.open()
 
     context.dispatch('diagnostic/ADD_DEBUG', 'Opening REST block websocket channel connection', {root: true})
@@ -144,9 +144,9 @@ export class RESTService {
     const newBlock = listener.newBlock().subscribe((block: BlockInfo) => {
       context.dispatch('SET_CURRENT_HEIGHT', block.height.compact())
       context.dispatch('ADD_BLOCK', block)
-      context.dispatch('diagnostic/ADD_INFO', 'New block height: ' + block.height.compact(), {root: true})
+      context.dispatch('diagnostic/ADD_INFO', `New block height: ${block.height.compact()}`, {root: true})
     })
 
-    return {listener, subscriptions: [newBlock,]}
+    return {listener, subscriptions: [newBlock]}
   }
 }

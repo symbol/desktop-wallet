@@ -65,7 +65,7 @@ export class ViewHashLockTransaction extends TransactionView<HashLockTransaction
     else {
       this.values.set('mosaic', new Mosaic(
         new MosaicId(formItems.mosaic.mosaicHex),
-        UInt64.fromUint(formItems.mosaic.amount)
+        UInt64.fromUint(formItems.mosaic.amount),
       ))
     }
 

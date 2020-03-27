@@ -28,7 +28,7 @@ import {AccountsRepository} from '@/repositories/AccountsRepository'
 @Component({
   computed: {...mapGetters({
     currentAccount: 'account/currentAccount',
-    currentPassword: 'temporary/password'
+    currentPassword: 'temporary/password',
   })},
 })
 export default class GenerateMnemonicTs extends Vue {
@@ -85,8 +85,8 @@ export default class GenerateMnemonicTs extends Vue {
    */
   public handleMousemove({x, y}) {
     if (this.percent < 100) {
-      this.entropy += AESEncryptionService.generateRandomBytes(8, /*raw=*/false)
-      this.percent++
+      this.entropy += AESEncryptionService.generateRandomBytes(8, /* raw=*/false)
+      this.percent ++
       return
     }
 
@@ -108,11 +108,11 @@ export default class GenerateMnemonicTs extends Vue {
       // encrypt seed for storage
       const encSeed = AESEncryptionService.encrypt(
         seed.plain,
-        this.currentPassword
+        this.currentPassword,
       )
 
       // update currentAccount instance and storage
-      this.currentAccount.values.set("seed", encSeed)
+      this.currentAccount.values.set('seed', encSeed)
       this.accounts.update(this.currentAccount.getIdentifier(), this.currentAccount.values)
 
       // update state

@@ -29,7 +29,7 @@ export class AccountsMigrations {
    * @return {Map<string, AccountsModel>}
    */
   public static version2_addGenHash(
-    rows: Map<string, AccountsModel>
+    rows: Map<string, AccountsModel>,
   ): Map<string, AccountsModel> {
 
     const entities = Array.from(rows.values())

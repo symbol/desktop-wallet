@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Vue from 'vue';
+import Vue from 'vue'
 import {
   Account,
   AccountInfo,
@@ -39,12 +39,12 @@ import {Subscription} from 'rxjs'
 // internal dependencies
 import {$eventBus} from '../events'
 import {RESTService} from '@/services/RESTService'
-import {AwaitLock} from './AwaitLock';
-import {BroadcastResult} from '@/core/transactions/BroadcastResult';
+import {AwaitLock} from './AwaitLock'
+import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 import {WalletsModel} from '@/core/database/entities/WalletsModel'
-import {RESTDispatcher} from '@/core/utils/RESTDispatcher';
-import {NamespaceService} from '@/services/NamespaceService';
-import {MultisigService} from '@/services/MultisigService';
+import {RESTDispatcher} from '@/core/utils/RESTDispatcher'
+import {NamespaceService} from '@/services/NamespaceService'
+import {MultisigService} from '@/services/MultisigService'
 
 /**
  * Helper to format transaction group in name of state variable.
@@ -54,16 +54,16 @@ import {MultisigService} from '@/services/MultisigService';
  * @return {string} One of 'confirmedTransactions', 'unconfirmedTransactions' or 'partialTransactions'
  */
 const transactionGroupToStateVariable = (
-  group: string
+  group: string,
 ): string => {
-  let transactionGroup = group.toLowerCase();
+  let transactionGroup = group.toLowerCase()
   if (transactionGroup === 'unconfirmed'
       || transactionGroup === 'confirmed'
       || transactionGroup === 'partial') {
-    transactionGroup = transactionGroup + 'Transactions'
+    transactionGroup = `${transactionGroup}Transactions`
   }
   else {
-    throw new Error('Unknown transaction group \'' + group + '\'.')
+    throw new Error(`Unknown transaction group '${group}'.`)
   }
 
   return transactionGroup
@@ -74,7 +74,7 @@ const transactionGroupToStateVariable = (
  * @param payload
  */
 const getAddressByPayload = (
-  payload: WalletsModel | Account | PublicAccount | Address | {networkType: NetworkType, publicKey?: string, name?: string}
+  payload: WalletsModel | Account | PublicAccount | Address | {networkType: NetworkType, publicKey?: string, name?: string},
 ): Address => {
   if (payload instanceof WalletsModel) {
     return Address.createFromRawAddress(payload.values.get('address'))
@@ -90,7 +90,7 @@ const getAddressByPayload = (
   // - finally from payload
   const publicAccount = PublicAccount.createFromPublicKey(
     payload.publicKey,
-    payload.networkType
+    payload.networkType,
   )
   return publicAccount.address
 }
@@ -100,42 +100,42 @@ const getAddressByPayload = (
  * @param payload
  */
 const getWalletByPayload = (
-  payload: WalletsModel | Account | PublicAccount | Address | {networkType: NetworkType, publicKey?: string, name?: string}
+  payload: WalletsModel | Account | PublicAccount | Address | {networkType: NetworkType, publicKey?: string, name?: string},
 ): WalletsModel => {
   if (payload instanceof WalletsModel) {
     return payload
   }
   else if (payload instanceof Address) {
     return new WalletsModel(new Map<string, any>([
-      ['name', payload.pretty()],
-      ['address', payload.plain()],
-      ['publicKey', payload.plain()],
-      ['isMultisig', true],
+      [ 'name', payload.pretty() ],
+      [ 'address', payload.plain() ],
+      [ 'publicKey', payload.plain() ],
+      [ 'isMultisig', true ],
     ]))
   }
   else if (payload instanceof PublicAccount || payload instanceof Account) {
     return new WalletsModel(new Map<string, any>([
-      ['name', payload.address.pretty()],
-      ['address', payload.address.plain()],
-      ['publicKey', payload.publicKey],
-      ['isMultisig', true],
+      [ 'name', payload.address.pretty() ],
+      [ 'address', payload.address.plain() ],
+      [ 'publicKey', payload.publicKey ],
+      [ 'isMultisig', true ],
     ]))
   }
   else if (payload && payload.networkType && payload.publicKey) {
     const publicAccount = PublicAccount.createFromPublicKey(payload.publicKey, payload.networkType)
     const walletName = payload.name && payload.name.length ? payload.name : publicAccount.address.pretty()
     return new WalletsModel(new Map<string, any>([
-      ['name', walletName],
-      ['address', publicAccount.address.plain()],
-      ['publicKey', publicAccount.publicKey],
-      ['isMultisig', true],
+      [ 'name', walletName ],
+      [ 'address', publicAccount.address.plain() ],
+      [ 'publicKey', publicAccount.publicKey ],
+      [ 'isMultisig', true ],
     ]))
   }
   else return undefined
 }
 
 /// region globals
-const Lock = AwaitLock.create();
+const Lock = AwaitLock.create()
 /// end-region globals
 
 /**
@@ -143,7 +143,7 @@ const Lock = AwaitLock.create();
  * @type {SubscriptionType}
  */
 type SubscriptionType = {
-  listener: IListener,
+  listener: IListener
   subscriptions: Subscription[]
 }
 
@@ -169,7 +169,7 @@ interface WalletState {
   confirmedTransactions: Transaction[]
   unconfirmedTransactions: Transaction[]
   partialTransactions: Transaction[]
-  stageOptions: { isAggregate: boolean, isMultisig: boolean },
+  stageOptions: { isAggregate: boolean, isMultisig: boolean }
   stagedTransactions: Transaction[]
   signedTransactions: SignedTransaction[]
   transactionCache: Record<string, Transaction[]>
@@ -333,10 +333,10 @@ export default {
       // get current subscriptions from state
       const oldSubscriptions = state.subscriptions[address] || []
       // update subscriptions
-      const newSubscriptions = [...oldSubscriptions, subscriptions]
+      const newSubscriptions = [ ...oldSubscriptions, subscriptions ]
       // update state
       Vue.set(state.subscriptions, address, newSubscriptions)
-     },
+    },
     addTransactionToCache: (state, payload): Record<string, Transaction[]> => {
       if (payload === undefined) return
       const {transaction, hash, cacheKey} = payload
@@ -375,12 +375,12 @@ export default {
       // - find transaction by hash and delete
       const idx = signed.findIndex(tx => tx.hash === transaction.hash)
       if (undefined === idx) {
-        return ;
+        return 
       }
 
       // skip `idx`
       const remaining = signed.splice(0, idx).concat(
-        signed.splice(idx+1, signed.length - idx - 1)
+        signed.splice(idx + 1, signed.length - idx - 1),
       )
 
       // - use Array.from to reset indexes
@@ -399,7 +399,7 @@ export default {
     async initialize({ commit, dispatch, getters }, {address, options}) {
       const callback = async () => {
         if (!address || !address.length) {
-            return ;
+          return 
         }
 
         // fetch account info
@@ -422,7 +422,7 @@ export default {
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
-/// region scoped actions
+    /// region scoped actions
     async REST_FETCH_WALLET_DETAILS({dispatch}, {address, options}) {
       const dispatcher = new RESTDispatcher(dispatch)
 
@@ -459,7 +459,7 @@ export default {
     async SET_CURRENT_WALLET({commit, dispatch, getters}, {model, options}) {
       const previous = getters.currentWallet
       const address: Address = getAddressByPayload(model)
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/SET_CURRENT_WALLET dispatched with ' + address.plain(), {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Store action wallet/SET_CURRENT_WALLET dispatched with ${address.plain()}`, {root: true})
 
       // skip if the wallet has not changed
       if (!!previous && previous.values.get('address') === address.plain()) return
@@ -484,8 +484,8 @@ export default {
       $eventBus.$emit('onWalletChange', address.plain())
     },
     async SET_CURRENT_SIGNER({commit, dispatch, getters}, {model, options}) {
-      let address: Address = getAddressByPayload(model)
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/SET_CURRENT_SIGNER dispatched with ' + address.plain(), {root: true})
+      const address: Address = getAddressByPayload(model)
+      dispatch('diagnostic/ADD_DEBUG', `Store action wallet/SET_CURRENT_SIGNER dispatched with ${address.plain()}`, {root: true})
 
       let payload = model
       if (model instanceof WalletsModel) {
@@ -509,7 +509,7 @@ export default {
       commit('isCosignatoryMode', isCosignatory)
 
       // setting current signer should not fetch ALL data
-      let detailOpts = {
+      const detailOpts = {
         skipTransactions: true,
         skipMultisig: true,
         skipOwnedAssets: false,
@@ -571,11 +571,11 @@ export default {
         throw Error('Missing mandatory field \'group\' for action wallet/ADD_TRANSACTION.')
       }
 
-      //const message = 'Adding transaction to ' + transactionMessage.group + ' Type: ' + transactionMessage.transaction.type
-      //dispatch('diagnostic/ADD_DEBUG', message, {root: true})
+      // const message = 'Adding transaction to ' + transactionMessage.group + ' Type: ' + transactionMessage.transaction.type
+      // dispatch('diagnostic/ADD_DEBUG', message, {root: true})
 
       // format transactionGroup to store variable name
-      let transactionGroup = transactionGroupToStateVariable(transactionMessage.group);
+      const transactionGroup = transactionGroupToStateVariable(transactionMessage.group)
 
       // if transaction hash is known, do nothing
       const hashes = getters['transactionHashes']
@@ -594,7 +594,7 @@ export default {
       }
 
       // update state
-      //commit('addTransactionToCache', {hash: transaction.transactionInfo.hash, transaction})
+      // commit('addTransactionToCache', {hash: transaction.transactionInfo.hash, transaction})
       commit(transactionGroup, transactions)
       return commit('transactionHashes', hashes)
     },
@@ -605,7 +605,7 @@ export default {
       }
 
       // format transactionGroup to store variable name
-      let transactionGroup = transactionGroupToStateVariable(transactionMessage.group);
+      const transactionGroup = transactionGroupToStateVariable(transactionMessage.group)
 
       // read from store
       const hashes = getters['transactionHashes']
@@ -617,7 +617,7 @@ export default {
       // find transaction in storage
       const findIterator = transactions.findIndex(tx => tx.transactionInfo.hash === transactionHash)
       if (findIterator === undefined) {
-        return ; // not found, do nothing
+        return // not found, do nothing
       }
 
       // commit empty array
@@ -627,7 +627,7 @@ export default {
 
       // skip `idx`
       const remaining = transactions.splice(0, findIterator).concat(
-        transactions.splice(findIterator+1, transactions.length - findIterator - 1)
+        transactions.splice(findIterator + 1, transactions.length - findIterator - 1),
       )
 
       commit(transactionGroup, Array.from(remaining))
@@ -641,18 +641,18 @@ export default {
     RESET_TRANSACTION_STAGE({commit}) {
       commit('setStagedTransactions', [])
     },
-/**
+    /**
  * Websocket API
  */
     // Subscribe to latest account transactions.
     async SUBSCRIBE({ commit, dispatch, rootGetters }, address) {
       if (!address || !address.length) {
-        return ;
+        return 
       }
 
       // use RESTService to open websocket channel subscriptions
       const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
-      const subscriptions: SubscriptionType  = await RESTService.subscribeTransactionChannels(
+      const subscriptions: SubscriptionType = await RESTService.subscribeTransactionChannels(
         {commit, dispatch},
         repositoryFactory,
         address,
@@ -672,11 +672,11 @@ export default {
       }
 
       const subsByAddress = subscriptions.hasOwnProperty(address) ? subscriptions[address] : []
-      for (let i = 0, m = subsByAddress.length; i < m; i++) {
+      for (let i = 0, m = subsByAddress.length; i < m; i ++) {
         const subscription = subsByAddress[i]
 
         // subscribers
-        for (let j = 0, n = subscription.subscriptions; j < n; j++) {
+        for (let j = 0, n = subscription.subscriptions; j < n; j ++) {
           await subscription.subscriptions[j].unsubscribe()
         }
 
@@ -686,21 +686,21 @@ export default {
       // update state
       dispatch('RESET_SUBSCRIPTIONS', address)
     },
-/**
+    /**
  * REST API
  */
     async REST_FETCH_TRANSACTIONS({dispatch, getters, rootGetters}, {group, address, pageSize, id}) {
       dispatch('app/SET_FETCHING_TRANSACTIONS', true, {root: true})
 
-      if (!group || ! ['partial', 'unconfirmed', 'confirmed'].includes(group)) {
+      if (!group || ![ 'partial', 'unconfirmed', 'confirmed' ].includes(group)) {
         group = 'confirmed'
       }
 
       if (!address || address.length !== 40) {
-        return ;
+        return 
       }
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_TRANSACTIONS dispatched with : ' + JSON.stringify({address: address, group}), {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Store action wallet/REST_FETCH_TRANSACTIONS dispatched with : ${JSON.stringify({address: address, group})}`, {root: true})
 
       try {
         // prepare REST parameters
@@ -711,7 +711,7 @@ export default {
         // fetch transactions from REST gateway
         const accountHttp = repositoryFactory.createAccountRepository()
         let transactions: Transaction[] = []
-        let blockHeights: number[] = []
+        const blockHeights: number[] = []
 
         if ('confirmed' === group) {
           transactions = await accountHttp.getAccountTransactions(addressObject, queryParams).toPromise()
@@ -719,14 +719,14 @@ export default {
           transactions.map(transaction => blockHeights.push(transaction.transactionInfo.height.compact()))
         }
         else if ('unconfirmed' === group)
-          transactions = await accountHttp.getAccountUnconfirmedTransactions(addressObject, queryParams).toPromise()
+        {transactions = await accountHttp.getAccountUnconfirmedTransactions(addressObject, queryParams).toPromise()}
         else if ('partial' === group)
-          transactions = await accountHttp.getAccountPartialTransactions(addressObject, queryParams).toPromise()
+        {transactions = await accountHttp.getAccountPartialTransactions(addressObject, queryParams).toPromise()}
 
-        dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_TRANSACTIONS numTransactions: ' + transactions.length, {root: true})
+        dispatch('diagnostic/ADD_DEBUG', `Store action wallet/REST_FETCH_TRANSACTIONS numTransactions: ${transactions.length}`, {root: true})
 
         // update store
-        for (let i = 0, m = transactions.length; i < m; i++) {
+        for (let i = 0, m = transactions.length; i < m; i ++) {
           const transaction = transactions[i]
           await dispatch('ADD_TRANSACTION', { address, group, transaction })
         }
@@ -740,7 +740,7 @@ export default {
         return transactions
       }
       catch (e) {
-        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch transactions: ' + e, {root: true})
+        dispatch('diagnostic/ADD_ERROR', `An error happened while trying to fetch transactions: ${e}`, {root: true})
         return false
       } finally {
         dispatch('app/SET_FETCHING_TRANSACTIONS', false, {root: true})
@@ -748,10 +748,10 @@ export default {
     },
     async REST_FETCH_BALANCES({dispatch}, address) {
       if (!address || address.length !== 40) {
-        return ;
+        return 
       }
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_BALANCES dispatched with : ' + address, {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Store action wallet/REST_FETCH_BALANCES dispatched with : ${address}`, {root: true})
       try {
         const accountInfo = await dispatch('REST_FETCH_INFO', address)
         return accountInfo.mosaics
@@ -761,10 +761,10 @@ export default {
     },
     async REST_FETCH_INFO({commit, dispatch, getters, rootGetters}, address) {
       if (!address || address.length !== 40) {
-        return ;
+        return 
       }
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_INFO dispatched with : ' + JSON.stringify({address: address}), {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Store action wallet/REST_FETCH_INFO dispatched with : ${JSON.stringify({address: address})}`, {root: true})
 
       const currentWallet = getters.currentWallet
       const currentSigner = getters.currentSigner
@@ -798,7 +798,7 @@ export default {
           dispatch('SET_BALANCES', {mosaics: [], which: 'currentSignerMosaics'})
         }
 
-        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch account information: ' + e, {root: true})
+        dispatch('diagnostic/ADD_ERROR', `An error happened while trying to fetch account information: ${e}`, {root: true})
         return false
       }
     },
@@ -852,10 +852,10 @@ export default {
     },
     async REST_FETCH_MULTISIG({commit, dispatch, getters, rootGetters}, address): Promise<void> {
       if (!address || address.length !== 40) {
-        return ;
+        return 
       }
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_MULTISIG dispatched with : ' + address, {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Store action wallet/REST_FETCH_MULTISIG dispatched with : ${address}`, {root: true})
 
       // read store
       const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
@@ -875,8 +875,8 @@ export default {
         multisigsInfo.forEach(multisigInfo => commit('addKnownMultisigInfo', multisigInfo))
       }
       catch (e) {
-        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch multisig information: ' + e, {root: true})
-        return ;
+        dispatch('diagnostic/ADD_ERROR', `An error happened while trying to fetch multisig information: ${e}`, {root: true})
+        return 
       }
     },
     async REST_FETCH_OWNED_MOSAICS(
@@ -885,7 +885,7 @@ export default {
     ): Promise<MosaicInfo[]> {
       if (!address || address.length !== 40) return
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_OWNED_MOSAICS dispatched with : ' + address, {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Store action wallet/REST_FETCH_OWNED_MOSAICS dispatched with : ${address}`, {root: true})
 
       // read store
       const currentWallet = getters['currentWallet']
@@ -918,7 +918,7 @@ export default {
           commit('currentSignerOwnedMosaics', [])
         }
 
-        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch owned mosaics: ' + e, {root: true})
+        dispatch('diagnostic/ADD_ERROR', `An error happened while trying to fetch owned mosaics: ${e}`, {root: true})
         return null
       }
     },
@@ -926,10 +926,10 @@ export default {
       // @TODO: This method should be called by NamespaceService, like NamespaceService.fetchNamespaceInfo
       // To be fixed that along with "Owned" namespaces getters (see below)
       if (!address || address.length !== 40) {
-        return ;
+        return 
       }
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_FETCH_OWNED_NAMESPACES dispatched with : ' + address, {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Store action wallet/REST_FETCH_OWNED_NAMESPACES dispatched with : ${address}`, {root: true})
 
       // read store
       const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
@@ -977,24 +977,24 @@ export default {
           commit('currentSignerOwnedNamespaces', [])
         }
 
-        dispatch('diagnostic/ADD_ERROR', 'An error happened while trying to fetch owned namespaces: ' + e, {root: true})
+        dispatch('diagnostic/ADD_ERROR', `An error happened while trying to fetch owned namespaces: ${e}`, {root: true})
         return null
       }
     },
     async REST_ANNOUNCE_PARTIAL(
       {commit, dispatch, rootGetters},
-      {issuer, signedLock, signedPartial}
+      {issuer, signedLock, signedPartial},
     ): Promise<BroadcastResult> {
 
       if (!issuer || issuer.length !== 40) {
-        return ;
+        return 
       }
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_ANNOUNCE_PARTIAL dispatched with: ' + JSON.stringify({
+      dispatch('diagnostic/ADD_DEBUG', `Store action wallet/REST_ANNOUNCE_PARTIAL dispatched with: ${JSON.stringify({
         issuer: issuer,
         signedLockHash: signedLock.hash,
         signedPartialHash: signedPartial.hash,
-      }), {root: true})
+      })}`, {root: true})
 
       try {
         // - prepare REST parameters
@@ -1002,7 +1002,7 @@ export default {
         const transactionHttp = repositoryFactory.createTransactionRepository()
 
         // - prepare scoped *confirmation listener*
-        const listener = repositoryFactory.createListener();
+        const listener = repositoryFactory.createListener()
         await listener.open()
 
 
@@ -1024,7 +1024,7 @@ export default {
               commit('removeSignedTransaction', signedLock)
               commit('removeSignedTransaction', signedPartial)
               reject(new BroadcastResult(signedPartial, false))
-            }
+            },
           )
         })
       }
@@ -1034,12 +1034,12 @@ export default {
     },
     async REST_ANNOUNCE_TRANSACTION(
       {commit, dispatch, rootGetters},
-      signedTransaction: SignedTransaction
+      signedTransaction: SignedTransaction,
     ): Promise<BroadcastResult> {
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_ANNOUNCE_TRANSACTION dispatched with: ' + JSON.stringify({
+      dispatch('diagnostic/ADD_DEBUG', `Store action wallet/REST_ANNOUNCE_TRANSACTION dispatched with: ${JSON.stringify({
         hash: signedTransaction.hash,
-        payload: signedTransaction.payload
-      }), {root: true})
+        payload: signedTransaction.payload,
+      })}`, {root: true})
 
       try {
         // prepare REST parameters
@@ -1058,14 +1058,14 @@ export default {
     },
     async REST_ANNOUNCE_COSIGNATURE(
       {commit, dispatch, rootGetters},
-      cosignature: CosignatureSignedTransaction
+      cosignature: CosignatureSignedTransaction,
     ): Promise<BroadcastResult> {
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/REST_ANNOUNCE_COSIGNATURE dispatched with: ' + JSON.stringify({
+      dispatch('diagnostic/ADD_DEBUG', `Store action wallet/REST_ANNOUNCE_COSIGNATURE dispatched with: ${JSON.stringify({
         hash: cosignature.parentHash,
         signature: cosignature.signature,
         signerPublicKey: cosignature.signerPublicKey,
-      }), {root: true})
+      })}`, {root: true})
 
       try {
         // prepare REST parameters
@@ -1124,6 +1124,6 @@ export default {
       // dispatch actions
       dispatcher.throttle_dispatch()
     },
-/// end-region scoped actions
+    /// end-region scoped actions
   },
-};
+}

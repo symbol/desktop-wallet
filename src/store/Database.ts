@@ -16,16 +16,16 @@
 import Vue from 'vue'
 
 // internal dependencies
-import {AwaitLock} from './AwaitLock';
-import {MosaicService} from '@/services/MosaicService';
-import {NamespaceService} from '@/services/NamespaceService';
-import {AccountService} from '@/services/AccountService';
-import {WalletService} from '@/services/WalletService';
-import {SettingService} from '@/services/SettingService';
-import {PeerService} from '@/services/PeerService';
+import {AwaitLock} from './AwaitLock'
+import {MosaicService} from '@/services/MosaicService'
+import {NamespaceService} from '@/services/NamespaceService'
+import {AccountService} from '@/services/AccountService'
+import {WalletService} from '@/services/WalletService'
+import {SettingService} from '@/services/SettingService'
+import {PeerService} from '@/services/PeerService'
 
 /// region globals
-const Lock = AwaitLock.create();
+const Lock = AwaitLock.create()
 const mosaicService = new MosaicService()
 const namespaceService = new NamespaceService()
 const accountService = new AccountService()
@@ -93,8 +93,8 @@ export default {
         endpoints,
         settings,
       })
-    }
-/// region scoped actions
-/// end-region scoped actions
-  }
+    },
+    /// region scoped actions
+    /// end-region scoped actions
+  },
 }

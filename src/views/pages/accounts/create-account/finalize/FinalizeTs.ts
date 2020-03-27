@@ -102,19 +102,19 @@ export default class FinalizeTs extends Vue {
         this.currentAccount,
         this.currentMnemonic,
         this.currentPassword,
-        this.networkType
+        this.networkType,
       )
 
       // add wallet to account
-      const wallets = this.currentAccount.values.get("wallets")
+      const wallets = this.currentAccount.values.get('wallets')
       wallets.push(wallet.getIdentifier())
-      this.currentAccount.values.set("wallets", wallets)
+      this.currentAccount.values.set('wallets', wallets)
 
       // use repository for storage
       this.walletsRepository.create(wallet.values)
       this.accountsRepository.update(
         this.currentAccount.getIdentifier(),
-        this.currentAccount.values
+        this.currentAccount.values,
       )
 
       // execute store actions

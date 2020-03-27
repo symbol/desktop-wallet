@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Vue from 'vue';
+import Vue from 'vue'
 
 // internal dependencies
 import i18n from '@/language'
 import app from '@/main'
-import {AwaitLock} from './AwaitLock';
-const Lock = AwaitLock.create();
+import {AwaitLock} from './AwaitLock'
+const Lock = AwaitLock.create()
 
 // configuration
 import appConfig from '@/../config/app.conf.json'
@@ -94,7 +94,7 @@ export default {
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
-/// region scoped actions
+    /// region scoped actions
     SET_TIME_ZONE({commit}, timezone: number): void {
       commit('timezone', timezone)
     },
@@ -129,6 +129,6 @@ export default {
     SET_FETCHING_TRANSACTIONS({commit}, bool: boolean) {
       commit('setFetchingTransactions', bool)
     },
-/// end-region scoped actions
-  }
+    /// end-region scoped actions
+  },
 }

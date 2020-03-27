@@ -22,10 +22,10 @@ import {TransactionView} from './TransactionView'
 /// region custom types
 export type NamespaceRegistrationFormFieldsType = {
   rootNamespaceName: string
-  subNamespaceName?: string,
-  registrationType: NamespaceRegistrationType,
-  duration?: number,
-  maxFee: UInt64,
+  subNamespaceName?: string
+  registrationType: NamespaceRegistrationType
+  duration?: number
+  maxFee: UInt64
 }
 /// end-region custom types
 

@@ -35,7 +35,7 @@ import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
   },
   computed: {...mapGetters({
     currentWallet: 'wallet/currentWallet',
-  })}
+  })},
 })
 export class DashboardTs extends Vue {
   /**

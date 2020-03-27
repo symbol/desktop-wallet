@@ -319,7 +319,7 @@ export class MosaicService extends AbstractService {
     amount: number,
     mosaic: MosaicId,
   ): Promise<number> {
-    let info = await this.getMosaic(mosaic)
+    const info = await this.getMosaic(mosaic)
     return amount / Math.pow(10, info.values.get('divisibility') || 0)
   }
 

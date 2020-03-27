@@ -26,7 +26,7 @@ import FormWalletNameUpdate from '@/views/forms/FormWalletNameUpdate/FormWalletN
 })
 export class ModalFormWalletNameUpdateTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   /**

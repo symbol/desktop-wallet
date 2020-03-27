@@ -113,7 +113,7 @@ export class CustomValidationRules {
         const knownWallets = Array.from(accountsRepository.fetchRelations(
           walletsRepository,
           currentAccount,
-          'wallets'
+          'wallets',
         ).values())
 
         return undefined === knownWallets.find(w => value === w.values.get('name'))

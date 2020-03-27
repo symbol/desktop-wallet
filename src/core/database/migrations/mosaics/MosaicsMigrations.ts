@@ -32,7 +32,7 @@ export class MosaicsMigrations {
    * @return {Map<string, MosaicsModel>}
    */
   public static version2_addGenHash(
-    rows: Map<string, MosaicsModel>
+    rows: Map<string, MosaicsModel>,
   ): Map<string, MosaicsModel> {
 
     const entities = Array.from(rows.values())
@@ -57,7 +57,7 @@ export class MosaicsMigrations {
    * @returns {Map<string, MosaicsModel>}
    */
   public static version3_newSymbol(
-    rows: Map<string, MosaicsModel>
+    rows: Map<string, MosaicsModel>,
   ): Map<string, MosaicsModel> {
     const entities = Array.from(rows.values())
     const migrated = new Map<string, MosaicsModel>()

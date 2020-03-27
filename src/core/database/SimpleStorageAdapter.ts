@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {Password} from 'symbol-sdk'
-import CryptoJS from "crypto-js";
+import CryptoJS from 'crypto-js'
 
 // internal dependencies
 import {DatabaseModel} from './DatabaseModel'
@@ -64,7 +64,7 @@ export class SimpleStorageAdapter
    * @return {string}
    */
   public getSaltForSession(): string {
-    let sessionId: string = this.getSessionId()
+    const sessionId: string = this.getSessionId()
     let accessSalt: string = this.storage.getItem('accessSalt')
 
     if (null === accessSalt) {

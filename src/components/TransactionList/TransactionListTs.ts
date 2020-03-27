@@ -202,7 +202,7 @@ export class TransactionListTs extends Vue {
     return [...transactions].reverse().slice(start, end)
   }
 
-    /**
+  /**
    * Returns all the transactions,
    * from the getter that matches the provided tab name
    * @param {TabName} tabName

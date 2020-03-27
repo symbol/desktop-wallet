@@ -21,25 +21,25 @@ import {
   RepositoryFactory,
   Transaction,
   TransactionType,
-  UInt64
+  UInt64,
 } from 'symbol-sdk'
 import Vue from 'vue'
 // internal dependencies
 import {MosaicService} from '@/services/MosaicService'
-import {AwaitLock} from './AwaitLock';
+import {AwaitLock} from './AwaitLock'
 
-const Lock = AwaitLock.create();
+const Lock = AwaitLock.create()
 
 // mosaic state typing
 interface MosaicState {
-  initialized: boolean,
-  networkMosaicId: MosaicId,
-  networkMosaicName: string,
-  networkMosaicTicker: string,
-  nemesisTransactions: Transaction[],
-  mosaicsInfoByHex: Record<string, MosaicInfo>,
-  mosaicsNamesByHex: Record<string, string>,
-  hiddenMosaics: string[],
+  initialized: boolean
+  networkMosaicId: MosaicId
+  networkMosaicName: string
+  networkMosaicTicker: string
+  nemesisTransactions: Transaction[]
+  mosaicsInfoByHex: Record<string, MosaicInfo>
+  mosaicsNamesByHex: Record<string, string>
+  hiddenMosaics: string[]
 }
 
 // mosaic state initial definition
@@ -89,7 +89,7 @@ export default {
       if (index > -1) return
 
       // update the state
-      Vue.set(state, 'hiddenMosaics', [...hiddenMosaics, mosaicId.toHex()])
+      Vue.set(state, 'hiddenMosaics', [ ...hiddenMosaics, mosaicId.toHex() ])
     },
     showMosaic: (state: MosaicState, mosaicId) => {
       const hiddenMosaics = [...state.hiddenMosaics]
@@ -105,7 +105,7 @@ export default {
 
       // update the state
       Vue.set(state, 'hiddenMosaics', hiddenMosaics)
-    }
+    },
   },
   actions: {
     async initialize({ commit, dispatch, getters, rootGetters }, withFeed) {
@@ -122,8 +122,8 @@ export default {
         }
         // - initialize CURRENCY from nemesis transactions
         else {
-          const nodeUrl = rootGetters['network/currentPeer'].url;
-          const repositoryFactory = rootGetters['network/repositoryFactory'];
+          const nodeUrl = rootGetters['network/currentPeer'].url
+          const repositoryFactory = rootGetters['network/repositoryFactory']
           await dispatch('INITIALIZE_FROM_NEMESIS', {nodeUrl, repositoryFactory})
         }
 
@@ -140,15 +140,15 @@ export default {
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
-/// region scoped actions
+    /// region scoped actions
     async INITIALIZE_FROM_DB({commit, dispatch, rootGetters}, withFeed) {
       const generationHash = rootGetters['network/generationHash']
       const currencyMosaic = withFeed.mosaics.find(
         m => m.values.get('isCurrencyMosaic')
-          && generationHash === m.values.get('generationHash')
+          && generationHash === m.values.get('generationHash'),
       )
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action mosaic/INITIALIZE_FROM_DB dispatched with currencyMosaic: ' + currencyMosaic.values.get('name'), {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Store action mosaic/INITIALIZE_FROM_DB dispatched with currencyMosaic: ${currencyMosaic.values.get('name')}`, {root: true})
 
       // - set network currency mosaic
       dispatch('SET_NETWORK_CURRENCY_MOSAIC', {
@@ -171,15 +171,15 @@ export default {
       })
       return {
         currencyMosaic,
-        knownMosaics: withFeed.mosaics
+        knownMosaics: withFeed.mosaics,
       }
     },
     async INITIALIZE_FROM_NEMESIS({commit, dispatch}, {repositoryFactory, nodeUrl}) {
       // read first network block to identify currency mosaic
 
-      dispatch('diagnostic/ADD_DEBUG', 'Store action mosaic/INITIALIZE_FROM_NEMESIS dispatched with nodeUrl: ' + nodeUrl, {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Store action mosaic/INITIALIZE_FROM_NEMESIS dispatched with nodeUrl: ${nodeUrl}`, {root: true})
 
-      const blockHttp = repositoryFactory.createBlockRepository();
+      const blockHttp = repositoryFactory.createBlockRepository()
       blockHttp.getBlockTransactions(UInt64.fromUint(1), new QueryParams({pageSize: 100})).subscribe(
         async (transactions: Transaction[]) => {
           const payload = await dispatch('GET_CURRENCY_MOSAIC_FROM_NEMESIS', transactions)
@@ -212,7 +212,7 @@ export default {
 
       commit('addMosaicName', {
         hex: payload.mosaic.objects.mosaicId.toHex(),
-        name: payload.name
+        name: payload.name,
       })
     },
     HIDE_MOSAIC({commit}, mosaicId) {
@@ -249,12 +249,12 @@ export default {
       return {
         name: mosaicName,
         mosaicId: aliasTx.mosaicId,
-        ticker: subNamespaceTx.namespaceName.toUpperCase()
+        ticker: subNamespaceTx.namespaceName.toUpperCase(),
       }
     },
     async REST_FETCH_INFO({commit, rootGetters}, mosaicId): Promise<MosaicInfo> {
-      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-      const mosaicHttp = repositoryFactory.createMosaicRepository();
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+      const mosaicHttp = repositoryFactory.createMosaicRepository()
       const mosaicInfo = await mosaicHttp.getMosaic(mosaicId).toPromise()
 
       commit('addMosaicInfo', mosaicInfo)
@@ -262,15 +262,15 @@ export default {
     },
     async REST_FETCH_INFOS({commit, rootGetters}, mosaicIds): Promise<MosaicInfo[]> {
       const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
-      const mosaicHttp = repositoryFactory.createMosaicRepository();
+      const mosaicHttp = repositoryFactory.createMosaicRepository()
       const mosaicsInfo = await mosaicHttp.getMosaics(mosaicIds).toPromise()
 
       mosaicsInfo.forEach(info => commit('addMosaicInfo', info))
       return mosaicsInfo
     },
     async REST_FETCH_NAMES({commit, rootGetters}, mosaicIds): Promise<{hex: string, name: string}[]> {
-      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-      const namespaceHttp = repositoryFactory.createNamespaceRepository();
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+      const namespaceHttp = repositoryFactory.createNamespaceRepository()
       const mosaicNames = await namespaceHttp.getMosaicsNames(mosaicIds).toPromise()
 
       // map by hex if names available
@@ -288,6 +288,6 @@ export default {
 
       return mappedNames
     },
-/// end-region scoped actions
+    /// end-region scoped actions
   },
 }

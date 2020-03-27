@@ -114,7 +114,7 @@ export class AppRouter extends Router {
 
     // - app modules
     const moduleRoutes = appRoute.children.filter(
-      ({name}) => modules.includes(name)
+      ({name}) => modules.includes(name),
     )
 
     // - find by name
@@ -122,7 +122,7 @@ export class AppRouter extends Router {
 
     // - name does not represent a top level route
     if (undefined === module) {
-      throw new Error('Top level (module) route with name \'' + parentRouteName + '\' does not exist.')
+      throw new Error(`Top level (module) route with name '${parentRouteName}' does not exist.`)
     }
 
     return module

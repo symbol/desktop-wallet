@@ -122,7 +122,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     return true
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Getter for MOSAIC DEFINITION and SUPPLY CHANGE transactions that will be staged
    * @see {FormTransactionBase}
@@ -142,7 +142,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
         mosaicFlags: MosaicFlags.create(
           this.formItems.supplyMutable,
           this.formItems.transferable,
-          this.formItems.restrictable
+          this.formItems.restrictable,
         ),
         divisibility: this.formItems.divisibility,
         permanent: this.formItems.permanent,

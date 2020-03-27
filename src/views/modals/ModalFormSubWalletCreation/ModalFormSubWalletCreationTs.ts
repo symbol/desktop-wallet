@@ -29,11 +29,11 @@ import FormSubWalletCreation from '@/views/forms/FormSubWalletCreation/FormSubWa
   },
   computed: {...mapGetters({
     currentAccount: 'account/currentAccount',
-  })}
+  })},
 })
 export class ModalFormSubWalletCreationTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   /**

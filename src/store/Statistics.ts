@@ -17,9 +17,9 @@ import {RepositoryFactory, StorageInfo} from 'symbol-sdk'
 import Vue from 'vue'
 import axios from 'axios'
 // internal dependencies
-import {AwaitLock} from './AwaitLock';
+import {AwaitLock} from './AwaitLock'
 
-const Lock = AwaitLock.create();
+const Lock = AwaitLock.create()
 
 /// region protected helpers
 /**
@@ -68,8 +68,8 @@ export default {
   actions: {
     async initialize({ commit, dispatch, getters, rootGetters }) {
       const callback = async () => {
-        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-        const nodeHttp = repositoryFactory.createNodeRepository();
+        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+        const nodeHttp = repositoryFactory.createNodeRepository()
         const diagnostic: StorageInfo = await nodeHttp.getStorageInfo().toPromise()
 
         commit('countTransactions', diagnostic.numTransactions)
@@ -93,8 +93,8 @@ export default {
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
-/// region scoped actions
+    /// region scoped actions
 
-/// end-region scoped actions
-  }
+    /// end-region scoped actions
+  },
 }

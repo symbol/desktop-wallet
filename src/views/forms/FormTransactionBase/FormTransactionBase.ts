@@ -161,15 +161,15 @@ export class FormTransactionBase extends Vue {
     observer: InstanceType<typeof ValidationObserver>
   }
 
-/// end-region store getters
+  /// end-region store getters
 
-/// region property watches
+  /// region property watches
   @Watch('currentWallet')
   onCurrentWalletChange() {
     this.resetForm() // @TODO: probably not the best way
     this.resetFormValidation()
   }
-/// end-region property watches
+  /// end-region property watches
 
   /**
    * Whether the form is currently awaiting a signature
@@ -221,7 +221,7 @@ export class FormTransactionBase extends Vue {
     }
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   get signers(): {publicKey: string, label: string}[] {
     return this.getSigners()
   }
@@ -253,7 +253,7 @@ export class FormTransactionBase extends Vue {
   set hasConfirmationModal(f: boolean) {
     this.isAwaitingSignature = f
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Reset the form with properties
@@ -315,7 +315,7 @@ export class FormTransactionBase extends Vue {
     const isCosig = this.currentWallet.values.get('publicKey') !== signerPublicKey
     const payload = !isCosig ? this.currentWallet : {
       networkType: this.networkType,
-      publicKey: signerPublicKey
+      publicKey: signerPublicKey,
     }
 
     await this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {model: payload})
@@ -328,7 +328,7 @@ export class FormTransactionBase extends Vue {
   public async onSubmit() {
     const transactions = this.getTransactions()
 
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding ' + transactions.length + ' transaction(s) to stage (prepared & unsigned)')
+    this.$store.dispatch('diagnostic/ADD_DEBUG', `Adding ${transactions.length} transaction(s) to stage (prepared & unsigned)`)
 
     // - check whether transactions must be aggregated
     // - also set isMultisig flag in case of cosignatory mode
@@ -344,7 +344,7 @@ export class FormTransactionBase extends Vue {
       async (transaction) => {
         await this.$store.dispatch(
           'wallet/ADD_STAGED_TRANSACTION',
-          transaction
+          transaction,
         )
       }))
 
@@ -369,7 +369,7 @@ export class FormTransactionBase extends Vue {
     this.hasConfirmationModal = false
     this.$emit('on-confirmation-success')
 
-    //XXX does the user want to broadcast NOW ?
+    // XXX does the user want to broadcast NOW ?
 
     // - read transaction stage options
     const options = this.$store.getters['wallet/stageOptions']
@@ -389,7 +389,7 @@ export class FormTransactionBase extends Vue {
     const errors = results.filter(result => false === result.success)
     if (errors.length) {
       errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
-      return ;
+      return 
     }
 
     // - notify about broadcast success (_transactions now unconfirmed_)

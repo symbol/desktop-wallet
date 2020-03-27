@@ -107,7 +107,7 @@ export class MosaicAttachmentInputTs extends Vue {
     relativeAmount: 0,
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   /**
    * Mosaics to be shown as options
    * @readonly

@@ -43,7 +43,7 @@ import failureIcon from '@/views/resources/img/monitor/failure.png'
 })
 export class ModalMnemonicExportTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   /**
@@ -75,7 +75,7 @@ export class ModalMnemonicExportTs extends Vue {
     this.$eventToObservable('onAccountUnlocked').subscribe(
       async (event) => {
         this.qrBase64 = await this.exportMnemonicQR.toBase64().toPromise()
-      }
+      },
     )
   }
 
@@ -122,7 +122,7 @@ export class ModalMnemonicExportTs extends Vue {
       return true
     }
     catch (e) {
-      console.error("error mnemonic: ", e)
+      console.error('error mnemonic: ', e)
     }
 
     return false

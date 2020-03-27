@@ -42,7 +42,7 @@ import MnemonicDisplay from '@/components/MnemonicDisplay/MnemonicDisplay.vue'
 })
 export class ModalMnemonicDisplayTs extends Vue {
   @Prop({
-    default: false
+    default: false,
   }) visible: boolean
 
   /**
@@ -96,7 +96,7 @@ export class ModalMnemonicDisplayTs extends Vue {
       return true
     }
     catch (e) {
-      console.error("error mnemonic: ", e)
+      console.error('error mnemonic: ', e)
     }
 
     return false

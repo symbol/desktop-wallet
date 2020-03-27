@@ -124,7 +124,7 @@ export class FormWalletNameUpdateTs extends Vue {
     this.walletsRepository = new WalletsRepository()
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get hasAccountUnlockModal(): boolean {
     return this.isUnlockingAccount
   }
@@ -132,7 +132,7 @@ export class FormWalletNameUpdateTs extends Vue {
   public set hasAccountUnlockModal(f: boolean) {
     this.isUnlockingAccount = f
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Submit action asks for account unlock
@@ -161,7 +161,7 @@ export class FormWalletNameUpdateTs extends Vue {
       // - use repositories for storage
       this.walletsRepository.update(
         this.currentWallet.getIdentifier(),
-        this.currentWallet.values
+        this.currentWallet.values,
       )
 
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)

@@ -17,8 +17,8 @@ import Vue from 'vue'
 
 // internal dependencies
 import {LogLevels} from '@/core/utils/LogLevels'
-import {AwaitLock} from './AwaitLock';
-const Lock = AwaitLock.create();
+import {AwaitLock} from './AwaitLock'
+const Lock = AwaitLock.create()
 
 export default {
   namespaced: true,
@@ -58,7 +58,7 @@ export default {
       logs.push({
         level: payload.level || LogLevels.DEBUG,
         message: payload.message,
-        time: payload.time
+        time: payload.time,
       })
       Vue.set(state, 'logs', logs)
     },
@@ -79,7 +79,7 @@ export default {
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
-/// region scoped actions
+    /// region scoped actions
     ADD_LOG({commit}, {level, message}) {
       commit('addLog', {level, message, time: new Date()})
     },
@@ -103,6 +103,6 @@ export default {
       commit('addLog', {level: LogLevels.ERROR, message, time})
       return time
     },
-/// end-region scoped actions
-  }
+    /// end-region scoped actions
+  },
 }

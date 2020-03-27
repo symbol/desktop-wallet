@@ -31,9 +31,9 @@ import {onPeerConnection} from '@/store/plugins/onPeerConnection'
 
 // use AwaitLock for initialization routines
 import {AwaitLock} from '@/store/AwaitLock'
-const Lock = AwaitLock.create();
+const Lock = AwaitLock.create()
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 /**
  * Application Store
@@ -87,8 +87,8 @@ const AppStore = new Vuex.Store({
         dispatch('temporary/uninitialize'),
         dispatch('diagnostic/uninitialize'),
       ])
-    }
-  }
-});
+    },
+  },
+})
 
 export default AppStore

@@ -42,7 +42,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
     networkType: 'network/networkType',
     currentAccount: 'account/currentAccount',
     currentWallet: 'wallet/currentWallet',
-  })}
+  })},
 })
 export class FormAccountUnlockTs extends Vue {
   /**
@@ -74,7 +74,7 @@ export class FormAccountUnlockTs extends Vue {
    * @var {any}
    */
   public formItems = {
-    password: ''
+    password: '',
   }
 
   /**
@@ -85,8 +85,8 @@ export class FormAccountUnlockTs extends Vue {
     
   }
 
-/// region computed properties getter/setter
-/// end-region computed properties getter/setter
+  /// region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Attempt decryption of private key to unlock
@@ -97,7 +97,7 @@ export class FormAccountUnlockTs extends Vue {
     // - create encrypted payload for active wallet
     const encrypted = new EncryptedPrivateKey(
       this.currentWallet.values.get('encPrivate'),
-      this.currentWallet.values.get('encIv')
+      this.currentWallet.values.get('encIv'),
     )
 
     try {

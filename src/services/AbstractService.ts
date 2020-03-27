@@ -33,7 +33,7 @@ export abstract class AbstractService implements IService {
    */
   public $store: Store<any>
 
-    /**
+  /**
    * Vuex Store 
    * @var {VueI18n}
    */

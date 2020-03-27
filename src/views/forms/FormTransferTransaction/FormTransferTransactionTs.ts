@@ -81,32 +81,32 @@ export interface MosaicAttachment {
     MaxFeeAndSubmit,
     FormRow,
   },
-  computed: {...mapGetters({currentSignerMosaics: 'wallet/currentSignerMosaics'})}
+  computed: {...mapGetters({currentSignerMosaics: 'wallet/currentSignerMosaics'})},
 })
 export class FormTransferTransactionTs extends FormTransactionBase {
   /// region component properties
   @Prop({
-    default: null
+    default: null,
   }) signer: PublicAccount
 
   @Prop({
-    default: null
+    default: null,
   }) recipient: Address
 
   @Prop({
-    default: null
+    default: null,
   }) mosaics: Mosaic[]
 
   @Prop({
-    default: null
+    default: null,
   }) message: Message
 
   @Prop({
-    default: false
+    default: false,
   }) disableSubmit: boolean
 
   @Prop({
-    default: false
+    default: false,
   }) hideSigner: boolean
   /// end-region component properties
 
@@ -128,7 +128,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     selectedMosaicHex: '',
     relativeAmount: 0,
     messagePlain: '',
-    maxFee: 0
+    maxFee: 0,
   }
 
   protected mosaicInputsManager = MosaicInputsManager.initialize([])
@@ -237,7 +237,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
           .filter(({uid}) => uid) // filter out null values
           .map((spec: MosaicAttachment): MosaicAttachment => ({
             mosaicHex: spec.mosaicHex,
-            amount: spec.amount // amount is relative
+            amount: spec.amount, // amount is relative
           })),
         message: this.formItems.messagePlain,
         maxFee: UInt64.fromUint(this.formItems.maxFee),
@@ -363,7 +363,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         const div = info ? info.divisibility : 0
         // amount will be converted to RELATIVE
         return {
-          id: mosaic.id as MosaicId, //XXX resolve mosaicId from namespaceId
+          id: mosaic.id as MosaicId, // XXX resolve mosaicId from namespaceId
           mosaicHex: mosaic.id.toHex(), // XXX resolve mosaicId from namespaceId
           name: this.getMosaicName(mosaic.id),
           amount: mosaic.amount.compact() / Math.pow(10, div),
@@ -430,7 +430,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * Resetting the form when choosing a multisig signer and changing multisig signer
    * Is necessary to make the mosaic inputs reactive
    */
-  @Watch("selectedSigner")
+  @Watch('selectedSigner')
   onSelectedSignerChange() {
     if (this.isMultisigMode) this.resetForm()
   }

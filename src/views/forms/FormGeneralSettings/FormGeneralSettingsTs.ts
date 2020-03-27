@@ -62,7 +62,7 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
     defaultFee: 'app/defaultFee',
     defaultWallet: 'app/defaultWallet',
     knownWallets: 'wallet/knownWallets',
-  })}
+  })},
 })
 export class FormGeneralSettingsTs extends Vue {
   /**
@@ -129,12 +129,12 @@ export class FormGeneralSettingsTs extends Vue {
     this.formItems.maxFee = this.defaultFee
     this.formItems.explorerUrl = this.explorerUrl
     this.formItems.defaultWallet = this.defaultWallet && this.defaultWallet.length
-                                 ? this.defaultWallet : (this.knownWallets.length
-                                 ? this.knownWallets.shift()
-                                 : '')
+      ? this.defaultWallet : (this.knownWallets.length
+        ? this.knownWallets.shift()
+        : '')
   }
 
-/// region computed properties getter/setter
+  /// region computed properties getter/setter
   public get hasAccountUnlockModal(): boolean {
     return this.isUnlockingAccount
   }
@@ -142,7 +142,7 @@ export class FormGeneralSettingsTs extends Vue {
   public set hasAccountUnlockModal(f: boolean) {
     this.isUnlockingAccount = f
   }
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 
   /**
    * Submit action asks for account unlock

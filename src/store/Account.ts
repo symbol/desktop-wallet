@@ -17,11 +17,11 @@ import Vue from 'vue'
 
 // internal dependencies
 import {$eventBus} from '../events'
-import {AwaitLock} from './AwaitLock';
+import {AwaitLock} from './AwaitLock'
 import {SettingService} from '@/services/SettingService'
 
 /// region globals
-const Lock = AwaitLock.create();
+const Lock = AwaitLock.create()
 /// end-region globals
 
 export default {
@@ -57,7 +57,7 @@ export default {
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
-/// region scoped actions
+    /// region scoped actions
     RESET_STATE({commit}) {
       commit('currentAccount', null)
       commit('setAuthenticated', false)
@@ -74,12 +74,12 @@ export default {
       commit('currentAccount', currentAccountModel)
       commit('setAuthenticated', true)
 
-      dispatch('diagnostic/ADD_DEBUG', 'Changing current account to ' + currentAccountModel.getIdentifier(), {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Changing current account to ${currentAccountModel.getIdentifier()}`, {root: true})
 
       const settings = new SettingService().getSettings(currentAccountModel)
       dispatch('app/USE_SETTINGS', settings, {root: true})
 
-      dispatch('diagnostic/ADD_DEBUG', 'Using account settings ' + Array.from(settings.values), {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Using account settings ${Array.from(settings.values)}`, {root: true})
 
       // reset store + re-initialize
       await dispatch('initialize')
@@ -91,15 +91,15 @@ export default {
         return
       }
 
-      dispatch('diagnostic/ADD_DEBUG', 'Adding wallet to account: ' + resolvedAccount.getIdentifier() + ' with: ' + walletModel.values.get('address'), {root: true})
+      dispatch('diagnostic/ADD_DEBUG', `Adding wallet to account: ${resolvedAccount.getIdentifier()} with: ${walletModel.values.get('address')}`, {root: true})
 
-      const wallets = resolvedAccount.values.get("wallets")
+      const wallets = resolvedAccount.values.get('wallets')
       wallets.push(walletModel.getIdentifier())
 
       // update account and return
-      resolvedAccount.values.set("wallets", wallets)
+      resolvedAccount.values.set('wallets', wallets)
       return dispatch('SET_CURRENT_ACCOUNT', resolvedAccount)
-    }
-/// end-region scoped actions
-  }
+    },
+    /// end-region scoped actions
+  },
 }

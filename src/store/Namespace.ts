@@ -16,11 +16,11 @@
 import {NamespaceId, NamespaceInfo, RepositoryFactory} from 'symbol-sdk'
 import Vue from 'vue'
 // internal dependencies
-import {AwaitLock} from './AwaitLock';
-import {NamespaceService} from '@/services/NamespaceService';
-import {NamespacesModel} from '@/core/database/entities/NamespacesModel';
+import {AwaitLock} from './AwaitLock'
+import {NamespaceService} from '@/services/NamespaceService'
+import {NamespacesModel} from '@/core/database/entities/NamespacesModel'
 
-const Lock = AwaitLock.create();
+const Lock = AwaitLock.create()
 
 export default {
   namespaced: true,
@@ -62,7 +62,7 @@ export default {
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
-/// region scoped actions
+    /// region scoped actions
     async INITIALIZE_FROM_DB({commit, dispatch}, withFeed) {
       dispatch('diagnostic/ADD_DEBUG', 'Store action namespace/INITIALIZE_FROM_DB dispatched', {root: true})
       withFeed.namespaces.forEach((model: NamespacesModel) => {
@@ -79,8 +79,8 @@ export default {
       return namespaceInfo
     },
     async REST_FETCH_NAMES({commit, rootGetters}, namespaceIds: NamespaceId[]): Promise<{hex: string, name: string}[]> {
-      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-      const namespaceHttp = repositoryFactory.createNamespaceRepository();
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+      const namespaceHttp = repositoryFactory.createNamespaceRepository()
       const namespaceNames = await namespaceHttp.getNamespacesName(namespaceIds).toPromise()
 
       // map by hex if names available
@@ -99,7 +99,7 @@ export default {
     },
     ADD_NAMESPACE_INFOS({commit}, namespacesInfo: NamespaceInfo[]): void {
       namespacesInfo.forEach(namespace => commit('addNamespaceInfo', namespace))
-    }
-/// end-region scoped actions
-  }
+    },
+    /// end-region scoped actions
+  },
 }

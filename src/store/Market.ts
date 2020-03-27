@@ -17,8 +17,8 @@ import Vue from 'vue'
 
 // internal dependencies
 import {$eventBus} from '../events'
-import {AwaitLock} from './AwaitLock';
-const Lock = AwaitLock.create();
+import {AwaitLock} from './AwaitLock'
+const Lock = AwaitLock.create()
 
 export default {
   namespaced: true,
@@ -50,12 +50,12 @@ export default {
       }
       await Lock.uninitialize(callback, {commit, dispatch, getters})
     },
-/// region scoped actions
+    /// region scoped actions
     async SET_CURRENT_PRICE({commit, dispatch}, currentPrice) {
-      //XXX validate correct price
+      // XXX validate correct price
       commit('currentPrice', currentPrice)
       $eventBus.$emit('onPriceChange', currentPrice)
-    }
-/// end-region scoped actions
-  }
+    },
+    /// end-region scoped actions
+  },
 }
