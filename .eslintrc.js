@@ -68,7 +68,7 @@ module.exports = {
    "no-var": "error",
    "object-literal-sort-keys": 0,
    "prefer-const": "error",
-   "prefer-template": 2,
+   "prefer-template": "off",
    "quotes": ["error", "single"],
    "space-infix-ops": "error",
    "space-unary-ops": [
