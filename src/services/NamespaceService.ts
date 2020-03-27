@@ -169,7 +169,7 @@ export class NamespaceService extends AbstractService {
     // - update the model in database if it exists...
     if (existingModel) repository.update(hexId, namespace.values)
     // ... or create a new model
-    if (!existingModel) repository.create(namespace.values)
+    else repository.create(namespace.values)
 
     return namespace
   }
@@ -183,7 +183,8 @@ export class NamespaceService extends AbstractService {
   private async getNamespaceFullName(namespaceInfo: NamespaceInfo): Promise<string> {
     const namespaceIds: NamespaceId[] = namespaceInfo.levels.map(id => id)
     const namespaceNames: {
-      hex: string name: string
+      hex: string,
+      name: string,
     }[] = await this.$store.dispatch('namespace/REST_FETCH_NAMES', namespaceIds)
     return namespaceNames.find(({hex}) => hex === namespaceInfo.id.toHex()).name
   }
