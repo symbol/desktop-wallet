@@ -294,8 +294,7 @@ export class FormTransactionBase extends Vue {
    * @throws {Error} If not overloaded in derivate component
    */
   protected setTransactions(transactions: Transaction[]) {
-    const error = 'Setter method \'setTransactions()\' must be overloaded in derivate components. '
-                + 'Call got ' + transactions.length + ' transactions.'
+    const error = `setTransactions() must be overloaded. Call got ${transactions.length} transactions.`
     throw new Error(error)
   }
 

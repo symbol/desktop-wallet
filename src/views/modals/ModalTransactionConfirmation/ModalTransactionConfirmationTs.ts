@@ -212,7 +212,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
 
     // - notify about successful transaction announce
-    const debug = 'Count of transactions signed: ' + signedTransactions.length
+    const debug = `Count of transactions signed:  ${signedTransactions.length}`
     this.$store.dispatch('notification/ADD_DEBUG', debug)
     this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
     this.$emit('success', account.publicAccount)
