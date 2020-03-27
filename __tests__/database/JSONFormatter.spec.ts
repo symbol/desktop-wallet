@@ -143,18 +143,20 @@ describe('database/JSONFormatter ==>', () => {
       expect(Object.keys(parsed).length).toBe(2)
 
       // model 1
-      expect(Object.keys(parsed[model1.getIdentifier()]).length).toBe(4)
+      expect(Object.keys(parsed[model1.getIdentifier()]).length).toBe(5)
       expect(parsed[model1.getIdentifier()].id).toBe(model1.getIdentifier())
       expect(parsed[model1.getIdentifier()].db_column1).toBe('value1')
       expect(parsed[model1.getIdentifier()].db_column2).toBe('value2')
-      expect(parsed[model1.getIdentifier()].db_column3).toBe('value2')
+      expect(parsed[model1.getIdentifier()].db_column3).toBe('value3')
+      expect(parsed[model1.getIdentifier()].version).toBe(0)
 
       // model 2
-      expect(Object.keys(parsed[model2.getIdentifier()]).length).toBe(4)
+      expect(Object.keys(parsed[model2.getIdentifier()]).length).toBe(5)
       expect(parsed[model2.getIdentifier()].id).toBe(model2.getIdentifier())
       expect(parsed[model2.getIdentifier()].db_column1).toBe('value1_2')
       expect(parsed[model2.getIdentifier()].db_column2).toBe('value2_2')
-      expect(parsed[model2.getIdentifier()].db_column3).toBe('value2_2')
+      expect(parsed[model2.getIdentifier()].db_column3).toBe('value3_2')
+      expect(parsed[model1.getIdentifier()].version).toBe(0)
     })
   })
 
