@@ -100,6 +100,6 @@ module.exports = {
      }],
      "vue/require-v-for-key": "error",
      "vue/space-infix-ops": "error",
-     // "vue/no-v-html": "error",
+     "vue/no-v-html": "off",
    }
  };
