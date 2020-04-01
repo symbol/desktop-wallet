@@ -7,7 +7,7 @@ Cross-platform client for Symbol to manage accounts, mosaics, namespaces, and is
 
 ## Installation
 
-Symbol Desktop Wallet is available for Mac, Linux, and Windows.
+Symbol Desktop Wallet is available for Mac, Windows, and as a web application.
 
 1. Download Symbol Desktop Wallet from the [releases section](https://github.com/nemfoundation/symbol-desktop-wallet/releases).
 
