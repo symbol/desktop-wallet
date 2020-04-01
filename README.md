@@ -19,7 +19,7 @@ Symbol Desktop Wallet is available for Mac, Windows, and as a web application.
 
 ## Building instructions
 
-Symbol CLI require **Node.js 12 LTS** to execute.
+Symbol CLI require **Node.js 10 or 12 LTS** to execute.
 
 1. Clone the project.
 
