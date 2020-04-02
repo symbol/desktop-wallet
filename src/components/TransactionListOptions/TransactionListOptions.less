@@ -1,0 +1,41 @@
+@import '../../views/resources/css/variables.less';
+
+.transaction-list-options-container {
+  width                : 4.8rem;
+  display              : grid;
+  grid-template-rows   : 100%;
+  grid-template-columns: 4rem 0.8rem;
+  margin-top           : 0.15rem;
+  height           : 0.45rem;
+  align-items          : center;
+
+  .form-row-inner-container-value-only {
+    grid-template-columns: unset;
+  }
+
+  .form-row {
+    width                : 100%;
+    grid-template-columns: unset;
+    margin               : unset;
+    grid-template-columns: unset;
+  }
+
+  .inputs-container {
+    width: 100%;
+  }
+
+  .show-signer-selector {
+    display        : grid;
+    align-content  : center;
+    text-align     : center;
+    cursor         : pointer;
+    font-size      : @smallFont;
+    height         : 100%;
+    color          : @secondary;
+    text-decoration: underline;
+  }
+}
+
+.refresh-button {
+  color: @secondary;
+}

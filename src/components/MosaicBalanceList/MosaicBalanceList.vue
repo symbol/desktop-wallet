@@ -2,11 +2,6 @@
   <div class="mosaics-list-container">
     <Tabs v-if="!isEditionMode" size="small">
       <TabPane :label="$t('assets')" name="name1">
-        <img
-          class="asset_list pointer"
-          src="@/views/resources/img/monitor/monitorAssetList.png"
-          @click="isEditionMode = true"
-        >
         <div class="mosaicList secondary_page_animate">
           <div
             v-for="(entry, index) in filteredBalanceEntries"
@@ -27,6 +22,12 @@
           </div>
         </div>
       </TabPane>
+      <img
+        slot="extra"
+        class="asset_list pointer"
+        src="@/views/resources/img/monitor/monitorAssetList.png"
+        @click="isEditionMode = true"
+      >
     </Tabs>
     <div v-else class="searchMosaic secondary_page_animate">
       <img
