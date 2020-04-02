@@ -40,6 +40,7 @@ import failureIcon from '@/views/resources/img/monitor/failure.png'
   })},
 })
 export class ModalMnemonicExportTs extends Vue {
+  [x: string]: any
   @Prop({
     default: false,
   }) visible: boolean
@@ -92,6 +93,28 @@ export class ModalMnemonicExportTs extends Vue {
     if (!val) {
       this.$emit('close')
     }
+  }
+
+  /**
+   * Hook called when the download QR button is pressed
+   * @return {void}
+   */
+  public onDownloadQR() {
+    if (!this.qrBase64) return
+
+    // - read QR code base64
+    const QRCode: any = document.querySelector('#qrImg')
+    if (!QRCode) return
+    const url = QRCode.src
+
+    // - create link (<a>)
+    const a = document.createElement('a')
+    const event = new MouseEvent('click')
+    a.download = `qr_mnemonic_backup_profile[${this.currentAccount.values.get('accountName')}]`
+    a.href = url
+
+    // - start download
+    a.dispatchEvent(event)
   }
 
   /**
