@@ -136,6 +136,7 @@ export class FormAccountPasswordUpdateTs extends Vue {
 
       const walletIdentifiers = accountModel.values.get('wallets')
       const walletModels = walletIdentifiers.map(id => walletsRepository.read(id))
+
       for (const model of walletModels) {
         const updatedModel = walletService.updateWalletPassword(model, oldPassword, newPassword)
         const updatedValues = new Map<string, string>([
