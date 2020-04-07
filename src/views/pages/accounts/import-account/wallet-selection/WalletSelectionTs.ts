@@ -256,7 +256,7 @@ export default class WalletSelectionTs extends Vue {
       return {
         id: SimpleObjectStorage.generateIdentifier(),
         accountName: this.currentAccount.accountName,
-        name: `Seed Wallet${indexes[i] + 1}`,
+        name: `Seed Account${indexes[i] + 1}`,
         node: '',
         type: WalletType.SEED,
         address: simpleWallet.address.plain(),

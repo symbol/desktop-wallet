@@ -3,6 +3,13 @@
     <div class="upper-section-container">
       <div class="table-title-container section-title">
         <slot name="table-title" />
+        <div class="user-operation">
+          <Checkbox v-model="showExpired">
+            <span v-show="assetType === 'mosaic'">{{ $t('show_expired_mosaics') }}</span>
+            <span v-show="assetType === 'namespace'">{{ $t('show_expired_namespaces') }}</span>
+          </Checkbox>
+          <span @click="onRefresh"><Icon :class="{'animation-rotate':isRefreshing}" type="ios-sync" /></span>
+        </div>
       </div>
     </div>
     <div
@@ -30,7 +37,7 @@
     </div>
     <div class="table-body-container">
       <Spin
-        v-if="loading" size="large" fix
+        v-show="loading" size="large" fix
         class="absolute"
       />
       <div v-if="displayedValues.length" class="table-rows-container">

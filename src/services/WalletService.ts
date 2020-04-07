@@ -186,7 +186,7 @@ export class WalletService {
     return {
       id: SimpleObjectStorage.generateIdentifier(),
       accountName: currentAccount.accountName,
-      name: 'Seed Wallet 1',
+      name: 'Seed Account 1',
       node: '',
       type: WalletType.fromDescriptor('Seed'),
       address: simpleWallet.address.plain(),
@@ -281,4 +281,44 @@ export class WalletService {
   }
 
 
+
+  /**
+   * Returns a WalletsModel with an updated SimpleWallet
+   * @param {string} walletIdentifier
+   * @param {Password} oldPassword
+   * @param {Password} newPassword
+   */
+  public updateWalletPassword(
+    wallet: WalletsModel,
+    oldPassword: Password,
+    newPassword: Password,
+  ): WalletsModel {
+    // Password modification is not allowed for hardware wallets
+    if (wallet.values.get('type') !== WalletType.fromDescriptor('Seed')
+      && wallet.values.get('type') !== WalletType.fromDescriptor('Pk')) {
+      return wallet
+    }
+
+    // Get the private key
+    const encryptedPrivateKey = new EncryptedPrivateKey(
+      wallet.values.get('encPrivate'),
+      wallet.values.get('encIv'),
+    )
+
+    const privateKey = encryptedPrivateKey.decrypt(oldPassword)
+
+    // Encrypt the private key with the new password
+    const newSimpleWallet = SimpleWallet.createFromPrivateKey(
+      wallet.values.get('name'),
+      newPassword,
+      privateKey,
+      wallet.objects.address.networkType,
+    )
+
+    // Update the wallet model
+    wallet.values.set('encPrivate', newSimpleWallet.encryptedPrivateKey.encryptedKey)
+    wallet.values.set('encIv', newSimpleWallet.encryptedPrivateKey.iv)
+
+    return wallet
+  }
 }

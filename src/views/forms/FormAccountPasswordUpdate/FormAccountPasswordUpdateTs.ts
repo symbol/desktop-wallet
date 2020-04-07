@@ -114,19 +114,51 @@ export class FormAccountPasswordUpdateTs extends Vue {
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public async onAccountUnlocked() {
+  public async onAccountUnlocked(account: Account, oldPassword: Password) {
     try {
       const accountService = new AccountService()
+      const newPassword = new Password(this.formItems.password)
 
-      // - create new password hash
-      const passwordHash = AccountService.getPasswordHash(new Password(this.formItems.password))
-      accountService.updatePassword(this.currentAccount, passwordHash, this.formItems.passwordHint)
+      // // - create new password hash
+      // const passwordHash = AccountService.getPasswordHash(new Password(this.formItems.password))
+      // accountService.updatePassword(this.currentAccount, passwordHash, this.formItems.passwordHint)
+      //
+      // // - create new password hash
+      // const passwordHash = service.getPasswordHash(newPassword)
+      // accountModel.values.set('password', passwordHash)
+      // accountModel.values.set('hint', this.formItems.passwordHint)
+      //
+      // // - encrypt the seed with the new password
+      // const oldSeed = accountModel.values.get('seed')
+      // const plainSeed = AESEncryptionService.decrypt(oldSeed , oldPassword)
+      // const newSeed = AESEncryptionService.encrypt(plainSeed, newPassword)
+      // this.currentAccount.values.set('seed', newSeed)
+      //
+      // // - update in storage
+      // repository.update(accountModel.getIdentifier(), accountModel.values)
+      //
+      // // - update wallets passwords
+      // const walletsRepository = new WalletsRepository()
+      // const walletService = new WalletService()
+      //
+      // const walletIdentifiers = accountModel.values.get('wallets')
+      // const walletModels = walletIdentifiers.map(id => walletsRepository.read(id))
+      //
+      // for (const model of walletModels) {
+      //   const updatedModel = walletService.updateWalletPassword(model, oldPassword, newPassword)
+      //   const updatedValues = new Map<string, string>([
+      //     [ 'encPrivate', updatedModel.values.get('encPrivate') ],
+      //     [ 'encIv', updatedModel.values.get('encIv') ],
+      //   ])
+      //   walletsRepository.update(model.getIdentifier(), updatedValues)
+      // }
 
       // - update state and finalize
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS_PASSWORD_CHANGED)
-      this.$store.dispatch('account/LOG_OUT')
-      this.$router.push({name: 'accounts.login'})
-    } catch (e) {
+      await this.$store.dispatch('account/LOG_OUT')
+      setTimeout(() => {this.$router.push({name: 'accounts.login'})}, 500)
+    }
+    catch (e) {
       this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.')
       console.error(e)
     }

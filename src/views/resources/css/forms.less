@@ -103,7 +103,7 @@
   height: 100%;
   text-align: right;
   overflow: hidden;
-  padding: 0.1rem;
+  padding: 0.08rem 0.1rem;
   align-items: center;
   text-transform: capitalize;
   word-spacing: 0px;
@@ -145,7 +145,6 @@
     font-weight: @boldest;
     color: @purpleDark;
     text-transform: uppercase !important;
-    background-color: @grayLight;
     border-radius: 4px 0 0 4px;
   }
 }
@@ -213,8 +212,9 @@
   display: grid;
   width: 100%;
   height: @formFieldHeight !important;
-  grid-template-columns: 55% auto 0.4rem;
+  grid-template-columns: 55% auto;
   grid-template-rows: 100%;
+  position: relative;
 }
 
 .row-mosaic-attachment-display {
@@ -554,7 +554,9 @@
 }
 
 .delete-mosaic-container {
-  width: 100%;
+  position: absolute;
+  right: -0.3rem;
+  top: 0;
   height: 100%;
   display: grid;
   align-items: center;
@@ -569,6 +571,7 @@
   width: 20px;
   height: 20px;
   cursor: pointer;
+  display: block
 }
 
 .delete-icon:hover {
@@ -605,4 +608,21 @@
 
 .pr-2 {
   padding-right: 0.2rem;
+}
+.ivu-modal{
+  .form-wrapper{
+    max-width: 100%;
+  }
+  .form-row{
+    width: 100%;
+  }
+  .form-row-inner-container{
+    grid-template-columns: 20% 80%;
+    .form-label-container{
+      padding: 0;
+    }
+    .inputs-container{
+      padding-left: 0.1rem;
+    }
+  }
 }

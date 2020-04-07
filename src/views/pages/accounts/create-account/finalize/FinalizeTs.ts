@@ -79,7 +79,7 @@ export default class FinalizeTs extends Vue {
    * the wallet created from mnemonic pass phrase.
    * @return {void}
    */
-  public submit() {
+  public async submit() {
     try {
       // create account by mnemonic
       const wallet = this.walletService.getDefaultWallet(
@@ -89,6 +89,14 @@ export default class FinalizeTs extends Vue {
         this.networkType,
       )
 
+      // execute store actions
+      await this.$store.dispatch('account/ADD_WALLET', wallet)
+      await this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
+      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
+      await this.$store.dispatch('temporary/RESET_STATE')
+      await this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+
+
       // add wallet to account
       const wallets = [ ...this.currentAccount.wallets, wallet.id ]
 
@@ -96,13 +104,6 @@ export default class FinalizeTs extends Vue {
       this.walletService.saveWallet(wallet)
 
       this.accountService.updateWallets(this.currentAccount, wallets)
-
-      // execute store actions
-      this.$store.dispatch('account/ADD_WALLET', wallet)
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
-      this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
-      this.$store.dispatch('temporary/RESET_STATE')
-      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
       // flush and continue
       return this.$router.push({name: 'dashboard'})

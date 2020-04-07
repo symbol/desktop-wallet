@@ -231,16 +231,16 @@ export const routes: AppRoute[] = [
             // @ts-ignore
             component: () => import('@/views/pages/wallets/WalletBackupPage/WalletBackupPage.vue'),
           },
-          {
-            path: 'harvesting',
-            name: 'wallet.harvesting',
-            meta: {
-              protected: true,
-              title: 'page_title_wallet_harvesting',
-            },
-            // @ts-ignore
-            component: () => import('@/views/pages/wallets/WalletHarvestingPage/WalletHarvestingPage.vue'),
-          },
+          // {
+          //   path: 'harvesting',
+          //   name: 'wallet.harvesting',
+          //   meta: {
+          //     protected: true,
+          //     title: 'page_title_wallet_harvesting',
+          //   },
+          //   // @ts-ignore
+          //   component: () => import('@/views/pages/wallets/WalletHarvestingPage/WalletHarvestingPage.vue'),
+          // },
         ],
       }, {
         path: '/mosaics',
@@ -308,6 +308,16 @@ export const routes: AppRoute[] = [
             },
             // @ts-ignore
             component: () => import('@/views/pages/namespaces/CreateNamespacePage/CreateNamespacePage.vue'),
+          },
+          {
+            path: '/createSubNamespace',
+            name: 'namespaces.createSubNamespace',
+            meta: {
+              protected: true,
+              title: 'create_sub_namespace',
+            },
+            // @ts-ignore
+            component: () => import('@/views/pages/namespaces/createSubNamespace/CreateSubNamespace.vue'),
           },
         ],
       }, {

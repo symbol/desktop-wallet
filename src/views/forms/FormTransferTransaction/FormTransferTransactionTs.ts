@@ -21,7 +21,7 @@ import {Formatters} from '@/core/utils/Formatters'
 import {TransferFormFieldsType, ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
 import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
-import {AddressValidator} from '@/core/validation/validators'
+import {AddressValidator, AliasValidator} from '@/core/validation/validators'
 import {MosaicInputsManager} from './MosaicInputsManager'
 import {ITransactionEntry} from '@/views/pages/dashboard/invoice/DashboardInvoicePageTs'
 // child components
@@ -135,7 +135,12 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     // - set default form values
     this.formItems.signerPublicKey = this.selectedSigner.publicKey
     this.formItems.selectedMosaicHex = this.networkMosaic.toHex()
-    this.formItems.recipientRaw = !!this.recipient ? this.recipient.plain() : ''
+    // default currentWallet Address to recipientRaw
+    if(this.$route.path.indexOf('invoice') > -1){
+      this.formItems.recipientRaw = this.currentWallet.objects.address.plain() || ''
+    }else{
+      this.formItems.recipientRaw = !!this.recipient ? this.recipient.plain() : ''
+    }
     this.formItems.recipient = !!this.recipient ? this.recipient : null
 
     const currentMosaics = this.currentMosaicList()
@@ -163,6 +168,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         },
       )
     })
+    this.triggerChange()
   }
 
   /**
@@ -256,14 +262,13 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    */
   protected get instantiatedRecipient(): Address | NamespaceId {
     const {recipientRaw} = this.formItems
-
-    if (!recipientRaw) return null
-
     if (AddressValidator.validate(recipientRaw)) {
       return Address.createFromRawAddress(recipientRaw)
+    } else if (AliasValidator.validate(recipientRaw)) {
+      return new NamespaceId(recipientRaw)
+    } else {
+      return null
     }
-
-    return new NamespaceId(recipientRaw)
   }
 
   /// end-region computed properties getter/setter
@@ -315,6 +320,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     // update formItems, set input uid to null
     const indexToUpdate = this.formItems.attachedMosaics.findIndex(({uid}) => uid == index)
     Vue.set(this.formItems.attachedMosaics, indexToUpdate, {uid: null})
+    // delete the last one in order to re-render the list 
+    this.formItems.attachedMosaics.pop()
     this.triggerChange()
   }
 
@@ -386,15 +393,18 @@ export class FormTransferTransactionTs extends FormTransactionBase {
   triggerChange() {
     if (this.formItems.recipientRaw && this.formItems.recipientRaw !== '') {
       const transactions = this.getTransactions()
-      const data: ITransactionEntry[] = []
-      transactions.map((item: TransferTransaction) => {
-        data.push({
-          transaction: item,
-          attachments: this.mosaicsToAttachments(item.mosaics),
+      // avoid error
+      if(transactions){
+        const data: ITransactionEntry[] = []
+        transactions.map((item: TransferTransaction) => {
+          data.push({
+            transaction: item,
+            attachments: this.mosaicsToAttachments(item.mosaics),
+          })
         })
-      })
-
-      this.$emit('onTransactionsChange', data)
+  
+        this.$emit('onTransactionsChange', data)
+      }
     }
   }
 

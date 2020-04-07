@@ -1,17 +1,25 @@
 @import "../../views/resources/css/variables.less";
 .mosaic-columns {
-  grid-template-columns: repeat(4, 14%) repeat(5, 8%) 4%;
+  grid-template-columns: 14% 10% repeat(2, 14%) 12% repeat(4, 8%) 4%;
   grid-template-rows: 100%;
 }
 
 .namespace-columns {
-  grid-template-columns: repeat(3, 20%) repeat(4, 10%);
-  .name-header {
+  grid-template-columns: 15% 15% 10% 15% 10% 25% 10% ;
+  .name-header,.name-cell {
     text-align: left;
   }
-
-  .name-cell {
+  .expiration-header,.expiration-cell{
     text-align: left;
+  }
+  .expired-header,.expired-cell{
+    text-align: center;
+  }
+  .aliasIdentifier-header,.aliasIdentifier-cell{
+    text-align: center;
+  }
+  .aliasType-header,.aliasType-cell{
+    text-align: center;
   }
 }
 
@@ -90,12 +98,25 @@
     .table-title-container {
       padding-left: 0.2rem;
       padding-top: 0.1rem;
-
+      position: relative;
       .section-title {
         font-size:28px;
         font-weight:400;
         line-height:38px;
         color:@grayDark;
+      }
+      .user-operation{
+        position: absolute;
+        right: 0.5rem;
+        bottom: .2rem;
+        color: @purpleDark;
+        .ivu-icon-ios-sync{
+          margin-left:.2rem;
+          font-weight: 600;
+          &:hover{
+            cursor: pointer;
+          }
+        }
       }
     }
 
@@ -130,7 +151,7 @@
   .table-body-container {
     text-align: right;
     overflow-y: auto;
-
+    position: relative;
     .table-rows-container {
       width: 100%;
       height: 100%;
@@ -177,5 +198,16 @@
     .ivu-page-prev,.ivu-page-next {
       border: none !important;
     }
+  }
+}
+.animation-rotate{
+  animation: auto-rotate infinite linear 1s;
+}
+@keyframes auto-rotate{
+  from{
+    transform: rotateZ(0);
+  }
+  to{
+    transform: rotateZ(360deg);
   }
 }

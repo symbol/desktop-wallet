@@ -188,4 +188,21 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     // - populate maxFee
     this.formItems.maxFee = transaction.maxFee.compact()
   }
+
+  public relativeTimetoParent = ''
+  /**
+ * Namespaces names
+ * @type {[h: string]: string}
+ */
+  public namespacesNames: { [h: string]: string }
+  public getTimeByparentNamespaceName() {
+    const selectedNamespace = this.fertileNamespaces.find((item) =>
+      this.namespacesNames[item.id.toHex()] === this.formItems.parentNamespaceName,
+    )
+    this.relativeTimetoParent = new NamespaceTableService(this.$store).getExpiration(selectedNamespace).expiration
+  }
+  setParentNamespaceName(val) {
+    this.formItems.parentNamespaceName = val
+    this.getTimeByparentNamespaceName()
+  }
 }

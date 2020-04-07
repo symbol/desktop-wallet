@@ -14,6 +14,6 @@ import {WalletHarvestingPageTs} from './WalletHarvestingPageTs'
 export default class WalletHarvestingPage extends WalletHarvestingPageTs {}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import './WalletHarvestingPage.less';
 </style>

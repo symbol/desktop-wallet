@@ -286,6 +286,7 @@ export default {
         await dispatch('RESET_BALANCES', which)
         await dispatch('RESET_MULTISIG')
         await dispatch('RESET_TRANSACTIONS')
+        await dispatch('RESET_CURRENT_WALLET')
         commit('setInitialized', false)
       }
       await Lock.uninitialize(callback, {getters})
@@ -330,6 +331,11 @@ export default {
       $eventBus.$emit('onWalletChange', currentWalletAddress.plain())
     },
 
+    async RESET_CURRENT_WALLET({commit, dispatch}) {
+      dispatch('diagnostic/ADD_DEBUG', 'Store action wallet/RESET_CURRENT_WALLET dispatched', {root: true})
+      commit('currentWallet', null)
+      commit('currentWalletAddress', null)
+    },
 
     async SET_CURRENT_SIGNER({commit, dispatch, getters, rootGetters},
       {publicKey}: { publicKey: string }) {

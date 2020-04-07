@@ -63,10 +63,10 @@ export class TableDisplayTs extends Vue {
   }) assetType: string
 
   /**
-   * Loading state of the data to be shown in the table
-   * @type {boolean}
-   */
-  @Prop({default: false}) loading: boolean
+  * Loading state of the data to be shown in the table
+  * @type {boolean}
+  */
+  loading: boolean =false
 
   /**
    * Current wallet owned mosaics
@@ -215,6 +215,16 @@ export class TableDisplayTs extends Vue {
       this.currentPage * this.pageSize,
     )
   }
+  /**
+   * getter and setter for the showExpired button
+   *
+   */
+  get showExpired(): boolean{
+    return this.filteredBy.fieldName === 'expiration' && this.filteredBy.filteringType === 'show'
+  }
+  set showExpired(newVal: boolean){
+    this.setFilteredBy('expiration')
+  }
 
   /**
    * Alias form modal title
@@ -245,12 +255,14 @@ export class TableDisplayTs extends Vue {
    * Refreshes the owned assets
    * @returns {void}
    */
-  private refresh(): void {
+  private async refresh(): void {
+    this.loading = true
     if ('mosaic' === this.assetType) {
-      this.$store.dispatch('mosaic/LOAD_MOSAICS')
+      await this.$store.dispatch('mosaic/LOAD_MOSAICS')
     } else if ('namespace' === this.assetType) {
-      this.$store.dispatch('namespace/LOAD_NAMESPACES')
+      await this.$store.dispatch('namespace/LOAD_NAMESPACES')
     }
+    this.loading = false
   }
 
   /**
@@ -381,5 +393,24 @@ export class TableDisplayTs extends Vue {
    */
   protected closeModal(modalIdentifier: string): void {
     Vue.set(this.modalFormsVisibility, modalIdentifier, false)
+  }
+  /**
+   * avoid multiple clicks
+   * @protected
+   * @param {string}
+   * @return {void}
+   */
+  public isRefreshing: boolean = false
+  protected async onRefresh() {
+    if (!this.isRefreshing) {
+      this.isRefreshing = true
+      try {
+        await this.refresh()
+        this.$store.dispatch('notification/ADD_SUCCESS', `${this.$t('refresh_success')}`)
+      } catch{
+        this.$store.dispatch('notification/ADD_ERROR', `${this.$t('refresh_failed')}`)
+      }
+      this.isRefreshing = false
+    }
   }
 }

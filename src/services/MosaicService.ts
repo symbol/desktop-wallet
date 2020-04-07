@@ -26,7 +26,7 @@ import {fromIterable} from 'rxjs/internal-compatibility'
 import {MosaicConfigurationModel} from '@/core/database/entities/MosaicConfigurationModel'
 
 // custom types
-export type ExpirationStatus = 'unlimited' | 'expired' | string
+export type ExpirationStatus = 'unlimited' | 'expired' | string | number
 
 // TODO. Can this interface be removed?
 export interface AttachedMosaic {
@@ -115,7 +115,7 @@ export class MosaicService {
     const expiresIn = startHeight + duration - (currentHeight || 0)
     if (expiresIn <= 0) return 'expired'
     // number of blocks remaining
-    return expiresIn.toLocaleString()
+    return TimeHelpers.durationToRelativeTime(expiresIn)
   }
 
 
