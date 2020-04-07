@@ -36,6 +36,7 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
+import {AESEncryptionService} from '@/services/AESEncryptionService'
 
 @Component({
   components: {
@@ -126,6 +127,12 @@ export class FormAccountPasswordUpdateTs extends Vue {
       const passwordHash = service.getPasswordHash(newPassword)
       accountModel.values.set('password', passwordHash)
       accountModel.values.set('hint', this.formItems.passwordHint)
+
+      // - encrypt the seed with the new password
+      const oldSeed = accountModel.values.get('seed')
+      const plainSeed = AESEncryptionService.decrypt(oldSeed , oldPassword)
+      const newSeed = AESEncryptionService.encrypt(plainSeed, newPassword)
+      this.currentAccount.values.set('seed', newSeed)
 
       // - update in storage
       repository.update(accountModel.getIdentifier(), accountModel.values)
