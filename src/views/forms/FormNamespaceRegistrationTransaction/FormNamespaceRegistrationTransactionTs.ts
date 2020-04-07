@@ -42,6 +42,7 @@ import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirm
 // configuration
 import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import {NamespaceService} from '@/services/NamespaceService'
 
 @Component({
   components: {
@@ -59,6 +60,7 @@ import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigu
   computed: {
     ...mapGetters({
       ownedNamespaces: 'namespace/ownedNamespaces',
+      currentHeight: 'network/currentHeight',
       networkConfiguration: 'network/networkConfiguration',
     }),
   },
@@ -88,6 +90,11 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    * @var {NamespaceRegistrationType}
    */
   public typeSubNamespace = NamespaceRegistrationType.SubNamespace
+
+  /**
+   * Current network block height
+   */
+  public currentHeight: number
 
   /**
    * Form items
@@ -165,7 +172,8 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
       // - return instantiated Transaction
       return [this.factory.build(view)]
     } catch (error) {
-      console.error('Error happened in FormNamespaceRegistrationTransaction.transactions(): ', error)
+      console.error('Error happened in FormNamespaceRegistrationTransaction.transactions(): ',
+        error)
     }
   }
 
@@ -191,16 +199,20 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
 
   public relativeTimetoParent = ''
   /**
- * Namespaces names
- * @type {[h: string]: string}
- */
+   * Namespaces names
+   * @type {[h: string]: string}
+   */
   public namespacesNames: { [h: string]: string }
+
   public getTimeByparentNamespaceName() {
     const selectedNamespace = this.fertileNamespaces.find((item) =>
-      this.namespacesNames[item.id.toHex()] === this.formItems.parentNamespaceName,
+      this.namespacesNames[item.namespaceIdHex] === this.formItems.parentNamespaceName,
     )
-    this.relativeTimetoParent = new NamespaceTableService(this.$store).getExpiration(selectedNamespace).expiration
+
+    this.relativeTimetoParent = NamespaceService.getExpiration(this.networkConfiguration,
+      this.currentHeight, selectedNamespace.endHeight).expiration
   }
+
   setParentNamespaceName(val) {
     this.formItems.parentNamespaceName = val
     this.getTimeByparentNamespaceName()

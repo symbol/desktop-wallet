@@ -115,8 +115,8 @@ describe('services/WalletServices', () => {
       const service = new WalletService()
 
       // get initial encrypted private key values
-      const initialEncPrivate = WalletsModel1.values.get('encPrivate')
-      const initialEncIv = WalletsModel1.values.get('encIv')
+      const initialEncPrivate = WalletsModel1.encPrivate
+      const initialEncIv = WalletsModel1.encIv
 
       // update the model
       const updatedWallet = service.updateWalletPassword(
@@ -124,8 +124,8 @@ describe('services/WalletServices', () => {
       )
 
       // decrypt the new model's private key
-      const newEncPrivate = updatedWallet.values.get('encPrivate')
-      const newEncIv = updatedWallet.values.get('encIv')
+      const newEncPrivate = updatedWallet.encPrivate
+      const newEncIv = updatedWallet.encIv
       const privateKey = new EncryptedPrivateKey(newEncPrivate, newEncIv)
         .decrypt(new Password('password2'))
 

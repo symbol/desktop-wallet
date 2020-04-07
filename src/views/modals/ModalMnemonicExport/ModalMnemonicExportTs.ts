@@ -149,10 +149,9 @@ export class ModalMnemonicExportTs extends Vue {
     // - create link (<a>)
     const a = document.createElement('a')
     const event = new MouseEvent('click')
-    const accountName = this.currentAccount.values.get('accountName')
+    const accountName = this.currentAccount.accountName
     a.download = `qr_account_mnemonic_${accountName}`
     a.href = url
-
     // - start download
     a.dispatchEvent(event)
   }

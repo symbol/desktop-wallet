@@ -24,6 +24,7 @@ import {dashboardImages} from '@/views/resources/Images'
 import {MosaicService} from '@/services/MosaicService'
 import {MosaicConfigurationModel} from '@/core/database/entities/MosaicConfigurationModel'
 import {MosaicModel} from '@/core/database/entities/MosaicModel'
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 export interface BalanceEntry {
   id: MosaicId
@@ -42,6 +43,7 @@ export interface BalanceEntry {
       balanceMosaics: 'mosaic/balanceMosaics',
       networkMosaic: 'mosaic/networkMosaic',
       currentHeight: 'network/currentHeight',
+      networkConfiguration: 'network/networkConfiguration',
     }),
   },
 })
@@ -79,6 +81,8 @@ export class MosaicBalanceListTs extends Vue {
 
   public currentHeight: number
 
+  private networkConfiguration: NetworkConfigurationModel
+
 
   /// region computed properties getter/setter
   /**
@@ -105,7 +109,8 @@ export class MosaicBalanceListTs extends Vue {
   get allBalanceEntries(): BalanceEntry[] {
     return this.balanceEntries.filter((entry) => {
       // calculate expiration
-      const expiration = MosaicService.getExpiration(entry.mosaic, this.currentHeight)
+      const expiration = MosaicService.getExpiration(entry.mosaic, this.currentHeight,
+        this.networkConfiguration.blockGenerationTargetTime)
       // skip if mosaic is expired
       return expiration !== 'expired'
     })

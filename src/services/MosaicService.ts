@@ -24,6 +24,7 @@ import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyMode
 import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
 import {fromIterable} from 'rxjs/internal-compatibility'
 import {MosaicConfigurationModel} from '@/core/database/entities/MosaicConfigurationModel'
+import {TimeHelpers} from '@/core/utils/TimeHelpers'
 
 // custom types
 export type ExpirationStatus = 'unlimited' | 'expired' | string | number
@@ -102,8 +103,10 @@ export class MosaicService {
    * Utility method that returns the mosaic expiration status
    * @param mosaicInfo the mosaic info
    * @param currentHeight
+   * @param blockGenerationTargetTime
    */
-  public static getExpiration(mosaicInfo: MosaicModel, currentHeight: number): ExpirationStatus {
+  public static getExpiration(mosaicInfo: MosaicModel, currentHeight: number,
+    blockGenerationTargetTime: number): ExpirationStatus {
     const duration = mosaicInfo.duration
     const startHeight = mosaicInfo.height
 
@@ -115,7 +118,7 @@ export class MosaicService {
     const expiresIn = startHeight + duration - (currentHeight || 0)
     if (expiresIn <= 0) return 'expired'
     // number of blocks remaining
-    return TimeHelpers.durationToRelativeTime(expiresIn)
+    return TimeHelpers.durationToRelativeTime(expiresIn, blockGenerationTargetTime)
   }
 
 

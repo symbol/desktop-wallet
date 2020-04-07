@@ -17,10 +17,12 @@
 import {AssetTableService, TableField} from './AssetTableService'
 import {MosaicModel} from '@/core/database/entities/MosaicModel'
 import {MosaicService} from '@/services/MosaicService'
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 export class MosaicTableService extends AssetTableService {
 
-  constructor(currentHeight: number, private readonly mosaics: MosaicModel[]) {
+  constructor(currentHeight: number, private readonly mosaics: MosaicModel[],
+    private readonly networkConfiguration: NetworkConfigurationModel) {
     super(currentHeight)
   }
 
@@ -51,7 +53,8 @@ export class MosaicTableService extends AssetTableService {
     const mosaicsInfo = this.mosaics
     const currentHeight = this.currentHeight
     return mosaicsInfo.map((mosaicInfo) => {
-      const expiration = MosaicService.getExpiration(mosaicInfo, currentHeight)
+      const expiration = MosaicService.getExpiration(mosaicInfo, currentHeight,
+        this.networkConfiguration.blockGenerationTargetTime)
       // - map table fields
       return {
         'hexId': mosaicInfo.mosaicIdHex,

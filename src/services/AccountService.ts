@@ -28,7 +28,8 @@ export class AccountService {
    * The storage to keep user configuration around mosaics.  For example, the balance hidden
    * feature.
    */
-  private readonly accountsStorage = new SimpleObjectStorage<Record<string, AccountModel>>('accounts')
+  private readonly accountsStorage = new SimpleObjectStorage<Record<string, AccountModel>>(
+    'accounts')
 
 
   public getAccounts(): AccountModel[] {
@@ -59,8 +60,8 @@ export class AccountService {
     this.saveAccount({...account, ...{seed}})
   }
 
-  public updatePassword(account: AccountModel, password: string, hint: string) {
-    this.saveAccount({...account, ...{password, hint}})
+  public updatePassword(account: AccountModel, password: string, hint: string, seed: string) {
+    this.saveAccount({...account, ...{password, hint, seed}})
   }
 
   public updateWallets(account: AccountModel, wallets: string[]) {

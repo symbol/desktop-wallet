@@ -48,6 +48,7 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 import FormRow from '@/components/FormRow/FormRow.vue'
 import {MosaicService} from '@/services/MosaicService'
 import {MosaicModel} from '@/core/database/entities/MosaicModel'
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 export interface MosaicAttachment {
   mosaicHex: string
@@ -75,6 +76,7 @@ export interface MosaicAttachment {
     ...mapGetters({
       currentHeight: 'network/currentHeight',
       balanceMosaics: 'mosaic/balanceMosaics',
+      networkConfiguration: 'network/networkConfiguration',
     }),
   },
 })
@@ -124,6 +126,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
   private balanceMosaics: MosaicModel[]
 
+  private networkConfiguration: NetworkConfigurationModel
+
   /**
    * Reset the form with properties
    * @return {void}
@@ -136,9 +140,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     this.formItems.signerPublicKey = this.selectedSigner.publicKey
     this.formItems.selectedMosaicHex = this.networkMosaic.toHex()
     // default currentWallet Address to recipientRaw
-    if(this.$route.path.indexOf('invoice') > -1){
-      this.formItems.recipientRaw = this.currentWallet.objects.address.plain() || ''
-    }else{
+    if (this.$route.path.indexOf('invoice') > -1) {
+      this.formItems.recipientRaw = this.currentWallet.address || ''
+    } else {
       this.formItems.recipientRaw = !!this.recipient ? this.recipient.plain() : ''
     }
     this.formItems.recipient = !!this.recipient ? this.recipient : null
@@ -190,7 +194,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     // filter out expired mosaics
     return this.balanceMosaics.filter(mosaicInfo => {
       // calculate expiration
-      const expiration = MosaicService.getExpiration(mosaicInfo, this.currentHeight)
+      const expiration = MosaicService.getExpiration(mosaicInfo, this.currentHeight,
+        this.networkConfiguration.blockGenerationTargetTime)
       // skip if mosaic is expired
       return expiration !== 'expired'
     })
@@ -394,7 +399,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     if (this.formItems.recipientRaw && this.formItems.recipientRaw !== '') {
       const transactions = this.getTransactions()
       // avoid error
-      if(transactions){
+      if (transactions) {
         const data: ITransactionEntry[] = []
         transactions.map((item: TransferTransaction) => {
           data.push({
@@ -402,7 +407,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             attachments: this.mosaicsToAttachments(item.mosaics),
           })
         })
-  
+
         this.$emit('onTransactionsChange', data)
       }
     }

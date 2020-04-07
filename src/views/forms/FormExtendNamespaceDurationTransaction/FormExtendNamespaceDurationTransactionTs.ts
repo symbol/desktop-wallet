@@ -16,7 +16,6 @@
 // external dependencies
 import {Component, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
 import {FormNamespaceRegistrationTransactionTs} from '../FormNamespaceRegistrationTransaction/FormNamespaceRegistrationTransactionTs'
 import {NamespaceId} from 'symbol-sdk'
@@ -34,27 +33,20 @@ import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
   components: {ErrorTooltip, ModalTransactionConfirmation},
   computed: {
     ...mapGetters({
-      currentHeight: 'network/currentHeight',
       namespaces: 'namespace/namespaces',
     }),
   },
 })
-export class FormExtendNamespaceDurationTransactionTs extends FormNamespaceRegistrationTransactionTs {
+export class FormExtendNamespaceDurationTransactionTs
+  extends FormNamespaceRegistrationTransactionTs {
   @Prop({default: null, required: true}) namespaceId: NamespaceId
-
-  /**
-   * Network current height
-   * @private
-   * @type {number}
-   */
-  private currentHeight: number
 
   private namespaces: NamespaceModel[]
   /**
    * Validation rules
    * @var {ValidationRuleset}
    */
-  protected validationRules = ValidationRuleset
+  public validationRules = ValidationRuleset
 
   /**
    * Current namespace info
@@ -63,7 +55,8 @@ export class FormExtendNamespaceDurationTransactionTs extends FormNamespaceRegis
    * @type {NamespaceInfo}
    */
   protected get currentNamespaceEndHeight(): number {
-    const currentNamespace = this.namespaces.find(model => model.namespaceIdHex === this.namespaceId.toHex())
+    const currentNamespace = this.namespaces.find(
+      model => model.namespaceIdHex === this.namespaceId.toHex())
     return currentNamespace && currentNamespace.endHeight || 0
   }
 

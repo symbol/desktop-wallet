@@ -92,7 +92,7 @@ export default class FinalizeTs extends Vue {
       // execute store actions
       await this.$store.dispatch('account/ADD_WALLET', wallet)
       await this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
-      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
+      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', [wallet.id])
       await this.$store.dispatch('temporary/RESET_STATE')
       await this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 

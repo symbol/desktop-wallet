@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Account, Address, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
+import {Account, Address, EncryptedPrivateKey, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {ExtendedKey, MnemonicPassPhrase, Wallet} from 'symbol-hd-wallets'
 // internal dependencies
 import {DerivationPathLevels, DerivationService} from './DerivationService'
@@ -281,44 +281,34 @@ export class WalletService {
   }
 
 
-
   /**
    * Returns a WalletsModel with an updated SimpleWallet
    * @param {string} walletIdentifier
    * @param {Password} oldPassword
    * @param {Password} newPassword
    */
-  public updateWalletPassword(
-    wallet: WalletsModel,
-    oldPassword: Password,
-    newPassword: Password,
-  ): WalletsModel {
+  public updateWalletPassword(wallet: WalletModel, oldPassword: Password, newPassword: Password): WalletModel {
     // Password modification is not allowed for hardware wallets
-    if (wallet.values.get('type') !== WalletType.fromDescriptor('Seed')
-      && wallet.values.get('type') !== WalletType.fromDescriptor('Pk')) {
+    if (wallet.type !== WalletType.SEED
+      && wallet.type !== WalletType.PRIVATE_KEY) {
       return wallet
     }
-
     // Get the private key
-    const encryptedPrivateKey = new EncryptedPrivateKey(
-      wallet.values.get('encPrivate'),
-      wallet.values.get('encIv'),
-    )
+    const encryptedPrivateKey = new EncryptedPrivateKey(wallet.encPrivate, wallet.encIv)
 
     const privateKey = encryptedPrivateKey.decrypt(oldPassword)
 
     // Encrypt the private key with the new password
     const newSimpleWallet = SimpleWallet.createFromPrivateKey(
-      wallet.values.get('name'),
+      wallet.name,
       newPassword,
       privateKey,
-      wallet.objects.address.networkType,
+      WalletModel.getObjects(wallet).address.networkType,
     )
-
     // Update the wallet model
-    wallet.values.set('encPrivate', newSimpleWallet.encryptedPrivateKey.encryptedKey)
-    wallet.values.set('encIv', newSimpleWallet.encryptedPrivateKey.iv)
-
-    return wallet
+    return {
+      ...wallet, encPrivate: newSimpleWallet.encryptedPrivateKey.encryptedKey,
+      encIv: newSimpleWallet.encryptedPrivateKey.iv,
+    }
   }
 }

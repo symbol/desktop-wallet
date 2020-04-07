@@ -27,37 +27,39 @@ export const createValidationRuleset = ({
   maxMosaicDivisibility,
   maxMosaicDuration,
   minNamespaceDuration,
-}: NetworkConfigurationModel) => ({
-  address: 'required|address|addressNetworkType:currentAccount',
-  accountPassword: 'required|accountPassword',
-  addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentAccount',
-  amount: `excluded:""|is_not:0|min_value:0|maxDecimals:${maxMosaicDivisibility}|max_value:${maxMosaicAtomicUnits}`,
-  confirmPassword: 'required|confirmPassword:@newPassword',
-  divisibility: 'required|min_value:0|max_value:6|integer',
-  duration: `required|min_value:0|max_value:${maxMosaicDuration}`,
-  generationHash: 'required|min:64|max:64',
-  mosaicId: 'required|mosaicId',
-  message: `max:${maxMessageSize}`,
-  namespaceDuration: `required|min_value:${minNamespaceDuration}|maxNamespaceDuration`,
-  namespaceName: {
-    required: true,
-    regex: '^[a-z0-9-_]{1,64}$',
-  },
-  subNamespaceName: {
-    required: true,
-    regex: '^[a-z0-9-_.]{1,64}$',
-  },
-  password: `required|min:${MIN_PASSWORD_LENGTH}|passwordRegex`,
-  previousPassword: 'required|confirmLock:cipher',
-  privateKey: 'min:64|max:64|privateKey',
-  recipientPublicKey: 'required|publicKey',
-  supply: `required|integer|min_value: 1|max_value:${maxMosaicAtomicUnits}`,
-  walletPassword: 'required|confirmWalletPassword:wallet',
-  url: 'required|url',
-  newAccountName: 'required|newAccountName',
-  accountWalletName: 'required|accountWalletName',
-  addressOrPublicKey: 'addressOrPublicKey',
-})
+}: NetworkConfigurationModel) => {
+  return {
+    address: 'required|address|addressNetworkType:currentAccount',
+    accountPassword: 'required|accountPassword',
+    addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentAccount',
+    amount: `excluded:""|is_not:0|min_value:0|maxDecimals:${maxMosaicDivisibility}|max_value:${maxMosaicAtomicUnits}`,
+    confirmPassword: 'required|confirmPassword:@newPassword',
+    divisibility: 'required|min_value:0|max_value:6|integer',
+    duration: `required|min_value:0|max_value:${maxMosaicDuration}`,
+    generationHash: 'required|min:64|max:64',
+    mosaicId: 'required|mosaicId',
+    message: `max:${maxMessageSize}`,
+    namespaceDuration: `required|min_value:${minNamespaceDuration}|maxNamespaceDuration`,
+    namespaceName: {
+      required: true,
+      regex: '^[a-z0-9-_]{1,64}$',
+    },
+    subNamespaceName: {
+      required: true,
+      regex: '^[a-z0-9-_.]{1,64}$',
+    },
+    password: `required|min:${MIN_PASSWORD_LENGTH}|passwordRegex`,
+    previousPassword: 'required|confirmLock:cipher',
+    privateKey: 'min:64|max:64|privateKey',
+    recipientPublicKey: 'required|publicKey',
+    supply: `required|integer|min_value: 1|max_value:${maxMosaicAtomicUnits}`,
+    walletPassword: 'required|confirmWalletPassword:wallet',
+    url: 'required|url',
+    newAccountName: 'required|newAccountName',
+    accountWalletName: 'required|accountWalletName',
+    addressOrPublicKey: 'addressOrPublicKey',
+  }
+}
 
 // TODO ValidationRuleset needs to be created when the network configuration is resolved, UI needs
 // to use the resolved ValidationResulset ATM rules are using the hardocded ones

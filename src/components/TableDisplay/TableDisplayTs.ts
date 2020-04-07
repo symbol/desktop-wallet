@@ -63,10 +63,10 @@ export class TableDisplayTs extends Vue {
   }) assetType: string
 
   /**
-  * Loading state of the data to be shown in the table
-  * @type {boolean}
-  */
-  loading: boolean =false
+   * Loading state of the data to be shown in the table
+   * @type {boolean}
+   */
+  loading: boolean = false
 
   /**
    * Current wallet owned mosaics
@@ -167,9 +167,11 @@ export class TableDisplayTs extends Vue {
    */
   protected getService(): AssetTableService {
     if ('mosaic' === this.assetType) {
-      return new MosaicTableService(this.currentHeight, this.ownedMosaics)
+      return new MosaicTableService(this.currentHeight, this.ownedMosaics,
+        this.networkConfiguration)
     } else if ('namespace' === this.assetType) {
-      return new NamespaceTableService(this.currentHeight, this.ownedNamespaces, this.networkConfiguration)
+      return new NamespaceTableService(this.currentHeight, this.ownedNamespaces,
+        this.networkConfiguration)
     }
     throw new Error(`Asset type '${this.assetType}' does not exist in TableDisplay.`)
   }
@@ -215,14 +217,16 @@ export class TableDisplayTs extends Vue {
       this.currentPage * this.pageSize,
     )
   }
+
   /**
    * getter and setter for the showExpired button
    *
    */
-  get showExpired(): boolean{
+  get showExpired(): boolean {
     return this.filteredBy.fieldName === 'expiration' && this.filteredBy.filteringType === 'show'
   }
-  set showExpired(newVal: boolean){
+
+  set showExpired(newVal: boolean) {
     this.setFilteredBy('expiration')
   }
 
@@ -255,7 +259,7 @@ export class TableDisplayTs extends Vue {
    * Refreshes the owned assets
    * @returns {void}
    */
-  private async refresh(): void {
+  private async refresh(): Promise<void> {
     this.loading = true
     if ('mosaic' === this.assetType) {
       await this.$store.dispatch('mosaic/LOAD_MOSAICS')
@@ -335,7 +339,8 @@ export class TableDisplayTs extends Vue {
   protected showAliasForm(rowValues: Record<string, string>): void {
     // populate asset form modal props if asset is a mosaic
     if (this.assetType === 'mosaic') {
-      this.modalFormsProps.namespaceId = rowValues.name !== 'N/A' ? new NamespaceId(rowValues.name) : null
+      this.modalFormsProps.namespaceId = rowValues.name !== 'N/A' ? new NamespaceId(
+        rowValues.name) : null
       this.modalFormsProps.aliasTarget = new MosaicId(rowValues.hexId)
       this.modalFormsProps.aliasAction = rowValues.name !== 'N/A' ? AliasAction.Unlink : AliasAction.Link
     }
@@ -394,6 +399,7 @@ export class TableDisplayTs extends Vue {
   protected closeModal(modalIdentifier: string): void {
     Vue.set(this.modalFormsVisibility, modalIdentifier, false)
   }
+
   /**
    * avoid multiple clicks
    * @protected
@@ -401,14 +407,14 @@ export class TableDisplayTs extends Vue {
    * @return {void}
    */
   public isRefreshing: boolean = false
+
   protected async onRefresh() {
     if (!this.isRefreshing) {
       this.isRefreshing = true
       try {
         await this.refresh()
-        this.$store.dispatch('notification/ADD_SUCCESS', `${this.$t('refresh_success')}`)
-      } catch{
-        this.$store.dispatch('notification/ADD_ERROR', `${this.$t('refresh_failed')}`)
+      } catch (e) {
+        console.log('Cannot refresh', e)
       }
       this.isRefreshing = false
     }

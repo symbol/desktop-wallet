@@ -337,7 +337,7 @@ export class FormTransactionBase extends Vue {
    */
   private resetFormValidation(): void {
     this.$nextTick(() => {
-      this.$refs.observer.reset()
+      this.$refs.observer && this.$refs.observer.reset()
     })
   }
 

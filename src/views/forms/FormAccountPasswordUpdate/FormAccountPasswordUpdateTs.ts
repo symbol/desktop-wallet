@@ -31,6 +31,9 @@ import FormRow from '@/components/FormRow/FormRow.vue'
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {AccountModel} from '@/core/database/entities/AccountModel'
+import {AESEncryptionService} from '@/services/AESEncryptionService'
+import {WalletService} from '@/services/WalletService'
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 @Component({
   components: {
@@ -44,6 +47,7 @@ import {AccountModel} from '@/core/database/entities/AccountModel'
   computed: {
     ...mapGetters({
       currentAccount: 'account/currentAccount',
+      networkConfiguration: 'network/networkConfiguration',
     }),
   },
 })
@@ -55,6 +59,7 @@ export class FormAccountPasswordUpdateTs extends Vue {
    */
   public currentAccount: AccountModel
 
+  private networkConfiguration: NetworkConfigurationModel
   /**
    * Validation rules
    * @var {ValidationRuleset}
@@ -118,47 +123,30 @@ export class FormAccountPasswordUpdateTs extends Vue {
     try {
       const accountService = new AccountService()
       const newPassword = new Password(this.formItems.password)
+      const oldSeed = this.currentAccount.seed
+      const plainSeed = AESEncryptionService.decrypt(oldSeed, oldPassword)
+      const newSeed = AESEncryptionService.encrypt(plainSeed, newPassword)
 
       // // - create new password hash
-      // const passwordHash = AccountService.getPasswordHash(new Password(this.formItems.password))
-      // accountService.updatePassword(this.currentAccount, passwordHash, this.formItems.passwordHint)
-      //
-      // // - create new password hash
-      // const passwordHash = service.getPasswordHash(newPassword)
-      // accountModel.values.set('password', passwordHash)
-      // accountModel.values.set('hint', this.formItems.passwordHint)
-      //
-      // // - encrypt the seed with the new password
-      // const oldSeed = accountModel.values.get('seed')
-      // const plainSeed = AESEncryptionService.decrypt(oldSeed , oldPassword)
-      // const newSeed = AESEncryptionService.encrypt(plainSeed, newPassword)
-      // this.currentAccount.values.set('seed', newSeed)
-      //
-      // // - update in storage
-      // repository.update(accountModel.getIdentifier(), accountModel.values)
-      //
-      // // - update wallets passwords
-      // const walletsRepository = new WalletsRepository()
-      // const walletService = new WalletService()
-      //
-      // const walletIdentifiers = accountModel.values.get('wallets')
-      // const walletModels = walletIdentifiers.map(id => walletsRepository.read(id))
-      //
-      // for (const model of walletModels) {
-      //   const updatedModel = walletService.updateWalletPassword(model, oldPassword, newPassword)
-      //   const updatedValues = new Map<string, string>([
-      //     [ 'encPrivate', updatedModel.values.get('encPrivate') ],
-      //     [ 'encIv', updatedModel.values.get('encIv') ],
-      //   ])
-      //   walletsRepository.update(model.getIdentifier(), updatedValues)
-      // }
+      const passwordHash = AccountService.getPasswordHash(newPassword)
+      accountService.updatePassword(this.currentAccount, passwordHash, this.formItems.passwordHint,
+        newSeed)
+
+      const walletService = new WalletService()
+      const walletIdentifiers = this.currentAccount.wallets
+
+      const wallets = walletService.getKnownWallets(walletIdentifiers)
+      for (const model of wallets) {
+        const updatedModel = walletService.updateWalletPassword(model, oldPassword, newPassword)
+        walletService.saveWallet(updatedModel)
+      }
+
 
       // - update state and finalize
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS_PASSWORD_CHANGED)
       await this.$store.dispatch('account/LOG_OUT')
       setTimeout(() => {this.$router.push({name: 'accounts.login'})}, 500)
-    }
-    catch (e) {
+    } catch (e) {
       this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.')
       console.error(e)
     }
