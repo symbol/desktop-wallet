@@ -119,19 +119,16 @@ describe('services/WalletServices', () => {
       const initialEncIv = WalletsModel1.values.get('encIv')
 
       // update the model
-      const updatedWallet = service.updateWalletPassword(
+      const encryptedKey = service.updateWalletPassword(
         WalletsModel1, wallet1Params.password, new Password('password2'),
       )
-      
+
       // decrypt the new model's private key
-      const newEncPrivate = updatedWallet.values.get('encPrivate')
-      const newEncIv = updatedWallet.values.get('encIv')
-      const privateKey = new EncryptedPrivateKey(newEncPrivate, newEncIv)
-        .decrypt(new Password('password2'))
+      const privateKey = encryptedKey.decrypt(new Password('password2'))
 
       // assert the encrypted private key changed
-      expect(newEncPrivate).not.toBe(initialEncPrivate)
-      expect(newEncIv).not.toBe(initialEncIv)
+      expect(encryptedKey.encryptedKey).not.toBe(initialEncPrivate)
+      expect(encryptedKey.iv).not.toBe(initialEncIv)
 
       // assert the plain private key did not change
       expect(privateKey).toBe(wallet1Params.privateKey)
