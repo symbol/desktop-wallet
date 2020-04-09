@@ -39,6 +39,7 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 
 // configuration
 import appConfig from '@/../config/app.conf.json'
+import { LocalStorageBackend } from '@/core/database/backends/LocalStorageBackend'
 
 @Component({
   computed: {
@@ -89,6 +90,8 @@ export default class LoginPageTs extends Vue {
    * @var {WalletsRepository}
    */
   public walletsRepository = new WalletsRepository()
+
+  public localStorage=new LocalStorageBackend()
 
   /**
    * Validation rules
@@ -147,9 +150,11 @@ export default class LoginPageTs extends Vue {
       return
     }
 
-    // accounts available, iterate to first account
-    const firstAccount = this.accountsRepository.collect().shift()
-    this.formItems.currentAccountName = firstAccount.values.get('accountName')
+    /** 
+     * Get the accountName that you've recently signed in from the localStorage first ,or get the first from the collect
+     */
+    const defaultAccountName = localStorage.getItem('latestAccount') ? localStorage.getItem('latestAccount') : this.accountsRepository.collect().shift().values.get('accountName')
+    this.formItems.currentAccountName = defaultAccountName
   }
 
   /**
@@ -257,6 +262,8 @@ export default class LoginPageTs extends Vue {
     this.$store.dispatch('diagnostic/ADD_DEBUG', `Account login successful with identifier: ${account.getIdentifier()}`)
 
     $eventBus.$emit('onLogin', identifier)
+    // save the identifier as the latest login account name if logon successfully
+    localStorage.setItem('latestAccount',identifier)
     return this.$router.push({name: 'dashboard'})
   }
 }
