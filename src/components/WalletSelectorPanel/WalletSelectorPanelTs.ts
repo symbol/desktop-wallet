@@ -55,6 +55,7 @@ import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemoni
     currentWallets: 'wallet/currentWallets',
     knownWalletsInfo: 'wallet/knownWalletsInfo',
     networkMosaic: 'mosaic/networkMosaic',
+    hasUpdatedCurrentWallet:'wallet/hasUpdatedCurrentWallet',
   })}})
 export class WalletSelectorPanelTs extends Vue {
   /**
@@ -137,7 +138,7 @@ export class WalletSelectorPanelTs extends Vue {
    * @type string
    */
   public isLoading: boolean = true
-
+  public hasUpdatedCurrentWallet: boolean
   /**
    * Hook called when the component is created
    * @return {void}

@@ -153,7 +153,9 @@ export class FormWalletNameUpdateTs extends Vue {
   public onAccountUnlocked() {
     // - interpret form items
     const values = this.formItems
-
+    if(values.name === this.currentWallet.values.get('name')){
+      return
+    }
     try {
       // - update model values
       this.currentWallet.values.set('name', values.name)
@@ -163,7 +165,8 @@ export class FormWalletNameUpdateTs extends Vue {
         this.currentWallet.getIdentifier(),
         this.currentWallet.values,
       )
-
+      // manual setting the current wallets to reactive
+      this.$store.commit('wallet/toggleHasUpdatedCurrentWallet')
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$emit('submit', this.formItems)
     }

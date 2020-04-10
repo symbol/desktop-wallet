@@ -182,6 +182,7 @@ interface WalletState {
   transactionCache: Record<string, Transaction[]>
   // Subscriptions to webSocket channels
   subscriptions: Record<string, SubscriptionType[][]>
+  hasUpdatedCurrentWallet: boolean
 }
 
 // Wallet state initial definition
@@ -214,6 +215,10 @@ const walletState: WalletState = {
   transactionCache: {},
   // Subscriptions to websocket channels.
   subscriptions: {},
+  /**
+   * A change in value means some of the current wallet values have changed.
+   */   
+  hasUpdatedCurrentWallet:false,
 }
 
 /**
@@ -269,12 +274,14 @@ export default {
     currentSignerOwnedNamespaces: (state: WalletState) => state.currentSignerOwnedNamespaces,
     knownWallets: (state: WalletState) => state.knownWallets,
     knownWalletsInfo: (state: WalletState) => state.knownWalletsInfo,
-    currentWallets:(state: WalletState)=>{
+    currentWallets:(state: WalletState,getters)=>{
       const knownWallets = state.knownWallets
       if(!knownWallets || !knownWallets.length) return []
       const currentWallets = new WalletService().getWallets(
         (e) => knownWallets.includes(e.getIdentifier()),
       )
+      // force update the knownWallets
+      getters.hasUpdatedCurrentWallet
       return currentWallets.map(
         ({identifier, values}) => ({
           identifier,
@@ -323,6 +330,7 @@ export default {
         getters.confirmedTransactions,
       )
     },
+    hasUpdatedCurrentWallet:(state: WalletState)=>state.hasUpdatedCurrentWallet,
   },
   mutations: {
     setInitialized: (state, initialized) => { state.initialized = initialized },
@@ -409,6 +417,9 @@ export default {
 
       // - use Array.from to reset indexes
       return Vue.set(state, 'signedTransactions', Array.from(remaining))
+    },
+    toggleHasUpdatedCurrentWallet:(state)=>{
+      return Vue.set(state,'hasUpdatedCurrentWallet',!state.hasUpdatedCurrentWallet)
     },
   },
   actions: {
