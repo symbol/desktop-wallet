@@ -63,7 +63,7 @@ export class AESEncryptionService extends AbstractService {
     // encrypt using random IV
     const iv = CryptoJS.lib.WordArray.random(16)
     const encrypted = CryptoJS.AES.encrypt(data, key, { 
-      iv: iv, 
+      iv: iv.toString(), 
       padding: CryptoJS.pad.Pkcs7,
       mode: CryptoJS.mode.CBC,
     })
@@ -114,7 +114,7 @@ export class AESEncryptionService extends AbstractService {
     raw: boolean = false,
   ): string {
     const bytes = CryptoJS.lib.WordArray.random(count)
-    if (raw === true) return bytes
+    if (raw === true) return bytes.toString()
 
     return CryptoJS.enc.Hex.stringify(bytes)
   }

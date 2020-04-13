@@ -17,8 +17,6 @@ import {NetworkType} from 'symbol-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
-// internal dependencies
-import {Electron} from '@/core/utils/Electron'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 import {WalletService} from '@/services/WalletService'
 
