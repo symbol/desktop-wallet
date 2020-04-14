@@ -3,6 +3,8 @@ const path = require('path')
 const {app, BrowserWindow, shell, globalShortcut, Menu, ipcMain} = require('electron')
 const electron = require('electron')
 const name = electron.app.getName()
+const iconUrlPath = process.platform === 'darwin' ? './dist/assets/logo.png' : '../dist/assets/logo.png'
+const loadUrlPath = process.platform === 'darwin' ? './dist/index.html' : '../dist/index.html'
 
 let mainWindow = null
 
@@ -176,7 +178,7 @@ function initialize() {
         resizable: true,
       })
     }
-    mainWindow.loadFile('../dist/index.html')
+    mainWindow.loadFile(loadUrlPath)
     mainWindow.on('closed', function() {
       mainWindow = null
     })
@@ -209,10 +211,10 @@ function initialize() {
       },
       resizable: true,
     }
-    windowOptions.icon = path.join(__dirname, '../dist/assets/logo.png')
+    windowOptions.icon = path.join(__dirname, iconUrlPath)
     mainWindow = new BrowserWindow(windowOptions)
     mainWindow.setMenu(null)
-    mainWindow.loadURL(path.join(__dirname, '../dist/index.html'))
+    mainWindow.loadURL(path.join(__dirname, loadUrlPath))
 
     mainWindow.once('ready-to-show', () => {
       mainWindow.show()
