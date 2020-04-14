@@ -4,62 +4,30 @@
   "homepage": "https://github.com/nemfoundation/symbol-desktop-wallet",
   "version": "0.9.7-beta1",
   "author": {
-    "name": "NEM Foundation"
+    "name": "NEM Foundation",
+    "email": "devs@nem.foundation"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/nemfoundation/symbol-desktop-wallet.git"
   },
-  "mac": {
-    "category": "public.app-category.finance",
-    "target": "tar.gz",
-    "icon": "./assets/icons/Icon.incs",
-    "hardenedRuntime": true,
-    "gatekeeperAssess": false,
-    "asarUnpack": [
-      "**/*.node"
-    ]
-  },
   "license": "Apache-2.0",
   "scripts": {
-    "build": "npm run build:web",
-    "build:mac": "npm run build:web && electron-builder --mac",
-    "build:web": "rimraf dist && mkdir dist && tsc && vue-cli-service build",
-    "build:win": "npm run build:web && electron-builder --win --ia32",
-    "dev": "vue-cli-service serve ",
     "start": "electron .",
+    "test": "vue-cli-service test:unit",
+    "dev": "vue-cli-service serve ",
+    "build": "npm run build:web",
+    "build:web": "rimraf dist && mkdir dist && tsc && vue-cli-service build",
+    "release": "npm run build && npm run release:all",
+    "release:all": "npm run release:mac && npm run release:win && npm run release:lin",
+    "release:mac": "electron-builder --mac",
+    "release:win": "electron-builder --win --ia32",
+    "release:lin": "electron-builder --linux deb snap tar.xz",
     "lint:all:fix": "eslint src/ --ext .ts --fix && eslint src/ --ext .vue --fix && eslint __tests__/ --ext .ts --fix",
     "lint:all": "npm run lint:ts && npm run lint:vue && npm run lint:tests",
     "lint:tests": "eslint __tests__/ --ext .ts",
     "lint:ts": "eslint src/ --ext .ts",
-    "lint:vue": "eslint src/ --ext .vue",
-    "test": "vue-cli-service test:unit"
-  },
-  "main": "./public/build.js",
-  "build": {
-    "appId": "779WZP2CKJ",
-    "extends": null,
-    "copyright": "NEM Foundation",
-    "productName": "symbol-wallet",
-    "artifactName": "${name}-${os}-${arch}-${version}.${ext}",
-    "icon": "./dist/assets/icons/Icon.icns",
-    "dmg": {
-      "window": {
-        "x": 100,
-        "y": 100,
-        "width": 500,
-        "height": 400
-      }
-    },
-    "files": [
-      "dist/**/*",
-      "package.json",
-      "./public/build.js"
-    ],
-    "directories": {
-      "buildResources": "assets",
-      "output":"release"
-    }
+    "lint:vue": "eslint src/ --ext .vue"
   },
   "dependencies": {
     "animate.css": "^3.7.2",
@@ -132,5 +100,51 @@
     "utf-8-validate": "^5.0.2",
     "vue-jest": "^3.0.5",
     "vue-template-compiler": "^2.6.10"
+  },
+  "main": "./public/build.js",
+  "build": {
+    "appId": "io.nem.symbol.desktop-wallet",
+    "extends": null,
+    "copyright": "NEM Foundation",
+    "productName": "Symbol Wallet",
+    "artifactName": "${name}-${os}-${arch}-${version}.${ext}",
+    "icon": "./dist/assets/icons/Icon.icns",
+    "files": [
+      "dist/**/*",
+      "package.json",
+      "./public/build.js"
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "release"
+    }
+  },
+  "mac": {
+    "category": "public.app-category.finance",
+    "target": "tar.gz",
+    "icon": "./assets/icons/Icon.incs",
+    "hardenedRuntime": true,
+    "gatekeeperAssess": false,
+    "asarUnpack": [
+      "**/*.node"
+    ]
+  },
+  "dmg": {
+    "window": {
+      "x": 100,
+      "y": 100,
+      "width": 500,
+      "height": 400
+    }
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "installerIcon": "./assets/icons/Symbol.ico"
+  },
+  "linux": {
+    "category": "Office;Finance",
+    "icon": "./assets/icons/Icon.incs"
   }
 }
