@@ -291,7 +291,7 @@ export class WalletService {
     // Password modification is not allowed for hardware wallets
     if (wallet.type !== WalletType.SEED
       && wallet.type !== WalletType.PRIVATE_KEY) {
-      return wallet
+      throw new Error('Hardware wallet password cannot be changed')
     }
     // Get the private key
     const encryptedPrivateKey = new EncryptedPrivateKey(wallet.encPrivate, wallet.encIv)
