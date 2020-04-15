@@ -15,14 +15,7 @@
  * limitations under the License.
  */
 // external dependencies
-import {
-  HashLockTransaction,
-  Mosaic,
-  MosaicId,
-  RawUInt64,
-  SignedTransaction,
-  UInt64,
-} from 'symbol-sdk'
+import {HashLockTransaction, Mosaic, MosaicId, RawUInt64, SignedTransaction, UInt64} from 'symbol-sdk'
 // internal dependencies
 import {TransactionView} from './TransactionView'
 import {MosaicModel} from '@/core/database/entities/MosaicModel'

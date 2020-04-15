@@ -16,19 +16,14 @@
 // external dependencies
 import {mapGetters} from 'vuex'
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import {Address, NetworkType} from 'symbol-sdk'
-import {asyncScheduler, Subject} from 'rxjs'
-import {throttleTime} from 'rxjs/operators'
-
+import {NetworkType} from 'symbol-sdk'
 // child components
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
-import {RESTDispatcher} from '@/core/utils/RESTDispatcher'
 import {Signer} from '@/store/Wallet'
 import {WalletModel} from '@/core/database/entities/WalletModel'
+import {TransactionGroup} from '@/store/Transaction'
 
-// custom types
-type group = 'confirmed' | 'unconfirmed' | 'partial'
 
 @Component({
   components: {SignerSelector},
@@ -42,22 +37,7 @@ type group = 'confirmed' | 'unconfirmed' | 'partial'
   },
 })
 export class TransactionListOptionsTs extends Vue {
-  @Prop({default: 'confirmed'}) currentTab: group
-
-  /**
-   * Minimum interval in ms between each refresh call
-   * @private
-   * @type {number}
-   */
-  private REFRESH_CALLS_THROTTLING: number = 500
-
-  /**
-   * Observable of public keys to fetch for
-   *
-   * @private
-   * @type {Observable<string>}
-   */
-  private refreshStream$: Subject<{ publicKey: string, group: group }> = new Subject
+  @Prop({default: TransactionGroup.confirmed}) currentTab: TransactionGroup
 
   /**
    * Currently active wallet
@@ -104,18 +84,7 @@ export class TransactionListOptionsTs extends Vue {
     this.formItems.currentSignerPubicKey = publicKey
 
     // clear previous account transactions
-    this.$store.dispatch('wallet/RESET_TRANSACTIONS')
-
-    // dispatch actions using the rest dispatcher
-    const dispatcher = new RESTDispatcher(this.$store.dispatch)
-    dispatcher.add('wallet/SET_CURRENT_SIGNER', {publicKey})
-    dispatcher.add('wallet/REST_FETCH_TRANSACTIONS', {
-      group: this.currentTab,
-      address: Address.createFromPublicKey(publicKey, this.networkType).plain(),
-      pageSize: 100,
-    })
-
-    dispatcher.throttle_dispatch()
+    this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {publicKey})
   }
 
   /**
@@ -123,7 +92,7 @@ export class TransactionListOptionsTs extends Vue {
    * @protected
    */
   protected refresh(): void {
-    this.refreshStream$.next({publicKey: this.currentSigner.publicKey, group: this.currentTab})
+    this.$store.dispatch('transaction/LOAD_TRANSACTIONS', {group: this.currentTab})
   }
 
   /**
@@ -131,18 +100,7 @@ export class TransactionListOptionsTs extends Vue {
    * Starts a subscription to handle REST calls for refreshing transactions
    */
   public created(): void {
-    this.refreshStream$
-      .pipe(
-        throttleTime(this.REFRESH_CALLS_THROTTLING, asyncScheduler, {leading: true, trailing: true}),
-      )
-      .subscribe(({publicKey, group}) => {
-      // dispatch REST call
-        this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
-          group,
-          address: Address.createFromPublicKey(publicKey, this.networkType).plain(),
-          pageSize: 100,
-        })
-      })
+    this.refresh()
   }
 
   public mounted(): void {

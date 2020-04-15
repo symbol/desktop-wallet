@@ -25,7 +25,7 @@ export const onPeerConnection = store => {
       if (!!currentWallet) {
         console.log('onPeerConnection dispatching wallet actions..')
 
-        // store.dispatch('wallet/REST_FETCH_TRANSACTIONS')
+        store.dispatch('transaction/LOAD_TRANSACTIONS')
         store.dispatch('mosaic/LOAD_MOSAICS')
         store.dispatch('namespace/LOAD_NAMESPACES')
       }

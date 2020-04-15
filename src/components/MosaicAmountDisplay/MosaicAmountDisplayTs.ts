@@ -41,7 +41,6 @@ export class MosaicAmountDisplayTs extends Vue {
 
   @Prop({
     default: null,
-    required: true,
   }) id: MosaicId
 
   @Prop({
@@ -51,13 +50,6 @@ export class MosaicAmountDisplayTs extends Vue {
   @Prop({
     default: null,
   }) absoluteAmount: number
-
-  /**
-   * Whether to show absolute amount or not
-   */
-  @Prop({
-    default: false,
-  }) absolute: boolean
 
   @Prop({
     default: 'green',
@@ -71,10 +63,6 @@ export class MosaicAmountDisplayTs extends Vue {
     default: false,
   }) showTicker: false
 
-  @Prop({
-    default: null,
-  }) ticker: string
-
   private mosaics: MosaicModel[]
 
   private networkCurrency: NetworkCurrencyModel
@@ -87,28 +75,34 @@ export class MosaicAmountDisplayTs extends Vue {
    * @return {number}
    */
   protected get divisibility(): number {
-    if (!this.id && this.networkCurrency) {
+    if (!this.id) {
+      return this.networkCurrency && this.networkCurrency.divisibility
+        || this.networkConfiguration.maxMosaicDivisibility
+    }
+    if (this.networkCurrency && this.id.toHex() === this.networkCurrency.mosaicIdHex) {
       return this.networkCurrency.divisibility
     }
-    if (this.id && this.networkCurrency && this.id.toHex() === this.networkCurrency.mosaicIdHex) {
-      return this.networkCurrency.divisibility
-    }
-    const mosaic = this.id && this.mosaics.find(m => m.mosaicIdHex === this.id.toHex())
-    if (mosaic) return mosaic.divisibility
-
-    return this.networkConfiguration.maxMosaicDivisibility
+    const mosaic = this.mosaics.find(m => m.mosaicIdHex === this.id.toHex())
+    return mosaic ? mosaic.divisibility : this.networkConfiguration.maxMosaicDivisibility
 
   }
 
   public get amount(): number {
-    if (this.absolute && null === this.absoluteAmount) {
-      return this.relativeAmount * Math.pow(10, this.divisibility)
-    } else if (this.absolute) {
-      return this.absoluteAmount
-    } else if (!this.absolute && this.absoluteAmount && this.divisibility >= 0) {
+    if (this.absoluteAmount) {
       return this.absoluteAmount / Math.pow(10, this.divisibility)
+    } else {return this.relativeAmount || 0}
+  }
+
+  public get ticker(): string {
+    if (!this.id) {
+      return this.networkCurrency && this.networkCurrency.ticker || ''
     }
-    return this.relativeAmount
+
+    if (this.networkCurrency && this.id.toHex() === this.networkCurrency.mosaicIdHex) {
+      return this.networkCurrency.ticker
+    }
+    const mosaic = this.mosaics.find(m => m.mosaicIdHex === this.id.toHex())
+    return mosaic ? mosaic.name : this.id.toHex()
   }
 
 /// end-region computed properties getter/setter

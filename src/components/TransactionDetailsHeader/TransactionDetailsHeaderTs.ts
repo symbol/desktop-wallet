@@ -23,7 +23,6 @@ import {Formatters} from '@/core/utils/Formatters'
 // child components
 // @ts-ignore
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 @Component({
   components: {
@@ -34,7 +33,6 @@ import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigu
       networkType: 'network/networkType',
       networkMosaic: 'mosaic/networkMosaic',
       networkMosaicTicker: 'mosaic/networkMosaicTicker',
-      networkConfiguration: 'network/networkConfiguration',
     }),
   },
 })
@@ -65,8 +63,6 @@ export class TransactionDetailsHeaderTs extends Vue {
    */
   public networkMosaicTicker: string
 
-  private networkConfiguration: NetworkConfigurationModel
-
   /**
    * Formatters
    * @var {Formatters}
@@ -74,15 +70,12 @@ export class TransactionDetailsHeaderTs extends Vue {
   public formatters = Formatters
 
   /**
-   * Returns the relative effective fee paid if available
+   * Returns the absolute effective fee paid if available
    * @return {number}
    */
   public getFeeAmount(): number {
     if (!this.view) return 0
-    const absoluteFee = this.view.values.get('effectiveFee') || this.view.values.get('maxFee')
-    if (!absoluteFee) return 0
-    const networkMosaicDivisibility = this.networkConfiguration.maxMosaicDivisibility
-    return absoluteFee / Math.pow(10, networkMosaicDivisibility)
+    return this.view.values.get('effectiveFee') || this.view.values.get('maxFee') || 0
   }
 
   /**

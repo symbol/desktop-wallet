@@ -24,9 +24,7 @@
         <div>{{ networkCurrency.ticker }}</div>
         <div class="amount">
           <MosaicAmountDisplay
-            :id="networkMosaicId"
-            :relative-amount="networkMosaicBalance"
-            :absolute="false"
+            :absolute-amount="absoluteBalance"
             :size="'biggest'"
           />
         </div>

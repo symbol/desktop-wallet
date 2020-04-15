@@ -55,7 +55,7 @@ export default class ImportMnemonicTs extends Vue {
    * Account repository
    * @var {AccountService}
    */
-  public accountService: AccountService
+  public accountService: AccountService = new AccountService()
 
   /**
    * Form items
@@ -69,14 +69,6 @@ export default class ImportMnemonicTs extends Vue {
    * @type: Array<string>
    */
   public wordsArray: Array<string> = []
-
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  public mounted() {
-    this.accountService = new AccountService()
-  }
 
   /**
    * Delete account and go back

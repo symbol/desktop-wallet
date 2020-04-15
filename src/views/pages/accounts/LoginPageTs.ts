@@ -31,7 +31,6 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue'
 // configuration
-import appConfig from '@/../config/app.conf.json'
 import {SettingService} from '@/services/SettingService'
 import {SettingsModel} from '@/core/database/entities/SettingsModel'
 import {WalletService} from '@/services/WalletService'
@@ -39,7 +38,6 @@ import {WalletService} from '@/services/WalletService'
 @Component({
   computed: {
     ...mapGetters({
-      language: 'app/currentLanguage',
       currentAccount: 'account/currentAccount',
       isAuthenticated: 'account/isAuthenticated',
     }),
@@ -53,12 +51,6 @@ import {WalletService} from '@/services/WalletService'
 })
 
 export default class LoginPageTs extends Vue {
-  /**
-   * Currently active language
-   * @see {Store.AppInfo}
-   * @var {string}
-   */
-  public currentLanguage: string
 
   /**
    * Currently active account
@@ -66,13 +58,6 @@ export default class LoginPageTs extends Vue {
    * @var {string}
    */
   public currentAccount: AccountModel
-
-  /**
-   * List of languages
-   * @see {Config.app}
-   * @var {any[]}
-   */
-  public languageList: any[] = appConfig.languages
 
   /**
    * Accounts repository
@@ -106,15 +91,6 @@ export default class LoginPageTs extends Vue {
     currentAccountName: '',
     password: '',
     hasHint: false,
-  }
-
-  /// region computed properties getter/setter
-  get language() {
-    return this.currentLanguage
-  }
-
-  set language(lang) {
-    this.$store.commit('app/SET_LANGUAGE', lang)
   }
 
   get accountsClassifiedByNetworkType(): Map<NetworkType, string> {

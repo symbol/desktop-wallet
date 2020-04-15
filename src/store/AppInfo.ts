@@ -26,6 +26,7 @@ import {SettingService} from '@/services/SettingService'
 
 const Lock = AwaitLock.create()
 const settingService = new SettingService()
+const ANON_ACCOUNT_NAME = ''
 
 interface AppInfoState {
   initialized: false
@@ -38,7 +39,6 @@ interface AppInfoState {
   controlsDisabledMessage: string
   faucetUrl: string
   settings: SettingsModel
-  isFetchingTransactions: boolean
 }
 
 const appInfoState: AppInfoState = {
@@ -51,8 +51,7 @@ const appInfoState: AppInfoState = {
   hasControlsDisabled: false,
   controlsDisabledMessage: '',
   faucetUrl: networkConfig.faucetUrl,
-  settings: settingService.createDefaultSettingsModel(''),
-  isFetchingTransactions: false,
+  settings: settingService.getAccountSettings(ANON_ACCOUNT_NAME),
 }
 
 
@@ -74,20 +73,22 @@ export default {
     faucetUrl: (state: AppInfoState) => state.faucetUrl,
     defaultFee: (state: AppInfoState) => state.settings.defaultFee,
     defaultWallet: (state: AppInfoState) => state.settings.defaultWallet,
-    isFetchingTransactions: (state: AppInfoState) => state.isFetchingTransactions,
   },
   mutations: {
     setInitialized: (state: AppInfoState, initialized) => { state.initialized = initialized },
     timezone: (state: AppInfoState, timezone) => Vue.set(state, 'timezone', timezone),
-    settings: (state: AppInfoState, settings: SettingsModel) => Vue.set(state, 'settings', settings),
+    settings: (state: AppInfoState, settings: SettingsModel) => Vue.set(state, 'settings',
+      settings),
     toggleControlsDisabled: (state: AppInfoState, {disable, message}) => {
       Vue.set(state, 'hasControlsDisabled', disable)
       Vue.set(state, 'controlsDisabledMessage', message || '')
     },
-    toggleLoadingOverlay: (state: AppInfoState, display: boolean) => Vue.set(state, 'hasLoadingOverlay', display),
-    setLoadingOverlayMessage: (state: AppInfoState, message: string) => Vue.set(state, 'loadingOverlayMessage', message),
-    setLoadingDisableCloseButton: (state: AppInfoState, bool: boolean) => Vue.set(state, 'loadingDisableCloseButton', bool),
-    setFetchingTransactions: (state: AppInfoState, bool: boolean) => Vue.set(state, 'isFetchingTransactions', bool),
+    toggleLoadingOverlay: (state: AppInfoState, display: boolean) => Vue.set(state,
+      'hasLoadingOverlay', display),
+    setLoadingOverlayMessage: (state: AppInfoState, message: string) => Vue.set(state,
+      'loadingOverlayMessage', message),
+    setLoadingDisableCloseButton: (state: AppInfoState, bool: boolean) => Vue.set(state,
+      'loadingDisableCloseButton', bool),
   },
   actions: {
     async initialize({commit, getters}) {
@@ -125,7 +126,8 @@ export default {
         i18n.locale = settingsModel.language
         window.localStorage.setItem('locale', settingsModel.language)
       }
-      const accountName = rootGetters['account/currentAccount'].accountName
+      const currentAccount = rootGetters['account/currentAccount']
+      const accountName = currentAccount && currentAccount.accountName || ANON_ACCOUNT_NAME
       commit('settings', settingService.changeAccountSettings(accountName, settingsModel))
     },
 
@@ -141,9 +143,6 @@ export default {
     },
     SET_DEFAULT_WALLET({dispatch}, defaultWallet: string) {
       dispatch('SET_SETTINGS', {defaultWallet})
-    },
-    SET_FETCHING_TRANSACTIONS({commit}, bool: boolean) {
-      commit('setFetchingTransactions', bool)
     },
     /// end-region scoped actions
   },

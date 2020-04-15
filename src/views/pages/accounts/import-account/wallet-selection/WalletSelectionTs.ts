@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {AccountInfo, Address, MosaicId, Password, SimpleWallet} from 'symbol-sdk'
+import {AccountInfo, Address, MosaicId, Password, RepositoryFactory, SimpleWallet} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 // internal dependencies
 import {WalletModel, WalletType} from '@/core/database/entities/WalletModel'
@@ -190,12 +190,10 @@ export default class WalletSelectionTs extends Vue {
       this.currentAccount.networkType,
       10,
     )
-
+    const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory
     // fetch accounts info
-    const accountsInfo = await this.$store.dispatch(
-      'wallet/REST_FETCH_INFOS',
-      this.addressesList,
-    )
+    const accountsInfo = await repositoryFactory.createAccountRepository()
+      .getAccountsInfo(this.addressesList).toPromise()
     if (!accountsInfo) return
     // map balances
     this.addressMosaicMap = this.mapBalanceByAddress(
@@ -217,7 +215,7 @@ export default class WalletSelectionTs extends Vue {
       const balance = hasNetworkMosaic.amount.compact()
       return {
         address: address.plain(),
-        balance: balance * Math.pow(10, this.networkCurrency.divisibility),
+        balance: balance,
       }
     }).reduce((acc, {address, balance}) => ({...acc, [address]: balance}), {})
   }

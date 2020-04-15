@@ -16,7 +16,7 @@
 // external dependencies
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {MosaicId, Transaction, TransactionType} from 'symbol-sdk'
+import {MosaicId, Transaction, TransactionType, TransferTransaction} from 'symbol-sdk'
 // internal dependencies
 import {TransactionService, TransactionViewType} from '@/services/TransactionService'
 import {Formatters} from '@/core/utils/Formatters'
@@ -43,9 +43,8 @@ import {officialIcons, transactionTypeToIcon} from '@/views/resources/Images'
 })
 export class TransactionRowTs extends Vue {
 
-  @Prop({
-    default: [],
-  }) transaction: Transaction
+  @Prop({default: []})
+  public transaction: Transaction
 
   /**
    * Transaction service
@@ -112,7 +111,6 @@ export class TransactionRowTs extends Vue {
 
   /**
    * Returns true if \a transaction is an incoming transaction
-   * @return {boolean}
    */
   public isIncomingTransaction(): boolean {
     // - read per-transaction-type details
@@ -120,21 +118,56 @@ export class TransactionRowTs extends Vue {
   }
 
   /**
-   * Returns the effective fee paid if available
-   * @return {number}
+   * Returns the amount to be shown. The first mosaic or the paid fee.
    */
-  public getFeeAmount(): number {
-    this.view.values
+  public getAmount(): number {
+    if (this.transaction.type === TransactionType.TRANSFER) {
+      // We may prefer XYM over other mosaic if XYM is 2nd+
+      const transferTransaction = this.transaction as TransferTransaction
+      return transferTransaction.mosaics.length && transferTransaction.mosaics[0].amount.compact() || 0
+    }
+    // https://github.com/nemfoundation/nem2-desktop-wallet/issues/879
+    // We may want to show N/A instead of the paid fee
+    return this.view.values.get('effectiveFee') || this.view.values.get('maxFee') || 0
+  }
 
-    if (this.view.values.get('effectiveFee') !== undefined) {return this.view.values.get(
-      'effectiveFee')}
-    if (this.view.values.get('maxFee') !== undefined) return this.view.values.get('maxFee')
-    return 0
+  /**
+   * Returns the color of the balance
+   */
+  public getAmountColor(): string {
+    // https://github.com/nemfoundation/nem2-desktop-wallet/issues/879
+    if (this.transaction.type === TransactionType.TRANSFER) {
+      return this.isIncomingTransaction() ? 'green' : 'red'
+    }
+    return this.getAmount() === 0 ? '' : 'red'
+  }
+
+  /**
+   * Returns the mosaic id of the balance or undefined for the network.
+   */
+  public getAmountMosaicId(): MosaicId | undefined {
+    if (this.transaction.type === TransactionType.TRANSFER) {
+      // We may prefer XYM over other mosaic if XYM is 2nd+
+      const transferTransaction = this.transaction as TransferTransaction
+      return transferTransaction.mosaics.length && transferTransaction.mosaics[0].id as MosaicId || undefined
+    }
+    return undefined
+  }
+
+  /**
+   * Should he ticker be shown in the amount column
+   */
+  public isAmountShowTicker(): boolean {
+    // if (this.transaction.type === TransactionType.TRANSFER) {
+    //   const transferTransaction = this.transaction as TransferTransaction
+    //   return !!transferTransaction.mosaics.length
+    // }
+    // return true
+    return false
   }
 
   /**
    * Returns the transaction height or number of confirmations
-   * @param transaction
    */
   public getHeight(): string {
     return this.view.info?.height.compact().toLocaleString()

@@ -38,6 +38,7 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
 import {SettingsModel} from '@/core/database/entities/SettingsModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 
 @Component({
   components: {
@@ -55,7 +56,6 @@ import {SettingsModel} from '@/core/database/entities/SettingsModel'
   },
   computed: {
     ...mapGetters({
-      language: 'app/currentLanguage',
       settings: 'app/settings',
       knownWallets: 'wallet/knownWallets',
     }),
@@ -73,7 +73,7 @@ export class FormGeneralSettingsTs extends Vue {
    * Known wallets identifiers
    * @var {string[]}
    */
-  public knownWallets: string[]
+  public knownWallets: WalletModel[]
 
   /**
    * Whether account is currently being unlocked
@@ -99,7 +99,7 @@ export class FormGeneralSettingsTs extends Vue {
   public resetForm() {
     this.formItems = {...this.settings}
     if (this.settings.defaultWallet && this.knownWallets.length) {
-      this.formItems.defaultWallet = this.knownWallets[0]
+      this.formItems.defaultWallet = this.knownWallets[0].id
     }
   }
 

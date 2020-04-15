@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, Password} from 'symbol-sdk'
+import {NetworkType} from 'symbol-sdk'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {WalletModel} from '@/core/database/entities/WalletModel'
@@ -45,7 +45,6 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
     ...mapGetters({
       networkType: 'network/networkType',
       currentWallet: 'wallet/currentWallet',
-      knownWallets: 'wallet/knownWallets',
     }),
   },
 })
@@ -56,12 +55,6 @@ export class FormWalletNameUpdateTs extends Vue {
    * @var {WalletModel}
    */
   public currentWallet: WalletModel
-
-  /**
-   * Known wallets identifiers
-   * @var {string[]}
-   */
-  public knownWallets: string[]
 
   /**
    * Currently active network type
@@ -87,12 +80,6 @@ export class FormWalletNameUpdateTs extends Vue {
    * @var {boolean}
    */
   public isUnlockingAccount: boolean = false
-
-  /**
-   * Current unlocked password
-   * @var {Password}
-   */
-  public currentPassword: Password
 
   /**
    * Form fields

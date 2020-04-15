@@ -95,7 +95,7 @@ export class MosaicBalanceListTs extends Vue {
       return {
         id: new MosaicId(mosaic.mosaicIdHex),
         name: mosaic.name || mosaic.mosaicIdHex,
-        amount: (mosaic.balance || 0) / Math.pow(10, mosaic.divisibility),
+        amount: (mosaic.balance || 0),
         mosaic: mosaic,
       }
     })

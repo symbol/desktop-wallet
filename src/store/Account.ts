@@ -19,6 +19,8 @@ import {$eventBus} from '../events'
 import {AwaitLock} from './AwaitLock'
 import {SettingService} from '@/services/SettingService'
 import {AccountModel} from '@/core/database/entities/AccountModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountService} from '@/services/AccountService'
 
 /// region globals
 const Lock = AwaitLock.create()
@@ -99,22 +101,19 @@ export default {
       $eventBus.$emit('onAccountChange', currentAccount.accountName)
     },
 
-    ADD_WALLET({dispatch, getters}, walletModel) {
-      const resolvedAccount = getters['currentAccount']
-      if (!resolvedAccount || !resolvedAccount.values) {
+    ADD_WALLET({dispatch, getters}, walletModel: WalletModel) {
+      const currentAccount: AccountModel = getters['currentAccount']
+      if (!currentAccount) {
         return
       }
-
       dispatch('diagnostic/ADD_DEBUG',
-        'Adding wallet to account: ' + resolvedAccount.getIdentifier() + ' with: ' + walletModel.address,
+        'Adding wallet to account: ' + currentAccount.accountName + ' with: ' + walletModel.address,
         {root: true})
-
-      const wallets = resolvedAccount.values.get('wallets')
-      wallets.push(walletModel.getIdentifier())
-
-      // update account and return
-      resolvedAccount.values.set('wallets', wallets)
-      return dispatch('SET_CURRENT_ACCOUNT', resolvedAccount)
+      if (!currentAccount.wallets.includes(walletModel.id)) {
+        new AccountService().updateWallets(currentAccount,
+          [ ...currentAccount.wallets, walletModel.id ])
+      }
+      return dispatch('SET_CURRENT_ACCOUNT', currentAccount)
     },
     /// end-region scoped actions
   },

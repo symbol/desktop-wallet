@@ -45,15 +45,16 @@ export class WalletService {
     return this.storage.get() || {}
   }
 
-  public saveWallet(wallet: WalletModel) {
+  public saveWallet(wallet: WalletModel): WalletModel {
     const wallets = this.getWalletsById()
     wallets[wallet.id] = wallet
     this.storage.set(wallets)
+    return wallet
   }
 
 
-  public updateName(wallet: WalletModel, name: string) {
-    this.saveWallet({...wallet, ...{name}})
+  public updateName(wallet: WalletModel, name: string): WalletModel {
+    return this.saveWallet(Object.assign(wallet, {name}))
   }
 
 

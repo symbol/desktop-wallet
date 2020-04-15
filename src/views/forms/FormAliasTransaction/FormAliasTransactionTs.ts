@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Address, AddressAliasTransaction, AliasAction, AliasTransaction, AliasType, Mosaic, MosaicAliasTransaction, MosaicId, NamespaceId, UInt64} from 'symbol-sdk'
+import {Address, AddressAliasTransaction, AliasAction, AliasTransaction, AliasType, MosaicAliasTransaction, MosaicId, NamespaceId, UInt64} from 'symbol-sdk'
 import {Component, Prop} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
@@ -71,7 +71,11 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   @Prop({default: null}) aliasTarget: MosaicId | Address
   @Prop({default: null, required: true}) aliasAction: AliasAction
   @Prop({default: false}) disableSubmit: boolean
-
+  /**
+   * Type of assets shown in the form alias
+   * @type {string}
+   */
+  @Prop({default: 'namespace'}) assetType: string
   /**
    * Alias action
    * @protected
@@ -135,9 +139,8 @@ export class FormAliasTransactionTs extends FormTransactionBase {
    * Current wallet mosaics hex Ids that can be linked
    * @readonly
    * @protected
-   * @type {Mosaic}
    */
-  protected get linkableMosaics(): Mosaic[] {
+  protected get linkableMosaics(): string[] {
     return this.mosaics
       .filter((mosaicInfo) => {
       // no mosaics with names
@@ -148,7 +151,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
         if (mosaicInfo.duration == 0) return true
         return mosaicInfo.height + mosaicInfo.duration > this.currentHeight
       })
-      .map(({mosaicIdHex}) => new Mosaic(new MosaicId(mosaicIdHex), UInt64.fromUint(0)))
+      .map(({mosaicIdHex}) => mosaicIdHex)
   }
 
   /**

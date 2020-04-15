@@ -17,7 +17,6 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
 // child components
 // @ts-ignore
 import MnemonicVerification from '@/components/MnemonicVerification/MnemonicVerification.vue'
@@ -28,18 +27,11 @@ import MnemonicVerification from '@/components/MnemonicVerification/MnemonicVeri
   },
   computed: {
     ...mapGetters({
-      currentAccount: 'account/currentAccount',
       currentMnemonic: 'temporary/mnemonic',
     }),
   },
 })
 export default class VerifyMnemonicTs extends Vue {
-  /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {string}
-   */
-  public currentAccount: AccountModel
 
   /**
    * Temporary Mnemonic pass phrase

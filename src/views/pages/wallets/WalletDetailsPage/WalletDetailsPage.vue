@@ -11,7 +11,7 @@
           </div>
 
           <div class="detail-row">
-            <ImportanceScoreDisplay :address="currentWallet.address" />
+            <ImportanceScoreDisplay :address="currentWallet && currentWallet.address" />
           </div>
 
           <div class="detail-row">

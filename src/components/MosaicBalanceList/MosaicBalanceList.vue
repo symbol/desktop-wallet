@@ -22,7 +22,7 @@
             </span>
             <span class="mosaic_name">{{ entry.name !== '' ? entry.name : entry.id.toHex() }}</span>
             <span class="mosaic_value">
-              <MosaicAmountDisplay :id="entry.id" :relative-amount="entry.amount" :size="'normal'" />
+              <MosaicAmountDisplay :id="entry.id" :absolute-amount="entry.amount" :size="'normal'" />
             </span>
           </div>
         </div>
@@ -75,7 +75,7 @@
           <span class="mosaic_value">
             <MosaicAmountDisplay
               :id="entry.id"
-              :relative-amount="entry.amount"
+              :absolute-amount="entry.amount"
               :size="'normal'"
             />
           </span>

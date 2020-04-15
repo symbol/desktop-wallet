@@ -21,7 +21,6 @@ import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {DerivationService} from '@/services/DerivationService'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
-import {AccountService} from '@/services/AccountService'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {WalletService} from '@/services/WalletService'
 import {WalletModel} from '@/core/database/entities/WalletModel'
@@ -67,7 +66,7 @@ export class FormSubWalletCreationTs extends Vue {
   /**
    * Known wallets identifiers
    */
-  public knownWallets: string[]
+  public knownWallets: WalletModel[]
 
   /**
    * Currently active network type
@@ -83,11 +82,6 @@ export class FormSubWalletCreationTs extends Vue {
    * Derivation paths service
    */
   public paths: DerivationService
-
-  /**
-   * Accounts repository
-   */
-  public accountService: AccountService
 
   /**
    * Validation rules
@@ -128,7 +122,6 @@ export class FormSubWalletCreationTs extends Vue {
   public created() {
     this.walletService = new WalletService()
     this.paths = new DerivationService()
-    this.accountService = new AccountService()
   }
 
   /// region computed properties getter/setter
@@ -145,8 +138,7 @@ export class FormSubWalletCreationTs extends Vue {
       return []
     }
     // filter wallets to only known wallet names
-    const knownWallets = this.walletService.getKnownWallets(this.knownWallets)
-    return knownWallets.map(w => w.path).filter(p => p)
+    return this.knownWallets.map(w => w.path).filter(p => p)
   }
 
   /// end-region computed properties getter/setter
@@ -205,16 +197,10 @@ export class FormSubWalletCreationTs extends Vue {
       // - use repositories for storage
       this.walletService.saveWallet(subWallet)
 
-      // - also add wallet to account (in storage)
-      const wallets = this.currentAccount.wallets
-      wallets.push(subWallet.id)
-
-      this.accountService.updateWallets(this.currentAccount, wallets)
-
       // - update app state
       await this.$store.dispatch('account/ADD_WALLET', subWallet)
       await this.$store.dispatch('wallet/SET_CURRENT_WALLET', subWallet)
-      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
+      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', this.currentAccount.wallets)
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$emit('submit', this.formItems)
     } catch (e) {

@@ -60,7 +60,7 @@ export class MosaicTableService extends AssetTableService {
         'hexId': mosaicInfo.mosaicIdHex,
         'name': mosaicInfo.name || 'N/A',
         'supply': mosaicInfo.supply.toLocaleString(),
-        'balance': mosaicInfo.balance || 0 / Math.pow(10, mosaicInfo.divisibility),
+        'balance': (mosaicInfo.balance || 0) / Math.pow(10, mosaicInfo.divisibility),
         'expiration': expiration,
         'divisibility': mosaicInfo.divisibility,
         'transferable': mosaicInfo.transferable,

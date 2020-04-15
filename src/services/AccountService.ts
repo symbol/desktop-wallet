@@ -44,10 +44,11 @@ export class AccountService {
     return this.accountsStorage.get() || {}
   }
 
-  public saveAccount(account: AccountModel) {
+  public saveAccount(account: AccountModel): AccountModel {
     const accounts = this.getAccountsByAccountName()
     accounts[account.accountName] = account
     this.accountsStorage.set(accounts)
+    return account
   }
 
   public deleteAccount(accountName: string) {
@@ -56,16 +57,16 @@ export class AccountService {
     this.accountsStorage.set(accounts)
   }
 
-  public updateSeed(account: AccountModel, seed: string) {
-    this.saveAccount({...account, ...{seed}})
+  public updateSeed(account: AccountModel, seed: string): AccountModel {
+    return this.saveAccount(Object.assign(account, {seed}))
   }
 
-  public updatePassword(account: AccountModel, password: string, hint: string, seed: string) {
-    this.saveAccount({...account, ...{password, hint, seed}})
+  public updatePassword(account: AccountModel, password: string, hint: string, seed: string): AccountModel {
+    return this.saveAccount(Object.assign(account, {password, hint, seed}))
   }
 
-  public updateWallets(account: AccountModel, wallets: string[]) {
-    this.saveAccount({...account, ...{wallets}})
+  public updateWallets(account: AccountModel, wallets: string[]): AccountModel {
+    return this.saveAccount(Object.assign(account, {wallets}))
   }
 
   /**

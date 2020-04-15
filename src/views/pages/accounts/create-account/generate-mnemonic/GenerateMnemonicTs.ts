@@ -51,7 +51,7 @@ export default class GenerateMnemonicTs extends Vue {
    * Accounts repository
    * @var {AccountService}
    */
-  public accountService: AccountService
+  public accountService: AccountService = new AccountService()
 
   /**
    * Whether component should track mouse move
@@ -70,14 +70,6 @@ export default class GenerateMnemonicTs extends Vue {
    * @var {number}
    */
   private percent: number = 0
-
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  public mounted() {
-    this.accountService = new AccountService()
-  }
 
   /**
    * Track and handle mouse move event

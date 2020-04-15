@@ -89,7 +89,7 @@ export class WalletSelectorPanelTs extends Vue {
    * Known wallets identifiers
    * @var {string[]}
    */
-  public knownWallets: string[]
+  public knownWallets: WalletModel[]
   /**
    * Networks currency mosaic
    * @var {MosaicId}
@@ -138,8 +138,7 @@ export class WalletSelectorPanelTs extends Vue {
   /// region computed properties getter/setter
   public get balances(): Map<string, number> {
     const networkMosaics = this.mosaics.filter(m => m.mosaicIdHex === this.networkMosaic.toHex())
-    return Object.assign({}, ...networkMosaics.map(
-      s => ({[s.addressRawPlain]: s.balance / Math.pow(10, this.networkCurrency.divisibility)})))
+    return Object.assign({}, ...networkMosaics.map(s => ({[s.addressRawPlain]: s.balance})))
     // return this.addressesBalances
   }
 
@@ -164,11 +163,7 @@ export class WalletSelectorPanelTs extends Vue {
   }
 
   public get currentWallets(): WalletModel[] {
-    if (!this.knownWallets || !this.knownWallets.length) {
-      return []
-    }
-    // filter wallets to only known wallet names
-    return this.walletService.getKnownWallets(this.knownWallets)
+    return this.knownWallets
   }
 
   public get hasAddWalletModal(): boolean {

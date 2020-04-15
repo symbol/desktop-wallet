@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 import Vue from 'vue'
-import {BlockInfo, IListener, Listener, NetworkType, RepositoryFactory, UInt64} from 'symbol-sdk'
+import {BlockInfo, IListener, Listener, NetworkType, RepositoryFactory} from 'symbol-sdk'
 import {Subscription} from 'rxjs'
 // internal dependencies
 import {$eventBus} from '../events'
-import {RESTService} from '@/services/RESTService'
 import {URLHelpers} from '@/core/utils/URLHelpers'
 import app from '@/main'
 import {AwaitLock} from './AwaitLock'
@@ -33,29 +32,6 @@ import {URLInfo} from '@/core/utils/URLInfo'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 const Lock = AwaitLock.create()
-
-/// region internal helpers
-/**
- * Recursive function helper to determine block ranges
- * needed to fetch data about all block \a heights
- * @param {number[]} heights
- * @return {BlockRangeType[]}
- */
-const getBlockRanges = (heights: number[], ranges: BlockRangeType[] = []): BlockRangeType[] => {
-  const pageSize: number = 100
-  const min: number = Math.min(...heights)
-
-  // - register first range
-  ranges.push({start: min})
-
-  // - take remaining block heights and run again
-  heights = heights.filter(height => height > min + pageSize)
-  if (heights.length) {
-    return getBlockRanges(heights, ranges)
-  }
-  return ranges
-}
-/// end-region internal helpers
 
 /// region custom types
 /**
@@ -86,7 +62,6 @@ interface NetworkState {
   isConnected: boolean
   knowNodes: NodeModel[]
   currentHeight: number
-  knownBlocks: Record<number, BlockInfo>
   subscriptions: Subscription[]
 }
 
@@ -96,16 +71,15 @@ const networkState: NetworkState = {
   initialized: false,
   currentPeer: defaultPeer,
   currentPeerInfo: new NodeModel(defaultPeer.url, defaultPeer.url),
-  networkType: undefined,
+  networkType: networkConfig.defaultNetworkType,
   generationHash: undefined,
   networkModel: undefined,
   networkConfiguration: networkConfig.networkConfigurationDefaults,
-  repositoryFactory: RESTService.createRepositoryFactory(networkConfig.defaultNodeUrl),
+  repositoryFactory: NetworkService.createRepositoryFactory(networkConfig.defaultNodeUrl),
   listener: undefined,
   isConnected: false,
   knowNodes: [],
   currentHeight: 0,
-  knownBlocks: {},
   subscriptions: [],
 }
 export default {
@@ -125,7 +99,6 @@ export default {
     isConnected: (state: NetworkState) => state.isConnected,
     knowNodes: (state: NetworkState) => state.knowNodes,
     currentHeight: (state: NetworkState) => state.currentHeight,
-    knownBlocks: (state: NetworkState) => state.knownBlocks,
   },
   mutations: {
     setInitialized: (state: NetworkState,
@@ -171,11 +144,6 @@ export default {
       const newNodes = knowNodes.filter(n => n !== toBeDeleted)
       new NodeService().saveNodes(newNodes)
       Vue.set(state, 'knowNodes', newNodes)
-    },
-    addBlock: (state: NetworkState, block: BlockInfo) => {
-      const knownBlocks = state.knownBlocks
-      knownBlocks[block.height.compact()] = block
-      Vue.set(state, 'knownBlocks', knownBlocks)
     },
     subscriptions: (state: NetworkState, data) => Vue.set(state, 'subscriptions', data),
     addSubscriptions: (state: NetworkState, payload) => {
@@ -305,9 +273,7 @@ export default {
       }
     },
 
-    ADD_BLOCK({commit}, block: BlockInfo) {
-      commit('addBlock', block)
-    },
+
     /**
      * Websocket API
      */
@@ -317,7 +283,7 @@ export default {
       const listener = getters['listener'] as Listener
       const subscription = listener.newBlock().subscribe((block: BlockInfo) => {
         dispatch('SET_CURRENT_HEIGHT', block.height.compact())
-        dispatch('ADD_BLOCK', block)
+        dispatch('transaction/ADD_BLOCK', block, {root: true})
         dispatch('diagnostic/ADD_INFO', 'New block height: ' + block.height.compact(), {root: true})
       })
       // update state of listeners & subscriptions
@@ -338,50 +304,5 @@ export default {
       commit('currentHeight', height)
     },
 
-    async REST_FETCH_BLOCKS({commit, dispatch, getters, rootGetters}, blockHeights: number[]) {
-
-      // - filter out known blocks
-      const knownBlocks: {[h: number]: BlockInfo} = getters['knownBlocks']
-      const unknownHeights = blockHeights.filter(height => !knownBlocks || !knownBlocks[height])
-      const knownHeights = blockHeights.filter(height => knownBlocks && knownBlocks[height])
-
-      // - initialize blocks list with known blocks
-      let blocks: BlockInfo[] = knownHeights.map(known => knownBlocks[known])
-      if (!unknownHeights.length) {
-        return blocks
-      }
-
-      // - use block ranges helper to minimize number of requests (recent blocks first)
-      const ranges: {start: number}[] = getBlockRanges(unknownHeights).reverse()
-
-      try {
-        // - prepare REST gateway connection
-        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
-        const blockHttp = repositoryFactory.createBlockRepository()
-
-        // - fetch blocks information per-range (wait 3 seconds every 4th block)
-        ranges.slice(0, 3).map(({start}) => {
-          blockHttp.getBlocksByHeightWithLimit(UInt64.fromUint(start), 100).subscribe(
-            (infos: BlockInfo[]) => {
-              infos.map(b => commit('addBlock', b))
-              blocks = blocks.concat(infos)
-            })
-        })
-
-        const nextHeights = ranges.slice(3).map(r => r.start)
-        if (nextHeights.length) {
-          setTimeout(() => {
-            dispatch('diagnostic/ADD_DEBUG',
-              'Store action network/REST_FETCH_BLOCKS delaying heights discovery for 2 seconds: ' + JSON.stringify(
-                nextHeights), {root: true})
-            return dispatch('REST_FETCH_BLOCKS', nextHeights)
-          }, 2000)
-        }
-      } catch (e) {
-        dispatch('diagnostic/ADD_ERROR',
-          'An error happened while trying to fetch blocks information: ' + e, {root: true})
-        return false
-      }
-    },
   },
 }

@@ -32,7 +32,7 @@ import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
   },
   computed: {
     ...mapGetters({
-      namespaces: 'namespace/namespaces',
+      namespaces: 'namespace/ownedNamespaces',
     }),
   },
 })

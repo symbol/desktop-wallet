@@ -25,6 +25,7 @@ import NotificationStore from '@/store/Notification'
 import TemporaryStore from '@/store/Temporary'
 import MosaicStore from '@/store/Mosaic'
 import NamespaceStore from '@/store/Namespace'
+import TransactionStore from '@/store/Transaction'
 import StatisticsStore from '@/store/Statistics'
 import CommunityStore from '@/store/Community'
 import {onPeerConnection} from '@/store/plugins/onPeerConnection'
@@ -53,6 +54,7 @@ const AppStore = new Vuex.Store({
     temporary: TemporaryStore,
     mosaic: MosaicStore,
     namespace: NamespaceStore,
+    transaction: TransactionStore,
     statistics: StatisticsStore,
     community: CommunityStore,
   },
@@ -69,6 +71,7 @@ const AppStore = new Vuex.Store({
         await dispatch('network/initialize')
         await dispatch('mosaic/initialize')
         await dispatch('namespace/initialize')
+        await dispatch('transaction/initialize')
       }
 
       // aquire async lock until initialized
@@ -80,6 +83,7 @@ const AppStore = new Vuex.Store({
         dispatch('app/uninitialize'),
         dispatch('network/uninitialize'),
         dispatch('mosaic/uninitialize'),
+        dispatch('transaction/uninitialize'),
         dispatch('account/uninitialize'),
         dispatch('wallet/uninitialize'),
         dispatch('namespace/uninitialize'),

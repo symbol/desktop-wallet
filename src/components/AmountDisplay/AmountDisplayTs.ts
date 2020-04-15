@@ -15,18 +15,15 @@
  */
 // external dependencies
 import {Component, Prop, Vue} from 'vue-property-decorator'
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 import {mapGetters} from 'vuex'
-import {MosaicId} from 'symbol-sdk'
 
 // configuration
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 
 @Component({
   computed: {
     ...mapGetters({
-      networkMosaicTicker: 'mosaic/networkMosaicTicker',
-      networkMosaic: 'mosaic/networkMosaic',
       networkConfiguration: 'network/networkConfiguration',
     }),
   },
@@ -34,7 +31,7 @@ import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigu
 export class AmountDisplayTs extends Vue {
   @Prop({default: 0}) value: number
 
-  @Prop() decimals: number | undefined
+  @Prop({default: undefined}) decimals: number | undefined
 
   @Prop({default: false}) showTicker: false
 
@@ -43,17 +40,6 @@ export class AmountDisplayTs extends Vue {
   @Prop({default: 'normal'}) size: 'normal' | 'smaller' | 'bigger' | 'biggest'
 
   public networkConfiguration: NetworkConfigurationModel
-  /**
-   * Currency mosaic's ticker
-   * @var {string}
-   */
-  public networkMosaicTicker: string
-
-  /**
-   * Currency mosaic's Id
-   * @var {string}
-   */
-  public networkMosaic: MosaicId
 
   /// region computed properties getter/setter
   get integerPart(): string {
@@ -63,8 +49,8 @@ export class AmountDisplayTs extends Vue {
   get fractionalPart(): string {
     const rest = this.value - Math.floor(this.value)
     if (rest === 0) return ''
-
-    const decimals = this.networkConfiguration.maxMosaicDivisibility
+    const decimals = this.decimals === undefined ?
+      (this.networkConfiguration.maxMosaicDivisibility || 6) : this.decimals
     // remove leftmost-0 and rightmost-0
     return Number(rest.toFixed(decimals)).toPrecision().toString().replace(/^0/, '')
   }
@@ -75,9 +61,7 @@ export class AmountDisplayTs extends Vue {
    * @type {string}
    */
   get displayedTicker(): string {
-    if (!this.showTicker) return ''
-    if (this.ticker === this.networkMosaic.id.toHex()) return this.networkMosaicTicker
-    return this.ticker || this.networkMosaicTicker
+    return this.showTicker && this.ticker || ''
   }
 
 /// end-region computed properties getter/setter

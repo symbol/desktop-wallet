@@ -198,15 +198,10 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   }
 
   public relativeTimetoParent = ''
-  /**
-   * Namespaces names
-   * @type {[h: string]: string}
-   */
-  public namespacesNames: { [h: string]: string }
 
   public getTimeByparentNamespaceName() {
-    const selectedNamespace = this.fertileNamespaces.find((item) =>
-      this.namespacesNames[item.namespaceIdHex] === this.formItems.parentNamespaceName,
+    const selectedNamespace = this.ownedNamespaces.find((item) =>
+      item.name === this.formItems.parentNamespaceName,
     )
 
     this.relativeTimetoParent = NamespaceService.getExpiration(this.networkConfiguration,

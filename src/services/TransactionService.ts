@@ -98,7 +98,7 @@ export class TransactionService extends AbstractService {
   public getView(transaction: Transaction): TransactionViewType {
     // - store shortcuts
     const currentWallet: WalletModel = this.$store.getters['wallet/currentWallet']
-    const knownBlocks: { [h: number]: BlockInfo } = this.$store.getters['network/knownBlocks']
+    const knownBlocks: BlockInfo[] = this.$store.getters['transaction/blocks']
 
     // - interpret transaction type and initialize view
     let view: TransactionViewType
@@ -164,9 +164,7 @@ export class TransactionService extends AbstractService {
 
     // - try to find block for fee information
     const height = transaction.transactionInfo ? transaction.transactionInfo.height : undefined
-    const block: BlockInfo = !height ? undefined : Object.keys(knownBlocks).filter(
-      k => knownBlocks[k].height.equals(height),
-    ).map(k => knownBlocks[k]).shift()
+    const block: BlockInfo = !height ? undefined : knownBlocks.find(k => k.height.equals(height))
 
     const isAggregate = [
       TransactionType.AGGREGATE_BONDED,

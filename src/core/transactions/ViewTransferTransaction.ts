@@ -14,21 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Address,
-  EmptyMessage,
-  Mosaic,
-  MosaicId,
-  NamespaceId,
-  PlainMessage,
-  RawUInt64,
-  TransferTransaction,
-  UInt64,
-} from 'symbol-sdk'
+import {Address, EmptyMessage, Mosaic, MosaicId, NamespaceId, PlainMessage, RawUInt64, TransferTransaction, UInt64} from 'symbol-sdk'
 // internal dependencies
 import {TransactionView} from './TransactionView'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
 import {AttachedMosaic} from '@/services/MosaicService'
+import {MosaicModel} from '@/core/database/entities/MosaicModel'
 
 /// region custom types
 export type TransferFormFieldsType = {

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, Address} from 'symbol-sdk'
+import {Address} from 'symbol-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
 // internal dependencies
 import {WalletModel} from '@/core/database/entities/WalletModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
@@ -40,7 +39,6 @@ import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyMode
       balanceMosaics: 'mosaic/balanceMosaics',
       isCosignatoryMode: 'wallet/isCosignatoryMode',
       networkCurrency: 'mosaic/networkCurrency',
-      networkMosaicId: 'mosaic/networkMosaic',
     }),
   },
 })
@@ -75,8 +73,6 @@ export class AccountBalancesPanelTs extends Vue {
    */
   public networkCurrency: NetworkCurrencyModel
 
-  public networkMosaicId: MosaicId
-
 
   /**
    * UI Helpers
@@ -88,25 +84,9 @@ export class AccountBalancesPanelTs extends Vue {
     this.$store.dispatch('mosaic/LOAD_MOSAICS')
   }
 
-  /**
-   * Network mosaic divisibility
-   * @readonly
-   * @protected
-   * @type {number}
-   */
-  protected get divisibility(): number {
-    return this.networkCurrency && this.networkCurrency.divisibility || 0
-  }
-
   public get absoluteBalance() {
     const networkMosaicData = this.balanceMosaics.filter(m => m.isCurrencyMosaic).find(i => i)
     return networkMosaicData && networkMosaicData.balance || 0
-  }
-
-  public get networkMosaicBalance(): number {
-    const balance = this.absoluteBalance
-    if (balance === 0 || !this.divisibility) return 0
-    return balance / Math.pow(10, this.divisibility)
   }
 
 }

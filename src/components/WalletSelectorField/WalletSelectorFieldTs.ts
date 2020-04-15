@@ -44,10 +44,9 @@ export class WalletSelectorFieldTs extends Vue {
   public currentWallet: WalletModel
 
   /**
-   * Known wallets identifiers
-   * @var {string[]}
+   * Known wallets
    */
-  public knownWallets: string[]
+  public knownWallets: WalletModel[]
 
   /**
    * Wallets repository
@@ -78,7 +77,7 @@ export class WalletSelectorFieldTs extends Vue {
   }
 
   public get currentWallets(): WalletModel[] {
-    return this.walletService.getKnownWallets(this.knownWallets)
+    return this.knownWallets
   }
 
 /// end-region computed properties getter/setter

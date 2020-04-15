@@ -18,7 +18,6 @@
           :id="value.id"
           :absolute-amount="value.amount"
           :show-ticker="true"
-          :ticker="value.mosaicHex"
         />
       </span>
       <span v-else>
@@ -30,10 +29,12 @@
 
 <script lang="ts">
 // external dependencies
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {Mosaic} from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Mosaic } from 'symbol-sdk'
+
 // configuration
 import networkConfig from '@/../config/network.conf.json'
+
 // child components
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 

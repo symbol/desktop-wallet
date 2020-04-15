@@ -21,7 +21,6 @@ import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import {WalletService} from '@/services/WalletService'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {AccountModel} from '@/core/database/entities/AccountModel'
-import {AccountService} from '@/services/AccountService'
 
 @Component({
   computed: {
@@ -69,46 +68,32 @@ export default class FinalizeTs extends Vue {
   public walletService: WalletService = new WalletService()
 
   /**
-   * Accounts Repository
-   * @var {AccountService}
-   */
-  public accountService: AccountService = new AccountService()
-
-  /**
    * Finalize the account creation process by adding
    * the wallet created from mnemonic pass phrase.
    * @return {void}
    */
   public async submit() {
-    try {
-      // create account by mnemonic
-      const wallet = this.walletService.getDefaultWallet(
-        this.currentAccount,
-        this.currentMnemonic,
-        this.currentPassword,
-        this.networkType,
-      )
 
-      // execute store actions
-      await this.$store.dispatch('account/ADD_WALLET', wallet)
-      await this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
-      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', [wallet.id])
-      await this.$store.dispatch('temporary/RESET_STATE')
-      await this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+    // create account by mnemonic
+    const wallet = this.walletService.getDefaultWallet(
+      this.currentAccount,
+      this.currentMnemonic,
+      this.currentPassword,
+      this.networkType,
+    )
+    // use repository for storage
+    this.walletService.saveWallet(wallet)
+
+    // execute store actions
+    await this.$store.dispatch('account/ADD_WALLET', wallet)
+    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
+    await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', [wallet.id])
+    await this.$store.dispatch('temporary/RESET_STATE')
+    await this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
 
-      // add wallet to account
-      const wallets = [ ...this.currentAccount.wallets, wallet.id ]
+    // flush and continue
+    return this.$router.push({name: 'dashboard'})
 
-      // use repository for storage
-      this.walletService.saveWallet(wallet)
-
-      this.accountService.updateWallets(this.currentAccount, wallets)
-
-      // flush and continue
-      return this.$router.push({name: 'dashboard'})
-    } catch (error) {
-      throw new Error(error)
-    }
   }
 }

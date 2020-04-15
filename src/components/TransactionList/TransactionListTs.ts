@@ -17,7 +17,6 @@ import {mapGetters} from 'vuex'
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {AggregateTransaction, MosaicId, Transaction} from 'symbol-sdk'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
 import {WalletModel} from '@/core/database/entities/WalletModel'
 import {TransactionService} from '@/services/TransactionService'
 // child components
@@ -31,9 +30,7 @@ import PageTitle from '@/components/PageTitle/PageTitle.vue'
 import TransactionListOptions from '@/components/TransactionListOptions/TransactionListOptions.vue'
 // @ts-ignore
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
-
-// custom types
-type TabName = 'confirmed' | 'unconfirmed' | 'partial'
+import {TransactionGroup} from '@/store/Transaction'
 
 @Component({
   components: {
@@ -45,16 +42,14 @@ type TabName = 'confirmed' | 'unconfirmed' | 'partial'
   },
   computed: {
     ...mapGetters({
-      currentAccount: 'account/currentAccount',
       currentWallet: 'wallet/currentWallet',
-      knownWallets: 'wallet/knownWallets',
       networkMosaic: 'mosaic/networkMosaic',
       currentHeight: 'network/currentHeight',
       // use partial+unconfirmed from store because
       // of ephemeral nature (websocket only here)
-      confirmedTransactions: 'wallet/confirmedTransactions',
-      partialTransactions: 'wallet/partialTransactions',
-      unconfirmedTransactions: 'wallet/unconfirmedTransactions',
+      confirmedTransactions: 'transaction/confirmedTransactions',
+      partialTransactions: 'transaction/partialTransactions',
+      unconfirmedTransactions: 'transaction/unconfirmedTransactions',
     }),
   },
 })
@@ -69,25 +64,11 @@ export class TransactionListTs extends Vue {
   }) pageSize: number
 
   /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
-   */
-  public currentAccount: AccountModel
-
-  /**
    * Currently active wallet
    * @see {Store.Wallet}
    * @var {WalletModel}
    */
   public currentWallet: WalletModel
-
-  /**
-   * Active account's wallets
-   * @see {Store.Wallet}
-   * @var {WalletModel[]}
-   */
-  public knownWallets: WalletModel[]
 
   /**
    * Network block height
@@ -105,23 +86,18 @@ export class TransactionListTs extends Vue {
 
   /**
    * List of confirmed transactions (per-request)
-   * @var {Transaction[]}
    */
-  public confirmedTransactions: Transaction[]
+  public confirmedTransactions: Transaction[] | undefined
 
   /**
-   * List of unconfirmed transactions (websocket only)
-   * @see {Store.Wallet}
-   * @var {Transaction[]}
+   * List of unconfirmed transactions (per-request)
    */
-  public unconfirmedTransactions: Transaction[]
+  public unconfirmedTransactions: Transaction[] | undefined
 
   /**
-   * List of confirmed transactions (websocket only)
-   * @see {Store.Wallet}
-   * @var {Transaction[]}
+   * List of confirmed transactions (per-request)
    */
-  public partialTransactions: Transaction[]
+  public partialTransactions: Transaction[] | undefined
 
   /**
    * Transaction service
@@ -131,9 +107,8 @@ export class TransactionListTs extends Vue {
 
   /**
    * The current tab
-   * @var {string} One of 'confirmed', 'unconfirmed' or 'partial'
    */
-  public currentTab: TabName = 'confirmed'
+  public currentTab: TransactionGroup = TransactionGroup.confirmed
 
   /**
    * The current page number
@@ -180,19 +155,24 @@ export class TransactionListTs extends Vue {
   }
 
   public get totalCountItems(): number {
-    return this.getCurrentTabTransactions(this.currentTab).length
+    const currentTabTransactions = this.getCurrentTabTransactions(this.currentTab)
+    return currentTabTransactions && currentTabTransactions.length
   }
 
   /**
    * Returns the transactions of the current page
-   * from the getter that matches the provided tab name
+   * from the getter that matches the provided tab name.
+   * Undefined means the list is being loaded.
    * @param {TabName} tabName
    * @returns {Transaction[]}
    */
-  public getCurrentPageTransactions(tabName: TabName): Transaction[] {
+  public getCurrentPageTransactions(tabName: TransactionGroup): Transaction[] | undefined {
     // get current tab transactions
     const transactions = this.getCurrentTabTransactions(tabName)
-    if (!transactions || !transactions.length) return []
+    if (!transactions){
+      // loading...
+      return undefined
+    }
 
     // get pagination params
     const start = (this.currentPage - 1) * this.pageSize
@@ -205,13 +185,13 @@ export class TransactionListTs extends Vue {
   /**
    * Returns all the transactions,
    * from the getter that matches the provided tab name
-   * @param {TabName} tabName
+   * @param {TabName} group
    * @returns {Transaction[]}
    */
-  public getCurrentTabTransactions(tabName: TabName): Transaction[] {
-    if (tabName === 'confirmed') return this.confirmedTransactions || []
-    if (tabName === 'unconfirmed') return this.unconfirmedTransactions || []
-    if (tabName === 'partial') return this.partialTransactions || []
+  public getCurrentTabTransactions(group: TransactionGroup): Transaction[] {
+    if (group === TransactionGroup.confirmed) return this.confirmedTransactions
+    if (group === TransactionGroup.unconfirmed) return this.unconfirmedTransactions
+    if (group === TransactionGroup.partial) return this.partialTransactions
     return []
   }
 
@@ -237,13 +217,10 @@ export class TransactionListTs extends Vue {
    * Refresh transaction list
    * @return {void}
    */
-  public async refresh(grp?) {
-    const group = grp ? grp : this.currentTab
-
-    this.$store.dispatch('wallet/REST_FETCH_TRANSACTIONS', {
+  public async refresh(newTab: TransactionGroup | undefined) {
+    const group = newTab ? newTab : this.currentTab
+    this.$store.dispatch('transaction/LOAD_TRANSACTIONS', {
       group: group,
-      address: this.currentWallet.address,
-      pageSize: 100,
     })
   }
 
@@ -274,7 +251,7 @@ export class TransactionListTs extends Vue {
   /**
    * Hook called at each tab change
    */
-  public onTabChange(tab: TabName): void {
+  public onTabChange(tab: TransactionGroup): void {
     this.currentTab = tab
     this.refresh(this.currentTab)
   }
