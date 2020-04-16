@@ -9,14 +9,14 @@ const loadUrlPath = process.platform === 'darwin' ? './dist/index.html' : '../di
 let mainWindow = null
 
 const template = [{
-  label: 'window',
+  label: 'Window',
   role: 'window',
   submenu: [{
-    label: 'minimize',
+    label: 'Minimize',
     accelerator: 'CmdOrCtrl+M',
     role: 'minimize',
   }, {
-    label: 'close',
+    label: 'Close',
     accelerator: 'CmdOrCtrl+W',
     role: 'close',
   }, {
@@ -24,9 +24,9 @@ const template = [{
     accelerator: (function() {
       if (process.platform === 'darwin') {
         return 'Ctrl+Command+F'
-      } else {
-        return 'F11'
       }
+
+      return 'F11'
     })(),
     click: function(item, focusedWindow) {
       if (focusedWindow) {
@@ -38,9 +38,9 @@ const template = [{
     accelerator: (function() {
       if (process.platform === 'darwin') {
         return 'Alt+Command+I'
-      } else {
-        return 'Ctrl+Shift+I'
       }
+
+      return 'Ctrl+Shift+I'
     })(),
     click: function(item, focusedWindow) {
       if (focusedWindow) {
@@ -49,15 +49,15 @@ const template = [{
     },
   }],
 }, {
-  label: 'help',
+  label: 'Help',
   role: 'help',
   submenu: [{
     label: 'Learn More',
     click: function() {
-      electron.shell.openExternal('https://github.com/nemfoundation/nem2-desktop-wallet')
+      electron.shell.openExternal('https://github.com/nemfoundation/symbol-desktop-wallet')
     },
   }, {
-    label: 'NEM',
+    label: 'About NEM',
     click: function() {
       electron.shell.openExternal('https://nem.io/')
     },

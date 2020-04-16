@@ -105,7 +105,7 @@
   "build": {
     "appId": "io.nem.symbol.desktop-wallet",
     "extends": null,
-    "copyright": "NEM Foundation",
+    "copyright": "Copyright © 2019-2020 NEM Foundation",
     "productName": "Symbol Wallet",
     "artifactName": "${name}-${os}-${arch}-${version}.${ext}",
     "icon": "./dist/assets/icons/Icon.icns",
@@ -144,7 +144,7 @@
     "installerIcon": "./assets/icons/Symbol.ico"
   },
   "linux": {
-    "category": "Office;Finance",
+    "category": "Finance",
     "icon": "./assets/icons/Icon.incs"
   }
 }
