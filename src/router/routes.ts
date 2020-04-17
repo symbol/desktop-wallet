@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { createStepImage, importStepImage, officialIcons } from '@/views/resources/Images'
-import { AppRoute } from './AppRoute'
+import {createStepImage, importStepImage,importLedgerStepImage, officialIcons} from '@/views/resources/Images'
+import {AppRoute} from './AppRoute'
 
 export const routes: AppRoute[] = [
   {
@@ -152,6 +152,39 @@ export const routes: AppRoute[] = [
                 component: () => import('@/views/pages/profiles/import-profile/finalize/Finalize.vue'),
               },
             ],
+          },
+          {
+            path: 'import',
+            name: 'accounts.importLedgerAccount',
+            meta: { protected: false },
+            // @ts-ignore
+            component: () => import('@/views/pages/accounts/import-account/ImportAccount.vue'),
+            children: [
+              {
+              path: 'inputLedgerAccountInfo',
+              name: 'accounts.importLedgerAccount',
+              meta: {
+                protected:false,
+                index: 1,
+                isLedger: true, 
+                icon: importLedgerStepImage.importLedgerStepImage1
+              },
+              // @ts-ignore
+              component: () => import('@/views/forms/FormAccountCreation/FormAccountCreation.vue'),
+            },
+            {
+              path: 'importLedger',
+              name: 'accounts.importLedger',
+              meta: {
+                protected: false,
+                index: 1,
+                isLedger: true, 
+                icon: importLedgerStepImage.importLedgerStepImage2,
+
+              },
+              // @ts-ignore
+              component: () => import('@/views/pages/wallets/WalletImportLedger/WalletImportLedger.vue'),
+            }],
           },
         ],
       },
