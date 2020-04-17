@@ -24,7 +24,7 @@ import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletsModel,WalletType} from '@/core/database/entities/WalletsModel'
 import {SettingsModel} from '@/core/database/entities/SettingsModel'
 import {AccountService} from '@/services/AccountService'
 import {SettingService} from '@/services/SettingService'
@@ -46,6 +46,7 @@ import appConfig from '@/../config/app.conf.json'
       currentLanguage: 'app/currentLanguage',
       currentAccount: 'account/currentAccount',
       isAuthenticated: 'account/isAuthenticated',
+      knownWallets: 'wallet/knownWallets',
     }),
   },
   components: {
@@ -100,6 +101,9 @@ export default class LoginPageTs extends Vue {
    * Network types
    * @var {NetworkNodeEntry[]}
    */
+ 
+  public knownWallets: string[]
+
   public networkTypeList: {value: NetworkType, label: string}[] = [
     {value: NetworkType.MIJIN_TEST, label: 'MIJIN_TEST'},
     {value: NetworkType.MAIN_NET, label: 'MAIN_NET'},
@@ -204,6 +208,24 @@ export default class LoginPageTs extends Vue {
    * Process login request.
    * @return {void}
    */
+
+  isNotHardwareWallet(wallet : any):boolean{
+    let flag2 =false
+    
+    const existingWallets = Object.values(this.walletsRepository.collect())
+    existingWallets.filter(w=>{
+      if (w.getIdentifier()==wallet){
+        if (w.values.get("type") !== WalletType.fromDescriptor('Ledger')  ) {
+        
+        flag2 = true
+      } 
+      else flag2 = false
+    }
+  }
+  )
+    return flag2
+  }
+
   private async processLogin() {
     const identifier = this.formItems.currentAccountName
     const accountService = new AccountService(this.$store)
@@ -233,9 +255,9 @@ export default class LoginPageTs extends Vue {
     if (accountPass !== passwordHash) {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
     }
-
-    // if account setup was not finalized, redirect
-    if (!account.values.has('seed') || !account.values.get('seed').length) {
+    
+     // if account setup was not finalized, redirect
+    if ((!account.values.has('seed') || !account.values.get('seed').length) && (account.values.get('wallets').every(this.isNotHardwareWallet)) ) { //
       this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
       this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
       this.$store.dispatch('diagnostic/ADD_WARNING', `Account has not setup mnemonic pass phrase, redirecting: ${account.getIdentifier()}`)

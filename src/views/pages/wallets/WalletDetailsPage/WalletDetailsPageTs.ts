@@ -18,7 +18,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletsModel,WalletType} from '@/core/database/entities/WalletsModel'
 
 // child components
 // @ts-ignore
@@ -85,6 +85,12 @@ export class WalletDetailsPageTs extends Vue {
    * @param item
    * @return {boolean}
    */
+  public isLedger : boolean;
+  created() {
+    if(this.currentWallet.values.get('type')==WalletType.fromDescriptor("Ledger")){
+      this.isLedger = true
+    } else this.isLedger= false
+  }
   public isSeedWallet(wallet: WalletsModel): boolean {
     return wallet.values.get('seed') && wallet.values.get('seed').length
   }

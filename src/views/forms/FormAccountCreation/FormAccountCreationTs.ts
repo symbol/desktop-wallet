@@ -56,6 +56,12 @@ export class FormAccountCreationTs extends Vue {
    * @see {Store.Account}
    * @var {string}
    */
+  isLedger = false;
+  created() {
+    const {isLedger} = this.$route.meta
+    this.isLedger = isLedger
+  }
+
   public currentAccount: AccountsModel
 
   /**
@@ -162,6 +168,10 @@ export class FormAccountCreationTs extends Vue {
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
     // flush and continue
-    this.$router.push({name: this.nextPage})
+    if(!this.isLedger){
+      this.$router.push({name: this.nextPage})}
+    else{
+      this.$router.push("importLedger")
+    }
   }
 }

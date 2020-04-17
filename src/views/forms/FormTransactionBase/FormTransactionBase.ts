@@ -22,12 +22,22 @@ import {
   PublicAccount,
   NamespaceId,
   NetworkType,
+  Account,
+  Address,
+  RepositoryFactoryHttp,
+  LockFundsTransaction,
+  AggregateTransaction,
+  Deadline,
+  UInt64,
+  SignedTransaction,
 } from 'symbol-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
+import {SymbolLedger} from '@/core/utils/ledger'
+import {AccountsModel} from '@/core/database/entities/AccountsModel'
 // internal dependencies
-import {WalletsModel} from '@/core/database/entities/WalletsModel'
+import {WalletsModel,WalletType} from '@/core/database/entities/WalletsModel'
 import {TransactionFactory} from '@/core/transactions/TransactionFactory'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
@@ -46,11 +56,14 @@ import {MultisigService} from '@/services/MultisigService'
     isCosignatoryMode: 'wallet/isCosignatoryMode',
     networkMosaic: 'mosaic/networkMosaic',
     stagedTransactions: 'wallet/stagedTransactions',
+    signedTransactions: 'wallet/signedTransactions',
     mosaicsInfo: 'mosaic/mosaicsInfoList',
     mosaicsInfoByHex: 'mosaic/mosaicsInfo',
     mosaicsNames: 'mosaic/mosaicsNames',
     namespacesNames: 'namespace/namespacesNames',
     currentSignerMultisigInfo: 'wallet/currentSignerMultisigInfo',
+    currentPeer: 'network/currentPeer',
+    currentAccount: 'account/currentAccount',
   })},
 })
 export class FormTransactionBase extends Vue {
@@ -327,10 +340,17 @@ export class FormTransactionBase extends Vue {
    * Process form input
    * @return {void}
    */
+  public currentAccount: AccountsModel
+  public currentPeer: Record<string, any>
+  public signedTransactions: SignedTransaction[]
+
   public async onSubmit() {
     const transactions = this.getTransactions()
 
     this.$store.dispatch('diagnostic/ADD_DEBUG', `Adding ${transactions.length} transaction(s) to stage (prepared & unsigned)`)
+    const currentFee = transactions.map(t=>{
+      return t.maxFee
+    } )
 
     // - check whether transactions must be aggregated
     // - also set isMultisig flag in case of cosignatory mode
@@ -338,20 +358,167 @@ export class FormTransactionBase extends Vue {
       this.$store.commit('wallet/stageOptions', {
         isAggregate: true,
         isMultisig: this.isMultisigMode(),
+        
       })
-    }
+    }     
+  const options = this.$store.getters['wallet/stageOptions']
+  //check isLedger wallet
+  if(this.currentWallet.values.get('type')== WalletType.fromDescriptor('Ledger')){
+    this.$Notice.success({
+      title: this['$t']('Verify information in your device!') + ''
+    })
+    const nodeUrl = Object.values(this.currentPeer)[3]
+    const signer = this.currentSigner.publicKey;//accountResult.publicKey;
+    const transport = await TransportWebUSB.create();
+    const symbolLedger = new SymbolLedger(transport, "XYM");
+    const currentPath = this.currentWallet.values.get('path')
+    const accountIndex = Number(currentPath.substring(currentPath.length-2,currentPath.length-1))
+    const networkType =  Number(currentPath.substring(currentPath.length-10,currentPath.length-7))
+    const accountResult = await symbolLedger.getAccount(`m/44'/43'/${networkType}'/0'/${accountIndex}'`)
+    const { address, publicKey, path } = accountResult;
+    const generationHash = this.$store.getters['network/generationHash']
+    // const addr = Address.createFromPublicKey(signer,this.networkType)
+    try {
+        //Get account from ledger.
+        const signedTransactions =[]
+        
+        
+        if (options.isAggregate ){
+          if(!options.isMultisig){ //Create New Mosaics
+            const aggregateTx = AggregateTransaction.createComplete(
+              Deadline.create(),
+              // - format as `InnerTransaction`
+              transactions.map(t => t.toAggregate(this.currentSigner)),
+              networkType,
+              [],
+              UInt64.fromUint(this.defaultFee),
+            )
 
-    // - add transactions to stage (to be signed)
+            const signature = await symbolLedger.signTransaction(path,aggregateTx, generationHash, publicKey) //`m/44'/43'/${networkType}'/0'/${accountIndex}'`
+            transport.close()
+            this.$store.commit('wallet/addSignedTransaction', signature)
+            signedTransactions.push(signature)
+            
+            
+            // - notify diagnostics
+            this.$store.dispatch('diagnostic/ADD_DEBUG', `Signed aggregate transaction with account ${address} and result: ${JSON.stringify({ // addr.plain()
+              hash: signature.hash,
+              payload: signature.payload,
+            })}`)
+            // - reset transaction stage
+            this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
+            // - notify about successful transaction announce
+            const debug = `Count of transactions signed:  ${signedTransactions.length}`
+            this.$store.dispatch('diagnostic/ADD_DEBUG', debug)
+            this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
+            // this.$emit('success', this.currentSigner) // implement in onConfirmationSuccess
+            await this.onConfirmationSuccess(this.currentSigner)
+          } 
+          else if(options.isMultisig ) { // && !isCosig  modify ledger account to multisig, && !isCosig 
+            const currentSigner = this.$store.getters['wallet/currentSigner']
+            const multisigAccount = PublicAccount.createFromPublicKey(
+              currentSigner.values.get('publicKey'),
+              this.networkType,
+            )
+            const networkType = this.$store.getters['network/networkType']
+            const networkMosaic = this.$store.getters['mosaic/networkMosaic']
+            const networkProps = this.$store.getters['network/properties']
+            const signedTransactions = []
+        
+            // - aggregate staged transactions
+            const aggregateTx = AggregateTransaction.createBonded(
+              Deadline.create(),
+              // - format as `InnerTransaction`
+              transactions.map(t => t.toAggregate(multisigAccount)),
+              networkType,
+              [],
+              UInt64.fromUint(this.defaultFee),
+            )
+
+            // - sign aggregate transaction and create lock
+            const signedTx  = await symbolLedger.signTransaction(path,aggregateTx, generationHash, publicKey) //`m/44'/43'/${networkType}'/0'/${accountIndex}'`
+            const hashLock = LockFundsTransaction.create(
+              Deadline.create(),
+              new Mosaic(
+                networkMosaic,
+                UInt64.fromUint(networkProps.lockedFundsPerAggregate),
+              ),
+              UInt64.fromUint(1000), // duration=1000
+              signedTx,
+              networkType,
+              UInt64.fromUint(this.defaultFee) //currentFee[transactions.length-1]
+            )
+            
+            this.$Notice.success({
+              title: this['$t']('Sign LockFundTransaction to finish your registration!') + ''
+            })
+            // - sign hash lock and push
+            const signedLock = await symbolLedger.signTransaction(`m/44'/43'/${networkType}'/0'/${accountIndex}'`,hashLock, this.generationHash, publicKey)
+
+            // - push signed transactions (order matters)
+            this.$store.commit('wallet/addSignedTransaction', signedLock)
+            this.$store.commit('wallet/addSignedTransaction', signedTx)
+            signedTransactions.push(signedLock)
+            signedTransactions.push(signedTx)
+
+            // - notify diagnostics
+            this.$store.dispatch('diagnostic/ADD_DEBUG', `Signed hash lock and aggregate bonded for account ${multisigAccount.address.plain() 
+            } with cosignatory ${this.currentWallet.objects.address.plain()} and result: ${JSON.stringify({
+              hashLockTransactionHash: signedTransactions[0].hash,
+              aggregateTransactionHash: signedTransactions[1].hash,
+            })}`)
+            // - reset transaction stage
+            this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
+
+            // - notify about successful transaction announce
+            const debug = `Count of transactions signed:  ${signedTransactions.length}`
+            this.$store.dispatch('diagnostic/ADD_DEBUG', debug)
+            this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
+            this.$emit('success',this.currentWallet.objects.publicAccount)
+            await this.onConfirmationSuccess(this.currentWallet.objects.publicAccount)
+          } 
+        } else {
+          await Promise.all(transactions.map(
+            async (transaction) => {
+              await this.$store.dispatch(
+                'wallet/ADD_STAGED_TRANSACTION',
+                transaction,
+              )
+              const signature = await symbolLedger.signTransaction(path, transaction, this.generationHash, signer) //`m/44'/43'/${networkType}'/0'/${accountIndex}'`
+              transport.close()
+
+              //Announce the transaction
+              const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
+              const transactionHttp = repositoryFactory.createTransactionRepository();
+              transactionHttp
+              .announce(signature)
+              .subscribe(
+                  (x) => console.log(x),
+                  (err) => console.error(err));
+              }))
+            }
+  
+    } catch (err) {
+      transport.close()
+      this.$Notice.error({
+        title: this['$t']('Transaction canceled!') + ''
+      })
+        console.log(err);
+    }  
+  }
+  // This account is not Ledger account
+  else{
     await Promise.all(transactions.map(
       async (transaction) => {
         await this.$store.dispatch(
           'wallet/ADD_STAGED_TRANSACTION',
           transaction,
         )
-      }))
-
     // - open signature modal
     this.onShowConfirmationModal()
+    }))
+  }
+    this.resetForm()
   }
 
   /**

@@ -28,6 +28,20 @@ export default class CreateAccountTs extends Vue {
     'Verify_Mnemonic_phrase',
     'Finish',
   ]
+  public LedgerStepBarTitleList = [
+    'Create Account',
+    'Import Ledger',
+  ]
+  isLedger = false;
+  public titleList = []
+  public created() {
+    const {isLedger} = this.$route.meta
+    
+    if (isLedger) {
+        this.titleList = this.LedgerStepBarTitleList
+    }   else
+    {this.titleList = this.StepBarTitleList}
+}
 
   /**
    * Hook called when the page is mounted

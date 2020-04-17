@@ -142,6 +142,17 @@ export class WalletSelectorPanelTs extends Vue {
    * Hook called when the component is created
    * @return {void}
    */
+
+
+  public isLedger : boolean;
+
+  checkLedger():boolean {
+    if(this.currentWallet.values.get('type')==WalletType.fromDescriptor("Ledger")){
+      this.isLedger = true
+    } else this.isLedger= false
+      return this.isLedger
+  }
+
   public async created() {
     this.service = new WalletService(this.$store)
     const mosaicService = new MosaicService(this.$store)

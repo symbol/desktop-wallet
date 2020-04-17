@@ -24,6 +24,7 @@ export class WalletType {
   public static readonly PRIVATE_KEY = 2
   public static readonly KEYSTORE = 3
   public static readonly TREZOR = 4
+  public static readonly LEDGER = 5
 
   public static fromDescriptor(descriptor: string) {
     switch(descriptor) {
@@ -32,6 +33,7 @@ export class WalletType {
       case 'Pk': return WalletType.PRIVATE_KEY
       case 'Seed': return WalletType.SEED
       case 'Trezor': return WalletType.TREZOR
+      case 'Ledger': return WalletType.LEDGER
     }
   }
 }
