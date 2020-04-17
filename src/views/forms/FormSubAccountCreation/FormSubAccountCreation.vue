@@ -7,10 +7,10 @@
             <template v-slot:label> {{ $t('form_label_new_account_type') }}: </template>
             <template v-slot:inputs>
               <select v-model="formItems.type" class="input-size input-style">
-                <option value="child_account">
+                <option v-show="!isPrivateKeyProfile" value="child_account">
                   {{ $t('option_child_account') }}
                 </option>
-                <option value="privatekey_account">
+                <option v-show="isPrivateKeyProfile" value="privatekey_account">
                   {{ $t('option_privatekey_account') }}
                 </option>
               </select>

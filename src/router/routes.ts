@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { createStepImage, importStepImage, officialIcons } from '@/views/resources/Images'
+import { createStepImage, importStepImage, officialIcons, importPrivateKeyStepImage } from '@/views/resources/Images'
 import { AppRoute } from './AppRoute'
 
 export const routes: AppRoute[] = [
@@ -150,6 +150,49 @@ export const routes: AppRoute[] = [
                 },
                 // @ts-ignore
                 component: () => import('@/views/pages/profiles/import-profile/finalize/Finalize.vue'),
+              },
+            ],
+          },
+          {
+            path: 'importPrivateKey',
+            name: 'accounts.importPrivateKey',
+            meta: {
+              protected: false,
+            },
+            // @ts-ignore
+            component: () => import('@/views/pages/profiles/import-private-key/ImportPrivateKey.vue'),
+            children: [
+              {
+                path: 'fillInfo',
+                name: 'accounts.importPrivateKey.fillInfo',
+                meta: {
+                  protected: false,
+                  nextPage: 'accounts.importPrivateKey.input',
+                  icon: importPrivateKeyStepImage.importPrivateKeyStepImage1,
+                },
+                // @ts-ignore
+                component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
+              },
+              {
+                path: 'input',
+                name: 'accounts.importPrivateKey.input',
+                meta: {
+                  protected: false,
+                  icon: importPrivateKeyStepImage.importPrivateKeyStepImage2,
+                },
+                // @ts-ignore
+                component: () =>
+                  import('@/views/pages/profiles/import-private-key/input-private-key/InputPrivateKey.vue'),
+              },
+              {
+                path: 'finalize',
+                name: 'accounts.importPrivateKey.finalize',
+                meta: {
+                  protected: false,
+                  icon: importPrivateKeyStepImage.importPrivateKeyStepImage3,
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/profiles/import-private-key/finalize/Finalize.vue'),
               },
             ],
           },

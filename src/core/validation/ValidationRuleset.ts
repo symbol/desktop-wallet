@@ -50,7 +50,7 @@ export const createValidationRuleset = ({
     },
     password: `required|min:${MIN_PASSWORD_LENGTH}|passwordRegex`,
     previousPassword: 'required|confirmLock:cipher',
-    privateKey: 'min:64|max:64|privateKey',
+    privateKey: 'required|min:64|max:64|privateKey',
     recipientPublicKey: 'required|publicKey',
     supply: `required|integer|min_value: 1|max_value:${maxMosaicAtomicUnits}`,
     url: 'required|url',

@@ -232,7 +232,7 @@
   "address_book": "Address book",
   "instant_exchanges": "Instant Exchanges",
   "mnemonic": "Mnemonic",
-  "privatekey": "Private Key",
+  "private_key": "Private Key",
   "keystore": "Keystore",
   "import": "Import ",
   "back": "Back",
@@ -1129,5 +1129,20 @@
   "Estimated_period_of_validity": "Estimated Period Of Validity",
   "no_data_namespace_tips": "You do not have a namespace, please create one first",
   "current_validity": "Expires in",
-  "copy_failed": "Copy failed"
+  "copy_failed": "Copy failed",
+  "import_private_key": "Import private key",
+  "public_key": "Public key",
+  "network": "Network",
+  "import_private_key_input_tip1": "Enter your private key in the input field on the left.",
+  "import_private_key_input_tip2": "Please make sure your private key is correct.",
+  "import_private_key_input_tip3": "When you enter the correct private key, the corresponding public key and address will appear at the bottom of the input box.",
+  "import_private_key_input_tip4": "Note the network type.",
+  "import_private_key_account_successfully": "Account imported successfully.",
+  "import_private_key_account_successfully_title_tips": "The current profile was created using a private key. It is not possible to add other accounts to it. Hope you have a pleasant experience and journey.",
+  "import_private_key_finalize_tip_text1": "Please, make sure to backup your private key in a safe place. It is only encrypted and mounted under you local current profile. It has nothing to do with any mnemonic.",
+
+  "enter_your_private_key": "Enter your private key",
+  "you_can_Import_private_key_here": "You can also <b>import a private key</b>.",
+  "import_private_key_profile_description_tip1": "Before you start using this software, you need to create a profile name and password. Used to encrypt your account information locally.",
+  "import_private_key_profile_description_tip2": "The password will be used to secure the access to your profile, like 'Transfer' and any transaction operations."
 }

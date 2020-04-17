@@ -190,8 +190,10 @@ export default class LoginPageTs extends Vue {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
     }
 
-    // if profile setup was not finalized, redirect
-    if (!profile.seed) {
+    // the profile which is created by import private key has no seed but wallet
+    const shouldPerfectProfile: boolean = !this.currentProfile.seed && knownAccounts.length === 0
+    // if account setup was not finalized, redirect
+    if (shouldPerfectProfile) {
       this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile)
       this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
       this.$store.dispatch(

@@ -140,8 +140,18 @@
         </form>
       </ValidationObserver>
     </FormWrapper>
-
-    <div class="right-hints-section">
+    <div v-if="nextPage === 'accounts.importPrivateKey.input'" class="right-hints-section">
+      <p class="text1">
+        {{ $t('profile_description') }}
+      </p>
+      <p class="text">
+        {{ $t('import_private_key_profile_description_tip1') }}
+      </p>
+      <p class="text">
+        {{ $t('import_private_key_profile_description_tip2') }}
+      </p>
+    </div>
+    <div v-else class="right-hints-section">
       <p class="text1">
         {{ $t('profile_description') }}
       </p>

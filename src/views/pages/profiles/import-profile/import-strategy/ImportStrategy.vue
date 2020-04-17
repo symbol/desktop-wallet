@@ -25,7 +25,12 @@
           </p>
         </div>
       </div>
-      <div class="bottom-text">{{ $t('More_Access_Tool_is_working') }}...</div>
+      <div class="bottom-text">
+        <div class="link" @click="$router.push({ name: 'accounts.importPrivateKey.fillInfo' })">
+          <span v-html="$t('you_can_Import_private_key_here')" />
+        </div>
+        <div>{{ $t('More_Access_Tool_is_working') }}...</div>
+      </div>
     </div>
   </div>
 </template>

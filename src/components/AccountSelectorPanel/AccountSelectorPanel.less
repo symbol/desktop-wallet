@@ -123,16 +123,16 @@
 
   .account-switch-footer-container {
     padding: 0.3rem 0.3rem;
-    display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 100%;
     text-align: center;
     font-size: @smallerFont;
     font-weight: 400;
     line-height: 22px;
     color: rgba(68, 0, 78, 1);
+    width: 100%;
 
     .add-account {
+      width: 50%;
+      display: inline-block;
       .ivu-icon {
         padding-right: 3px;
         padding-bottom: 2px;
@@ -141,6 +141,8 @@
     }
 
     .account-switch-header-right-container {
+      width: 50%;
+      display: inline-block;
       img {
         width: 18px;
         height: 16px;
