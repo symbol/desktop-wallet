@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {Address, AggregateTransaction, BlockInfo, QueryParams, RepositoryFactory, Transaction, TransactionType, UInt64} from 'symbol-sdk'
+import {Address, AggregateTransaction, BlockInfo, CosignatureSignedTransaction, QueryParams, RepositoryFactory, Transaction, TransactionType, UInt64} from 'symbol-sdk'
 // internal dependencies
 import {AwaitLock} from './AwaitLock'
-import {Observable} from 'rxjs'
+import {combineLatest, Observable} from 'rxjs'
 import * as _ from 'lodash'
+import {map} from 'rxjs/operators'
 
 const Lock = AwaitLock.create()
 
 export enum TransactionGroup {
   confirmed = 'confirmed',
   unconfirmed = 'unconfirmed',
-  partial = 'partial'
+  partial = 'partial',
+  all = 'all'
 }
 
 
@@ -63,14 +65,16 @@ function conditionalSort<T>(array: T[] | undefined, comparator: (a: T, b: T) => 
 
 interface TransactionState {
   initialized: boolean
-  confirmedTransactions: Transaction[] | undefined
-  unconfirmedTransactions: Transaction[] | undefined
-  partialTransactions: Transaction[] | undefined
+  isFetchingTransactions: boolean
+  confirmedTransactions: Transaction[]
+  unconfirmedTransactions: Transaction[]
+  partialTransactions: Transaction[]
   blocks: BlockInfo[]
 }
 
 const transactionState: TransactionState = {
   initialized: false,
+  isFetchingTransactions: false,
   confirmedTransactions: [],
   unconfirmedTransactions: [],
   partialTransactions: [],
@@ -81,6 +85,7 @@ export default {
   state: transactionState,
   getters: {
     getInitialized: (state: TransactionState) => state.initialized,
+    isFetchingTransactions: (state: TransactionState) => state.isFetchingTransactions,
     confirmedTransactions: (state: TransactionState) => state.confirmedTransactions,
     unconfirmedTransactions: (state: TransactionState) => state.unconfirmedTransactions,
     partialTransactions: (state: TransactionState) => state.partialTransactions,
@@ -88,6 +93,8 @@ export default {
   },
   mutations: {
     setInitialized: (state: TransactionState, initialized: boolean) => { state.initialized = initialized },
+    isFetchingTransactions: (state: TransactionState, isFetchingTransactions: boolean) =>
+    { state.isFetchingTransactions = isFetchingTransactions },
     confirmedTransactions: (state: TransactionState, confirmedTransactions: Transaction[] | undefined) => {
       state.confirmedTransactions = conditionalSort(confirmedTransactions,
         confirmedTransactionComparator)
@@ -123,43 +130,52 @@ export default {
     },
 
     LOAD_TRANSACTIONS({commit, rootGetters, dispatch}, {group}:
-    { group: TransactionGroup | undefined } = {group: undefined}) {
+    { group: TransactionGroup } = {group: TransactionGroup.all}) {
       const currentSignerAddress: Address = rootGetters['wallet/currentSignerAddress']
       if (!currentSignerAddress) {
         return
       }
       const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory']
       const accountRepository = repositoryFactory.createAccountRepository()
-      const subscribeTransactions = (group: TransactionGroup, transactionCall: Observable<Transaction[]>) => {
+      const subscribeTransactions = (group: TransactionGroup, transactionCall: Observable<Transaction[]>):
+      Observable<Transaction[]> => {
         const attributeName = transactionGroupToStateVariable(group)
-        commit(attributeName, undefined)
-        transactionCall.subscribe((transactions) => {
+        commit(attributeName, [])
+        return transactionCall.pipe(map((transactions) => {
           commit(attributeName, transactions)
           const heights = _.uniqBy(
             transactions.filter(t => t.transactionInfo && t.transactionInfo.height)
               .map(t => t.transactionInfo.height),
             h => h.compact())
           dispatch('LOAD_BLOCKS', heights)
-        }, err => {
-          console.log('HTTP Error retrieving transactions', err)
-          commit(attributeName, [])
-        })
-      }
-      const queryParams = new QueryParams({pageSize: 100})
-      if (!group || group === TransactionGroup.confirmed) {
-        subscribeTransactions(TransactionGroup.confirmed,
-          accountRepository.getAccountTransactions(currentSignerAddress, queryParams))
-      }
-      if (!group || group === TransactionGroup.unconfirmed) {
-        subscribeTransactions(TransactionGroup.unconfirmed,
-          accountRepository.getAccountUnconfirmedTransactions(currentSignerAddress, queryParams))
+          return transactions
+        }))
       }
 
-      if (!group || group === TransactionGroup.partial) {
-        subscribeTransactions(TransactionGroup.partial,
-          accountRepository.getAccountPartialTransactions(currentSignerAddress, queryParams))
+      const subscriptions: Observable<Transaction[]>[] = []
+      commit('isFetchingTransactions', true)
+
+      const queryParams = new QueryParams({pageSize: 100})
+      if (group === TransactionGroup.all || group === TransactionGroup.confirmed) {
+        subscriptions.push(subscribeTransactions(TransactionGroup.confirmed,
+          accountRepository.getAccountTransactions(currentSignerAddress, queryParams)))
       }
+      if (group === TransactionGroup.all || group === TransactionGroup.unconfirmed) {
+        subscriptions.push(subscribeTransactions(TransactionGroup.unconfirmed,
+          accountRepository.getAccountUnconfirmedTransactions(currentSignerAddress, queryParams)))
+      }
+
+      if (group === TransactionGroup.all || group === TransactionGroup.partial) {
+        subscriptions.push(subscribeTransactions(TransactionGroup.partial,
+          accountRepository.getAccountPartialTransactions(currentSignerAddress, queryParams)))
+      }
+
+      combineLatest(subscriptions)
+        .subscribe({
+          complete: () => commit('isFetchingTransactions', false),
+        })
     },
+
 
     SIGNER_CHANGED({dispatch}) {
       dispatch('LOAD_TRANSACTIONS')
@@ -167,7 +183,7 @@ export default {
 
     RESET_TRANSACTIONS({commit}) {
       Object.keys(TransactionGroup).forEach((group: TransactionGroup) => {
-        commit(transactionGroupToStateVariable(group), [])
+        if (group !== TransactionGroup.all) {commit(transactionGroupToStateVariable(group), [])}
       })
     },
 
@@ -198,7 +214,8 @@ export default {
       const blockRepository = repositoryFactory.createBlockRepository()
 
       await asyncForEach(heightsToBeLoaded, async (start: UInt64) => {
-        // Async one by one sequentially so we can reuse a previous loading if the height has been found.
+        // Async one by one sequentially so we can reuse a previous loading if the height has been
+        // found.
         if (isUnknownBlock(start)) {
           const infos = await blockRepository.getBlocksByHeightWithLimit(start, 100).toPromise()
           blocks = blocks.concat(infos)
@@ -278,27 +295,27 @@ export default {
 
     },
     /// end-region scoped actions
-  },
 
+    ADD_COSIGNATURE({commit, getters}, transaction: CosignatureSignedTransaction) {
+      if (!transaction || !transaction.parentHash) {
+        throw Error(
+          'Missing mandatory field \'parentHash\' for action transaction/ADD_COSIGNATURE.')
+      }
+      const transactionAttribute = transactionGroupToStateVariable(TransactionGroup.partial)
+      const transactions = getters[transactionAttribute] || []
 
-  ADD_COSIGNATURE({commit, getters}, cosignatureMessage: { parentHash: string }) {
-    if (!cosignatureMessage || !cosignatureMessage.parentHash) {
-      throw Error('Missing mandatory field \'parentHash\' for action transaction/ADD_COSIGNATURE.')
-    }
-    const transactionAttribute = transactionGroupToStateVariable(TransactionGroup.partial)
-    const transactions = getters[transactionAttribute] || []
+      // return if no transactions
+      if (!transactions.length) return
 
-    // return if no transactions
-    if (!transactions.length) return
+      const index = transactions.findIndex(
+        t => t.transactionInfo.hash === transaction.parentHash)
 
-    const index = transactions.findIndex(
-      t => t.transactionInfo.hash === cosignatureMessage.parentHash)
+      // partial tx unknown, @TODO: handle this case (fetch partials)
+      if (index === -1) return
 
-    // partial tx unknown, @TODO: handle this case (fetch partials)
-    if (index === -1) return
-
-    transactions[index] = transactions[index].addCosignatures(cosignatureMessage)
-    commit('partialTransactions', transactions)
+      transactions[index] = transactions[index].addCosignatures(transaction)
+      commit('partialTransactions', transactions)
+    },
   },
 
 }

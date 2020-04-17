@@ -192,9 +192,10 @@ export class FormSubWalletCreationTs extends Vue {
       if (!subWallet) return
 
       // Verify that the import is repeated
-      const hasAddressInfo = this.currentWallets.find(w => w['address'] === subWallet.values.get('address'))
-      if (hasAddressInfo !== undefined){
-        this.$store.dispatch('notification/ADD_ERROR', `This private key already exists. The account name is ${hasAddressInfo['name']}`)
+      const hasAddressInfo = this.knownWallets.find(w => w.address === subWallet.address)
+      if (hasAddressInfo !== undefined) {
+        this.$store.dispatch('notification/ADD_ERROR',
+          `This private key already exists. The account name is ${hasAddressInfo.name}`)
         return null
       }
 

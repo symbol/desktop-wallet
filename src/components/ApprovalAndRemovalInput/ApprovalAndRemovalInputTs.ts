@@ -41,7 +41,6 @@ import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigu
     }),
   },
 })
-@Component
 export class ApprovalAndRemovalInputTs extends Vue {
   /**
    * Value bound to the form v-model

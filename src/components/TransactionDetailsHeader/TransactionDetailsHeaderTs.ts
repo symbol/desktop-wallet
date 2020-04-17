@@ -100,6 +100,7 @@ export class TransactionDetailsHeaderTs extends Vue {
           id: this.networkMosaic,
           mosaicHex: this.networkMosaicTicker,
           amount: this.getFeeAmount(),
+          color: 'red',
         },
         isMosaic: true,
       },

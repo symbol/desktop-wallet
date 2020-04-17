@@ -43,6 +43,7 @@ import ApprovalAndRemovalInput from '@/components/ApprovalAndRemovalInput/Approv
 // @ts-ignore
 import MultisigCosignatoriesDisplay from '@/components/MultisigCosignatoriesDisplay/MultisigCosignatoriesDisplay.vue'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import {mapGetters} from 'vuex'
 
 @Component({
   components: {
@@ -58,6 +59,11 @@ import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigu
     ModalTransactionConfirmation,
     ApprovalAndRemovalInput,
     MultisigCosignatoriesDisplay,
+  },
+  computed: {
+    ...mapGetters({
+      networkConfiguration: 'network/networkConfiguration',
+    }),
   },
 })
 export class FormMultisigAccountModificationTransactionTs extends FormTransactionBase {
@@ -91,7 +97,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     maxFee: 0,
   }
 
-  private networkConfiguration: NetworkConfigurationModel = this.$store.getters['network/networkConfiguration']
+  private networkConfiguration: NetworkConfigurationModel
 
 
   public get multisigOperationType(): 'conversion' | 'modification' {

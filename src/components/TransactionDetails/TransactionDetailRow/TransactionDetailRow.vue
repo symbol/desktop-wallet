@@ -16,6 +16,7 @@
       <span v-else-if="isMosaic">
         <MosaicAmountDisplay
           :id="value.id"
+          :color="value['color']"
           :absolute-amount="value.amount"
           :show-ticker="true"
         />
@@ -43,7 +44,7 @@ export default class TransactionDetailRow extends Vue {
   @Prop({ default: '', required: true }) label: string
   @Prop({ default: '', required: true }) value: string | boolean | number | Mosaic
   @Prop({ default: false, required: false }) isMosaic: boolean
-  
+
   /**
    * Explorer base path
    * @var {string}

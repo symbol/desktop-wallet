@@ -20,20 +20,20 @@
             @click="uiHelpers.copyToClipboard(currentWallet.objects.address.plain())"
           >
         </div>
-      <div v-if="networkCurrency" class="XEM_amount overflow_ellipsis">
-        <div>{{ networkCurrency.ticker }}</div>
-        <div class="amount">
-          <MosaicAmountDisplay
-            :absolute-amount="absoluteBalance"
-            :size="'biggest'"
-          />
+        <div v-if="networkCurrency" class="XEM_amount overflow_ellipsis">
+          <div>{{ networkCurrency.ticker }}</div>
+          <div class="amount">
+            <MosaicAmountDisplay
+              :absolute-amount="absoluteBalance"
+              :size="'biggest'"
+            />
+          </div>
         </div>
+        <img
+          class="balance-background"
+          src="@/views/resources/img/monitor/dash-board/dashboardWalletBalanceBackground.png"
+        >
       </div>
-      <img
-        class="balance-background"
-        src="@/views/resources/img/monitor/dash-board/dashboardWalletBalanceBackground.png"
-      >
-    </div>
 
       <div class="bottom_account_info radius xym-outline">
         <Spin

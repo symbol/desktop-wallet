@@ -28,10 +28,11 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue'
 // @ts-ignore
 import ActionDisplay from '@/components/ActionDisplay/ActionDisplay.vue'
+
 // configuration
 import networkConfig from '@/../config/network.conf.json'
+
 // resources
-import {officialIcons, transactionTypeToIcon} from '@/views/resources/Images'
 import {transactionTypeToIcon, officialIcons, dashboardImages} from '@/views/resources/Images'
 
 @Component({
@@ -47,11 +48,8 @@ export class TransactionRowTs extends Vue {
   @Prop({default: []})
   public transaction: Transaction
 
-  @Prop({
-    default: [],
-  }) transaction: Transaction
-  @Prop({default: false}) isPartial: boolean
-
+  @Prop({default: false})
+  public isPartial: boolean
 
   /**
    * Transaction service

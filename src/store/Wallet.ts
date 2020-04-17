@@ -262,6 +262,9 @@ export default {
 
     async SET_CURRENT_SIGNER({commit, dispatch, getters, rootGetters},
       {publicKey}: { publicKey: string }) {
+      if (!publicKey){
+        throw new Error('Public Key must be provided when calling wallet/SET_CURRENT_SIGNER!')
+      }
       const networkType: NetworkType = rootGetters['network/networkType']
       const currentAccount: AccountModel = rootGetters['account/currentAccount']
       const currentWallet: WalletModel = getters.currentWallet

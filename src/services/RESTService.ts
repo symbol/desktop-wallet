@@ -71,7 +71,7 @@ export class RESTService {
     // partial listeners
     const cosignatureAdded = listener.cosignatureAdded(address).subscribe(
       cosignature => {
-        context.dispatch('wallet/ADD_COSIGNATURE', cosignature, {root: true})
+        context.dispatch('transaction/ADD_COSIGNATURE', cosignature, {root: true})
         context.dispatch('notification/ADD_SUCCESS', NotificationType.COSIGNATURE_ADDED,
           {root: true})
       },

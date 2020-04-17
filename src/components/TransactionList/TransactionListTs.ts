@@ -87,17 +87,17 @@ export class TransactionListTs extends Vue {
   /**
    * List of confirmed transactions (per-request)
    */
-  public confirmedTransactions: Transaction[] | undefined
+  public confirmedTransactions: Transaction[]
 
   /**
    * List of unconfirmed transactions (per-request)
    */
-  public unconfirmedTransactions: Transaction[] | undefined
+  public unconfirmedTransactions: Transaction[]
 
   /**
    * List of confirmed transactions (per-request)
    */
-  public partialTransactions: Transaction[] | undefined
+  public partialTransactions: Transaction[]
 
   /**
    * Transaction service
@@ -106,10 +106,9 @@ export class TransactionListTs extends Vue {
   public service: TransactionService
 
   /**
-   * The current tab
+   * set the default to select all
    */
-  public currentTab: TransactionGroup = TransactionGroup.confirmed
-
+  public selectedOption: TransactionGroup = TransactionGroup.all
   /**
    * The current page number
    * @var {number}
@@ -140,13 +139,10 @@ export class TransactionListTs extends Vue {
    */
   public isAwaitingCosignature: boolean = false
 
-  public getEmptyMessage(){
-    const status = this.selectedOption
-    if(!status.includes(status)){
-      status
-    }
-    return this.selectedOption === 'all' ? 'no_data_transactions' : `no_${this.selectedOption}_transactions`
+  public getEmptyMessage() {
+    return this.selectedOption === TransactionGroup.all ? 'no_data_transactions' : `no_${this.selectedOption}_transactions`
   }
+
   /**
    * Hook called when the component is mounted
    * @return {void}
@@ -162,8 +158,7 @@ export class TransactionListTs extends Vue {
   }
 
   public get totalCountItems(): number {
-    const currentTabTransactions = this.getCurrentTabTransactions(this.currentTab)
-    return currentTabTransactions && currentTabTransactions.length
+    return this.getCurrentTabTransactions(this.selectedOption).length
   }
 
   /**
@@ -173,18 +168,12 @@ export class TransactionListTs extends Vue {
    * @param {TabName} tabName
    * @returns {Transaction[]}
    */
-  public getCurrentPageTransactions(tabName: TransactionGroup): Transaction[] | undefined {
+  public getCurrentPageTransactions(): Transaction[] {
     // get current tab transactions
-    const transactions = this.getCurrentTabTransactions(tabName)
-    if (!transactions){
-      // loading...
-      return undefined
-    }
-
+    const transactions = this.getCurrentTabTransactions(this.selectedOption)
     // get pagination params
     const start = (this.currentPage - 1) * this.pageSize
     const end = this.currentPage * this.pageSize
-
     // slice and return
     return [...transactions].reverse().slice(start, end)
   }
@@ -199,6 +188,9 @@ export class TransactionListTs extends Vue {
     if (group === TransactionGroup.confirmed) return this.confirmedTransactions
     if (group === TransactionGroup.unconfirmed) return this.unconfirmedTransactions
     if (group === TransactionGroup.partial) return this.partialTransactions
+    if (group === TransactionGroup.all) {return [ ...this.confirmedTransactions,
+      ...this.partialTransactions, ...this.unconfirmedTransactions ]}
+
     return []
   }
 
@@ -219,17 +211,14 @@ export class TransactionListTs extends Vue {
   }
 
   /// end-region computed properties getter/setter
-
   /**
    * Refresh transaction list
    * @return {void}
    */
-  public async refresh(newTab: TransactionGroup | undefined) {
-    const group = newTab ? newTab : this.currentTab
-    this.$store.dispatch('transaction/LOAD_TRANSACTIONS', {
-      group: group,
-    })
+  public async getTransactionListByOption(filter: TransactionGroup) {
+    this.selectedOption = filter
   }
+
 
   /**
    * Hook called when a transaction is clicked
@@ -255,13 +244,6 @@ export class TransactionListTs extends Vue {
     this.activePartialTransaction = undefined
   }
 
-  /**
-   * Hook called at each tab change
-   */
-  public onTabChange(tab: TransactionGroup): void {
-    this.currentTab = tab
-    this.refresh(this.currentTab)
-  }
 
   /**
    * Hook called at each page change

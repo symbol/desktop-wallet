@@ -15,18 +15,20 @@
  */
 // external dependencies
 import {mapGetters} from 'vuex'
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import {Component, Prop, Vue} from 'vue-property-decorator'
 import {NetworkType} from 'symbol-sdk'
 // child components
 // @ts-ignore
-import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
+import TransactionAddressFilter from '@/components/TransactionList/TransactionListFilters/TransactionAddressFilter/TransactionAddressFilter.vue'
+// @ts-ignore
+import TransactionStatusFilter from '@/components/TransactionList/TransactionListFilters/TransactionStatusFilter/TransactionStatusFilter.vue'
 import {Signer} from '@/store/Wallet'
 import {WalletModel} from '@/core/database/entities/WalletModel'
 import {TransactionGroup} from '@/store/Transaction'
 
 
 @Component({
-  components: {SignerSelector},
+  components: {TransactionAddressFilter, TransactionStatusFilter},
   computed: {
     ...mapGetters({
       currentSigner: 'wallet/currentSigner',
@@ -36,9 +38,9 @@ import {TransactionGroup} from '@/store/Transaction'
     }),
   },
 })
-export class TransactionListOptionsTs extends Vue {
-  @Prop({default: TransactionGroup.confirmed}) currentTab: TransactionGroup
 
+export class TransactionListFiltersTs extends Vue {
+  @Prop({default: TransactionGroup.confirmed}) currentTab: TransactionGroup
   /**
    * Currently active wallet
    * @var {WalletModel}
@@ -58,63 +60,25 @@ export class TransactionListOptionsTs extends Vue {
    */
   public currentSigner: Signer
 
-  /**
-   * Form fields
-   * @var {Object}
-   */
-  public formItems = {
-    currentSignerPubicKey: this.currentSigner && this.currentSigner.publicKey || '',
-  }
-
-  /**
-   * Whether to show the signer selector
-   * @protected
-   * @type {boolean}
-   */
-  protected showSignerSelector: boolean = false
 
   public signers: Signer[]
+
+  /**
+   * set the default to select all
+   */
+  protected selectedOption: string = 'all'
 
   /**
    * Hook called when the signer selector has changed
    * @protected
    */
   protected onSignerSelectorChange(publicKey: string): void {
-    // set selected signer if the chosen account is a multisig one
-    this.formItems.currentSignerPubicKey = publicKey
-
     // clear previous account transactions
     this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {publicKey})
   }
 
-  /**
-   * Hook called when refresh button is clicked
-   * @protected
-   */
-  protected refresh(): void {
-    this.$store.dispatch('transaction/LOAD_TRANSACTIONS', {group: this.currentTab})
-  }
-
-  /**
-   * Hook called @ component creation
-   * Starts a subscription to handle REST calls for refreshing transactions
-   */
-  public created(): void {
-    this.refresh()
-  }
-
-  public mounted(): void {
-    this.formItems.currentSignerPubicKey = this.currentSigner && this.currentSigner.publicKey || ''
-  }
-
-  /**
-   * Watch for currentWallet changes
-   * Necessary to set the default signer in the selector
-   * @param currentSigner the new signer
-   */
-  @Watch('currentSigner')
-  onCurrentSignerChange(currentSigner: Signer): void {
-    this.formItems.currentSignerPubicKey = currentSigner.publicKey
+  protected onStatusSelectorChange(filter: TransactionGroup) {
+    this.$emit('option-change', filter)
   }
 
   /**
@@ -122,6 +86,8 @@ export class TransactionListOptionsTs extends Vue {
    */
   beforeDestroy(): void {
     // reset the selected signer if it is not the current wallet
-    this.onSignerSelectorChange(this.currentWallet.publicKey)
+    if (this.currentWallet) {
+      this.onSignerSelectorChange(this.currentWallet.publicKey)
+    }
   }
 }
