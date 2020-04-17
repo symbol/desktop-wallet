@@ -1,12 +1,12 @@
 /**
  * Copyright 2020 NEM Foundation (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,34 +16,31 @@
 import {mapGetters} from 'vuex'
 import {Component, Vue} from 'vue-property-decorator'
 import {NetworkType, Password} from 'symbol-sdk'
-
 // internal dependencies
 import {$eventBus} from '@/events'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-import {AccountsRepository} from '@/repositories/AccountsRepository'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
-import {AccountsModel} from '@/core/database/entities/AccountsModel'
-import {WalletsModel,WalletType} from '@/core/database/entities/WalletsModel'
-import {SettingsModel} from '@/core/database/entities/SettingsModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
+import {ProfileModel} from '@/core/database/entities/ProfileModel'
+import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
 import {AccountService} from '@/services/AccountService'
-import {SettingService} from '@/services/SettingService'
-
+import {ProfileService} from '@/services/ProfileService'
 // child components
 // @ts-ignore
-import {ValidationProvider, ValidationObserver} from 'vee-validate'
+import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue'
-
 // configuration
-import appConfig from '@/../config/app.conf.json'
+import {SettingService} from '@/services/SettingService'
+import {SettingsModel} from '@/core/database/entities/SettingsModel'
+import {WalletService} from '@/services/WalletService'
+import {NetworkTypeHelper} from '@/core/utils/NetworkTypeHelper'
 
 @Component({
   computed: {
     ...mapGetters({
-      currentLanguage: 'app/currentLanguage',
       currentAccount: 'account/currentAccount',
       isAuthenticated: 'account/isAuthenticated',
       knownWallets: 'wallet/knownWallets',
@@ -59,37 +56,28 @@ import appConfig from '@/../config/app.conf.json'
 
 export default class LoginPageTs extends Vue {
   /**
-   * Currently active language
-   * @see {Store.AppInfo}
-   * @var {string}
+   * All known accounts
    */
-  public currentLanguage: string
+  private accounts: ProfileModel[]
 
+  /**
+   * Account indexed by network type
+   */
+  private accountsClassifiedByNetworkType: { networkType: NetworkType, accounts: ProfileModel[] }[]
   /**
    * Currently active account
    * @see {Store.Account}
    * @var {string}
    */
-  public currentAccount: AccountsModel
-
-  /**
-   * List of languages
-   * @see {Config.app}
-   * @var {any[]}
-   */
-  public languageList: any[] = appConfig.languages
+  public currentAccount: ProfileModel
 
   /**
    * Accounts repository
-   * @var {AccountsRepository}
+   * @var {AccountService}
    */
-  public accountsRepository = new AccountsRepository()
+  public accountService = new ProfileService()
 
-  /**
-   * Accounts repository
-   * @var {WalletsRepository}
-   */
-  public walletsRepository = new WalletsRepository()
+  public walletService = new AccountService()
 
   /**
    * Validation rules
@@ -120,53 +108,42 @@ export default class LoginPageTs extends Vue {
     hasHint: false,
   }
 
-  /// region computed properties getter/setter
-  get language() {
-    return this.currentLanguage
-  }
-
-  set language(lang) {
-    this.$store.commit('app/SET_LANGUAGE', lang)
-  }
-
-  get accountsClassifiedByNetworkType() {
-    const repository = new AccountsRepository()
-    return repository.getNamesByNetworkType()
-  }
   /// end-region computed properties getter/setter
 
   /**
    * Hook called when the page is mounted
    * @return {void}
    */
-  public mounted() {
-    if (this.currentAccount) {
-      this.formItems.currentAccountName = this.currentAccount.values.get('accountName')
-      return
+  public created() {
+    this.accounts = this.accountService.getProfiles()
+
+    const reducer = (accumulator: { networkType: NetworkType, accounts: ProfileModel[] }[],
+      currentValue: ProfileModel) => {
+
+      const currentAccumulator = accumulator.find(a => a.networkType == currentValue.networkType)
+      if (currentAccumulator) {
+        currentAccumulator.accounts.push(currentValue)
+        return accumulator
+      } else {
+        return [ ...accumulator, {networkType: currentValue.networkType, accounts: [currentValue]}]
+      }
     }
 
-    // no account pre-selected, select first if available
-    const accounts = this.accountsRepository.entries()
-    if (!accounts.size) {
+    this.accountsClassifiedByNetworkType = this.accounts.reduce(reducer, [])
+    if (!this.accounts.length) {
       return
     }
-
     // accounts available, iterate to first account
-    const firstAccount = this.accountsRepository.collect().shift()
-    this.formItems.currentAccountName = firstAccount.values.get('accountName')
+    this.formItems.currentAccountName = this.accounts[0].profileName
   }
 
   /**
    * Getter for network type label
-   * @param {NetworkType} networkType 
+   * @param {NetworkType} networkType
    * @return {string}
    */
   public getNetworkTypeLabel(networkType: NetworkType): string {
-    const findType = this.networkTypeList.find(n => n.value === networkType)
-    if (findType === undefined) {
-      return ''
-    }
-    return findType.label
+    return NetworkTypeHelper.getNetworkTypeLabel(networkType)
   }
 
   /**
@@ -175,23 +152,16 @@ export default class LoginPageTs extends Vue {
    * @return {string}
    */
   public getPasswordHint(): string {
-    const identifier = this.formItems.currentAccountName
-
-    // if account doesn't exist, authentication is not valid
-    if (!this.accountsRepository.find(identifier)) {
-      return ''
-    }
-
-    // account exists, fetch data
-    const account: AccountsModel = this.accountsRepository.read(identifier)
-    return account.values.get('hint')
+    const accountName = this.formItems.currentAccountName
+    const account = this.accountService.getProfileByName(accountName)
+    return account && account.hint || ''
   }
 
   /**
    * Submit action, validates form and logs in user if valid
    * @return {void}
    */
-  public submit() {
+  public async submit() {
     if (!this.formItems.currentAccountName.length) {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.ACCOUNT_NAME_INPUT_ERROR)
     }
@@ -209,68 +179,75 @@ export default class LoginPageTs extends Vue {
    * @return {void}
    */
 
-  isHardwareWallet(wallet: any): boolean{
-    let flag2 = false
-    const existingWallets = Object.values(this.walletsRepository.collect())
-    existingWallets.find(w=>{
-      flag2 = w.getIdentifier()==wallet && w.values.get('type') == WalletType.fromDescriptor('Ledger')
+  isHardwareWallet(): boolean{
+    const walletService = new WalletService()
+    const currentAccountName = this.formItems.currentAccountName
+    const account = this.accountService.getProfileByName(currentAccountName)
+    const existingLedgerWallets = account.accounts.find((w)=>{
+      if(walletService.getWallet(w).type == WalletType.fromDescriptor('Ledger')) {
+        return w
+      }
     })
-    return flag2
+    if(existingLedgerWallets !== ('' || undefined)){
+      return true
+    }
+    return false
   }
 
   private async processLogin() {
-    const identifier = this.formItems.currentAccountName
-    const accountService = new AccountService(this.$store)
-    const settingService = new SettingService(this.$store)
+    const currentAccountName = this.formItems.currentAccountName
+    const account = this.accountService.getProfileByName(currentAccountName)
+    const settingService = new SettingService()
 
     // if account doesn't exist, authentication is not valid
-    if (!this.accountsRepository.find(identifier)) {
+    if (!account) {
       this.$store.dispatch('diagnostic/ADD_ERROR', 'Invalid login attempt')
       return this.$router.push({name: 'accounts.login'})
     }
 
     // account exists, fetch data
-    const account: AccountsModel = this.accountsRepository.read(identifier)
-    const settings: SettingsModel = settingService.getSettings(account)
-    const knownWallets: Map<string, WalletsModel> = this.accountsRepository.fetchRelations(
-      this.walletsRepository,
-      account,
-      'wallets',
-    )
+    const settings: SettingsModel = settingService.getProfileSettings(currentAccountName)
+
+    const knownWallets: AccountModel[] = this.walletService.getKnownAccounts(account.accounts)
+    if (knownWallets.length == 0) {
+      throw new Error('knownWallets is empty')
+    }
 
     // use service to generate password hash
-    const passwordHash = accountService.getPasswordHash(new Password(this.formItems.password))
+    const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password))
 
     // read account's password hash and compare
-    const accountPass = account.values.get('password')
+    const accountPass = account.password
 
     if (accountPass !== passwordHash) {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
     }
-    
+
     // if account setup was not finalized, redirect
-    if ((!account.values.has('seed') || !account.values.get('seed').length) && !(account.values.get('wallets').find(this.isHardwareWallet)!=='') ) { //
+    if (!account.seed && !(this.isHardwareWallet()) ) { //
       this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
       this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
-      this.$store.dispatch('diagnostic/ADD_WARNING', `Account has not setup mnemonic pass phrase, redirecting: ${account.getIdentifier()}`)
+      this.$store.dispatch('diagnostic/ADD_WARNING', 'Account has not setup mnemonic pass phrase, redirecting: ' + currentAccountName)
       return this.$router.push({name: 'accounts.createAccount.generateMnemonic'})
     }
 
     // read default wallet from settings
-    const defaultWalletId = settings.values.get('default_wallet').length
-      ? settings.values.get('default_wallet')
-      : Array.from(knownWallets.values())[0].getIdentifier()
-    const defaultWallet = Array.from(knownWallets.values()).filter(
-      w => w.getIdentifier() === defaultWalletId,
-    )[0]
+    const defaultWalletId = settings.defaultAccount ? settings.defaultAccount : knownWallets[0].id
+    if (!defaultWalletId) {
+      throw new Error('defaultWalletId could not be resolved')
+    }
+    const defaultWallet = knownWallets.find(w => w.id == defaultWalletId)
+    if (!defaultWallet) {
+      throw new Error(`defaultWallet could not be resolved from id ${defaultWalletId}`)
+    }
 
     // LOGIN SUCCESS: update app state
     await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
-    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: defaultWallet})
-    this.$store.dispatch('wallet/SET_KNOWN_WALLETS', account.values.get('wallets'))
-    this.$store.dispatch('diagnostic/ADD_DEBUG', `Account login successful with identifier: ${account.getIdentifier()}`)
+    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', defaultWallet)
+    this.$store.dispatch('wallet/SET_KNOWN_WALLETS', account.accounts)
+    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Account login successful with currentAccountName: ' + currentAccountName)
 
-    $eventBus.$emit('onLogin', identifier)
+    $eventBus.$emit('onLogin', currentAccountName)
     return this.$router.push({name: 'dashboard'})
   }
 }

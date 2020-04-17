@@ -18,7 +18,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 
 // internal dependencies
-import {WalletsModel,WalletType} from '@/core/database/entities/WalletsModel'
+import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
 
 // child components
 // @ts-ignore

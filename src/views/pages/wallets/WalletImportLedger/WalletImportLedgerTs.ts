@@ -3,16 +3,17 @@ import {mapGetters} from 'vuex'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
 import {NetworkType} from 'symbol-sdk'
 import {SymbolLedger} from '@/core/utils/Ledger'
-import {formDataConfig} from '@/views/forms/FormDefaults'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 // internal dependencies
-import {WalletsModel,WalletType} from '@/core/database/entities/WalletsModel'
-import { AccountsModel } from '@/core/database/entities/AccountsModel'
+import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { AccountModel } from '@/core/database/entities/AccountModel'
 import {NotificationType} from '@/core/utils/NotificationType'
 import { Password } from 'symbol-sdk'
-import {WalletService} from '@/services/WalletService'
-import {WalletsRepository} from '@/repositories/WalletsRepository'
-import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {AccountService} from '@/services/AccountService'
+import {ProfileService} from '@/services/ProfileService'
+import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
+
 // child components
 // @ts-ignore
 
@@ -36,14 +37,12 @@ export class WalletImportLedgerTs extends Vue {
    * @see {Store.Wallet}
    * @var {WalletsModel}
    */
-  public currentAccount: AccountsModel
+  public currentAccount: ProfileModel
   public currentPassword: Password
   public currentMnemonic: MnemonicPassPhrase
-  public walletService: WalletService
+  public walletService: AccountService
+  public accountService: ProfileService
   public knownWallets: string[]
-  public accounts: AccountsRepository
-  public walletsRepository: WalletsRepository
-  public accountsRepository: AccountsRepository
   public networkTypeList: {value: NetworkType, label: string}[] = [
     {value: NetworkType.MIJIN_TEST, label: 'MIJIN_TEST'},
     {value: NetworkType.MAIN_NET, label: 'MAIN_NET'},
@@ -52,9 +51,17 @@ export class WalletImportLedgerTs extends Vue {
   ]
   // activeAccount: StoreAccount
   // app:AppInfo
-  public currentWallet: WalletsModel
+  public currentWallet: WalletModel
 
-  ledgerForm = formDataConfig.ledgerImportForm
+  ledgerForm = {
+    networkType: NetworkType.TEST_NET,
+    accountIndex: 0,
+    walletName: 'Ledger Wallet',
+  }
+
+  public created() {
+    this.walletService = new AccountService()
+  }
 
   toWalletDetails() {
     this.$Notice.success({
@@ -62,17 +69,10 @@ export class WalletImportLedgerTs extends Vue {
     })
     this.$router.push('/dashboard')
   }
-  deleteAccountAndBack() {
-    // - delete the temporary account from storage
-    const identifier = this.currentAccount.getIdentifier()
-    this.accounts.delete(identifier)
-    this.$store.dispatch('account/RESET_STATE')
 
-    // - back to previous page
-    this.$router.push({ name: 'accounts.importAccount.info' })
-  }
   toBack() {
     // this.deleteAccountAndBack();
+    this.$store.dispatch('account/RESET_STATE')
     this.$router.push('/accounts/create')
   }
   onNetworkSelected(){
@@ -80,17 +80,17 @@ export class WalletImportLedgerTs extends Vue {
   }
   numExistingLedgerWallets(networkType){
     let num = 0
-    const existingWallets = Object.values(this.walletsRepository.collect())
+    const existingWallets = this.walletService.getAccounts()
     existingWallets.filter(wallet=>{
-      const accountName1 = wallet.values.get('accountName')
+      const accountName1 = wallet.profileName
       let networkTypeLocal
       for (let i = 0, m = existingWallets.length; i < m; i ++) {
-        const accounts = this.accountsRepository.collect()
+        const accounts = this.accountService.getProfiles()
         const account = accounts[i]
-        const accountName2 = account.values.get('accountName')
+        const accountName2 = account.profileName
         if (accountName2 == accountName1){
-          networkTypeLocal = account.values.get('networkType')
-          if ( networkTypeLocal == networkType && wallet.values.get('type') === WalletType.fromDescriptor('Ledger')){
+          networkTypeLocal = account.networkType
+          if ( networkTypeLocal == networkType && wallet.type === WalletType.fromDescriptor('Ledger')){
             num += 1 
           } 
         }    
@@ -111,7 +111,26 @@ export class WalletImportLedgerTs extends Vue {
     }
   }
 
-  async importAccountFromLedger() {
+  public onSubmit(){
+    this.importAccountFromLedger().then(
+      (res)=>{
+        // - use repositories for storage
+        this.walletService.saveAccount(res)
+
+        // - update app state
+        this.$store.dispatch('account/ADD_WALLET', res)
+        this.$store.dispatch('wallet/SET_CURRENT_WALLET', res)
+        this.$store.dispatch('wallet/SET_KNOWN_WALLETS', this.currentAccount.accounts)
+        this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+        this.toWalletDetails()
+        this.$store.dispatch('SET_UI_DISABLED', {
+          isDisabled: false,
+          message: '',
+        })
+      },
+    )
+  }
+  async importAccountFromLedger(): Promise<AccountModel> {
     const { accountIndex, networkType, walletName } = this.ledgerForm
     try {
       this.$Notice.success({
@@ -123,19 +142,22 @@ export class WalletImportLedgerTs extends Vue {
       const { address, publicKey, path } = accountResult
       transport.close()
 
-      this.createFromLedger(
-        walletName,
-        networkType,
-        path,
-        publicKey.toUpperCase(),
-        address)
-      this.toWalletDetails()
+      // add wallet to list
+      
+      const accName = this.currentAccount.profileName
 
-      this.$store.dispatch('SET_UI_DISABLED', {
-        isDisabled: false,
-        message: '',
-      })
-
+      return {
+        id: SimpleObjectStorage.generateIdentifier(),
+        name: walletName,
+        profileName:accName,
+        node: '',
+        type:  WalletType.fromDescriptor('Ledger'),
+        address:address,
+        publicKey: publicKey,
+        encryptedPrivateKey:'',
+        path: path,
+        isMultisig: false,
+      }
     } catch (e) {
       this.$store.dispatch('SET_UI_DISABLED', {
         isDisabled: false,
@@ -144,38 +166,6 @@ export class WalletImportLedgerTs extends Vue {
       this.$Notice.error({
         title: this['$t']('CONDITIONS_OF_USE_NOT_SATISFIED') + '',
       })
-    }
-  }
-  public mounted() {
-    this.walletService = new WalletService(this.$store)
-    this.walletsRepository = new WalletsRepository()
-    this.accountsRepository = new AccountsRepository()
-  }
-
-  createFromLedger(
-    name: string,
-    networkType: NetworkType,
-    path: string,
-    publicKey: string,
-    address: string){
-    try {     
-      // add wallet to list
-      const accName = Object.values(this.currentAccount)[2]
-      const wallet = new WalletsModel(new Map<string, any>([
-        [ 'accountName', accName ],
-        [ 'name', 'Ledger Wallet 1' ],
-        [ 'type', WalletType.fromDescriptor('Ledger') ],
-        [ 'address', address ],
-        [ 'publicKey', publicKey ],
-        [ 'path',path ],
-        [ 'isMultisig', false ],
-      ]))
-      
-      this.walletService.addWalletToAccount(this.currentAccount,wallet)
-
-      return this
-    } catch (error) {
-      throw new Error(error)
     }
   }
 }
