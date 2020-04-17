@@ -27,7 +27,7 @@ import ModalTransactionDetails from '@/views/modals/ModalTransactionDetails/Moda
 // @ts-ignore
 import PageTitle from '@/components/PageTitle/PageTitle.vue'
 // @ts-ignore
-import TransactionListOptions from '@/components/TransactionListOptions/TransactionListOptions.vue'
+import TransactionListFilters from '@/components/TransactionList/TransactionListFilters/TransactionListFilters.vue'
 // @ts-ignore
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
 import {TransactionGroup} from '@/store/Transaction'
@@ -37,7 +37,7 @@ import {TransactionGroup} from '@/store/Transaction'
     ModalTransactionCosignature,
     ModalTransactionDetails,
     PageTitle,
-    TransactionListOptions,
+    TransactionListFilters,
     TransactionTable,
   },
   computed: {
@@ -140,6 +140,13 @@ export class TransactionListTs extends Vue {
    */
   public isAwaitingCosignature: boolean = false
 
+  public getEmptyMessage(){
+    const status = this.selectedOption
+    if(!status.includes(status)){
+      status
+    }
+    return this.selectedOption === 'all' ? 'no_data_transactions' : `no_${this.selectedOption}_transactions`
+  }
   /**
    * Hook called when the component is mounted
    * @return {void}
@@ -262,7 +269,6 @@ export class TransactionListTs extends Vue {
   public onPageChange(page: number): void {
     if (page > this.countPages) page = this.countPages
     else if (page < 1) page = 1
-
     this.currentPage = page
   }
 }

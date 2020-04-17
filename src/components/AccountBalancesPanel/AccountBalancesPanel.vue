@@ -1,25 +1,25 @@
 <template>
-  <div class="balances-panel-container">
-    <div
-      :class="{
-        'top_wallet_address': true,
-        'radius': true,
-        'grayed': isCosignatoryMode,
-        'purpled': !isCosignatoryMode,
-        'xym-outline': true,
-      }"
-    >
-      <div class="wallet_address">
-        <span class="address">
-          {{ currentSignerAddress.plain() }}
-        </span>
-        <img
-          class="pointer"
-          src="@/views/resources/img/monitor/monitorCopyAddress.png"
-          @click="uiHelpers.copyToClipboard(currentWallet.address)"
-        >
-      </div>
-
+  <div class="balances-panel-outer-container">
+    <div class="balances-panel-container">
+      <div
+        :class="{
+          'top_wallet_address': true,
+          'radius': true,
+          'grayed': isCosignatoryMode,
+          'purpled': !isCosignatoryMode,
+          'xym-outline': true,
+        }"
+      >
+        <div class="wallet_address">
+          <span class="address">
+            {{ currentSignerAddress.plain() }}
+          </span>
+          <img
+            class="pointer"
+            src="@/views/resources/img/monitor/monitorCopyAddress.png"
+            @click="uiHelpers.copyToClipboard(currentWallet.objects.address.plain())"
+          >
+        </div>
       <div v-if="networkCurrency" class="XEM_amount overflow_ellipsis">
         <div>{{ networkCurrency.ticker }}</div>
         <div class="amount">
@@ -35,8 +35,7 @@
       >
     </div>
 
-    <div class="bottom_account_info radius xym-outline">
-      <div class="mosaicListWrap">
+      <div class="bottom_account_info radius xym-outline">
         <Spin
           v-if="!currentWallet || !balanceMosaics.length" size="large" fix
           class="absolute"

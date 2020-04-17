@@ -11,6 +11,7 @@
           v-for="transaction in transactionsList"
           :key="transaction.transactionInfo.hash"
           :transaction="transaction"
+          :is-partial="getTransactionStatus(transaction) === 'partial'"
           @click="$emit('click', transaction)"
         />
       </div>
