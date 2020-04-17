@@ -17,10 +17,13 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { createStore } from '@MOCKS/Store'
 import i18n from '@/language/index'
+import VueRouter from 'vue-router'
 
 /// region globals
 const localVue = createLocalVue()
+const router = new VueRouter()
 localVue.use(Vuex)
+localVue.use(VueRouter)
 /// end-region globals
 
 /// region helpers
@@ -61,6 +64,7 @@ export const getComponent = (
     store,
     i18n,
     localVue,
+    router,
   }
 
   if (propsData && Object.keys(propsData).length) {

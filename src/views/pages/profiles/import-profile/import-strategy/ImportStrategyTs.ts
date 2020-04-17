@@ -38,10 +38,10 @@ export default class ImportStrategyTs extends Vue {
       route: 'profiles.importProfile.info',
     },
     {
-      image: walletTypeImages.trezorImg,
-      title: 'access_trezor',
-      description: 'access_trezor_account',
-      route: null,
+      image: walletTypeImages.privateKeyImportImg,
+      title: 'import_private_key',
+      description: 'import_private_key_description',
+      route: 'profiles.importPrivateKey.fillInfo',
     },
     {
       image: walletTypeImages.ledgerImg,

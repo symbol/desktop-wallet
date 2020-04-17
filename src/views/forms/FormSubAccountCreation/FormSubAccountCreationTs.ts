@@ -54,6 +54,8 @@ const { MAX_SEED_ACCOUNTS_NUMBER } = appConfig.constants
       networkType: 'network/networkType',
       currentProfile: 'profile/currentProfile',
       knownAccounts: 'account/knownAccounts',
+      currentAccount: 'wallet/currentAccount',
+      isPrivateKeyProfile: 'profile/isPrivateKeyProfile',
     }),
   },
 })
@@ -64,7 +66,13 @@ export class FormSubAccountCreationTs extends Vue {
   public currentProfile: ProfileModel
 
   /**
-   * Known accounts identifiers
+   * Currently active wallet
+   * @see {Store.Wallet}
+   * @var {WalletsModel}
+   */
+  public accountModel: AccountModel
+  /**
+   * Known wallets identifiers
    */
   public knownAccounts: AccountModel[]
 
@@ -99,12 +107,14 @@ export class FormSubAccountCreationTs extends Vue {
    */
   public currentPassword: Password
 
+  public isPrivateKeyProfile: boolean
+
   /**
    * Form fields
    * @var {Object}
    */
   public formItems = {
-    type: 'child_account',
+    type: '',
     privateKey: '',
     name: '',
   }
@@ -122,6 +132,9 @@ export class FormSubAccountCreationTs extends Vue {
   public created() {
     this.accountService = new AccountService()
     this.paths = new DerivationService()
+    /* this.accountsRepository = new AccountsRepository()
+    this.walletsRepository = new WalletsRepository() */
+    this.formItems.type = this.isPrivateKeyProfile ? 'privatekey_account' : 'child_account'
   }
 
   /// region computed properties getter/setter
@@ -140,7 +153,6 @@ export class FormSubAccountCreationTs extends Vue {
     // filter accounts to only known account names
     return this.knownAccounts.map((a) => a.path).filter((p) => p)
   }
-
   /// end-region computed properties getter/setter
 
   /**

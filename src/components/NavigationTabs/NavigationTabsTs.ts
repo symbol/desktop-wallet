@@ -19,9 +19,26 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 
 // internal dependencies
 import { TabEntry } from '@/router/TabEntry'
+import { mapGetters } from 'vuex'
+import { AccountModel } from '@/core/database/entities/AccountModel'
 
-@Component
+@Component({
+  computed: {
+    ...mapGetters({
+      currentAccount: 'account/currentAccount',
+      isPrivateKeyProfile: 'profile/isPrivateKeyProfile',
+    }),
+  },
+})
 export class NavigationTabsTs extends Vue {
+  /**
+   * Currently active account
+   * @see {Store.Account}
+   * @var {AccountsModel}
+   */
+  public currentAccount: AccountModel
+
+  public isPrivateKeyProfile: boolean
   /**
    * Parent route name
    * @var {string}
@@ -30,7 +47,12 @@ export class NavigationTabsTs extends Vue {
 
   public get tabEntries(): TabEntry[] {
     // @ts-ignore
-    return this.$router.getTabEntries(this.parentRouteName)
+    const tabEntries = this.$router.getTabEntries(this.parentRouteName)
+    return this.isPrivateKeyProfile
+      ? tabEntries.filter((tabEntry) => {
+          return tabEntry.title != 'page_title_account_backup'
+        })
+      : tabEntries
   }
 
   @Prop({ default: 'horizontal' }) direction: 'horizontal' | 'vertical'

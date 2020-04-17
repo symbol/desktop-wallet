@@ -136,17 +136,29 @@
                 {{ $t('back') }}
               </button>
               <button type="submit" class="button-style validation-button" @click="handleSubmit(submit)">
-                {{
-                  $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'restore_mnemonic' : 'generating_mnemonic')
-                }}
+                <span v-if="nextPage === 'profiles.importProfile.importMnemonic'">{{ $t('restore_mnemonic') }}</span>
+                <span v-else-if="nextPage === 'profiles.createProfile.generateMnemonic'">{{
+                  $t('generating_mnemonic')
+                }}</span>
+                <span v-else>{{ $t('import_private_key') }}</span>
               </button>
             </div>
           </div>
         </form>
       </ValidationObserver>
     </FormWrapper>
-
-    <div class="right-hints-section">
+    <div v-if="nextPage === 'profiles.importPrivateKey.input'" class="right-hints-section">
+      <p class="text1">
+        {{ $t('profile_description') }}
+      </p>
+      <p class="text">
+        {{ $t('import_private_key_profile_description_tip1') }}
+      </p>
+      <p class="text">
+        {{ $t('import_private_key_profile_description_tip2') }}
+      </p>
+    </div>
+    <div v-else class="right-hints-section">
       <p class="text1">
         {{ $t('profile_description') }}
       </p>

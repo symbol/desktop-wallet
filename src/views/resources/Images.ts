@@ -24,6 +24,8 @@ import trezorImg from '@/views/resources/img/login/trezor.png'
 // @ts-ignore
 import ledgerImg from '@/views/resources/img/login/ledger.png'
 // @ts-ignore
+import privateKeyImportImg from '@/views/resources/img/login/private-key.png'
+// @ts-ignore
 import importStepImage1 from '@/views/resources/img/login/1_4.png'
 // @ts-ignore
 import importStepImage2 from '@/views/resources/img/login/2_4.png'
@@ -41,6 +43,12 @@ import createStepImage3 from '@/views/resources/img/login/3_5.png'
 import createStepImage4 from '@/views/resources/img/login/4_5.png'
 // @ts-ignore
 import createStepImage5 from '@/views/resources/img/login/5_5.png'
+// @ts-ignore
+import importPrivateKeyStepImage1 from '@/views/resources/img/login/1-3.png'
+// @ts-ignore
+import importPrivateKeyStepImage2 from '@/views/resources/img/login/2-3.png'
+// @ts-ignore
+import importPrivateKeyStepImage3 from '@/views/resources/img/login/3-3.png'
 // @ts-ignore
 import dashboardUnconfirmed from '@/views/resources/img/monitor/dash-board/dashboardUnconfirmed.png'
 // @ts-ignore
@@ -219,6 +227,7 @@ export const walletTypeImages = {
   seedImg,
   trezorImg,
   ledgerImg,
+  privateKeyImportImg,
 }
 
 export const importStepImage = {
@@ -235,7 +244,11 @@ export const createStepImage = {
   createStepImage4,
   createStepImage5,
 }
-
+export const importPrivateKeyStepImage = {
+  importPrivateKeyStepImage1,
+  importPrivateKeyStepImage2,
+  importPrivateKeyStepImage3,
+}
 export const dashboardImages = {
   dashboardUnconfirmed,
   dashboardConfirmed,

@@ -25,7 +25,16 @@
           </p>
         </div>
       </div>
-      <div class="bottom-text">{{ $t('more_access_tool_is_working') }}...</div>
+      <div class="bottom-text">
+        <div class="link" @click="redirect()">
+          <i18n path="access_trezor_account">
+            <template v-slot:trezor>
+              <b>{{ $t('trezor') }}</b>
+            </template>
+          </i18n>
+        </div>
+        <div>{{ $t('more_access_tool_is_working') }}...</div>
+      </div>
     </div>
   </div>
 </template>

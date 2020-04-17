@@ -15,7 +15,7 @@
  */
 import { Component, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
-import { Transaction, SignedTransaction, CosignatureTransaction, CosignatureSignedTransaction } from 'symbol-sdk'
+import { Transaction, SignedTransaction, CosignatureSignedTransaction } from 'symbol-sdk'
 
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel'
@@ -47,7 +47,7 @@ export class HardwareConfirmationButtonTs extends Vue implements TransactionSign
     return this.$emit('success', this)
   }
 
-  signCosignatureTransaction(t: CosignatureTransaction): Observable<CosignatureSignedTransaction> {
+  signCosignatureTransaction(): Observable<CosignatureSignedTransaction> {
     throw new Error('Not Implemented!!!')
   }
 

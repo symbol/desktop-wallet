@@ -109,6 +109,16 @@ export class FormProfileCreationTs extends Vue {
     return this.$route.meta.nextPage
   }
 
+  get nextButtonText() {
+    switch (this.nextPage) {
+      case 'profiles.importAccount.importMnemonic':
+        return 'Restore_Mnemonic'
+      case 'profiles.importPrivateKey.input':
+        return 'next'
+      default:
+        return 'Generating_mnemonic'
+    }
+  }
   /// end-region computed properties getter/setter
 
   /**
@@ -135,7 +145,10 @@ export class FormProfileCreationTs extends Vue {
    */
   private persistAccountAndContinue() {
     // -  password stored as hash (never plain.)
-    const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password))
+    const passwordHash =
+      this.nextPage !== 'profiles.importPrivateKey.input'
+        ? ProfileService.getPasswordHash(new Password(this.formItems.password))
+        : this.formItems.password
 
     const account: ProfileModel = {
       profileName: this.formItems.profileName,
@@ -146,6 +159,7 @@ export class FormProfileCreationTs extends Vue {
       networkType: this.formItems.networkType,
       generationHash: this.generationHash,
     }
+
     // use repository for storage
     this.accountService.saveProfile(account)
 

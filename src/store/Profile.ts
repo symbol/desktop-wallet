@@ -48,6 +48,9 @@ export default {
     currentProfile: (state: ProfileState) => state.currentProfile,
     isAuthenticated: (state: ProfileState) => state.isAuthenticated,
     isSettingsVisible: (state: ProfileState) => state.isSettingsVisible,
+    isPrivateKeyProfile: (state: ProfileState): boolean => {
+      return !state.currentProfile.seed
+    },
   },
   mutations: {
     setInitialized: (state: ProfileState, initialized: boolean) => {
