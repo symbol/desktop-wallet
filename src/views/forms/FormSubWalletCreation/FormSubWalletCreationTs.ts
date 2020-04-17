@@ -15,15 +15,18 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, NetworkType, Password} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
+import {NetworkType, Password, Account} from 'symbol-sdk'
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
+import {SymbolLedger} from '@/core/utils/Ledger'
+
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {DerivationService} from '@/services/DerivationService'
 import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {WalletService} from '@/services/WalletService'
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -37,6 +40,7 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
 // configuration
 import appConfig from '@/../config/app.conf.json'
 import {AccountModel} from '@/core/database/entities/AccountModel'
+import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 
 const {MAX_SEED_WALLETS_NUMBER} = appConfig.constants
 
@@ -63,6 +67,7 @@ export class FormSubWalletCreationTs extends Vue {
    */
   public currentAccount: AccountModel
 
+  public hasSubAccount :boolean
   /**
    * Known wallets identifiers
    */
@@ -147,19 +152,29 @@ export class FormSubWalletCreationTs extends Vue {
    * Submit action asks for account unlock
    * @return {void}
    */
-  public onSubmit() {
-    this.hasAccountUnlockModal = true
+  public currentWallet: WalletModel
 
-    // // resets form validation
-    // this.$nextTick(() => {
-    //   this.$refs.observer.reset()
-    // })
+  public get isLedger():boolean{
+    return this.currentWallet.type == WalletType.fromDescriptor('Ledger')
+  }
+
+  public onSubmit() {
+    const values = {...this.formItems}
+    const type = values.type && [ 'child_wallet', 'privatekey_wallet' ].includes(values.type)
+      ? values.type
+      : 'child_wallet'
+     if (this.isLedger && type =="child_wallet"){
+      this.deriveNextChildWallet(values.name)
+     } 
+     else this.hasAccountUnlockModal = true
+
   }
 
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public async onAccountUnlocked(account: Account, password: Password) {
+  
+  public async onAccountUnlocked(account: Account, password: Password) { 
     this.currentPassword = password
 
     // - interpret form items
@@ -232,26 +247,88 @@ export class FormSubWalletCreationTs extends Vue {
       )
       return null
     }
+    if(this.isLedger){
+      this.importSubAccountFromLedger(childWalletName).then(
+        (res)=>{
+          this.walletService.saveWallet(res);
+           // - update app state
+          this.$store.dispatch('account/ADD_WALLET', res)
+          this.$store.dispatch('wallet/SET_CURRENT_WALLET', res)
+          this.$store.dispatch('wallet/SET_KNOWN_WALLETS', this.currentAccount.wallets)
+          this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+          this.$emit('submit', this.formItems)
+        }
+      ).catch(
+        (err)=> console.log(err)
+      );
+    } else {
+      // - get next path
+      const nextPath = this.paths.getNextAccountPath(this.knownPaths)
 
-    // - get next path
-    const nextPath = this.paths.getNextAccountPath(this.knownPaths)
+      this.$store.dispatch('diagnostic/ADD_DEBUG',
+        'Adding child wallet with derivation path: ' + nextPath)
 
-    this.$store.dispatch('diagnostic/ADD_DEBUG',
-      'Adding child wallet with derivation path: ' + nextPath)
+      // - decrypt mnemonic
+      const encSeed = this.currentAccount.seed
+      const passphrase = AESEncryptionService.decrypt(encSeed, this.currentPassword)
+      const mnemonic = new MnemonicPassPhrase(passphrase)
 
-    // - decrypt mnemonic
-    const encSeed = this.currentAccount.seed
-    const passphrase = AESEncryptionService.decrypt(encSeed, this.currentPassword)
-    const mnemonic = new MnemonicPassPhrase(passphrase)
+      // create account by mnemonic
+      return this.walletService.getChildWalletByPath(
+        this.currentAccount,
+        this.currentPassword,
+        mnemonic,
+        nextPath,
+        this.networkType,
+        childWalletName,
+      )
+    } 
+  }
 
-    // create account by mnemonic
-    return this.walletService.getChildWalletByPath(
-      this.currentAccount,
-      this.currentPassword,
-      mnemonic,
-      nextPath,
-      this.networkType,
-      childWalletName,
-    )
+  async importSubAccountFromLedger(childWalletName: string) {
+    const subWalletName = childWalletName
+    const accountPath = this.currentWallet.path
+    const currentAccountIndex = accountPath.substring(accountPath.length-2,accountPath.length-1)
+    const numAccount = this.knownPaths.length
+    var accountIndex
+    if(numAccount<= Number(currentAccountIndex) ){
+      accountIndex = numAccount+Number(currentAccountIndex)
+    } else {
+      accountIndex = numAccount+1
+    }
+    try {
+      this.$Notice.success({
+        title: this['$t']('Verify information in your device!') + ''
+      })
+      const transport = await TransportWebUSB.create();
+      const symbolLedger = new SymbolLedger(transport, "XYM");
+      const accountResult = await symbolLedger.getAccount(`m/44'/4343'/${this.networkType}'/0'/${accountIndex}'`)
+      const { address, publicKey, path } = accountResult;
+      transport.close()
+
+      const accName = Object.values(this.currentAccount)[2]
+
+      return {
+        id: SimpleObjectStorage.generateIdentifier(),
+        accountName: accName,
+        name: subWalletName,
+        node: '',
+        type: WalletType.fromDescriptor('Seed'),
+        address: address,
+        publicKey: publicKey.toUpperCase(),
+        encPrivate: '',
+        encIv: '',
+        path: path,
+        isMultisig: false,
+      }
+    } catch (e) {
+      this.$store.dispatch('SET_UI_DISABLED', {
+          isDisabled: false,
+          message: ""
+      });
+      this.$Notice.error({
+          title: this['$t']('CONDITIONS_OF_USE_NOT_SATISFIED') + ''
+      })
+    }
   }
 }

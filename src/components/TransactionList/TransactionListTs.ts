@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as BIPPath from 'bip32-path'
 import {mapGetters} from 'vuex'
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {AggregateTransaction, MosaicId, Transaction} from 'symbol-sdk'
+import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Transaction, MosaicId, AggregateTransaction,Address,PublicAccount, NetworkType} from 'symbol-sdk'
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
+import {SymbolLedger} from '@/core/utils/Ledger'
 // internal dependencies
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
+import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
 import {TransactionService} from '@/services/TransactionService'
 // child components
 // @ts-ignore
@@ -32,6 +36,10 @@ import TransactionListFilters from '@/components/TransactionList/TransactionList
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
 import {TransactionGroup} from '@/store/Transaction'
 
+import { userInfo } from 'os'
+import {BroadcastResult} from '@/core/transactions/BroadcastResult'
+// custom types
+export const STATUS: Array<string> = [ 'all','confirmed','unconfirmed','partial' ]
 @Component({
   components: {
     ModalTransactionCosignature,
@@ -42,14 +50,20 @@ import {TransactionGroup} from '@/store/Transaction'
   },
   computed: {
     ...mapGetters({
+      currentAccount: 'account/currentAccount',
       currentWallet: 'wallet/currentWallet',
+      knownWallets: 'wallet/knownWallets',
       networkMosaic: 'mosaic/networkMosaic',
       currentHeight: 'network/currentHeight',
+      networkType: 'network/networkType',
+      selectedSigner: 'wallet/currentSigner',
       // use partial+unconfirmed from store because
       // of ephemeral nature (websocket only here)
       confirmedTransactions: 'transaction/confirmedTransactions',
       partialTransactions: 'transaction/partialTransactions',
       unconfirmedTransactions: 'transaction/unconfirmedTransactions',
+      currentPeer: 'network/currentPeer',
+      generationHash: 'network/generationHash',
     }),
   },
 })
@@ -147,6 +161,8 @@ export class TransactionListTs extends Vue {
    * Hook called when the component is mounted
    * @return {void}
    */
+  public generationHash: string
+
   public async created() {
     this.service = new TransactionService(this.$store)
   }
@@ -224,11 +240,58 @@ export class TransactionListTs extends Vue {
    * Hook called when a transaction is clicked
    * @param {Transaction} transaction
    */
-  public onClickTransaction(transaction: Transaction | AggregateTransaction) {
-    if (transaction.hasMissingSignatures()) {
-      this.activePartialTransaction = transaction as AggregateTransaction
-      this.hasCosignatureModal = true
-    } else {
+
+   /**
+   * Network type
+   * @var {NetworkType}
+   */
+  public networkType: NetworkType
+
+  public currentSigner: PublicAccount
+
+  public currentPeer: Record<string, any>
+
+
+  public async onClickTransaction(transaction: any ) {//Transaction | AggregateTransaction
+    const isSigner = transaction.signer.address.plain()==this.currentWallet.address ? true : false
+    if (transaction.hasMissingSignatures() ) {
+      if(this.currentWallet.type==WalletType.fromDescriptor('Ledger') && !isSigner ){
+        this.$Notice.success({
+          title: this['$t']('Verify information in your device!') + ''
+        })
+        const transport = await TransportWebUSB.create();
+        const currentPath = this.currentWallet.path     
+        const accountIndex = Number(currentPath.substring(currentPath.length-2,currentPath.length-1))
+        const networkType =  Number(currentPath.substring(currentPath.length-10,currentPath.length-7))
+        const symbolLedger = new SymbolLedger(transport, "XYM");
+        const signerPublickey = this.currentWallet.publicKey;
+        const addr = Address.createFromPublicKey(signerPublickey,networkType)
+        const signature = await symbolLedger.signCosignatureTransaction(`m/44'/4343'/${networkType}'/0'/${accountIndex}'`,transaction, this.generationHash, signerPublickey)
+        transport.close()
+        this.$store.dispatch('diagnostic/ADD_DEBUG', `Co-signed transaction with account ${addr.plain()} and result: ${JSON.stringify({
+          parentHash: signature.parentHash,
+          signature: signature.signature
+        })}`)
+        // in modal transactioncosignature
+        // - broadcast signed transactions
+        const service = new TransactionService(this.$store)
+        const results: BroadcastResult[] = await service.announceCosignatureTransactions([signature])
+        // - notify about errors
+        const errors = results.filter(result => false === result.success)
+        if (errors.length) {
+          return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
+        }
+        this.$Notice.success({
+          title: this['$t']('Transaction announce successfully!') + ''
+        })
+      }
+      else {
+        this.activePartialTransaction = transaction as AggregateTransaction
+        this.hasCosignatureModal = true
+      }
+      
+    }
+    else {
       this.activeTransaction = transaction
       this.hasDetailModal = true
     }

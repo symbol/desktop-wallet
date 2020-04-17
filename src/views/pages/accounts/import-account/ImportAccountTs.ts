@@ -27,7 +27,21 @@ export default class ImportAccountTs extends Vue {
     'Choose_Wallets',
     'Finish',
   ]
-
+  public LedgerStepBarTitleList = [
+      'Create Account',
+      'Import Ledger',
+    ]
+  isLedger = false;
+  public titleList = []
+    
+  public created() {
+      const {isLedger} = this.$route.meta
+      
+      if (isLedger) {
+          this.titleList = this.LedgerStepBarTitleList
+      }   else
+      {this.titleList = this.StepBarTitleList}
+  }
   /**
    * Hook called when the page is mounted
    * @return {void}
@@ -37,12 +51,21 @@ export default class ImportAccountTs extends Vue {
   }
 
   public getCurrentStep(): number {
-    switch(this.$route.name) {
-      default:
-      case 'accounts.importAccount.info': return 0
-      case 'accounts.importAccount.importMnemonic': return 1
-      case 'accounts.importAccount.walletSelection': return 2
-      case 'accounts.importAccount.finalize': return 3
+    const {isLedger} = this.$route.meta
+    if (isLedger){
+      switch(this.$route.name) {
+        default:
+        case 'accounts.importLedgerAccount': return 0
+        case 'accounts.importLedger': return 1
+      }
+    } else {
+      switch(this.$route.name) {
+        default:
+        case 'accounts.importAccount.info': return 0
+        case 'accounts.importAccount.importMnemonic': return 1
+        case 'accounts.importAccount.walletSelection': return 2
+        case 'accounts.importAccount.finalize': return 3
+      }
     }
   }
 

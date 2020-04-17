@@ -22,7 +22,7 @@
             <WalletPublicKeyDisplay :wallet="currentWallet" />
           </div>
 
-          <div class="detail-row">
+          <div class="detail-row" v-if="!isLedger">
             <ProtectedPrivateKeyDisplay :wallet="currentWallet" />
           </div>
 

@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Account, EncryptedPrivateKey, NetworkType, Password} from 'symbol-sdk'
+import {Account, EncryptedPrivateKey, NetworkType, Password, Address} from 'symbol-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
+import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
+import {AccountService} from '@/services/AccountService'
+import {NotificationType} from '@/core/utils/NotificationType'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 // child components
 import {ValidationProvider} from 'vee-validate'
@@ -35,12 +38,12 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
     FormRow,
     ErrorTooltip,
   },
-  computed: {
-    ...mapGetters({
-      networkType: 'network/networkType',
-      currentWallet: 'wallet/currentWallet',
-    }),
-  },
+  computed: {...mapGetters({
+    networkType: 'network/networkType',
+    currentAccount: 'account/currentAccount',
+    currentWallet: 'wallet/currentWallet',
+    currentPass: 'temporary/password',
+  })},
 })
 export class FormAccountUnlockTs extends Vue {
   /**
@@ -55,6 +58,7 @@ export class FormAccountUnlockTs extends Vue {
    */
   public currentWallet: WalletModel
 
+  public currentPass: Password
   /**
    * Validation rules
    * @var {ValidationRuleset}
@@ -77,6 +81,13 @@ export class FormAccountUnlockTs extends Vue {
    * account.
    * @return {void}
    */
+
+  public get isLedger():boolean{
+    return this.currentWallet.type == WalletType.fromDescriptor('Ledger')
+  }
+
+  public accountService = new AccountService()
+
   public processVerification() {
     // - create encrypted payload for active wallet
     const encrypted = new EncryptedPrivateKey(
@@ -87,12 +98,28 @@ export class FormAccountUnlockTs extends Vue {
     try {
       // - attempt decryption
       const password = new Password(this.formItems.password)
-      const privateKey: string = encrypted.decrypt(password)
+      const passwordHash = AccountService.getPasswordHash(new Password(this.formItems.password))
+      // read account's password hash and compare
+      const currentAccount = this.accountService.getAccountByName(this.currentWallet.accountName)
+      const accountPass = currentAccount.password
 
-      if (privateKey.length === 64) {
-        const unlockedAccount = Account.createFromPrivateKey(privateKey, this.networkType)
-        return this.$emit('success', {account: unlockedAccount, password})
+      if (accountPass !== passwordHash) {
+        return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
       }
+        
+      if(this.isLedger && accountPass == passwordHash){
+        const publickey = this.currentWallet.publicKey
+        const addr = Address.createFromPublicKey(publickey,this.networkType)
+        return this.$emit('success',{account: currentAccount,addr, password})
+      } 
+      else {
+        const privateKey: string = encrypted.decrypt(password)
+
+        if (privateKey.length === 64) {
+          const unlockedAccount = Account.createFromPrivateKey(privateKey, this.networkType)
+          return this.$emit('success', {account: unlockedAccount, password})
+        }
+      } 
 
       return this.$emit('error', this.$t('error_invalid_password'))
     } catch (e) {

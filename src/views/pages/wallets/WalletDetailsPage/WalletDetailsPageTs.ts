@@ -16,6 +16,10 @@
 // external dependencies
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
+
+// internal dependencies
+import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
+
 // child components
 // @ts-ignore
 import WalletNameDisplay from '@/components/WalletNameDisplay/WalletNameDisplay.vue'
@@ -35,7 +39,7 @@ import WalletActions from '@/components/WalletActions/WalletActions.vue'
 import WalletLinks from '@/components/WalletLinks/WalletLinks.vue'
 // @ts-ignore
 import WalletAliasDisplay from '@/components/WalletAliasDisplay/WalletAliasDisplay.vue'
-import {WalletModel} from '@/core/database/entities/WalletModel'
+
 
 @Component({
   components: {
@@ -71,4 +75,12 @@ export class WalletDetailsPageTs extends Vue {
    */
   public currentWallet: WalletModel
 
+  /**
+   * Whether the wallet item is a seed wallet
+   * @param item
+   * @return {boolean}
+   */
+  public get isLedger():boolean{
+    return this.currentWallet.type == WalletType.fromDescriptor('Ledger')
+  }
 }
