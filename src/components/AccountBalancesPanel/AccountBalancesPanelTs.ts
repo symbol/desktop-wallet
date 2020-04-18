@@ -17,7 +17,6 @@ import {Address} from 'symbol-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
-import {WalletModel} from '@/core/database/entities/WalletModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
 // child components
 // @ts-ignore
@@ -34,7 +33,6 @@ import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyMode
   },
   computed: {
     ...mapGetters({
-      currentWallet: 'wallet/currentWallet',
       currentSignerAddress: 'wallet/currentSignerAddress',
       balanceMosaics: 'mosaic/balanceMosaics',
       isCosignatoryMode: 'wallet/isCosignatoryMode',
@@ -43,11 +41,6 @@ import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyMode
   },
 })
 export class AccountBalancesPanelTs extends Vue {
-  /**
-   * Currently active wallet
-   * @var {WalletModel}
-   */
-  public currentWallet: WalletModel
 
   /**
    * Currently active signer

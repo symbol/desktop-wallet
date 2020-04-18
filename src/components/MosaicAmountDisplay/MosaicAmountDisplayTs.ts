@@ -94,6 +94,9 @@ export class MosaicAmountDisplayTs extends Vue {
   }
 
   public get ticker(): string {
+    if (!this.showTicker) {
+      return ''
+    }
     if (!this.id) {
       return this.networkCurrency && this.networkCurrency.ticker || ''
     }
@@ -102,7 +105,7 @@ export class MosaicAmountDisplayTs extends Vue {
       return this.networkCurrency.ticker
     }
     const mosaic = this.mosaics.find(m => m.mosaicIdHex === this.id.toHex())
-    return mosaic ? mosaic.name : this.id.toHex()
+    return mosaic && mosaic.name || this.id.toHex()
   }
 
 /// end-region computed properties getter/setter

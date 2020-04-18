@@ -132,8 +132,8 @@ export class PeerSelectorTs extends Vue {
       if (!this.formItems.filter) {
         return true
       } else {
-        return p.url.indexOf(this.formItems.filter) > -1
-          || (p.friendlyName && p.friendlyName.indexOf(this.formItems.filter) > -1)
+        return p.url.includes(this.formItems.filter)
+          || (p.friendlyName && p.friendlyName.includes(this.formItems.filter))
       }
     })
   }
@@ -161,7 +161,6 @@ export class PeerSelectorTs extends Vue {
 
     // validate and parse input
     const nodeUrl = URLHelpers.getNodeUrl(this.formItems.nodeUrl)
-    const node = URLHelpers.formatUrl(nodeUrl)
 
     // return if node already exists in the database
     if (this.knowNodes.find(node => node.url === nodeUrl)) {
@@ -169,17 +168,10 @@ export class PeerSelectorTs extends Vue {
       return
     }
 
-    // show loading overlay
-    this.$store.dispatch('app/SET_LOADING_OVERLAY', {
-      show: true,
-      message: `${this.$t('info_connecting_peer', {peerUrl: node.url})}`,
-    })
-
     // read network type from node pre-saving
     try {
 
       // hide loading overlay
-      this.$store.dispatch('app/SET_LOADING_OVERLAY', {show: false})
       this.$store.dispatch('network/ADD_KNOWN_PEER', nodeUrl)
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$store.dispatch('diagnostic/ADD_DEBUG', 'PeerSelector added peer: ' + nodeUrl)
@@ -197,7 +189,6 @@ export class PeerSelectorTs extends Vue {
       })
     } catch (e) {
       // hide loading overlay
-      this.$store.dispatch('app/SET_LOADING_OVERLAY', {show: false})
       this.$store.dispatch('diagnostic/ADD_ERROR', 'PeerSelector unreachable host with URL: ' + nodeUrl)
       this.$store.dispatch('notification/ADD_ERROR', NotificationType.ERROR_PEER_UNREACHABLE)
     }

@@ -241,36 +241,28 @@ export default {
         dispatch('app/SET_LOADING_OVERLAY', {show: false}, {root: true})
       }
     },
+
     ADD_KNOWN_PEER({commit}, peerUrl) {
       if (!UrlValidator.validate(peerUrl)) {
         throw Error('Cannot add node. URL is not valid: ' + peerUrl)
       }
       commit('addPeer', peerUrl)
     },
+
     REMOVE_KNOWN_PEER({commit}, peerUrl) {
       commit('removePeer', peerUrl)
     },
 
     async RESET_PEERS({dispatch}) {
-      try {
 
-        const nodeService = new NodeService()
-        nodeService.reset()
+      const nodeService = new NodeService()
+      nodeService.reset()
 
-        const networkService = new NetworkService()
-        networkService.reset()
+      const networkService = new NetworkService()
+      networkService.reset()
 
-        const defaultUrl = networkService.getDefaultUrl()
-        dispatch('app/SET_LOADING_OVERLAY', {
-          show: true,
-          message: `${app.$t('info_connecting_peer', {peerUrl: defaultUrl})}`,
-          disableCloseButton: true,
-        }, {root: true})
+      dispatch('SET_CURRENT_PEER', networkService.getDefaultUrl())
 
-        await dispatch('SET_CURRENT_PEER', defaultUrl)
-      } finally {
-        dispatch('app/SET_LOADING_OVERLAY', {show: false}, {root: true})
-      }
     },
 
 

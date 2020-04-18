@@ -48,14 +48,16 @@ export default {
       const callback = async () => {
         const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
         const nodeHttp = repositoryFactory.createNodeRepository()
-        const diagnostic: StorageInfo = await nodeHttp.getStorageInfo().toPromise()
+        const storageInfoPromise = nodeHttp.getStorageInfo().toPromise()
+        const nodePeersPromise = nodeHttp.getNodePeers().toPromise()
+
+        const diagnostic: StorageInfo = await storageInfoPromise
+        const nodes = await nodePeersPromise
 
         commit('countTransactions', diagnostic.numTransactions)
         commit('countBlocks', diagnostic.numBlocks)
         commit('countAccounts', diagnostic.numAccounts)
 
-        // - fetch nodes (not yet in SDK)
-        const nodes = await nodeHttp.getNodePeers().toPromise()
         commit('countNodes', nodes.length)
 
         // update store

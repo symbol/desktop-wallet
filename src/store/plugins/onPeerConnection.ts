@@ -18,17 +18,7 @@ export const onPeerConnection = store => {
     if (mutation.type === 'network/currentPeerInfo') {
       // - Done connection to new node
       const nodeUrl = store.getters['network/currentPeer'].url
-      const currentWallet = store.getters['wallet/currentWallet']
-
       store.dispatch('statistics/initialize', nodeUrl)
-
-      if (!!currentWallet) {
-        console.log('onPeerConnection dispatching wallet actions..')
-
-        store.dispatch('transaction/LOAD_TRANSACTIONS')
-        store.dispatch('mosaic/LOAD_MOSAICS')
-        store.dispatch('namespace/LOAD_NAMESPACES')
-      }
     }
   })
 }
