@@ -24,7 +24,7 @@
             <button
               type="button"
               class="button-style back-button" 
-              @click="$router.back()"
+              @click="deleteAccountAndBack"
             >
               {{ $t('back') }}
             </button>

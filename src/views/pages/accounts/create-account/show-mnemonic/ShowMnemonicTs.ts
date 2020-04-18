@@ -18,7 +18,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 // internal dependencies
 import {AccountModel} from '@/core/database/entities/AccountModel'
-
+import {AccountService} from '@/services/AccountService'
 @Component({
   computed: {...mapGetters({
     currentAccount: 'account/currentAccount',
@@ -44,6 +44,24 @@ export default class ShowMnemonicTs extends Vue {
    * @var {boolean}
    */
   public showMnemonic: boolean = false
+
+  /**
+   * Account repository
+   * @var {AccountService}
+   */
+  public accountService: AccountService = new AccountService()
+
+  /*
+  * Delete account and go back
+  * @return {void}
+  */
+  public deleteAccountAndBack() {
+    // - delete the temporary account from storage
+    this.accountService.deleteAccount(this.currentAccount.accountName)
+    this.$store.dispatch('account/RESET_STATE')
+    // - back to previous page
+    this.$router.push({ name: 'accounts.createAccount.info' })
+  }
 
   /// region computed properties getter/setter
   get mnemonicWordsList() {

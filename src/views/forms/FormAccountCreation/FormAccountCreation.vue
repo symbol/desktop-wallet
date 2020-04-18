@@ -146,7 +146,7 @@
               <button
                 type="button"
                 class="button-style back-button" 
-                @click="$router.back(-1)"
+                @click="$router.replace({name: 'accounts.importAccount.importStrategy'})"
               >
                 {{ $t('back') }}
               </button>
