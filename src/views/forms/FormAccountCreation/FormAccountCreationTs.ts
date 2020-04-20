@@ -29,9 +29,9 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
+import {NetworkTypeHelper} from '@/core/utils/NetworkTypeHelper'
 
-/// region custom types
-type NetworkNodeEntry = { value: NetworkType, label: string }
+
 
 /// end-region custom types
 
@@ -93,12 +93,7 @@ export class FormAccountCreationTs extends Vue {
    * Network types
    * @var {NetworkNodeEntry[]}
    */
-  public networkTypeList: NetworkNodeEntry[] = [
-    {value: NetworkType.MIJIN_TEST, label: 'MIJIN_TEST'},
-    {value: NetworkType.MAIN_NET, label: 'MAIN_NET'},
-    {value: NetworkType.TEST_NET, label: 'TEST_NET'},
-    {value: NetworkType.MIJIN, label: 'MIJIN'},
-  ]
+  public networkTypeList= NetworkTypeHelper.networkTypeList
 
   /**
    * Type the ValidationObserver refs

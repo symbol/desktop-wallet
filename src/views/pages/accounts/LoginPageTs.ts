@@ -34,6 +34,7 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 import {SettingService} from '@/services/SettingService'
 import {SettingsModel} from '@/core/database/entities/SettingsModel'
 import {WalletService} from '@/services/WalletService'
+import {NetworkTypeHelper} from '@/core/utils/NetworkTypeHelper'
 
 @Component({
   computed: {
@@ -51,7 +52,15 @@ import {WalletService} from '@/services/WalletService'
 })
 
 export default class LoginPageTs extends Vue {
+  /**
+   * All known accounts
+   */
+  private accounts: AccountModel[]
 
+  /**
+   * Account indexed by network type
+   */
+  private accountsClassifiedByNetworkType: { networkType: NetworkType, accounts: AccountModel[] }[]
   /**
    * Currently active account
    * @see {Store.Account}
@@ -74,17 +83,6 @@ export default class LoginPageTs extends Vue {
   public validationRules = ValidationRuleset
 
   /**
-   * Network types
-   * @var {NetworkNodeEntry[]}
-   */
-  public networkTypeList: { value: NetworkType, label: string }[] = [
-    {value: NetworkType.MIJIN_TEST, label: 'MIJIN_TEST'},
-    {value: NetworkType.MAIN_NET, label: 'MAIN_NET'},
-    {value: NetworkType.TEST_NET, label: 'TEST_NET'},
-    {value: NetworkType.MIJIN, label: 'MIJIN'},
-  ]
-
-  /**
    * Form items
    */
   public formItems: any = {
@@ -93,33 +91,33 @@ export default class LoginPageTs extends Vue {
     hasHint: false,
   }
 
-  get accountsClassifiedByNetworkType(): Map<NetworkType, string> {
-    const accounts = this.accountService.getAccounts()
-    return new Map<NetworkType, string>(accounts.map(i => [ i.networkType, i.accountName ]))
-
-  }
-
   /// end-region computed properties getter/setter
 
   /**
    * Hook called when the page is mounted
    * @return {void}
    */
-  public mounted() {
-    if (this.currentAccount) {
-      this.formItems.currentAccountName = this.currentAccount.accountName
-      return
+  public created() {
+    this.accounts = this.accountService.getAccounts()
+
+    const reducer = (accumulator: { networkType: NetworkType, accounts: AccountModel[] }[],
+                     currentValue: AccountModel) => {
+
+      const currentAccumulator = accumulator.find(a => a.networkType == currentValue.networkType)
+      if (currentAccumulator) {
+        currentAccumulator.accounts.push(currentValue)
+        return accumulator
+      } else {
+        return [...accumulator, {networkType: currentValue.networkType, accounts: [currentValue]}]
+      }
     }
 
-    // no account pre-selected, select first if available
-    const accounts = this.accountService.getAccounts()
-    if (!accounts.length) {
+    this.accountsClassifiedByNetworkType = this.accounts.reduce(reducer, [])
+    if (!this.accounts.length) {
       return
     }
-
     // accounts available, iterate to first account
-    const firstAccount = accounts[0]
-    this.formItems.currentAccountName = firstAccount.accountName
+    this.formItems.currentAccountName = this.accounts[0].accountName
   }
 
   /**
@@ -128,11 +126,7 @@ export default class LoginPageTs extends Vue {
    * @return {string}
    */
   public getNetworkTypeLabel(networkType: NetworkType): string {
-    const findType = this.networkTypeList.find(n => n.value === networkType)
-    if (findType === undefined) {
-      return ''
-    }
-    return findType.label
+    return NetworkTypeHelper.getNetworkTypeLabel(networkType)
   }
 
   /**

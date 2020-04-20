@@ -28,21 +28,8 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // resources
 import {dashboardImages} from '@/views/resources/Images'
 import {NodeModel} from '@/core/database/entities/NodeModel'
+import {NetworkTypeHelper} from '@/core/utils/NetworkTypeHelper'
 
-// helpers
-const getNetworkTypeText = (networkType: NetworkType) => {
-  switch (networkType) {
-    default:
-    case NetworkType.MIJIN_TEST:
-      return 'MIJIN_TEST'
-    case NetworkType.MIJIN:
-      return 'MIJIN'
-    case NetworkType.TEST_NET:
-      return 'TEST_NET'
-    case NetworkType.MAIN_NET:
-      return 'MAIN_NET'
-  }
-}
 
 @Component({
   computed: {
@@ -140,7 +127,7 @@ export class PeerSelectorTs extends Vue {
 
   get networkTypeText(): string {
     if (!this.isConnected) return this.$t('Invalid_node').toString()
-    return !!this.networkType ? getNetworkTypeText(this.networkType) : this.$t('Loading').toString()
+    return !!this.networkType ? NetworkTypeHelper.getNetworkTypeLabel(this.networkType) : this.$t('Loading').toString()
   }
 
   /// end-region computed properties getter/setter
