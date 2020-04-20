@@ -32,7 +32,6 @@ import FormRow from '@/components/FormRow/FormRow.vue'
 import {NetworkTypeHelper} from '@/core/utils/NetworkTypeHelper'
 
 
-
 /// end-region custom types
 
 @Component({

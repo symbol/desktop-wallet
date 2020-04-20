@@ -101,14 +101,14 @@ export default class LoginPageTs extends Vue {
     this.accounts = this.accountService.getAccounts()
 
     const reducer = (accumulator: { networkType: NetworkType, accounts: AccountModel[] }[],
-                     currentValue: AccountModel) => {
+      currentValue: AccountModel) => {
 
       const currentAccumulator = accumulator.find(a => a.networkType == currentValue.networkType)
       if (currentAccumulator) {
         currentAccumulator.accounts.push(currentValue)
         return accumulator
       } else {
-        return [...accumulator, {networkType: currentValue.networkType, accounts: [currentValue]}]
+        return [ ...accumulator, {networkType: currentValue.networkType, accounts: [currentValue]}]
       }
     }
 
