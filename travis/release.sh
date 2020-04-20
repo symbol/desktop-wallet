@@ -14,6 +14,15 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   echo "Checking out $RELEASE_BRANCH as travis leaves the head detached."
   git checkout $RELEASE_BRANCH
 
+  echo "Organizing releases."
+  mkdir release/upload
+  mv release/*.exe release/upload
+  mv release/*.dmg release/upload
+  mv release/*.deb release/upload
+  mv release/*.snap release/upload
+  mv release/*.tar.xz release/upload
+  echo ""
+
   CURRENT_VERSION=$(npm run version --silent)
 
   echo "Current Version"
@@ -25,7 +34,7 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   echo ""
 
   echo "Creating tag v$CURRENT_VERSION"
-  git tag -fa "v$CURRENT_VERSION" -m "Releasing version $CURRENT_VERSION"
+  ghr v$CURRENT_VERSION release/upload
 
   echo "Increasing package version"
   npm version patch -m "Increasing version to %s" --git-tag-version false

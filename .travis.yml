@@ -1,10 +1,13 @@
 language: node_js
 os: osx
+osx_image: xcode10.1
 node_js:
   - "12"
 cache:
   directories:
     - node_modules
+install:
+  - brew install ghr
 before_script:
   - npm run build:web
 script:
@@ -17,14 +20,3 @@ deploy:
     script: /bin/sh travis/release.sh
     on:
       branch: $RELEASE_BRANCH
-  - provider: releases
-    skip_cleanup: true
-    api_key: $GITHUB_TOKEN
-    file:
-      - release/symbol-desktop-wallet-win.exe
-      - release/symbol-desktop-wallet-linux-x64.tar.xz
-      - release/symbol-desktop-wallet-linux-amd64.snap
-      - release/symbol-desktop-wallet-linux-amd64.deb
-      - release/symbol-desktop-wallet-mac.dmg
-    on:
-      tags: true

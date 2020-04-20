@@ -109,7 +109,7 @@
     "extends": null,
     "copyright": "Copyright © 2019-2020 NEM Foundation",
     "productName": "Symbol Wallet",
-    "artifactName": "${name}-${os}-${arch}.${ext}",
+    "artifactName": "${name}-${os}-${arch}-${version}.${ext}",
     "icon": "./dist/assets/icons/Icon.icns",
     "files": [
       "dist/**/*",
