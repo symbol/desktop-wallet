@@ -21,7 +21,7 @@
     "release": "npm run build && npm run release:all",
     "release:all": "npm run release:mac && npm run release:win && npm run release:lin",
     "release:mac": "electron-builder --mac",
-    "release:win": "electron-builder --win --ia32",
+    "release:win": "electron-builder --win",
     "release:lin": "electron-builder --linux deb snap tar.xz",
     "lint:all:fix": "eslint src/ --ext .ts --fix && eslint src/ --ext .vue --fix && eslint __tests__/ --ext .ts --fix",
     "lint:all": "npm run lint:ts && npm run lint:vue && npm run lint:tests",
