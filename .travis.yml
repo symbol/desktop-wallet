@@ -3,11 +3,6 @@ node_js:
   - "12"
 os: osx
 osx_image: xcode11.3
-addons:
-  homebrew:
-    update: true
-    packages:
-      - ghr
 env:
   global:
     - ELECTRON_CACHE=$HOME/.cache/electron
@@ -15,18 +10,15 @@ env:
 cache:
   directories:
     - node_modules
-    - $HOME/Library/Caches/Homebrew
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
 before_cache:
-  - brew cleanup
   - rm -rf $HOME/.cache/electron-builder/wine
 before_script:
   - npm run build:web
 script:
   - npm run lint:all
   - npm run test
-  - npm run release:all
 deploy:
   - provider: script
     skip_cleanup: true

@@ -14,7 +14,11 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   echo "Checking out $RELEASE_BRANCH as travis leaves the head detached."
   git checkout $RELEASE_BRANCH
 
-  echo "Organizing releases."
+  echo "Releasing packages for Windows, Linux and Mac"
+  npm run release:all
+  echo " "
+
+  echo "Organizing releases into a new folder"
   mkdir release/upload
   mv release/*.exe release/upload
   mv release/*.dmg release/upload
@@ -34,6 +38,7 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   echo ""
 
   echo "Creating tag v$CURRENT_VERSION"
+  brew install ghr
   ghr v$CURRENT_VERSION release/upload
 
   echo "Increasing package version"
