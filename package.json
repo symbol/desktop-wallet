@@ -2,7 +2,7 @@
   "name": "symbol-desktop-wallet",
   "description": "Symbol Wallet",
   "homepage": "https://github.com/nemfoundation/symbol-desktop-wallet",
-  "version": "0.9.8-beta1",
+  "version": "0.9.9",
   "author": {
     "name": "NEM Foundation",
     "email": "devs@nem.foundation"
@@ -27,7 +27,8 @@
     "lint:all": "npm run lint:ts && npm run lint:vue && npm run lint:tests",
     "lint:tests": "eslint __tests__/ --ext .ts",
     "lint:ts": "eslint src/ --ext .ts",
-    "lint:vue": "eslint src/ --ext .vue"
+    "lint:vue": "eslint src/ --ext .vue",
+    "version": "echo $npm_package_version"
   },
   "dependencies": {
     "animate.css": "^3.7.2",
@@ -108,7 +109,7 @@
     "extends": null,
     "copyright": "Copyright © 2019-2020 NEM Foundation",
     "productName": "Symbol Wallet",
-    "artifactName": "${name}-${os}-${arch}-${version}.${ext}",
+    "artifactName": "${name}-${os}-${arch}.${ext}",
     "icon": "./dist/assets/icons/Icon.icns",
     "files": [
       "dist/**/*",
