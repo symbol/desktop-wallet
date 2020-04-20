@@ -1,8 +1,13 @@
 language: node_js
-os: osx
-osx_image: xcode10.1
 node_js:
   - "12"
+os: osx
+osx_image: xcode10.1
+addons:
+  homebrew:
+    update: false
+    packages:
+      - ghr
 env:
   global:
     - ELECTRON_CACHE=$HOME/.cache/electron
@@ -16,9 +21,6 @@ cache:
 before_cache:
   - brew cleanup
   - rm -rf $HOME/.cache/electron-builder/wine
-install:
-  - brew install ghr
-  - npm install
 before_script:
   - npm run build:web
 script:
