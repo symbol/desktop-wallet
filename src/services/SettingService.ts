@@ -35,7 +35,7 @@ export class SettingService {
 
   public getAccountSettings(accountName: string): SettingsModel {
     const storedData = this.storage.get() || {}
-    return {...storedData[accountName] || {}, ...this.createDefaultSettingsModel(accountName)}
+    return {...this.createDefaultSettingsModel(accountName), ...storedData[accountName] || {}}
   }
 
   public changeAccountSettings(accountName: string, newConfigs: any): SettingsModel {

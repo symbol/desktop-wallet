@@ -98,7 +98,7 @@ export class FormGeneralSettingsTs extends Vue {
 
   public resetForm() {
     this.formItems = {...this.settings}
-    if (this.settings.defaultWallet && this.knownWallets.length) {
+    if (!this.settings.defaultWallet && this.knownWallets.length) {
       this.formItems.defaultWallet = this.knownWallets[0].id
     }
   }
