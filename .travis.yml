@@ -8,6 +8,7 @@ cache:
     - node_modules
 install:
   - brew install ghr
+  - npm install
 before_script:
   - npm run build:web
 script:
