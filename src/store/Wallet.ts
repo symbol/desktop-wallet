@@ -260,6 +260,21 @@ export default {
       commit('currentWalletAddress', null)
     },
 
+    UPDATE_CURRENT_WALLET_NAME({commit, getters, rootGetters}, name: string) {
+      const currentWallet: WalletModel = getters.currentWallet
+      if (!currentWallet) {
+        return
+      }
+      const currentAccount: AccountModel = rootGetters['account/currentAccount']
+      if (!currentAccount) {
+        return
+      }
+      const walletService = new WalletService()
+      walletService.updateName(currentWallet, name)
+      const knownWallets = walletService.getKnownWallets(currentAccount.wallets)
+      commit('knownWallets', knownWallets)
+    },
+
     async SET_CURRENT_SIGNER({commit, dispatch, getters, rootGetters},
       {publicKey}: { publicKey: string }) {
       if (!publicKey){

@@ -20,7 +20,6 @@ import {NetworkType} from 'symbol-sdk'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {WalletModel} from '@/core/database/entities/WalletModel'
 import {NotificationType} from '@/core/utils/NotificationType'
-import {WalletService} from '@/services/WalletService'
 // child components
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 // @ts-ignore
@@ -64,12 +63,6 @@ export class FormWalletNameUpdateTs extends Vue {
   public networkType: NetworkType
 
   /**
-   * Wallets repository
-   * @var {WalletService}
-   */
-  public walletService: WalletService
-
-  /**
    * Validation rules
    * @var {ValidationRuleset}
    */
@@ -99,10 +92,6 @@ export class FormWalletNameUpdateTs extends Vue {
     observer: InstanceType<typeof ValidationObserver>
   }
 
-  public created() {
-    this.walletService = new WalletService()
-  }
-
   /// region computed properties getter/setter
   public get hasAccountUnlockModal(): boolean {
     return this.isUnlockingAccount
@@ -130,11 +119,9 @@ export class FormWalletNameUpdateTs extends Vue {
   /**
    * When account is unlocked, the sub wallet can be created
    */
-  public onAccountUnlocked() {
+  public async onAccountUnlocked() {
     try {
-      // - use repositories for storage
-      this.walletService.updateName(this.currentWallet, this.formItems.name)
-
+      await this.$store.dispatch('wallet/UPDATE_CURRENT_WALLET_NAME', this.formItems.name)
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$emit('submit', this.formItems)
     } catch (e) {
