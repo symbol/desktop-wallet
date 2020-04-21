@@ -29,7 +29,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 import {dashboardImages} from '@/views/resources/Images'
 import {NodeModel} from '@/core/database/entities/NodeModel'
 import {NetworkTypeHelper} from '@/core/utils/NetworkTypeHelper'
-
+import * as _ from 'lodash'
 
 @Component({
   computed: {
