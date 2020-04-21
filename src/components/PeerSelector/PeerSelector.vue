@@ -98,5 +98,11 @@ export default class PeerSelector extends PeerSelectorTs {}
   .ivu-poptip-body-content {
     overflow: hidden;
   }
+  .ivu-poptip-title {
+    overflow: hidden;
+  }
+  .ivu-poptip-inner {
+    width: 1000px;
+  }
 }
 </style>

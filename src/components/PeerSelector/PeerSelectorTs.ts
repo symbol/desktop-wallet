@@ -121,6 +121,7 @@ export class PeerSelectorTs extends Vue {
       } else {
         return p.url.includes(this.formItems.filter)
           || (p.friendlyName && p.friendlyName.includes(this.formItems.filter))
+          || this.currentPeerInfo.url === p.url
       }
     })
     return _.sortBy(nodeModels, (a) => a.isDefault !== true, (a) => a.url)
@@ -172,8 +173,10 @@ export class PeerSelectorTs extends Vue {
         this.$refs.observer.reset()
 
         // scroll to the bottom of the node list
-        const container = this.$el.querySelector('#node-list-container')
-        container.scrollTop = container.scrollHeight
+        // const container = this.$el.querySelector('#node-list-container')
+        // container.scrollTop = container.scrollHeight
+        // Maybe scroll to element instead of tunning the filter?
+        this.formItems.filter = nodeUrl
       })
     } catch (e) {
       // hide loading overlay
