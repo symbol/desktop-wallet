@@ -70,7 +70,7 @@ const defaultPeer = URLHelpers.formatUrl(networkConfig.defaultNodeUrl)
 const networkState: NetworkState = {
   initialized: false,
   currentPeer: defaultPeer,
-  currentPeerInfo: new NodeModel(defaultPeer.url, defaultPeer.url),
+  currentPeerInfo: new NodeModel(defaultPeer.url, defaultPeer.url, true),
   networkType: networkConfig.defaultNetworkType,
   generationHash: undefined,
   networkModel: undefined,
@@ -102,7 +102,7 @@ export default {
   },
   mutations: {
     setInitialized: (state: NetworkState,
-      initialized: boolean) => { state.initialized = initialized },
+                     initialized: boolean) => { state.initialized = initialized },
     setConnected: (state: NetworkState, connected: boolean) => { state.isConnected = connected },
     currentHeight: (state: NetworkState, currentHeight: number) => Vue.set(state, 'currentHeight',
       currentHeight),
@@ -111,7 +111,7 @@ export default {
     repositoryFactory: (state: NetworkState, repositoryFactory: RepositoryFactory) => Vue.set(state,
       'repositoryFactory', repositoryFactory),
     networkConfiguration: (state: NetworkState,
-      networkConfiguration: NetworkConfigurationModel) => Vue.set(state,
+                           networkConfiguration: NetworkConfigurationModel) => Vue.set(state,
       'networkConfiguration', networkConfiguration),
     listener: (state: NetworkState, listener: Listener) => Vue.set(state, 'listener', listener),
     networkModel: (state: NetworkState, networkModel: NetworkModel) => Vue.set(state,
@@ -131,7 +131,7 @@ export default {
       if (existNode) {
         return
       }
-      const newNodes = [ ...knowNodes, new NodeModel(peerUrl, '') ]
+      const newNodes = [...knowNodes, new NodeModel(peerUrl, '', false)]
       new NodeService().saveNodes(newNodes)
       Vue.set(state, 'knowNodes', newNodes)
     },
@@ -148,14 +148,13 @@ export default {
     subscriptions: (state: NetworkState, data) => Vue.set(state, 'subscriptions', data),
     addSubscriptions: (state: NetworkState, payload) => {
       const subscriptions = state.subscriptions
-      Vue.set(state, 'subscriptions', [ ...subscriptions, payload ])
+      Vue.set(state, 'subscriptions', [...subscriptions, payload])
     },
   },
   actions: {
     async initialize({commit, dispatch, getters}) {
       const callback = async () => {
-        const networkService = new NetworkService()
-        await dispatch('CONNECT', networkService.getDefaultUrl())
+        await dispatch('CONNECT')
         // update store
         commit('setInitialized', true)
       }
@@ -171,20 +170,23 @@ export default {
     },
 
 
-    async CONNECT({commit, dispatch}, rawUrl: string) {
+    async CONNECT({commit, dispatch}, newCandidate: string | undefined) {
       const networkService = new NetworkService()
-      const currentPeer = URLHelpers.formatUrl(rawUrl)
-      const url = currentPeer.url
-      const {networkModel, repositoryFactory} = await networkService.getNetworkModel(url)
-        .toPromise()
-      const getNodesPromise = new NodeService().getNodes(repositoryFactory, url).toPromise()
+      const {networkModel, repositoryFactory, fallback} = await networkService.getNetworkModel(newCandidate)
+      .toPromise()
+      if (fallback) {
+        throw new Error('Connection Error.')
+      }
+
+      const getNodesPromise = new NodeService().getNodes(repositoryFactory, networkModel.url).toPromise()
       const getBlockchainHeightPromise = repositoryFactory.createChainRepository()
-        .getBlockchainHeight().toPromise()
+      .getBlockchainHeight().toPromise()
       const nodes = await getNodesPromise
       const currentHeight = (await getBlockchainHeightPromise).compact()
       const listener = repositoryFactory.createListener()
       await listener.open()
 
+      const currentPeer = URLHelpers.getNodeUrl(networkModel.url)
       commit('currentPeer', currentPeer)
       commit('networkModel', networkModel)
       commit('networkConfiguration', networkModel.networkConfiguration)
@@ -194,7 +196,7 @@ export default {
       commit('knowNodes', nodes)
       commit('listener', listener)
       commit('currentHeight', currentHeight)
-      commit('currentPeerInfo', nodes.find(n => n.url === url))
+      commit('currentPeerInfo', nodes.find(n => n.url === networkModel.url))
       commit('setConnected', true)
       $eventBus.$emit('newConnection', currentPeer)
       // subscribe to updates
@@ -229,6 +231,7 @@ export default {
         dispatch('wallet/initialize', {address: currentWallet.address}, {root: true})
 
       } catch (e) {
+        console.log(e)
         dispatch(
           'notification/ADD_ERROR',
           `${app.$t('error_peer_connection_went_wrong', {peerUrl: currentPeerUrl})}`,

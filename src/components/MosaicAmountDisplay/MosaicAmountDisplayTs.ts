@@ -16,7 +16,7 @@
 // external dependencies
 import {mapGetters} from 'vuex'
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {MosaicId} from 'symbol-sdk'
+import {MosaicId, NamespaceId} from 'symbol-sdk'
 // internal dependencies
 // configuration
 // child components
@@ -41,7 +41,7 @@ export class MosaicAmountDisplayTs extends Vue {
 
   @Prop({
     default: null,
-  }) id: MosaicId
+  }) id: MosaicId | NamespaceId
 
   @Prop({
     default: null,
@@ -70,21 +70,32 @@ export class MosaicAmountDisplayTs extends Vue {
   private networkConfiguration: NetworkConfigurationModel
 
   /// region computed properties getter/setter
+
+  private useNetwork(): boolean {
+    if (!this.id) {
+      return !!this.networkCurrency
+    }
+    if (this.networkCurrency && this.id.toHex() === this.networkCurrency.mosaicIdHex) {
+      return true
+    }
+    if (this.networkCurrency && this.id.toHex() === this.networkCurrency.namespaceIdHex) {
+      return true
+    }
+    return false
+  }
+
   /**
    * Mosaic divisibility from database
    * @return {number}
    */
   protected get divisibility(): number {
-    if (!this.id) {
-      return this.networkCurrency && this.networkCurrency.divisibility
-        || this.networkConfiguration.maxMosaicDivisibility
-    }
-    if (this.networkCurrency && this.id.toHex() === this.networkCurrency.mosaicIdHex) {
+    if (this.useNetwork()) {
       return this.networkCurrency.divisibility
     }
+    //TODO improve how to resolve the mosaic id when the known value is a namespace id.
+    //Note that if the transaction is old, the namespace id of the mosaic may have been expired!
     const mosaic = this.mosaics.find(m => m.mosaicIdHex === this.id.toHex())
     return mosaic ? mosaic.divisibility : this.networkConfiguration.maxMosaicDivisibility
-
   }
 
   public get amount(): number {
@@ -97,13 +108,11 @@ export class MosaicAmountDisplayTs extends Vue {
     if (!this.showTicker) {
       return ''
     }
-    if (!this.id) {
-      return this.networkCurrency && this.networkCurrency.ticker || ''
+
+    if (this.useNetwork()) {
+      return this.networkCurrency.ticker || ''
     }
 
-    if (this.networkCurrency && this.id.toHex() === this.networkCurrency.mosaicIdHex) {
-      return this.networkCurrency.ticker
-    }
     const mosaic = this.mosaics.find(m => m.mosaicIdHex === this.id.toHex())
     return mosaic && mosaic.name || this.id.toHex()
   }

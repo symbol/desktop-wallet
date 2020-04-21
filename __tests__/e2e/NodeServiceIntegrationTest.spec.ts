@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-/**
- * Stored POJO that holds node information.
- *
- * The stored data is cached from rest.
- *
- * The object is serialized and deserialized to/from JSON. no method or complex attributes can be fined.
- *
- */
-export class NodeModel {
-  constructor(
-    public readonly url: string,
-    public readonly friendlyName: string,
-    public readonly isDefault: boolean,
-  ) {
+import {RepositoryFactoryHttp} from 'symbol-sdk'
+import {NodeService} from '@/services/NodeService'
+import {toArray} from 'rxjs/operators'
 
-  }
-}
+
+const nodeService = new NodeService()
+const realUrl = 'http://api-01.us-west-1.symboldev.network:3000'
+const realRepositoryFactory = new RepositoryFactoryHttp(realUrl)
+
+describe.skip('services/NodeService', () => {
+  test('getNodes', async () => {
+    const peers = await nodeService.getNodes(realRepositoryFactory, realUrl).pipe(toArray()).toPromise()
+    console.log(JSON.stringify(peers, null, 2))
+  })
+})

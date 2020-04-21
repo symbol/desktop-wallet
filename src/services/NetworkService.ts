@@ -18,7 +18,7 @@ import {NetworkModel} from '@/core/database/entities/NetworkModel'
 import {Listener, NetworkConfiguration, RepositoryFactory, RepositoryFactoryHttp} from 'symbol-sdk'
 import {URLHelpers} from '@/core/utils/URLHelpers'
 import {combineLatest, defer, EMPTY, Observable} from 'rxjs'
-import {catchError, flatMap, map, take, tap} from 'rxjs/operators'
+import {catchError, concatMap, flatMap, map, take, tap} from 'rxjs/operators'
 import * as _ from 'lodash'
 
 import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
@@ -49,18 +49,19 @@ export class NetworkService {
   }
 
   /**
-   * This method get the network data from the provided URL. If the server in the newUrl is down,
+   * This method get the network data from the provided URL. If the server in the candidateUrl is down,
    * the next available url will be used.
    *
-   * @param newUrl the new url.
+   * @param candidateUrl the new url.
    */
-  public getNetworkModel(newUrl: string):
-  Observable<{ networkModel: NetworkModel, repositoryFactory: RepositoryFactory }> {
+  public getNetworkModel(candidateUrl: string | undefined):
+    Observable<{ fallback: boolean, networkModel: NetworkModel, repositoryFactory: RepositoryFactory }> {
     const storedNetworkModel = this.loadNetworkModel()
-    const possibleUrls = this.resolveCandidates(newUrl, storedNetworkModel)
-    const repositoryFactoryObservable = defer(
-      () => fromIterable(possibleUrls).pipe(flatMap(url => this.createRepositoryFactory(url))))
-      .pipe(take(1))
+    const possibleUrls = this.resolveCandidates(candidateUrl, storedNetworkModel)
+
+    const repositoryFactoryObservable = fromIterable(possibleUrls)
+    .pipe(concatMap(url => this.createRepositoryFactory(url)))
+    .pipe(take(1))
     return repositoryFactoryObservable.pipe(flatMap(({url, repositoryFactory}) => {
       const networkRepository = repositoryFactory.createNetworkRepository()
       const nodeRepository = repositoryFactory.createNodeRepository()
@@ -76,6 +77,7 @@ export class NetworkService {
           storedNetworkModel && storedNetworkModel.nodeInfo)),
       ]).pipe(map(restData => {
         return {
+          fallback: !!candidateUrl && candidateUrl !== url,
           networkModel: new NetworkModel(url, restData[0], restData[1], restData[2], restData[3]),
           repositoryFactory,
         }
@@ -83,8 +85,10 @@ export class NetworkService {
     }))
   }
 
+
   private createRepositoryFactory(url: string): Observable<{ url: string, repositoryFactory: RepositoryFactory }> {
 
+    console.log(`Testing ${url}`)
     const repositoryFactory = NetworkService.createRepositoryFactory(url)
     return defer(() => {
       return repositoryFactory.getGenerationHash()
@@ -118,12 +122,12 @@ export class NetworkService {
   }
 
 
-  private resolveCandidates(newUrl: string,
-    storedNetworkModel: NetworkModel | undefined): string[] {
+  private resolveCandidates(newUrl: string | undefined,
+                            storedNetworkModel: NetworkModel | undefined): string[] {
     // Should we load cached candidates in the node tables?
     return _.uniq(
-      [ newUrl, storedNetworkModel && storedNetworkModel.url, networkConfig.defaultNodeUrl,
-        ...networkConfig.nodes.map(n => n.url) ].filter(p => p))
+      [newUrl, storedNetworkModel && storedNetworkModel.url, networkConfig.defaultNodeUrl,
+        ...networkConfig.nodes.map(n => n.url)].filter(p => p))
   }
 
 

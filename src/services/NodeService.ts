@@ -37,39 +37,46 @@ export class NodeService {
    */
   private readonly storage = new SimpleObjectStorage<NodeModel[]>('node')
 
-  public getNodes(repositoryFactory: RepositoryFactory, url: string): Observable<NodeModel[]> {
+  public getNodes(repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string): Observable<NodeModel[]> {
     const storedNodes = this.loadNodes().concat(this.loadStaticNodes())
     const nodeRepository = repositoryFactory.createNodeRepository()
 
-    function toNodeModel(n: NodeInfo): NodeModel | undefined {
-      if (!n.host || n.roles == RoleType.PeerNode) {
-        return undefined
-      }
-      const resolvedUrl = URLHelpers.getNodeUrl(n.host)
-      return new NodeModel(resolvedUrl, n.friendlyName || resolvedUrl)
-    }
-
     return combineLatest([
-      nodeRepository.getNodeInfo().pipe(map(dto => new NodeModel(url, dto.friendlyName || '')))
-        .pipe(ObservableHelpers.defaultLast(
-          new NodeModel(url, url))),
-      nodeRepository.getNodePeers().pipe(map(l => l.map(toNodeModel).filter(n => n && n.url)))
-        .pipe(ObservableHelpers.defaultLast(
-          storedNodes)),
+      nodeRepository.getNodeInfo().pipe(map(dto => this.createNodeModel(repositoryFactoryUrl, dto.friendlyName)))
+      .pipe(ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl))),
+      nodeRepository.getNodePeers().pipe(map(l => l.map(this.toNodeModel).filter(n => n && n.url)))
+      .pipe(ObservableHelpers.defaultLast(
+        storedNodes)),
 
     ]).pipe(map(restData => {
       const currentNode = restData[0]
       const nodePeers = restData[1]
       const nodeInfos = [currentNode].concat(nodePeers, storedNodes)
-      return _.sortBy(_.uniqBy(nodeInfos, 'url'), 'friendlyName')
+      return _.sortBy(_.uniqBy(nodeInfos, 'url'), 'isDefault', ' friendlyName')
     }), tap(p => this.saveNodes(p)))
   }
 
 
   private loadStaticNodes(): NodeModel[] {
     return networkConfig.nodes.map(n => {
-      return new NodeModel(n.url, n.friendlyName)
+      return this.createNodeModel(n.url, n.friendlyName, true)
     })
+  }
+
+  private toNodeModel(n: NodeInfo): NodeModel | undefined {
+    if (!n.host || n.roles == RoleType.PeerNode) {
+      return undefined
+    }
+    const resolvedUrl = URLHelpers.getNodeUrl(n.host)
+    return this.createNodeModel(resolvedUrl, n.friendlyName)
+  }
+
+
+  private createNodeModel(url: string,
+                          friendlyName: string | undefined = undefined,
+                          isDefault: boolean | undefined = undefined): NodeModel {
+    return new NodeModel(url, friendlyName || '', isDefault
+      || !!networkConfig.nodes.find(n => n.url === url))
   }
 
   private loadNodes(): NodeModel[] {

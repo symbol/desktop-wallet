@@ -16,7 +16,7 @@
 // external dependencies
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {MosaicId, Transaction, TransactionType, TransferTransaction} from 'symbol-sdk'
+import {MosaicId, NamespaceId, Transaction, TransactionType, TransferTransaction} from 'symbol-sdk'
 // internal dependencies
 import {TransactionService, TransactionViewType} from '@/services/TransactionService'
 import {Formatters} from '@/core/utils/Formatters'
@@ -156,11 +156,11 @@ export class TransactionRowTs extends Vue {
   /**
    * Returns the mosaic id of the balance or undefined for the network.
    */
-  public getAmountMosaicId(): MosaicId | undefined {
+  public getAmountMosaicId(): MosaicId | NamespaceId | undefined {
     if (this.transaction.type === TransactionType.TRANSFER) {
       // We may prefer XYM over other mosaic if XYM is 2nd+
       const transferTransaction = this.transaction as TransferTransaction
-      return transferTransaction.mosaics.length && transferTransaction.mosaics[0].id as MosaicId || undefined
+      return transferTransaction.mosaics.length && transferTransaction.mosaics[0].id || undefined
     }
     return undefined
   }

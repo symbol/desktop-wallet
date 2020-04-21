@@ -74,7 +74,8 @@ export class TransactionListFiltersTs extends Vue {
    */
   protected onSignerSelectorChange(publicKey: string): void {
     // clear previous account transactions
-    this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {publicKey})
+    if (publicKey)
+      this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {publicKey})
   }
 
   protected onStatusSelectorChange(filter: TransactionGroup) {

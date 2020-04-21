@@ -53,10 +53,10 @@
     "xss": "^1.0.6"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.149",
     "@babel/core": "^7.7.2",
     "@types/crypto-js": "^3.1.43",
     "@types/jest": "^23.3.1",
+    "@types/lodash": "^4.14.149",
     "@types/node": "^9.6.50",
     "@types/request": "^2.47.1",
     "@types/vue-moment": "^4.0.0",

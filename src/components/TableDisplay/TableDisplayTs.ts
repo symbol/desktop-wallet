@@ -35,6 +35,7 @@ import FormMosaicSupplyChangeTransaction from '@/views/forms/FormMosaicSupplyCha
 import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
 import {MosaicModel} from '@/core/database/entities/MosaicModel'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import {WalletModel} from '@/core/database/entities/WalletModel'
 
 @Component({
   components: {
@@ -47,7 +48,8 @@ import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigu
   computed: {
     ...mapGetters({
       currentHeight: 'network/currentHeight',
-      ownedMosaics: 'mosaic/ownedMosaics',
+      currentWallet: 'wallet/currentWallet',
+      holdMosaics: 'mosaic/holdMosaics',
       ownedNamespaces: 'namespace/ownedNamespaces',
       networkConfiguration: 'network/networkConfiguration',
     }),
@@ -73,7 +75,7 @@ export class TableDisplayTs extends Vue {
    * @protected
    * @type {MosaicModel[]}
    */
-  private ownedMosaics: MosaicModel[]
+  private holdMosaics: MosaicModel[]
 
   /**
    * Current wallet owned namespaces
@@ -81,6 +83,8 @@ export class TableDisplayTs extends Vue {
    * @type {NamespaceModel[]}
    */
   private ownedNamespaces: NamespaceModel[]
+
+  private currentWallet: WalletModel
 
   private currentHeight: number
 
@@ -112,10 +116,12 @@ export class TableDisplayTs extends Vue {
 
   public nodata = [...new Array(this.pageSize).keys()]
 
+
   protected get ownedAssetHexIds(): string[] {
     return this.assetType === 'namespace'
       ? this.ownedNamespaces.map(({namespaceIdHex}) => namespaceIdHex)
-      : this.ownedMosaics.map(({mosaicIdHex}) => mosaicIdHex)
+      : this.holdMosaics.filter(({ownerRawPlain}) => ownerRawPlain === this.currentWallet.address)
+      .map(({mosaicIdHex}) => mosaicIdHex)
   }
 
   /**
@@ -167,7 +173,7 @@ export class TableDisplayTs extends Vue {
    */
   protected getService(): AssetTableService {
     if ('mosaic' === this.assetType) {
-      return new MosaicTableService(this.currentHeight, this.ownedMosaics,
+      return new MosaicTableService(this.currentHeight, this.holdMosaics,
         this.networkConfiguration)
     } else if ('namespace' === this.assetType) {
       return new NamespaceTableService(this.currentHeight, this.ownedNamespaces,
@@ -359,8 +365,8 @@ export class TableDisplayTs extends Vue {
     // populate asset form modal props if asset is a namespace
     if (this.assetType === 'namespace') {
       this.modalFormsProps.namespaceId = new NamespaceId(rowValues.name),
-      this.modalFormsProps.aliasTarget = rowValues.aliasIdentifier === 'N/A' ? null : rowValues.aliasIdentifier
-        ? getInstantiatedAlias(rowValues.aliasType, rowValues.aliasIdentifier) : null
+        this.modalFormsProps.aliasTarget = rowValues.aliasIdentifier === 'N/A' ? null : rowValues.aliasIdentifier
+          ? getInstantiatedAlias(rowValues.aliasType, rowValues.aliasIdentifier) : null
       this.modalFormsProps.aliasAction = rowValues.aliasIdentifier === 'N/A' ? AliasAction.Link : AliasAction.Unlink
     }
 
