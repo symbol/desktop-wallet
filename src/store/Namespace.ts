@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Address} from 'symbol-sdk'
+import {Address, NamespaceId, RepositoryFactory} from 'symbol-sdk'
 import Vue from 'vue'
 // internal dependencies
 import {AwaitLock} from './AwaitLock'
 import {NamespaceService} from '@/services/NamespaceService'
 import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
+
+import * as _ from 'lodash'
 
 const Lock = AwaitLock.create()
 
@@ -47,9 +49,10 @@ export default {
     setInitialized: (state: NamespaceState, initialized) => { state.initialized = initialized },
     namespaces: (state: NamespaceState,
       {namespaces, currentSignerAddress}: { namespaces: NamespaceModel[], currentSignerAddress: Address }) => {
-      Vue.set(state, 'namespaces', namespaces)
+      const uniqueNamespaces = _.uniqBy(namespaces, n => n.namespaceIdHex)
+      Vue.set(state, 'namespaces', uniqueNamespaces)
       Vue.set(state, 'ownedNamespaces',
-        namespaces.filter(n => n.ownerAddressRawPlain === currentSignerAddress.plain()))
+        uniqueNamespaces.filter(n => n.ownerAddressRawPlain === currentSignerAddress.plain()))
     },
   },
   actions: {
@@ -80,6 +83,36 @@ export default {
       namespaceService.getNamespaces(repositoryFactory, knownAddresses).subscribe((namespaces) => {
         commit('namespaces', {namespaces, currentSignerAddress})
       })
+    },
+
+    async RESOLVE_NAME({commit, getters, rootGetters}, namespaceId: NamespaceId): Promise<string> {
+      if (!namespaceId) {
+        return ''
+      }
+
+      if (namespaceId.fullName) {
+        return namespaceId.fullName
+      }
+      const namespaces: NamespaceModel[] = getters['namespaces']
+      const knownNamespace = namespaces.find(n => n.namespaceIdHex === namespaceId.toHex())
+      if (knownNamespace) {
+        return knownNamespace.name
+      }
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
+      const currentSignerAddress = rootGetters['wallet/currentSignerAddress'] as Address
+      const namespaceRepository = repositoryFactory.createNamespaceRepository()
+
+      const namespaceInfo = await namespaceRepository.getNamespace(namespaceId).toPromise()
+
+      // map by hex if names available
+      const namespaceName = await namespaceRepository.getNamespacesName([namespaceId]).toPromise()
+
+      // Note, fullName may not be full. How can we load it without needing to load each parent recursively?.
+      const model = new NamespaceModel(namespaceInfo,
+        NamespaceService.getFullNameFromNamespaceNames(namespaceName[0], namespaceName))
+      namespaces.push(model)
+      commit('namespaces', {namespaces, currentSignerAddress})
+      return model.name
     },
 
     SIGNER_CHANGED({dispatch}) {

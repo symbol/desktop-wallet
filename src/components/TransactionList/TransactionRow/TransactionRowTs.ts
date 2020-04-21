@@ -24,8 +24,7 @@ import {TimeHelpers} from '@/core/utils/TimeHelpers'
 // child components
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
-// @ts-ignore
-import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue'
+
 // @ts-ignore
 import ActionDisplay from '@/components/ActionDisplay/ActionDisplay.vue'
 
@@ -37,7 +36,6 @@ import {transactionTypeToIcon, officialIcons, dashboardImages} from '@/views/res
 
 @Component({
   components: {
-    AddressDisplay,
     ActionDisplay,
     MosaicAmountDisplay,
   },

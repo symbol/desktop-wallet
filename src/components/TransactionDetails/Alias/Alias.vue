@@ -1,11 +1,11 @@
 <template>
   <div class="transaction-details-item-inner-container">
     <div
-      v-for="({ key, value }, index) in items"
+      v-for="(item, index) in items"
       :key="index"
       class="transaction-row-outer-container"
     >
-      <TransactionDetailRow :label="key" :value="value" />
+      <TransactionDetailRow :item="item" />
     </div>
   </div>
 </template>
@@ -15,6 +15,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator'
 import {Address, AliasAction, MosaicId, NamespaceId} from 'symbol-sdk'
 import {TransactionViewType} from '@/services/TransactionService'
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
+import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({ components: { TransactionDetailRow } })
 export default class Alias extends Vue {
@@ -25,7 +26,7 @@ export default class Alias extends Vue {
    * Displayed items
    * @type {({ key: string, value: string | boolean }[])}
    */
-  protected get items(): { key: string, value: string | boolean }[] {
+  protected get items(): TransactionDetailItem[] {
     const namespaceId: NamespaceId = this.view.values.get('namespaceId')
     const name: string = this.view.values.get('name')
     const aliasTarget: Address | MosaicId = this.view.values.get('aliasTarget')

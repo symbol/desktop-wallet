@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {Address, NamespaceId, Transaction, TransactionType, TransferTransaction} from 'symbol-sdk'
-import {mapGetters} from 'vuex'
-import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
+import {Transaction, TransactionType} from 'symbol-sdk'
+// @ts-ignore
+import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue'
 
 @Component({
-  computed: {
-    ...mapGetters({
-      namespaces: 'namespace/namespaces',
-    }),
+  components: {
+    AddressDisplay,
   },
 })
 export class ActionDisplayTs extends Vue {
@@ -31,18 +29,11 @@ export class ActionDisplayTs extends Vue {
    * @type {Transaction}
    */
   @Prop({default: null}) transaction: Transaction
-
-  /**
-   * Action descriptor
-   * @var {string}
-   */
-  public descriptor: string = ''
-
   /**
    * Transaction type from SDK
    * @type {TransactionType}
    */
-  private transactionType = TransactionType
+  public transactionType = TransactionType
 
   /**
    * Whether the transaction needs a cosignature
@@ -52,43 +43,4 @@ export class ActionDisplayTs extends Vue {
    */
   protected needsCosignature: boolean = false
 
-  public namespaces: NamespaceModel[]
-
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  public created() {
-    // - load transaction details
-    this.loadDetails()
-  }
-
-
-  /// region computed properties getter/setter
-  /// end-region computed properties getter/setter
-
-  /**
-   * Load transaction details
-   * @return {Promise<void>}
-   */
-  protected async loadDetails(): Promise<void> {
-    // in case of normal transfer, display pretty address
-    if (this.transaction.type === this.transactionType.TRANSFER
-      && (this.transaction as TransferTransaction).recipientAddress instanceof Address) {
-      const transaction = this.transaction as TransferTransaction
-      const recipient = transaction.recipientAddress as Address
-      this.descriptor = recipient.pretty()
-    }
-    // - in case of transfer to a namespace id, resolve namespace name
-    else if (this.transaction.type === this.transactionType.TRANSFER
-      && (this.transaction as TransferTransaction).recipientAddress instanceof NamespaceId) {
-      const id = ((this.transaction as TransferTransaction).recipientAddress as NamespaceId)
-      const namespaceName = this.namespaces.find(n => n.namespaceIdHex == id.toHex())
-      this.descriptor = namespaceName && namespaceName.name || ''
-    }
-    // - otherwise use *translated* transaction descriptor
-    else {
-      this.descriptor = this.$t(`transaction_descriptor_${this.transaction.type}`).toString()
-    }
-  }
 }

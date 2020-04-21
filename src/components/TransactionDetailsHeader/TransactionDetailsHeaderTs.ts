@@ -23,6 +23,7 @@ import {Formatters} from '@/core/utils/Formatters'
 // child components
 // @ts-ignore
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
+import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({
   components: {
@@ -83,7 +84,7 @@ export class TransactionDetailsHeaderTs extends Vue {
    * @see {Store.Mosaic}
    * @type {({ key: string, value: string | boolean, | Mosaic }[])}
    */
-  get items(): { key: string, value: any, isMosaic?: boolean }[] {
+  get items(): TransactionDetailItem[] {
     return [
       {key: 'status', value: `${this.$t(this.view.info ? 'confirmed' : 'unconfirmed')}`},
       {

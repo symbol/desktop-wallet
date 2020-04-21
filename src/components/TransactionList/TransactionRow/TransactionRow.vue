@@ -10,7 +10,6 @@
 
     <!-- SECOND COLUMN -->
     <div class="address-cell">
-      <AddressDisplay :address="transaction.signer.address" />
       <ActionDisplay :transaction="transaction" />
     </div>
 
