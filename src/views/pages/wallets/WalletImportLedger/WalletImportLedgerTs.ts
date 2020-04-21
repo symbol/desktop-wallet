@@ -69,7 +69,6 @@ export class WalletImportLedgerTs extends Vue {
     })
     this.$router.push('/dashboard')
   }
-
   toBack() {
     // this.deleteAccountAndBack();
     this.$store.dispatch('account/RESET_STATE')

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import * as BIPPath from 'bip32-path'
 import {mapGetters} from 'vuex'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Transaction, MosaicId, AggregateTransaction,Address,PublicAccount, NetworkType} from 'symbol-sdk'
@@ -250,7 +249,7 @@ export class TransactionListTs extends Vue {
    * @param {Transaction} transaction
    */
 
-   /**
+  /**
    * Network type
    * @var {NetworkType}
    */
