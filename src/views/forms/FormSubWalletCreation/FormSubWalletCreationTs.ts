@@ -67,7 +67,7 @@ export class FormSubWalletCreationTs extends Vue {
    */
   public currentAccount: AccountModel
 
-  public hasSubAccount :boolean
+  public hasSubAccount: boolean
   /**
    * Known wallets identifiers
    */
@@ -165,8 +165,8 @@ export class FormSubWalletCreationTs extends Vue {
       : 'child_wallet'
      if (this.isLedger && type =="child_wallet"){
       this.deriveNextChildWallet(values.name)
-     } 
-     else this.hasAccountUnlockModal = true
+    } 
+    else this.hasAccountUnlockModal = true
 
   }
 
@@ -290,11 +290,11 @@ export class FormSubWalletCreationTs extends Vue {
     const accountPath = this.currentWallet.path
     const currentAccountIndex = accountPath.substring(accountPath.length-2,accountPath.length-1)
     const numAccount = this.knownPaths.length
-    var accountIndex
-    if(numAccount<= Number(currentAccountIndex) ){
-      accountIndex = numAccount+Number(currentAccountIndex)
+    let accountIndex
+    if(numAccount <= Number(currentAccountIndex) ){
+      accountIndex = numAccount + Number(currentAccountIndex)
     } else {
-      accountIndex = numAccount+1
+      accountIndex = numAccount + 1
     }
     try {
       this.$Notice.success({

@@ -28,19 +28,19 @@ export default class ImportAccountTs extends Vue {
     'Finish',
   ]
   public LedgerStepBarTitleList = [
-      'Create Account',
-      'Import Ledger',
-    ]
-  isLedger = false;
+    'Create Account',
+    'Import Ledger',
+  ]
+  isLedger = false
   public titleList = []
     
   public created() {
-      const {isLedger} = this.$route.meta
+    const {isLedger} = this.$route.meta
       
-      if (isLedger) {
-          this.titleList = this.LedgerStepBarTitleList
-      }   else
-      {this.titleList = this.StepBarTitleList}
+    if (isLedger) {
+      this.titleList = this.LedgerStepBarTitleList
+    } else
+    {this.titleList = this.StepBarTitleList}
   }
   /**
    * Hook called when the page is mounted

@@ -299,13 +299,11 @@ export class FormTransactionBase extends Vue {
       title: this['$t']('Verify information in your device!') + ''
     })
     const nodeUrl = Object.values(this.currentPeer)[3]
-    const signer = this.currentSigner.publicKey;//accountResult.publicKey;
     const transport = await TransportWebUSB.create();
     const symbolLedger = new SymbolLedger(transport, "XYM");
     const currentPath = this.currentWallet.path
-    const accountIndex = Number(currentPath.substring(currentPath.length-2,currentPath.length-1))
-    const networkType =  Number(currentPath.substring(currentPath.length-10,currentPath.length-7))
-    const accountResult = await symbolLedger.getAccount(`m/44'/4343'/${networkType}'/0'/${accountIndex}'`)
+    const networkType = this.currentAccount.networkType
+    const accountResult = await symbolLedger.getAccount(currentPath)
     const { address, publicKey, path } = accountResult;
     const generationHash = this.$store.getters['network/generationHash']
     // const addr = Address.createFromPublicKey(signer,this.networkType)
@@ -325,7 +323,7 @@ export class FormTransactionBase extends Vue {
               UInt64.fromUint(this.defaultFee),
             )
 
-            const signature = await symbolLedger.signTransaction(path,aggregateTx, generationHash, publicKey) //`m/44'/43'/${networkType}'/0'/${accountIndex}'`
+            const signature = await symbolLedger.signTransaction(path,aggregateTx, generationHash, publicKey)
             transport.close()
             this.$store.commit('wallet/addSignedTransaction', signature)
             signedTransactions.push(signature)
@@ -367,7 +365,7 @@ export class FormTransactionBase extends Vue {
             )
 
             // - sign aggregate transaction and create lock
-            const signedTx  = await symbolLedger.signTransaction(path,aggregateTx, generationHash, publicKey) //`m/44'/43'/${networkType}'/0'/${accountIndex}'`
+            const signedTx = await symbolLedger.signTransaction(path,aggregateTx, generationHash, publicKey) 
             const hashLock = LockFundsTransaction.create(
               Deadline.create(),
               new Mosaic(
@@ -377,14 +375,14 @@ export class FormTransactionBase extends Vue {
               UInt64.fromUint(1000), // duration=1000
               signedTx,
               networkType,
-              UInt64.fromUint(this.defaultFee) //currentFee[transactions.length-1]
+              UInt64.fromUint(this.defaultFee), // currentFee[transactions.length-1]
             )
             
             this.$Notice.success({
-              title: this['$t']('Sign LockFundTransaction to finish your registration!') + ''
+              title: this['$t']('Sign LockFundTransaction to finish your registration!') + '',
             })
             // - sign hash lock and push
-            const signedLock = await symbolLedger.signTransaction(`m/44'/43'/${networkType}'/0'/${accountIndex}'`,hashLock, this.generationHash, publicKey)
+            const signedLock = await symbolLedger.signTransaction(currentPath,hashLock, this.generationHash, publicKey)
 
             // - push signed transactions (order matters)
             this.$store.commit('wallet/addSignedTransaction', signedLock)
@@ -417,40 +415,40 @@ export class FormTransactionBase extends Vue {
                 'wallet/ADD_STAGED_TRANSACTION',
                 transaction,
               )
-              const signature = await symbolLedger.signTransaction(path, transaction, this.generationHash, signer) //`m/44'/43'/${networkType}'/0'/${accountIndex}'`
+              const signature = await symbolLedger.signTransaction(path, transaction, this.generationHash, publicKey)
               transport.close()
 
-              //Announce the transaction
-              const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
-              const transactionHttp = repositoryFactory.createTransactionRepository();
+              // Announce the transaction
+              const repositoryFactory = new RepositoryFactoryHttp(nodeUrl)
+              const transactionHttp = repositoryFactory.createTransactionRepository()
               transactionHttp
-              .announce(signature)
-              .subscribe(
+                .announce(signature)
+                .subscribe(
                   (x) => console.log(x),
-                  (err) => console.error(err));
-              }))
-            }
+                  (err) => console.error(err))
+            }))
+        }
   
-    } catch (err) {
-      transport.close()
-      this.$Notice.error({
-        title: this['$t']('Transaction canceled!') + ''
-      })
-        console.log(err);
-    }  
-  }
-  // This account is not Ledger account
-  else{
-    await Promise.all(transactions.map(
-      async (transaction) => {
-        await this.$store.dispatch(
-          'wallet/ADD_STAGED_TRANSACTION',
-          transaction,
-        )
-    // - open signature modal
-    this.onShowConfirmationModal()
-    }))
-  }
+      } catch (err) {
+        transport.close()
+        this.$Notice.error({
+          title: this['$t']('Transaction canceled!') + '',
+        })
+        console.log(err)
+      }  
+    }
+    // This account is not Ledger account
+    else{
+      await Promise.all(transactions.map(
+        async (transaction) => {
+          await this.$store.dispatch(
+            'wallet/ADD_STAGED_TRANSACTION',
+            transaction,
+          )
+          // - open signature modal
+          this.onShowConfirmationModal()
+        }))
+    }
     this.resetForm()
   }
 

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as BIPPath from 'bip32-path'
 import {mapGetters} from 'vuex'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Transaction, MosaicId, AggregateTransaction,Address,PublicAccount, NetworkType} from 'symbol-sdk'
@@ -241,7 +240,7 @@ export class TransactionListTs extends Vue {
    * @param {Transaction} transaction
    */
 
-   /**
+  /**
    * Network type
    * @var {NetworkType}
    */
@@ -255,35 +254,18 @@ export class TransactionListTs extends Vue {
   public async onClickTransaction(transaction: any ) {//Transaction | AggregateTransaction
     const isSigner = transaction.signer.address.plain()==this.currentWallet.address ? true : false
     if (transaction.hasMissingSignatures() ) {
-      if(this.currentWallet.type==WalletType.fromDescriptor('Ledger') && !isSigner ){
-        this.$Notice.success({
-          title: this['$t']('Verify information in your device!') + ''
-        })
-        const transport = await TransportWebUSB.create();
-        const currentPath = this.currentWallet.path     
-        const accountIndex = Number(currentPath.substring(currentPath.length-2,currentPath.length-1))
-        const networkType =  Number(currentPath.substring(currentPath.length-10,currentPath.length-7))
-        const symbolLedger = new SymbolLedger(transport, "XYM");
-        const signerPublickey = this.currentWallet.publicKey;
-        const addr = Address.createFromPublicKey(signerPublickey,networkType)
-        const signature = await symbolLedger.signCosignatureTransaction(`m/44'/4343'/${networkType}'/0'/${accountIndex}'`,transaction, this.generationHash, signerPublickey)
-        transport.close()
-        this.$store.dispatch('diagnostic/ADD_DEBUG', `Co-signed transaction with account ${addr.plain()} and result: ${JSON.stringify({
-          parentHash: signature.parentHash,
-          signature: signature.signature
-        })}`)
-        // in modal transactioncosignature
-        // - broadcast signed transactions
-        const service = new TransactionService(this.$store)
-        const results: BroadcastResult[] = await service.announceCosignatureTransactions([signature])
-        // - notify about errors
-        const errors = results.filter(result => false === result.success)
-        if (errors.length) {
-          return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
-        }
-        this.$Notice.success({
-          title: this['$t']('Transaction announce successfully!') + ''
-        })
+      let isCosignatorSigned
+      if(transaction.cosignatures.length !=0){
+        transaction.cosignatures.find(
+          (res)=>{
+            if (this.currentWallet.publicKey != res.signer.publicKey  ){
+              isCosignatorSigned = false
+            } else isCosignatorSigned = true;
+          }
+        )
+      } 
+      if(this.currentWallet.type==WalletType.fromDescriptor('Ledger') && !isCosignatorSigned ){
+        this.signWithLedger(transaction);
       }
       else {
         this.activePartialTransaction = transaction as AggregateTransaction
@@ -315,5 +297,34 @@ export class TransactionListTs extends Vue {
     if (page > this.countPages) page = this.countPages
     else if (page < 1) page = 1
     this.currentPage = page
+  }
+
+  async signWithLedger(transaction:AggregateTransaction){
+    this.$Notice.success({
+      title: this['$t']('Verify information in your device!') + '',
+    })
+    const transport = await TransportWebUSB.create()
+    const currentPath = this.currentWallet.path 
+    const addr = this.currentWallet.address      
+    const symbolLedger = new SymbolLedger(transport, 'XYM')
+    const signerPublickey = this.currentWallet.publicKey
+    const signature = await symbolLedger.signCosignatureTransaction(currentPath,transaction, this.generationHash, signerPublickey)
+    transport.close()
+    this.$store.dispatch('diagnostic/ADD_DEBUG', `Co-signed transaction with account ${addr} and result: ${JSON.stringify({
+      parentHash: signature.parentHash,
+      signature: signature.signature,
+    })}`)
+    // in modal transactioncosignature
+    // - broadcast signed transactions
+    const service = new TransactionService(this.$store)
+    const results: BroadcastResult[] = await service.announceCosignatureTransactions([signature])
+    // - notify about errors
+    const errors = results.filter(result => false === result.success)
+    if (errors.length) {
+      return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
+    }
+    this.$Notice.success({
+      title: this['$t']('Transaction announce successfully!') + '',
+    })
   }
 }

@@ -19,7 +19,7 @@ import {MosaicId, NetworkType} from 'symbol-sdk'
 import {ValidationProvider} from 'vee-validate'
 // internal dependencies
 import {AccountModel} from '@/core/database/entities/AccountModel'
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
 import {WalletService} from '@/services/WalletService'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 // child components
@@ -132,14 +132,8 @@ export class WalletSelectorPanelTs extends Vue {
    * @return {void}
    */
 
-
-  public isLedger : boolean;
-
-  checkLedger():boolean {
-    if(this.currentWallet.values.get('type')==WalletType.fromDescriptor("Ledger")){
-      this.isLedger = true
-    } else this.isLedger= false
-      return this.isLedger
+  public get isLedger():boolean{
+    return this.currentWallet.type == WalletType.fromDescriptor('Ledger')
   }
 
   public async created() {
