@@ -121,9 +121,9 @@ export const formDataConfig = {
     walletName: 'wallet-privateKey',
   },
   ledgerImportForm: {
-      networkType: NetworkType.TEST_NET,
-      accountIndex: 0,
-      walletName: 'Ledger Wallet'
+    networkType: NetworkType.TEST_NET,
+    accountIndex: 0,
+    walletName: 'Ledger Wallet',
   },
   trezorImportForm: {
     networkType: NetworkType.MIJIN_TEST,

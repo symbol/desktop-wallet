@@ -86,16 +86,16 @@ export class FormAccountUnlockTs extends Vue {
    * account.
    * @return {void}
    */
-  public isLedger : boolean;
-  checkLedger():boolean {
-    if(this.currentWallet.values.get('type')==WalletType.fromDescriptor("Ledger")){
+  public isLedger: boolean
+  checkLedger(): boolean {
+    if(this.currentWallet.values.get('type') == WalletType.fromDescriptor('Ledger')){
       this.isLedger = true
-    } else this.isLedger= false
+    } else this.isLedger = false
     return this.isLedger
   }
   public processVerification() {
     // - create encrypted payload for active wallet
-     const encrypted = new EncryptedPrivateKey(
+    const encrypted = new EncryptedPrivateKey(
       this.currentWallet.values.get('encPrivate'),
       this.currentWallet.values.get('encIv'),
     )

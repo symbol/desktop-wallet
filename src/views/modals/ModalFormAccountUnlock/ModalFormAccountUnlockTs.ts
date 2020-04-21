@@ -73,14 +73,14 @@ export class ModalFormAccountUnlockTs extends Vue {
    * @return {void}
    */
   public currentWallet: WalletsModel
-  public isLedger : boolean;
-  checkLedger():boolean {
-    if(this.currentWallet.values.get('type')==WalletType.fromDescriptor("Ledger")){
+  public isLedger: boolean
+  checkLedger(): boolean {
+    if(this.currentWallet.values.get('type') == WalletType.fromDescriptor('Ledger')){
       this.isLedger = true
-    } else this.isLedger= false
+    } else this.isLedger = false
     return this.isLedger
   }
-  public onAccountUnlocked(payload: {account: any,addr:any, password: Password}) {
+  public onAccountUnlocked(payload: {account: any,addr: any, password: Password}) {
     // - log about unlock success
     if(!this.checkLedger()){
       this.$store.dispatch('diagnostic/ADD_INFO', `Account ${payload.account.address.plain()} unlocked successfully.`)

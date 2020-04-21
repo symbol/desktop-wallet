@@ -151,30 +151,30 @@ export const routes: AppRoute[] = [
             component: () => import('@/views/pages/accounts/import-account/ImportAccount.vue'),
             children: [
               {
-              path: 'inputLedgerAccountInfo',
-              name: 'accounts.importLedgerAccount',
-              meta: {
-                protected:false,
-                index: 1,
-                isLedger: true, 
-                icon: importLedgerStepImage.importLedgerStepImage1
+                path: 'inputLedgerAccountInfo',
+                name: 'accounts.importLedgerAccount',
+                meta: {
+                  protected:false,
+                  index: 1,
+                  isLedger: true, 
+                  icon: importLedgerStepImage.importLedgerStepImage1,
+                },
+                // @ts-ignore
+                component: () => import('@/views/forms/FormAccountCreation/FormAccountCreation.vue'),
               },
-              // @ts-ignore
-              component: () => import('@/views/forms/FormAccountCreation/FormAccountCreation.vue'),
-            },
-            {
-              path: 'importLedger',
-              name: 'accounts.importLedger',
-              meta: {
-                protected: false,
-                index: 1,
-                isLedger: true, 
-                icon: importLedgerStepImage.importLedgerStepImage2,
+              {
+                path: 'importLedger',
+                name: 'accounts.importLedger',
+                meta: {
+                  protected: false,
+                  index: 1,
+                  isLedger: true, 
+                  icon: importLedgerStepImage.importLedgerStepImage2,
 
-              },
-              // @ts-ignore
-              component: () => import('@/views/pages/wallets/WalletImportLedger/WalletImportLedger.vue'),
-            }],
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/wallets/WalletImportLedger/WalletImportLedger.vue'),
+              }],
           },
         ],
       },

@@ -56,7 +56,7 @@ export class FormAccountCreationTs extends Vue {
    * @see {Store.Account}
    * @var {string}
    */
-  isLedger = false;
+  isLedger = false
   created() {
     const {isLedger} = this.$route.meta
     this.isLedger = isLedger
@@ -171,7 +171,7 @@ export class FormAccountCreationTs extends Vue {
     if(!this.isLedger){
       this.$router.push({name: this.nextPage})}
     else{
-      this.$router.push("importLedger")
+      this.$router.push('importLedger')
     }
   }
 }

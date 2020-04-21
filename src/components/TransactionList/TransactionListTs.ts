@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as BIPPath from 'bip32-path'
 import {mapGetters} from 'vuex'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Transaction, MosaicId, AggregateTransaction,Address,PublicAccount, NetworkType} from 'symbol-sdk'
@@ -35,7 +34,7 @@ import PageTitle from '@/components/PageTitle/PageTitle.vue'
 import TransactionListFilters from '@/components/TransactionList/TransactionListFilters/TransactionListFilters.vue'
 // @ts-ignore
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
-import { userInfo } from 'os'
+
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 // custom types
 export const STATUS: Array<string> = [ 'all','confirmed','unconfirmed','partial' ]
@@ -264,7 +263,7 @@ export class TransactionListTs extends Vue {
    * @param {Transaction} transaction 
    */
 
-   /**
+  /**
    * Network type
    * @var {NetworkType}
    */
@@ -275,25 +274,25 @@ export class TransactionListTs extends Vue {
   public currentPeer: Record<string, any>
 
 
-  public async onClickTransaction(transaction: any ) {//Transaction | AggregateTransaction
-    const isSigner = transaction.signer.address.plain()==this.currentWallet.values.get("address") ? true : false
+  public async onClickTransaction(transaction: any ) {// Transaction | AggregateTransaction
+    const isSigner = transaction.signer.address.plain() == this.currentWallet.values.get('address') ? true : false
     if (transaction.hasMissingSignatures() ) {
-      if(this.currentWallet.values.get("type")==WalletType.fromDescriptor('Ledger') && !isSigner ){
+      if(this.currentWallet.values.get('type') == WalletType.fromDescriptor('Ledger') && !isSigner ){
         this.$Notice.success({
-          title: this['$t']('Verify information in your device!') + ''
+          title: this['$t']('Verify information in your device!') + '',
         })
-        const transport = await TransportWebUSB.create();
+        const transport = await TransportWebUSB.create()
         const currentPath = this.currentWallet.values.get('path')      
-        const accountIndex = Number(currentPath.substring(currentPath.length-2,currentPath.length-1))
-        const networkType =  Number(currentPath.substring(currentPath.length-10,currentPath.length-7))
-        const symbolLedger = new SymbolLedger(transport, "XYM");
-        const signerPublickey = this.currentWallet.values.get("publicKey");
+        const accountIndex = Number(currentPath.substring(currentPath.length - 2,currentPath.length - 1))
+        const networkType = Number(currentPath.substring(currentPath.length - 10,currentPath.length - 7))
+        const symbolLedger = new SymbolLedger(transport, 'XYM')
+        const signerPublickey = this.currentWallet.values.get('publicKey')
         const addr = Address.createFromPublicKey(signerPublickey,networkType)
         const signature = await symbolLedger.signCosignatureTransaction(`m/44'/43'/${networkType}'/0'/${accountIndex}'`,transaction, this.generationHash, signerPublickey)
         transport.close()
         this.$store.dispatch('diagnostic/ADD_DEBUG', `Co-signed transaction with account ${addr.plain()} and result: ${JSON.stringify({
           parentHash: signature.parentHash,
-          signature: signature.signature
+          signature: signature.signature,
         })}`)
         // in modal transactioncosignature
         // - broadcast signed transactions
@@ -305,7 +304,7 @@ export class TransactionListTs extends Vue {
           return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
         }
         this.$Notice.success({
-          title: this['$t']('Transaction announce successfully!') + ''
+          title: this['$t']('Transaction announce successfully!') + '',
         })
       }
       else {
