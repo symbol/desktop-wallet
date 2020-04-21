@@ -439,26 +439,26 @@ export class FormTransactionBase extends Vue {
               }))
           }
   
-    } catch (err) {
-      transport.close()
-      this.$Notice.error({
-        title: this['$t']('Transaction canceled!') + ''
-      })
-        console.log(err);
-    }  
-  }
-  // This account is not Ledger account
-  else{
-    await Promise.all(transactions.map(
-      async (transaction) => {
-        await this.$store.dispatch(
-          'wallet/ADD_STAGED_TRANSACTION',
-          transaction,
-        )
-    // - open signature modal
-    this.onShowConfirmationModal()
-    }))
-  }
+      } catch (err) {
+        transport.close()
+        this.$Notice.error({
+          title: this['$t']('Transaction canceled!') + '',
+        })
+        console.log(err)
+      }  
+    }
+    // This account is not Ledger account
+    else{
+      await Promise.all(transactions.map(
+        async (transaction) => {
+          await this.$store.dispatch(
+            'wallet/ADD_STAGED_TRANSACTION',
+            transaction,
+          )
+          // - open signature modal
+          this.onShowConfirmationModal()
+        }))
+    }
     this.resetForm()
   }
 

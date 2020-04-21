@@ -1,28 +1,20 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
-import {NetworkType,SimpleWallet} from "symbol-sdk"
+import {NetworkType} from 'symbol-sdk'
 import {SymbolLedger} from '@/core/utils/ledger'
-import {formDataConfig} from "@/views/forms/FormDefaults";
+import {formDataConfig} from '@/views/forms/FormDefaults'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 // internal dependencies
 import {WalletsModel,WalletType} from '@/core/database/entities/WalletsModel'
 import { AccountsModel } from '@/core/database/entities/AccountsModel'
-// import {AppWallet} from '@/core/model/AppWallet'
 import {NotificationType} from '@/core/utils/NotificationType'
-// import {StoreAccount} from '@/core/model/types'
-// import {WalletType} from '@/core/database/entities/WalletsModel'
-// import {networkTypeConfig} from '@/config/view/setting'
-// import { AppInfo } from '@/core/model/types'
 import { Password } from 'symbol-sdk'
 import {WalletService} from '@/services/WalletService'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {AccountsRepository} from '@/repositories/AccountsRepository'
 // child components
 // @ts-ignore
-import WalletBackupOptions from '@/components/WalletBackupOptions/WalletBackupOptions.vue'
-import { type } from 'os'
-
 
 @Component({
   // components: {
@@ -35,7 +27,7 @@ import { type } from 'os'
     currentMnemonic: 'temporary/mnemonic',
     knownWallets: 'wallet/knownWallets',
     // activeAccount:'account',
-    app:'app'
+    app:'app',
   })},
 })
 export class WalletImportLedgerTs extends Vue {
@@ -53,23 +45,23 @@ export class WalletImportLedgerTs extends Vue {
   public walletsRepository: WalletsRepository
   public accountsRepository: AccountsRepository
   public networkTypeConfig: Array<{
-    value: NetworkType,
+    value: NetworkType
     label: string
-}> = [
-        {
-            value: NetworkType.MIJIN_TEST,
-            label: 'MIJIN_TEST'
-        }, {
-            value: NetworkType.MAIN_NET,
-            label: 'MAIN_NET'
-        }, {
-            value: NetworkType.TEST_NET,
-            label: 'TEST_NET'
-        }, {
-            value: NetworkType.MIJIN,
-            label: 'MIJIN'
-        },
-    ]
+  }> = [
+    {
+      value: NetworkType.MIJIN_TEST,
+      label: 'MIJIN_TEST',
+    }, {
+      value: NetworkType.MAIN_NET,
+      label: 'MAIN_NET',
+    }, {
+      value: NetworkType.TEST_NET,
+      label: 'TEST_NET',
+    }, {
+      value: NetworkType.MIJIN,
+      label: 'MIJIN',
+    },
+  ]
   // activeAccount: StoreAccount
   // app:AppInfo
   public currentWallet: WalletsModel
@@ -81,11 +73,11 @@ export class WalletImportLedgerTs extends Vue {
   networkType: NetworkType | undefined
   active: boolean | undefined
   path: string
-  sourceType: Number
+  sourceType: number
 
   toWalletDetails() {
     this.$Notice.success({
-        title: this['$t']('Imported_wallet_successfully') + ''
+      title: this['$t']('Imported_wallet_successfully') + '',
     })
     this.$router.push('/dashboard')
   }
@@ -103,7 +95,7 @@ export class WalletImportLedgerTs extends Vue {
     this.$router.push('/accounts/create')
   }
   onNetworkSelected(){
-    this.ledgerForm = this.getDefaultFormValues(this.ledgerForm.networkType);
+    this.ledgerForm = this.getDefaultFormValues(this.ledgerForm.networkType)
   }
   numExistingLedgerWallets(networkType){
     let num = 0
@@ -115,76 +107,76 @@ export class WalletImportLedgerTs extends Vue {
         const accounts = this.accountsRepository.collect()
         const account = accounts[i]
         const accountName2 = account.values.get('accountName')
-        if (accountName2==accountName1){
+        if (accountName2 == accountName1){
           networkTypeLocal = account.values.get('networkType')
-          if ( networkTypeLocal == networkType && wallet.values.get("type")=== WalletType.fromDescriptor('Ledger')){
-            num+=1 
+          if ( networkTypeLocal == networkType && wallet.values.get('type') === WalletType.fromDescriptor('Ledger')){
+            num += 1 
           } 
         }    
       }
-      return   num
-      })
-    return num;
+      return num
+    })
+    return num
   }
 
   getDefaultFormValues(networkType) {
-      const numExistingLedgerWallets = this.numExistingLedgerWallets(networkType);
-      const networkName = this.networkTypeConfig.find(network => network.value === networkType).label;
+    const numExistingLedgerWallets = this.numExistingLedgerWallets(networkType)
+    const networkName = this.networkTypeConfig.find(network => network.value === networkType).label
 
-      return {
-          networkType: networkType,
-          accountIndex: numExistingLedgerWallets,
-          walletName: `${networkName} Ledger Account ${numExistingLedgerWallets + 1}`
-      }
+    return {
+      networkType: networkType,
+      accountIndex: numExistingLedgerWallets,
+      walletName: `${networkName} Ledger Account ${numExistingLedgerWallets + 1}`,
+    }
   }
 
-async importAccountFromLedger() {
-  const { accountIndex, networkType, walletName } = this.ledgerForm
-  try {
+  async importAccountFromLedger() {
+    const { accountIndex, networkType, walletName } = this.ledgerForm
+    try {
       this.$Notice.success({
-        title: this['$t']('Verify information in your device!') + ''
+        title: this['$t']('Verify information in your device!') + '',
       })
-      const transport = await TransportWebUSB.create();
-      const symbolLedger = new SymbolLedger(transport, "XYM");
+      const transport = await TransportWebUSB.create()
+      const symbolLedger = new SymbolLedger(transport, 'XYM')
       const accountResult = await symbolLedger.getAccount(`m/44'/43'/${networkType}'/0'/${accountIndex}'`)
-      const { address, publicKey, path } = accountResult;
+      const { address, publicKey, path } = accountResult
       transport.close()
 
       this.createFromLedger(
-          walletName,
-          networkType,
-          path,
-          publicKey.toUpperCase(),
-          address,);
-      this.toWalletDetails();
+        walletName,
+        networkType,
+        path,
+        publicKey.toUpperCase(),
+        address)
+      this.toWalletDetails()
 
       this.$store.dispatch('SET_UI_DISABLED', {
-          isDisabled: false,
-          message: ""
-      });
-
-  } catch (e) {
-      this.$store.dispatch('SET_UI_DISABLED', {
-          isDisabled: false,
-          message: ""
-      });
-      this.$Notice.error({
-          title: this['$t']('CONDITIONS_OF_USE_NOT_SATISFIED') + ''
+        isDisabled: false,
+        message: '',
       })
+
+    } catch (e) {
+      this.$store.dispatch('SET_UI_DISABLED', {
+        isDisabled: false,
+        message: '',
+      })
+      this.$Notice.error({
+        title: this['$t']('CONDITIONS_OF_USE_NOT_SATISFIED') + '',
+      })
+    }
   }
-}
-public mounted() {
-  this.walletService = new WalletService(this.$store)
-  this.walletsRepository = new WalletsRepository()
-  this.accountsRepository = new AccountsRepository()
-}
-createFromLedger(
-  name: string,
-  networkType: NetworkType,
-  path: string,
-  publicKey: string,
-  address: string,){
-  try {     
+  public mounted() {
+    this.walletService = new WalletService(this.$store)
+    this.walletsRepository = new WalletsRepository()
+    this.accountsRepository = new AccountsRepository()
+  }
+  createFromLedger(
+    name: string,
+    networkType: NetworkType,
+    path: string,
+    publicKey: string,
+    address: string){
+    try {     
       this.name = name
       this.address = address
       this.publicKey = publicKey
@@ -193,9 +185,9 @@ createFromLedger(
       this.path = path
       this.sourceType = WalletType.fromDescriptor('Ledger')
       // add wallet to list
-      const accName = Object.values(this.currentAccount)[2];
+      const accName = Object.values(this.currentAccount)[2]
       const wallet = new WalletsModel(new Map<string, any>([
-        [ 'accountName', accName],
+        [ 'accountName', accName ],
         [ 'name', 'Ledger Wallet 1' ],
         [ 'type', this.sourceType ],
         [ 'address', this.address ],
@@ -211,8 +203,8 @@ createFromLedger(
       // use repository for storage
       this.walletsRepository.create(wallet.values)
       this.accountsRepository.update(
-      this.currentAccount.getIdentifier(),
-      this.currentAccount.values,
+        this.currentAccount.getIdentifier(),
+        this.currentAccount.values,
       )
       this.$store.dispatch('account/ADD_WALLET', wallet)
       this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})
@@ -221,7 +213,7 @@ createFromLedger(
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       return this
     } catch (error) {
-        throw new Error(error)
+      throw new Error(error)
     }
   }
 }

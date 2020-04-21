@@ -15,11 +15,11 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {NetworkType, Password, Account} from 'symbol-sdk'
+import {NetworkType, Password} from 'symbol-sdk'
 import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
 import {SymbolLedger} from '@/core/utils/ledger'
-import {formDataConfig} from "@/views/forms/FormDefaults";
+import {formDataConfig} from '@/views/forms/FormDefaults'
 
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
@@ -71,7 +71,7 @@ export class FormSubWalletCreationTs extends Vue {
    */
   public currentAccount: AccountsModel
 
-  public hasSubAccount :boolean
+  public hasSubAccount: boolean
   /**
    * Known wallets identifiers
    * @var {string[]}
@@ -201,15 +201,15 @@ export class FormSubWalletCreationTs extends Vue {
   publicKey: string | undefined
   active: boolean | undefined
   path: string
-  sourceType: Number
+  sourceType: number
 
-  public isLedger : boolean;
-  checkLedger():boolean {
+  public isLedger: boolean
+  checkLedger(): boolean {
 
-    if(this.currentWallet.values.get('type')==WalletType.fromDescriptor("Ledger")){
+    if(this.currentWallet.values.get('type') == WalletType.fromDescriptor('Ledger')){
       this.isLedger = true
-    } else this.isLedger= false
-      return this.isLedger
+    } else this.isLedger = false
+    return this.isLedger
   }
 
   public onSubmit() {
@@ -217,10 +217,10 @@ export class FormSubWalletCreationTs extends Vue {
     const type = values.type && [ 'child_wallet', 'privatekey_wallet' ].includes(values.type)
       ? values.type
       : 'child_wallet'
-     if (this.checkLedger() && type =="child_wallet"){
+    if (this.checkLedger() && type == 'child_wallet'){
       this.deriveNextChildWallet(values.name)
-     } 
-     else this.hasAccountUnlockModal = true
+    } 
+    else this.hasAccountUnlockModal = true
 
   }
 
@@ -316,64 +316,64 @@ export class FormSubWalletCreationTs extends Vue {
       this.importSubAccountFromLedger(childWalletName)
     } else {
       // - get next path
-    const nextPath = this.paths.getNextAccountPath(this.knownPaths)
+      const nextPath = this.paths.getNextAccountPath(this.knownPaths)
 
-    this.$store.dispatch('diagnostic/ADD_DEBUG', `Adding child wallet with derivation path: ${nextPath}`)
+      this.$store.dispatch('diagnostic/ADD_DEBUG', `Adding child wallet with derivation path: ${nextPath}`)
 
-    // - decrypt mnemonic
-    const encSeed = this.currentAccount.values.get('seed')
-    const passphrase = AESEncryptionService.decrypt(encSeed, this.currentPassword)
-    const mnemonic = new MnemonicPassPhrase(passphrase)
+      // - decrypt mnemonic
+      const encSeed = this.currentAccount.values.get('seed')
+      const passphrase = AESEncryptionService.decrypt(encSeed, this.currentPassword)
+      const mnemonic = new MnemonicPassPhrase(passphrase)
 
-    // create account by mnemonic
-    const wallet = this.wallets.getChildWalletByPath(
-      this.currentAccount,
-      this.currentPassword,
-      mnemonic,
-      nextPath,
-      this.networkType,
-      childWalletName,
-    )
-    return wallet
+      // create account by mnemonic
+      const wallet = this.wallets.getChildWalletByPath(
+        this.currentAccount,
+        this.currentPassword,
+        mnemonic,
+        nextPath,
+        this.networkType,
+        childWalletName,
+      )
+      return wallet
     }   
   }
 
   async importSubAccountFromLedger(childWalletName: string) {
     const subWalletName = childWalletName
-    const accountPath = this.currentWallet.values.get("path")
-    const currentAccountIndex = accountPath.substring(accountPath.length-2,accountPath.length-1)
+    const accountPath = this.currentWallet.values.get('path')
+    const currentAccountIndex = accountPath.substring(accountPath.length - 2,accountPath.length - 1)
     const numAccount = this.knownPaths.length
-    var accountIndex
-    if(numAccount<= Number(currentAccountIndex) ){
-      accountIndex = numAccount+Number(currentAccountIndex)
+    let accountIndex
+    if(numAccount <= Number(currentAccountIndex) ){
+      accountIndex = numAccount + Number(currentAccountIndex)
     } else {
-      accountIndex = numAccount+1
+      accountIndex = numAccount + 1
     }
     try {
-        this.$Notice.success({
-          title: this['$t']('Verify information in your device!') + ''
-        })
-        const transport = await TransportWebUSB.create();
-        const symbolLedger = new SymbolLedger(transport, "XYM");
-        const accountResult = await symbolLedger.getAccount(`m/44'/43'/${this.networkType}'/0'/${accountIndex}'`)
-        const { address, publicKey, path } = accountResult;
-        transport.close()
+      this.$Notice.success({
+        title: this['$t']('Verify information in your device!') + '',
+      })
+      const transport = await TransportWebUSB.create()
+      const symbolLedger = new SymbolLedger(transport, 'XYM')
+      const accountResult = await symbolLedger.getAccount(`m/44'/43'/${this.networkType}'/0'/${accountIndex}'`)
+      const { address, publicKey, path } = accountResult
+      transport.close()
 
-        this.createFromLedger(
-            subWalletName,
-            path,
-            publicKey.toUpperCase(),
-            address,);
-        this.$emit('submit', this.formItems)
+      this.createFromLedger(
+        subWalletName,
+        path,
+        publicKey.toUpperCase(),
+        address)
+      this.$emit('submit', this.formItems)
 
     } catch (e) {
-        this.$store.dispatch('SET_UI_DISABLED', {
-            isDisabled: false,
-            message: ""
-        });
-        this.$Notice.error({
-            title: this['$t']('CONDITIONS_OF_USE_NOT_SATISFIED') + ''
-        })
+      this.$store.dispatch('SET_UI_DISABLED', {
+        isDisabled: false,
+        message: '',
+      })
+      this.$Notice.error({
+        title: this['$t']('CONDITIONS_OF_USE_NOT_SATISFIED') + '',
+      })
     }
   }
 
@@ -388,46 +388,46 @@ export class FormSubWalletCreationTs extends Vue {
     name: string,
     path: string,
     publicKey: string,
-    address: string,){
+    address: string){
     try {     
-        this.name = name
-        this.address = address
-        this.publicKey = publicKey
-        this.active = true
-        this.path = path
-        this.sourceType = WalletType.fromDescriptor('Ledger')
-        // add wallet to list
-        const accName = Object.values(this.currentAccount)[2];
+      this.name = name
+      this.address = address
+      this.publicKey = publicKey
+      this.active = true
+      this.path = path
+      this.sourceType = WalletType.fromDescriptor('Ledger')
+      // add wallet to list
+      const accName = Object.values(this.currentAccount)[2]
 
-        const wallet = new WalletsModel(new Map<string, any>([
-          [ 'accountName', accName],
-          [ 'name', this.name ],
-          [ 'type', this.sourceType ],
-          [ 'address', this.address ],
-          [ 'publicKey', this.publicKey ],
-          [ 'path', this.path ],
-          [ 'isMultisig', false ],
-        ]))
-        // add wallet to account
-        const wallets = this.currentAccount.values.get('wallets')
-        wallets.push(wallet.getIdentifier())
+      const wallet = new WalletsModel(new Map<string, any>([
+        [ 'accountName', accName ],
+        [ 'name', this.name ],
+        [ 'type', this.sourceType ],
+        [ 'address', this.address ],
+        [ 'publicKey', this.publicKey ],
+        [ 'path', this.path ],
+        [ 'isMultisig', false ],
+      ]))
+      // add wallet to account
+      const wallets = this.currentAccount.values.get('wallets')
+      wallets.push(wallet.getIdentifier())
         
-        this.currentAccount.values.set('wallets', wallets)
-        // use repository for storage
-        this.walletsRepository.create(wallet.values)
-        this.accountsRepository.update(
+      this.currentAccount.values.set('wallets', wallets)
+      // use repository for storage
+      this.walletsRepository.create(wallet.values)
+      this.accountsRepository.update(
         this.currentAccount.getIdentifier(),
         this.currentAccount.values,
-        )
+      )
   
-        this.$store.dispatch('account/ADD_WALLET', wallet)
-        this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})
-        this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
-        this.$store.dispatch('temporary/RESET_STATE')
-        this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-        return this
+      this.$store.dispatch('account/ADD_WALLET', wallet)
+      this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})
+      this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
+      this.$store.dispatch('temporary/RESET_STATE')
+      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+      return this
     } catch (error) {
-        throw new Error(error)
+      throw new Error(error)
     }
   }
 }

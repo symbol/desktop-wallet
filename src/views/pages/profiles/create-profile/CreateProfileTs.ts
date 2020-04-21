@@ -32,16 +32,16 @@ export default class CreateProfileTs extends Vue {
     'Create Account',
     'Import Ledger',
   ]
-  isLedger = false;
+  isLedger = false
   public titleList = []
   public created() {
     const {isLedger} = this.$route.meta
     
     if (isLedger) {
-        this.titleList = this.LedgerStepBarTitleList
-    }   else
+      this.titleList = this.LedgerStepBarTitleList
+    } else
     {this.titleList = this.StepBarTitleList}
-}
+  }
 
   /**
    * Hook called when the page is mounted

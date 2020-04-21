@@ -18,7 +18,7 @@ import {mapGetters} from 'vuex'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Transaction, MosaicId, AggregateTransaction,Address,PublicAccount, NetworkType} from 'symbol-sdk'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
-import {SymbolLedger} from '@/core/utils/ledger'
+import {SymbolLedger} from '@/core/utils/Ledger'
 // internal dependencies
 import {AccountModel} from '@/core/database/entities/AccountModel'
 import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
