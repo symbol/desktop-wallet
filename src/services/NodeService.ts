@@ -43,16 +43,16 @@ export class NodeService {
 
     return combineLatest([
       nodeRepository.getNodeInfo().pipe(map(dto => this.createNodeModel(repositoryFactoryUrl, dto.friendlyName)))
-      .pipe(ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl))),
+        .pipe(ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl))),
       nodeRepository.getNodePeers().pipe(map(l => l.map(this.toNodeModel).filter(n => n && n.url)))
-      .pipe(ObservableHelpers.defaultLast(
-        storedNodes)),
+        .pipe(ObservableHelpers.defaultLast(
+          storedNodes)),
 
     ]).pipe(map(restData => {
       const currentNode = restData[0]
       const nodePeers = restData[1]
       const nodeInfos = [currentNode].concat(nodePeers, storedNodes)
-      return _.sortBy(_.uniqBy(nodeInfos, 'url'), 'isDefault', ' friendlyName')
+      return _.uniqBy(nodeInfos, 'url')
     }), tap(p => this.saveNodes(p)))
   }
 
@@ -73,8 +73,8 @@ export class NodeService {
 
 
   private createNodeModel(url: string,
-                          friendlyName: string | undefined = undefined,
-                          isDefault: boolean | undefined = undefined): NodeModel {
+    friendlyName: string | undefined = undefined,
+    isDefault: boolean | undefined = undefined): NodeModel {
     return new NodeModel(url, friendlyName || '', isDefault
       || !!networkConfig.nodes.find(n => n.url === url))
   }

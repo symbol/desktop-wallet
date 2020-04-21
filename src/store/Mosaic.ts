@@ -69,7 +69,7 @@ export default {
   },
   mutations: {
     setInitialized: (state: MosaicState,
-                     initialized: boolean) => { state.initialized = initialized },
+      initialized: boolean) => { state.initialized = initialized },
     networkCurrency: (state: MosaicState, networkCurrency: NetworkCurrencyModel) => {
       Vue.set(state, 'networkCurrency', networkCurrency)
       Vue.set(state, 'networkMosaicId', new MosaicId(networkCurrency.mosaicIdHex))
@@ -77,27 +77,27 @@ export default {
       Vue.set(state, 'networkMosaicTicker', networkCurrency.ticker)
     },
     mosaics: (state: MosaicState, {mosaics, currentSignerAddress, networkCurrency}:
-      { mosaics: MosaicModel[], currentSignerAddress: Address, networkCurrency: NetworkCurrencyModel }) => {
+    { mosaics: MosaicModel[], currentSignerAddress: Address, networkCurrency: NetworkCurrencyModel }) => {
 
       const ownedMosaics = mosaics.filter(
         m => m.ownerRawPlain === currentSignerAddress.plain() && m.addressRawPlain === currentSignerAddress.plain())
 
       const holdMosaics = mosaics.filter(m => m.addressRawPlain === currentSignerAddress.plain()).sort((m1, m2)=>{
-        const owner1 = m1.ownerRawPlain === currentSignerAddress.plain();
-        const owner2 = m2.ownerRawPlain === currentSignerAddress.plain();
+        const owner1 = m1.ownerRawPlain === currentSignerAddress.plain()
+        const owner2 = m2.ownerRawPlain === currentSignerAddress.plain()
         return Number(owner1) - Number(owner2)
       })
 
       const noMosaic = networkCurrency && !holdMosaics.find(
         m => m.isCurrencyMosaic)
 
-      const balanceMosaics = (noMosaic ? [...holdMosaics, {
+      const balanceMosaics = (noMosaic ? [ ...holdMosaics, {
         mosaicIdHex: networkCurrency.mosaicIdHex,
         divisibility: networkCurrency.divisibility,
         name: networkCurrency.namespaceIdFullname,
         isCurrencyMosaic: true,
         balance: 0,
-      } as MosaicModel] : [...holdMosaics]).filter(m => m.isCurrencyMosaic || m.balance > 0)
+      } as MosaicModel ] : [...holdMosaics]).filter(m => m.isCurrencyMosaic || m.balance > 0)
 
 
       Vue.set(state, 'mosaics', mosaics)
@@ -106,7 +106,7 @@ export default {
       Vue.set(state, 'holdMosaics', holdMosaics.filter(m => m.ownerRawPlain === currentSignerAddress.plain() || m.balance > 0))
     },
     mosaicConfigurations: (state: MosaicState,
-                           mosaicConfigurations: Record<string, MosaicConfigurationModel>) => Vue.set(
+      mosaicConfigurations: Record<string, MosaicConfigurationModel>) => Vue.set(
       state, 'mosaicConfigurations', mosaicConfigurations),
 
   },

@@ -55,13 +55,13 @@ export class NetworkService {
    * @param candidateUrl the new url.
    */
   public getNetworkModel(candidateUrl: string | undefined):
-    Observable<{ fallback: boolean, networkModel: NetworkModel, repositoryFactory: RepositoryFactory }> {
+  Observable<{ fallback: boolean, networkModel: NetworkModel, repositoryFactory: RepositoryFactory }> {
     const storedNetworkModel = this.loadNetworkModel()
     const possibleUrls = this.resolveCandidates(candidateUrl, storedNetworkModel)
 
     const repositoryFactoryObservable = fromIterable(possibleUrls)
-    .pipe(concatMap(url => this.createRepositoryFactory(url)))
-    .pipe(take(1))
+      .pipe(concatMap(url => this.createRepositoryFactory(url)))
+      .pipe(take(1))
     return repositoryFactoryObservable.pipe(flatMap(({url, repositoryFactory}) => {
       const networkRepository = repositoryFactory.createNetworkRepository()
       const nodeRepository = repositoryFactory.createNodeRepository()
@@ -123,11 +123,11 @@ export class NetworkService {
 
 
   private resolveCandidates(newUrl: string | undefined,
-                            storedNetworkModel: NetworkModel | undefined): string[] {
+    storedNetworkModel: NetworkModel | undefined): string[] {
     // Should we load cached candidates in the node tables?
     return _.uniq(
-      [newUrl, storedNetworkModel && storedNetworkModel.url, networkConfig.defaultNodeUrl,
-        ...networkConfig.nodes.map(n => n.url)].filter(p => p))
+      [ newUrl, storedNetworkModel && storedNetworkModel.url, networkConfig.defaultNodeUrl,
+        ...networkConfig.nodes.map(n => n.url) ].filter(p => p))
   }
 
 

@@ -30,7 +30,7 @@ const realRepositoryFactory = new RepositoryFactoryHttp(realUrl)
 describe.skip('services/MosaicService', () => {
   test('getMosaics all addresses', async () => {
     const networkCurrencies = await mosaicService.getNetworkCurrencies(realRepositoryFactory).toPromise()
-    const addresses: Address[] = [address1, address2, address3, address4, address5]
+    const addresses: Address[] = [ address1, address2, address3, address4, address5 ]
     const accountInfos = await realRepositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise()
     const result = await mosaicService.getMosaics(realRepositoryFactory, networkCurrencies, accountInfos).toPromise()
     console.log(JSON.stringify(result, null, 2))

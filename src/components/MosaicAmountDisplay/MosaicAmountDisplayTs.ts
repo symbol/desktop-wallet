@@ -92,8 +92,8 @@ export class MosaicAmountDisplayTs extends Vue {
     if (this.useNetwork()) {
       return this.networkCurrency.divisibility
     }
-    //TODO improve how to resolve the mosaic id when the known value is a namespace id.
-    //Note that if the transaction is old, the namespace id of the mosaic may have been expired!
+    // TODO improve how to resolve the mosaic id when the known value is a namespace id.
+    // Note that if the transaction is old, the namespace id of the mosaic may have been expired!
     const mosaic = this.mosaics.find(m => m.mosaicIdHex === this.id.toHex())
     return mosaic ? mosaic.divisibility : this.networkConfiguration.maxMosaicDivisibility
   }

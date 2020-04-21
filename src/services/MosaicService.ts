@@ -87,38 +87,37 @@ export class MosaicService {
    * @param accountsInfo
    */
   public getMosaics(repositoryFactory: RepositoryFactory, networkCurrencies: NetworkCurrencyModel[],
-                    accountsInfo: AccountInfo[]): Observable<MosaicModel[]> {
+    accountsInfo: AccountInfo[]): Observable<MosaicModel[]> {
     const mosaicDataList = this.loadMosaicData()
     const resolvedBalancesObservable = this.resolveBalances(repositoryFactory, accountsInfo)
     const accountAddresses = accountsInfo.map(a => a.address)
     const mosaicsFromAccountsObservable = repositoryFactory.createMosaicRepository()
-    .getMosaicsFromAccounts(accountAddresses)
+      .getMosaicsFromAccounts(accountAddresses)
 
-    return combineLatest([resolvedBalancesObservable, mosaicsFromAccountsObservable])
-    .pipe(flatMap(([balances, owedMosaics]) => {
-      const mosaicIds = _.uniqBy([...balances.map(m => m.mosaicId), ...owedMosaics.map(o => o.id)], m => m.toHex())
-      const nameObservables = repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds)
-      const mosaicInfoObservable = repositoryFactory.createMosaicRepository().getMosaics(mosaicIds)
-      return combineLatest([nameObservables, mosaicInfoObservable]).pipe(map(([names, mosaicInfos]) => {
-        return this.toMosaicDtos(balances, mosaicInfos, names, networkCurrencies, accountAddresses)
-      }))
-    })).pipe(tap((d) => this.saveMosaicData(d)),
-      ObservableHelpers.defaultFirst(mosaicDataList))
+    return combineLatest([ resolvedBalancesObservable, mosaicsFromAccountsObservable ])
+      .pipe(flatMap(([ balances, owedMosaics ]) => {
+        const mosaicIds = _.uniqBy([ ...balances.map(m => m.mosaicId), ...owedMosaics.map(o => o.id) ], m => m.toHex())
+        const nameObservables = repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds)
+        const mosaicInfoObservable = repositoryFactory.createMosaicRepository().getMosaics(mosaicIds)
+        return combineLatest([ nameObservables, mosaicInfoObservable ]).pipe(map(([ names, mosaicInfos ]) => {
+          return this.toMosaicDtos(balances, mosaicInfos, names, networkCurrencies, accountAddresses)
+        }))
+      })).pipe(tap((d) => this.saveMosaicData(d)),
+        ObservableHelpers.defaultFirst(mosaicDataList))
   }
 
   private getName(mosaicNames: MosaicNames[], accountMosaicDto: MosaicId): string {
     return _.first(
       mosaicNames.filter(n => n.mosaicId.equals(accountMosaicDto))
-      .filter(n => n.names.length).map(n => n.names[0].name))
+        .filter(n => n.names.length).map(n => n.names[0].name))
   }
 
 
-
   private toMosaicDtos(balances: MosaicBalance[],
-                       mosaicDtos: MosaicInfo[],
-                       mosaicNames: MosaicNames[],
-                       networkCurrencies: NetworkCurrencyModel[],
-                       accountAddresses: Address[]): MosaicModel[] {
+    mosaicDtos: MosaicInfo[],
+    mosaicNames: MosaicNames[],
+    networkCurrencies: NetworkCurrencyModel[],
+    accountAddresses: Address[]): MosaicModel[] {
 
     return _.flatten(accountAddresses.map((address) => {
       return mosaicDtos.map(mosaicDto => {
@@ -133,7 +132,7 @@ export class MosaicService {
   }
 
   private resolveBalances(repositoryFactory: RepositoryFactory,
-                          accountsInfo: AccountInfo[]): Observable<MosaicBalance[]> {
+    accountsInfo: AccountInfo[]): Observable<MosaicBalance[]> {
     const mosaicIdOrAliases = _.flatten(accountsInfo.map(a => a.mosaics.map(m => m.id)))
     const mosaicIdOrAliasesUnique = _.uniqBy(mosaicIdOrAliases, m => m.toHex())
     return this.resolveMosaicIds(repositoryFactory, mosaicIdOrAliasesUnique).pipe(
@@ -153,7 +152,7 @@ export class MosaicService {
 
 
   private resolveMosaicIds(repositoryFactory: RepositoryFactory,
-                           ids: (NamespaceId | MosaicId)[]): Observable<{ from: (NamespaceId | MosaicId), to: MosaicId }[]> {
+    ids: (NamespaceId | MosaicId)[]): Observable<{ from: (NamespaceId | MosaicId), to: MosaicId }[]> {
     const namespaceRepository = repositoryFactory.createNamespaceRepository()
     return fromIterable(ids).pipe(flatMap(id => {
       if (id instanceof MosaicId) {
@@ -182,24 +181,24 @@ export class MosaicService {
     const blockHttp = repositoryFactory.createBlockRepository()
     // TODO move this to a service in the SDK.
     return blockHttp.getBlockTransactions(UInt64.fromUint(1), new QueryParams({pageSize: 100}))
-    .pipe(flatMap(transactions => {
-      const mosaicTransactions = transactions.filter(
-        t => t.type == TransactionType.MOSAIC_DEFINITION).map(t => t as MosaicDefinitionTransaction)
-      const aliasTransactions = transactions.filter(t => t.type == TransactionType.MOSAIC_ALIAS)
-      .map(t => t as MosaicAliasTransaction)
-      const namespaceRegistrations = transactions.filter(
-        t => t.type == TransactionType.NAMESPACE_REGISTRATION)
-      .map(t => t as NamespaceRegistrationTransaction)
-      const networkCurrencies = mosaicTransactions.map(mosaicTransaction => {
-        const mosaicAliasTransactions = aliasTransactions.filter(
-          a => a.mosaicId.toHex() == mosaicTransaction.mosaicId.toHex())
-        return mosaicAliasTransactions.map(mosaicAliasTransaction => this.getNetworkCurrency(
-          mosaicTransaction, mosaicAliasTransaction,
-          namespaceRegistrations)).filter(c => c)
-      })
-      return networkCurrencies
-    })).pipe(tap(d => this.networkCurrencyStorage.set(d)),
-      ObservableHelpers.defaultFirst(storedNetworkCurrencies))
+      .pipe(flatMap(transactions => {
+        const mosaicTransactions = transactions.filter(
+          t => t.type == TransactionType.MOSAIC_DEFINITION).map(t => t as MosaicDefinitionTransaction)
+        const aliasTransactions = transactions.filter(t => t.type == TransactionType.MOSAIC_ALIAS)
+          .map(t => t as MosaicAliasTransaction)
+        const namespaceRegistrations = transactions.filter(
+          t => t.type == TransactionType.NAMESPACE_REGISTRATION)
+          .map(t => t as NamespaceRegistrationTransaction)
+        const networkCurrencies = mosaicTransactions.map(mosaicTransaction => {
+          const mosaicAliasTransactions = aliasTransactions.filter(
+            a => a.mosaicId.toHex() == mosaicTransaction.mosaicId.toHex())
+          return mosaicAliasTransactions.map(mosaicAliasTransaction => this.getNetworkCurrency(
+            mosaicTransaction, mosaicAliasTransaction,
+            namespaceRegistrations)).filter(c => c)
+        })
+        return networkCurrencies
+      })).pipe(tap(d => this.networkCurrencyStorage.set(d)),
+        ObservableHelpers.defaultFirst(storedNetworkCurrencies))
   }
 
   private loadMosaicData(): MosaicModel[] {
@@ -227,8 +226,8 @@ export class MosaicService {
    * @return the {@link NetworkCurrencyModel} if it can be resolved.
    */
   private getNetworkCurrency(mosaicTransaction: MosaicDefinitionTransaction,
-                             mosaicAliasTransaction: MosaicAliasTransaction,
-                             namespaceRegistrations: NamespaceRegistrationTransaction[]): NetworkCurrencyModel | undefined {
+    mosaicAliasTransaction: MosaicAliasTransaction,
+    namespaceRegistrations: NamespaceRegistrationTransaction[]): NetworkCurrencyModel | undefined {
 
     const mosaicId = mosaicAliasTransaction.mosaicId
     const namespaceName = this.getNamespaceFullName(namespaceRegistrations,
@@ -238,7 +237,7 @@ export class MosaicService {
     }
     const namespaceId = new NamespaceId(namespaceName)
     const ticker = namespaceId && namespaceId.fullName && namespaceId.fullName.split('.').pop()
-    .toUpperCase() || undefined
+      .toUpperCase() || undefined
     return new NetworkCurrencyModel(mosaicId.toHex(), namespaceId.toHex(), namespaceId.fullName,
       mosaicTransaction.divisibility, mosaicTransaction.flags.transferable,
       mosaicTransaction.flags.supplyMutable, mosaicTransaction.flags.restrictable, ticker)
@@ -255,7 +254,7 @@ export class MosaicService {
    * @return the full name of the namespace if all the parents namespace can be resolved.
    */
   private getNamespaceFullName(transactions: NamespaceRegistrationTransaction[],
-                               namespaceId: NamespaceId): string | undefined {
+    namespaceId: NamespaceId): string | undefined {
     if (namespaceId.fullName) {
       return namespaceId.fullName
     }
@@ -286,7 +285,7 @@ export class MosaicService {
    * @param blockGenerationTargetTime
    */
   public static getExpiration(mosaicInfo: MosaicModel, currentHeight: number,
-                              blockGenerationTargetTime: number): ExpirationStatus {
+    blockGenerationTargetTime: number): ExpirationStatus {
     const duration = mosaicInfo.duration
     const startHeight = mosaicInfo.height
 
@@ -310,7 +309,7 @@ export class MosaicService {
   }
 
   public changeMosaicConfiguration(mosaicId: MosaicId,
-                                   newConfigs: any): Record<string, MosaicConfigurationModel> {
+    newConfigs: any): Record<string, MosaicConfigurationModel> {
     const mosaicConfigurationsStorage = this.getMosaicConfigurations()
     mosaicConfigurationsStorage[mosaicId.toHex()] = {
       ...this.getMosaicConfiguration(mosaicId), ...newConfigs,

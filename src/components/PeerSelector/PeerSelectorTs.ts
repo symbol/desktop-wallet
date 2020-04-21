@@ -115,7 +115,7 @@ export class PeerSelectorTs extends Vue {
 
   /// region computed properties getter/setter
   get peersList(): NodeModel[] {
-    return this.knowNodes.filter(p => {
+    const nodeModels = this.knowNodes.filter(p => {
       if (!this.formItems.filter) {
         return true
       } else {
@@ -123,6 +123,7 @@ export class PeerSelectorTs extends Vue {
           || (p.friendlyName && p.friendlyName.includes(this.formItems.filter))
       }
     })
+    return _.sortBy(nodeModels, (a) => a.isDefault !== true, (a) => a.url)
   }
 
   get networkTypeText(): string {

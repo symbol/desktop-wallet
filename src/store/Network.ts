@@ -102,7 +102,7 @@ export default {
   },
   mutations: {
     setInitialized: (state: NetworkState,
-                     initialized: boolean) => { state.initialized = initialized },
+      initialized: boolean) => { state.initialized = initialized },
     setConnected: (state: NetworkState, connected: boolean) => { state.isConnected = connected },
     currentHeight: (state: NetworkState, currentHeight: number) => Vue.set(state, 'currentHeight',
       currentHeight),
@@ -111,7 +111,7 @@ export default {
     repositoryFactory: (state: NetworkState, repositoryFactory: RepositoryFactory) => Vue.set(state,
       'repositoryFactory', repositoryFactory),
     networkConfiguration: (state: NetworkState,
-                           networkConfiguration: NetworkConfigurationModel) => Vue.set(state,
+      networkConfiguration: NetworkConfigurationModel) => Vue.set(state,
       'networkConfiguration', networkConfiguration),
     listener: (state: NetworkState, listener: Listener) => Vue.set(state, 'listener', listener),
     networkModel: (state: NetworkState, networkModel: NetworkModel) => Vue.set(state,
@@ -131,7 +131,7 @@ export default {
       if (existNode) {
         return
       }
-      const newNodes = [...knowNodes, new NodeModel(peerUrl, '', false)]
+      const newNodes = [ ...knowNodes, new NodeModel(peerUrl, '', false) ]
       new NodeService().saveNodes(newNodes)
       Vue.set(state, 'knowNodes', newNodes)
     },
@@ -148,7 +148,7 @@ export default {
     subscriptions: (state: NetworkState, data) => Vue.set(state, 'subscriptions', data),
     addSubscriptions: (state: NetworkState, payload) => {
       const subscriptions = state.subscriptions
-      Vue.set(state, 'subscriptions', [...subscriptions, payload])
+      Vue.set(state, 'subscriptions', [ ...subscriptions, payload ])
     },
   },
   actions: {
@@ -173,14 +173,14 @@ export default {
     async CONNECT({commit, dispatch}, newCandidate: string | undefined) {
       const networkService = new NetworkService()
       const {networkModel, repositoryFactory, fallback} = await networkService.getNetworkModel(newCandidate)
-      .toPromise()
+        .toPromise()
       if (fallback) {
         throw new Error('Connection Error.')
       }
 
       const getNodesPromise = new NodeService().getNodes(repositoryFactory, networkModel.url).toPromise()
       const getBlockchainHeightPromise = repositoryFactory.createChainRepository()
-      .getBlockchainHeight().toPromise()
+        .getBlockchainHeight().toPromise()
       const nodes = await getNodesPromise
       const currentHeight = (await getBlockchainHeightPromise).compact()
       const listener = repositoryFactory.createListener()

@@ -121,7 +121,7 @@ export class TableDisplayTs extends Vue {
     return this.assetType === 'namespace'
       ? this.ownedNamespaces.map(({namespaceIdHex}) => namespaceIdHex)
       : this.holdMosaics.filter(({ownerRawPlain}) => ownerRawPlain === this.currentWallet.address)
-      .map(({mosaicIdHex}) => mosaicIdHex)
+        .map(({mosaicIdHex}) => mosaicIdHex)
   }
 
   /**
@@ -365,8 +365,8 @@ export class TableDisplayTs extends Vue {
     // populate asset form modal props if asset is a namespace
     if (this.assetType === 'namespace') {
       this.modalFormsProps.namespaceId = new NamespaceId(rowValues.name),
-        this.modalFormsProps.aliasTarget = rowValues.aliasIdentifier === 'N/A' ? null : rowValues.aliasIdentifier
-          ? getInstantiatedAlias(rowValues.aliasType, rowValues.aliasIdentifier) : null
+      this.modalFormsProps.aliasTarget = rowValues.aliasIdentifier === 'N/A' ? null : rowValues.aliasIdentifier
+        ? getInstantiatedAlias(rowValues.aliasType, rowValues.aliasIdentifier) : null
       this.modalFormsProps.aliasAction = rowValues.aliasIdentifier === 'N/A' ? AliasAction.Link : AliasAction.Unlink
     }
 
