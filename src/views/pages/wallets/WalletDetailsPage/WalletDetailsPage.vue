@@ -1,5 +1,5 @@
 <template>
-  <div class="wallet-detail-outer-container">
+  <div class="wallet-detail-outer-container" v-show="currentWallet">
     <div class="wallet-detail-inner-container">
       <div class="left-container">
         <div class="wallet-details-grid">
@@ -11,7 +11,7 @@
           </div>
 
           <div class="detail-row">
-            <ImportanceScoreDisplay :address="currentWallet && currentWallet.address" />
+            <ImportanceScoreDisplay :address="currentWallet.address" />
           </div>
 
           <div class="detail-row">
