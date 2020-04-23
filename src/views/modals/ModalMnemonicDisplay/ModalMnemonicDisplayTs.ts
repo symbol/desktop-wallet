@@ -15,10 +15,9 @@
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, Password} from 'symbol-sdk'
+import {Account, Password, Crypto} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 // internal dependencies
-import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {AccountModel} from '@/core/database/entities/AccountModel'
 // child components
 // @ts-ignore
@@ -81,7 +80,7 @@ export class ModalMnemonicDisplayTs extends Vue {
 
     // decrypt seed + create QR
     const encSeed = this.currentAccount.seed
-    const plnSeed = AESEncryptionService.decrypt(encSeed, payload.password)
+    const plnSeed = Crypto.decrypt(encSeed, payload.password.value)
 
     try {
       this.mnemonic = new MnemonicPassPhrase(plnSeed)

@@ -15,12 +15,11 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, NetworkType, Password} from 'symbol-sdk'
+import {Account, NetworkType, Password, Crypto} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {DerivationService} from '@/services/DerivationService'
-import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {WalletService} from '@/services/WalletService'
 import {WalletModel} from '@/core/database/entities/WalletModel'
@@ -241,7 +240,7 @@ export class FormSubWalletCreationTs extends Vue {
 
     // - decrypt mnemonic
     const encSeed = this.currentAccount.seed
-    const passphrase = AESEncryptionService.decrypt(encSeed, this.currentPassword)
+    const passphrase = Crypto.decrypt(encSeed, this.currentPassword.value)
     const mnemonic = new MnemonicPassPhrase(passphrase)
 
     // create account by mnemonic

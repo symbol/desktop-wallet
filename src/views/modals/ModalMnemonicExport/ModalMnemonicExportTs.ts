@@ -15,11 +15,10 @@
  */
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Account, NetworkType, Password} from 'symbol-sdk'
+import {Account, NetworkType, Password, Crypto} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import {MnemonicQR, QRCodeGenerator} from 'symbol-qr-library'
 // internal dependencies
-import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {AccountModel} from '@/core/database/entities/AccountModel'
 // child components
 // @ts-ignore
@@ -102,7 +101,7 @@ export class ModalMnemonicExportTs extends Vue {
 
     // decrypt seed + create QR
     const encSeed = this.currentAccount.seed
-    const plnSeed = AESEncryptionService.decrypt(encSeed, payload.password)
+    const plnSeed = Crypto.decrypt(encSeed, payload.password.value)
 
     try {
       this.exportMnemonicQR = QRCodeGenerator.createExportMnemonic(

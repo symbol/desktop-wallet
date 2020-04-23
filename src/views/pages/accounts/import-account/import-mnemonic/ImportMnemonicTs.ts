@@ -20,8 +20,7 @@ import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import {AccountModel} from '@/core/database/entities/AccountModel'
 
 import {NotificationType} from '@/core/utils/NotificationType'
-import {Password} from 'symbol-sdk'
-import {AESEncryptionService} from '@/services/AESEncryptionService'
+import {Password, Crypto} from 'symbol-sdk'
 // @ts-ignore
 import MnemonicInput from '@/components/MnemonicInput/MnemonicInput.vue'
 import {AccountService} from '@/services/AccountService'
@@ -112,9 +111,9 @@ export default class ImportMnemonicTs extends Vue {
       }
 
       // encrypt seed for storage
-      const encSeed = AESEncryptionService.encrypt(
+      const encSeed = Crypto.encrypt(
         mnemonic.plain,
-        this.currentPassword,
+        this.currentPassword.value,
       )
 
       this.accountService.updateSeed(this.currentAccount, encSeed)
