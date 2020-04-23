@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NetworkType, Account, Password, EncryptedPrivateKey} from 'symbol-sdk'
+import {NetworkType, Account, Password, Crypto} from 'symbol-sdk'
 import {WalletService} from '@/services/WalletService'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import {wallet1Params, WalletsModel1} from '@MOCKS/Wallets'
@@ -115,8 +115,7 @@ describe('services/WalletServices', () => {
       const service = new WalletService()
 
       // get initial encrypted private key values
-      const initialEncPrivate = WalletsModel1.encPrivate
-      const initialEncIv = WalletsModel1.encIv
+      const initialEncPrivate = WalletsModel1.encryptedPrivateKey
 
       // update the model
       const updatedWallet = service.updateWalletPassword(
@@ -124,14 +123,11 @@ describe('services/WalletServices', () => {
       )
 
       // decrypt the new model's private key
-      const newEncPrivate = updatedWallet.encPrivate
-      const newEncIv = updatedWallet.encIv
-      const privateKey = new EncryptedPrivateKey(newEncPrivate, newEncIv)
-        .decrypt(new Password('password2'))
+      const newEncPrivate = updatedWallet.encryptedPrivateKey
+      const privateKey = Crypto.decrypt(newEncPrivate, 'password2')
 
       // assert the encrypted private key changed
       expect(newEncPrivate).not.toBe(initialEncPrivate)
-      expect(newEncIv).not.toBe(initialEncIv)
 
       // assert the plain private key did not change
       expect(privateKey).toBe(wallet1Params.privateKey)

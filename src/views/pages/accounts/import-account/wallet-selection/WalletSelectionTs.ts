@@ -259,8 +259,7 @@ export default class WalletSelectionTs extends Vue {
         type: WalletType.SEED,
         address: simpleWallet.address.plain(),
         publicKey: accounts[i].publicKey,
-        encPrivate: simpleWallet.encryptedPrivateKey.encryptedKey,
-        encIv: simpleWallet.encryptedPrivateKey.iv,
+        encryptedPrivateKey: simpleWallet.encryptedPrivateKey,
         path: paths[i],
         isMultisig: false,
       }

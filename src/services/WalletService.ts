@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Account, Address, EncryptedPrivateKey, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
+import {Account, Address, NetworkType, Password, SimpleWallet, Crypto} from 'symbol-sdk'
 import {ExtendedKey, MnemonicPassPhrase, Wallet} from 'symbol-hd-wallets'
 // internal dependencies
 import {DerivationPathLevels, DerivationService} from './DerivationService'
@@ -192,8 +192,7 @@ export class WalletService {
       type: WalletType.fromDescriptor('Seed'),
       address: simpleWallet.address.plain(),
       publicKey: account.publicKey,
-      encPrivate: simpleWallet.encryptedPrivateKey.encryptedKey,
-      encIv: simpleWallet.encryptedPrivateKey.iv,
+      encryptedPrivateKey: simpleWallet.encryptedPrivateKey,
       path: WalletService.DEFAULT_WALLET_PATH,
       isMultisig: false,
     }
@@ -235,8 +234,7 @@ export class WalletService {
       type: WalletType.SEED,
       address: simpleWallet.address.plain(),
       publicKey: account.publicKey,
-      encPrivate: simpleWallet.encryptedPrivateKey.encryptedKey,
-      encIv: simpleWallet.encryptedPrivateKey.iv,
+      encryptedPrivateKey: simpleWallet.encryptedPrivateKey,
       path: nextPath,
       isMultisig: false,
     }
@@ -274,8 +272,7 @@ export class WalletService {
       type: WalletType.PRIVATE_KEY,
       address: simpleWallet.address.plain(),
       publicKey: account.publicKey,
-      encPrivate: simpleWallet.encryptedPrivateKey.encryptedKey,
-      encIv: simpleWallet.encryptedPrivateKey.iv,
+      encryptedPrivateKey: simpleWallet.encryptedPrivateKey,
       path: '',
       isMultisig: false,
     }
@@ -294,10 +291,8 @@ export class WalletService {
       && wallet.type !== WalletType.PRIVATE_KEY) {
       throw new Error('Hardware wallet password cannot be changed')
     }
-    // Get the private key
-    const encryptedPrivateKey = new EncryptedPrivateKey(wallet.encPrivate, wallet.encIv)
 
-    const privateKey = encryptedPrivateKey.decrypt(oldPassword)
+    const privateKey = Crypto.decrypt(wallet.encryptedPrivateKey, oldPassword.value)
 
     // Encrypt the private key with the new password
     const newSimpleWallet = SimpleWallet.createFromPrivateKey(
@@ -308,8 +303,8 @@ export class WalletService {
     )
     // Update the wallet model
     return {
-      ...wallet, encPrivate: newSimpleWallet.encryptedPrivateKey.encryptedKey,
-      encIv: newSimpleWallet.encryptedPrivateKey.iv,
+      ...wallet,
+      encryptedPrivateKey: newSimpleWallet.encryptedPrivateKey,
     }
   }
 }
