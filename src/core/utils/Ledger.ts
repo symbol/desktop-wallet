@@ -221,5 +221,4 @@ export class SymbolLedger {
     }
     return response
   }
-
 }

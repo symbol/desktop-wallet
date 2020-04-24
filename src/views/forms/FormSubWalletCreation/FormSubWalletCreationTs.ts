@@ -53,13 +53,13 @@ const {MAX_SEED_WALLETS_NUMBER} = appConfig.constants
     FormRow,
     ModalFormAccountUnlock,
   },
-  computed: {
-    ...mapGetters({
-      networkType: 'network/networkType',
-      currentAccount: 'account/currentAccount',
-      knownWallets: 'wallet/knownWallets',
-    }),
-  },
+  computed: {...mapGetters({
+    networkType: 'network/networkType',
+    currentAccount: 'account/currentAccount',
+    knownWallets: 'wallet/knownWallets',
+    currentWallets: 'wallet/currentWallets',
+    currentWallet: 'wallet/currentWallet',
+  })},
 })
 export class FormSubWalletCreationTs extends Vue {
   /**
@@ -285,7 +285,7 @@ export class FormSubWalletCreationTs extends Vue {
     } 
   }
 
-  async importSubAccountFromLedger(childWalletName: string) {
+  async importSubAccountFromLedger(childWalletName: string):Promise<WalletModel> |null{
     const subWalletName = childWalletName
     const accountPath = this.currentWallet.path
     const currentAccountIndex = accountPath.substring(accountPath.length-2,accountPath.length-1)

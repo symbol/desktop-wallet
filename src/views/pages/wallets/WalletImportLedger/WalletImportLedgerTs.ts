@@ -142,7 +142,7 @@ export class WalletImportLedgerTs extends Vue {
       })
       const transport = await TransportWebUSB.create()
       const symbolLedger = new SymbolLedger(transport, 'XYM')
-      const accountResult = await symbolLedger.getAccount(`m/44'/43'/${networkType}'/0'/${accountIndex}'`)
+      const accountResult = await symbolLedger.getAccount(`m/44'/4343'/${networkType}'/0'/${accountIndex}'`)
       const { address, publicKey, path } = accountResult
       transport.close()
 

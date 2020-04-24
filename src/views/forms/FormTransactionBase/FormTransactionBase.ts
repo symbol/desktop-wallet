@@ -340,7 +340,6 @@ export class FormTransactionBase extends Vue {
             const debug = `Count of transactions signed:  ${signedTransactions.length}`
             this.$store.dispatch('diagnostic/ADD_DEBUG', debug)
             this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
-            // this.$emit('success', this.currentSigner) // implement in onConfirmationSuccess
             await this.onConfirmationSuccess(this.currentSigner)
           } 
           else if(options.isMultisig ) { // && !isCosig  modify ledger account to multisig, && !isCosig 
@@ -349,7 +348,7 @@ export class FormTransactionBase extends Vue {
               currentSigner.values.get('publicKey'),
               this.networkType,
             )
-            const networkType = this.$store.getters['network/networkType']
+
             const networkMosaic = this.$store.getters['mosaic/networkMosaic']
             const networkProps = this.$store.getters['network/properties']
             const signedTransactions = []
@@ -372,10 +371,10 @@ export class FormTransactionBase extends Vue {
                 networkMosaic,
                 UInt64.fromUint(networkProps.lockedFundsPerAggregate),
               ),
-              UInt64.fromUint(1000), // duration=1000
+              UInt64.fromUint(1000), 
               signedTx,
               networkType,
-              UInt64.fromUint(this.defaultFee), // currentFee[transactions.length-1]
+              UInt64.fromUint(this.defaultFee),
             )
             
             this.$Notice.success({
@@ -426,9 +425,8 @@ export class FormTransactionBase extends Vue {
                 .subscribe(
                   (x) => console.log(x),
                   (err) => console.error(err))
-            }))
+          }))
         }
-  
       } catch (err) {
         transport.close()
         this.$Notice.error({

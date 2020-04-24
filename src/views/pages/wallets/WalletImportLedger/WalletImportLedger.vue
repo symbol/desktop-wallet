@@ -11,7 +11,7 @@
         {{ $t('choose_network') }}
         <div class="gray_content">
           <Select v-model="ledgerForm.networkType" :placeholder="$t('choose_network')" @on-change="onNetworkSelected">
-            <Option v-for="item in NetworkTypeList" :key="item.value" :value="item.value">
+            <Option v-for="item in networkTypeList" :key="item.value" :value="item.value">
               {{ item.label }}
             </Option>
           </Select>
