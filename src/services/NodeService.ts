@@ -14,12 +14,11 @@
  *
  */
 
-import {NodeInfo, NodeRepository, RepositoryFactory, RoleType} from 'symbol-sdk'
-import {combineLatest, Observable, of} from 'rxjs'
+import {RepositoryFactory} from 'symbol-sdk'
+import {Observable} from 'rxjs'
 import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
 import {map, tap} from 'rxjs/operators'
 import {NodeModel} from '@/core/database/entities/NodeModel'
-import {URLHelpers} from '@/core/utils/URLHelpers'
 import * as _ from 'lodash'
 import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 
@@ -41,25 +40,15 @@ export class NodeService {
     const storedNodes = this.loadNodes().concat(this.loadStaticNodes())
     const nodeRepository = repositoryFactory.createNodeRepository()
 
-    return combineLatest([
-      nodeRepository.getNodeInfo().pipe(map(dto => this.createNodeModel(repositoryFactoryUrl, dto.friendlyName)))
-        .pipe(ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl))),
-      this.getNodePeers(nodeRepository)
-        .pipe(ObservableHelpers.defaultLast(
-          storedNodes)),
-
-    ]).pipe(map(restData => {
-      const currentNode = restData[0]
-      const nodePeers = restData[1]
-      const nodeInfos = [currentNode].concat(nodePeers, storedNodes)
-      return _.uniqBy(nodeInfos, 'url')
-    }), tap(p => this.saveNodes(p)))
-  }
-
-
-  private getNodePeers(nodeRepository: NodeRepository): Observable<NodeModel[]> {
-    // return nodeRepository.getNodePeers().pipe(map(l => l.map(this.toNodeModel).filter(n => n && n.url)))
-    return of([])
+    return nodeRepository.getNodeInfo().pipe(
+      map(dto => this.createNodeModel(repositoryFactoryUrl, dto.friendlyName)),
+      ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl)),
+      map(restData => {
+        const currentNode = restData[0]
+        const nodePeers = restData[1]
+        const nodeInfos = [currentNode].concat(nodePeers, storedNodes)
+        return _.uniqBy(nodeInfos, 'url')
+      }), tap(p => this.saveNodes(p)))
   }
 
   private loadStaticNodes(): NodeModel[] {
@@ -67,15 +56,6 @@ export class NodeService {
       return this.createNodeModel(n.url, n.friendlyName, true)
     })
   }
-
-  private toNodeModel(n: NodeInfo): NodeModel | undefined {
-    if (!n.host || n.roles == RoleType.PeerNode) {
-      return undefined
-    }
-    const resolvedUrl = URLHelpers.getNodeUrl(n.host)
-    return this.createNodeModel(resolvedUrl, n.friendlyName)
-  }
-
 
   private createNodeModel(url: string,
     friendlyName: string | undefined = undefined,

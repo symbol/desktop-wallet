@@ -83,7 +83,7 @@ export class MosaicService {
   private getNetworkCurrenciesIds(): MosaicId[] {
     const {networkConfiguration} = new SimpleObjectStorage<NetworkModel>('network').get()
     const {currencyMosaicId, harvestingMosaicId} = networkConfiguration
-    return [new MosaicId(currencyMosaicId), new MosaicId(harvestingMosaicId)]
+    return [ new MosaicId(currencyMosaicId), new MosaicId(harvestingMosaicId) ]
   }
 
   /**
@@ -192,11 +192,11 @@ export class MosaicService {
     const namespaceHttp = repositoryFactory.createNamespaceRepository()
 
     // get network currencies ids from stored network configuration
-    const [currencyMosaicId, harvestingMosaicId] = this.getNetworkCurrenciesIds()
+    const [ currencyMosaicId, harvestingMosaicId ] = this.getNetworkCurrenciesIds()
 
     // filter out harvesting currency if it is the same as the network currency
     const mosaicIds = currencyMosaicId.equals(harvestingMosaicId)
-      ? [currencyMosaicId] : [currencyMosaicId, harvestingMosaicId]
+      ? [currencyMosaicId] : [ currencyMosaicId, harvestingMosaicId ]
 
     // get mosaicInfo and mosaic names from the network,
     // build network currency models
@@ -208,10 +208,10 @@ export class MosaicService {
         const thisMosaicNames = mosaicNames.find(mn => mn.mosaicId.equals(mosaicInfo.id))
         if (!thisMosaicNames) {throw new Error('thisMosaicNames not found at getNetworkCurrencies')}
         return this.getNetworkCurrency(mosaicInfo, thisMosaicNames)
-      })
+      }),
       ),
       tap(d => this.networkCurrencyStorage.set(d)),
-      ObservableHelpers.defaultFirst(storedNetworkCurrencies)
+      ObservableHelpers.defaultFirst(storedNetworkCurrencies),
     )
   }
 
