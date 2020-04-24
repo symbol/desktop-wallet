@@ -312,7 +312,7 @@ export class TransactionService extends AbstractService {
    * @param {Account} account
    * @return {SignedTransaction[]}
    */
-  public signStagedTransactions(account: any): SignedTransaction[] {
+  public signStagedTransactions(account: Account): SignedTransaction[] {
     // - shortcuts
     const transactions = this.$store.getters['wallet/stagedTransactions']
     const generationHash = this.$store.getters['network/generationHash']

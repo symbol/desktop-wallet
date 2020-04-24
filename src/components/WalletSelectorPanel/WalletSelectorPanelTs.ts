@@ -143,14 +143,8 @@ export class WalletSelectorPanelTs extends Vue {
    * @return {void}
    */
 
-
-  public isLedger: boolean
-
-  checkLedger(): boolean {
-    if(this.currentWallet.values.get('type') == WalletType.fromDescriptor('Ledger')){
-      this.isLedger = true
-    } else this.isLedger = false
-    return this.isLedger
+  public get isLedger():boolean{
+    return this.currentWallet.values.get('type') == WalletType.fromDescriptor('Ledger')
   }
 
   public async created() {

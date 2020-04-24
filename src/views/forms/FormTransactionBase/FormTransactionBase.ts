@@ -32,7 +32,7 @@ import {
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
-import {SymbolLedger} from '@/core/utils/ledger'
+import {SymbolLedger} from '@/core/utils/Ledger'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
 // internal dependencies
 import {WalletsModel,WalletType} from '@/core/database/entities/WalletsModel'
@@ -366,23 +366,18 @@ export class FormTransactionBase extends Vue {
         title: this['$t']('Verify information in your device!') + '',
       })
       const nodeUrl = Object.values(this.currentPeer)[3]
-      const signer = this.currentSigner.publicKey// accountResult.publicKey;
       const transport = await TransportWebUSB.create()
       const symbolLedger = new SymbolLedger(transport, 'XYM')
       const currentPath = this.currentWallet.values.get('path')
-      const accountIndex = Number(currentPath.substring(currentPath.length - 2,currentPath.length - 1))
-      const networkType = Number(currentPath.substring(currentPath.length - 10,currentPath.length - 7))
-      const accountResult = await symbolLedger.getAccount(`m/44'/43'/${networkType}'/0'/${accountIndex}'`)
+      const networkType = this.currentAccount.values.get('networkType')
+      const accountResult = await symbolLedger.getAccount(currentPath)
       const { address, publicKey, path } = accountResult
       const generationHash = this.$store.getters['network/generationHash']
-      // const addr = Address.createFromPublicKey(signer,this.networkType)
+
       try {
-        // Get account from ledger.
         const signedTransactions = []
-        
-        
         if (options.isAggregate ){
-          if(!options.isMultisig){ // Create New Mosaics
+          if(!options.isMultisig){ 
             const aggregateTx = AggregateTransaction.createComplete(
               Deadline.create(),
               // - format as `InnerTransaction`
@@ -409,7 +404,6 @@ export class FormTransactionBase extends Vue {
             const debug = `Count of transactions signed:  ${signedTransactions.length}`
             this.$store.dispatch('diagnostic/ADD_DEBUG', debug)
             this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
-            // this.$emit('success', this.currentSigner) // implement in onConfirmationSuccess
             await this.onConfirmationSuccess(this.currentSigner)
           } 
           else if(options.isMultisig ) { // && !isCosig  modify ledger account to multisig, && !isCosig 
@@ -418,7 +412,7 @@ export class FormTransactionBase extends Vue {
               currentSigner.values.get('publicKey'),
               this.networkType,
             )
-            const networkType = this.$store.getters['network/networkType']
+
             const networkMosaic = this.$store.getters['mosaic/networkMosaic']
             const networkProps = this.$store.getters['network/properties']
             const signedTransactions = []
@@ -441,17 +435,17 @@ export class FormTransactionBase extends Vue {
                 networkMosaic,
                 UInt64.fromUint(networkProps.lockedFundsPerAggregate),
               ),
-              UInt64.fromUint(1000), // duration=1000
+              UInt64.fromUint(1000), 
               signedTx,
               networkType,
-              UInt64.fromUint(this.defaultFee), // currentFee[transactions.length-1]
+              UInt64.fromUint(this.defaultFee),
             )
             
             this.$Notice.success({
               title: this['$t']('Sign LockFundTransaction to finish your registration!') + '',
             })
             // - sign hash lock and push
-            const signedLock = await symbolLedger.signTransaction(`m/44'/43'/${networkType}'/0'/${accountIndex}'`,hashLock, this.generationHash, publicKey)
+            const signedLock = await symbolLedger.signTransaction(currentPath,hashLock, this.generationHash, publicKey)
 
             // - push signed transactions (order matters)
             this.$store.commit('wallet/addSignedTransaction', signedLock)
@@ -482,7 +476,7 @@ export class FormTransactionBase extends Vue {
                 'wallet/ADD_STAGED_TRANSACTION',
                 transaction,
               )
-              const signature = await symbolLedger.signTransaction(path, transaction, this.generationHash, signer)
+              const signature = await symbolLedger.signTransaction(path, transaction, this.generationHash, this.currentSigner.publicKey)
               transport.close()
 
               // Announce the transaction
@@ -493,9 +487,8 @@ export class FormTransactionBase extends Vue {
                 .subscribe(
                   (x) => console.log(x),
                   (err) => console.error(err))
-            }))
+          }))
         }
-  
       } catch (err) {
         transport.close()
         this.$Notice.error({

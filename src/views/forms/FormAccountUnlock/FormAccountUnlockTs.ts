@@ -86,13 +86,11 @@ export class FormAccountUnlockTs extends Vue {
    * account.
    * @return {void}
    */
-  public isLedger: boolean
-  checkLedger(): boolean {
-    if(this.currentWallet.values.get('type') == WalletType.fromDescriptor('Ledger')){
-      this.isLedger = true
-    } else this.isLedger = false
-    return this.isLedger
+
+  public get isLedger():boolean{
+    return this.currentWallet.values.get('type') == WalletType.fromDescriptor('Ledger')
   }
+
   public processVerification() {
     // - create encrypted payload for active wallet
     const encrypted = new EncryptedPrivateKey(
@@ -112,7 +110,7 @@ export class FormAccountUnlockTs extends Vue {
         return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
       }
         
-      if(this.checkLedger() && accountPass == passwordHash){
+      if(this.isLedger && accountPass == passwordHash){
         const publickey = this.currentWallet.values.get('publicKey')
         const addr = Address.createFromPublicKey(publickey,this.networkType)
         return this.$emit('success',{account: this.currentAccount,addr, password})

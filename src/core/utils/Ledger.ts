@@ -1,4 +1,5 @@
 import * as BIPPath from 'bip32-path'
+import app from '@/main'
 import { 
   Transaction,
   SignedTransaction,
@@ -22,6 +23,7 @@ import {
  */
 
 const MAX_CHUNK_SIZE = 255
+const ADPUS = []
 
 export class SymbolLedger {
   transport: any
@@ -94,57 +96,29 @@ export class SymbolLedger {
      */
   // public signingBytes:any
   async signTransaction(path: string, transferTransaction: any, networkGenerationHash: string, signer: string) {
-    const bipPath = BIPPath.fromString(path).toPathArray()
-    // const byteBuffer = Array.from(Convert.hexToUint8(transferTransaction.serialize()));
     const rawPayload = transferTransaction.serialize()
-    // symbol-sdk 0.17.3
     const signingBytes = networkGenerationHash + rawPayload.slice(216)
     const rawTx = Buffer.from(signingBytes, 'hex')
-    const curveMask = 0x80
     // symbol-sdk 0.17.3
-
-    const apdus = []
-    let offset = 0
     let twiceTransfer
     // The length of the APDU buffer is 255Bytes
     if (rawTx.length > 446) {
-      throw new Error('The transaction is too long.')
+      app.$Notice.error({
+        title: this['$t']('Transaction length is over the limit.') + '',
+      })
     } else {
       twiceTransfer = rawTx.length > 234 ? true : false
     }
 
-    while (offset !== rawTx.length) {
-      const maxChunkSize = offset === 0 ? MAX_CHUNK_SIZE - 1 - bipPath.length * 4 : MAX_CHUNK_SIZE
-      const chunkSize = offset + maxChunkSize > rawTx.length ? rawTx.length - offset : maxChunkSize
-      const apdu = {
-        cla: 0xe0,
-        ins: 0x04,
-        p1: offset === 0 ? 0x00 : 0x80,
-        p2: curveMask,
-        data: offset === 0 ? Buffer.alloc(1 + bipPath.length * 4 + chunkSize) : Buffer.alloc(chunkSize),
+    let response
+    await this.generateDataUnit(rawTx,path,twiceTransfer).then(
+      (res)=>{
+        response = res;
       }
+    ).catch(
+      (err)=> console.log(err)      
+    )
 
-      if (offset === 0) {
-        apdu.data.writeInt8(bipPath.length, 0)
-        bipPath.forEach((segment, index) => {
-          apdu.data.writeUInt32BE(segment, 1 + index * 4)
-        })
-        rawTx.copy(apdu.data, 1 + bipPath.length * 4, offset, offset + chunkSize)
-        if (!twiceTransfer) {
-          apdu.p1 = 0x90
-        }
-      } else {
-        rawTx.copy(apdu.data, 0, offset, offset + chunkSize)
-      }
-
-      apdus.push(apdu)
-      offset += chunkSize
-    }
-
-    let response = Buffer.alloc(0)
-    for (const apdu of apdus) {
-      response = await this.transport.send(apdu.cla, apdu.ins, apdu.p1, apdu.p2, apdu.data)
-    }
     // Response from Ledger
     const h = response.toString('hex')
 
@@ -175,23 +149,45 @@ export class SymbolLedger {
     transferTransaction: AggregateTransaction, 
     networkGenerationHash: string, 
     signer: string) {
-    const bipPath = BIPPath.fromString(path).toPathArray()
     const rawPayload = transferTransaction.serialize()
     const signingBytes = transferTransaction.transactionInfo.hash + rawPayload.slice(216)
     const rawTx = Buffer.from(signingBytes, 'hex')
-    const curveMask = 0x80
-    // symbol-sdk 0.17.3
-
-    const apdus = []
-    let offset = 0
     let twiceTransfer
     // The length of the APDU buffer is 255Bytes
     if (rawTx.length > 446) {
-      throw new Error('The transaction is too long.')
+      app.$Notice.error({
+        title: this['$t']('Transaction length is over the limit.') + '',
+      })
     } else {
       twiceTransfer = rawTx.length > 234 ? true : false
     }
 
+    let response
+    await this.generateDataUnit(rawTx,path,twiceTransfer).then(
+      (res)=>{
+        response = res;
+      }
+    ).catch(
+      (err)=> console.log(err)      
+    )
+
+    // Response from Ledger
+    const h = response.toString('hex')
+    const signature = h.slice(0, 128)
+    const cosignatureSignedTransaction = new CosignatureSignedTransaction(
+      transferTransaction.transactionInfo.hash,
+      signature,
+      signer,
+    )
+    return cosignatureSignedTransaction
+  }
+
+  async generateDataUnit(rawTx: Buffer,path:string, twiceTransfer:any ){
+    let offset = 0;
+    const curveMask = 0x80;
+    const bipPath = BIPPath.fromString(path).toPathArray();
+    const apdus = []
+    
     while (offset !== rawTx.length) {
       const maxChunkSize = offset === 0 ? MAX_CHUNK_SIZE - 1 - bipPath.length * 4 : MAX_CHUNK_SIZE
       const chunkSize = offset + maxChunkSize > rawTx.length ? rawTx.length - offset : maxChunkSize
@@ -219,21 +215,10 @@ export class SymbolLedger {
       apdus.push(apdu)
       offset += chunkSize
     }
-
     let response = Buffer.alloc(0)
     for (const apdu of apdus) {
       response = await this.transport.send(apdu.cla, apdu.ins, apdu.p1, apdu.p2, apdu.data)
     }
-    // Response from Ledger
-    const h = response.toString('hex')
-
-    const signature = h.slice(0, 128)
-    const cosignatureSignedTransaction = new CosignatureSignedTransaction(
-      transferTransaction.transactionInfo.hash,
-      signature,
-      signer,
-    )
-    return cosignatureSignedTransaction
+    return response
   }
-
 }

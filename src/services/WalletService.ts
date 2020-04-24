@@ -30,6 +30,8 @@ import {WalletsModel, WalletType} from '@/core/database/entities/WalletsModel'
 import {WalletsRepository} from '@/repositories/WalletsRepository'
 import {SimpleStorageAdapter} from '@/core/database/SimpleStorageAdapter'
 import {AccountsModel} from '@/core/database/entities/AccountsModel'
+import {AccountsRepository} from '@/repositories/AccountsRepository'
+import {NotificationType} from '@/core/utils/NotificationType'
 
 export class WalletService extends AbstractService {
   /**
@@ -404,5 +406,26 @@ export class WalletService extends AbstractService {
 
     // return new encrypted private key
     return newSimpleWallet.encryptedPrivateKey
+  }
+
+  public addWalletToAccount(currentAccount:AccountsModel,wallet:WalletsModel){
+    const wallets = currentAccount.values.get('wallets')
+      wallets.push(wallet.getIdentifier())
+      
+      currentAccount.values.set('wallets', wallets)
+      // use repository for storage
+      const walletsRepository = new WalletsRepository()
+      walletsRepository.create(wallet.values)
+
+      const accountsRepository = new AccountsRepository()
+      accountsRepository.update(
+        currentAccount.getIdentifier(),
+        currentAccount.values,
+      )
+      this.$store.dispatch('account/ADD_WALLET', wallet)
+      this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})
+      this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
+      this.$store.dispatch('temporary/RESET_STATE')
+      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
   }
 }

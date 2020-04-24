@@ -209,20 +209,12 @@ export default class LoginPageTs extends Vue {
    * @return {void}
    */
 
-  isNotHardwareWallet(wallet: any): boolean{
+  isHardwareWallet(wallet: any): boolean{
     let flag2 = false
-    
     const existingWallets = Object.values(this.walletsRepository.collect())
-    existingWallets.filter(w=>{
-      if (w.getIdentifier() == wallet){
-        if (w.values.get('type') !== WalletType.fromDescriptor('Ledger') ) {
-        
-          flag2 = true
-        } 
-        else flag2 = false
-      }
-    },
-    )
+    existingWallets.find(w=>{
+      flag2 = w.getIdentifier()==wallet && w.values.get('type') == WalletType.fromDescriptor('Ledger')
+    })
     return flag2
   }
 
@@ -257,7 +249,7 @@ export default class LoginPageTs extends Vue {
     }
     
     // if account setup was not finalized, redirect
-    if ((!account.values.has('seed') || !account.values.get('seed').length) && (account.values.get('wallets').every(this.isNotHardwareWallet)) ) { //
+    if ((!account.values.has('seed') || !account.values.get('seed').length) && !(account.values.get('wallets').find(this.isHardwareWallet)!=='') ) { //
       this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
       this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
       this.$store.dispatch('diagnostic/ADD_WARNING', `Account has not setup mnemonic pass phrase, redirecting: ${account.getIdentifier()}`)

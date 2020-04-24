@@ -18,7 +18,7 @@ import {mapGetters} from 'vuex'
 import {NetworkType, Password} from 'symbol-sdk'
 import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
-import {SymbolLedger} from '@/core/utils/ledger'
+import {SymbolLedger} from '@/core/utils/Ledger'
 import {formDataConfig} from '@/views/forms/FormDefaults'
 
 // internal dependencies
@@ -61,6 +61,7 @@ const {MAX_SEED_WALLETS_NUMBER} = appConfig.constants
     currentAccount: 'account/currentAccount',
     knownWallets: 'wallet/knownWallets',
     currentWallets: 'wallet/currentWallets',
+    currentWallet: 'wallet/currentWallet',
   })},
 })
 export class FormSubWalletCreationTs extends Vue {
@@ -195,21 +196,9 @@ export class FormSubWalletCreationTs extends Vue {
    * @return {void}
    */
   public currentWallet: WalletsModel
-  ledgerForm = formDataConfig.ledgerImportForm
-  name: string | undefined
-  address: string | undefined
-  publicKey: string | undefined
-  active: boolean | undefined
-  path: string
-  sourceType: number
 
-  public isLedger: boolean
-  checkLedger(): boolean {
-
-    if(this.currentWallet.values.get('type') == WalletType.fromDescriptor('Ledger')){
-      this.isLedger = true
-    } else this.isLedger = false
-    return this.isLedger
+  public get isLedger():boolean{
+    return this.currentWallet.values.get('type') == WalletType.fromDescriptor('Ledger')
   }
 
   public onSubmit() {
@@ -217,7 +206,7 @@ export class FormSubWalletCreationTs extends Vue {
     const type = values.type && [ 'child_wallet', 'privatekey_wallet' ].includes(values.type)
       ? values.type
       : 'child_wallet'
-    if (this.checkLedger() && type == 'child_wallet'){
+    if (this.isLedger && type == 'child_wallet'){
       this.deriveNextChildWallet(values.name)
     } 
     else this.hasAccountUnlockModal = true
@@ -228,7 +217,7 @@ export class FormSubWalletCreationTs extends Vue {
    * When account is unlocked, the sub wallet can be created
    */
   
-  public async onAccountUnlocked(account: any, password: Password) { 
+  public async onAccountUnlocked(account: Account, password: Password) { 
     this.currentPassword = password
 
     // - interpret form items
@@ -269,28 +258,7 @@ export class FormSubWalletCreationTs extends Vue {
 
       // - remove password before GC
       this.currentPassword = null
-
-      // - use repositories for storage
-      const walletsRepo = new WalletsRepository()
-      walletsRepo.create(subWallet.values)
-
-      // - also add wallet to account (in storage)
-      const wallets = this.currentAccount.values.get('wallets')
-      wallets.push(subWallet.getIdentifier())
-      this.currentAccount.values.set('wallets', wallets)
-
-      const accountsRepo = new AccountsRepository()
-      accountsRepo.update(
-        this.currentAccount.getIdentifier(),
-        this.currentAccount.values,
-      )
-
-      // - update app state
-      await this.$store.dispatch('account/ADD_WALLET', subWallet)
-      await this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: subWallet})
-      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
-      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-      this.$emit('submit', this.formItems)
+      this.walletService.addWalletToAccount(this.currentAccount,subWallet);
     }
     catch (e) {
       this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.')
@@ -312,8 +280,14 @@ export class FormSubWalletCreationTs extends Vue {
       )
       return null
     }
-    if(this.checkLedger()){
-      this.importSubAccountFromLedger(childWalletName)
+    if(this.isLedger){
+      this.importSubAccountFromLedger(childWalletName).then(
+        (res)=>{
+          this.walletService.addWalletToAccount(this.currentAccount,res);
+        }
+      ).catch(
+        (err)=> console.log(err)
+      );
     } else {
       // - get next path
       const nextPath = this.paths.getNextAccountPath(this.knownPaths)
@@ -338,7 +312,7 @@ export class FormSubWalletCreationTs extends Vue {
     }   
   }
 
-  async importSubAccountFromLedger(childWalletName: string) {
+  async importSubAccountFromLedger(childWalletName: string):Promise<WalletsModel> |null{
     const subWalletName = childWalletName
     const accountPath = this.currentWallet.values.get('path')
     const currentAccountIndex = accountPath.substring(accountPath.length - 2,accountPath.length - 1)
@@ -349,32 +323,29 @@ export class FormSubWalletCreationTs extends Vue {
     } else {
       accountIndex = numAccount + 1
     }
-    try {
-      this.$Notice.success({
-        title: this['$t']('Verify information in your device!') + '',
-      })
-      const transport = await TransportWebUSB.create()
-      const symbolLedger = new SymbolLedger(transport, 'XYM')
-      const accountResult = await symbolLedger.getAccount(`m/44'/43'/${this.networkType}'/0'/${accountIndex}'`)
-      const { address, publicKey, path } = accountResult
-      transport.close()
+    this.$Notice.success({
+      title: this['$t']('Verify information in your device!') + '',
+    })
+    const transport = await TransportWebUSB.create()
+    const symbolLedger = new SymbolLedger(transport, 'XYM')
+    const accountResult = await symbolLedger.getAccount(`m/44'/4343'/${this.networkType}'/0'/${accountIndex}'`)
+    const { address, publicKey, path } = accountResult
+    transport.close()
 
-      this.createFromLedger(
-        subWalletName,
-        path,
-        publicKey.toUpperCase(),
-        address)
-      this.$emit('submit', this.formItems)
-
-    } catch (e) {
-      this.$store.dispatch('SET_UI_DISABLED', {
-        isDisabled: false,
-        message: '',
-      })
-      this.$Notice.error({
-        title: this['$t']('CONDITIONS_OF_USE_NOT_SATISFIED') + '',
-      })
-    }
+    const accName = Object.values(this.currentAccount)[2]
+    
+    const wallet = new WalletsModel(new Map<string, any>([
+      [ 'accountName', accName ],
+      [ 'name', subWalletName ],
+      [ 'type', WalletType.fromDescriptor('Ledger') ],
+      [ 'address', address ],
+      [ 'publicKey', publicKey.toUpperCase() ],
+      [ 'encPrivate', '' ],
+      [ 'encIv', '' ],
+      [ 'path', path ],
+      [ 'isMultisig', false ],
+    ]))
+    return wallet
   }
 
   public walletService: WalletService
@@ -382,52 +353,5 @@ export class FormSubWalletCreationTs extends Vue {
     this.walletService = new WalletService(this.$store)
     this.walletsRepository = new WalletsRepository()
     this.accountsRepository = new AccountsRepository()
-  }
-
-  createFromLedger(
-    name: string,
-    path: string,
-    publicKey: string,
-    address: string){
-    try {     
-      this.name = name
-      this.address = address
-      this.publicKey = publicKey
-      this.active = true
-      this.path = path
-      this.sourceType = WalletType.fromDescriptor('Ledger')
-      // add wallet to list
-      const accName = Object.values(this.currentAccount)[2]
-
-      const wallet = new WalletsModel(new Map<string, any>([
-        [ 'accountName', accName ],
-        [ 'name', this.name ],
-        [ 'type', this.sourceType ],
-        [ 'address', this.address ],
-        [ 'publicKey', this.publicKey ],
-        [ 'path', this.path ],
-        [ 'isMultisig', false ],
-      ]))
-      // add wallet to account
-      const wallets = this.currentAccount.values.get('wallets')
-      wallets.push(wallet.getIdentifier())
-        
-      this.currentAccount.values.set('wallets', wallets)
-      // use repository for storage
-      this.walletsRepository.create(wallet.values)
-      this.accountsRepository.update(
-        this.currentAccount.getIdentifier(),
-        this.currentAccount.values,
-      )
-  
-      this.$store.dispatch('account/ADD_WALLET', wallet)
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', {model: wallet})
-      this.$store.dispatch('wallet/SET_KNOWN_WALLETS', wallets)
-      this.$store.dispatch('temporary/RESET_STATE')
-      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-      return this
-    } catch (error) {
-      throw new Error(error)
-    }
   }
 }
