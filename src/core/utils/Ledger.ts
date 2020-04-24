@@ -23,6 +23,7 @@ import {
  */
 
 const MAX_CHUNK_SIZE = 255
+const ADPUS = []
 
 export class SymbolLedger {
   transport: any

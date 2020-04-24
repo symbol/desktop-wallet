@@ -165,7 +165,6 @@ export const routes: AppRoute[] = [
                 name: 'accounts.importLedgerAccount',
                 meta: {
                   protected:false,
-                  index: 1,
                   isLedger: true, 
                   icon: importLedgerStepImage.importLedgerStepImage1,
                 },
@@ -177,7 +176,6 @@ export const routes: AppRoute[] = [
                 name: 'accounts.importLedger',
                 meta: {
                   protected: false,
-                  index: 1,
                   isLedger: true, 
                   icon: importLedgerStepImage.importLedgerStepImage2,
 
