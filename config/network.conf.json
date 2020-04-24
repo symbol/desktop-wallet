@@ -16,7 +16,9 @@
     "maxTransactionsPerAggregate": 1000,
     "maxCosignedAccountsPerAccount": 25,
     "maxMessageSize": 1024,
-    "maxMosaicAtomicUnits":  9000000000000000
+    "maxMosaicAtomicUnits":  9000000000000000,
+    "currencyMosaicId": "747B276C30626442",
+    "harvestingMosaicId": "747B276C30626442"
   },
   "nodes": [
     {"friendlyName": "API US West 1", "roles": 2, "url": "http://api-01.us-west-1.symboldev.network:3000"},

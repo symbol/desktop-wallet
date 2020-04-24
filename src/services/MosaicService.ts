@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
-import {combineLatest, Observable, of} from 'rxjs'
-import * as _ from 'lodash'
-import {AccountInfo, Address, MosaicAliasTransaction, MosaicDefinitionTransaction, MosaicId, MosaicInfo, MosaicNames, NamespaceId, NamespaceRegistrationTransaction, NamespaceRegistrationType, QueryParams, RepositoryFactory, TransactionType, UInt64} from 'symbol-sdk'
+// external dependencies
+import _ from 'lodash'
+import {AccountInfo, Address, MosaicId, MosaicInfo, MosaicNames, NamespaceId, RepositoryFactory, UInt64} from 'symbol-sdk'
+import {combineLatest, Observable, of, forkJoin} from 'rxjs'
 import {flatMap, map, tap, toArray} from 'rxjs/operators'
-import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
-import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
+
+// internal dependencies
 import {fromIterable} from 'rxjs/internal-compatibility'
 import {MosaicConfigurationModel} from '@/core/database/entities/MosaicConfigurationModel'
+import {MosaicModel} from '@/core/database/entities/MosaicModel'
+import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
+import {NetworkModel} from '@/core/database/entities/NetworkModel'
+import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
+import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 import {TimeHelpers} from '@/core/utils/TimeHelpers'
 
 // custom types
@@ -68,14 +71,20 @@ export class MosaicService {
     'mosaicConfiguration')
 
   /**
-   * Store that caches the information around the network currency. The network currency is
-   * currently calculated from the block 1 transactions.
-   *
-   * In the near future, rest will return the information without loading block 1.
+   * Store that caches the information around the network currency.
    */
   private readonly networkCurrencyStorage = new SimpleObjectStorage<NetworkCurrencyModel[]>(
     'networkCurrencyStorage')
 
+  /**
+   * Gets currency mosaicId and harvesting mosaicId from the stored network configuration
+   * @returns {MosaicId[]}
+   */
+  private getNetworkCurrenciesIds(): MosaicId[] {
+    const {networkConfiguration} = new SimpleObjectStorage<NetworkModel>('network').get()
+    const {currencyMosaicId, harvestingMosaicId} = networkConfiguration
+    return [new MosaicId(currencyMosaicId), new MosaicId(harvestingMosaicId)]
+  }
 
   /**
    * This method loads and caches the mosaic information for the given accounts.
@@ -176,29 +185,34 @@ export class MosaicService {
    * @param repositoryFactory tge repository factory used to load the block 1 transactions
    * @return the list of {@link NetworkCurrencyModel} found in block 1.
    */
+  // TODO move this to a service in the SDK.
   public getNetworkCurrencies(repositoryFactory: RepositoryFactory): Observable<NetworkCurrencyModel[]> {
     const storedNetworkCurrencies = this.networkCurrencyStorage.get()
-    const blockHttp = repositoryFactory.createBlockRepository()
-    // TODO move this to a service in the SDK.
-    return blockHttp.getBlockTransactions(UInt64.fromUint(1), new QueryParams({pageSize: 100}))
-      .pipe(flatMap(transactions => {
-        const mosaicTransactions = transactions.filter(
-          t => t.type == TransactionType.MOSAIC_DEFINITION).map(t => t as MosaicDefinitionTransaction)
-        const aliasTransactions = transactions.filter(t => t.type == TransactionType.MOSAIC_ALIAS)
-          .map(t => t as MosaicAliasTransaction)
-        const namespaceRegistrations = transactions.filter(
-          t => t.type == TransactionType.NAMESPACE_REGISTRATION)
-          .map(t => t as NamespaceRegistrationTransaction)
-        const networkCurrencies = mosaicTransactions.map(mosaicTransaction => {
-          const mosaicAliasTransactions = aliasTransactions.filter(
-            a => a.mosaicId.toHex() == mosaicTransaction.mosaicId.toHex())
-          return mosaicAliasTransactions.map(mosaicAliasTransaction => this.getNetworkCurrency(
-            mosaicTransaction, mosaicAliasTransaction,
-            namespaceRegistrations)).filter(c => c)
-        })
-        return networkCurrencies
-      })).pipe(tap(d => this.networkCurrencyStorage.set(d)),
-        ObservableHelpers.defaultFirst(storedNetworkCurrencies))
+    const mosaicHttp = repositoryFactory.createMosaicRepository()
+    const namespaceHttp = repositoryFactory.createNamespaceRepository()
+
+    // get network currencies ids from stored network configuration
+    const [currencyMosaicId, harvestingMosaicId] = this.getNetworkCurrenciesIds()
+
+    // filter out harvesting currency if it is the same as the network currency
+    const mosaicIds = currencyMosaicId.equals(harvestingMosaicId)
+      ? [currencyMosaicId] : [currencyMosaicId, harvestingMosaicId]
+
+    // get mosaicInfo and mosaic names from the network,
+    // build network currency models
+    return forkJoin({
+      mosaicsInfo: mosaicHttp.getMosaics(mosaicIds).toPromise(),
+      mosaicNames: namespaceHttp.getMosaicsNames(mosaicIds).toPromise(),
+    }).pipe(
+      map(({mosaicsInfo, mosaicNames}) => mosaicsInfo.map(mosaicInfo => {
+        const thisMosaicNames = mosaicNames.find(mn => mn.mosaicId.equals(mosaicInfo.id))
+        if (!thisMosaicNames) {throw new Error('thisMosaicNames not found at getNetworkCurrencies')}
+        return this.getNetworkCurrency(mosaicInfo, thisMosaicNames)
+      })
+      ),
+      tap(d => this.networkCurrencyStorage.set(d)),
+      ObservableHelpers.defaultFirst(storedNetworkCurrencies)
+    )
   }
 
   private loadMosaicData(): MosaicModel[] {
@@ -215,67 +229,36 @@ export class MosaicService {
   }
 
   /**
-   * This method tries to {@link NetworkCurrencyModel} from the original {@link
-    * MosaicDefinitionTransaction} and {@link MosaicAliasTransaction}.
-   *
-   * @param mosaicTransaction the original mosiac transaction
-   * @param mosaicAliasTransaction the original mosaic alias transaction used to know the
-   * mosaic/currency namespace
-   * @param namespaceRegistrations the list of namespace registration used to resolve the
-   * mosaic/currency full name
-   * @return the {@link NetworkCurrencyModel} if it can be resolved.
+   * Creates a network currency model given mosaic info and mosaic names
+   * @param {MosaicInfo} mosaicInfo
+   * @param {MosaicNames} mosaicName
+   * @returns {(NetworkCurrencyModel | undefined)}
    */
-  private getNetworkCurrency(mosaicTransaction: MosaicDefinitionTransaction,
-    mosaicAliasTransaction: MosaicAliasTransaction,
-    namespaceRegistrations: NamespaceRegistrationTransaction[]): NetworkCurrencyModel | undefined {
+  private getNetworkCurrency(
+    mosaicInfo: MosaicInfo,
+    mosaicName: MosaicNames,
+  ): NetworkCurrencyModel | undefined {
+    const mosaicId = mosaicInfo.id
 
-    const mosaicId = mosaicAliasTransaction.mosaicId
-    const namespaceName = this.getNamespaceFullName(namespaceRegistrations,
-      mosaicAliasTransaction.namespaceId)
-    if (!namespaceName) {
-      return undefined
-    }
+    const namespaceName = this.getName([mosaicName], mosaicId)
+    if (!namespaceName) {throw new Error('could not get namespaceName at getNetworkCurrency')}
+
     const namespaceId = new NamespaceId(namespaceName)
-    const ticker = namespaceId && namespaceId.fullName && namespaceId.fullName.split('.').pop()
-      .toUpperCase() || undefined
-    return new NetworkCurrencyModel(mosaicId.toHex(), namespaceId.toHex(), namespaceId.fullName,
-      mosaicTransaction.divisibility, mosaicTransaction.flags.transferable,
-      mosaicTransaction.flags.supplyMutable, mosaicTransaction.flags.restrictable, ticker)
-  }
 
-  // }
-  /**
-   * This method resolves the full name of a leaf namespace if possible. It used the completed
-   * {@link NamespaceRegistrationTransaction} and creates the full name recursively from button
-   * (leaf) up (root)
-   *
-   * @param transactions the {@link NamespaceRegistrationTransaction} list
-   * @param namespaceId the leaf namespace.
-   * @return the full name of the namespace if all the parents namespace can be resolved.
-   */
-  private getNamespaceFullName(transactions: NamespaceRegistrationTransaction[],
-    namespaceId: NamespaceId): string | undefined {
-    if (namespaceId.fullName) {
-      return namespaceId.fullName
-    }
-    const namespaceRegistrationTransaction = transactions.find(
-      tx => tx.namespaceId.toHex() === namespaceId.toHex())
-    if (!namespaceRegistrationTransaction) {
-      return undefined
-    }
-    if (namespaceRegistrationTransaction.registrationType == NamespaceRegistrationType.RootNamespace) {
-      return namespaceRegistrationTransaction.namespaceName
-    } else {
-      const parentNamespaceNameOptional = this.getNamespaceFullName(transactions,
-        namespaceRegistrationTransaction.parentId)
-      if (!parentNamespaceNameOptional) {
-        return undefined
-      } else {
-        return `${parentNamespaceNameOptional}.${namespaceRegistrationTransaction.namespaceName}`
-      }
-    }
-  }
+    const ticker = namespaceId && namespaceId.fullName
+      && namespaceId.fullName.split('.').pop().toUpperCase() || undefined
 
+    return new NetworkCurrencyModel(
+      mosaicId.toHex(),
+      namespaceId.toHex(),
+      namespaceId.fullName,
+      mosaicInfo.divisibility,
+      mosaicInfo.flags.transferable,
+      mosaicInfo.flags.supplyMutable,
+      mosaicInfo.flags.restrictable,
+      ticker,
+    )
+  }
 
   /**
    *
@@ -317,5 +300,4 @@ export class MosaicService {
     this.mosaicConfigurationsStorage.set(mosaicConfigurationsStorage)
     return mosaicConfigurationsStorage
   }
-
 }
