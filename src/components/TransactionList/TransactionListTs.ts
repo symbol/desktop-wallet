@@ -279,8 +279,7 @@ export class TransactionListTs extends Vue {
       else {
         this.activePartialTransaction = transaction as AggregateTransaction
         this.hasCosignatureModal = true
-      }
-      
+      }  
     }
     else {
       this.activeTransaction = transaction
