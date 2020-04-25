@@ -254,7 +254,7 @@ export class TransactionListTs extends Vue {
   public async onClickTransaction(transaction: any ) {//Transaction | AggregateTransaction
     const isSigner = transaction.signer.address.plain()==this.currentWallet.address ? true : false
     if (transaction.hasMissingSignatures() ) {
-      let isCosignatorSigned
+      let isCosignatorSigned = false
       if(transaction.cosignatures.length !=0){
         transaction.cosignatures.find(
           (res)=>{
@@ -264,14 +264,13 @@ export class TransactionListTs extends Vue {
           }
         )
       } 
-      if(this.currentWallet.type==WalletType.fromDescriptor('Ledger') && !isCosignatorSigned ){
+      if(this.currentWallet.type==WalletType.fromDescriptor('Ledger') && !isCosignatorSigned && !isSigner){
         this.signWithLedger(transaction);
       }
       else {
         this.activePartialTransaction = transaction as AggregateTransaction
         this.hasCosignatureModal = true
-      }
-      
+      }  
     }
     else {
       this.activeTransaction = transaction

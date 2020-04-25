@@ -40,7 +40,7 @@
 
     <div class="bottom_button ">
       <span class="back left" @click="toBack"> {{ $t('back') }}</span>
-      <span class="import right" @click="onSUbmit">{{ $t('connect_ledger_prompt') }}</span>
+      <span class="import right" @click="onSubmit">{{ $t('connect_ledger_prompt') }}</span>
     </div>
   </div>
 </template>

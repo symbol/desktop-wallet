@@ -177,11 +177,19 @@ export default class LoginPageTs extends Vue {
    * @return {void}
    */
 
-  isHardwareWallet(wallet : any):boolean{
-    if (wallet.values.get("type") !== WalletType.fromDescriptor('Ledger')  ) {
-      return false
+  isHardwareWallet(): boolean{
+    const walletService = new WalletService()
+    const currentAccountName = this.formItems.currentAccountName
+    const account = this.accountService.getAccountByName(currentAccountName)
+    const existingLedgerWallets = account.wallets.find((w)=>{
+      if(walletService.getWallet(w).type == WalletType.fromDescriptor('Ledger')) {
+        return w
+      }
+    })
+    if(existingLedgerWallets !==(''||undefined)){
+      return true
     }
-    return true
+    return false
   }
 
   private async processLogin() {
@@ -212,9 +220,9 @@ export default class LoginPageTs extends Vue {
     if (accountPass !== passwordHash) {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
     }
-    
+
      // if account setup was not finalized, redirect
-    if (!account.seed && !(account.wallets.find(this.isHardwareWallet)!=='') ) { //
+    if (!account.seed && !(this.isHardwareWallet()) ) { //
       this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
       this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
       this.$store.dispatch('diagnostic/ADD_WARNING', 'Account has not setup mnemonic pass phrase, redirecting: ' + currentAccountName)

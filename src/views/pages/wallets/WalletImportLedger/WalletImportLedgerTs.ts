@@ -58,6 +58,9 @@ export class WalletImportLedgerTs extends Vue {
     walletName: 'Ledger Wallet',
   }
 
+  public created() {
+    this.walletService = new WalletService()
+  }
 
   toWalletDetails() {
     this.$Notice.success({
@@ -65,15 +68,7 @@ export class WalletImportLedgerTs extends Vue {
     })
     this.$router.push('/dashboard')
   }
-  // deleteAccountAndBack() {
-  //   // - delete the temporary account from storage
-  //   const identifier = this.currentAccount.
-  //   this.accounts.delete(identifier)
-  //   this.$store.dispatch('account/RESET_STATE')
 
-  //   // - back to previous page
-  //   this.$router.push({ name: 'accounts.importAccount.info' })
-  // }
   toBack() {
     // this.deleteAccountAndBack();
     this.$store.dispatch('account/RESET_STATE')
@@ -119,22 +114,22 @@ export class WalletImportLedgerTs extends Vue {
     this.importAccountFromLedger().then(
       (res)=>{
         // - use repositories for storage
-      this.walletService.saveWallet(res)
+        this.walletService.saveWallet(res)
 
-      // - update app state
-      this.$store.dispatch('account/ADD_WALLET', res)
-      this.$store.dispatch('wallet/SET_CURRENT_WALLET', res)
-      this.$store.dispatch('wallet/SET_KNOWN_WALLETS', this.currentAccount.wallets)
-      this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-      this.toWalletDetails()
-      this.$store.dispatch('SET_UI_DISABLED', {
-        isDisabled: false,
-        message: '',
-      })
+        // - update app state
+        this.$store.dispatch('account/ADD_WALLET', res)
+        this.$store.dispatch('wallet/SET_CURRENT_WALLET', res)
+        this.$store.dispatch('wallet/SET_KNOWN_WALLETS', this.currentAccount.wallets)
+        this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+        this.toWalletDetails()
+        this.$store.dispatch('SET_UI_DISABLED', {
+          isDisabled: false,
+          message: '',
+        })
       }
     )
   }
-  async importAccountFromLedger() {
+  async importAccountFromLedger():Promise<WalletModel> {
     const { accountIndex, networkType, walletName } = this.ledgerForm
     try {
       this.$Notice.success({
@@ -147,11 +142,13 @@ export class WalletImportLedgerTs extends Vue {
       transport.close()
 
       // add wallet to list
-      const accName = Object.values(this.currentAccount)[2]
+      
+      const accName = this.currentAccount.accountName
+
       return {
         id: SimpleObjectStorage.generateIdentifier(),
         accountName:accName,
-        name:"Ledger Wallet",
+        name: walletName,
         node: '',
         type:  WalletType.fromDescriptor('Ledger'),
         address:address,
@@ -169,30 +166,6 @@ export class WalletImportLedgerTs extends Vue {
       this.$Notice.error({
         title: this['$t']('CONDITIONS_OF_USE_NOT_SATISFIED') + '',
       })
-    }
-  }
-
-  createFromLedger(
-    name: string,
-    networkType: NetworkType,
-    path: string,
-    publicKey: string,
-    address: string){
-    try {     
-      
-      // add wallet to list
-      const accName = Object.values(this.currentAccount)[2]
-      return {
-        accountName:accName,
-        name:"Ledger Wallet",
-        type:  WalletType.fromDescriptor('Ledger'),
-        address:address,
-        publicKey: publicKey,
-        path: path,
-        isMultisig: false
-      }
-    } catch (error) {
-      throw new Error(error)
     }
   }
 }
