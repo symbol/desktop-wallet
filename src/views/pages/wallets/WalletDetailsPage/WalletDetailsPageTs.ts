@@ -19,6 +19,7 @@ import {mapGetters} from 'vuex'
 
 // internal dependencies
 import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
+import {ProfileModel} from '@/core/database/entities/ProfileModel'
 
 // child components
 // @ts-ignore
@@ -70,7 +71,7 @@ export class WalletDetailsPageTs extends Vue {
    * @see {Store.Wallet}
    * @var {WalletsModel}
    */
-  public currentWallet: WalletsModel
+  public currentWallet: WalletModel
 
   /**
    * Name form visibility
@@ -86,9 +87,6 @@ export class WalletDetailsPageTs extends Vue {
    * @return {boolean}
    */
   public get isLedger():boolean{
-    return this.currentWallet.values.get('type') == WalletType.fromDescriptor('Ledger')
-  }
-  public isSeedWallet(wallet: WalletsModel): boolean {
-    return wallet.values.get('seed') && wallet.values.get('seed').length
+    return this.currentWallet.type == WalletType.fromDescriptor('Ledger')
   }
 }
