@@ -26,10 +26,12 @@
             <Icon :type="'ios-code-working'" size="22" class="debug-console-trigger-icon" />
             <span>&nbsp;{{ $t('top_window_console') }}</span>
           </div>
-
+         
           <PeerSelector />
           <LanguageSelector />
-          <WalletSelectorField @input="onChangeWallet" />
+          <!-- <WalletSelectorField @input="onChangeWallet" /> -->
+          <Setting />
+          <ProfileInfo />
         </div>
       </div>
     </div>

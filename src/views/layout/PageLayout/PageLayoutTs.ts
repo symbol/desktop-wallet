@@ -35,6 +35,10 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 // @ts-ignore
 import WalletSelectorField from '@/components/WalletSelectorField/WalletSelectorField.vue'
 // @ts-ignore
+import ProfileInfo from '@/components/ProfileInfo/ProfileInfo.vue'
+// @ts-ignore
+import Setting from '@/components/Setting/Setting.vue'
+// @ts-ignore
 import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue'
 import {URLInfo} from '@/core/utils/URLInfo'
 
@@ -48,6 +52,8 @@ import {URLInfo} from '@/core/utils/URLInfo'
     LanguageSelector,
     WalletSelectorField,
     ModalDebugConsole,
+    ProfileInfo,
+    Setting,
   },
   computed: {
     ...mapGetters({

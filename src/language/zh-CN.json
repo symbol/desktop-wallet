@@ -332,7 +332,7 @@
   "address_alias_not_exist": "地址别名不存在",
   "export_mnemonic": "导出助记词",
   "backup_mnemonic": "备份助记词",
-  "button_add_wallet": "增加或导入钱包",
+  "add_an_account": "增加或导入钱包",
   "confirm_backup": "确认备份",
   "getting_a_mnemonic_equals_ownership_of_a_wallet_asset": "获得助记词等于拥有钱包资产所有权",
   "use_paper_and_pen_to_correctly_copy_mnemonics": "使用纸和笔正确抄写助记词,如果你的手机丢失、被盗、损坏,助记词将可以恢复你的资产",
@@ -1161,5 +1161,14 @@
   "rules_describe":"规则描述",
   "Estimated_period_of_validity":"预估有效期",
   "no_data_namespace_tips":"您还没有父命名空间，请先创建一个父命名空间",
-  "current_validity":"当前有效期"
+  "current_validity":"当前有效期",
+  "profile_name":"账户名称",
+  "current_network":"当前网络",
+  "current_wallet":"钱包",
+  "logout":"注销",
+  "import_seed_account":"导入助记词",
+  "import_private_key":"导入私钥",
+  "backup_current_mnemonic":"备份当前账户助记词",
+  "delete_current_account":"删除钱包",
+  "delete_current_profile":"删除账户"
 }

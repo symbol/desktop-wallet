@@ -1,0 +1,53 @@
+@import "../../views/resources/css/variables.less";
+
+.profile-info-container {
+  position: relative;
+  color: @white;
+  font-size: @biggerFont;
+  /deep/.back-button{
+    line-height: 1.5;
+  }
+  .profile-info-content {
+    padding  : .16rem;
+    color    :@purpleDark;
+    font-size: @smallerFont;
+  }
+
+  /deep/.ivu-poptip-popper {
+    width: 3.68rem;
+  }
+
+  .ivu-row {
+    margin-top: .1rem;
+  }
+
+  .row-label {
+    color      : @black;
+    font-weight: 400;
+    line-height: .22rem;
+  }
+
+  .row-value {
+    color      : @purpleDark;
+    font-weight: bold;
+    line-height: .22rem;
+  }
+
+  .profile-info-controls {
+    .ivu-row {
+      cursor: pointer;
+      &:hover{
+        color:lighten(@purpleDark,15%)
+      }
+    }
+
+    .profile-manage {
+      margin-bottom: .25rem;
+    }
+
+
+    .profile-logout {
+      text-align: right;
+    }
+  }
+}

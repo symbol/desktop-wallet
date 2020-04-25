@@ -1,9 +1,10 @@
 <template>
   <div class="container">
+    <!-- hack the fixed will be invalid -->
     <Modal
       v-model="show"
       :title="$t('modal_account_unlock_title')"
-      :transfer="false"
+      :transfer="true"
       class-name="modal-container"
     >
       <FormAccountUnlock @success="onAccountUnlocked" @error="onError" />

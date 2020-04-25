@@ -1056,7 +1056,7 @@
   "approval_greater_than_cosignatories": "There are {delta} more required cosignatories for min. approval than available cosignatories. Please add cosignatories or reduce the min. approval number.",
   "removal_greater_than_cosignatories": "There are {delta} more required cosignatories for min removal than available cosignatories. Please add cosignatories or reduce the min. removal number.",
   "too_many_cosignatories": "The maximum number of cosignatories is {maxCosignatoriesPerAccount}, please remove {delta} cosignatories",
-  "button_add_wallet": "Add an account",
+  "add_an_account": "Add an account",
   "option_root_namespace": "Root Namespace",
   "option_sub_namespace": "Sub namespace",
   "option_child_wallet": "I want to create a child account for my profile",
@@ -1209,5 +1209,14 @@
   "rules_describe":"Rules description",
   "Estimated_period_of_validity":"Estimated Period Of Validity",
   "no_data_namespace_tips":"You do not have a namespace, please create one first",
-  "current_validity":"Expires in"
+  "current_validity":"Expires in",
+  "profile_name":"Profile name",
+  "current_network":"Current network",
+  "current_account":"Current account",
+  "logout":"Logout",
+  "import_seed_account":"Import seed account",
+  "import_private_key":"Import private key",
+  "backup_current_mnemonic":"Backup current mnemonic",
+  "delete_current_account":"Delete current account",
+  "delete_current_profile":"Delete current profile"
 }

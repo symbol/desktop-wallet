@@ -1,0 +1,27 @@
+@import "../../../resources/css/variables.less";
+
+.about-container {
+  display   : block;
+  width     : 100%;
+  clear     : both;
+  min-height: 1rem;
+
+  .form-row {
+    width                : 100%;
+    margin-top           : @normalFont;
+    margin-bottom        : @normalFont;
+    display              : grid;
+    grid-template-columns: 2.5rem auto;
+    font-size            : @normalFont;
+
+    .value {
+      font-weight: bolder;
+      word-break : break-all;
+    }
+  }
+
+  .subtitle {
+    font-size : @biggerFont;
+    margin-top: .5rem;
+  }
+}

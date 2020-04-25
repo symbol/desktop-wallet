@@ -39,7 +39,7 @@
 
     <div class="wallet-switch-footer-container">
       <span class="add-wallet pointer" @click="hasAddWalletModal = true">
-        <Icon type="md-add-circle" />{{ $t('button_add_wallet') }}
+        <Icon type="md-add-circle" />{{ $t('add_an_account') }}
       </span>
       <div class="wallet-switch-header-right-container" @click="hasMnemonicExportModal = true">
         <span>

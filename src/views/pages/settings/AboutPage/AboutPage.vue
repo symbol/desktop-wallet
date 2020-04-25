@@ -150,35 +150,6 @@ export default class AboutPage extends Vue {
 </script>
 
 <style lang="less" scoped>
-.about-container {
-  display: block;
-  width: 100%;
-  clear: both;
-  min-height: 1rem;
-
-  .form-row {
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-
-    .label {
-      float: left;
-      font-size: 20px;
-      width: 250px;
-    }
-
-    .value {
-      float: left;
-      margin-left: 50px;
-      font-size: 20px;
-      font-weight: bolder;
-    }
-  }
-
-  .subtitle {
-    font-size: 25px;
-    margin-top: 50px;
-  }
-}
+  @import "./AboutPage.less";
 </style>
 
