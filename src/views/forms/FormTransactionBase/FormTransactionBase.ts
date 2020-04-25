@@ -257,7 +257,6 @@ export class FormTransactionBase extends Vue {
    * @param {string} publicKey
    */
   public async onChangeSigner(publicKey: string) {
-    // this.currentSigner = PublicAccount.createFromPublicKey(publicKey, this.networkType)
     await this.$store.dispatch('wallet/SET_CURRENT_SIGNER', {publicKey})
   }
 
@@ -289,7 +288,6 @@ export class FormTransactionBase extends Vue {
     this.$Notice.success({
       title: this['$t']('Verify information in your device!') + ''
     })
-    const nodeUrl = Object.values(this.currentPeer)[3]
     const transport = await TransportWebUSB.create();
     const symbolLedger = new SymbolLedger(transport, "XYM");
     const currentPath = this.currentWallet.path
@@ -404,7 +402,6 @@ export class FormTransactionBase extends Vue {
               'wallet/ADD_STAGED_TRANSACTION',
               transaction,
             )
-
             // - sign transaction with \a account
             const signature = await symbolLedger.signTransaction(path, transaction, this.generationHash, publicKey)
             transport.close()
