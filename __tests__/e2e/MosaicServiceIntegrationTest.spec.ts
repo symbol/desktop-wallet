@@ -15,7 +15,7 @@
  */
 import {Address, RepositoryFactoryHttp} from 'symbol-sdk'
 import {MosaicService} from '@/services/MosaicService'
-
+import networkConfig from '../../config/network.conf.json'
 
 const address1 = Address.createFromRawAddress('TDH3WI3AXBZJQMFI5XPTWRABTWVEDR54DMTHAB6I')
 const address2 = Address.createFromRawAddress('TAI4NEL4SBQDSPY2XKMPIGOC53UALIXJ5WHRJVQZ')
@@ -29,7 +29,9 @@ const realRepositoryFactory = new RepositoryFactoryHttp(realUrl)
 
 describe.skip('services/MosaicService', () => {
   test('getMosaics all addresses', async () => {
-    const networkCurrencies = await mosaicService.getNetworkCurrencies(realRepositoryFactory).toPromise()
+    const networkCurrencies = await mosaicService.getNetworkCurrencies(
+      realRepositoryFactory, networkConfig.networkConfigurationDefaults,
+    ).toPromise()
     const addresses: Address[] = [ address1, address2, address3, address4, address5 ]
     const accountInfos = await realRepositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise()
     const result = await mosaicService.getMosaics(realRepositoryFactory, networkCurrencies, accountInfos).toPromise()
@@ -37,7 +39,9 @@ describe.skip('services/MosaicService', () => {
   })
 
   test('getMosaics account 1 addresses', async () => {
-    const networkCurrencies = await mosaicService.getNetworkCurrencies(realRepositoryFactory).toPromise()
+    const networkCurrencies = await mosaicService.getNetworkCurrencies(
+      realRepositoryFactory, networkConfig.networkConfigurationDefaults,
+    ).toPromise()
     const addresses: Address[] = [address1]
     const accountInfos = await realRepositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise()
     const result = await mosaicService.getMosaics(realRepositoryFactory, networkCurrencies, accountInfos).toPromise()
@@ -45,7 +49,9 @@ describe.skip('services/MosaicService', () => {
   })
 
   test('getMosaics account 3 addresses', async () => {
-    const networkCurrencies = await mosaicService.getNetworkCurrencies(realRepositoryFactory).toPromise()
+    const networkCurrencies = await mosaicService.getNetworkCurrencies(
+      realRepositoryFactory, networkConfig.networkConfigurationDefaults,
+    ).toPromise()
     const addresses: Address[] = [address3]
     const accountInfos = await realRepositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise()
     const result = await mosaicService.getMosaics(realRepositoryFactory, networkCurrencies, accountInfos).toPromise()
