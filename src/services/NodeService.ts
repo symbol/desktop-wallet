@@ -44,7 +44,7 @@ export class NodeService {
     return nodeRepository.getNodeInfo().pipe(
       map((dto: NodeInfo) => this.createNodeModel(repositoryFactoryUrl, dto.friendlyName)),
       ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl)),
-      map(currentNode => _.uniqBy([currentNode, ...storedNodes], 'url')),
+      map(currentNode => _.uniqBy([ currentNode, ...storedNodes ], 'url')),
       tap(p => this.saveNodes(p)),
     )
   }

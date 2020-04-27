@@ -44,7 +44,7 @@ export interface AttachedMosaic {
 
 interface NetworkCurrencyStorage {
   networkCurrency: NetworkCurrencyModel
-  harvestCurrency:NetworkCurrencyModel
+  harvestCurrency: NetworkCurrencyModel
 }
 
 interface MosaicBalance {
