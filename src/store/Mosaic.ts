@@ -116,10 +116,13 @@ export default {
       const callback = () => {
         const repositoryFactory = rootGetters['network/repositoryFactory']
         const mosaicService = new MosaicService()
-        mosaicService.getNetworkCurrencies(repositoryFactory).subscribe(networkCurrencies => {
-          commit('networkCurrency', networkCurrencies.find(i => i))
-          commit('setInitialized', true)
-        })
+        const networkConfig = rootGetters['network/networkConfiguration']
+
+        mosaicService.getNetworkCurrencies(repositoryFactory, networkConfig)
+          .subscribe(networkCurrencies => {
+            commit('networkCurrency', networkCurrencies.find(i => i))
+            commit('setInitialized', true)
+          })
         commit('mosaicConfigurations', mosaicService.getMosaicConfigurations())
       }
       // acquire async lock until initialized

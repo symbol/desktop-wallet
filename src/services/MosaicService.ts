@@ -24,10 +24,10 @@ import {fromIterable} from 'rxjs/internal-compatibility'
 import {MosaicConfigurationModel} from '@/core/database/entities/MosaicConfigurationModel'
 import {MosaicModel} from '@/core/database/entities/MosaicModel'
 import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
-import {NetworkModel} from '@/core/database/entities/NetworkModel'
 import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
 import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 import {TimeHelpers} from '@/core/utils/TimeHelpers'
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 // custom types
 export type ExpirationStatus = 'unlimited' | 'expired' | string | number
@@ -75,16 +75,6 @@ export class MosaicService {
    */
   private readonly networkCurrencyStorage = new SimpleObjectStorage<NetworkCurrencyModel[]>(
     'networkCurrencyStorage')
-
-  /**
-   * Gets currency mosaicId and harvesting mosaicId from the stored network configuration
-   * @returns {MosaicId[]}
-   */
-  private getNetworkCurrenciesIds(): MosaicId[] {
-    const {networkConfiguration} = new SimpleObjectStorage<NetworkModel>('network').get()
-    const {currencyMosaicId, harvestingMosaicId} = networkConfiguration
-    return [ new MosaicId(currencyMosaicId), new MosaicId(harvestingMosaicId) ]
-  }
 
   /**
    * This method loads and caches the mosaic information for the given accounts.
@@ -175,28 +165,33 @@ export class MosaicService {
     })).pipe(toArray())
   }
 
-
   /**
-   * This method returns the list of {@link NetworkCurrencyModel} found in block 1.
+   * This method returns the list of {@link NetworkCurrencyModel} of the network.
    *
    * The intent of this method is to resolve the configured main (like cat.currency or symbol.xym)
-   * and harvest currencies (cat.harvest). More currencies may be defined in the block one.
+   * and harvest currencies (cat.harvest) returned by the network configuration endpoint.
    *
-   * @param repositoryFactory tge repository factory used to load the block 1 transactions
-   * @return the list of {@link NetworkCurrencyModel} found in block 1.
+   * @param {RepositoryFactory} repositoryFactory
+   * @param {NetworkConfigurationModel} networkConfig
+   * @returns {Observable<NetworkCurrencyModel[]>}
    */
   // TODO move this to a service in the SDK.
-  public getNetworkCurrencies(repositoryFactory: RepositoryFactory): Observable<NetworkCurrencyModel[]> {
+  public getNetworkCurrencies(
+    repositoryFactory: RepositoryFactory,
+    networkConfig: NetworkConfigurationModel,
+  ): Observable<NetworkCurrencyModel[]> {
     const storedNetworkCurrencies = this.networkCurrencyStorage.get()
     const mosaicHttp = repositoryFactory.createMosaicRepository()
     const namespaceHttp = repositoryFactory.createNamespaceRepository()
 
     // get network currencies ids from stored network configuration
-    const [ currencyMosaicId, harvestingMosaicId ] = this.getNetworkCurrenciesIds()
+    const { currencyMosaicId, harvestingMosaicId } = networkConfig
+    const currencyMosaic = new MosaicId(currencyMosaicId)
+    const harvestingMosaic = new MosaicId(harvestingMosaicId)
 
     // filter out harvesting currency if it is the same as the network currency
-    const mosaicIds = currencyMosaicId.equals(harvestingMosaicId)
-      ? [currencyMosaicId] : [ currencyMosaicId, harvestingMosaicId ]
+    const mosaicIds = currencyMosaic.equals(harvestingMosaic)
+      ? [currencyMosaic] : [ currencyMosaic, harvestingMosaic ]
 
     // get mosaicInfo and mosaic names from the network,
     // build network currency models
