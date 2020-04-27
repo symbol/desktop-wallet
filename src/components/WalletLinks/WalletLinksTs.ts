@@ -37,7 +37,7 @@ export class WalletLinksTs extends Vue {
   /// end-region computed properties getter/setter
 
   public get explorerUrl() {
-    return this.explorerBaseUrl + '/account/' + this.wallet.address
+    return this.explorerBaseUrl + 'account/' + this.wallet.address
   }
 
   public get faucetUrl() {
