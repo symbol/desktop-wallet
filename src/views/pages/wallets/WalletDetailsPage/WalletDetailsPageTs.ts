@@ -80,7 +80,7 @@ export class WalletDetailsPageTs extends Vue {
    * @param item
    * @return {boolean}
    */
-  public get isLedger():boolean{
+  public get isLedger(): boolean{
     return this.currentWallet.type == WalletType.fromDescriptor('Ledger')
   }
 }

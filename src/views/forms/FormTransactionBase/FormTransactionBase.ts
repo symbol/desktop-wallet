@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId, Mosaic,Deadline,UInt64,AggregateTransaction,RepositoryFactoryHttp,SignedTransaction,LockFundsTransaction, MultisigAccountInfo, NetworkType, PublicAccount, Transaction} from 'symbol-sdk'
+import {MosaicId, Mosaic,Deadline,UInt64,AggregateTransaction,SignedTransaction,LockFundsTransaction, MultisigAccountInfo, NetworkType, PublicAccount, Transaction} from 'symbol-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
@@ -282,140 +282,107 @@ export class FormTransactionBase extends Vue {
         
       })
     }     
-  const options = this.$store.getters['wallet/stageOptions']
-  //check isLedger wallet
-  if(this.currentWallet.type == WalletType.fromDescriptor('Ledger')){
-    this.$Notice.success({
-      title: this['$t']('Verify information in your device!') + ''
-    })
-    const transport = await TransportWebUSB.create();
-    const symbolLedger = new SymbolLedger(transport, "XYM");
-    const currentPath = this.currentWallet.path
-    const networkType = this.currentAccount.networkType
-    const accountResult = await symbolLedger.getAccount(currentPath)
-    const { address, publicKey, path } = accountResult;
-    const defaultFee = this.$store.getters['app/defaultFee']
+    const options = this.$store.getters['wallet/stageOptions']
+    // check isLedger wallet
+    if(this.currentWallet.type == WalletType.fromDescriptor('Ledger')){
+      this.$Notice.success({
+        title: this['$t']('Verify information in your device!') + '',
+      })
+      const transport = await TransportWebUSB.create()
+      const symbolLedger = new SymbolLedger(transport, 'XYM')
+      const currentPath = this.currentWallet.path
+      const networkType = this.currentAccount.networkType
+      const accountResult = await symbolLedger.getAccount(currentPath)
+      const { address, publicKey, path } = accountResult
+      const defaultFee = this.$store.getters['app/defaultFee']
 
-    try {
-      //Get account from ledger.
-      const signedTransactions =[]
-      this.currentSigner = PublicAccount.createFromPublicKey(publicKey,networkType)
-      // const currentSigner = this.$store.getters['wallet/currentSigner']
-      if (options.isAggregate){
-        if(!options.isMultisig){ 
-          const aggregateTx = AggregateTransaction.createComplete(
-            Deadline.create(),
-            // - format as `InnerTransaction`
-            transactions.map(t => t.toAggregate(this.currentSigner)),
-            networkType,
-            [],
-            UInt64.fromUint(defaultFee),
-          )
-
-          const signature = await symbolLedger.signTransaction(path,aggregateTx, this.generationHash, publicKey)
-          transport.close()
-          this.$store.commit('wallet/addSignedTransaction', signature)
-          signedTransactions.push(signature)
-          
-          // - notify diagnostics
-          this.$store.dispatch('diagnostic/ADD_DEBUG', `Signed aggregate transaction with account ${address} and result: ${JSON.stringify({ // addr.plain()
-            hash: signature.hash,
-            payload: signature.payload,
-          })}`)
-          // - reset transaction stage
-          this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
-          // - notify about successful transaction announce
-          const debug = `Count of transactions signed:  ${signedTransactions.length}`
-          this.$store.dispatch('diagnostic/ADD_DEBUG', debug)
-          this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
-          await this.onConfirmationSuccess(this.currentSigner)
-        } 
-        else if(options.isMultisig ) { 
-          const currentSigner = this.$store.getters['wallet/currentSigner']
-          const multisigAccount = PublicAccount.createFromPublicKey(
-            currentSigner.publicKey,
-            this.networkType,
-          )
-
-          const networkMosaic = this.$store.getters['mosaic/networkMosaic']
-          const signedTransactions = []
-          const networkConfiguration = this.$store.getters['network/networkConfiguration'] as NetworkConfigurationModel
-      
-          // - aggregate staged transactions
-          const aggregateTx = AggregateTransaction.createBonded(
-            Deadline.create(),
-            // - format as `InnerTransaction`
-            transactions.map(t => t.toAggregate(multisigAccount)),
-            networkType,
-            [],
-            UInt64.fromUint(defaultFee),
-          )
-
-          // - sign aggregate transaction and create lock
-          const signedTx = await symbolLedger.signTransaction(path,aggregateTx, this.generationHash, publicKey) 
-          const hashLock = LockFundsTransaction.create(
-            Deadline.create(),
-            new Mosaic(
-              networkMosaic,
-              UInt64.fromNumericString(networkConfiguration.lockedFundsPerAggregate),
-            ),
-            UInt64.fromUint(1000), 
-            signedTx,
-            networkType,
-            UInt64.fromUint(defaultFee),
-          )
-
-          this.$Notice.success({
-            title: this['$t']('Sign LockFundTransaction to finish your registration!') + '',
-          })
-          // - sign hash lock and push
-          const signedLock = await symbolLedger.signTransaction(currentPath,hashLock, this.generationHash, publicKey)
-
-          // - push signed transactions (order matters)
-          this.$store.commit('wallet/addSignedTransaction', signedLock)
-          this.$store.commit('wallet/addSignedTransaction', signedTx)
-          signedTransactions.push(signedLock)
-          signedTransactions.push(signedTx)
-
-          // - notify diagnostics
-          this.$store.dispatch('diagnostic/ADD_DEBUG', `Signed hash lock and aggregate bonded for account ${multisigAccount.address.plain() 
-          } with cosignatory ${this.currentWallet.address} and result: ${JSON.stringify({
-            hashLockTransactionHash: signedTransactions[0].hash,
-            aggregateTransactionHash: signedTransactions[1].hash,
-          })}`)
-          // - reset transaction stage
-          this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
-
-          // - notify about successful transaction announce
-          const debug = `Count of transactions signed:  ${signedTransactions.length}`
-          this.$store.dispatch('diagnostic/ADD_DEBUG', debug)
-          this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
-          this.$emit('success', this.currentWallet)
-          this.$emit('close')
-          const currenwalletPublicAccount = PublicAccount.createFromPublicKey(this.currentWallet.publicKey,networkType)
-          await this.onConfirmationSuccess(currenwalletPublicAccount)
-        } 
-      } else {
-        await Promise.all(transactions.map(
-          async (transaction) => {
-            await this.$store.dispatch(
-              'wallet/ADD_STAGED_TRANSACTION',
-              transaction,
+      try {
+      // Get account from ledger.
+        const signedTransactions = []
+        this.currentSigner = PublicAccount.createFromPublicKey(publicKey,networkType)
+        // const currentSigner = this.$store.getters['wallet/currentSigner']
+        if (options.isAggregate){
+          if(!options.isMultisig){ 
+            const aggregateTx = AggregateTransaction.createComplete(
+              Deadline.create(),
+              // - format as `InnerTransaction`
+              transactions.map(t => t.toAggregate(this.currentSigner)),
+              networkType,
+              [],
+              UInt64.fromUint(defaultFee),
             )
-            // - sign transaction with \a account
-            const signature = await symbolLedger.signTransaction(path, transaction, this.generationHash, publicKey)
+
+            const signature = await symbolLedger.signTransaction(path,aggregateTx, this.generationHash, publicKey)
             transport.close()
             this.$store.commit('wallet/addSignedTransaction', signature)
             signedTransactions.push(signature)
+          
+            // - notify diagnostics
+            this.$store.dispatch('diagnostic/ADD_DEBUG', `Signed aggregate transaction with account ${address} and result: ${JSON.stringify({ // addr.plain()
+              hash: signature.hash,
+              payload: signature.payload,
+            })}`)
+            // - reset transaction stage
+            this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
+            // - notify about successful transaction announce
+            const debug = `Count of transactions signed:  ${signedTransactions.length}`
+            this.$store.dispatch('diagnostic/ADD_DEBUG', debug)
+            this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
+            await this.onConfirmationSuccess(this.currentSigner)
+          } 
+          else if(options.isMultisig ) { 
+            const currentSigner = this.$store.getters['wallet/currentSigner']
+            const multisigAccount = PublicAccount.createFromPublicKey(
+              currentSigner.publicKey,
+              this.networkType,
+            )
+
+            const networkMosaic = this.$store.getters['mosaic/networkMosaic']
+            const signedTransactions = []
+            const networkConfiguration = this.$store.getters['network/networkConfiguration'] as NetworkConfigurationModel
+      
+            // - aggregate staged transactions
+            const aggregateTx = AggregateTransaction.createBonded(
+              Deadline.create(),
+              // - format as `InnerTransaction`
+              transactions.map(t => t.toAggregate(multisigAccount)),
+              networkType,
+              [],
+              UInt64.fromUint(defaultFee),
+            )
+
+            // - sign aggregate transaction and create lock
+            const signedTx = await symbolLedger.signTransaction(path,aggregateTx, this.generationHash, publicKey) 
+            const hashLock = LockFundsTransaction.create(
+              Deadline.create(),
+              new Mosaic(
+                networkMosaic,
+                UInt64.fromNumericString(networkConfiguration.lockedFundsPerAggregate),
+              ),
+              UInt64.fromUint(1000), 
+              signedTx,
+              networkType,
+              UInt64.fromUint(defaultFee),
+            )
+
+            this.$Notice.success({
+              title: this['$t']('Sign LockFundTransaction to finish your registration!') + '',
+            })
+            // - sign hash lock and push
+            const signedLock = await symbolLedger.signTransaction(currentPath,hashLock, this.generationHash, publicKey)
+
+            // - push signed transactions (order matters)
+            this.$store.commit('wallet/addSignedTransaction', signedLock)
+            this.$store.commit('wallet/addSignedTransaction', signedTx)
+            signedTransactions.push(signedLock)
+            signedTransactions.push(signedTx)
 
             // - notify diagnostics
-            this.$store.dispatch('diagnostic/ADD_DEBUG',
-              `Signed transaction with account ${this.currentSigner.address.plain()} and result: ${JSON.stringify(
-                {
-                  hash: signature.hash,
-                  payload: signature.payload,
-                })}`)
-            
+            this.$store.dispatch('diagnostic/ADD_DEBUG', `Signed hash lock and aggregate bonded for account ${multisigAccount.address.plain() 
+            } with cosignatory ${this.currentWallet.address} and result: ${JSON.stringify({
+              hashLockTransactionHash: signedTransactions[0].hash,
+              aggregateTransactionHash: signedTransactions[1].hash,
+            })}`)
             // - reset transaction stage
             this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
 
@@ -425,10 +392,45 @@ export class FormTransactionBase extends Vue {
             this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
             this.$emit('success', this.currentWallet)
             this.$emit('close')
-            const currenwalletPublicAccount = PublicAccount.createFromPublicKey(this.currentWallet.publicKey,networkType)
-            await this.onConfirmationSuccess(currenwalletPublicAccount)
+            const currentwalletPublicAccount = PublicAccount.createFromPublicKey(this.currentWallet.publicKey,
+              networkType)
+            await this.onConfirmationSuccess(currentwalletPublicAccount)
+          } 
+        } else {
+          await Promise.all(transactions.map(
+            async (transaction) => {
+              await this.$store.dispatch(
+                'wallet/ADD_STAGED_TRANSACTION',
+                transaction,
+              )
+              // - sign transaction with \a account
+              const signature = await symbolLedger.signTransaction(path, transaction, this.generationHash, publicKey)
+              transport.close()
+              this.$store.commit('wallet/addSignedTransaction', signature)
+              signedTransactions.push(signature)
 
-          }))
+              // - notify diagnostics
+              this.$store.dispatch('diagnostic/ADD_DEBUG',
+                `Signed transaction with account ${this.currentSigner.address.plain()} and result: ${JSON.stringify(
+                  {
+                    hash: signature.hash,
+                    payload: signature.payload,
+                  })}`)
+            
+              // - reset transaction stage
+              this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
+
+              // - notify about successful transaction announce
+              const debug = `Count of transactions signed:  ${signedTransactions.length}`
+              this.$store.dispatch('diagnostic/ADD_DEBUG', debug)
+              this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
+              this.$emit('success', this.currentWallet)
+              this.$emit('close')
+              const currentwalletPublicAccount = PublicAccount.createFromPublicKey(this.currentWallet.publicKey,
+                networkType)
+              await this.onConfirmationSuccess(currentwalletPublicAccount)
+
+            }))
         }
       } catch (err) {
         transport.close()

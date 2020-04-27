@@ -132,7 +132,7 @@ export class WalletSelectorPanelTs extends Vue {
    * @return {void}
    */
 
-  public get isLedger():boolean{
+  public get isLedger(): boolean{
     return this.currentWallet.type == WalletType.fromDescriptor('Ledger')
   }
 

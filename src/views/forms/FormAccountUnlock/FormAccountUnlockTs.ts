@@ -17,7 +17,6 @@ import {Account, EncryptedPrivateKey, NetworkType, Password, Address} from 'symb
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
 import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
 import {AccountService} from '@/services/AccountService'
 import {NotificationType} from '@/core/utils/NotificationType'
@@ -82,7 +81,7 @@ export class FormAccountUnlockTs extends Vue {
    * @return {void}
    */
 
-  public get isLedger():boolean{
+  public get isLedger(): boolean{
     return this.currentWallet.type == WalletType.fromDescriptor('Ledger')
   }
 

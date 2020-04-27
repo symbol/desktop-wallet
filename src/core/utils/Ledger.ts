@@ -23,7 +23,6 @@ import {
  */
 
 const MAX_CHUNK_SIZE = 255
-const ADPUS = []
 
 export class SymbolLedger {
   transport: any
@@ -113,10 +112,10 @@ export class SymbolLedger {
     let response
     await this.generateDataUnit(rawTx,path,twiceTransfer).then(
       (res)=>{
-        response = res;
-      }
+        response = res
+      },
     ).catch(
-      (err)=> console.log(err)      
+      (err)=> console.log(err),      
     )
 
     // Response from Ledger
@@ -165,10 +164,10 @@ export class SymbolLedger {
     let response
     await this.generateDataUnit(rawTx,path,twiceTransfer).then(
       (res)=>{
-        response = res;
-      }
+        response = res
+      },
     ).catch(
-      (err)=> console.log(err)      
+      (err)=> console.log(err),      
     )
 
     // Response from Ledger
@@ -182,10 +181,10 @@ export class SymbolLedger {
     return cosignatureSignedTransaction
   }
 
- async generateDataUnit(rawTx: Buffer,path:string, twiceTransfer:any ){
-    let offset = 0;
-    const curveMask = 0x80;
-    const bipPath = BIPPath.fromString(path).toPathArray();
+  async generateDataUnit(rawTx: Buffer,path: string, twiceTransfer: any ){
+    let offset = 0
+    const curveMask = 0x80
+    const bipPath = BIPPath.fromString(path).toPathArray()
     const apdus = []
     
     while (offset !== rawTx.length) {

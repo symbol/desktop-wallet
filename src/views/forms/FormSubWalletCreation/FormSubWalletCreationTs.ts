@@ -154,7 +154,7 @@ export class FormSubWalletCreationTs extends Vue {
    */
   public currentWallet: WalletModel
 
-  public get isLedger():boolean{
+  public get isLedger(): boolean{
     return this.currentWallet.type == WalletType.fromDescriptor('Ledger')
   }
 
@@ -163,7 +163,7 @@ export class FormSubWalletCreationTs extends Vue {
     const type = values.type && [ 'child_wallet', 'privatekey_wallet' ].includes(values.type)
       ? values.type
       : 'child_wallet'
-     if (this.isLedger && type =="child_wallet"){
+    if (this.isLedger && type == 'child_wallet'){
       this.deriveNextChildWallet(values.name)
     } 
     else this.hasAccountUnlockModal = true
@@ -250,17 +250,17 @@ export class FormSubWalletCreationTs extends Vue {
     if(this.isLedger){
       this.importSubAccountFromLedger(childWalletName).then(
         (res)=>{
-          this.walletService.saveWallet(res);
-           // - update app state
+          this.walletService.saveWallet(res)
+          // - update app state
           this.$store.dispatch('account/ADD_WALLET', res)
           this.$store.dispatch('wallet/SET_CURRENT_WALLET', res)
           this.$store.dispatch('wallet/SET_KNOWN_WALLETS', this.currentAccount.wallets)
           this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
           this.$emit('submit', this.formItems)
-        }
+        },
       ).catch(
-        (err)=> console.log(err)
-      );
+        (err)=> console.log(err),
+      )
     } else {
       // - get next path
       const nextPath = this.paths.getNextAccountPath(this.knownPaths)
@@ -285,10 +285,10 @@ export class FormSubWalletCreationTs extends Vue {
     } 
   }
 
-  async importSubAccountFromLedger(childWalletName: string):Promise<WalletModel> |null{
+  async importSubAccountFromLedger(childWalletName: string): Promise<WalletModel> |null{
     const subWalletName = childWalletName
     const accountPath = this.currentWallet.path
-    const currentAccountIndex = accountPath.substring(accountPath.length-2,accountPath.length-1)
+    const currentAccountIndex = accountPath.substring(accountPath.length - 2,accountPath.length - 1)
     const numAccount = this.knownPaths.length
     let accountIndex
     if(numAccount <= Number(currentAccountIndex) ){
@@ -298,12 +298,12 @@ export class FormSubWalletCreationTs extends Vue {
     }
     try {
       this.$Notice.success({
-        title: this['$t']('Verify information in your device!') + ''
+        title: this['$t']('Verify information in your device!') + '',
       })
-      const transport = await TransportWebUSB.create();
-      const symbolLedger = new SymbolLedger(transport, "XYM");
+      const transport = await TransportWebUSB.create()
+      const symbolLedger = new SymbolLedger(transport, 'XYM')
       const accountResult = await symbolLedger.getAccount(`m/44'/4343'/${this.networkType}'/0'/${accountIndex}'`)
-      const { address, publicKey, path } = accountResult;
+      const { address, publicKey, path } = accountResult
       transport.close()
 
       const accName = Object.values(this.currentAccount)[2]
@@ -323,11 +323,11 @@ export class FormSubWalletCreationTs extends Vue {
       }
     } catch (e) {
       this.$store.dispatch('SET_UI_DISABLED', {
-          isDisabled: false,
-          message: ""
-      });
+        isDisabled: false,
+        message: '',
+      })
       this.$Notice.error({
-          title: this['$t']('CONDITIONS_OF_USE_NOT_SATISFIED') + ''
+        title: this['$t']('CONDITIONS_OF_USE_NOT_SATISFIED') + '',
       })
     }
   }

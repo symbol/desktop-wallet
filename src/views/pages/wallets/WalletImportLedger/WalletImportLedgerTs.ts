@@ -1,7 +1,7 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
-import {NetworkType,SimpleWallet} from "symbol-sdk"
+import {NetworkType} from 'symbol-sdk'
 import {SymbolLedger} from '@/core/utils/Ledger'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 // internal dependencies
@@ -90,7 +90,7 @@ export class WalletImportLedgerTs extends Vue {
         if (accountName2 == accountName1){
           networkTypeLocal = account.networkType
           if ( networkTypeLocal == networkType && wallet.type === WalletType.fromDescriptor('Ledger')){
-            num+=1 
+            num += 1 
           } 
         }    
       }
@@ -126,10 +126,10 @@ export class WalletImportLedgerTs extends Vue {
           isDisabled: false,
           message: '',
         })
-      }
+      },
     )
   }
-  async importAccountFromLedger():Promise<WalletModel> {
+  async importAccountFromLedger(): Promise<WalletModel> {
     const { accountIndex, networkType, walletName } = this.ledgerForm
     try {
       this.$Notice.success({
@@ -156,7 +156,7 @@ export class WalletImportLedgerTs extends Vue {
         encPrivate: '',
         encIv: '',
         path: path,
-        isMultisig: false
+        isMultisig: false,
       }
     } catch (e) {
       this.$store.dispatch('SET_UI_DISABLED', {

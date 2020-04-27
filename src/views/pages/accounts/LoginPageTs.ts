@@ -186,7 +186,7 @@ export default class LoginPageTs extends Vue {
         return w
       }
     })
-    if(existingLedgerWallets !==(''||undefined)){
+    if(existingLedgerWallets !== ('' || undefined)){
       return true
     }
     return false
@@ -221,7 +221,7 @@ export default class LoginPageTs extends Vue {
       return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
     }
 
-     // if account setup was not finalized, redirect
+    // if account setup was not finalized, redirect
     if (!account.seed && !(this.isHardwareWallet()) ) { //
       this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
       this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)

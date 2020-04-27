@@ -15,11 +15,10 @@
  */
 import {mapGetters} from 'vuex'
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Transaction, MosaicId, AggregateTransaction,Address,PublicAccount, NetworkType} from 'symbol-sdk'
+import {Transaction, MosaicId, AggregateTransaction,PublicAccount, NetworkType} from 'symbol-sdk'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
 import {SymbolLedger} from '@/core/utils/Ledger'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
 import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
 import {TransactionService} from '@/services/TransactionService'
 // child components
@@ -35,7 +34,6 @@ import TransactionListFilters from '@/components/TransactionList/TransactionList
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
 import {TransactionGroup} from '@/store/Transaction'
 
-import { userInfo } from 'os'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 // custom types
 export const STATUS: Array<string> = [ 'all','confirmed','unconfirmed','partial' ]
@@ -251,21 +249,21 @@ export class TransactionListTs extends Vue {
   public currentPeer: Record<string, any>
 
 
-  public async onClickTransaction(transaction: any ) {//Transaction | AggregateTransaction
-    const isSigner = transaction.signer.address.plain()==this.currentWallet.address ? true : false
+  public async onClickTransaction(transaction: any ) {// Transaction | AggregateTransaction
+    const isSigner = transaction.signer.address.plain() == this.currentWallet.address ? true : false
     if (transaction.hasMissingSignatures() ) {
       let isCosignatorSigned = false
-      if(transaction.cosignatures.length !=0){
+      if(transaction.cosignatures.length != 0){
         transaction.cosignatures.find(
           (res)=>{
-            if (this.currentWallet.publicKey != res.signer.publicKey  ){
+            if (this.currentWallet.publicKey != res.signer.publicKey ){
               isCosignatorSigned = false
-            } else isCosignatorSigned = true;
-          }
+            } else isCosignatorSigned = true
+          },
         )
       } 
-      if(this.currentWallet.type==WalletType.fromDescriptor('Ledger') && !isCosignatorSigned && !isSigner){
-        this.signWithLedger(transaction);
+      if(this.currentWallet.type == WalletType.fromDescriptor('Ledger') && !isCosignatorSigned && !isSigner){
+        this.signWithLedger(transaction)
       }
       else {
         this.activePartialTransaction = transaction as AggregateTransaction
@@ -298,7 +296,7 @@ export class TransactionListTs extends Vue {
     this.currentPage = page
   }
 
-  async signWithLedger(transaction:AggregateTransaction){
+  async signWithLedger(transaction: AggregateTransaction){
     this.$Notice.success({
       title: this['$t']('Verify information in your device!') + '',
     })
@@ -307,7 +305,10 @@ export class TransactionListTs extends Vue {
     const addr = this.currentWallet.address      
     const symbolLedger = new SymbolLedger(transport, 'XYM')
     const signerPublickey = this.currentWallet.publicKey
-    const signature = await symbolLedger.signCosignatureTransaction(currentPath,transaction, this.generationHash, signerPublickey)
+    const signature = await symbolLedger.signCosignatureTransaction(currentPath,
+      transaction,
+      this.generationHash,
+      signerPublickey)
     transport.close()
     this.$store.dispatch('diagnostic/ADD_DEBUG', `Co-signed transaction with account ${addr} and result: ${JSON.stringify({
       parentHash: signature.parentHash,
