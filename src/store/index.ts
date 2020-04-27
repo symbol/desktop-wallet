@@ -68,6 +68,8 @@ const AppStore = new Vuex.Store({
         await dispatch('db/initialize')
         await dispatch('diagnostic/initialize')
         await dispatch('notification/initialize')
+        // Network init must happen before Mosaic init because network currency Ids
+        // are supplied to MosaicService from the network configuration
         await dispatch('network/initialize')
         await dispatch('mosaic/initialize')
         await dispatch('namespace/initialize')

@@ -52,8 +52,7 @@ export class WalletModel {
   public readonly type: number
   public readonly address: string
   public readonly publicKey: string
-  public readonly encPrivate: string
-  public readonly encIv: string
+  public readonly encryptedPrivateKey: string
   public readonly path: string
   public readonly isMultisig: boolean
 
@@ -66,5 +65,4 @@ export class WalletModel {
     const publicAccount = PublicAccount.createFromPublicKey(model.publicKey, address.networkType)
     return {address, publicAccount}
   }
-
 }

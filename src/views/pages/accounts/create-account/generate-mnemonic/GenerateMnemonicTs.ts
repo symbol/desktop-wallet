@@ -15,12 +15,11 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Password} from 'symbol-sdk'
+import {Password, Crypto} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import CryptoJS from 'crypto-js'
 // internal dependencies
 import {AccountModel} from '@/core/database/entities/AccountModel'
-import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {AccountService} from '@/services/AccountService'
 
@@ -78,7 +77,7 @@ export default class GenerateMnemonicTs extends Vue {
    */
   public handleMousemove() {
     if (this.percent < 100) {
-      this.entropy += AESEncryptionService.generateRandomBytes(8, /* raw=*/false)
+      this.entropy += Crypto.randomBytes(8)
       this.percent ++
       return
     }
@@ -96,12 +95,13 @@ export default class GenerateMnemonicTs extends Vue {
     try {
       // act
       const entropy = CryptoJS.SHA256(this.entropy).toString()
+      console.log('GenerateMnemonicTs -> saveMnemonicAndGoToNextPage -> entropy', entropy)
       const seed = MnemonicPassPhrase.createFromEntropy(entropy)
 
       // encrypt seed for storage
-      const encSeed = AESEncryptionService.encrypt(
+      const encSeed = Crypto.encrypt(
         seed.plain,
-        this.currentPassword,
+        this.currentPassword.value,
       )
 
       // update currentAccount instance and storage

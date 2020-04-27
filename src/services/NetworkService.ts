@@ -117,6 +117,8 @@ export class NetworkService {
       maxCosignedAccountsPerAccount: NetworkConfigurationHelpers.maxCosignedAccountsPerAccount(dto),
       maxMessageSize: NetworkConfigurationHelpers.maxMessageSize(dto),
       maxMosaicAtomicUnits: NetworkConfigurationHelpers.maxMosaicAtomicUnits(dto),
+      currencyMosaicId: NetworkConfigurationHelpers.currencyMosaicId(dto),
+      harvestingMosaicId: NetworkConfigurationHelpers.harvestingMosaicId(dto),
     }
     return {...fileDefaults, ...fromDto}
   }

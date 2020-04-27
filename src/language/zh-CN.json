@@ -742,6 +742,7 @@
   "fromWhere": "来自于",
   "display_mnemonic_QR_code": "显示助记词二维码",
   "Wallet_network_type_does_not_match_current_network_type": " 钱包网络类型与当前节点网络类型不匹配。",
+  "Wallet_network_does_not_match_current_network_type": " 钱包网络与当前节点网络不匹配。",
   "mosaicId": "马赛克ID",
   "supplyMutable": "供应量是否可改",
   "Increase": "增加",

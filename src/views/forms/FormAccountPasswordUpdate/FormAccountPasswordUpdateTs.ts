@@ -15,7 +15,7 @@
  */
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
-import {Password} from 'symbol-sdk'
+import {Password, Crypto} from 'symbol-sdk'
 // internal dependencies
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {AccountService} from '@/services/AccountService'
@@ -31,7 +31,6 @@ import FormRow from '@/components/FormRow/FormRow.vue'
 import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {AccountModel} from '@/core/database/entities/AccountModel'
-import {AESEncryptionService} from '@/services/AESEncryptionService'
 import {WalletService} from '@/services/WalletService'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
@@ -124,8 +123,8 @@ export class FormAccountPasswordUpdateTs extends Vue {
       const accountService = new AccountService()
       const newPassword = new Password(this.formItems.password)
       const oldSeed = this.currentAccount.seed
-      const plainSeed = AESEncryptionService.decrypt(oldSeed, oldPassword)
-      const newSeed = AESEncryptionService.encrypt(plainSeed, newPassword)
+      const plainSeed = Crypto.decrypt(oldSeed, oldPassword.value)
+      const newSeed = Crypto.encrypt(plainSeed, newPassword.value)
 
       // // - create new password hash
       const passwordHash = AccountService.getPasswordHash(newPassword)

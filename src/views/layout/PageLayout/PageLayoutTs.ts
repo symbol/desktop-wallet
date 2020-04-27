@@ -124,7 +124,7 @@ export class PageLayoutTs extends Vue {
     }
 
     if (this.currentAccount && this.currentAccount.generationHash !== this.generationHash) {
-      return {show: true, message: 'Wallet_network_type_does_not_match_current_network_type'}
+      return {show: true, message: 'Wallet_network_does_not_match_current_network_type'}
     }
 
     return {show: false, message: ''}
