@@ -14,7 +14,7 @@
  *
  */
 
-import {RepositoryFactory} from 'symbol-sdk'
+import {RepositoryFactory, NodeInfo} from 'symbol-sdk'
 import {Observable} from 'rxjs'
 import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
 import {map, tap} from 'rxjs/operators'
@@ -38,17 +38,15 @@ export class NodeService {
 
   public getNodes(repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string): Observable<NodeModel[]> {
     const storedNodes = this.loadNodes().concat(this.loadStaticNodes())
+    console.log('NodeService -> storedNodes', storedNodes)
     const nodeRepository = repositoryFactory.createNodeRepository()
 
     return nodeRepository.getNodeInfo().pipe(
-      map(dto => this.createNodeModel(repositoryFactoryUrl, dto.friendlyName)),
+      map((dto: NodeInfo) => this.createNodeModel(repositoryFactoryUrl, dto.friendlyName)),
       ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl)),
-      map(restData => {
-        const currentNode = restData[0]
-        const nodePeers = restData[1]
-        const nodeInfos = [currentNode].concat(nodePeers, storedNodes)
-        return _.uniqBy(nodeInfos, 'url')
-      }), tap(p => this.saveNodes(p)))
+      map(currentNode => _.uniqBy([currentNode, ...storedNodes], 'url')),
+      tap(p => this.saveNodes(p)),
+    )
   }
 
   private loadStaticNodes(): NodeModel[] {
