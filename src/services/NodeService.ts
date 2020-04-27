@@ -38,7 +38,6 @@ export class NodeService {
 
   public getNodes(repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string): Observable<NodeModel[]> {
     const storedNodes = this.loadNodes().concat(this.loadStaticNodes())
-    console.log('NodeService -> storedNodes', storedNodes)
     const nodeRepository = repositoryFactory.createNodeRepository()
 
     return nodeRepository.getNodeInfo().pipe(
