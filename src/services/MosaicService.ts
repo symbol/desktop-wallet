@@ -43,7 +43,7 @@ export interface AttachedMosaic {
   amount: number
 }
 
-interface NetworkCurrencyStorage {
+interface NetworkCurrenciesModel {
   networkCurrency: NetworkCurrencyModel
   harvestCurrency: NetworkCurrencyModel
 }
@@ -78,7 +78,7 @@ export class MosaicService {
   /**
    * Store that caches the information around the network currency.
    */
-  private readonly networkCurrencyStorage = new NetworkBasedObjectStorage<NetworkCurrencyStorage>('networkCurrencyCache')
+  private readonly networkCurrencyStorage = new NetworkBasedObjectStorage<NetworkCurrenciesModel>('networkCurrencyCache')
 
   /**
    * This method loads and caches the mosaic information for the given accounts.
@@ -86,6 +86,7 @@ export class MosaicService {
    * information (if possible).
    *
    * @param {RepositoryFactory} repositoryFactory
+   * @param {string} generationHash
    * @param {NetworkCurrencyModel} networkCurrency
    * @param {AccountInfo[]} accountsInfo
    * @returns {Observable<MosaicModel[]>}
@@ -191,7 +192,7 @@ export class MosaicService {
     repositoryFactory: RepositoryFactory,
     generationHash: string,
     networkConfig: NetworkConfigurationModel,
-  ): Observable<NetworkCurrencyStorage> {
+  ): Observable<NetworkCurrenciesModel> {
     const storedNetworkCurrencies = this.networkCurrencyStorage.get(generationHash)
     const mosaicHttp = repositoryFactory.createMosaicRepository()
     const namespaceHttp = repositoryFactory.createNamespaceRepository()

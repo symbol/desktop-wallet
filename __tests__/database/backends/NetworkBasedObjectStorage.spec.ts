@@ -14,6 +14,7 @@
  *
  */
 import {NetworkBasedObjectStorage} from '@/core/database/backends/NetworkBasedObjectStorage'
+import {timeout} from 'rxjs/operators'
 
 const getStorage = () => new NetworkBasedObjectStorage<number>('SomeStorageKey')
 
@@ -39,21 +40,29 @@ describe('database/NetworkBasedObjectStorage.spec ==>', () => {
     })
   })
 
-  test('Get/Set/Delete same generation hash different generation hash', () => {
+  function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
+  test('Get/Set/Delete same generation hash different generation hash', async () => {
     const storage = getStorage()
     const generationHash1 = 'abc1'
     const generationHash2 = 'abc2'
     expect(storage.get(generationHash1)).toBeUndefined()
     expect(storage.get(generationHash2)).toBeUndefined()
     storage.set(generationHash1, 123)
+    await delay(1)
     expect(storage.getLatest()).toBe(123)
     expect(storage.get(generationHash1)).toBe(123)
     storage.set(generationHash2, 345)
+
+    await delay(1)
     expect(storage.getLatest()).toBe(345)
 
     expect(storage.get(generationHash2)).toBe(345)
     expect(storage.get(generationHash1)).toBe(123)
     storage.set(generationHash1, 456)
+    await delay(1)
     expect(storage.getLatest()).toBe(456)
     expect(storage.get(generationHash1)).toBe(456)
     storage.remove(generationHash1)
@@ -62,6 +71,7 @@ describe('database/NetworkBasedObjectStorage.spec ==>', () => {
     expect(storage.get(generationHash1)).toBeUndefined()
 
     storage.set(generationHash2, 456)
+    await delay(1)
     expect(storage.get(generationHash2)).toBe(456)
     storage.remove(generationHash2)
     storage.remove(generationHash2)
