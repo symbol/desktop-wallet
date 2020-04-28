@@ -258,6 +258,7 @@ export default {
         {root: true})
       commit('currentWallet', null)
       commit('currentWalletAddress', null)
+      commit('currentSignerAddress', null)
     },
 
     async SET_CURRENT_SIGNER({commit, dispatch, getters, rootGetters},
@@ -298,6 +299,17 @@ export default {
       dispatch('namespace/LOAD_NAMESPACES', {}, {root: true})
       dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
 
+    },
+
+    async NETWORK_CHANGED({dispatch}) {
+      dispatch('transaction/RESET_TRANSACTIONS', {}, {root: true})
+      dispatch('namespace/RESET_NAMESPACES', {}, {root: true})
+      dispatch('mosaic/RESET_MOSAICS', {}, {root: true})
+      dispatch('transaction/LOAD_TRANSACTIONS', undefined, {root: true})
+      await dispatch('LOAD_ACCOUNT_INFO')
+      dispatch('namespace/LOAD_NAMESPACES', {}, {root: true})
+      await dispatch('mosaic/LOAD_NETWORK_CURRENCIES', undefined, {root: true})
+      dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
     },
 
     async LOAD_ACCOUNT_INFO({commit, getters, rootGetters}) {

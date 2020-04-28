@@ -28,6 +28,7 @@ import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
 import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 import {TimeHelpers} from '@/core/utils/TimeHelpers'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import {NetworkBasedObjectStorage} from '@/core/database/backends/NetworkBasedObjectStorage'
 
 // custom types
 export type ExpirationStatus = 'unlimited' | 'expired' | string | number
@@ -42,7 +43,7 @@ export interface AttachedMosaic {
   amount: number
 }
 
-interface NetworkCurrencyStorage {
+interface NetworkCurrenciesModel {
   networkCurrency: NetworkCurrencyModel
   harvestCurrency: NetworkCurrencyModel
 }
@@ -65,7 +66,7 @@ export class MosaicService {
   /**
    * Store that caches the mosaic information of the current accounts when returned from rest.
    */
-  private readonly mosaicDataStorage = new SimpleObjectStorage<MosaicModel[]>('mosaicData')
+  private readonly mosaicDataStorage = new NetworkBasedObjectStorage<MosaicModel[]>('mosaicCache')
 
   /**
    * The storage to keep user configuration around mosaics.  For example, the balance hidden
@@ -77,8 +78,7 @@ export class MosaicService {
   /**
    * Store that caches the information around the network currency.
    */
-  private readonly networkCurrencyStorage = new SimpleObjectStorage<NetworkCurrencyStorage>(
-    'networkCurrencyStorage')
+  private readonly networkCurrencyStorage = new NetworkBasedObjectStorage<NetworkCurrenciesModel>('networkCurrencyCache')
 
   /**
    * This method loads and caches the mosaic information for the given accounts.
@@ -86,16 +86,18 @@ export class MosaicService {
    * information (if possible).
    *
    * @param {RepositoryFactory} repositoryFactory
+   * @param {string} generationHash
    * @param {NetworkCurrencyModel} networkCurrency
    * @param {AccountInfo[]} accountsInfo
    * @returns {Observable<MosaicModel[]>}
    */
   public getMosaics(
     repositoryFactory: RepositoryFactory,
+    generationHash: string,
     networkCurrency: NetworkCurrencyModel,
     accountsInfo: AccountInfo[],
   ): Observable<MosaicModel[]> {
-    const mosaicDataList = this.loadMosaicData()
+    const mosaicDataList = this.loadMosaicData(generationHash) || []
     const resolvedBalancesObservable = this.resolveBalances(repositoryFactory, accountsInfo)
     const accountAddresses = accountsInfo.map(a => a.address)
     const mosaicsFromAccountsObservable = repositoryFactory.createMosaicRepository()
@@ -109,7 +111,7 @@ export class MosaicService {
         return combineLatest([ nameObservables, mosaicInfoObservable ]).pipe(map(([ names, mosaicInfos ]) => {
           return this.toMosaicDtos(balances, mosaicInfos, names, networkCurrency, accountAddresses)
         }))
-      })).pipe(tap((d) => this.saveMosaicData(d)),
+      })).pipe(tap((d) => this.saveMosaicData(generationHash, d)),
         ObservableHelpers.defaultFirst(mosaicDataList))
   }
 
@@ -182,15 +184,16 @@ export class MosaicService {
    * and harvest currencies (cat.harvest) returned by the network configuration endpoint.
    *
    * @param {RepositoryFactory} repositoryFactory
+   * @param {generationHash} the generation hash.
    * @param {NetworkConfigurationModel} networkConfig
    * @returns {Observable<NetworkCurrencyModel[]>}
    */
-  // TODO move this to a service in the SDK.
   public getNetworkCurrencies(
     repositoryFactory: RepositoryFactory,
+    generationHash: string,
     networkConfig: NetworkConfigurationModel,
-  ): Observable<NetworkCurrencyStorage> {
-    const storedNetworkCurrencies = this.networkCurrencyStorage.get()
+  ): Observable<NetworkCurrenciesModel> {
+    const storedNetworkCurrencies = this.networkCurrencyStorage.get(generationHash)
     const mosaicHttp = repositoryFactory.createMosaicRepository()
     const namespaceHttp = repositoryFactory.createNamespaceRepository()
 
@@ -218,22 +221,22 @@ export class MosaicService {
         networkCurrency: networkMosaics[0],
         harvestCurrency: networkMosaics[1] || networkMosaics[0],
       })),
-      tap(d => this.networkCurrencyStorage.set(d)),
+      tap(d => this.networkCurrencyStorage.set(generationHash, d)),
       ObservableHelpers.defaultFirst(storedNetworkCurrencies),
     )
   }
 
-  private loadMosaicData(): MosaicModel[] {
-    return this.mosaicDataStorage.get()
+  private loadMosaicData(generationHash: string): MosaicModel[] {
+    return this.mosaicDataStorage.get(generationHash)
   }
 
-  private saveMosaicData(mosaics: MosaicModel[]) {
-    this.mosaicDataStorage.set(mosaics)
+  private saveMosaicData(generationHash: string, mosaics: MosaicModel[]) {
+    this.mosaicDataStorage.set(generationHash, mosaics)
   }
 
-  public reset() {
-    this.mosaicDataStorage.remove()
-    this.networkCurrencyStorage.remove()
+  public reset(generationHash: string) {
+    this.mosaicDataStorage.remove(generationHash)
+    this.networkCurrencyStorage.remove(generationHash)
   }
 
   /**

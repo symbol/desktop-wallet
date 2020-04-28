@@ -14,7 +14,7 @@
  *
  */
 
-import {RepositoryFactory, NodeInfo} from 'symbol-sdk'
+import {NodeInfo, RepositoryFactory} from 'symbol-sdk'
 import {Observable} from 'rxjs'
 import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
 import {map, tap} from 'rxjs/operators'

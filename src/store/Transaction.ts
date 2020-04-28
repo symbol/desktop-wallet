@@ -156,16 +156,16 @@ export default {
       commit('isFetchingTransactions', true)
 
       const queryParams = new QueryParams({pageSize: 100})
-      if (group === TransactionGroup.all || group === TransactionGroup.confirmed) {
+      if (group == undefined || group === TransactionGroup.all || group === TransactionGroup.confirmed) {
         subscriptions.push(subscribeTransactions(TransactionGroup.confirmed,
           accountRepository.getAccountTransactions(currentSignerAddress, queryParams)))
       }
-      if (group === TransactionGroup.all || group === TransactionGroup.unconfirmed) {
+      if (group == undefined || group === TransactionGroup.all || group === TransactionGroup.unconfirmed) {
         subscriptions.push(subscribeTransactions(TransactionGroup.unconfirmed,
           accountRepository.getAccountUnconfirmedTransactions(currentSignerAddress, queryParams)))
       }
 
-      if (group === TransactionGroup.all || group === TransactionGroup.partial) {
+      if (group == undefined || group === TransactionGroup.all || group === TransactionGroup.partial) {
         subscriptions.push(subscribeTransactions(TransactionGroup.partial,
           accountRepository.getAccountPartialTransactions(currentSignerAddress, queryParams)))
       }
