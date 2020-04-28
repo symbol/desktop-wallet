@@ -14,7 +14,6 @@
  *
  */
 import {NetworkBasedObjectStorage} from '@/core/database/backends/NetworkBasedObjectStorage'
-import {timeout} from 'rxjs/operators'
 
 const getStorage = () => new NetworkBasedObjectStorage<number>('SomeStorageKey')
 
@@ -41,7 +40,7 @@ describe('database/NetworkBasedObjectStorage.spec ==>', () => {
   })
 
   function delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+    return new Promise( resolve => setTimeout(resolve, ms) )
   }
 
   test('Get/Set/Delete same generation hash different generation hash', async () => {
