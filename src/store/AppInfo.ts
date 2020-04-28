@@ -26,7 +26,7 @@ import {SettingService} from '@/services/SettingService'
 
 const Lock = AwaitLock.create()
 const settingService = new SettingService()
-const ANON_ACCOUNT_NAME = ''
+const ANON_PROFILE_NAME = ''
 
 interface AppInfoState {
   initialized: false
@@ -51,7 +51,7 @@ const appInfoState: AppInfoState = {
   hasControlsDisabled: false,
   controlsDisabledMessage: '',
   faucetUrl: networkConfig.faucetUrl,
-  settings: settingService.getAccountSettings(ANON_ACCOUNT_NAME),
+  settings: settingService.getProfileSettings(ANON_PROFILE_NAME),
 }
 
 
@@ -126,9 +126,9 @@ export default {
         i18n.locale = settingsModel.language
         window.localStorage.setItem('locale', settingsModel.language)
       }
-      const currentAccount = rootGetters['account/currentAccount']
-      const accountName = currentAccount && currentAccount.accountName || ANON_ACCOUNT_NAME
-      commit('settings', settingService.changeAccountSettings(accountName, settingsModel))
+      const currentProfile = rootGetters['profile/currentProfile']
+      const profileName = currentProfile && currentProfile.profileName || ANON_PROFILE_NAME
+      commit('settings', settingService.changeProfileSettings(profileName, settingsModel))
     },
 
     SET_EXPLORER_URL({dispatch}, explorerUrl: string) {

@@ -7,7 +7,7 @@
       :transfer="false"
     >
       <div class="form-unlock">
-        <FormAccountUnlock v-if="!hasMnemonicInfo" @success="onAccountUnlocked" @error="onError" />
+        <FormProfileUnlock v-if="!hasMnemonicInfo" @success="onAccountUnlocked" @error="onError" />
       </div>
       <div v-if="hasMnemonicInfo" class="body">
         <div class="explain">

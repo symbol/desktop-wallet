@@ -18,20 +18,20 @@ import {mapGetters} from 'vuex'
 import {Account, Password, Crypto} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import {ProfileModel} from '@/core/database/entities/ProfileModel'
 // child components
 // @ts-ignore
-import FormAccountUnlock from '@/views/forms/FormAccountUnlock/FormAccountUnlock.vue'
+import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue'
 // @ts-ignore
 import MnemonicDisplay from '@/components/MnemonicDisplay/MnemonicDisplay.vue'
 
 @Component({
   components: {
-    FormAccountUnlock,
+    FormProfileUnlock,
     MnemonicDisplay,
   },
   computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
+    currentProfile: 'profile/currentProfile',
   })},
 })
 export class ModalMnemonicDisplayTs extends Vue {
@@ -40,11 +40,11 @@ export class ModalMnemonicDisplayTs extends Vue {
   }) visible: boolean
 
   /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
+   * Currently active profile
+   * @see {Store.Profile}
+   * @var {ProfileModel}
    */
-  public currentAccount: AccountModel
+  public currentProfile: ProfileModel
   
   public hasMnemonicInfo: boolean = false
   public mnemonic: MnemonicPassPhrase
@@ -79,7 +79,7 @@ export class ModalMnemonicDisplayTs extends Vue {
   public onAccountUnlocked(payload: {account: Account, password: Password}): boolean {
 
     // decrypt seed + create QR
-    const encSeed = this.currentAccount.seed
+    const encSeed = this.currentProfile.seed
     const plnSeed = Crypto.decrypt(encSeed, payload.password.value)
 
     try {
@@ -97,7 +97,7 @@ export class ModalMnemonicDisplayTs extends Vue {
   }
 
   /**
-   * Hook called when child component FormAccountUnlock or
+   * Hook called when child component FormProfileUnlock or
    * HardwareConfirmationButton emit the 'error' event.
    * @param {string} message
    * @return {void}

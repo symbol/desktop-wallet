@@ -21,7 +21,7 @@
                 mode="lazy"
                 vid="name"
                 :name="$t('name')"
-                :rules="validationRules.accountWalletName"
+                :rules="validationRules.profileAccountName"
                 slim
               >
                 <ErrorTooltip :errors="errors">
@@ -48,7 +48,7 @@
       </form>
     </ValidationObserver>
 
-    <ModalFormAccountUnlock
+    <ModalFormProfileUnlock
       v-if="hasAccountUnlockModal"
       :visible="hasAccountUnlockModal"
       :on-success="onAccountUnlocked"

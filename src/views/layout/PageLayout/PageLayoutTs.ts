@@ -17,7 +17,7 @@ import {NetworkType} from 'symbol-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import {ProfileModel} from '@/core/database/entities/ProfileModel'
 import {WalletService} from '@/services/WalletService'
 // child components
 // @ts-ignore
@@ -55,18 +55,18 @@ import {URLInfo} from '@/core/utils/URLInfo'
       isConnected: 'network/isConnected',
       networkType: 'network/networkType',
       generationHash: 'network/generationHash',
-      currentAccount: 'account/currentAccount',
+      currentProfile: 'profile/currentProfile',
       isCosignatoryMode: 'wallet/isCosignatoryMode',
     }),
   },
 })
 export class PageLayoutTs extends Vue {
   /**
-   * Currently active account
-   * @see {Store.Account}
+   * Currently active profile
+   * @see {Store.Profile}
    * @var {string}
    */
-  public currentAccount: AccountModel
+  public currentProfile: ProfileModel
 
   /**
    * Currently active peer
@@ -119,11 +119,11 @@ export class PageLayoutTs extends Vue {
       return {show: true, message: 'Node_not_available_please_check_your_node_or_network_settings'}
     }
 
-    if (this.currentAccount && this.currentAccount.networkType !== this.networkType) {
+    if (this.currentProfile && this.currentProfile.networkType !== this.networkType) {
       return {show: true, message: 'Wallet_network_type_does_not_match_current_network_type'}
     }
 
-    if (this.currentAccount && this.currentAccount.generationHash !== this.generationHash) {
+    if (this.currentProfile && this.currentProfile.generationHash !== this.generationHash) {
       return {show: true, message: 'Wallet_network_does_not_match_current_network_type'}
     }
 

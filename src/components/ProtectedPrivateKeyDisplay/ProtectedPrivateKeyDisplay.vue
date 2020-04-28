@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <ModalFormAccountUnlock
+    <ModalFormProfileUnlock
       v-if="hasAccountUnlockModal"
       :visible="hasAccountUnlockModal"
       :on-success="onAccountUnlocked"

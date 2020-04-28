@@ -32,10 +32,10 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
-import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
+import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
 // configuration
 import appConfig from '@/../config/app.conf.json'
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import {ProfileModel} from '@/core/database/entities/ProfileModel'
 
 const {MAX_SEED_WALLETS_NUMBER} = appConfig.constants
 
@@ -46,21 +46,21 @@ const {MAX_SEED_WALLETS_NUMBER} = appConfig.constants
     ErrorTooltip,
     FormWrapper,
     FormRow,
-    ModalFormAccountUnlock,
+    ModalFormProfileUnlock,
   },
   computed: {
     ...mapGetters({
       networkType: 'network/networkType',
-      currentAccount: 'account/currentAccount',
+      currentProfile: 'profile/currentProfile',
       knownWallets: 'wallet/knownWallets',
     }),
   },
 })
 export class FormSubWalletCreationTs extends Vue {
   /**
-   * Currently active account
+   * Currently active profile
    */
-  public currentAccount: AccountModel
+  public currentProfile: ProfileModel
 
   /**
    * Known wallets identifiers
@@ -178,7 +178,7 @@ export class FormSubWalletCreationTs extends Vue {
 
         case 'privatekey_wallet':
           subWallet = this.walletService.getSubWalletByPrivateKey(
-            this.currentAccount,
+            this.currentProfile,
             this.currentPassword,
             this.formItems.name,
             this.formItems.privateKey,
@@ -205,9 +205,9 @@ export class FormSubWalletCreationTs extends Vue {
       this.walletService.saveWallet(subWallet)
 
       // - update app state
-      await this.$store.dispatch('account/ADD_WALLET', subWallet)
+      await this.$store.dispatch('profile/ADD_WALLET', subWallet)
       await this.$store.dispatch('wallet/SET_CURRENT_WALLET', subWallet)
-      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', this.currentAccount.wallets)
+      await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', this.currentProfile.wallets)
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
       this.$emit('submit', this.formItems)
     } catch (e) {
@@ -239,13 +239,13 @@ export class FormSubWalletCreationTs extends Vue {
       'Adding child wallet with derivation path: ' + nextPath)
 
     // - decrypt mnemonic
-    const encSeed = this.currentAccount.seed
+    const encSeed = this.currentProfile.seed
     const passphrase = Crypto.decrypt(encSeed, this.currentPassword.value)
     const mnemonic = new MnemonicPassPhrase(passphrase)
 
     // create account by mnemonic
     return this.walletService.getChildWalletByPath(
-      this.currentAccount,
+      this.currentProfile,
       this.currentPassword,
       mnemonic,
       nextPath,

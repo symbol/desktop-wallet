@@ -40,7 +40,7 @@ export const simpleWallet1 = SimpleWallet.createFromPrivateKey(
 export const WalletsModel1: WalletModel = {
   id: 'someId',
   node: '',
-  accountName: 'account_name',
+  profileName: 'account_name',
   name:  wallet1Params.walletName,
   type: WalletType.PRIVATE_KEY,
   address: simpleWallet1.address.plain(),

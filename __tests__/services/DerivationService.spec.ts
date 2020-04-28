@@ -18,7 +18,7 @@ import {WalletService} from '@/services/WalletService'
 
 const {DEFAULT_WALLET_PATH} = WalletService
 
-// Standard account paths
+// Standard profile paths
 const standardPaths = {
   // the path number one is the DEFAULT_WALLET_PATH
   2: 'm/44\'/4343\'/1\'/0\'/0\'',
@@ -37,7 +37,7 @@ describe('services/DerivationService ==>', () => {
     test('increase standard paths as expected', () => {
       expect(
         [...Array(9).keys()].map(index => new DerivationService().incrementPathLevel(
-          DEFAULT_WALLET_PATH, DerivationPathLevels.Account, index + 1,
+          DEFAULT_WALLET_PATH, DerivationPathLevels.Profile, index + 1,
         ))).toEqual(Object.values(standardPaths))
     })
   })
@@ -46,7 +46,7 @@ describe('services/DerivationService ==>', () => {
     test('decrease standard paths as expected', () => {
       expect(
         [...Array(9).keys()].map(index => new DerivationService().decrementPathLevel(
-          standardPaths[10], DerivationPathLevels.Account, index + 1,
+          standardPaths[10], DerivationPathLevels.Profile, index + 1,
         ))).toEqual([ DEFAULT_WALLET_PATH, ...Object.values(standardPaths).slice(0,8) ].reverse())
     })
   })

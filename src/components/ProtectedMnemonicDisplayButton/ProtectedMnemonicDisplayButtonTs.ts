@@ -27,7 +27,7 @@ import ModalMnemonicDisplay from '@/views/modals/ModalMnemonicDisplay/ModalMnemo
     ModalMnemonicDisplay,
   },
   computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
+    currentProfile: 'profile/currentProfile',
     networkType: 'network/networkType',
     generationHash: 'network/generationHash',
   })},

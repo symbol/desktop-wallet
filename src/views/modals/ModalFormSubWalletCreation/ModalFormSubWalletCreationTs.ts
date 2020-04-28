@@ -16,7 +16,7 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import {ProfileModel} from '@/core/database/entities/ProfileModel'
 // child components
 // @ts-ignore
 import FormSubWalletCreation from '@/views/forms/FormSubWalletCreation/FormSubWalletCreation.vue'
@@ -26,7 +26,7 @@ import FormSubWalletCreation from '@/views/forms/FormSubWalletCreation/FormSubWa
     FormSubWalletCreation,
   },
   computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
+    currentProfile: 'profile/currentProfile',
   })},
 })
 export class ModalFormSubWalletCreationTs extends Vue {
@@ -52,11 +52,11 @@ export class ModalFormSubWalletCreationTs extends Vue {
   }
 
   /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
+   * Currently active profile
+   * @see {Store.Profile}
+   * @var {ProfileModel}
    */
-  public currentAccount: AccountModel
+  public currentProfile: ProfileModel
 
   /**
    * Hook called when child component FormSubWalletCreation emits

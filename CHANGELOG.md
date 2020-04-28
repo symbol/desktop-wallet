@@ -170,7 +170,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 #### Added
 
-- `FormAccountUnlock`: standardize practice of unlocking account across app
+- `FormProfileUnlock`: standardize practice of unlocking account across app
 - `FormTransactionBase`: base abstraction layer for transaction forms
 - `SignerSelector`: generic transaction signer selector, works with multisig to change owned assets states
 - General change of views files (*.vue) paths with result :

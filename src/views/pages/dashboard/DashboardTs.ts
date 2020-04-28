@@ -18,7 +18,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // child components
 // @ts-ignore
-import AccountBalancesPanel from '@/components/AccountBalancesPanel/AccountBalancesPanel.vue'
+import ProfileBalancesPanel from '@/components/ProfileBalancesPanel/ProfileBalancesPanel.vue'
 // @ts-ignore
 import NetworkStatisticsPanel from '@/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue'
 // @ts-ignore
@@ -26,7 +26,7 @@ import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
 
 @Component({
   components: {
-    AccountBalancesPanel,
+    ProfileBalancesPanel,
     NetworkStatisticsPanel,
     NavigationTabs,
   },

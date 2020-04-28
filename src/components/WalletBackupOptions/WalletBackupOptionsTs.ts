@@ -19,7 +19,7 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 import {WalletModel} from '@/core/database/entities/WalletModel'
 // child components
 // @ts-ignore
-import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
+import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
 // @ts-ignore
 import ProtectedMnemonicQRButton from '@/components/ProtectedMnemonicQRButton/ProtectedMnemonicQRButton.vue'
 // @ts-ignore
@@ -27,7 +27,7 @@ import ProtectedMnemonicDisplayButton from '@/components/ProtectedMnemonicDispla
 
 @Component({
   components: {
-    ModalFormAccountUnlock,
+    ModalFormProfileUnlock,
     ProtectedMnemonicQRButton,
     ProtectedMnemonicDisplayButton,
   }})

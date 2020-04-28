@@ -47,7 +47,7 @@ export class WalletModel {
 
   public readonly id: string
   public readonly name: string
-  public readonly accountName: string
+  public readonly profileName: string
   public readonly node: string
   public readonly type: number
   public readonly address: string

@@ -24,7 +24,7 @@ import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 import {WalletModel} from '@/core/database/entities/WalletModel'
 import {MultisigService} from '@/services/MultisigService'
 import * as _ from 'lodash'
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import {ProfileModel} from '@/core/database/entities/ProfileModel'
 import {WalletService} from '@/services/WalletService'
 import {catchError, map} from 'rxjs/operators'
 
@@ -267,7 +267,7 @@ export default {
         throw new Error('Public Key must be provided when calling wallet/SET_CURRENT_SIGNER!')
       }
       const networkType: NetworkType = rootGetters['network/networkType']
-      const currentAccount: AccountModel = rootGetters['account/currentAccount']
+      const currentProfile: ProfileModel = rootGetters['profile/currentProfile']
       const currentWallet: WalletModel = getters.currentWallet
       const previousSignerAddress: Address = getters.currentSignerAddress
 
@@ -282,7 +282,7 @@ export default {
       dispatch('transaction/RESET_TRANSACTIONS', {}, {root: true})
 
       const currentWalletAddress = Address.createFromRawAddress(currentWallet.address)
-      const knownWallets = new WalletService().getKnownWallets(currentAccount.wallets)
+      const knownWallets = new WalletService().getKnownWallets(currentProfile.wallets)
 
       commit('currentSignerAddress', currentSignerAddress)
       commit('currentWalletAddress', currentWalletAddress)
@@ -367,13 +367,13 @@ export default {
       if (!currentWallet) {
         return
       }
-      const currentAccount: AccountModel = rootGetters['account/currentAccount']
-      if (!currentAccount) {
+      const currentProfile: ProfileModel = rootGetters['profile/currentProfile']
+      if (!currentProfile) {
         return
       }
       const walletService = new WalletService()
       walletService.updateName(currentWallet, name)
-      const knownWallets = walletService.getKnownWallets(currentAccount.wallets)
+      const knownWallets = walletService.getKnownWallets(currentProfile.wallets)
       commit('knownWallets', knownWallets)
     },
 

@@ -18,7 +18,7 @@ import {mapGetters} from 'vuex'
 import {MosaicId, NetworkType} from 'symbol-sdk'
 import {ValidationProvider} from 'vee-validate'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import {ProfileModel} from '@/core/database/entities/ProfileModel'
 import {WalletModel} from '@/core/database/entities/WalletModel'
 import {WalletService} from '@/services/WalletService'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
@@ -47,7 +47,7 @@ import {MosaicModel} from '@/core/database/entities/MosaicModel'
   },
   computed: {
     ...mapGetters({
-      currentAccount: 'account/currentAccount',
+      currentProfile: 'profile/currentProfile',
       currentWallet: 'wallet/currentWallet',
       knownWallets: 'wallet/knownWallets',
       networkType: 'network/networkType',
@@ -72,11 +72,11 @@ export class WalletSelectorPanelTs extends Vue {
   public networkType: NetworkType
 
   /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountsModel}
+   * Currently active profile
+   * @see {Store.Profile}
+   * @var {ProfileModel}
    */
-  public currentAccount: AccountModel
+  public currentProfile: ProfileModel
 
   /**
    * Currently active wallet

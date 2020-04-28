@@ -20,7 +20,7 @@ import Vue from 'vue'
  * This event bus channels following events:
  * 
  * - newConnection with \a nodeUrl
- * - onAccountChange with \a accountName
+ * - onProfileChange with \a profileName
  * - onWalletChange with \a walletAddress
  */
 export const $eventBus = new Vue()

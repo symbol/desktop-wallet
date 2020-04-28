@@ -29,7 +29,7 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
-import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
+import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
 
 @Component({
   components: {
@@ -38,7 +38,7 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
     ErrorTooltip,
     FormWrapper,
     FormRow,
-    ModalFormAccountUnlock,
+    ModalFormProfileUnlock,
   },
   computed: {
     ...mapGetters({
@@ -49,7 +49,7 @@ import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalF
 })
 export class FormWalletNameUpdateTs extends Vue {
   /**
-   * Currently active account
+   * Currently active profile
    * @see {Store.Wallet}
    * @var {WalletModel}
    */

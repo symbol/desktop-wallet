@@ -34,7 +34,7 @@ import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
 // @ts-ignore
 import WalletSelectorField from '@/components/WalletSelectorField/WalletSelectorField.vue'
 // @ts-ignore
-import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
+import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
 import {SettingsModel} from '@/core/database/entities/SettingsModel'
@@ -51,7 +51,7 @@ import {WalletModel} from '@/core/database/entities/WalletModel'
     LanguageSelector,
     MaxFeeSelector,
     WalletSelectorField,
-    ModalFormAccountUnlock,
+    ModalFormProfileUnlock,
     FormLabel,
   },
   computed: {

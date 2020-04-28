@@ -29,7 +29,7 @@ import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemoni
     ModalMnemonicExport,
   },
   computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
+    currentProfile: 'profile/currentProfile',
     networkType: 'network/networkType',
     generationHash: 'network/generationHash',
   })},

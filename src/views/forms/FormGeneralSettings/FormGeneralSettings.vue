@@ -73,7 +73,7 @@
       </ValidationObserver>
     </FormWrapper>
 
-    <ModalFormAccountUnlock
+    <ModalFormProfileUnlock
       v-if="hasAccountUnlockModal"
       :visible="hasAccountUnlockModal"
       :on-success="onAccountUnlocked"

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 export enum NotificationType {
-  ACCOUNT_NAME_EXISTS_ERROR = 'Account_name_already_exists',
-  ACCOUNT_NAME_INPUT_ERROR = 'accountCreateWalletNameRemind',
+  PROFILE_NAME_EXISTS_ERROR = 'profile_name_already_exists',
+  PROFILE_NAME_INPUT_ERROR = 'profile_name_error',
   ADDRESS_ALIAS_NOT_EXIST_ERROR = 'address_alias_not_exist',
   ADDRESS_FORMAT_ERROR = 'address_format_error',
   ADDRESS_INVALID = 'address_invalid',

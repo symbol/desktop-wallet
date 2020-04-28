@@ -30,14 +30,14 @@ import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 // @ts-ignore
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue'
 // @ts-ignore
-import FormAccountUnlock from '@/views/forms/FormAccountUnlock/FormAccountUnlock.vue'
+import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue'
 // @ts-ignore
 import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue'
 
 @Component({
   components: {
     TransactionDetails,
-    FormAccountUnlock,
+    FormProfileUnlock,
     HardwareConfirmationButton,
   },
   computed: {...mapGetters({
@@ -127,7 +127,7 @@ export class ModalTransactionCosignatureTs extends Vue {
   }
 
   /**
-   * Hook called when child component FormAccountUnlock emits
+   * Hook called when child component FormProfileUnlock emits
    * the 'success' event.
    *
    * This hook shall *sign transactions* with the \a account
@@ -159,7 +159,7 @@ export class ModalTransactionCosignatureTs extends Vue {
   }
 
   /**
-   * Hook called when child component FormAccountUnlock or
+   * Hook called when child component FormProfileUnlock or
    * HardwareConfirmationButton emit the 'error' event.
    * @param {string} message
    * @return {void}

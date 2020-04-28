@@ -19,7 +19,7 @@ import {ExtendedKey, MnemonicPassPhrase, Wallet} from 'symbol-hd-wallets'
 import {DerivationPathLevels, DerivationService} from './DerivationService'
 import {DerivationPathValidator} from '@/core/validation/validators'
 import {WalletModel, WalletType} from '@/core/database/entities/WalletModel'
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import {ProfileModel} from '@/core/database/entities/ProfileModel'
 import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 
 export class WalletService {
@@ -112,7 +112,7 @@ export class WalletService {
 
       return derivationService.incrementPathLevel(
         WalletService.DEFAULT_WALLET_PATH,
-        DerivationPathLevels.Account,
+        DerivationPathLevels.Profile,
         index,
       )
     })
@@ -165,7 +165,7 @@ export class WalletService {
    * @return {WalletModel}
    */
   public getDefaultWallet(
-    currentAccount: AccountModel,
+    currentProfile: ProfileModel,
     mnemonic: MnemonicPassPhrase,
     password: Password,
     networkType: NetworkType,
@@ -186,7 +186,7 @@ export class WalletService {
 
     return {
       id: SimpleObjectStorage.generateIdentifier(),
-      accountName: currentAccount.accountName,
+      profileName: currentProfile.profileName,
       name: 'Seed Account 1',
       node: '',
       type: WalletType.fromDescriptor('Seed'),
@@ -204,7 +204,7 @@ export class WalletService {
    * @return {WalletModel}
    */
   public getChildWalletByPath(
-    currentAccount: AccountModel,
+    currentProfile: ProfileModel,
     password: Password,
     mnemonic: MnemonicPassPhrase,
     nextPath: string,
@@ -228,7 +228,7 @@ export class WalletService {
 
     return {
       id: SimpleObjectStorage.generateIdentifier(),
-      accountName: currentAccount.accountName,
+      profileName: currentProfile.profileName,
       name: childWalletName,
       node: '',
       type: WalletType.SEED,
@@ -242,7 +242,7 @@ export class WalletService {
 
   /**
    * Create a sub wallet by private key
-   * @param currentAccount
+   * @param currentProfile
    * @param password
    * @param childWalletName
    * @param privateKey
@@ -250,7 +250,7 @@ export class WalletService {
    * @return {WalletModel}
    */
   public getSubWalletByPrivateKey(
-    currentAccount: AccountModel,
+    currentProfile: ProfileModel,
     password: Password,
     childWalletName: string,
     privateKey: string,
@@ -266,7 +266,7 @@ export class WalletService {
 
     return {
       id: SimpleObjectStorage.generateIdentifier(),
-      accountName: currentAccount.accountName,
+      profileName: currentProfile.profileName,
       name: childWalletName,
       node: '',
       type: WalletType.PRIVATE_KEY,

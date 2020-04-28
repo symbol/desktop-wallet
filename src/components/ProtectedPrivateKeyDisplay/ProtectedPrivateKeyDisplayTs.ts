@@ -20,12 +20,12 @@ import {WalletModel} from '@/core/database/entities/WalletModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
 // child components
 // @ts-ignore
-import ModalFormAccountUnlock from '@/views/modals/ModalFormAccountUnlock/ModalFormAccountUnlock.vue'
+import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
 const defaultCount: number = 10
 const defaultTimerDuration: number = 1000
 @Component({
   components: {
-    ModalFormAccountUnlock,
+    ModalFormProfileUnlock,
   },
 })
 export class ProtectedPrivateKeyDisplayTs extends Vue {

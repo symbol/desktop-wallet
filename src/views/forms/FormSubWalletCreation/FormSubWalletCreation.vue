@@ -41,7 +41,7 @@
                 mode="lazy"
                 vid="name"
                 :name="$t('name')"
-                :rules="validationRules.accountWalletName"
+                :rules="validationRules.profileAccountName"
                 tag="div"
                 class="inputs-container items-container"
               >
@@ -102,7 +102,7 @@
       </ValidationObserver>
     </FormWrapper>
 
-    <ModalFormAccountUnlock
+    <ModalFormProfileUnlock
       v-if="hasAccountUnlockModal"
       :visible="hasAccountUnlockModal"
       :on-success="onAccountUnlocked"
