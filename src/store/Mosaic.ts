@@ -21,6 +21,8 @@ import {MosaicService} from '@/services/MosaicService'
 import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
 import {MosaicModel} from '@/core/database/entities/MosaicModel'
 import {MosaicConfigurationModel} from '@/core/database/entities/MosaicConfigurationModel'
+import {first, tap} from 'rxjs/operators'
+import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 const Lock = AwaitLock.create()
 
@@ -112,19 +114,12 @@ export default {
 
   },
   actions: {
-    async initialize({commit, getters, rootGetters}) {
-      const callback = () => {
-        const repositoryFactory = rootGetters['network/repositoryFactory']
+    async initialize({commit, getters, dispatch}) {
+      const callback = async () => {
         const mosaicService = new MosaicService()
-        const networkConfig = rootGetters['network/networkConfiguration']
-        const generationHash = rootGetters['network/generationHash']
-
-        mosaicService.getNetworkCurrencies(repositoryFactory, generationHash, networkConfig)
-          .subscribe(networkCurrencies => {
-            commit('networkCurrency', networkCurrencies.networkCurrency)
-            commit('setInitialized', true)
-          })
         commit('mosaicConfigurations', mosaicService.getMosaicConfigurations())
+        await dispatch('LOAD_NETWORK_CURRENCIES')
+        commit('setInitialized', true)
       }
       // acquire async lock until initialized
       await Lock.initialize(callback, {getters})
@@ -134,6 +129,17 @@ export default {
         commit('setInitialized', false)
       }
       await Lock.uninitialize(callback, {getters})
+    },
+
+    async LOAD_NETWORK_CURRENCIES({commit, rootGetters}) {
+      const mosaicService = new MosaicService()
+      const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory']
+      const networkConfig: NetworkConfigurationModel = rootGetters['network/networkConfiguration']
+      const generationHash: string = rootGetters['network/generationHash']
+      await mosaicService.getNetworkCurrencies(repositoryFactory, generationHash, networkConfig)
+        .pipe(tap(networkCurrencies => {
+          commit('networkCurrency', networkCurrencies.networkCurrency)
+        }), first()).toPromise()
     },
 
     LOAD_MOSAICS({commit, rootGetters}) {

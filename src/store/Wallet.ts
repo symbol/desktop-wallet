@@ -307,6 +307,7 @@ export default {
       dispatch('transaction/LOAD_TRANSACTIONS', undefined, {root: true})
       await dispatch('LOAD_ACCOUNT_INFO')
       dispatch('namespace/LOAD_NAMESPACES', {}, {root: true})
+      await dispatch('mosaic/LOAD_NETWORK_CURRENCIES', undefined, {root: true})
       dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
     },
 
