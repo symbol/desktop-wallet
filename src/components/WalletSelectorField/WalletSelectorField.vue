@@ -13,7 +13,7 @@
         :key="id"
         :value="id"
       >
-        {{ name }}
+        {{ truncate(name) }}
       </i-option>
     </i-select>
   </div>

@@ -80,5 +80,18 @@ export class WalletSelectorFieldTs extends Vue {
     return this.knownWallets
   }
 
+  /**
+   * Truncates the wallet name if it is too long
+   * @protected
+   * @param {string} str
+   * @returns {string}
+   */
+  protected truncate(str: string): string {
+    console.log('WalletSelectorFieldTs -> truncate -> str', str)
+    const maxStringLength = 15
+    if (str.length <= maxStringLength) return str
+    return `${str.substring(0, 9)}...${str.substring(str.length - 3)}`
+  }
+
 /// end-region computed properties getter/setter
 }
