@@ -258,6 +258,7 @@ export default {
         {root: true})
       commit('currentWallet', null)
       commit('currentWalletAddress', null)
+      commit('currentSignerAddress', null)
     },
 
     async SET_CURRENT_SIGNER({commit, dispatch, getters, rootGetters},
