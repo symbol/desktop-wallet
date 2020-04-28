@@ -75,14 +75,20 @@ export default {
     LOAD_NAMESPACES({commit, rootGetters}) {
       const knownAddresses: Address[] = rootGetters['wallet/knownAddresses'] || []
       const repositoryFactory = rootGetters['network/repositoryFactory']
+      const generationHash = rootGetters['network/generationHash']
       const namespaceService = new NamespaceService()
-      namespaceService.getNamespaces(repositoryFactory, knownAddresses).subscribe((namespaces) => {
+      namespaceService.getNamespaces(repositoryFactory, generationHash, knownAddresses).subscribe((namespaces) => {
         const currentSignerAddress: Address = rootGetters['wallet/currentSignerAddress']
         if (!currentSignerAddress) {
           return
         }
         commit('namespaces', {namespaces, currentSignerAddress})
       })
+    },
+
+    RESET_NAMESPACES({commit}) {
+      const namespaces: NamespaceModel[] = []
+      commit('namespaces', {namespaces, undefined})
     },
 
     SIGNER_CHANGED({commit, rootGetters, getters}) {

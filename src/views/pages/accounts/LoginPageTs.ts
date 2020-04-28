@@ -168,8 +168,7 @@ export default class LoginPageTs extends Vue {
 
     // if account doesn't exist, authentication is not valid
     if (!account) {
-      this.$store.dispatch('diagnostic/ADD_ERROR', 'Invalid login attempt')
-      return this.$router.push({name: 'accounts.login'})
+      return this.$store.dispatch('notification/ADD_ERROR', 'Invalid login attempt')
     }
 
     // account exists, fetch data

@@ -300,6 +300,16 @@ export default {
 
     },
 
+    async NETWORK_CHANGED({dispatch}) {
+      dispatch('transaction/RESET_TRANSACTIONS', {}, {root: true})
+      dispatch('namespace/RESET_NAMESPACES', {}, {root: true})
+      dispatch('mosaic/RESET_MOSAICS', {}, {root: true})
+      dispatch('transaction/LOAD_TRANSACTIONS', undefined, {root: true})
+      await dispatch('LOAD_ACCOUNT_INFO')
+      dispatch('namespace/LOAD_NAMESPACES', {}, {root: true})
+      dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
+    },
+
     async LOAD_ACCOUNT_INFO({commit, getters, rootGetters}) {
       const networkType: NetworkType = rootGetters['network/networkType']
       const currentWallet: WalletModel = getters.currentWallet
