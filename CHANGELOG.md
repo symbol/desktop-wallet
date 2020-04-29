@@ -170,7 +170,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 #### Added
 
-- `FormProfileUnlock`: standardize practice of unlocking account across app
+- `FormAccountUnlock`: standardize practice of unlocking account across app
 - `FormTransactionBase`: base abstraction layer for transaction forms
 - `SignerSelector`: generic transaction signer selector, works with multisig to change owned assets states
 - General change of views files (*.vue) paths with result :
@@ -193,18 +193,18 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Mosaic definition *multi-signature* feature bug with signer selection (aggregate bonded only)
 
 
-[v0.9.9]: https://github.com/nemfoundation/symbol-desktop-account/releases/tag/v0.9.8-beta1...v0.9.9
-[v0.9.8]: https://github.com/nemfoundation/symbol-desktop-account/releases/tag/v0.9.8-beta1
-[v0.9.8-beta1]: https://github.com/nemfoundation/symbol-desktop-account/compare/v0.9.7-beta1...v0.9.8-beta1
-[v0.9.7]: https://github.com/nemfoundation/symbol-desktop-account/releases/tag/v0.9.7-beta1
-[v0.9.7-beta1]: https://github.com/nemfoundation/symbol-desktop-account/compare/v0.9.6...v0.9.7-beta1
-[v0.9.6]: https://github.com/nemfoundation/symbol-desktop-account/releases/tag/v0.9.6-beta2
-[v0.9.6-beta2]: https://github.com/nemfoundation/symbol-desktop-account/compare/v0.9.6-beta1...v0.9.6-beta2
-[v0.9.6-beta1]: https://github.com/nemfoundation/symbol-desktop-account/compare/v0.9.5-beta6...v0.9.6-beta1
-[v0.9.5]: https://github.com/nemfoundation/symbol-desktop-account/releases/tag/v0.9.5-beta6
-[v0.9.5-beta6]: https://github.com/nemfoundation/symbol-desktop-account/compare/v0.9.5-beta5...v0.9.5-beta6
-[v0.9.5-beta5]: https://github.com/nemfoundation/symbol-desktop-account/compare/v0.9.5-beta4...v0.9.5-beta5
-[v0.9.5-beta4]: https://github.com/nemfoundation/symbol-desktop-account/compare/v0.9.5-beta2...v0.9.5-beta4
-[v0.9.5-beta2]: https://github.com/nemfoundation/symbol-desktop-account/compare/v0.9.5-beta1...v0.9.5-beta2
-[v0.9.5-beta1]: https://github.com/nemfoundation/symbol-desktop-account/compare/v0.9.4-beta...v0.9.5-beta1
-[v0.9.4-beta]: https://github.com/nemfoundation/symbol-desktop-account/releases/tag/v0.9.4-beta
+[v0.9.9]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.8-beta1...v0.9.9
+[v0.9.8]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.8-beta1
+[v0.9.8-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.7-beta1...v0.9.8-beta1
+[v0.9.7]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.7-beta1
+[v0.9.7-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.6...v0.9.7-beta1
+[v0.9.6]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.6-beta2
+[v0.9.6-beta2]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.6-beta1...v0.9.6-beta2
+[v0.9.6-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta6...v0.9.6-beta1
+[v0.9.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.5-beta6
+[v0.9.5-beta6]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta5...v0.9.5-beta6
+[v0.9.5-beta5]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta4...v0.9.5-beta5
+[v0.9.5-beta4]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta2...v0.9.5-beta4
+[v0.9.5-beta2]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta1...v0.9.5-beta2
+[v0.9.5-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.4-beta...v0.9.5-beta1
+[v0.9.4-beta]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.4-beta
