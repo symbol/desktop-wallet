@@ -165,7 +165,7 @@ export class AccountService {
    * Create a account instance from mnemonic
    * @return {AccountModel}
    */
-  public getDefaultWallet(
+  public getDefaultAccount(
     currentProfile: ProfileModel,
     mnemonic: MnemonicPassPhrase,
     password: Password,
@@ -178,7 +178,7 @@ export class AccountService {
     )
 
     const simpleWallet = SimpleWallet.createFromPrivateKey(
-      'SeedWallet 1',
+      'Seed Account 1',
       password,
       account.privateKey,
       networkType,
@@ -188,9 +188,9 @@ export class AccountService {
     return {
       id: SimpleObjectStorage.generateIdentifier(),
       profileName: currentProfile.profileName,
-      name: 'Seed Account 1',
+      name: simpleWallet.name,
       node: '',
-      type: AccountType.fromDescriptor('Seed'),
+      type: AccountType.SEED,
       address: simpleWallet.address.plain(),
       publicKey: account.publicKey,
       encryptedPrivateKey: simpleWallet.encryptedPrivateKey,
@@ -282,7 +282,7 @@ export class AccountService {
 
   /**
    * Returns a AccountModel with an updated SimpleWallet
-   * @param {string} walletIdentifier
+   * @param {AccountModel} account
    * @param {Password} oldPassword
    * @param {Password} newPassword
    */

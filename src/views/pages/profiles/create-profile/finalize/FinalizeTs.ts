@@ -62,7 +62,7 @@ export default class FinalizeTs extends Vue {
   public currentMnemonic: MnemonicPassPhrase
 
   /**
-   * Wallet Service
+   * Account Service
    * @var {AccountService}
    */
   public accountService: AccountService = new AccountService()
@@ -75,7 +75,7 @@ export default class FinalizeTs extends Vue {
   public async submit() {
 
     // create profile by mnemonic
-    const account = this.accountService.getDefaultWallet(
+    const account = this.accountService.getDefaultAccount(
       this.currentProfile,
       this.currentMnemonic,
       this.currentPassword,

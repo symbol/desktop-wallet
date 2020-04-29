@@ -29,7 +29,7 @@
 
           <PeerSelector />
           <LanguageSelector />
-          <AccountSelectorField @input="onChangeWallet" />
+          <AccountSelectorField @input="onChangeAccount" />
         </div>
       </div>
     </div>

@@ -148,7 +148,7 @@ export class PageLayoutTs extends Vue {
 
   /// end-region computed properties getter/setter
 
-  public async onChangeWallet(accountId: string) {
+  public async onChangeAccount(accountId: string) {
     const service = new AccountService()
     const account = service.getAccount(accountId)
     if (!account) {

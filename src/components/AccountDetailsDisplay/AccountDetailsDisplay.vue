@@ -14,7 +14,7 @@
     <div class="detail-row">
       <div class="account-detail-row-3cols">
         <span class="label">{{ $t('account_public_key') }}</span>
-        <span class="value walletPublicKey">{{ account.publicKey }}</span>
+        <span class="value accountPublicKey">{{ account.publicKey }}</span>
         <span><img
           src="@/views/resources/img/account/copyIcon.png"
           class="copy-icon"
@@ -26,7 +26,7 @@
     <p class="link_text">
       <span class="tit">{{ $t('Aliases') }}</span>
       <span class="  alias_add pointer" @click="bindNamespace()" />
-      <span class="walletPublicKey">
+      <span class="accountPublicKey">
         <span v-if="!selfAliases.length">-</span>
         <div v-if="selfAliases.length">
           <span v-for="(alias, index) in selfAliases" :key="index">

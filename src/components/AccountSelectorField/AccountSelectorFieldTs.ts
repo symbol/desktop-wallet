@@ -81,7 +81,7 @@ export class AccountSelectorFieldTs extends Vue {
   }
 
   /**
-   * Truncates the wallet name if it is too long
+   * Truncates the account name if it is too long
    * @protected
    * @param {string} str
    * @returns {string}

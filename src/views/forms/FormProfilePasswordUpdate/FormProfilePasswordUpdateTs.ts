@@ -132,10 +132,10 @@ export class FormProfilePasswordUpdateTs extends Vue {
         newSeed)
 
       const accountService = new AccountService()
-      const walletIdentifiers = this.currentProfile.accounts
+      const accountIdentifiers = this.currentProfile.accounts
 
-      const wallets = accountService.getKnownAccounts(walletIdentifiers)
-      for (const model of wallets) {
+      const accounts = accountService.getKnownAccounts(accountIdentifiers)
+      for (const model of accounts) {
         const updatedModel = accountService.updateWalletPassword(model, oldPassword, newPassword)
         accountService.saveAccount(updatedModel)
       }

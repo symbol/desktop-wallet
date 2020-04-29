@@ -1,7 +1,7 @@
 <template>
   <div class="account-detail-row-3cols">
     <span class="label">{{ $t('account_public_key') }}</span>
-    <div class="value walletPublicKey">
+    <div class="value accountPublicKey">
       {{ account.publicKey }}
       <img
         src="@/views/resources/img/account/copyIcon.png"
@@ -25,7 +25,7 @@ export default class AccountPublicKeyDisplay extends AccountPublicKeyDisplayTs {
   cursor: pointer;
 }
 
-.walletPublicKey {
+.accountPublicKey {
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: max-content;

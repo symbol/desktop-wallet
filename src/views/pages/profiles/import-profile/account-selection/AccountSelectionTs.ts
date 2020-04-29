@@ -86,7 +86,7 @@ export default class AccountSelectionTs extends Vue {
   public derivation: DerivationService
 
   /**
-   * Wallet Service
+   * Account Service
    * @var {AccountService}
    */
   public accountService: AccountService
@@ -159,12 +159,12 @@ export default class AccountSelectionTs extends Vue {
       })
 
       // get accounts identifiers
-      const walletIdentifiers = accounts.map(account => account.id)
+      const accountIdentifiers = accounts.map(account => account.id)
 
       // set known accounts
-      this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', walletIdentifiers)
+      this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', accountIdentifiers)
 
-      this.profileService.updateAccounts(this.currentProfile, walletIdentifiers)
+      this.profileService.updateAccounts(this.currentProfile, accountIdentifiers)
 
 
       // execute store actions
@@ -242,9 +242,9 @@ export default class AccountSelectionTs extends Vue {
       paths,
     )
 
-    const simpleWallets = accounts.map(account =>
+    const simpleWallets = accounts.map((account, i) =>
       SimpleWallet.createFromPrivateKey(
-        'SeedWallet',
+        `Seed Account ${indexes[i] + 1}`,
         this.currentPassword,
         account.privateKey,
         this.currentProfile.networkType,
@@ -254,7 +254,7 @@ export default class AccountSelectionTs extends Vue {
       return {
         id: SimpleObjectStorage.generateIdentifier(),
         profileName: this.currentProfile.profileName,
-        name: `Seed Account${indexes[i] + 1}`,
+        name: simpleWallet.name,
         node: '',
         type: AccountType.SEED,
         address: simpleWallet.address.plain(),

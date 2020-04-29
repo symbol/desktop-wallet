@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import ProfileStore from '@/store/Profiles'
+import ProfileStore from '@/store/Profile'
 import {ProfileModel} from '@/core/database/entities/ProfileModel'
 import flushPromises from 'flush-promises'
 

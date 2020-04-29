@@ -1,5 +1,5 @@
 <template>
-  <div class="wallets-main-container">
+  <div class="accounts-main-container">
     <div class="left-container xym-outline">
       <AccountSelectorPanel />
     </div>
