@@ -9,7 +9,7 @@ Cross-platform client for Symbol to manage accounts, mosaics, namespaces, and is
 
 Symbol Desktop Wallet is available for Mac, Windows, and as a web application.
 
-1. Download Symbol Desktop Wallet from the [releases section](https://github.com/nemfoundation/symbol-desktop-account/releases).
+1. Download Symbol Desktop Wallet from the [releases section](https://github.com/nemfoundation/symbol-desktop-wallet/releases).
 
 2. Launch the executable file and follow the installation instructions.
 
@@ -64,5 +64,5 @@ Licensed under the [Apache License 2.0](LICENSE)
 
 [self]: https://github.com/nemfoundation/symbol-desktop-wallet
 [docs]: https://nemtech.github.io
-[issues]: https://github.com/nemfoundation/symbol-desktop-account/issues
+[issues]: https://github.com/nemfoundation/symbol-desktop-wallet/issues
 [slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
