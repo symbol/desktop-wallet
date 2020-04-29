@@ -22,9 +22,9 @@ export default class ImportProfileTs extends Vue {
    * @var {string[]}
    */
   public StepBarTitleList = [
-    'Create_Account',
+    'create_profile',
     'Mnemonic_Phrase',
-    'Choose_Wallets',
+    'select_accounts',
     'Finish',
   ]
 

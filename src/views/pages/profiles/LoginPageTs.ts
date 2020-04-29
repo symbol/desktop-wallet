@@ -21,7 +21,7 @@ import {$eventBus} from '@/events'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 import {ProfileModel} from '@/core/database/entities/ProfileModel'
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {ProfileService} from '@/services/ProfileService'
 // child components
 // @ts-ignore
@@ -33,7 +33,7 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 // configuration
 import {SettingService} from '@/services/SettingService'
 import {SettingsModel} from '@/core/database/entities/SettingsModel'
-import {WalletService} from '@/services/WalletService'
+import {AccountService} from '@/services/AccountService'
 import {NetworkTypeHelper} from '@/core/utils/NetworkTypeHelper'
 
 @Component({
@@ -74,7 +74,7 @@ export default class LoginPageTs extends Vue {
    */
   public profileService = new ProfileService()
 
-  public walletService = new WalletService()
+  public accountService = new AccountService()
 
   /**
    * Validation rules
@@ -174,9 +174,9 @@ export default class LoginPageTs extends Vue {
     // profile exists, fetch data
     const settings: SettingsModel = settingService.getProfileSettings(currentProfileName)
 
-    const knownWallets: WalletModel[] = this.walletService.getKnownWallets(profile.wallets)
-    if (knownWallets.length == 0) {
-      throw new Error('knownWallets is empty')
+    const knownAccounts: AccountModel[] = this.accountService.getKnownAccounts(profile.accounts)
+    if (knownAccounts.length == 0) {
+      throw new Error('knownAccounts is empty')
     }
 
     // use service to generate password hash
@@ -195,20 +195,20 @@ export default class LoginPageTs extends Vue {
       return this.$router.push({name: 'profiles.createProfile.generateMnemonic'})
     }
 
-    // read default wallet from settings
-    const defaultWalletId = settings.defaultWallet ? settings.defaultWallet : knownWallets[0].id
-    if (!defaultWalletId) {
-      throw new Error('defaultWalletId could not be resolved')
+    // read default account from settings
+    const defaultAccountId = settings.defaultAccount ? settings.defaultAccount : knownAccounts[0].id
+    if (!defaultAccountId) {
+      throw new Error('defaultAccountId could not be resolved')
     }
-    const defaultWallet = knownWallets.find(w => w.id == defaultWalletId)
-    if (!defaultWallet) {
-      throw new Error(`defaultWallet could not be resolved from id ${defaultWalletId}`)
+    const defaultAccount = knownAccounts.find(w => w.id == defaultAccountId)
+    if (!defaultAccount) {
+      throw new Error(`defaultAccount could not be resolved from id ${defaultAccountId}`)
     }
 
     // LOGIN SUCCESS: update app state
     await this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile)
-    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', defaultWallet)
-    this.$store.dispatch('wallet/SET_KNOWN_WALLETS', profile.wallets)
+    await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', defaultAccount)
+    this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', profile.accounts)
     this.$store.dispatch('diagnostic/ADD_DEBUG', 'Profile login successful with currentProfileName: ' + currentProfileName)
 
     $eventBus.$emit('onLogin', currentProfileName)

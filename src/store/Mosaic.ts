@@ -145,7 +145,7 @@ export default {
     LOAD_MOSAICS({commit, rootGetters}) {
       const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory']
       const networkCurrency: NetworkCurrencyModel = rootGetters['mosaic/networkCurrency']
-      const accountsInfo: AccountInfo[] = rootGetters['wallet/accountsInfo'] || []
+      const accountsInfo: AccountInfo[] = rootGetters['account/accountsInfo'] || []
       const generationHash = rootGetters['network/generationHash']
 
       new MosaicService().getMosaics(
@@ -154,7 +154,7 @@ export default {
         networkCurrency,
         accountsInfo,
       ).subscribe((mosaics) => {
-        const currentSignerAddress: Address = rootGetters['wallet/currentSignerAddress']
+        const currentSignerAddress: Address = rootGetters['account/currentSignerAddress']
         if (!currentSignerAddress) return
         commit('mosaics', {mosaics: mosaics, currentSignerAddress, networkCurrency})
       })
@@ -166,7 +166,7 @@ export default {
     },
 
     SIGNER_CHANGED({commit, rootGetters, getters}) {
-      const currentSignerAddress: Address = rootGetters['wallet/currentSignerAddress']
+      const currentSignerAddress: Address = rootGetters['account/currentSignerAddress']
       const networkCurrency: NetworkCurrencyModel = rootGetters['mosaic/networkCurrency']
       if (!currentSignerAddress) {
         return

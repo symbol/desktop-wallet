@@ -202,7 +202,7 @@ export default {
       // subscribe to updates
       dispatch('SUBSCRIBE')
       if (oldGenerationHash != networkModel.generationHash) {
-        dispatch('wallet/NETWORK_CHANGED', {}, {root: true})
+        dispatch('account/NETWORK_CHANGED', {}, {root: true})
         dispatch('statistics/LOAD', {}, {root: true})
       }
     },
@@ -229,10 +229,10 @@ export default {
 
         await dispatch('CONNECT', currentPeerUrl)
 
-        const currentWallet = rootGetters['wallet/currentWallet']
+        const currentAccount = rootGetters['account/currentAccount']
 
         // - re-open listeners
-        dispatch('wallet/initialize', {address: currentWallet.address}, {root: true})
+        dispatch('account/initialize', {address: currentAccount.address}, {root: true})
 
       } catch (e) {
         console.log(e)

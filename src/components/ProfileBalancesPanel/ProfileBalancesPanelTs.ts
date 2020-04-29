@@ -33,9 +33,9 @@ import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyMode
   },
   computed: {
     ...mapGetters({
-      currentSignerAddress: 'wallet/currentSignerAddress',
+      currentSignerAddress: 'account/currentSignerAddress',
       balanceMosaics: 'mosaic/balanceMosaics',
-      isCosignatoryMode: 'wallet/isCosignatoryMode',
+      isCosignatoryMode: 'account/isCosignatoryMode',
       networkCurrency: 'mosaic/networkCurrency',
     }),
   },
@@ -49,13 +49,13 @@ export class ProfileBalancesPanelTs extends Vue {
   public currentSignerAddress: Address
 
   /**
-   * Currently active wallet's balances
+   * Currently active account's balances
    * @var {Mosaic[]}
    */
   public balanceMosaics: MosaicModel[]
 
   /**
-   * Whether currently active wallet is in cosignatory mode
+   * Whether currently active account is in cosignatory mode
    * @var {boolean}
    */
   public isCosignatoryMode: boolean

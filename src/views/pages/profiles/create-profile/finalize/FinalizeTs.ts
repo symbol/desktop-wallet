@@ -18,7 +18,7 @@ import {mapGetters} from 'vuex'
 import {NetworkType, Password} from 'symbol-sdk'
 import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 // internal dependencies
-import {WalletService} from '@/services/WalletService'
+import {AccountService} from '@/services/AccountService'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {ProfileModel} from '@/core/database/entities/ProfileModel'
 
@@ -63,31 +63,31 @@ export default class FinalizeTs extends Vue {
 
   /**
    * Wallet Service
-   * @var {WalletService}
+   * @var {AccountService}
    */
-  public walletService: WalletService = new WalletService()
+  public accountService: AccountService = new AccountService()
 
   /**
    * Finalize the profile creation process by adding
-   * the wallet created from mnemonic pass phrase.
+   * the account created from mnemonic pass phrase.
    * @return {void}
    */
   public async submit() {
 
     // create profile by mnemonic
-    const wallet = this.walletService.getDefaultWallet(
+    const account = this.accountService.getDefaultWallet(
       this.currentProfile,
       this.currentMnemonic,
       this.currentPassword,
       this.networkType,
     )
     // use repository for storage
-    this.walletService.saveWallet(wallet)
+    this.accountService.saveAccount(account)
 
     // execute store actions
-    await this.$store.dispatch('profile/ADD_WALLET', wallet)
-    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
-    await this.$store.dispatch('wallet/SET_KNOWN_WALLETS', [wallet.id])
+    await this.$store.dispatch('profile/ADD_ACCOUNT', account)
+    await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
+    await this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', [account.id])
     await this.$store.dispatch('temporary/RESET_STATE')
     await this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 

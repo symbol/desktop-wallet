@@ -44,7 +44,7 @@ const TEST_CHILD_ACCOUNTS = {
         + 'unit toy copy foam cheese number'
         + 'vicious forum crater afford snow chef'
         + 'toss broccoli second jeans good reject',
-    wallets: [
+    accounts: [
       {
         path: 'm/44\'/43\'/0\'/0\'/0\'',
         publicKey: 'C4B3DC11B41653AD52863B32159F771D847A1AFA6D117A64AB8305E0873F6506',

@@ -11,7 +11,7 @@ import networkConfig from '../../../config/network.conf.json'
 import appConfig from '../../../config/app.conf.json'
 import {AddressValidator, AliasValidator, MaxDecimalsValidator, PublicKeyValidator, UrlValidator} from './validators'
 import {ProfileModel} from '@/core/database/entities/ProfileModel'
-import {WalletService} from '@/services/WalletService'
+import {AccountService} from '@/services/AccountService'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 // TODO CustomValidationRules needs to be created when the network configuration is resolved, UI
@@ -101,14 +101,14 @@ export class CustomValidationRules {
 
     extend('profileAccountName', {
       validate(value) {
-        const walletService = new WalletService()
+        const accountService = new AccountService()
 
         // - fetch current profile accounts
         const currentProfile: ProfileModel = AppStore.getters['profile/currentProfile']
-        const knownWallets = Object.values(walletService.getKnownWallets(currentProfile.wallets))
-        return undefined === knownWallets.find(w => value === w.name)
+        const knownAccounts = Object.values(accountService.getKnownAccounts(currentProfile.accounts))
+        return undefined === knownAccounts.find(w => value === w.name)
       },
-      message: `${i18n.t(`${NotificationType.ERROR_WALLET_NAME_ALREADY_EXISTS}`)}`,
+      message: `${i18n.t(`${NotificationType.ERROR_ACCOUNT_NAME_ALREADY_EXISTS}`)}`,
     })
 
     extend('privateKey', {

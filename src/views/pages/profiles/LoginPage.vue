@@ -25,14 +25,14 @@
               v-model="formItems.currentProfileName"
               placeholder=" "
               :class="[
-                'select-wallet',
+                'select-account',
                 !profilesClassifiedByNetworkType ? 'un_click' : 'profile-name-input',
               ]"
             >
               <div class="auto-complete-sub-container scroll">
                 <div class="tips-in-sub-container">
                   {{ $t(profilesClassifiedByNetworkType
-                    ? 'Select_a_wallet_in_local_storage' : 'No_wallet_in_local_storage'
+                    ? 'Select_a_profile' : 'no_profiles_in_database'
                   ) }}
                 </div>
                 <div v-if="profilesClassifiedByNetworkType">
@@ -70,7 +70,7 @@
                   v-model="formItems.password"
                   v-focus
                   :class="[!profilesClassifiedByNetworkType ? 'un_click' : '']"
-                  :placeholder="$t('please_enter_your_wallet_password')"
+                  :placeholder="$t('please_enter_your_account_password')"
                   type="password"
                   :disabled="!profilesClassifiedByNetworkType"
                 >

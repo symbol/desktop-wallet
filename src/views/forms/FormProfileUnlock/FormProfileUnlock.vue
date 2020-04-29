@@ -25,7 +25,7 @@
                   v-focus
                   type="password"
                   class="input-size input-style"
-                  :placeholder="$t('please_enter_your_wallet_password')"
+                  :placeholder="$t('please_enter_your_account_password')"
                 >
               </ErrorTooltip>
             </ValidationProvider>

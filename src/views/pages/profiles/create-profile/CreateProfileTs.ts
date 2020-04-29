@@ -22,7 +22,7 @@ export default class CreateProfileTs extends Vue {
    * @var {string[]}
    */
   public StepBarTitleList = [
-    'Create_Account',
+    'create_profile',
     'Generate_Mnemonic',
     'Backup_Mnemonic_Phrase',
     'Verify_Mnemonic_phrase',

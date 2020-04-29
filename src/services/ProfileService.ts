@@ -62,8 +62,8 @@ export class ProfileService {
     return this.saveProfile(Object.assign(profile, {password, hint, seed}))
   }
 
-  public updateWallets(profile: ProfileModel, wallets: string[]): ProfileModel {
-    return this.saveProfile(Object.assign(profile, {wallets}))
+  public updateAccounts(profile: ProfileModel, accounts: string[]): ProfileModel {
+    return this.saveProfile(Object.assign(profile, {accounts}))
   }
 
   /**

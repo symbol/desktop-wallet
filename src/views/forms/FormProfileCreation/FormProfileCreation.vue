@@ -81,7 +81,7 @@
                     ref="passwordInput"
                     v-model="formItems.password"
                     class="input-size input-style"
-                    :placeholder="$t('please_enter_your_wallet_password')"
+                    :placeholder="$t('please_enter_your_account_password')"
                     type="password"
                   >
                 </ErrorTooltip>

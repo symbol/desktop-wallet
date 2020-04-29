@@ -16,7 +16,7 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {Account} from 'symbol-sdk'
 // internal dependencies
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {UIHelpers} from '@/core/utils/UIHelpers'
 // child components
 // @ts-ignore
@@ -31,7 +31,7 @@ const defaultTimerDuration: number = 1000
 export class ProtectedPrivateKeyDisplayTs extends Vue {
   @Prop({
     default: null,
-  }) wallet: WalletModel
+  }) account: AccountModel
 
   /**
    * UI Helpers
@@ -129,12 +129,9 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
     this.plainInformation = account.privateKey
     return true
   }
-  /**
-   * It is necessary to observe the CurrentWallet, 
-   * so that we can access to init. 
-   */
-  @Watch('wallet')
-  observeCurrentWallet(){
+
+  @Watch('account')
+  onAccountChange(){
     this.reset()
   }
   public destroyed(){

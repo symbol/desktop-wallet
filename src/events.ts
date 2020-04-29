@@ -21,7 +21,7 @@ import Vue from 'vue'
  * 
  * - newConnection with \a nodeUrl
  * - onProfileChange with \a profileName
- * - onWalletChange with \a walletAddress
+ * - onAccountChange with \a accountAddress
  */
 export const $eventBus = new Vue()
 /// end-region event bus

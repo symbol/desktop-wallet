@@ -15,7 +15,7 @@
  */
 // internal dependencies
 import {DerivationPathValidator} from '@/core/validation/validators'
-import {WalletService} from '@/services/WalletService'
+import {AccountService} from '@/services/AccountService'
 
 export enum DerivationPathLevels {
   Purpose = 1,
@@ -76,7 +76,7 @@ export class DerivationService {
    * @returns {string}
    */
   public getNextAccountPath(paths: string[]): string {
-    const defaultPath = WalletService.DEFAULT_WALLET_PATH
+    const defaultPath = AccountService.DEFAULT_ACCOUNT_PATH
 
     // return the default path if no path in the array
     if (!paths.length) return defaultPath

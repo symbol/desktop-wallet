@@ -19,7 +19,7 @@ import {$eventBus} from '../events'
 import {AwaitLock} from './AwaitLock'
 import {SettingService} from '@/services/SettingService'
 import {ProfileModel} from '@/core/database/entities/ProfileModel'
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {ProfileService} from '@/services/ProfileService'
 
 /// region globals
@@ -75,10 +75,10 @@ export default {
       commit('setAuthenticated', false)
     },
     async LOG_OUT({dispatch, rootGetters}): Promise<void> {
-      const currentWallet = rootGetters['wallet/currentWallet']
-      await dispatch('wallet/uninitialize', {address: currentWallet.address}, {root: true})
-      await dispatch('wallet/SET_KNOWN_WALLETS', [], {root: true})
-      await dispatch('wallet/RESET_CURRENT_WALLET', undefined, {root: true})
+      const currentAccount = rootGetters['account/currentAccount']
+      await dispatch('account/uninitialize', {address: currentAccount.address}, {root: true})
+      await dispatch('account/SET_KNOWN_ACCOUNTS', [], {root: true})
+      await dispatch('account/RESET_CURRENT_ACCOUNT', undefined, {root: true})
       await dispatch('RESET_STATE')
     },
     async SET_CURRENT_PROFILE({commit, dispatch}, currentProfile: ProfileModel) {
@@ -101,17 +101,17 @@ export default {
       $eventBus.$emit('onProfileChange', currentProfile.profileName)
     },
 
-    ADD_WALLET({dispatch, getters}, walletModel: WalletModel) {
+    ADD_ACCOUNT({dispatch, getters}, accountModel: AccountModel) {
       const currentProfile: ProfileModel = getters['currentProfile']
       if (!currentProfile) {
         return
       }
       dispatch('diagnostic/ADD_DEBUG',
-        'Adding wallet to profile: ' + currentProfile.profileName + ' with: ' + walletModel.address,
+        'Adding account to profile: ' + currentProfile.profileName + ' with: ' + accountModel.address,
         {root: true})
-      if (!currentProfile.wallets.includes(walletModel.id)) {
-        new ProfileService().updateWallets(currentProfile,
-          [ ...currentProfile.wallets, walletModel.id ])
+      if (!currentProfile.accounts.includes(accountModel.id)) {
+        new ProfileService().updateAccounts(currentProfile,
+          [ ...currentProfile.accounts, accountModel.id ])
       }
       return dispatch('SET_CURRENT_PROFILE', currentProfile)
     },

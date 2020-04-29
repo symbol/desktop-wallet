@@ -18,7 +18,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
 import {ProfileModel} from '@/core/database/entities/ProfileModel'
-import {WalletService} from '@/services/WalletService'
+import {AccountService} from '@/services/AccountService'
 // child components
 // @ts-ignore
 import AppLogo from '@/components/AppLogo/AppLogo.vue'
@@ -33,7 +33,7 @@ import PeerSelector from '@/components/PeerSelector/PeerSelector.vue'
 // @ts-ignore
 import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue'
 // @ts-ignore
-import WalletSelectorField from '@/components/WalletSelectorField/WalletSelectorField.vue'
+import AccountSelectorField from '@/components/AccountSelectorField/AccountSelectorField.vue'
 // @ts-ignore
 import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue'
 import {URLInfo} from '@/core/utils/URLInfo'
@@ -46,7 +46,7 @@ import {URLInfo} from '@/core/utils/URLInfo'
     WindowControls,
     PeerSelector,
     LanguageSelector,
-    WalletSelectorField,
+    AccountSelectorField,
     ModalDebugConsole,
   },
   computed: {
@@ -56,7 +56,7 @@ import {URLInfo} from '@/core/utils/URLInfo'
       networkType: 'network/networkType',
       generationHash: 'network/generationHash',
       currentProfile: 'profile/currentProfile',
-      isCosignatoryMode: 'wallet/isCosignatoryMode',
+      isCosignatoryMode: 'account/isCosignatoryMode',
     }),
   },
 })
@@ -98,7 +98,7 @@ export class PageLayoutTs extends Vue {
 
   /**
    * Whether cosignatory mode is active
-   * @see {Store.Wallet}
+   * @see {Store.Account}
    * @var {boolean}
    */
   public isCosignatoryMode: boolean
@@ -120,11 +120,11 @@ export class PageLayoutTs extends Vue {
     }
 
     if (this.currentProfile && this.currentProfile.networkType !== this.networkType) {
-      return {show: true, message: 'Wallet_network_type_does_not_match_current_network_type'}
+      return {show: true, message: 'account_network_type_does_not_match_current_network_type'}
     }
 
     if (this.currentProfile && this.currentProfile.generationHash !== this.generationHash) {
-      return {show: true, message: 'Wallet_network_does_not_match_current_network_type'}
+      return {show: true, message: 'account_network_does_not_match_current_network_type'}
     }
 
     return {show: false, message: ''}
@@ -148,14 +148,14 @@ export class PageLayoutTs extends Vue {
 
   /// end-region computed properties getter/setter
 
-  public async onChangeWallet(walletId: string) {
-    const service = new WalletService()
-    const wallet = service.getWallet(walletId)
-    if (!wallet) {
-      console.log('Wallet not found: ', walletId)
+  public async onChangeWallet(accountId: string) {
+    const service = new AccountService()
+    const account = service.getAccount(accountId)
+    if (!account) {
+      console.log('Wallet not found: ', accountId)
       return
     }
 
-    await this.$store.dispatch('wallet/SET_CURRENT_WALLET', wallet)
+    await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
   }
 }

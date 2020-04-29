@@ -36,7 +36,7 @@
         <div v-if="stagedTransactions && stagedTransactions.length > 1">
           <span
             class="clear-staged-transactions"
-            @click="$store.dispatch('wallet/CLEAR_STAGED_TRANSACTIONS'); show = false"
+            @click="$store.dispatch('account/CLEAR_STAGED_TRANSACTIONS'); show = false"
           >
             {{ $t('clear_staged_transactions') }}
           </span>

@@ -72,7 +72,7 @@ export default {
     settings: (state: AppInfoState) => state.settings,
     faucetUrl: (state: AppInfoState) => state.faucetUrl,
     defaultFee: (state: AppInfoState) => state.settings.defaultFee,
-    defaultWallet: (state: AppInfoState) => state.settings.defaultWallet,
+    defaultAccount: (state: AppInfoState) => state.settings.defaultAccount,
   },
   mutations: {
     setInitialized: (state: AppInfoState, initialized) => { state.initialized = initialized },
@@ -141,8 +141,8 @@ export default {
     SET_DEFAULT_FEE({dispatch}, defaultFee: number) {
       dispatch('SET_SETTINGS', {defaultFee})
     },
-    SET_DEFAULT_WALLET({dispatch}, defaultWallet: string) {
-      dispatch('SET_SETTINGS', {defaultWallet})
+    SET_DEFAULT_ACCOUNT({dispatch}, defaultAccount: string) {
+      dispatch('SET_SETTINGS', {defaultAccount})
     },
     /// end-region scoped actions
   },

@@ -107,7 +107,7 @@ export class AppRouter extends Router {
       'multisig',
       'namespaces',
       'settings',
-      'wallets',
+      'accounts',
       'community',
     ]
 

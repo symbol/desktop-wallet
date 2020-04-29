@@ -131,7 +131,7 @@ export default {
 
     LOAD_TRANSACTIONS({commit, rootGetters, dispatch}, {group}:
     { group: TransactionGroup } = {group: TransactionGroup.all}) {
-      const currentSignerAddress: Address = rootGetters['wallet/currentSignerAddress']
+      const currentSignerAddress: Address = rootGetters['account/currentSignerAddress']
       if (!currentSignerAddress) {
         return
       }
@@ -283,7 +283,7 @@ export default {
         dispatch('namespace/LOAD_NAMESPACES', {}, {root: true})
       }
       // Reloading Balances
-      await dispatch('wallet/LOAD_ACCOUNT_INFO', {}, {root: true})
+      await dispatch('account/LOAD_ACCOUNT_INFO', {}, {root: true})
       dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
 
     },

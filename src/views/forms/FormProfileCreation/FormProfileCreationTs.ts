@@ -139,7 +139,7 @@ export class FormProfileCreationTs extends Vue {
 
     const account: ProfileModel = {
       profileName: this.formItems.profileName,
-      wallets: [],
+      accounts: [],
       seed: '',
       password: passwordHash,
       hint: this.formItems.hint,

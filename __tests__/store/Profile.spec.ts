@@ -37,7 +37,7 @@ describe('store/Profile', () => {
     test('dispatch "RESET_STATE"', async (done) => {
       // prepare
       const dispatch = jest.fn()
-      const rootGetters = {'wallet/currentWallet': {}}
+      const rootGetters = {'account/currentAccount': {}}
 
       // act
       ProfileStore.actions.LOG_OUT({dispatch, rootGetters})
@@ -45,9 +45,9 @@ describe('store/Profile', () => {
 
       // assert
       expect(dispatch).toHaveBeenCalled()
-      expect(dispatch).toHaveBeenCalledWith('wallet/uninitialize', {'address': undefined}, {root: true})
-      expect(dispatch).toHaveBeenCalledWith('wallet/SET_KNOWN_WALLETS', [], {root: true})
-      expect(dispatch).toHaveBeenCalledWith('wallet/RESET_CURRENT_WALLET', undefined, {root: true})
+      expect(dispatch).toHaveBeenCalledWith('account/uninitialize', {'address': undefined}, {root: true})
+      expect(dispatch).toHaveBeenCalledWith('account/SET_KNOWN_ACCOUNTS', [], {root: true})
+      expect(dispatch).toHaveBeenCalledWith('account/RESET_CURRENT_ACCOUNT', undefined, {root: true})
       expect(dispatch).toHaveBeenCalledWith('RESET_STATE')
       done()
     })

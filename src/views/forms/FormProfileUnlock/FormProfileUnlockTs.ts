@@ -17,7 +17,7 @@ import {Account, NetworkType, Password, Crypto} from 'symbol-sdk'
 import {Component, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 // internal dependencies
-import {WalletModel} from '@/core/database/entities/WalletModel'
+import {AccountModel} from '@/core/database/entities/AccountModel'
 import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
 // child components
 import {ValidationProvider} from 'vee-validate'
@@ -38,7 +38,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
   computed: {
     ...mapGetters({
       networkType: 'network/networkType',
-      currentWallet: 'wallet/currentWallet',
+      currentAccount: 'account/currentAccount',
     }),
   },
 })
@@ -50,10 +50,10 @@ export class FormProfileUnlockTs extends Vue {
   public networkType: NetworkType
 
   /**
-   * Currently active wallet
-   * @var {WalletModel}
+   * Currently active account
+   * @var {AccountModel}
    */
-  public currentWallet: WalletModel
+  public currentAccount: AccountModel
 
   /**
    * Validation rules
@@ -80,7 +80,7 @@ export class FormProfileUnlockTs extends Vue {
   public processVerification() {
     try {
       const password = new Password(this.formItems.password)
-      const privateKey: string = Crypto.decrypt(this.currentWallet.encryptedPrivateKey, password.value)
+      const privateKey: string = Crypto.decrypt(this.currentAccount.encryptedPrivateKey, password.value)
 
       if (privateKey.length === 64) {
         const unlockedAccount = Account.createFromPrivateKey(privateKey, this.networkType)

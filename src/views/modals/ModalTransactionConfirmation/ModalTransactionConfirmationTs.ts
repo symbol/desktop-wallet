@@ -17,7 +17,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapGetters} from 'vuex'
 import {Account, NetworkType, PublicAccount, SignedTransaction, Transaction} from 'symbol-sdk'
 // internal dependencies
-import {WalletModel, WalletType} from '@/core/database/entities/WalletModel'
+import {AccountModel, AccountType} from '@/core/database/entities/AccountModel'
 import {TransactionService} from '@/services/TransactionService'
 import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 // child components
@@ -27,7 +27,7 @@ import TransactionDetails from '@/components/TransactionDetails/TransactionDetai
 import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue'
 // @ts-ignore
 import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue'
-import {Signer} from '@/store/Wallet'
+import {Signer} from '@/store/Account'
 
 @Component({
   components: {
@@ -39,9 +39,9 @@ import {Signer} from '@/store/Wallet'
     ...mapGetters({
       generationHash: 'network/generationHash',
       networkType: 'network/networkType',
-      currentWallet: 'wallet/currentWallet',
-      stagedTransactions: 'wallet/stagedTransactions',
-      signedTransactions: 'wallet/signedTransactions',
+      currentAccount: 'account/currentAccount',
+      stagedTransactions: 'account/stagedTransactions',
+      signedTransactions: 'account/signedTransactions',
     }),
   },
 })
@@ -64,22 +64,22 @@ export class ModalTransactionConfirmationTs extends Vue {
   public networkType: NetworkType
 
   /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletModel}
+   * Currently active account
+   * @see {Store.Account}
+   * @var {AccountModel}
    */
-  public currentWallet: WalletModel
+  public currentAccount: AccountModel
 
   /**
    * List of transactions on-stage
-   * @see {Store.Wallet}
+   * @see {Store.Account}
    * @var {Transaction[]}
    */
   public stagedTransactions: Transaction[]
 
   /**
    * List of transactions that are signed
-   * @see {Store.Wallet}
+   * @see {Store.Account}
    * @var {SignedTransaction[]}
    */
   public signedTransactions: SignedTransaction[]
@@ -92,12 +92,12 @@ export class ModalTransactionConfirmationTs extends Vue {
 
   /// region computed properties getter/setter
   /**
-   * Returns whether current wallets is a hardware wallet
+   * Returns whether current account is a hardware wallet
    * @return {boolean}
    */
   public get isUsingHardwareWallet(): boolean {
-    // XXX should use "stagedTransaction.signer" to identify wallet
-    return WalletType.TREZOR === this.currentWallet.type
+    // XXX should use "stagedTransaction.signer" to identify account
+    return AccountType.TREZOR === this.currentAccount.type
   }
 
   /**
@@ -139,11 +139,11 @@ export class ModalTransactionConfirmationTs extends Vue {
     // - transactions are ready to be announced
     for (let i = 0, m = transactions.length; i < m; i ++) {
       const signed = transactions[i]
-      this.$store.commit('wallet/addSignedTransaction', signed)
+      this.$store.commit('account/addSignedTransaction', signed)
     }
 
     // - reset transaction stage
-    await this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
+    await this.$store.dispatch('account/RESET_TRANSACTION_STAGE')
 
     // - broadcast signed transactions
     const results: BroadcastResult[] = await service.announceSignedTransactions()
@@ -172,7 +172,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     this.$store.dispatch('diagnostic/ADD_INFO', `Account ${account.address.plain()} unlocked successfully.`)
 
     // - get transaction stage config
-    const options = this.$store.getters['wallet/stageOptions']
+    const options = this.$store.getters['account/stageOptions']
     const service = new TransactionService(this.$store)
 
     let signedTransactions: SignedTransaction[] = []
@@ -180,7 +180,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     // - case 1 "is multisig": must create hash lock (aggregate bonded pre-requirement)
     if (options.isMultisig) {
       // - multisig account "issues" aggregate bonded
-      const currentSigner: Signer = this.$store.getters['wallet/currentSigner']
+      const currentSigner: Signer = this.$store.getters['account/currentSigner']
       const multisigAccount = PublicAccount.createFromPublicKey(
         currentSigner.publicKey,
         this.networkType,
@@ -198,7 +198,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     }
 
     // - reset transaction stage
-    this.$store.dispatch('wallet/RESET_TRANSACTION_STAGE')
+    this.$store.dispatch('account/RESET_TRANSACTION_STAGE')
 
     // - notify about successful transaction announce
     const debug = `Count of transactions signed:  ${signedTransactions.length}`

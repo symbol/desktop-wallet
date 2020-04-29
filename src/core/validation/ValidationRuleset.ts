@@ -53,7 +53,6 @@ export const createValidationRuleset = ({
     privateKey: 'min:64|max:64|privateKey',
     recipientPublicKey: 'required|publicKey',
     supply: `required|integer|min_value: 1|max_value:${maxMosaicAtomicUnits}`,
-    walletPassword: 'required|confirmWalletPassword:wallet',
     url: 'required|url',
     newAccountName: 'required|newAccountName',
     profileAccountName: 'required|profileAccountName',

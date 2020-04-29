@@ -3,14 +3,14 @@
     <div class="balances-panel-container">
       <div
         :class="{
-          'top_wallet_address': true,
+          'top_account_address': true,
           'radius': true,
           'grayed': isCosignatoryMode,
           'purpled': !isCosignatoryMode,
           'xym-outline': true,
         }"
       >
-        <div v-if="currentSignerAddress" class="wallet_address">
+        <div v-if="currentSignerAddress" class="account_address">
           <span class="address">
             {{ currentSignerAddress.plain() }}
           </span>

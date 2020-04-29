@@ -19,7 +19,7 @@ import AppInfoStore from '@/store/AppInfo'
 import DatabaseStore from '@/store/Database'
 import NetworkStore from '@/store/Network'
 import ProfileStore from '@/store/Profiles'
-import WalletStore from '@/store/Wallet'
+import AccountStore from '@/store/Account'
 import DiagnosticStore from '@/store/Diagnostic'
 import NotificationStore from '@/store/Notification'
 import TemporaryStore from '@/store/Temporary'
@@ -48,7 +48,7 @@ const AppStore = new Vuex.Store({
     db: DatabaseStore,
     network: NetworkStore,
     profile: ProfileStore,
-    wallet: WalletStore,
+    account: AccountStore,
     diagnostic: DiagnosticStore,
     notification: NotificationStore,
     temporary: TemporaryStore,
@@ -87,7 +87,7 @@ const AppStore = new Vuex.Store({
         dispatch('mosaic/uninitialize'),
         dispatch('transaction/uninitialize'),
         dispatch('profile/uninitialize'),
-        dispatch('wallet/uninitialize'),
+        dispatch('account/uninitialize'),
         dispatch('namespace/uninitialize'),
         dispatch('notification/uninitialize'),
         dispatch('temporary/uninitialize'),

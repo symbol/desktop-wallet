@@ -11,8 +11,8 @@
       </div>
       <div v-if="hasMnemonicInfo" class="body">
         <div class="explain">
-          <span class="subtitle">{{ $t('wallets_backup_title_qrcode') }}</span>
-          <p>{{ $t('wallets_backup_mnemonic_explain_qrcode') }}</p>
+          <span class="subtitle">{{ $t('accounts_backup_title_qrcode') }}</span>
+          <p>{{ $t('accounts_backup_mnemonic_explain_qrcode') }}</p>
         </div>
 
         <img

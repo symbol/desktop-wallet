@@ -27,8 +27,8 @@ export const routes: AppRoute[] = [
     /// region PageLayout children
     children: [
       {
-        path: 'accounts',
-        name: 'accounts',
+        path: '/profiles',
+        name: 'profiles',
         // @ts-ignore
         component: () => import('@/views/layout/RouterPage.vue'),
         meta: {
@@ -131,7 +131,7 @@ export const routes: AppRoute[] = [
                 icon: importStepImage.importStepImage3,
               },
               // @ts-ignore
-              component: () => import('@/views/pages/profiles/import-profile/wallet-selection/WalletSelection.vue'),
+              component: () => import('@/views/pages/profiles/import-profile/account-selection/AccountSelection.vue'),
             }, {
               path: 'finishImport',
               name: 'profiles.importProfile.finalize',
@@ -199,47 +199,47 @@ export const routes: AppRoute[] = [
         ],
       },
       {
-        path: '/wallets',
-        name: 'wallets',
-        redirect: '/wallets/details',
+        path: '/accounts',
+        name: 'accounts',
+        redirect: '/details',
         meta: {
           protected: true,
           clickable: true,
-          title: 'sidebar_item_wallets',
+          title: 'sidebar_item_accounts',
           icon: officialIcons.wallet,
         },
         // @ts-ignore
-        component: () => import('@/views/pages/wallets/Wallets.vue'),
+        component: () => import('@/views/pages/accounts/Accounts.vue'),
         children: [
           {
-            path: 'details',
-            name: 'wallet.details',
+            path: '/details',
+            name: 'accounts.details',
             meta: {
               protected: true,
-              title: 'page_title_wallet_details',
+              title: 'page_title_account_details',
             },
             // @ts-ignore
-            component: () => import('@/views/pages/wallets/WalletDetailsPage/WalletDetailsPage.vue'),
+            component: () => import('@/views/pages/accounts/AccountDetailsPage/AccountDetailsPage.vue'),
           },
           {
-            path: 'backup',
-            name: 'wallet.backup',
+            path: '/backup',
+            name: 'accounts.backup',
             meta: {
               protected: true,
-              title: 'page_title_wallet_backup',
+              title: 'page_title_account_backup',
             },
             // @ts-ignore
-            component: () => import('@/views/pages/wallets/WalletBackupPage/WalletBackupPage.vue'),
+            component: () => import('@/views/pages/accounts/AccountBackupPage/AccountBackupPage.vue'),
           },
           // {
           //   path: 'harvesting',
           //   name: 'wallet.harvesting',
           //   meta: {
           //     protected: true,
-          //     title: 'page_title_wallet_harvesting',
+          //     title: 'page_title_account_harvesting',
           //   },
           //   // @ts-ignore
-          //   component: () => import('@/views/pages/wallets/WalletHarvestingPage/WalletHarvestingPage.vue'),
+          //   component: () => import('@/views/pages/accounts/AccountHarvestingPage/AccountHarvestingPage.vue'),
           // },
         ],
       }, {

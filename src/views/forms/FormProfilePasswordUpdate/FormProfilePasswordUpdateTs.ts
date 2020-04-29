@@ -31,7 +31,7 @@ import FormRow from '@/components/FormRow/FormRow.vue'
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
 import {NotificationType} from '@/core/utils/NotificationType'
 import {ProfileModel} from '@/core/database/entities/ProfileModel'
-import {WalletService} from '@/services/WalletService'
+import {AccountService} from '@/services/AccountService'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 
 @Component({
@@ -116,11 +116,11 @@ export class FormProfilePasswordUpdateTs extends Vue {
   }
 
   /**
-   * When account is unlocked, the sub wallet can be created
+   * When account is unlocked, the sub account can be created
    */
   public async onAccountUnlocked(account: Account, oldPassword: Password) {
     try {
-      const accountService = new ProfileService()
+      const profileService = new ProfileService()
       const newPassword = new Password(this.formItems.password)
       const oldSeed = this.currentProfile.seed
       const plainSeed = Crypto.decrypt(oldSeed, oldPassword.value)
@@ -128,16 +128,16 @@ export class FormProfilePasswordUpdateTs extends Vue {
 
       // // - create new password hash
       const passwordHash = ProfileService.getPasswordHash(newPassword)
-      accountService.updatePassword(this.currentProfile, passwordHash, this.formItems.passwordHint,
+      profileService.updatePassword(this.currentProfile, passwordHash, this.formItems.passwordHint,
         newSeed)
 
-      const walletService = new WalletService()
-      const walletIdentifiers = this.currentProfile.wallets
+      const accountService = new AccountService()
+      const walletIdentifiers = this.currentProfile.accounts
 
-      const wallets = walletService.getKnownWallets(walletIdentifiers)
+      const wallets = accountService.getKnownAccounts(walletIdentifiers)
       for (const model of wallets) {
-        const updatedModel = walletService.updateWalletPassword(model, oldPassword, newPassword)
-        walletService.saveWallet(updatedModel)
+        const updatedModel = accountService.updateWalletPassword(model, oldPassword, newPassword)
+        accountService.saveAccount(updatedModel)
       }
 
 

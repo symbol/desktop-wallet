@@ -31,5 +31,5 @@ export class ProfileModel {
   public readonly networkType: NetworkType
   public readonly password: string
   public readonly seed: string
-  public readonly wallets: string[]
+  public readonly accounts: string[]
 }
