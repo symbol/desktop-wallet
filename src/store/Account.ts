@@ -209,11 +209,7 @@ export default {
      */
     async initialize({commit, dispatch, getters}, {address}) {
       const callback = async () => {
-        if (!address || !address.length) {
-          return
-        }
-        // open websocket connections
-        dispatch('SUBSCRIBE', address)
+        if (!address || !address.length) return
         commit('setInitialized', true)
       }
       await Lock.initialize(callback, {getters})
@@ -294,11 +290,14 @@ export default {
       dispatch('mosaic/SIGNER_CHANGED', {}, {root: true})
       dispatch('transaction/SIGNER_CHANGED', {}, {root: true})
 
+      // open / close websocket connections
+      if (previousSignerAddress) await dispatch('UNSUBSCRIBE', previousSignerAddress)
+      await dispatch('SUBSCRIBE', currentSignerAddress)
+
       await dispatch('LOAD_ACCOUNT_INFO')
 
       dispatch('namespace/LOAD_NAMESPACES', {}, {root: true})
       dispatch('mosaic/LOAD_MOSAICS', {}, {root: true})
-
     },
 
     async NETWORK_CHANGED({dispatch}) {
@@ -383,7 +382,7 @@ export default {
     },
 
     RESET_SUBSCRIPTIONS({commit}) {
-      commit('setSubscriptions', [])
+      commit('setSubscriptions', {})
     },
 
     ADD_STAGED_TRANSACTION({commit}, stagedTransaction: Transaction) {
@@ -399,17 +398,15 @@ export default {
      * Websocket API
      */
     // Subscribe to latest account transactions.
-    async SUBSCRIBE({commit, dispatch, rootGetters}, address) {
-      if (!address || !address.length) {
-        return
-      }
+    async SUBSCRIBE({commit, dispatch, rootGetters}, address: Address) {
+      if (!address) return
 
       // use RESTService to open websocket channel subscriptions
       const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
       const subscriptions: SubscriptionType = await RESTService.subscribeTransactionChannels(
         {commit, dispatch},
         repositoryFactory,
-        address,
+        address.plain(),
       )
 
       // update state of listeners & subscriptions
