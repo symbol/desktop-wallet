@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+
 /**
- * A model that store some generic value based on the generation hash.
+ * Generic interface for simple stored objects.
  */
-export type NetworkBasedModel<E> = Record<string, NetworkBasedEntryModel<E>>
+export interface IStorage<E> {
 
-export class NetworkBasedEntryModel<E> {
+  /**
+   * @return the stored value or undefined
+   */
+  get(): E | undefined
 
-  public readonly timestamp = Date.now()
+  /**
+   * Stores the provided value.
+   * @param value to be stored
+   */
+  set(value: E): void
 
-  constructor(public readonly generationHash: string, public readonly data: E) {
-
-  }
+  /**
+   * Deletes the stored value.
+   */
+  remove(): void
 }

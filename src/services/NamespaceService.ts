@@ -16,13 +16,13 @@
 
 import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
 import {Address, NamespaceName, RepositoryFactory} from 'symbol-sdk'
-import {Observable} from 'rxjs'
+import {Observable, of} from 'rxjs'
 import {flatMap, map, tap} from 'rxjs/operators'
 import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
 import * as _ from 'lodash'
 import {TimeHelpers} from '@/core/utils/TimeHelpers'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
-import {NetworkBasedObjectStorage} from '@/core/database/backends/NetworkBasedObjectStorage'
+import {NamespaceModelStorage} from '@/core/database/storage/NamespaceModelStorage'
 
 /**
  * The service in charge of loading and caching anything related to Namepsaces from Rest.
@@ -33,8 +33,7 @@ export class NamespaceService {
   /**
    * The namespace information local cache.
    */
-  private readonly namespaceModelStorage = new NetworkBasedObjectStorage<NamespaceModel[]>(
-    'namespaceCache')
+  private readonly namespaceModelStorage = NamespaceModelStorage.INSTANCE
 
   /**
    * This method loads and caches the namespace information for the given accounts.
@@ -47,6 +46,9 @@ export class NamespaceService {
    */
   public getNamespaces(repositoryFactory: RepositoryFactory, generationHash: string,
     addresses: Address[]): Observable<NamespaceModel[]> {
+    if (!addresses.length){
+      return of([])
+    }
     const namespaceModelList = this.namespaceModelStorage.get(generationHash) || []
     const namespaceRepository = repositoryFactory.createNamespaceRepository()
     return namespaceRepository.getNamespacesFromAccounts(addresses)

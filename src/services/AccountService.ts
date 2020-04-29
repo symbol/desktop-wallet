@@ -15,8 +15,8 @@
  */
 import {Convert, Password, SHA3Hasher} from 'symbol-sdk'
 // internal dependencies
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 import {AccountModel} from '@/core/database/entities/AccountModel'
+import {AccountModelStorage} from '@/core/database/storage/AccountModelStorage'
 
 
 /**
@@ -28,8 +28,7 @@ export class AccountService {
    * The storage to keep user configuration around mosaics.  For example, the balance hidden
    * feature.
    */
-  private readonly accountsStorage = new SimpleObjectStorage<Record<string, AccountModel>>(
-    'accounts')
+  private readonly accountsStorage = AccountModelStorage.INSTANCE
 
 
   public getAccounts(): AccountModel[] {

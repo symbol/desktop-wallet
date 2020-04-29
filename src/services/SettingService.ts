@@ -14,13 +14,13 @@
  *
  */
 
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 import {SettingsModel} from '@/core/database/entities/SettingsModel'
 
 import feesConfig from '@/../config/fees.conf.json'
 import appConfig from '@/../config/app.conf.json'
 import networkConfig from '@/../config/network.conf.json'
 import i18n from '@/language'
+import {SettingsModelStorage} from '@/core/database/storage/SettingsModelStorage'
 
 
 /**
@@ -31,7 +31,7 @@ export class SettingService {
   /**
    * The the local storage that keeps the SettingsModel objects indexed by accountName.
    */
-  private readonly storage = new SimpleObjectStorage<Record<string, SettingsModel>>('settings')
+  private readonly storage = SettingsModelStorage.INSTANCE
 
   public getAccountSettings(accountName: string): SettingsModel {
     const storedData = this.storage.get() || {}

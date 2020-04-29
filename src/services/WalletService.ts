@@ -21,10 +21,11 @@ import {DerivationPathValidator} from '@/core/validation/validators'
 import {WalletModel, WalletType} from '@/core/database/entities/WalletModel'
 import {AccountModel} from '@/core/database/entities/AccountModel'
 import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
+import {WalletModelStorage} from '@/core/database/storage/WalletModelStorage'
 
 export class WalletService {
 
-  private readonly storage = new SimpleObjectStorage<Record<string, WalletModel>>('wallets')
+  private readonly storage = WalletModelStorage.INSTANCE
 
   /**
    * Default wallet derivation path
