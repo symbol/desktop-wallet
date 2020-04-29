@@ -20,10 +20,8 @@ import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
 import {map, tap} from 'rxjs/operators'
 import {NodeModel} from '@/core/database/entities/NodeModel'
 import * as _ from 'lodash'
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
-
-
 import networkConfig from '@/../config/network.conf.json'
+import {NodeModelStorage} from '@/core/database/storage/NodeModelStorage'
 
 /**
  * The service in charge of loading and caching anything related to Node and Peers from Rest.
@@ -34,7 +32,7 @@ export class NodeService {
   /**
    * The peer information local cache.
    */
-  private readonly storage = new SimpleObjectStorage<NodeModel[]>('node')
+  private readonly storage = NodeModelStorage.INSTANCE
 
   public getNodes(repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string): Observable<NodeModel[]> {
     const storedNodes = this.loadNodes().concat(this.loadStaticNodes())

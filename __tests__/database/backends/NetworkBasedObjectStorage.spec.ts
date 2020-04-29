@@ -14,8 +14,9 @@
  *
  */
 import {NetworkBasedObjectStorage} from '@/core/database/backends/NetworkBasedObjectStorage'
+import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 
-const getStorage = () => new NetworkBasedObjectStorage<number>('SomeStorageKey')
+const getStorage = () => new NetworkBasedObjectStorage<number>(new SimpleObjectStorage('SomeStorageKey'))
 
 describe('database/NetworkBasedObjectStorage.spec ==>', () => {
   describe('constructor() should', () => {

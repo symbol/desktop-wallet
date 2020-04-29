@@ -27,7 +27,7 @@ import networkConfig from '../../config/network.conf.json'
 import {fromIterable} from 'rxjs/internal-compatibility'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
 import {NetworkConfigurationHelpers} from '@/core/utils/NetworkConfigurationHelpers'
-import {NetworkBasedObjectStorage} from '@/core/database/backends/NetworkBasedObjectStorage'
+import {NetworkModelStorage} from '@/core/database/storage/NetworkModelStorage'
 
 /**
  * The service in charge of loading and caching anything related to Network from Rest.
@@ -37,7 +37,7 @@ export class NetworkService {
   /**
    * The network information local cache.
    */
-  private readonly storage = new NetworkBasedObjectStorage<NetworkModel>('networkCache')
+  private readonly storage = NetworkModelStorage.INSTANCE
 
   /**
    * The best default Url. It uses the stored condiguration if possible.

@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 import {SettingsModel} from '@/core/database/entities/SettingsModel'
 
 import feesConfig from '@/../config/fees.conf.json'
 import appConfig from '@/../config/app.conf.json'
 import networkConfig from '@/../config/network.conf.json'
 import i18n from '@/language'
-
+import {SettingsModelStorage} from '@/core/database/storage/SettingsModelStorage'
 
 /**
  * Service in charge of loading and storing the SettingsModel from local storage.
@@ -31,7 +29,7 @@ export class SettingService {
   /**
    * The the local storage that keeps the SettingsModel objects indexed by profileName.
    */
-  private readonly storage = new SimpleObjectStorage<Record<string, SettingsModel>>('settings')
+  private readonly storage = SettingsModelStorage.INSTANCE
 
   public getProfileSettings(profileName: string): SettingsModel {
     const storedData = this.storage.get() || {}

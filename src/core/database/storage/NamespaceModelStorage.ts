@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-/**
- * A model that store some generic value based on the generation hash.
- */
-export type NetworkBasedModel<E> = Record<string, NetworkBasedEntryModel<E>>
 
-export class NetworkBasedEntryModel<E> {
-  public readonly timestamp = Date.now()
+import {VersionedNetworkBasedObjectStorage} from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
+import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
 
-  constructor(public readonly generationHash: string, public readonly data: E) {
+export class NamespaceModelStorage extends VersionedNetworkBasedObjectStorage<NamespaceModel[]> {
 
+  /**
+   * Singleton instance as we want to run the migration just once
+   */
+  public static INSTANCE = new NamespaceModelStorage()
+
+  private constructor() {
+    super('namespaceCache')
   }
+
 }

@@ -10,7 +10,7 @@
           'xym-outline': true,
         }"
       >
-        <div class="wallet_address">
+        <div v-if="currentSignerAddress" class="wallet_address">
           <span class="address">
             {{ currentSignerAddress.plain() }}
           </span>

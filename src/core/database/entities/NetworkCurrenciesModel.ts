@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-/**
- * A model that store some generic value based on the generation hash.
- */
-export type NetworkBasedModel<E> = Record<string, NetworkBasedEntryModel<E>>
 
-export class NetworkBasedEntryModel<E> {
-  public readonly timestamp = Date.now()
 
-  constructor(public readonly generationHash: string, public readonly data: E) {
+import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
 
-  }
+export class NetworkCurrenciesModel {
+  constructor(public networkCurrency: NetworkCurrencyModel,
+    public harvestCurrency: NetworkCurrencyModel) {}
 }

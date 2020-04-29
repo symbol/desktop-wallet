@@ -106,7 +106,7 @@
 </template>
 
 <script lang="ts">
-import { FormProfilePasswordUpdateTs } from  './FormProfilePasswordUpdateTs'
+import { FormProfilePasswordUpdateTs } from './FormProfilePasswordUpdateTs'
 export default class FormProfilePasswordUpdate extends FormProfilePasswordUpdateTs {}
 </script>
 

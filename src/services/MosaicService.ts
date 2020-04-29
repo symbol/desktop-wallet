@@ -16,19 +16,20 @@
 // external dependencies
 import _ from 'lodash'
 import {AccountInfo, Address, MosaicId, MosaicInfo, MosaicNames, NamespaceId, RepositoryFactory, UInt64} from 'symbol-sdk'
-import {combineLatest, Observable, of, forkJoin} from 'rxjs'
+import {combineLatest, forkJoin, Observable, of} from 'rxjs'
 import {flatMap, map, tap, toArray} from 'rxjs/operators'
-
 // internal dependencies
 import {fromIterable} from 'rxjs/internal-compatibility'
 import {MosaicConfigurationModel} from '@/core/database/entities/MosaicConfigurationModel'
 import {MosaicModel} from '@/core/database/entities/MosaicModel'
 import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
 import {ObservableHelpers} from '@/core/utils/ObservableHelpers'
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 import {TimeHelpers} from '@/core/utils/TimeHelpers'
 import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
-import {NetworkBasedObjectStorage} from '@/core/database/backends/NetworkBasedObjectStorage'
+import {NetworkCurrenciesModel} from '@/core/database/entities/NetworkCurrenciesModel'
+import {MosaicModelStorage} from '@/core/database/storage/MosaicModelStorage'
+import {NetworkCurrenciesModelStorage} from '@/core/database/storage/NetworkCurrenciesModelStorage'
+import {MosaicConfigurationModelStorage} from '@/core/database/storage/MosaicConfigurationModelStorage'
 
 // custom types
 export type ExpirationStatus = 'unlimited' | 'expired' | string | number
@@ -43,10 +44,6 @@ export interface AttachedMosaic {
   amount: number
 }
 
-interface NetworkCurrenciesModel {
-  networkCurrency: NetworkCurrencyModel
-  harvestCurrency: NetworkCurrencyModel
-}
 
 interface MosaicBalance {
   mosaicId: MosaicId
@@ -66,19 +63,18 @@ export class MosaicService {
   /**
    * Store that caches the mosaic information of the current accounts when returned from rest.
    */
-  private readonly mosaicDataStorage = new NetworkBasedObjectStorage<MosaicModel[]>('mosaicCache')
+  private readonly mosaicDataStorage = MosaicModelStorage.INSTANCE
 
   /**
    * The storage to keep user configuration around mosaics.  For example, the balance hidden
    * feature.
    */
-  private readonly mosaicConfigurationsStorage = new SimpleObjectStorage<Record<string, MosaicConfigurationModel>>(
-    'mosaicConfiguration')
+  private readonly mosaicConfigurationsStorage = MosaicConfigurationModelStorage.INSTANCE
 
   /**
    * Store that caches the information around the network currency.
    */
-  private readonly networkCurrencyStorage = new NetworkBasedObjectStorage<NetworkCurrenciesModel>('networkCurrencyCache')
+  private readonly networkCurrencyStorage = NetworkCurrenciesModelStorage.INSTANCE
 
   /**
    * This method loads and caches the mosaic information for the given accounts.
@@ -97,6 +93,9 @@ export class MosaicService {
     networkCurrency: NetworkCurrencyModel,
     accountsInfo: AccountInfo[],
   ): Observable<MosaicModel[]> {
+    if (!accountsInfo.length) {
+      return of([])
+    }
     const mosaicDataList = this.loadMosaicData(generationHash) || []
     const resolvedBalancesObservable = this.resolveBalances(repositoryFactory, accountsInfo)
     const accountAddresses = accountsInfo.map(a => a.address)
@@ -105,14 +104,26 @@ export class MosaicService {
 
     return combineLatest([ resolvedBalancesObservable, mosaicsFromAccountsObservable ])
       .pipe(flatMap(([ balances, owedMosaics ]) => {
-        const mosaicIds = _.uniqBy([ ...balances.map(m => m.mosaicId), ...owedMosaics.map(o => o.id) ], m => m.toHex())
+        const mosaicIds: MosaicId[] = _.uniqBy([ ...balances.map(m => m.mosaicId), ...owedMosaics.map(o => o.id) ],
+          m => m.toHex())
         const nameObservables = repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds)
-        const mosaicInfoObservable = repositoryFactory.createMosaicRepository().getMosaics(mosaicIds)
+        const mosaicInfoObservable = this.loadMosaic(repositoryFactory, mosaicIds, owedMosaics)
         return combineLatest([ nameObservables, mosaicInfoObservable ]).pipe(map(([ names, mosaicInfos ]) => {
           return this.toMosaicDtos(balances, mosaicInfos, names, networkCurrency, accountAddresses)
         }))
       })).pipe(tap((d) => this.saveMosaicData(generationHash, d)),
         ObservableHelpers.defaultFirst(mosaicDataList))
+  }
+
+  private loadMosaic(repositoryFactory: RepositoryFactory, mosaicIds: MosaicId[],
+    alreadyLoadedMosaics: MosaicInfo[]): Observable<MosaicInfo[]> {
+    const toLoadMosaicIds = mosaicIds.filter(mosaicId => !alreadyLoadedMosaics.some(info => info.id.equals(mosaicId)))
+    if (toLoadMosaicIds.length) {
+      return repositoryFactory.createMosaicRepository().getMosaics(toLoadMosaicIds)
+        .pipe(map(newMosaics => newMosaics.concat(alreadyLoadedMosaics)))
+    } else {
+      return of(alreadyLoadedMosaics)
+    }
   }
 
   private getName(mosaicNames: MosaicNames[], accountMosaicDto: MosaicId): string {
@@ -163,7 +174,7 @@ export class MosaicService {
 
 
   private resolveMosaicIds(repositoryFactory: RepositoryFactory,
-    ids: (NamespaceId | MosaicId)[]): Observable<{ from: (NamespaceId | MosaicId), to: MosaicId }[]> {
+    ids: (NamespaceId | MosaicId)[]): Observable<{from: (NamespaceId | MosaicId), to: MosaicId}[]> {
     const namespaceRepository = repositoryFactory.createNamespaceRepository()
     return fromIterable(ids).pipe(flatMap(id => {
       if (id instanceof MosaicId) {
@@ -198,7 +209,7 @@ export class MosaicService {
     const namespaceHttp = repositoryFactory.createNamespaceRepository()
 
     // get network currencies ids from stored network configuration
-    const { currencyMosaicId, harvestingMosaicId } = networkConfig
+    const {currencyMosaicId, harvestingMosaicId} = networkConfig
     const currencyMosaic = new MosaicId(currencyMosaicId)
     const harvestingMosaic = new MosaicId(harvestingMosaicId)
 
@@ -217,10 +228,8 @@ export class MosaicService {
         if (!thisMosaicNames) {throw new Error('thisMosaicNames not found at getNetworkCurrencies')}
         return this.getNetworkCurrency(mosaicInfo, thisMosaicNames)
       })),
-      map(networkMosaics => ({
-        networkCurrency: networkMosaics[0],
-        harvestCurrency: networkMosaics[1] || networkMosaics[0],
-      })),
+      map(networkMosaics => new NetworkCurrenciesModel(networkMosaics[0],
+        networkMosaics[1] || networkMosaics[0])),
       tap(d => this.networkCurrencyStorage.set(generationHash, d)),
       ObservableHelpers.defaultFirst(storedNetworkCurrencies),
     )

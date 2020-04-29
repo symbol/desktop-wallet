@@ -14,19 +14,17 @@
  *
  */
 
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
-import {NetworkBasedModel} from '@/core/database/entities/NetworkBasedModel'
+import {NetworkBasedEntryModel, NetworkBasedModel} from '@/core/database/entities/NetworkBasedModel'
+import {IStorage} from '@/core/database/backends/IStorage'
 
 /**
  * A storage save the data per generation hash
  */
 export class NetworkBasedObjectStorage<E> {
-
-  private readonly storage: SimpleObjectStorage<Record<string, NetworkBasedModel<E>>>
-
-  public constructor(storageKey: string) {
-    this.storage = new SimpleObjectStorage<Record<string, NetworkBasedModel<E>>>(storageKey)
-  }
+  /**
+   * @param delegate the delegate that will store the data that stores the generation model.
+   */
+  public constructor(private readonly delegate: IStorage<NetworkBasedModel<E>>) {}
 
   /**
    * it gets the stored value for the specific generation hash.
@@ -35,7 +33,7 @@ export class NetworkBasedObjectStorage<E> {
    * @return the stored value for the provided network hash or undefined
    */
   public get(generationHash: string): E | undefined {
-    const map = this.storage.get() || {}
+    const map = this.delegate.get() || {}
     return map[generationHash] && map[generationHash].data || undefined
   }
 
@@ -44,10 +42,9 @@ export class NetworkBasedObjectStorage<E> {
    * @return the entry if available.
    */
   public getLatest(): E | undefined {
-    const map = this.storage.get() || {}
-    const latest = Object.values(map).reduce(function (prev, current) {
-      return (prev && prev.timestamp > current.timestamp) ? prev : current
-    }, undefined)
+    const map = this.delegate.get() || {}
+    const latest = Object.values(map).reduce(
+      (prev, current) => (prev && prev.timestamp > current.timestamp) ? prev : current, undefined)
     return latest && latest.data || undefined
   }
 
@@ -58,9 +55,9 @@ export class NetworkBasedObjectStorage<E> {
    * @param value to be stored
    */
   public set(generationHash: string, value: E): void {
-    const map = this.storage.get() || {}
-    map[generationHash] = new NetworkBasedModel(generationHash, value)
-    this.storage.set(map)
+    const map = this.delegate.get() || {}
+    map[generationHash] = new NetworkBasedEntryModel(generationHash, value)
+    this.delegate.set(map)
   }
 
   /**
@@ -68,9 +65,9 @@ export class NetworkBasedObjectStorage<E> {
    * @param generationHash the generation hash.
    */
   public remove(generationHash: string): void {
-    const map = this.storage.get() || {}
+    const map = this.delegate.get() || {}
     delete map[generationHash]
-    this.storage.set(map)
+    this.delegate.set(map)
   }
 
 }

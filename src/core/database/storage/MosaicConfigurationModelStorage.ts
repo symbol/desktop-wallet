@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-/**
- * A model that store some generic value based on the generation hash.
- */
-export type NetworkBasedModel<E> = Record<string, NetworkBasedEntryModel<E>>
 
-export class NetworkBasedEntryModel<E> {
-  public readonly timestamp = Date.now()
+import {VersionedObjectStorage} from '@/core/database/backends/VersionedObjectStorage'
+import {MosaicConfigurationModel} from '@/core/database/entities/MosaicConfigurationModel'
 
-  constructor(public readonly generationHash: string, public readonly data: E) {
+export class MosaicConfigurationModelStorage extends VersionedObjectStorage<Record<string, MosaicConfigurationModel>> {
 
+  /**
+   * Singleton instance as we want to run the migration just once
+   */
+  public static INSTANCE = new MosaicConfigurationModelStorage()
+
+  private constructor() {
+    super('mosaicConfiguration')
   }
 }

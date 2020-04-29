@@ -15,9 +15,8 @@
  */
 import {Convert, Password, SHA3Hasher} from 'symbol-sdk'
 // internal dependencies
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
 import {ProfileModel} from '@/core/database/entities/ProfileModel'
-
+import {ProfileModelStorage} from '@/core/database/storage/ProfileModelStorage'
 
 /**
  * Service in charge of loading profiles information from the wallet.
@@ -28,9 +27,7 @@ export class ProfileService {
    * The storage to keep user configuration around mosaics.  For example, the balance hidden
    * feature.
    */
-  private readonly profilesStorage = new SimpleObjectStorage<Record<string, ProfileModel>>(
-    'profiles')
-
+  private readonly profilesStorage = ProfileModelStorage.INSTANCE
 
   public getProfiles(): ProfileModel[] {
     return Object.values(this.getProfilesByProfileName())
