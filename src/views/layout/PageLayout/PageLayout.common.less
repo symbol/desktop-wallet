@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+
 @import '../../resources/css/variables.less';
 
 .main-outer-container {
@@ -52,194 +53,59 @@
     }
   }
 
-  .alert.success_alert {
+  .alert.success-alert {
     color: #000;
   }
 
-  .error_alert {
-    background-color: #cc3835;
-    border: 1px solid #cc3835;
-  }
-
-  .warning_alert {
+  .warning-alert {
     background-color: #fd8c4a;
     border: 1px solid #fd8c4a;
   }
 
-  .point {
-    -webkit-app-region: no-drag;
-  }
-
-  .input_point {
-    padding-top: 20px;
-
-    .connection_letter {
-      font-size: 18px;
-      color: #ddd;
-      letter-spacing: 2px;
-    }
-
-    input {
-      width: 100%;
-      border-bottom: 1px solid @border;
-      padding-left: 10px;
-      margin-right: 20px;
-      padding-bottom: 5px;
-    }
-
-    input::placeholder {
-      font-size: 16px;
-    }
-
-    .reset-icon,
-    .sure_button {
-      display: inline-block;
-      text-align: center;
-      font-size: 35px;
-      line-height: 40px;
-      height: 40px !important;
-      width: 40px !important;
-      background-color: @purpleLight;
-      color: white;
-      justify-self: center;
-    }
-    .reset-icon:hover,
-    .sure_button:hover {
-      box-shadow: 0 0 10px @purpleLight;
-    }
-    .reset-icon {
-      font-size: 25px;
-      i {
-        height: 40px !important;
-        width: 40px !important;
-        background-color: transparent !important;
-      }
-      i:before {
-        right: 8px;
-      }
-    }
-  }
-
-  .node_list_container {
-    max-height: 160px;
-  }
-
-  .node_list {
-    max-height: 250px;
-
-    .ivu-input {
-      border: none;
-    }
-  }
-
-  .point_item {
-    margin: 10px 20px;
-    padding-right: 30px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
-    position: relative;
-
-    img {
-      width: 15px;
-      height: 15px;
-      margin-right: 10px;
-    }
-
-    span {
-      text-align: left;
-      //width: 500px;
-      font-size: 20px;
-    }
-  }
-
-  .top_window {
+  .top-window {
     position: absolute;
     top: 0;
     left: 0;
     background-image: linear-gradient(120deg, @primary, @secondary);
     -webkit-app-region: drag;
     width: 100%;
-    height: 50px;
+    height: 0.6rem;
 
-    .controller {
-      .app_controller {
-        float: right;
-        font-size: 20px;
-        margin-right: 20px;
+    .app-controller {
+      float: right;
+      margin-right: 0.4rem;
+      height: 0.6rem;
+      display: grid;
+      grid-template-columns: 1rem;
+      grid-gap: 0.2rem;
+      grid-auto-flow: column;
+      align-items: center;
 
-        .title {
-          font-size: 18px;
-          text-align: center;
-          padding: 10px;
-          min-width: 450px;
+      /deep/.ivu-select-selection {
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+
+        .ivu-select-placeholder,
+        .ivu-select-selected-value {
+          font-size: @normalFont;
+          font-weight: 400;
+          color: @white !important;
+          margin-left: 0;
         }
 
-        > div {
-          float: left;
-          margin-left: 25px;
-          position: relative;
-        }
-
-        .endpoint-healthy,
-        .endpoint-unhealthy {
-          cursor: pointer;
-          -webkit-app-region: no-drag;
-
-          i {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            background-color: #18b566;
-            border-radius: 50%;
-            margin-left: 0.4rem;
-          }
-
-          .point {
-            vertical-align: middle;
-            margin-right: 0.08rem;
-            margin-left: 0;
-          }
-
-          .network_type_text {
-            font-size: @smallerFont;
-            vertical-align: unset;
-            color: #fff;
-          }
-        }
-
-        .endpoint-unhealthy {
-          i {
-            background-color: red;
-          }
+        i::before {
+          display: none;
         }
       }
-
-      .debug-console-trigger {
-        padding-top: 0.01rem;
-        font-size: @smallerFont;
+      /deep/.language-switch-trigger,
+      /deep/.peer-selector-trigger,
+      /deep/.account-switch-trigger,
+      /deep/.debug-console-trigger {
+        font-size: @normalFont;
         color: @white;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-
-        .debug-console-trigger-icon {
-          font-size: 22px;
-          position: relative;
-          display: block;
-          // float: left;
-          // height: .6rem;
-          // padding-top: 0.17rem;
-          padding-right: 0.04rem;
-        }
       }
     }
-  }
-
-  .right_content {
-    width: 100%;
-    height: 100%;
   }
 
   .fade-enter-active {
@@ -260,38 +126,5 @@
 
   .fade-leave-active {
     opacity: 0;
-  }
-
-  .remove_icon {
-    position: absolute;
-    right: -15px;
-  }
-
-  .remove_icon:hover {
-    opacity: 0.5;
-  }
-
-  .ivu-poptip-popper {
-    z-index: 9;
-  }
-
-  .ivu-select-dropdown-list {
-    .ivu-select-item-focus {
-      background-color: transparent;
-    }
-
-    .ivu-select-item-focus:hover {
-      background-color: #f3f3f3;
-    }
-
-    .ivu-select-item-selected,
-    .ivu-select-item-selected:hover {
-      background-color: #f3f3f3;
-    }
-  }
-
-  .node-input-container {
-    width: 100%;
-    margin-right: 20px;
   }
 }

@@ -44,15 +44,15 @@
             <template v-slot:label> {{ $t('Set_network_type') }}: </template>
             <template v-slot:inputs>
               <div class="inputs-container select-container">
-                <select
+                <Select
                   v-model="formItems.networkType"
                   :placeholder="$t('choose_network')"
                   class="select-size select-style"
                 >
-                  <option v-for="(item, index) in networkTypeList" :key="index" :value="item.value">
+                  <Option v-for="(item, index) in networkTypeList" :key="index" :value="item.value">
                     {{ item.label }}
-                  </option>
-                </select>
+                  </Option>
+                </Select>
               </div>
             </template>
           </FormRow>
@@ -163,7 +163,7 @@ import { FormProfileCreationTs } from './FormProfileCreationTs'
 export default class FormProfileCreation extends FormProfileCreationTs {}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .right-hints-section {
   display: block;
   width: 5rem;

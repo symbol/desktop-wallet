@@ -3,7 +3,7 @@
     <Alert type="error">
       {{ $t(alert) }}
     </Alert>
-    <div class="is_multisig un_click radius" />
+    <div class="is_multisig cursor-disabled radius" />
   </div>
 </template>
 

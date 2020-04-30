@@ -28,17 +28,15 @@
   display: block;
 }
 
-.transaction-details-item-inner-container {
+/deep/.transaction-details-item-inner-container {
   display: grid;
   grid-row-gap: 0.03rem;
   margin-bottom: 0.2rem;
+  .transaction-details-item-container {
+    margin-bottom: 0.3rem;
+  }
 }
-
-.transaction-details-item-container {
-  margin-bottom: 0.3rem;
-}
-
-.transaction-row-inner-container {
+/deep/.transaction-row-inner-container {
   display: grid;
   width: 100%;
   height: 100%;

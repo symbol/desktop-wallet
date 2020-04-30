@@ -7,7 +7,7 @@
         :class="[
           'navigator-item-container',
           $route.matched.map(({ path }) => path).includes(route.path) ? 'active' : '',
-          !currentProfile ? 'un_click' : '',
+          !currentProfile ? 'cursor-disabled' : '',
         ]"
         @click="onPageNavigate(route)"
       >
@@ -32,6 +32,8 @@
 
 <script lang="ts">
 import { PageNavigatorTs } from './PageNavigatorTs'
-import './PageNavigator.less'
 export default class PageNavigator extends PageNavigatorTs {}
 </script>
+<style lang="less" scoped>
+@import './PageNavigator.less';
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="invoice-container secondary_page_animate">
+  <div class="invoice-container secondary-page-animate">
     <div class="invoice-inner-container scroll">
       <div class="invoice-section-container">
         <div class="image-container">
@@ -11,7 +11,7 @@
             <span class="gray">{{ recipient }}</span>
           </div>
 
-          <div class="top-qr-text overflow_ellipsis">
+          <div class="top-qr-text overflow-ellipsis">
             <span class="top-qr-text-title">{{ $t('assets') }}:</span>
             <div v-if="balanceEntries.length">
               <div v-for="({ mosaicHex, name, amount }, index) in balanceEntries" :key="index">
@@ -29,7 +29,7 @@
           </div>
 
           <div class="qr_button">
-            <span class="radius pointer" @click="onDownloadQR">{{ $t('Download') }}</span>
+            <span class="radius cursor-pointer" @click="onDownloadQR">{{ $t('Download') }}</span>
           </div>
         </div>
       </div>
@@ -41,7 +41,9 @@
 
 <script lang="ts">
 import { DashboardInvoicePageTs } from './DashboardInvoicePageTs'
-import './DashboardInvoicePage.less'
 
 export default class DashboardInvoicePage extends DashboardInvoicePageTs {}
 </script>
+<style lang="less" scoped>
+@import './DashboardInvoicePage.less';
+</style>

@@ -29,7 +29,7 @@
     <div class="hash-cell">
       <span class="hash-cell-transaction-hash">
         <a
-          class="url_text"
+          class="text-url"
           target="_blank"
           :href="(explorerBaseUrl + '/transaction/' + transaction.transactionInfo.hash)"
         >

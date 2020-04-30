@@ -6,9 +6,9 @@
     <Icon type="ios-help-circle-outline" size="20" @click="hasHelpModal = true" />
     <div class="container">
       <Modal v-model="hasHelpModal" :footer-hide="true" :transfer="false">
-        <h1 slot="header">
+        <div slot="header">
           {{ $t('rules_describe') }}
-        </h1>
+        </div>
         <p>
           <slot name="form-description" />
         </p>

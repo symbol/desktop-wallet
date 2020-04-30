@@ -1,11 +1,43 @@
 @import '../../views/resources/css/variables.less';
-.mosaic-columns {
+/deep/.mosaic-columns {
   grid-template-columns: 14% 10% repeat(2, 14%) 12% repeat(4, 8%) 4%;
   grid-template-rows: 100%;
+  .hexId-cell {
+    text-align: left;
+  }
+
+  .name-cell {
+    text-align: left;
+  }
+
+  .supply-cell,
+  .balance-cell,
+  .expiration-cell {
+    text-align: left;
+  }
+
+  .divisibility-cell {
+    text-align: center;
+  }
+
+  .transferable-cell {
+    text-align: center;
+  }
+
+  .supplyMutable-cell {
+    text-align: center;
+  }
+
+  .restrictable-cell {
+    text-align: center;
+  }
 }
 
-.namespace-columns {
+/deep/.namespace-columns {
   grid-template-columns: 15% 15% 10% 15% 10% 25% 10%;
+  .hexId-cell {
+    text-align: left;
+  }
   .name-header,
   .name-cell {
     text-align: left;
@@ -59,36 +91,6 @@
 .restrictable-header {
   text-align: center;
   white-space: nowrap;
-}
-
-.hexId-cell {
-  text-align: left;
-}
-
-.name-cell {
-  text-align: left;
-}
-
-.supply-cell,
-.balance-cell,
-.expiration-cell {
-  text-align: left;
-}
-
-.divisibility-cell {
-  text-align: center;
-}
-
-.transferable-cell {
-  text-align: center;
-}
-
-.supplyMutable-cell {
-  text-align: center;
-}
-
-.restrictable-cell {
-  text-align: center;
 }
 
 .table-container {

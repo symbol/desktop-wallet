@@ -18,7 +18,7 @@
             <img class="pointer" src="@/views/resources/img/monitor/monitorCopyAddress.png" />
           </ButtonCopyToClipboard>
         </div>
-        <div v-if="networkCurrency" class="XEM_amount overflow_ellipsis">
+        <div v-if="networkCurrency" class="XEM_amount overflow-ellipsis">
           <div>{{ networkCurrency.ticker }}</div>
           <div class="amount">
             <MosaicAmountDisplay :absolute-amount="absoluteBalance" :size="'biggest'" />
@@ -30,8 +30,8 @@
         />
       </div>
 
-      <div class="bottom_account_info radius xym-outline">
-        <Spin v-if="!balanceMosaics.length" size="large" fix class="absolute" />
+      <div class="bottom-account-info radius xym-outline">
+        <Spin v-if="!balanceMosaics.length" size="large" fix class="position-absolute-default" />
         <MosaicBalanceList />
       </div>
     </div>
@@ -44,3 +44,6 @@ import './ProfileBalancesPanel.less'
 
 export default class ProfileBalancesPanel extends ProfileBalancesPanelTs {}
 </script>
+<style lang="less" scoped>
+@import './ProfileBalancesPanel.less';
+</style>

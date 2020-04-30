@@ -38,11 +38,9 @@
 
 <script lang="ts">
 import { TableRowTs } from './TableRowTs'
-
 export default class TableRow extends TableRowTs {}
 </script>
 
-<style scoped lang="less">
-@import '../TableDisplay/TableDisplay.less';
+<style lang="less" scoped>
 @import './TableRow.less';
 </style>

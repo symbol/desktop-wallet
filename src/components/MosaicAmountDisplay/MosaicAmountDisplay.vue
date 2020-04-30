@@ -1,12 +1,13 @@
 <template>
-  <span :class="['amount', 'overflow_ellipsis', color]">
+  <span :class="['amount', 'overflow-ellipsis', color]">
     <AmountDisplay :value="amount" :decimals="divisibility" :size="size" :show-ticker="showTicker" :ticker="ticker" />
   </span>
 </template>
 
 <script lang="ts">
 import { MosaicAmountDisplayTs } from './MosaicAmountDisplayTs'
-import './MosaicAmountDisplay.less'
-
 export default class MosaicAmountDisplay extends MosaicAmountDisplayTs {}
 </script>
+<style lang="less" scoped>
+@import './MosaicAmountDisplay.less';
+</style>

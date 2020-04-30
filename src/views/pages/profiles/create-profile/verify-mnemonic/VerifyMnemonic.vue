@@ -1,6 +1,6 @@
 <template>
   <div class="check-mnemonic-sec">
-    <div class="skip pointer" @click="$router.push({ name: 'profiles.createProfile.finalize' })">
+    <div class="skip cursor-pointer" @click="$router.push({ name: 'profiles.createProfile.finalize' })">
       {{ $t('skip') }}
     </div>
     <p class="set-title">
@@ -28,7 +28,8 @@
 
 <script lang="ts">
 import VerifyMnemonicTs from './VerifyMnemonicTs'
-import './VerifyMnemonic.less'
-
 export default class VerifyMnemonic extends VerifyMnemonicTs {}
 </script>
+<style lang="less" scoped>
+@import './VerifyMnemonic.less';
+</style>

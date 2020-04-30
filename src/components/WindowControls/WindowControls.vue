@@ -1,17 +1,22 @@
 <template>
-  <div class="window_controller">
+  <div class="window-controller">
     <div>
-      <span class="pointer" @click="electronHelpers.minWindow" />
-      <span v-if="electronHelpers.isMaximized" class="pointer not_window_max" @click="electronHelpers.maxWindow" />
-      <span v-else class="pointer now_window_max" @click="electronHelpers.unMaximize" />
-      <span class="pointer close_window" @click="electronHelpers.closeWindow" />
+      <span class="cursor-pointer" @click="electronHelpers.minWindow" />
+      <span
+        v-if="electronHelpers.isMaximized"
+        class="cursor-pointer not-window-max"
+        @click="electronHelpers.maxWindow"
+      />
+      <span v-else class="cursor-pointer now-window-max" @click="electronHelpers.unMaximize" />
+      <span class="cursor-pointer close-window" @click="electronHelpers.closeWindow" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { WindowControlsTs } from './WindowControlsTs'
-import './WindowControls.less'
-
 export default class WindowControls extends WindowControlsTs {}
 </script>
+<style lang="less" scoped>
+@import './WindowControls.less';
+</style>

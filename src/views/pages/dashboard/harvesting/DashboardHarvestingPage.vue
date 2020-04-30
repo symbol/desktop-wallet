@@ -1,5 +1,5 @@
 <template>
-  <div class="harvesting-container secondary_page_animate">
+  <div class="harvesting-container secondary-page-animate">
     <div class="left-container scroll">
       Harvesting History
     </div>

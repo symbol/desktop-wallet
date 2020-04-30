@@ -62,7 +62,3 @@ export default class NamespaceRegistration extends Vue {
   }
 }
 </script>
-
-<style lang="less" scoped>
-@import '../TransactionDetails.less';
-</style>

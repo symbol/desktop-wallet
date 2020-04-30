@@ -15,6 +15,6 @@ export default class App extends AppTs {}
 <style lang="less">
 @import '../views/resources/css/common.less';
 @import '../views/resources/css/forms.less';
-@import '../views/resources/css/modals.less';
 @import '../views/resources/css/text.less';
+@import '../views/resources/css/custom-iview.less';
 </style>

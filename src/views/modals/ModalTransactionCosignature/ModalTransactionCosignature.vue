@@ -1,5 +1,5 @@
 <template>
-  <div class="transaction_modal">
+  <div class="transaction-modal">
     <Modal v-model="show" :title="$t('modal_title_transaction_details')" :transfer="false" @close="show = false">
       <TransactionDetails :transaction="transaction" />
 
@@ -45,7 +45,8 @@
 
 <script lang="ts">
 import { ModalTransactionCosignatureTs } from './ModalTransactionCosignatureTs'
-import './ModalTransactionCosignature.less'
-
 export default class ModalTransactionCosignature extends ModalTransactionCosignatureTs {}
 </script>
+<style lang="less" scoped>
+@import './ModalTransactionCosignature.less';
+</style>

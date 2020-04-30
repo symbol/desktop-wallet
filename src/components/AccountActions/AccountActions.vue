@@ -45,7 +45,8 @@
 
 <script lang="ts">
 import { AccountActionsTs } from './AccountActionsTs'
-import './AccountActions.less'
-
 export default class AccountActions extends AccountActionsTs {}
 </script>
+<style lang="less" scoped>
+@import './AccountActions.less';
+</style>

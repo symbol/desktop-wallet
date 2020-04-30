@@ -1,12 +1,12 @@
 <template>
-  <div class="information-main-container secondary_page_animate">
-    <Spin v-if="!currentArticle" size="large" fix class="absolute" />
+  <div class="information-main-container secondary-page-animate">
+    <Spin v-if="!currentArticle" size="large" fix class="position-absolute-default" />
     <div v-if="currentArticle" class="left left_article_list radius">
       <div ref="listContainer" class="list_container scroll">
         <div
           v-for="(a, index) in latestArticles"
           :key="index"
-          :class="['article_summary_item', currentArticleIndex === index ? 'selected' : '', 'pointer']"
+          :class="['article_summary_item', currentArticleIndex === index ? 'selected' : '', 'cursor-pointer']"
           @click="switchArticle(a, index)"
         >
           <div class="title">

@@ -29,7 +29,7 @@ import './TransactionListOptions.less'
 export default class TransactionListOptions extends TransactionListOptionsTs {}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '../../views/resources/css/variables.less';
 
 .ivu-tabs-nav-right {

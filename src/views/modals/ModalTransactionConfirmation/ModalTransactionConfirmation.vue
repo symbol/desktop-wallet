@@ -6,9 +6,9 @@
       :title="$t('modal_title_transaction_confirmation')"
       :transfer="false"
     >
-      <div class="transactionConfirmationBody">
-        <div v-if="!!stagedTransactions" class="stepItem1">
-          <div v-for="(transaction, index) in stagedTransactions" :key="index" class="info_container">
+      <div>
+        <div v-if="!!stagedTransactions">
+          <div v-for="(transaction, index) in stagedTransactions" :key="index">
             <TransactionDetails :transaction="transaction" />
           </div>
 
@@ -39,36 +39,6 @@ import { ModalTransactionConfirmationTs } from './ModalTransactionConfirmationTs
 export default class ModalTransactionConfirmation extends ModalTransactionConfirmationTs {}
 </script>
 
-<style lang="less">
-@import '../../resources/css/variables.less';
-
-.modal-transaction-confirmation {
-  min-width: 8.5rem;
-  max-width: 12rem;
-  margin: 0 auto;
-  overflow: hidden;
-  .ivu-modal {
-    width: 12rem !important;
-  }
-
-  .ivu-modal-content {
-    width: 100%;
-    max-height: 80vh;
-    overflow-y: scroll;
-  }
-}
-
-.modal-footer {
-  height: 0.46rem;
-  padding-right: 0.4rem;
-}
-
-.float-right {
-  float: right;
-}
-
-.clear-staged-transactions {
-  font-size: @smallFont;
-  cursor: pointer;
-}
+<style lang="less" scoped>
+@import './ModalTransactionConfirmation.less';
 </style>

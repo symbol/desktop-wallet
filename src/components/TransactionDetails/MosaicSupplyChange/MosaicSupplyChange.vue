@@ -46,7 +46,3 @@ export default class MosaicSupplyChange extends Vue {
   }
 }
 </script>
-
-<style lang="less" scoped>
-@import '../TransactionDetails.less';
-</style>

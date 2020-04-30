@@ -5,7 +5,7 @@
     </div>
     <div class="transaction-details-row-value-container">
       <span v-if="label === 'hash' || label === 'inner_transaction_hash'">
-        <a class="url_text" target="_blank" :href="(explorerBaseUrl + '/transaction/' + item.value)">{{
+        <a class="text-url" target="_blank" :href="(explorerBaseUrl + '/transaction/' + item.value)">{{
           item.value
         }}</a>
       </span>
@@ -53,7 +53,3 @@ export default class TransactionDetailRow extends Vue {
   protected explorerBaseUrl: string
 }
 </script>
-
-<style lang="less">
-@import '../TransactionDetails.less';
-</style>

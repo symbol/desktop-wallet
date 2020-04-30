@@ -73,22 +73,33 @@ ul {
   list-style-type: none;
 }
 
-.left {
+.pull-left {
   float: left;
 }
 
-.right {
+.pull-right {
   float: right;
 }
-
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
 .clear::after,
 .clear::before {
   content: '';
   display: block;
   clear: both;
 }
-
-.absolute {
+.flex-align-center {
+  display: flex;
+  align-items: center;
+}
+.position-absolute-default {
   position: absolute;
   left: 0;
   right: 0;
@@ -100,6 +111,7 @@ ul {
 input {
   background-color: transparent;
   outline: none;
+  border: none;
 }
 
 input::placeholder {
@@ -121,36 +133,18 @@ input::placeholder {
   display: block;
   clear: both;
 }
-
-.absolute {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-}
-
 .radius {
   border-radius: 4px;
 }
 
-.hide_scroll,
+.hide-scroll,
 .scroll {
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-.hide_scroll::-webkit-scrollbar {
+.hide-scroll::-webkit-scrollbar {
   display: none;
-}
-
-.un_click {
-  cursor: not-allowed !important;
-}
-
-.letter_spacing {
-  letter-spacing: 1px;
 }
 
 .noData {
@@ -183,20 +177,6 @@ input::placeholder {
   }
 }
 
-.white_wrap {
-  width: 100%;
-  height: 100%;
-  background: @blackTransparent;
-  opacity: 0.6;
-  position: absolute;
-  color: @black;
-  font-size: 40px;
-  text-align: center;
-  line-height: 500px;
-  top: 0;
-  z-index: 99999 !important;
-}
-
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -221,16 +201,11 @@ input::placeholder {
   cursor: pointer;
 }
 
-.overflow_ellipsis {
+.overflow-ellipsis {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
-.overflow_hidden {
-  overflow: hidden;
-}
-
 textarea {
   border: none;
   outline: none;
@@ -239,194 +214,28 @@ textarea {
   height: 100%;
 }
 
-.pointer {
-  cursor: pointer !important;
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-disabled {
+  cursor: not-allowed;
 }
 
-.topo_graph_container {
-  .tooltip {
-    box-shadow: 0 0 5px @boxShadow;
-    padding: 20px;
-    max-width: 700px !important;
-    word-break: break-all;
-    word-wrap: break-word;
-    overflow: unset;
-    white-space: normal;
-    height: auto;
-    background-color: @white;
-    color: @purpleLight;
-  }
-}
-
-.not_allowed {
-  color: @grayDark !important;
-  background-color: @grayLight !important;
-  cursor: not-allowed !important;
-}
-
-.ivu-tooltip-inner {
-  max-width: unset !important;
-}
-
-// $notice
-.ivu-notice {
-  position: fixed !important;
-  top: 60px !important;
-  width: auto !important;
-  max-width: 500px !important;
-  // 1 less than the wallet selector
-  z-index: 2147483646 !important;
-
-  .ivu-notice-notice {
-    width: 100%;
-    height: auto;
-    background: @black;
-    display: flex;
-    align-items: center;
-    word-break: break-all;
-    word-wrap: break-word;
-    overflow: revert;
-
-    .ivu-notice-custom-content {
-      display: flex;
-      align-items: center;
-      align-content: center;
-
-      .ivu-notice-icon {
-        font-size: 40px;
-        position: relative !important;
-      }
-    }
-
-    .ivu-notice-title {
-      max-width: 500px;
-      width: auto;
-      height: auto;
-      color: @white;
-      overflow: unset;
-      line-height: 24px !important;
-      font-size: 16px !important;
-      word-break: break-word;
-      white-space: unset;
-    }
-
-    .ivu-notice-notice-close {
-      i {
-        color: @white;
-      }
-    }
-  }
-}
-
-.secondary_page_animate,
-.fade_in_animation {
+.secondary-page-animate,
+.fade-in-animation {
   animation: fadeIn 0.5s infinite;
   -webkit-animation: fadeIn 0.5s;
 }
-
-.selection_animate {
-  animation: fadeIn 0.5s infinite;
-  -webkit-animation: fadeIn 0.5s;
-}
-
-.wrap {
-  .ivu-input {
-    border: none;
-    border-radius: 0;
-    border-bottom: 1px solid @border;
-  }
-
-  .ivu-input:focus {
-    box-shadow: none;
-    border-bottom: 1px solid @border;
-  }
-
-  .input_point {
-    input {
-      border: none;
-      border-bottom: 1px solid @border;
-    }
-  }
-}
-
-.ivu-modal-wrap {
-  z-index: 99999991 !important;
-}
-
-.url_text {
+.text-url {
   color: @grayDark;
   cursor: pointer;
-}
-
-.url_text:hover {
-  color: @purple;
-}
-
-.ivu-modal-header-inner {
-  font-size: 20px !important;
-  padding: 20px 30px !important;
-}
-
-.ivu-modal-body {
-  padding: 20px 50px !important;
-}
-
-.justify_text {
-  text-align-last: justify;
-  text-align: justify;
-  text-justify: distribute-all-lines; // 这行必加，兼容ie浏览器
-}
-
-.url_text {
-  color: @grayDark;
-  cursor: pointer;
-}
-
-.url_text:hover {
-  color: @purple;
-}
-
-.ivu-modal-header-inner {
-  font-size: 20px !important;
-  padding: 20px 30px !important;
-}
-
-.ivu-modal-body {
-  padding: 20px 50px !important;
-}
-
-.justify_text {
-  text-align-last: justify;
-  text-align: justify;
-  text-justify: distribute-all-lines;
-}
-
-.confirm-alert-container {
-  .ivu-modal-mask {
-    z-index: 99999999 !important;
-  }
-  .ivu-modal-wrap {
-    z-index: 99999999 !important;
-  }
-  .ivu-modal-body {
-    padding: 0 !important;
-  }
-  .ivu-modal-footer {
-    border: none;
-  }
-  .ivu-modal-header {
-    border: none;
-  }
-  .ivu-btn-primary {
-    background-color: @purple !important;
-    border: none !important;
+  &:hover {
+    color: @purple;
   }
 }
-
 .xym-outline {
   box-shadow: 0 0.01rem 0.15rem 0.01rem @boxShadow;
 }
-
 .no-data-outer-container {
   display: block;
   position: relative;

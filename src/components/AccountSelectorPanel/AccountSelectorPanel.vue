@@ -57,19 +57,10 @@
 
 <script lang="ts">
 import { AccountSelectorPanelTs } from './AccountSelectorPanelTs'
-import './AccountSelectorPanel.less'
 
 export default class AccountSelectorPanel extends AccountSelectorPanelTs {}
 </script>
 
 <style lang="less" scoped>
-.walletMethod {
-  text-align: center;
-}
-
-.button-add-account {
-  height: 0.35rem !important;
-  padding: 0 0.3rem;
-  margin: auto;
-}
+@import './AccountSelectorPanel.less';
 </style>

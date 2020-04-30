@@ -23,6 +23,6 @@ import { TransactionDetailsTs } from './TransactionDetailsTs'
 export default class TransactionDetails extends TransactionDetailsTs {}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import './TransactionDetails.less';
 </style>

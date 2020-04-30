@@ -20,7 +20,3 @@ export default class AccountOperationRestriction extends Vue {
   @Prop({ default: null }) view: TransactionViewType
 }
 </script>
-
-<style lang="less" scoped>
-@import '../TransactionDetails.less';
-</style>

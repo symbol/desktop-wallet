@@ -24,7 +24,7 @@
             <AutoComplete
               v-model="formItems.currentProfileName"
               placeholder=" "
-              :class="['select-account', !profilesClassifiedByNetworkType ? 'un_click' : 'profile-name-input']"
+              :class="['select-account', !profilesClassifiedByNetworkType ? 'cursor-disabled' : 'profile-name-input']"
             >
               <div class="auto-complete-sub-container scroll">
                 <div class="tips-in-sub-container">
@@ -61,7 +61,7 @@
                 <input
                   v-model="formItems.password"
                   v-focus
-                  :class="[!profilesClassifiedByNetworkType ? 'un_click' : '']"
+                  :class="[!profilesClassifiedByNetworkType ? 'cursor-disabled' : '']"
                   :placeholder="$t('please_enter_your_account_password')"
                   type="password"
                   :disabled="!profilesClassifiedByNetworkType"
@@ -70,25 +70,24 @@
             </ValidationProvider>
 
             <div class="password-tip">
-              <span class="prompt pointer" @click="formItems.hasHint = !formItems.hasHint">{{
+              <span class="prompt cursor-pointer" @click="formItems.hasHint = !formItems.hasHint">{{
                 $t('Password_hint')
               }}</span>
               <span
-                class="pointer create-profile"
-                @click="
-                  $router.push({
-                    name: 'profiles.importProfile.importStrategy',
-                  })
-                "
+                class="cursor-pointer create-profile"
+                @click="$router.push({ name: 'profiles.importProfile.importStrategy' })"
+                >{{ $t('create_a_new_account') }}?</span
               >
-                {{ $t('create_a_new_account') }}?
-              </span>
             </div>
             <div v-if="formItems.hasHint" class="hint">{{ $t('Password_hint') }}: {{ getPasswordHint() }}</div>
-            <div v-if="profilesClassifiedByNetworkType" class="pointer button" @click.stop="submit">
+            <div v-if="profilesClassifiedByNetworkType" class="cursor-pointer button" @click.stop="submit">
               {{ $t('login') }}
             </div>
-            <div v-else class="pointer button" @click="$router.push({ name: 'profiles.importProfile.importStrategy' })">
+            <div
+              v-else
+              class="cursor-pointer button"
+              @click="$router.push({ name: 'profiles.importProfile.importStrategy' })"
+            >
               {{ $t('register') }}
             </div>
           </div>
@@ -100,7 +99,8 @@
 
 <script lang="ts">
 import LoginPageTs from './LoginPageTs'
-import './LoginPage.less'
-
 export default class LoginPage extends LoginPageTs {}
 </script>
+<style lang="less" scoped>
+@import './LoginPage.less';
+</style>

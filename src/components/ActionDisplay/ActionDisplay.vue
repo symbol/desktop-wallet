@@ -1,7 +1,7 @@
 <template>
   <div>
-    <span class="col2-item overflow_ellipsis"><AddressDisplay :address="transaction.signer.address" /></span>
-    <span class="col2-item bottom overflow_ellipsis">
+    <span class="col2-item overflow-ellipsis"><AddressDisplay :address="transaction.signer.address" /></span>
+    <span class="col2-item bottom overflow-ellipsis">
       <span v-if="transaction.type === transactionType.TRANSFER">
         ->
         <AddressDisplay :address="transaction.recipientAddress" />

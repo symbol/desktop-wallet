@@ -53,7 +53,3 @@ export default class MosaicDefinition extends Vue {
   }
 }
 </script>
-
-<style lang="less" scoped>
-@import '../TransactionDetails.less';
-</style>

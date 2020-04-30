@@ -1,7 +1,7 @@
 <template>
   <div class="transaction-table-container">
     <TransactionListHeader />
-    <Spin v-if="isFetchingTransactions" size="large" fix class="absolute" />
+    <Spin v-if="isFetchingTransactions" size="large" fix class="position-absolute-default" />
     <div v-if="transactions.length" class="transaction-rows-outer-container">
       <div class="transaction-rows-inner-container">
         <TransactionRow
@@ -32,6 +32,6 @@ import { TransactionTableTs } from './TransactionTableTs'
 export default class TransactionTable extends TransactionTableTs {}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import './TransactionTable.less';
 </style>

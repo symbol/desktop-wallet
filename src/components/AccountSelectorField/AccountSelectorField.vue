@@ -1,10 +1,6 @@
 <template>
-  <div v-if="currentAccounts.length" class="switch_account">
-    <img
-      v-if="!defaultFormStyle"
-      class="select_account_icon"
-      src="@/views/resources/img/window/windowWalletSelect.png"
-    />
+  <div v-if="currentAccounts.length" class="account-switch account-switch-trigger">
+    <Icon v-if="!defaultFormStyle" type="ios-folder-outline" />
     <i-select
       v-model="currentAccountIdentifier"
       :class="{
@@ -21,7 +17,8 @@
 
 <script lang="ts">
 import { AccountSelectorFieldTs } from './AccountSelectorFieldTs'
-import './AccountSelectorField.less'
-
 export default class AccountSelectorField extends AccountSelectorFieldTs {}
 </script>
+<style lang="less" scoped>
+@import './AccountSelectorField.less';
+</style>

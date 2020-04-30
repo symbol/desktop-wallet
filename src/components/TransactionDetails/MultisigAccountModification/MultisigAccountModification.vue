@@ -68,7 +68,3 @@ export default class MultisigAccountModification extends Vue {
   }
 }
 </script>
-
-<style lang="less" scoped>
-@import '../TransactionDetails.less';
-</style>

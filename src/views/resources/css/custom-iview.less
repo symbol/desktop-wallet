@@ -1,0 +1,113 @@
+@import './variables.less';
+
+/* custom modal start */
+.ivu-modal {
+  width: 12rem !important;
+
+  .ivu-modal-header {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    height: 0.7rem;
+    font-size: @biggerFont;
+
+    .ivu-modal-header-inner {
+      height: auto;
+      font-size: @biggerFont;
+      line-height: unset;
+      overflow: visible;
+    }
+  }
+
+  .ivu-modal-body {
+    width: 100%;
+    padding: 0.2rem 0.5rem;
+    max-height: calc(80vh - 0.5rem - 0.7rem);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .ivu-modal-footer {
+    padding-right: 0.5rem;
+  }
+}
+
+/* Custom modal end*/
+
+.ivu-tooltip-inner {
+  max-width: unset !important;
+}
+
+// $notice
+.ivu-notice {
+  position: fixed !important;
+  top: 60px !important;
+  width: auto !important;
+  max-width: 500px !important;
+  // 1 less thank the wallet selector
+  z-index: 2147483646 !important;
+
+  .ivu-notice-notice {
+    width: 100%;
+    height: auto;
+    background: @black;
+    display: flex;
+    align-items: center;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow: revert;
+
+    .ivu-notice-custom-content {
+      display: flex;
+      align-items: center;
+      align-content: center;
+
+      .ivu-notice-icon {
+        font-size: 40px;
+        position: relative !important;
+      }
+    }
+
+    .ivu-notice-title {
+      max-width: 500px;
+      width: auto;
+      height: auto;
+      color: @white;
+      overflow: unset;
+      line-height: 24px !important;
+      font-size: 16px !important;
+      word-break: break-word;
+      white-space: unset;
+    }
+
+    .ivu-notice-notice-close {
+      i {
+        color: @white;
+      }
+    }
+  }
+}
+
+.ivu-input {
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid @border;
+}
+
+.ivu-input:focus {
+  box-shadow: none;
+  border-bottom: 1px solid @border;
+}
+/* custom  form controls  start */
+.select-control {
+  text-align: left;
+  .ivu-select-selection {
+    height: 0.45rem;
+    border-color: #b4b4b4;
+    .ivu-select-selected-value {
+      height: 0.45rem;
+      line-height: 0.45rem;
+      padding-left: 0.2rem;
+    }
+  }
+}

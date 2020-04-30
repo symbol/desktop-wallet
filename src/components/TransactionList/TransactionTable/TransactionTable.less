@@ -30,6 +30,7 @@
   grid-template-columns: 100%;
   grid-template-rows: @headerHeight auto;
   height: 100%;
+
   .transaction-table-columns {
     grid-template-columns: 0.65rem 5.05rem 1.8rem 2rem auto;
   }
@@ -38,8 +39,7 @@
     display: block;
     position: relative;
     width: 100%;
-    padding-bottom: 0.7rem;
-    max-height: 100%;
+    max-height: calc(100% - 0.7rem);
     overflow-y: auto;
   }
 
@@ -50,11 +50,7 @@
     position: relative;
   }
 
-  .transaction-row-container:hover {
-    background: @accentPinkLight;
-  }
-
-  .transaction-row-container {
+  /deep/.transaction-row-container {
     font-size: @smallFont;
     display: grid;
     width: 100%;
@@ -111,6 +107,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+    }
+
+    &:hover {
+      background: @accentPinkLight;
     }
   }
 }

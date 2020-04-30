@@ -30,7 +30,7 @@
       <div>&nbsp;</div>
     </div>
     <div class="table-body-container">
-      <Spin v-show="loading" size="large" fix class="absolute" />
+      <Spin v-show="loading" size="large" fix class="position-absolute-default" />
       <div v-if="displayedValues.length" class="table-rows-container">
         <TableRow
           v-for="(rowValues, index) in currentPageRows"
@@ -110,5 +110,7 @@
 <script lang="ts">
 import { TableDisplayTs } from './TableDisplayTs'
 export default class TableDisplay extends TableDisplayTs {}
-import './TableDisplay.less'
 </script>
+<style lang="less" scoped>
+@import './TableDisplay.less';
+</style>

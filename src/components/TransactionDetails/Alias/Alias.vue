@@ -41,7 +41,3 @@ export default class Alias extends Vue {
   }
 }
 </script>
-
-<style lang="less" scoped>
-@import '../TransactionDetails.less';
-</style>

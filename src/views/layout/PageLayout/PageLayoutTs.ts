@@ -35,7 +35,7 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 // @ts-ignore
 import AccountSelectorField from '@/components/AccountSelectorField/AccountSelectorField.vue'
 // @ts-ignore
-import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue'
+import DebugConsole from '@/components/DebugConsole/DebugConsole.vue'
 import { URLInfo } from '@/core/utils/URLInfo'
 
 @Component({
@@ -47,7 +47,7 @@ import { URLInfo } from '@/core/utils/URLInfo'
     PeerSelector,
     LanguageSelector,
     AccountSelectorField,
-    ModalDebugConsole,
+    DebugConsole,
   },
   computed: {
     ...mapGetters({
@@ -103,12 +103,6 @@ export class PageLayoutTs extends Vue {
    */
   public isCosignatoryMode: boolean
 
-  /**
-   * Whether currently displaying debug console
-   * @var {boolean}
-   */
-  public isDisplayingDebugConsole: boolean = false
-
   /// region computed properties getter/setter
   /**
    * Holds alert message
@@ -145,14 +139,6 @@ export class PageLayoutTs extends Vue {
     }
 
     return { show: false, message: '' }
-  }
-
-  get hasDebugConsoleModal(): boolean {
-    return this.isDisplayingDebugConsole
-  }
-
-  set hasDebugConsoleModal(f: boolean) {
-    this.isDisplayingDebugConsole = f
   }
 
   /// end-region computed properties getter/setter

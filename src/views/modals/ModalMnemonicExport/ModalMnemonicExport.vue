@@ -24,7 +24,7 @@
       </div>
 
       <div slot="footer" class="modal-footer">
-        <button type="submit" class="centered-button button-style back-button float-right" @click="show = false">
+        <button type="submit" class="centered-button button-style back-button" @click="show = false">
           {{ $t('close') }}
         </button>
       </div>

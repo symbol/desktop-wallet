@@ -44,7 +44,3 @@ export default class HashLock extends Vue {
   }
 }
 </script>
-
-<style lang="less" scoped>
-@import '../TransactionDetails.less';
-</style>

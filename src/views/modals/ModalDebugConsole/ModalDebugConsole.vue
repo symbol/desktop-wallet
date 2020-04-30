@@ -24,9 +24,6 @@ v-for="(entry, index) in logs"
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
-// resources
-import './ModalDebugConsole.less'
-
 @Component({
   computed: {
     ...mapGetters({
@@ -78,9 +75,12 @@ export default class ModalDebugConsole extends Vue {
   mounted() {
     // Scrolls logs div to bottom
     Vue.nextTick().then(() => {
-      const container = this.$el.querySelector('#logs-container')
+      const container = this.$el.querySelector('.ivu-modal-body')
       container.scrollTop = container.scrollHeight
     })
   }
 }
 </script>
+<style lang="less" scoped>
+@import './ModalDebugConsole.less';
+</style>

@@ -31,14 +31,18 @@
                 tag="div"
                 class="inputs-container select-container"
               >
-                <select v-model="aliasTargetType" class="select-size select-style" @change="formItems.aliasTarget = ''">
-                  <option value="mosaic">
+                <Select
+                  v-model="aliasTargetType"
+                  class="select-size select-style"
+                  @on-change="formItems.aliasTarget = ''"
+                >
+                  <Option value="mosaic">
                     {{ $t('option_link_mosaic') }}
-                  </option>
-                  <option v-show="assetType === 'namespace'" value="address">
+                  </Option>
+                  <Option v-show="assetType === 'namespace'" value="address">
                     {{ $t('option_link_address') }}
-                  </option>
-                </select>
+                  </Option>
+                </Select>
               </ValidationProvider>
             </template>
           </FormRow>
@@ -93,7 +97,7 @@ import { FormAliasTransactionTs } from './FormAliasTransactionTs'
 export default class FormAliasTransaction extends FormAliasTransactionTs {}
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .account-unlock-container {
   display: block;
   width: 100%;
