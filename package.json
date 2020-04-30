@@ -25,8 +25,9 @@
     "release:lin": "electron-builder --linux deb snap tar.xz",
     "lint": "eslint src/ --ext .ts && eslint src/ --ext .vue && eslint __tests__/ --ext .ts && eslint __mocks__/ --ext .ts",
     "lint:fix": "eslint src/ --ext .ts --fix && eslint src/ --ext .vue --fix && eslint __tests__/ --ext .ts --fix && eslint __mocks__/ --ext .ts --fix",
-    "version": "echo $npm_package_version",
-    "prettier": "prettier --write ./src ./__tests__ ./__mocks__"
+    "prettier": "prettier --check ./src ./__tests__ ./__mocks__",
+    "prettier:fix": "prettier --write ./src ./__tests__ ./__mocks__",
+    "version": "echo $npm_package_version"
   },
   "dependencies": {
     "animate.css": "^3.7.2",
