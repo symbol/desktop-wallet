@@ -15,11 +15,11 @@
  */
 // configuration
 import appConfig from '../../../config/app.conf.json'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 
 import networkConfig from '../../../config/network.conf.json'
 
-const {MIN_PASSWORD_LENGTH} = appConfig.constants
+const { MIN_PASSWORD_LENGTH } = appConfig.constants
 
 export const createValidationRuleset = ({
   maxMessageSize,

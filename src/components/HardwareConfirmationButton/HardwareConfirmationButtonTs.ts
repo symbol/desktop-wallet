@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {Transaction, SignedTransaction, NetworkType} from 'symbol-sdk'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { Transaction, SignedTransaction, NetworkType } from 'symbol-sdk'
 
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {TransactionService} from '@/services/TransactionService'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { TransactionService } from '@/services/TransactionService'
 import TrezorConnect from '@/core/utils/TrezorConnect'
 
 @Component({
@@ -81,7 +81,7 @@ export class HardwareConfirmationButtonTs extends Vue {
 
     const countStaged: number = transactions.length
     const signedTxes: SignedTransaction[] = []
-    for (let i = 0, m = transactions.length; i < m; i ++) {
+    for (let i = 0, m = transactions.length; i < m; i++) {
       // - order matters, get first transaction on-stage
       const stagedTx = transactions.shift()
 

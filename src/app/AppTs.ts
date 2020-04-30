@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // child components
 // @ts-ignore
 import DisabledUiOverlay from '@/components/DisabledUiOverlay/DisabledUiOverlay.vue'
@@ -69,8 +69,7 @@ export class AppTs extends Vue {
    * @see {Store.AppInfo}
    */
   protected initialize() {
-    this.$store.dispatch('initialize')
-      .catch(error => console.log(error))
+    this.$store.dispatch('initialize').catch((error) => console.log(error))
   }
 
   /**

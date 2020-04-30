@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
 import { Route } from 'vue-router'
 
 @Component({
@@ -40,11 +40,15 @@ export class PageNavigatorTs extends Vue {
    */
   public async logout() {
     await this.$store.dispatch('profile/LOG_OUT')
-    this.$router.push({name: 'profiles.login'})
+    this.$router.push({ name: 'profiles.login' })
   }
-  
+
   public onPageNavigate(route: Route) {
     const isDuplicatedRoute = this.$route.matched.map(({ path }) => path).includes(route.path)
-    !isDuplicatedRoute && this.currentProfile && this.$router.push({ name: route.name }).catch(() => {/**/ })
+    !isDuplicatedRoute &&
+      this.currentProfile &&
+      this.$router.push({ name: route.name }).catch(() => {
+        /**/
+      })
   }
 }

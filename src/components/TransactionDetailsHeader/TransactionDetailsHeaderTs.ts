@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {MosaicId, NetworkType} from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { MosaicId, NetworkType } from 'symbol-sdk'
 // internal dependencies
-import {TransactionViewType} from '@/services/TransactionService'
-import {Formatters} from '@/core/utils/Formatters'
+import { TransactionViewType } from '@/services/TransactionService'
+import { Formatters } from '@/core/utils/Formatters'
 // configuration
 // child components
 // @ts-ignore
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 @Component({
   components: {
@@ -38,10 +38,10 @@ import {TransactionDetailItem} from '@/components/TransactionDetails/Transaction
   },
 })
 export class TransactionDetailsHeaderTs extends Vue {
-
   @Prop({
     default: null,
-  }) view: TransactionViewType
+  })
+  view: TransactionViewType
 
   /**
    * Current network type
@@ -86,7 +86,10 @@ export class TransactionDetailsHeaderTs extends Vue {
    */
   get items(): TransactionDetailItem[] {
     return [
-      {key: 'status', value: `${this.$t(this.view.info ? 'confirmed' : 'unconfirmed')}`},
+      {
+        key: 'status',
+        value: `${this.$t(this.view.info ? 'confirmed' : 'unconfirmed')}`,
+      },
       {
         key: 'transaction_type',
         value: `${this.$t(`transaction_descriptor_${this.view.transaction.type}`)}`,
@@ -111,8 +114,9 @@ export class TransactionDetailsHeaderTs extends Vue {
       },
       {
         key: 'deadline',
-        value: `${this.view.values.get('deadline').value.toLocalDate()} ${this.view.values.get(
-          'deadline').value.toLocalTime()}`,
+        value: `${this.view.values.get('deadline').value.toLocalDate()} ${this.view.values
+          .get('deadline')
+          .value.toLocalTime()}`,
       },
     ]
   }

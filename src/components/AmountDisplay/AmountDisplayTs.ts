@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
-import {mapGetters} from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { mapGetters } from 'vuex'
 
 // configuration
-
 
 @Component({
   computed: {
@@ -29,15 +28,15 @@ import {mapGetters} from 'vuex'
   },
 })
 export class AmountDisplayTs extends Vue {
-  @Prop({default: 0}) value: number
+  @Prop({ default: 0 }) value: number
 
-  @Prop({default: undefined}) decimals: number | undefined
+  @Prop({ default: undefined }) decimals: number | undefined
 
-  @Prop({default: false}) showTicker: false
+  @Prop({ default: false }) showTicker: false
 
-  @Prop({default: ''}) ticker: string
+  @Prop({ default: '' }) ticker: string
 
-  @Prop({default: 'normal'}) size: 'normal' | 'smaller' | 'bigger' | 'biggest'
+  @Prop({ default: 'normal' }) size: 'normal' | 'smaller' | 'bigger' | 'biggest'
 
   public networkConfiguration: NetworkConfigurationModel
 
@@ -49,8 +48,7 @@ export class AmountDisplayTs extends Vue {
   get fractionalPart(): string {
     const rest = this.value - Math.floor(this.value)
     if (rest === 0) return ''
-    const decimals = this.decimals === undefined ?
-      (this.networkConfiguration.maxMosaicDivisibility || 6) : this.decimals
+    const decimals = this.decimals === undefined ? this.networkConfiguration.maxMosaicDivisibility || 6 : this.decimals
     // remove leftmost-0 and rightmost-0
     return Number(rest.toFixed(decimals)).toPrecision().toString().replace(/^0/, '')
   }
@@ -61,8 +59,8 @@ export class AmountDisplayTs extends Vue {
    * @type {string}
    */
   get displayedTicker(): string {
-    return this.showTicker && this.ticker || ''
+    return (this.showTicker && this.ticker) || ''
   }
 
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 }

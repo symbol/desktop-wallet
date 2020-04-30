@@ -14,12 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Store} from 'vuex'
-import {Transaction, TransactionInfo} from 'symbol-sdk'
-import {TransactionDetailItem} from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
+import { Store } from 'vuex'
+import { Transaction, TransactionInfo } from 'symbol-sdk'
+import { TransactionDetailItem } from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailItem'
 
 export abstract class TransactionView<FormFieldsType> {
-
   /**
    * Fields that are common to all transaction types
    * @var {string[]}
@@ -122,8 +121,8 @@ export abstract class TransactionView<FormFieldsType> {
    * It returns a list that that it easy to render when displaying TransactionDetailRow components.
    */
   public get items(): TransactionDetailItem[] {
-    return Array.from(this.values.entries()).map(([ key, value ]) => {
-      return {key, value}
+    return Array.from(this.values.entries()).map(([key, value]) => {
+      return { key, value }
     })
   }
 }

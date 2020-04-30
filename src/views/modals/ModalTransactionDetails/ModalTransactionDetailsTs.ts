@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue, Prop} from 'vue-property-decorator'
-import {Transaction} from 'symbol-sdk'
+import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Transaction } from 'symbol-sdk'
 
 // child components
 // @ts-ignore
@@ -28,11 +28,13 @@ import TransactionDetails from '@/components/TransactionDetails/TransactionDetai
 export class ModalTransactionDetailsTs extends Vue {
   @Prop({
     default: false,
-  }) visible: boolean
+  })
+  visible: boolean
 
   @Prop({
     default: null,
-  }) transaction: Transaction
+  })
+  transaction: Transaction
 
   /// region computed properties
 
@@ -52,5 +54,5 @@ export class ModalTransactionDetailsTs extends Vue {
       this.$emit('close')
     }
   }
-/// end-region computed properties
+  /// end-region computed properties
 }

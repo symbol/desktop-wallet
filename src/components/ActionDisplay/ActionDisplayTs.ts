@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {Transaction, TransactionType} from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Transaction, TransactionType } from 'symbol-sdk'
 // @ts-ignore
 import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue'
 
@@ -28,7 +28,7 @@ export class ActionDisplayTs extends Vue {
    * Transaction
    * @type {Transaction}
    */
-  @Prop({default: null}) transaction: Transaction
+  @Prop({ default: null }) transaction: Transaction
   /**
    * Transaction type from SDK
    * @type {TransactionType}
@@ -42,5 +42,4 @@ export class ActionDisplayTs extends Vue {
    * @type {boolean}
    */
   protected needsCosignature: boolean = false
-
 }

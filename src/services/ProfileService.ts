@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Convert, Password, SHA3Hasher} from 'symbol-sdk'
+import { Convert, Password, SHA3Hasher } from 'symbol-sdk'
 // internal dependencies
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
-import {ProfileModelStorage} from '@/core/database/storage/ProfileModelStorage'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { ProfileModelStorage } from '@/core/database/storage/ProfileModelStorage'
 
 /**
  * Service in charge of loading profiles information from the wallet.
  */
 export class ProfileService {
-
   /**
    * The storage to keep user configuration around mosaics.  For example, the balance hidden
    * feature.
@@ -55,15 +54,15 @@ export class ProfileService {
   }
 
   public updateSeed(profile: ProfileModel, seed: string): ProfileModel {
-    return this.saveProfile(Object.assign(profile, {seed}))
+    return this.saveProfile(Object.assign(profile, { seed }))
   }
 
   public updatePassword(profile: ProfileModel, password: string, hint: string, seed: string): ProfileModel {
-    return this.saveProfile(Object.assign(profile, {password, hint, seed}))
+    return this.saveProfile(Object.assign(profile, { password, hint, seed }))
   }
 
   public updateAccounts(profile: ProfileModel, accounts: string[]): ProfileModel {
-    return this.saveProfile(Object.assign(profile, {accounts}))
+    return this.saveProfile(Object.assign(profile, { accounts }))
   }
 
   /**
@@ -80,6 +79,4 @@ export class ProfileService {
     hasher.finalize(hash)
     return Convert.uint8ToHex(hash)
   }
-
-
 }

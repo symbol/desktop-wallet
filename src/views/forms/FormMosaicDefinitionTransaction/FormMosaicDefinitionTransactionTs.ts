@@ -25,7 +25,7 @@ import {
   Transaction,
   UInt64,
 } from 'symbol-sdk'
-import {Component} from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 // internal dependencies
 import {
   MosaicDefinitionFormFieldsType,
@@ -35,10 +35,10 @@ import {
   MosaicSupplyChangeFormFieldsType,
   ViewMosaicSupplyChangeTransaction,
 } from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
-import {FormTransactionBase} from '@/views/forms/FormTransactionBase/FormTransactionBase'
-import {TransactionFactory} from '@/core/transactions/TransactionFactory'
+import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
+import { TransactionFactory } from '@/core/transactions/TransactionFactory'
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
@@ -170,10 +170,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
       supplyChangeView = supplyChangeView.parse(supplyChangeData)
 
       // - prepare mosaic definition and supply change
-      return [
-        this.factory.build(definitionView),
-        this.factory.build(supplyChangeView),
-      ]
+      return [this.factory.build(definitionView), this.factory.build(supplyChangeView)]
     } catch (error) {
       console.error('Error happened in FormMosaicDefinitionTransaction.transactions(): ', error)
     }

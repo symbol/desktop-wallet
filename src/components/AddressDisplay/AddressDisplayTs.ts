@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {Address, NamespaceId} from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Address, NamespaceId } from 'symbol-sdk'
 
 @Component
 export class AddressDisplayTs extends Vue {
-
   @Prop({
     default: null,
-  }) address: Address | NamespaceId
-
+  })
+  address: Address | NamespaceId
 
   /**
    * Action descriptor
@@ -38,7 +37,6 @@ export class AddressDisplayTs extends Vue {
     // - load transaction details
     this.loadDetails()
   }
-
 
   /**
    * Load transaction details
@@ -57,6 +55,4 @@ export class AddressDisplayTs extends Vue {
       this.descriptor = await this.$store.dispatch('namespace/RESOLVE_NAME', this.address)
     }
   }
-
-
 }

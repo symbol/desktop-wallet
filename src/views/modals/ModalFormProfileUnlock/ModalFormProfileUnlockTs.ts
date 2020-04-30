@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {Account, Password} from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Account, Password } from 'symbol-sdk'
 // internal dependencies
 // child components
 // @ts-ignore
@@ -28,11 +28,13 @@ import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock
 export class ModalFormProfileUnlockTs extends Vue {
   @Prop({
     default: false,
-  }) visible: boolean
+  })
+  visible: boolean
 
   @Prop({
     default: () => true,
-  }) onSuccess: (a: Account, p: Password) => boolean
+  })
+  onSuccess: (a: Account, p: Password) => boolean
 
   /**
    * Visibility state
@@ -57,10 +59,9 @@ export class ModalFormProfileUnlockTs extends Vue {
    * @param {Password} password
    * @return {void}
    */
-  public onAccountUnlocked(payload: { account: Account, password: Password }) {
+  public onAccountUnlocked(payload: { account: Account; password: Password }) {
     // - log about unlock success
-    this.$store.dispatch('diagnostic/ADD_INFO',
-      `Account ${payload.account.address.plain()} unlocked successfully.`)
+    this.$store.dispatch('diagnostic/ADD_INFO', `Account ${payload.account.address.plain()} unlocked successfully.`)
 
     // - emit success
     this.$emit('success', payload.account.publicAccount)

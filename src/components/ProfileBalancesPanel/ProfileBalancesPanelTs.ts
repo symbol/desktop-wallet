@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Address} from 'symbol-sdk'
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Address } from 'symbol-sdk'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {UIHelpers} from '@/core/utils/UIHelpers'
+import { UIHelpers } from '@/core/utils/UIHelpers'
 // child components
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 // @ts-ignore
 import MosaicBalanceList from '@/components/MosaicBalanceList/MosaicBalanceList.vue'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
-import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
 
 @Component({
   components: {
@@ -41,7 +41,6 @@ import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyMode
   },
 })
 export class ProfileBalancesPanelTs extends Vue {
-
   /**
    * Currently active signer
    * @var {any}
@@ -66,7 +65,6 @@ export class ProfileBalancesPanelTs extends Vue {
    */
   public networkCurrency: NetworkCurrencyModel
 
-
   /**
    * UI Helpers
    * @var {UIHelpers}
@@ -78,8 +76,7 @@ export class ProfileBalancesPanelTs extends Vue {
   }
 
   public get absoluteBalance() {
-    const networkMosaicData = this.balanceMosaics.filter(m => m.isCurrencyMosaic).find(i => i)
-    return networkMosaicData && networkMosaicData.balance || 0
+    const networkMosaicData = this.balanceMosaics.filter((m) => m.isCurrencyMosaic).find((i) => i)
+    return (networkMosaicData && networkMosaicData.balance) || 0
   }
-
 }

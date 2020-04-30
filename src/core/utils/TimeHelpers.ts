@@ -21,14 +21,20 @@ export class TimeHelpers {
 
   public static formatTimestamp = (timestamp: number): string => {
     const d = new Date(timestamp)
-    const date = `${TimeHelpers.addZero(d.getFullYear())}-${TimeHelpers.addZero(d.getMonth() + 1)}-${TimeHelpers.addZero(d.getDate())} `
-    const time = ` ${TimeHelpers.addZero(d.getHours())}:${TimeHelpers.addZero(d.getMinutes())}:${TimeHelpers.addZero(d.getSeconds())}`
+    const date = `${TimeHelpers.addZero(d.getFullYear())}-${TimeHelpers.addZero(
+      d.getMonth() + 1,
+    )}-${TimeHelpers.addZero(d.getDate())} `
+    const time = ` ${TimeHelpers.addZero(d.getHours())}:${TimeHelpers.addZero(d.getMinutes())}:${TimeHelpers.addZero(
+      d.getSeconds(),
+    )}`
     return date + time
   }
 
   public static formatSeconds = function (second: number): string {
     if (!second && second !== 0) return ''
-    let d = 0, h = 0, m = 0
+    let d = 0,
+      h = 0,
+      m = 0
 
     if (second > 86400) {
       d = Math.floor(second / 86400)
@@ -132,7 +138,7 @@ export class TimeHelpers {
 
   public static getCurrentMonthLast = function (date: Date): Date {
     let currentMonth = date.getMonth()
-    const nextMonth = ++ currentMonth
+    const nextMonth = ++currentMonth
     const nextMonthFirstDay = new Date(date.getFullYear(), nextMonth, 1)
     return new Date(Number(nextMonthFirstDay))
   }

@@ -15,8 +15,8 @@
  */
 import Vue from 'vue'
 // internal dependencies
-import {$eventBus} from '../events'
-import {AwaitLock} from './AwaitLock'
+import { $eventBus } from '../events'
+import { AwaitLock } from './AwaitLock'
 
 const Lock = AwaitLock.create()
 
@@ -27,11 +27,13 @@ export default {
     lastPriceUSD: 0,
   },
   getters: {
-    getInitialized: state => state.initialized,
-    lastPrice: state => state.lastPriceUSD,
+    getInitialized: (state) => state.initialized,
+    lastPrice: (state) => state.lastPriceUSD,
   },
   mutations: {
-    setInitialized: (state, initialized) => { state.initialized = initialized },
+    setInitialized: (state, initialized) => {
+      state.initialized = initialized
+    },
     currentPrice: (state, price) => Vue.set(state, 'lastPriceUSD', price),
   },
   actions: {
@@ -42,16 +44,16 @@ export default {
       }
 
       // aquire async lock until initialized
-      await Lock.initialize(callback, {getters})
+      await Lock.initialize(callback, { getters })
     },
     async uninitialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {getters})
+      await Lock.uninitialize(callback, { getters })
     },
     /// region scoped actions
-    async SET_CURRENT_PRICE({commit}, currentPrice) {
+    async SET_CURRENT_PRICE({ commit }, currentPrice) {
       // XXX validate correct price
       commit('currentPrice', currentPrice)
       $eventBus.$emit('onPriceChange', currentPrice)

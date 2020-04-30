@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 // internal dependencies
-import {IStorageBackend} from './IStorageBackend'
+import { IStorageBackend } from './IStorageBackend'
 
 export class LocalStorageBackend implements IStorageBackend {
-
   /**
    * The number of available entries
    * @var {number}

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const onPeerConnection = store => {
+export const onPeerConnection = (store) => {
   store.subscribe((mutation) => {
     if (mutation.type === 'network/currentPeerInfo') {
       // - Done connection to new node

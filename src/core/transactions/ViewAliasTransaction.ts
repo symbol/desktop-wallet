@@ -1,13 +1,13 @@
 /**
- * 
+ *
  * Copyright 2020 Grégory Saive for NEM (https://nem.io)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,12 +15,17 @@
  * limitations under the License.
  */
 import {
-  MosaicId, UInt64, AddressAliasTransaction,
-  MosaicAliasTransaction, Address, AliasAction, NamespaceId,
+  MosaicId,
+  UInt64,
+  AddressAliasTransaction,
+  MosaicAliasTransaction,
+  Address,
+  AliasAction,
+  NamespaceId,
 } from 'symbol-sdk'
 
 // internal dependencies
-import {TransactionView} from './TransactionView'
+import { TransactionView } from './TransactionView'
 
 /// region custom types
 export type AliasFormFieldsType = {
@@ -36,11 +41,7 @@ export class ViewAliasTransaction extends TransactionView<AliasFormFieldsType> {
    * Fields that are specific to alias transactions
    * @var {string[]}
    */
-  protected readonly fields: string[] = [
-    'namespaceId',
-    'aliasTarget',
-    'aliasAction',
-  ]
+  protected readonly fields: string[] = ['namespaceId', 'aliasTarget', 'aliasAction']
 
   /**
    * Parse form items and return a ViewAliasTransaction

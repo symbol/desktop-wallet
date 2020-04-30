@@ -18,11 +18,7 @@ export class RESTDispatcher {
   /**
    *
    */
-  protected dispatch: (
-    action: string,
-    payload?: any,
-    options?: any,
-  ) => void
+  protected dispatch: (action: string, payload?: any, options?: any) => void
 
   /**
    *
@@ -38,13 +34,7 @@ export class RESTDispatcher {
    *
    * @param dispatchFn
    */
-  public constructor(
-    dispatchFn: (
-      action: string,
-      payload?: any,
-      options?: any,
-    ) => void,
-  ) {
+  public constructor(dispatchFn: (action: string, payload?: any, options?: any) => void) {
     this.dispatch = dispatchFn
   }
 
@@ -55,12 +45,7 @@ export class RESTDispatcher {
    * @param options
    * @param isBlocking
    */
-  public add(
-    action: string,
-    payload?: any,
-    options?: any,
-    shouldAwait: boolean = false,
-  ) {
+  public add(action: string, payload?: any, options?: any, shouldAwait: boolean = false) {
     this.actions.push({
       action,
       payload: payload,
@@ -79,7 +64,7 @@ export class RESTDispatcher {
     const promises: Promise<any>[] = []
     this.actions.map((action, index: number) => {
       // - every second value, delay 1000ms
-      const delay = index + 1 % 2 === 0 ? 1000 : 0
+      const delay = index + (1 % 2) === 0 ? 1000 : 0
 
       // - configure promises to include delay
       promises.push(
@@ -96,6 +81,6 @@ export class RESTDispatcher {
       )
     })
 
-    return new Promise(resolve => resolve(Promise.all(promises)))
+    return new Promise((resolve) => resolve(Promise.all(promises)))
   }
 }

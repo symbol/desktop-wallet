@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // child components
 // @ts-ignore
 import AccountNameDisplay from '@/components/AccountNameDisplay/AccountNameDisplay.vue'
@@ -35,7 +35,7 @@ import AccountActions from '@/components/AccountActions/AccountActions.vue'
 import AccountLinks from '@/components/AccountLinks/AccountLinks.vue'
 // @ts-ignore
 import AccountAliasDisplay from '@/components/AccountAliasDisplay/AccountAliasDisplay.vue'
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import { AccountModel } from '@/core/database/entities/AccountModel'
 
 @Component({
   components: {
@@ -70,5 +70,4 @@ export class AccountDetailsPageTs extends Vue {
    * @var {AccountModel}
    */
   public currentAccount: AccountModel
-
 }

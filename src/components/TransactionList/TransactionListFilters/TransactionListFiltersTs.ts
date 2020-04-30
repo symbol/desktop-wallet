@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 // external dependencies
-import {mapGetters} from 'vuex'
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {NetworkType} from 'symbol-sdk'
+import { mapGetters } from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { NetworkType } from 'symbol-sdk'
 // child components
 // @ts-ignore
 import TransactionAddressFilter from '@/components/TransactionList/TransactionListFilters/TransactionAddressFilter/TransactionAddressFilter.vue'
 // @ts-ignore
 import TransactionStatusFilter from '@/components/TransactionList/TransactionListFilters/TransactionStatusFilter/TransactionStatusFilter.vue'
-import {Signer} from '@/store/Account'
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {TransactionGroup} from '@/store/Transaction'
-
+import { Signer } from '@/store/Account'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { TransactionGroup } from '@/store/Transaction'
 
 @Component({
-  components: {TransactionAddressFilter, TransactionStatusFilter},
+  components: { TransactionAddressFilter, TransactionStatusFilter },
   computed: {
     ...mapGetters({
       currentAccount: 'account/currentAccount',
@@ -37,9 +36,8 @@ import {TransactionGroup} from '@/store/Transaction'
     }),
   },
 })
-
 export class TransactionListFiltersTs extends Vue {
-  @Prop({default: TransactionGroup.confirmed}) currentTab: TransactionGroup
+  @Prop({ default: TransactionGroup.confirmed }) currentTab: TransactionGroup
   /**
    * Currently active account
    * @var {AccountModel}
@@ -68,8 +66,9 @@ export class TransactionListFiltersTs extends Vue {
    */
   protected onSignerSelectorChange(publicKey: string): void {
     // clear previous account transactions
-    if (publicKey)
-    {this.$store.dispatch('account/SET_CURRENT_SIGNER', {publicKey})}
+    if (publicKey) {
+      this.$store.dispatch('account/SET_CURRENT_SIGNER', { publicKey })
+    }
   }
 
   protected onStatusSelectorChange(filter: TransactionGroup) {

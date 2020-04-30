@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {UIHelpers} from '@/core/utils/UIHelpers'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { UIHelpers } from '@/core/utils/UIHelpers'
 
 @Component
 export class AccountAddressDisplayTs extends Vue {
-
   @Prop({
     default: null,
-  }) account: AccountModel
+  })
+  account: AccountModel
 
   /**
    * UI Helpers
@@ -32,9 +32,9 @@ export class AccountAddressDisplayTs extends Vue {
   public uiHelpers = UIHelpers
 
   public getAccountPrettyAddress(): string {
-    return this.account && AccountModel.getObjects(this.account).address.pretty() || ''
+    return (this.account && AccountModel.getObjects(this.account).address.pretty()) || ''
   }
 
-/// region computed properties getter/setter
-/// end-region computed properties getter/setter
+  /// region computed properties getter/setter
+  /// end-region computed properties getter/setter
 }

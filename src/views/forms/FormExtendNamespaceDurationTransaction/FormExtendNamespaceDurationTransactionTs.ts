@@ -14,32 +14,31 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Prop} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Prop } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {FormNamespaceRegistrationTransactionTs} from '../FormNamespaceRegistrationTransaction/FormNamespaceRegistrationTransactionTs'
-import {NamespaceId} from 'symbol-sdk'
-import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
+import { FormNamespaceRegistrationTransactionTs } from '../FormNamespaceRegistrationTransaction/FormNamespaceRegistrationTransactionTs'
+import { NamespaceId } from 'symbol-sdk'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 // configuration
 // child components
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
-import {NamespaceService} from '@/services/NamespaceService'
-import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
+import { NamespaceService } from '@/services/NamespaceService'
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
 
 @Component({
-  components: {ErrorTooltip, ModalTransactionConfirmation},
+  components: { ErrorTooltip, ModalTransactionConfirmation },
   computed: {
     ...mapGetters({
       namespaces: 'namespace/namespaces',
     }),
   },
 })
-export class FormExtendNamespaceDurationTransactionTs
-  extends FormNamespaceRegistrationTransactionTs {
-  @Prop({default: null, required: true}) namespaceId: NamespaceId
+export class FormExtendNamespaceDurationTransactionTs extends FormNamespaceRegistrationTransactionTs {
+  @Prop({ default: null, required: true }) namespaceId: NamespaceId
 
   private namespaces: NamespaceModel[]
   /**
@@ -55,9 +54,8 @@ export class FormExtendNamespaceDurationTransactionTs
    * @type {NamespaceInfo}
    */
   protected get currentNamespaceEndHeight(): number {
-    const currentNamespace = this.namespaces.find(
-      model => model.namespaceIdHex === this.namespaceId.toHex())
-    return currentNamespace && currentNamespace.endHeight || 0
+    const currentNamespace = this.namespaces.find((model) => model.namespaceIdHex === this.namespaceId.toHex())
+    return (currentNamespace && currentNamespace.endHeight) || 0
   }
 
   /**
@@ -65,7 +63,10 @@ export class FormExtendNamespaceDurationTransactionTs
    * @readonly
    * @type {string}
    */
-  protected get currentExpirationInfoView(): { expired: boolean, expiration: string } {
+  protected get currentExpirationInfoView(): {
+    expired: boolean
+    expiration: string
+  } {
     return this.getExpirationInfoFromEndHeight(this.currentNamespaceEndHeight)
   }
 
@@ -88,9 +89,13 @@ export class FormExtendNamespaceDurationTransactionTs
    * @type {number}
    */
   protected get newDuration(): number {
-    return this.newEndHeight - this.currentHeight -
-      Math.floor((this.networkConfiguration.namespaceGracePeriodDuration
-        / this.networkConfiguration.blockGenerationTargetTime))
+    return (
+      this.newEndHeight -
+      this.currentHeight -
+      Math.floor(
+        this.networkConfiguration.namespaceGracePeriodDuration / this.networkConfiguration.blockGenerationTargetTime,
+      )
+    )
   }
 
   /**
@@ -108,7 +113,7 @@ export class FormExtendNamespaceDurationTransactionTs
    * @param {NamespaceInfo} mosaicInfo
    * @returns {string}
    */
-  private getExpirationInfoFromEndHeight(endHeight: number): { expiration: string, expired: boolean } {
+  private getExpirationInfoFromEndHeight(endHeight: number): { expiration: string; expired: boolean } {
     return NamespaceService.getExpiration(this.networkConfiguration, this.currentHeight, endHeight)
   }
 }

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 // child components
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
-import {Signer} from '@/store/Account'
+import { Signer } from '@/store/Account'
 
 @Component({
-  components: {FormRow},
+  components: { FormRow },
 })
 export class SignerSelectorTs extends Vue {
   /**
@@ -29,19 +29,23 @@ export class SignerSelectorTs extends Vue {
    */
   @Prop({
     default: '',
-  }) value: string
+  })
+  value: string
 
   @Prop({
     default: () => [],
-  }) signers: Signer[]
+  })
+  signers: Signer[]
 
   @Prop({
     default: 'sender',
-  }) label: string
+  })
+  label: string
 
   @Prop({
     default: false,
-  }) noLabel: boolean
+  })
+  noLabel: boolean
 
   /// region computed properties getter/setter
   /**
@@ -59,5 +63,5 @@ export class SignerSelectorTs extends Vue {
     this.$emit('input', newValue)
   }
 
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 }

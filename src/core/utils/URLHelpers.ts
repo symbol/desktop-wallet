@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 // internal dependencies
-import {UrlValidator} from '../validation/validators'
-import {URLInfo} from '@/core/utils/URLInfo'
+import { UrlValidator } from '../validation/validators'
+import { URLInfo } from '@/core/utils/URLInfo'
 
 export class URLHelpers {
-
   public static formatUrl = (rawUrl: string): URLInfo => {
     if (!UrlValidator.validate(rawUrl)) {
       throw new Error(`Invalid URL: ${rawUrl}`)
     }
     const url = new URL(rawUrl)
-    return new URLInfo(
-      url.protocol,
-      url.hostname,
-      url.port,
-      rawUrl,
-    )
+    return new URLInfo(url.protocol, url.hostname, url.port, rawUrl)
   }
 
   public static httpToWsUrl = (url: string) => {
@@ -44,9 +38,7 @@ export class URLHelpers {
    * @return {string}
    */
   public static getNodeUrl(fromUrl: string): string {
-    let fixedUrl = -1 === fromUrl.indexOf('://')
-      ? 'http://' + fromUrl
-      : fromUrl
+    let fixedUrl = -1 === fromUrl.indexOf('://') ? 'http://' + fromUrl : fromUrl
 
     fixedUrl = !fixedUrl.match(/https?:\/\/[^:]+:([0-9]+)\/?$/)
       ? fixedUrl + ':3000' // default adds :3000

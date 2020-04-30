@@ -13,30 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // configuration
 import feesConfig from '@/../config/fees.conf.json'
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
-import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
 
 @Component({
   components: {
     FormLabel,
   },
-  computed: {...mapGetters({
-    defaultFee: 'app/defaultFee',
-    networkMosaicName: 'mosaic/networkMosaicName',
-    networkCurrency: 'mosaic/networkCurrency',
-  })},
+  computed: {
+    ...mapGetters({
+      defaultFee: 'app/defaultFee',
+      networkMosaicName: 'mosaic/networkMosaicName',
+      networkCurrency: 'mosaic/networkCurrency',
+    }),
+  },
 })
 export class MaxFeeSelectorTs extends Vue {
-
   @Prop({
     default: 'form-line-container',
-  }) className: string
-
+  })
+  className: string
 
   /**
    * Networks currency mosaic name
@@ -58,7 +59,8 @@ export class MaxFeeSelectorTs extends Vue {
 
   @Prop({
     default: 1,
-  }) multiplier: number
+  })
+  multiplier: number
 
   /**
    * Value set by the parent component's v-model
@@ -66,7 +68,8 @@ export class MaxFeeSelectorTs extends Vue {
    */
   @Prop({
     default: feesConfig.normal,
-  }) value: number
+  })
+  value: number
 
   /**
    * Fees specification

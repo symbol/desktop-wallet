@@ -16,7 +16,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 // resources
-import {walletTypeImages} from '@/views/resources/Images'
+import { walletTypeImages } from '@/views/resources/Images'
 
 @Component
 export default class ImportStrategyTs extends Vue {

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {NetworkType} from 'symbol-sdk'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { NetworkType } from 'symbol-sdk'
 // internal dependencies
-import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {NotificationType} from '@/core/utils/NotificationType'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { NotificationType } from '@/core/utils/NotificationType'
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore

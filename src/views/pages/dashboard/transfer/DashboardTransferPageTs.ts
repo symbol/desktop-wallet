@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import { AccountModel } from '@/core/database/entities/AccountModel'
 // child components
 // @ts-ignore
 import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue'
@@ -25,9 +25,11 @@ import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormT
   components: {
     FormTransferTransaction,
   },
-  computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
-  })},
+  computed: {
+    ...mapGetters({
+      currentAccount: 'account/currentAccount',
+    }),
+  },
 })
 export class DashboardTransferPageTs extends Vue {
   /**
