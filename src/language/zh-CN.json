@@ -427,8 +427,6 @@
   "Input_mnemonic_tips": "请在输入单词之间用空格隔开，助记词数量为12或24个的英文单词。助记词是遵循HD-WALLET协议的种子文件，由12或24个随机单词成，导入本文件后，将会恢复你种子下的所有资产。导入记助词后，将会被你上一步设置的密码保存在你的本地设备中，使用中请注意网络安全！",
   "import_successful": "恭喜，导入账户成功！",
   "creation_successful": "恭喜，创建账户成功！",
-  "profile_imported_successfully": "你已成功导入自己的账户",
-  "Create_successful_tips": "你已成功创建自己的账户和密码，和账户的唯一助记词钱包种子",
   "Safe_storage_tips": "安全储存提示：",
   "Save_backups": "在多个位置保存备份",
   "Create_account_and_password": "创建账户和密码",
