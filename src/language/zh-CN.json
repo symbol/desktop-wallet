@@ -334,7 +334,6 @@
   "Don_not_share_mnemonics_with_anyone": "不要和任何人分享助记词",
   "phishing_warning": "小心网络钓鱼！一般来说，Wallet不会要求您输入助记词。",
   "If_you_need_to_back_up_your_mnemonics_again_you_can": "如果需要再次备份助记词，可以钱包管理-钱包详情-导出助记词中找到。",
-  "can_not_recover_mnemonic": "Nem wallet无法恢复您的助记词",
   "Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct": "请输入助记词，确保助记词是正确的",
   "Mnemonic_inconsistency": "助记词不一致",
   "Keystore_decryption_failed": "keystore解密失败",

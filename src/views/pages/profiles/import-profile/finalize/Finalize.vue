@@ -22,9 +22,6 @@
         <p class="text">
           {{ $t('If_you_need_to_back_up_your_mnemonics_again_you_can') }}
         </p>
-        <p class="text">
-          {{ $t('can_not_recover_mnemonic') }}
-        </p>
         <div class="jump-btn">
           <button class="button-style validation-button" @click="$router.push({ name: 'dashboard' })">
             {{ $t('next') }}

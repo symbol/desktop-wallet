@@ -17,7 +17,6 @@
           ·
           {{ $t('If_you_need_to_back_up_your_mnemonics_again_you_can') }}
         </p>
-        <p class="text">· {{ $t('can_not_recover_mnemonic') }}</p>
         <div class="jump-btn">
           <div class="flex-container" style="width: 100%;">
             <button type="button" class="button-style back-button" @click="$router.back()">

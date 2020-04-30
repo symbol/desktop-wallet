@@ -317,7 +317,6 @@
   "Don_not_share_mnemonics_with_anyone": "ニーモニックは誰にも共有してはいけません",
   "phishing_warning": "フィッシングに注意してください！このプログラムではウォレットを最初から復元する場合を除き、ニーモニックの入力は求められません。",
   "If_you_need_to_back_up_your_mnemonics_again_you_can": "もう一度、ニーモニックをバックアップするにはウォレット管理で確認できます - 'ウォレットマネジメント - ウォレット詳細 - ニーモニックのエクスポート'",
-  "can_not_recover_mnemonic": "ウォレットはニーモニックを復旧することができません。",
   "Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct": "正しいことを確認するために、ニーモニックを入力してください",
   "Mnemonic_inconsistency": "ニーモニックが正しくありません",
   "Basic_information": "基本情報",
