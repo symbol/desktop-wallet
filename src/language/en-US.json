@@ -318,7 +318,6 @@
   "Don_not_share_mnemonics_with_anyone": "Don't share mnemonics with anyone",
   "phishing_warning": "Beware of phishing! This program will not ask you to enter your mnemonic except when restoring a profile from scratch.",
   "If_you_need_to_back_up_your_mnemonics_again_you_can": "If you need to back up your mnemonics again, you can find them in 'Profile Management - Profile Details - Export Mnemonics'.",
-  "can_not_recover_mnemonic": "Your mnemonic can't be recovered from your profile.",
   "Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct": "Please enter a mnemonic to ensure that it is correct",
   "Mnemonic_inconsistency": "Mnemonic is not correct",
   "Basic_information": "Basic information",
