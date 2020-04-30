@@ -2,9 +2,6 @@
   <div class="finish-sec scroll" @keyup.enter="submit">
     <img src="@/views/resources/img/success.png" alt />
     <span class="set-title"> {{ $t('import_successful') }}</span>
-    <p class="set-title-tips">
-      {{ $t('profile_imported_successfully') }}
-    </p>
     <div class="finish-col">
       <div class="finish-left">
         <p class="text1">
