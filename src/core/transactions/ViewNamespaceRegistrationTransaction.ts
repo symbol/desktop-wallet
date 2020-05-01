@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NamespaceRegistrationTransaction, NamespaceRegistrationType, UInt64} from 'symbol-sdk'
+import { NamespaceRegistrationTransaction, NamespaceRegistrationType, UInt64 } from 'symbol-sdk'
 // internal dependencies
-import {TransactionView} from './TransactionView'
-import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
+import { TransactionView } from './TransactionView'
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
 
 /// region custom types
 export type NamespaceRegistrationFormFieldsType = {
@@ -80,7 +80,7 @@ export class ViewNamespaceRegistrationTransaction extends TransactionView<Namesp
       // - try to identify root namespace by id
       const parentId = transaction.parentId
       const namespaces: NamespaceModel[] = this.$store.getters['namespace/namespaces']
-      const parent = namespaces.find(n => n.namespaceIdHex === parentId.toHex() && n.name)
+      const parent = namespaces.find((n) => n.namespaceIdHex === parentId.toHex() && n.name)
       if (parent) {
         this.values.set('rootNamespaceName', parent.name)
       }

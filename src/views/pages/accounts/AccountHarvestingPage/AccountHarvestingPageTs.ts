@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import { AccountModel } from '@/core/database/entities/AccountModel'
 // child components
 // @ts-ignore
 import AccountActions from '@/components/AccountActions/AccountActions.vue'

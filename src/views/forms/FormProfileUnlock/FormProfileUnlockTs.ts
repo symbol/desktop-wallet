@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Account, NetworkType, Password, Crypto} from 'symbol-sdk'
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Account, NetworkType, Password, Crypto } from 'symbol-sdk'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 // child components
-import {ValidationProvider} from 'vee-validate'
+import { ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 // @ts-ignore
@@ -84,7 +84,7 @@ export class FormProfileUnlockTs extends Vue {
 
       if (privateKey.length === 64) {
         const unlockedAccount = Account.createFromPrivateKey(privateKey, this.networkType)
-        return this.$emit('success', {account: unlockedAccount, password})
+        return this.$emit('success', { account: unlockedAccount, password })
       }
 
       return this.$emit('error', this.$t('error_invalid_password'))

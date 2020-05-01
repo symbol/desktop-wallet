@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // configuration
 // child components
 // @ts-ignore
 import AnimatedNumber from '@/components/AnimatedNumber/AnimatedNumber.vue'
-import {NodeModel} from '@/core/database/entities/NodeModel'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import { NodeModel } from '@/core/database/entities/NodeModel'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 
 @Component({
   components: {
@@ -38,12 +38,10 @@ import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigu
   },
 })
 export class NetworkStatisticsPanelTs extends Vue {
-
   /**
    * The network configuration.
    */
   private networkConfiguration: NetworkConfigurationModel
-
 
   /**
    * Number of transactions on the network

@@ -13,12 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {AccountAddressRestrictionTransaction, AccountLinkTransaction, AccountMetadataTransaction, AccountMosaicRestrictionTransaction, AccountOperationRestrictionTransaction, AddressAliasTransaction, AggregateTransaction, HashLockTransaction, MosaicAddressRestrictionTransaction, MosaicAliasTransaction, MosaicDefinitionTransaction, MosaicGlobalRestrictionTransaction, MosaicId, MosaicMetadataTransaction, MosaicSupplyChangeTransaction, MultisigAccountModificationTransaction, NamespaceMetadataTransaction, NamespaceRegistrationTransaction, NetworkType, SecretLockTransaction, SecretProofTransaction, Transaction, TransactionType, TransferTransaction} from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import {
+  AccountAddressRestrictionTransaction,
+  AccountLinkTransaction,
+  AccountMetadataTransaction,
+  AccountMosaicRestrictionTransaction,
+  AccountOperationRestrictionTransaction,
+  AddressAliasTransaction,
+  AggregateTransaction,
+  HashLockTransaction,
+  MosaicAddressRestrictionTransaction,
+  MosaicAliasTransaction,
+  MosaicDefinitionTransaction,
+  MosaicGlobalRestrictionTransaction,
+  MosaicId,
+  MosaicMetadataTransaction,
+  MosaicSupplyChangeTransaction,
+  MultisigAccountModificationTransaction,
+  NamespaceMetadataTransaction,
+  NamespaceRegistrationTransaction,
+  NetworkType,
+  SecretLockTransaction,
+  SecretProofTransaction,
+  Transaction,
+  TransactionType,
+  TransferTransaction,
+} from 'symbol-sdk'
 // internal dependencies
-import {TransactionService, TransactionViewType} from '@/services/TransactionService'
-import {Formatters} from '@/core/utils/Formatters'
+import { TransactionService, TransactionViewType } from '@/services/TransactionService'
+import { Formatters } from '@/core/utils/Formatters'
 // configuration
 // child components
 // @ts-ignore
@@ -95,7 +120,7 @@ export class TransactionDetailsTs extends Vue {
    * Transaction to render
    * @type {Transaction}
    */
-  @Prop({default: null}) transaction: Transaction
+  @Prop({ default: null }) transaction: Transaction
 
   /**
    * Current network type
@@ -146,10 +171,7 @@ export class TransactionDetailsTs extends Vue {
     this.service = new TransactionService(this.$store)
 
     if (this.transaction instanceof AggregateTransaction) {
-      return [
-        this.getView(this.transaction),
-        ...this.transaction.innerTransactions.map(tx => this.getView(tx)),
-      ]
+      return [this.getView(this.transaction), ...this.transaction.innerTransactions.map((tx) => this.getView(tx))]
     }
 
     return [this.getView(this.transaction)]

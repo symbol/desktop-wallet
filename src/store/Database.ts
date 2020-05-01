@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 // internal dependencies
-import {AwaitLock} from './AwaitLock'
+import { AwaitLock } from './AwaitLock'
 
 /// region globals
 const Lock = AwaitLock.create()
@@ -26,28 +26,28 @@ export default {
     initialized: false,
   },
   getters: {
-    getInitialized: state => state.initialized,
+    getInitialized: (state) => state.initialized,
   },
   mutations: {
-    setInitialized: (state, initialized) => { state.initialized = initialized },
-
+    setInitialized: (state, initialized) => {
+      state.initialized = initialized
+    },
   },
   actions: {
-    async initialize({commit, getters}) {
+    async initialize({ commit, getters }) {
       const callback = async () => {
         // MIGRATIONS COULD GO HERE!
         commit('setInitialized', true)
       }
 
       // aquire async lock until initialized
-      await Lock.initialize(callback, {getters})
+      await Lock.initialize(callback, { getters })
     },
-    async uninitialize({commit, getters}) {
+    async uninitialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', false)
       }
-      await Lock.uninitialize(callback, {getters})
+      await Lock.uninitialize(callback, { getters })
     },
-
   },
 }

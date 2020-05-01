@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Store} from 'vuex'
+import { Store } from 'vuex'
 import {
   Address,
   AddressAliasTransaction,
@@ -31,34 +31,35 @@ import {
   TransferTransaction,
 } from 'symbol-sdk'
 // internal dependencies
-import {ViewAliasTransaction} from './ViewAliasTransaction'
-import {ViewMosaicDefinitionTransaction} from './ViewMosaicDefinitionTransaction'
-import {ViewMosaicSupplyChangeTransaction} from './ViewMosaicSupplyChangeTransaction'
-import {ViewMultisigAccountModificationTransaction} from './ViewMultisigAccountModificationTransaction'
-import {ViewNamespaceRegistrationTransaction} from './ViewNamespaceRegistrationTransaction'
-import {ViewTransferTransaction} from '@/core/transactions/ViewTransferTransaction'
-import {ViewUnknownTransaction} from '@/core/transactions/ViewUnknownTransaction'
+import { ViewAliasTransaction } from './ViewAliasTransaction'
+import { ViewMosaicDefinitionTransaction } from './ViewMosaicDefinitionTransaction'
+import { ViewMosaicSupplyChangeTransaction } from './ViewMosaicSupplyChangeTransaction'
+import { ViewMultisigAccountModificationTransaction } from './ViewMultisigAccountModificationTransaction'
+import { ViewNamespaceRegistrationTransaction } from './ViewNamespaceRegistrationTransaction'
+import { ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction'
+import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction'
 
 /// region custom types
 export type TransactionImpl = Transaction
-type TransactionViewType = ViewAliasTransaction
-| ViewMosaicDefinitionTransaction
-| ViewMosaicSupplyChangeTransaction
-| ViewMultisigAccountModificationTransaction
-| ViewNamespaceRegistrationTransaction
-| ViewTransferTransaction
-| ViewUnknownTransaction
+type TransactionViewType =
+  | ViewAliasTransaction
+  | ViewMosaicDefinitionTransaction
+  | ViewMosaicSupplyChangeTransaction
+  | ViewMultisigAccountModificationTransaction
+  | ViewNamespaceRegistrationTransaction
+  | ViewTransferTransaction
+  | ViewUnknownTransaction
 
 /// end-region custom types
 
 export class TransactionFactory {
-
   constructor(
     /**
      * Vuex Store instance
      * @var {Vuex.Store}
      */
-    public readonly $store: Store<any>) {}
+    public readonly $store: Store<any>,
+  ) {}
 
   /// region specialised signatures
   public build(view: ViewAliasTransaction): AliasTransaction
@@ -75,10 +76,7 @@ export class TransactionFactory {
    * @param {string} name
    * @param {string} nodeUrl
    */
-  public build(
-    view: TransactionViewType,
-  ): TransactionImpl {
-
+  public build(view: TransactionViewType): TransactionImpl {
     const deadline = Deadline.create()
     const networkType = this.$store.getters['network/networkType']
 

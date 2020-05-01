@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {mapGetters} from 'vuex'
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {AggregateTransaction, MosaicId, Transaction} from 'symbol-sdk'
+import { mapGetters } from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { AggregateTransaction, MosaicId, Transaction } from 'symbol-sdk'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {TransactionService} from '@/services/TransactionService'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { TransactionService } from '@/services/TransactionService'
 // child components
 // @ts-ignore
 import ModalTransactionCosignature from '@/views/modals/ModalTransactionCosignature/ModalTransactionCosignature.vue'
@@ -30,7 +30,7 @@ import PageTitle from '@/components/PageTitle/PageTitle.vue'
 import TransactionListFilters from '@/components/TransactionList/TransactionListFilters/TransactionListFilters.vue'
 // @ts-ignore
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
-import {TransactionGroup} from '@/store/Transaction'
+import { TransactionGroup } from '@/store/Transaction'
 
 @Component({
   components: {
@@ -54,14 +54,15 @@ import {TransactionGroup} from '@/store/Transaction'
   },
 })
 export class TransactionListTs extends Vue {
-
   @Prop({
     default: '',
-  }) address: string
+  })
+  address: string
 
   @Prop({
     default: 10,
-  }) pageSize: number
+  })
+  pageSize: number
 
   /**
    * Currently active account
@@ -140,7 +141,9 @@ export class TransactionListTs extends Vue {
   public isAwaitingCosignature: boolean = false
 
   public getEmptyMessage() {
-    return this.selectedOption === TransactionGroup.all ? 'no_data_transactions' : `no_${this.selectedOption}_transactions`
+    return this.selectedOption === TransactionGroup.all
+      ? 'no_data_transactions'
+      : `no_${this.selectedOption}_transactions`
   }
 
   /**
@@ -188,8 +191,9 @@ export class TransactionListTs extends Vue {
     if (group === TransactionGroup.confirmed) return this.confirmedTransactions
     if (group === TransactionGroup.unconfirmed) return this.unconfirmedTransactions
     if (group === TransactionGroup.partial) return this.partialTransactions
-    if (group === TransactionGroup.all) {return [ ...this.confirmedTransactions,
-      ...this.partialTransactions, ...this.unconfirmedTransactions ]}
+    if (group === TransactionGroup.all) {
+      return [...this.confirmedTransactions, ...this.partialTransactions, ...this.unconfirmedTransactions]
+    }
 
     return []
   }
@@ -219,7 +223,6 @@ export class TransactionListTs extends Vue {
     this.selectedOption = filter
   }
 
-
   /**
    * Hook called when a transaction is clicked
    * @param {Transaction} transaction
@@ -243,7 +246,6 @@ export class TransactionListTs extends Vue {
     this.hasCosignatureModal = false
     this.activePartialTransaction = undefined
   }
-
 
   /**
    * Hook called at each page change

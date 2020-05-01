@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
+import { AccountModel } from '@/core/database/entities/AccountModel'
 // child components
 // @ts-ignore
 import TransactionList from '@/components/TransactionList/TransactionList.vue'
-import {Address} from 'symbol-sdk'
+import { Address } from 'symbol-sdk'
 
 @Component({
   components: {

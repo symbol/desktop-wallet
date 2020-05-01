@@ -1,6 +1,6 @@
 <template>
   <div class="finish-sec scroll" @keyup.enter="submit">
-    <img src="@/views/resources/img/success.png" alt>
+    <img src="@/views/resources/img/success.png" alt />
     <span class="set-title"> {{ $t('import_successful') }}</span>
     <p class="set-title-tips">
       {{ $t('profile_imported_successfully') }}
@@ -26,16 +26,13 @@
           {{ $t('can_not_recover_mnemonic') }}
         </p>
         <div class="jump-btn">
-          <button
-            class="button-style validation-button"
-            @click="$router.push({name: 'dashboard'})"
-          >
+          <button class="button-style validation-button" @click="$router.push({ name: 'dashboard' })">
             {{ $t('next') }}
           </button>
         </div>
       </div>
       <div class="finish-right">
-        <img src="@/views/resources/img/finish.png" alt>
+        <img src="@/views/resources/img/finish.png" alt />
       </div>
     </div>
   </div>

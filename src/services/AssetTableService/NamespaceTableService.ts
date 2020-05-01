@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 // external dependencies
-import {AliasType} from 'symbol-sdk'
+import { AliasType } from 'symbol-sdk'
 // internal dependencies
-import {AssetTableService, TableField} from './AssetTableService'
-import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
-import {NamespaceService} from '@/services/NamespaceService'
-import {NetworkConfigurationModel} from '@/core/database/entities/NetworkConfigurationModel'
+import { AssetTableService, TableField } from './AssetTableService'
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
+import { NamespaceService } from '@/services/NamespaceService'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 
 export class NamespaceTableService extends AssetTableService {
-
-  constructor(currentHeight: number, private readonly namespaces: NamespaceModel[],
-    private readonly networkConfiguration: NetworkConfigurationModel) {
+  constructor(
+    currentHeight: number,
+    private readonly namespaces: NamespaceModel[],
+    private readonly networkConfiguration: NetworkConfigurationModel,
+  ) {
     super(currentHeight)
   }
 
@@ -34,29 +36,28 @@ export class NamespaceTableService extends AssetTableService {
    */
   public getTableFields(): TableField[] {
     return [
-      {name: 'hexId', label: 'table_header_hex_id'},
-      {name: 'name', label: 'table_header_name'},
-      {name: 'expiration', label: 'table_header_expiration'},
-      {name: 'expired', label: 'table_header_expired'},
-      {name: 'aliasType', label: 'table_header_alias_type'},
-      {name: 'aliasIdentifier', label: 'table_header_alias_identifier'},
+      { name: 'hexId', label: 'table_header_hex_id' },
+      { name: 'name', label: 'table_header_name' },
+      { name: 'expiration', label: 'table_header_expiration' },
+      { name: 'expired', label: 'table_header_expired' },
+      { name: 'aliasType', label: 'table_header_alias_type' },
+      { name: 'aliasIdentifier', label: 'table_header_alias_identifier' },
     ]
   }
-
 
   public getTableRows(): any[] {
     const namespaces: NamespaceModel[] = this.namespaces
 
     return namespaces.map((namespaceModel) => {
-      const {expired, expiration} = this.getExpiration(namespaceModel)
+      const { expired, expiration } = this.getExpiration(namespaceModel)
 
       return {
-        'hexId': namespaceModel.namespaceIdHex,
-        'name': namespaceModel.name,
-        'expiration': expiration,
-        'expired': expired,
-        'aliasType': this.getAliasType(namespaceModel),
-        'aliasIdentifier': this.getAliasIdentifier(namespaceModel),
+        hexId: namespaceModel.namespaceIdHex,
+        name: namespaceModel.name,
+        expiration: expiration,
+        expired: expired,
+        aliasType: this.getAliasType(namespaceModel),
+        aliasIdentifier: this.getAliasIdentifier(namespaceModel),
       }
     })
   }
@@ -88,8 +89,7 @@ export class NamespaceTableService extends AssetTableService {
    * @param the namespace model.
    * @returns {string}
    */
-  private getExpiration(namespaceModel: NamespaceModel): { expiration: string, expired: boolean } {
-    return NamespaceService.getExpiration(this.networkConfiguration, this.currentHeight,
-      namespaceModel.endHeight)
+  private getExpiration(namespaceModel: NamespaceModel): { expiration: string; expired: boolean } {
+    return NamespaceService.getExpiration(this.networkConfiguration, this.currentHeight, namespaceModel.endHeight)
   }
 }

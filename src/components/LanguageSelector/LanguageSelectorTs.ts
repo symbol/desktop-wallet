@@ -13,25 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 
-@Component({computed: {...mapGetters({
-  currentLanguage: 'app/language',
-  languageList: 'app/languages',
-})}})
+@Component({
+  computed: {
+    ...mapGetters({
+      currentLanguage: 'app/language',
+      languageList: 'app/languages',
+    }),
+  },
+})
 export class LanguageSelectorTs extends Vue {
   @Prop({
     default: '',
-  }) value: string
+  })
+  value: string
 
   @Prop({
     default: false,
-  }) defaultFormStyle: boolean
+  })
+  defaultFormStyle: boolean
 
   @Prop({
     default: true,
-  }) autoSubmit: boolean
+  })
+  autoSubmit: boolean
 
   /**
    * Currently active language
@@ -45,7 +52,7 @@ export class LanguageSelectorTs extends Vue {
    * @see {Store.AppInfo}
    * @var {any[]}
    */
-  public languageList: {value: string, label: string}[]
+  public languageList: { value: string; label: string }[]
 
   /**
    * Currently active language

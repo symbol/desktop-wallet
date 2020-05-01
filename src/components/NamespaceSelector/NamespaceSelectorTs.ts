@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // child components
-import {ValidationProvider} from 'vee-validate'
+import { ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
-import {NamespaceModel} from '@/core/database/entities/NamespaceModel'
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
 
 @Component({
   components: {
@@ -41,13 +41,13 @@ export class NamespaceSelectorTs extends Vue {
    * Field label
    * @type {string}
    */
-  @Prop({default: ''}) label: string
+  @Prop({ default: '' }) label: string
 
   /**
    * Value set by the parent component's v-model
    * @type {string}
    */
-  @Prop({default: null}) value: string
+  @Prop({ default: null }) value: string
 
   /**
    * Namespaces names

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 // external dependencies
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 
 // internal dependencies
 // child components

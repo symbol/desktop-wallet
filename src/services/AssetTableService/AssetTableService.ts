@@ -59,10 +59,7 @@ export type TableFilteringOptions = {
 }
 
 export abstract class AssetTableService {
-
-  protected constructor(public readonly currentHeight: number) {
-
-  }
+  protected constructor(public readonly currentHeight: number) {}
 
   /**
    * Return table fields to be displayed in a table header
@@ -88,7 +85,7 @@ export abstract class AssetTableService {
     }
 
     if (filter.fieldName === 'expiration') {
-      return values.filter(({expiration}) => expiration !== 'expired')
+      return values.filter(({ expiration }) => expiration !== 'expired')
     }
 
     if (filter.fieldName === 'expired') {
@@ -121,15 +118,16 @@ export abstract class AssetTableService {
     // - sorting method depends on type
     if ('string' === typeof sampleValue) {
       return [...values][sortingMethod]((a, b) => {
-        return a[options.fieldName].toLowerCase().localeCompare(
-          b[options.fieldName].toLowerCase(),
-          navigator.languages[0] || navigator.language,
-          {numeric: true, ignorePunctuation: true},
-        )
+        return a[options.fieldName]
+          .toLowerCase()
+          .localeCompare(b[options.fieldName].toLowerCase(), navigator.languages[0] || navigator.language, {
+            numeric: true,
+            ignorePunctuation: true,
+          })
       })
     } else if ('boolean' === typeof sampleValue) {
       return [...values][sortingMethod]((a, b) => {
-        return (a[options.fieldName] === b[options.fieldName]) ? 0 : a[options.fieldName] ? -1 : 1
+        return a[options.fieldName] === b[options.fieldName] ? 0 : a[options.fieldName] ? -1 : 1
       })
     } else if ('number' === typeof sampleValue) {
       return values[sortingMethod]((a, b) => {

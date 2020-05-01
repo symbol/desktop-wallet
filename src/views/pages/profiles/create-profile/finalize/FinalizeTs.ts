@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {NetworkType, Password} from 'symbol-sdk'
-import {MnemonicPassPhrase} from 'symbol-hd-wallets'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { NetworkType, Password } from 'symbol-sdk'
+import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 // internal dependencies
-import {AccountService} from '@/services/AccountService'
-import {NotificationType} from '@/core/utils/NotificationType'
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
+import { AccountService } from '@/services/AccountService'
+import { NotificationType } from '@/core/utils/NotificationType'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
 
 @Component({
   computed: {
@@ -73,7 +73,6 @@ export default class FinalizeTs extends Vue {
    * @return {void}
    */
   public async submit() {
-
     // create profile by mnemonic
     const account = this.accountService.getDefaultAccount(
       this.currentProfile,
@@ -91,9 +90,7 @@ export default class FinalizeTs extends Vue {
     await this.$store.dispatch('temporary/RESET_STATE')
     await this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
-
     // flush and continue
-    return this.$router.push({name: 'dashboard'})
-
+    return this.$router.push({ name: 'dashboard' })
   }
 }

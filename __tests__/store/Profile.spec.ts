@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import ProfileStore from '@/store/Profile'
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
 import flushPromises from 'flush-promises'
 
 describe('store/Profile', () => {
@@ -24,7 +24,7 @@ describe('store/Profile', () => {
       const commit = jest.fn()
 
       // act
-      ProfileStore.actions.RESET_STATE({commit})
+      ProfileStore.actions.RESET_STATE({ commit })
 
       // assert
       expect(commit).toHaveBeenCalledTimes(2)
@@ -37,17 +37,19 @@ describe('store/Profile', () => {
     test('dispatch "RESET_STATE"', async (done) => {
       // prepare
       const dispatch = jest.fn()
-      const rootGetters = {'account/currentAccount': {}}
+      const rootGetters = { 'account/currentAccount': {} }
 
       // act
-      ProfileStore.actions.LOG_OUT({dispatch, rootGetters})
+      ProfileStore.actions.LOG_OUT({ dispatch, rootGetters })
       await flushPromises()
 
       // assert
       expect(dispatch).toHaveBeenCalled()
-      expect(dispatch).toHaveBeenCalledWith('account/uninitialize', {'address': undefined}, {root: true})
-      expect(dispatch).toHaveBeenCalledWith('account/SET_KNOWN_ACCOUNTS', [], {root: true})
-      expect(dispatch).toHaveBeenCalledWith('account/RESET_CURRENT_ACCOUNT', undefined, {root: true})
+      expect(dispatch).toHaveBeenCalledWith('account/uninitialize', { address: undefined }, { root: true })
+      expect(dispatch).toHaveBeenCalledWith('account/SET_KNOWN_ACCOUNTS', [], {
+        root: true,
+      })
+      expect(dispatch).toHaveBeenCalledWith('account/RESET_CURRENT_ACCOUNT', undefined, { root: true })
       expect(dispatch).toHaveBeenCalledWith('RESET_STATE')
       done()
     })
@@ -61,10 +63,7 @@ describe('store/Profile', () => {
       const model = new ProfileModel()
 
       // act
-      await ProfileStore.actions.SET_CURRENT_PROFILE(
-        {commit, dispatch},
-        model,
-      )
+      await ProfileStore.actions.SET_CURRENT_PROFILE({ commit, dispatch }, model)
 
       // assert
       expect(commit).toHaveBeenCalledTimes(2)

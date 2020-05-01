@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {AccountService} from '@/services/AccountService'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountService } from '@/services/AccountService'
 
 @Component({
   computed: {
@@ -30,11 +30,13 @@ import {AccountService} from '@/services/AccountService'
 export class AccountSelectorFieldTs extends Vue {
   @Prop({
     default: null,
-  }) value: string
+  })
+  value: string
 
   @Prop({
     default: false,
-  }) defaultFormStyle: boolean
+  })
+  defaultFormStyle: boolean
 
   /**
    * Currently active account
@@ -53,7 +55,6 @@ export class AccountSelectorFieldTs extends Vue {
    * @var {AccountService}
    */
   public readonly accountService: AccountService = new AccountService()
-
 
   /// region computed properties getter/setter
   public get currentAccountIdentifier(): string {
@@ -92,5 +93,5 @@ export class AccountSelectorFieldTs extends Vue {
     return `${str.substring(0, 9)}...${str.substring(str.length - 3)}`
   }
 
-/// end-region computed properties getter/setter
+  /// end-region computed properties getter/setter
 }

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
-import {MosaicId, NetworkType} from 'symbol-sdk'
-import {ValidationProvider} from 'vee-validate'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
+import { MosaicId, NetworkType } from 'symbol-sdk'
+import { ValidationProvider } from 'vee-validate'
 // internal dependencies
-import {ProfileModel} from '@/core/database/entities/ProfileModel'
-import {AccountModel} from '@/core/database/entities/AccountModel'
-import {AccountService} from '@/services/AccountService'
-import {ValidationRuleset} from '@/core/validation/ValidationRuleset'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountService } from '@/services/AccountService'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 // child components
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
@@ -33,8 +33,8 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue'
 import ModalFormSubAccountCreation from '@/views/modals/ModalFormSubAccountCreation/ModalFormSubAccountCreation.vue'
 // @ts-ignore
 import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemonicExport.vue'
-import {NetworkCurrencyModel} from '@/core/database/entities/NetworkCurrencyModel'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
 
 @Component({
   components: {
@@ -58,7 +58,6 @@ import {MosaicModel} from '@/core/database/entities/MosaicModel'
   },
 })
 export class AccountSelectorPanelTs extends Vue {
-
   /**
    * The network currency.
    */
@@ -126,7 +125,6 @@ export class AccountSelectorPanelTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-
   /**
    * Hook called when the component is created
    * @return {void}
@@ -137,8 +135,8 @@ export class AccountSelectorPanelTs extends Vue {
 
   /// region computed properties getter/setter
   public get balances(): Map<string, number> {
-    const networkMosaics = this.mosaics.filter(m => m.mosaicIdHex === this.networkMosaic.toHex())
-    return Object.assign({}, ...networkMosaics.map(s => ({[s.addressRawPlain]: s.balance})))
+    const networkMosaics = this.mosaics.filter((m) => m.mosaicIdHex === this.networkMosaic.toHex())
+    return Object.assign({}, ...networkMosaics.map((s) => ({ [s.addressRawPlain]: s.balance })))
     // return this.addressesBalances
   }
 

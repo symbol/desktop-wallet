@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {MosaicId} from 'symbol-sdk'
-import {Component, Prop, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { MosaicId } from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 // internal dependencies
 // child components
-import {ValidationProvider} from 'vee-validate'
+import { ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import FormLabel from '@/components//FormLabel/FormLabel.vue'
-import {MosaicModel} from '@/core/database/entities/MosaicModel'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
 
 @Component({
   components: {
@@ -40,25 +40,22 @@ import {MosaicModel} from '@/core/database/entities/MosaicModel'
   },
 })
 export class MosaicSelectorTs extends Vue {
-
   /**
    * Prop bound to the parent v-model
    */
-  @Prop({default: ''}) value: string
+  @Prop({ default: '' }) value: string
 
   /**
    * Mosaics to display as options
    */
-  @Prop({default: []}) mosaicHexIds: string[]
-
+  @Prop({ default: [] }) mosaicHexIds: string[]
 
   /**
    * Field label hidden by default
    */
-  @Prop({default: null}) label: string
+  @Prop({ default: null }) label: string
 
-
-  @Prop({default: 'networkMosaic'}) defaultMosaic: 'networkMosaic' | 'firstInList'
+  @Prop({ default: 'networkMosaic' }) defaultMosaic: 'networkMosaic' | 'firstInList'
   /**
    * Networks currency mosaic
    */
@@ -74,9 +71,7 @@ export class MosaicSelectorTs extends Vue {
    */
   public mosaics: MosaicModel[]
 
-
   /// region computed properties getter/setter
-
 
   /**
    * Mosaics shown as options in the select
@@ -85,8 +80,8 @@ export class MosaicSelectorTs extends Vue {
    */
   protected get displayedMosaics(): MosaicModel[] {
     return this.mosaicHexIds
-      .map((mosaicIdHex) => this.mosaics.find(m => m.mosaicIdHex === mosaicIdHex))
-      .filter(x => x)
+      .map((mosaicIdHex) => this.mosaics.find((m) => m.mosaicIdHex === mosaicIdHex))
+      .filter((x) => x)
   }
 
   /**
