@@ -136,11 +136,13 @@ export class TransactionRowTs extends Vue {
     // We may want to show N/A instead of the paid fee
     if (!this.view) return 0
     const effectiveFee = this.view.values.get('effectiveFee')
-    if (effectiveFee !== undefined)
-    {return effectiveFee}
+    if (effectiveFee !== undefined) {
+      return effectiveFee
+    }
     const maxFee = this.view.values.get('maxFee')
-    if (maxFee !== undefined)
-    {return maxFee}
+    if (maxFee !== undefined) {
+      return maxFee
+    }
     return 0
   }
 

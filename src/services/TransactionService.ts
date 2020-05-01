@@ -13,8 +13,43 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {Store} from 'vuex'
-import {Account, AccountAddressRestrictionTransaction, AccountLinkTransaction, AccountMetadataTransaction, AccountMosaicRestrictionTransaction, AccountOperationRestrictionTransaction, AddressAliasTransaction, AggregateTransaction, BlockInfo, CosignatureSignedTransaction, CosignatureTransaction, Deadline, HashLockTransaction, LockFundsTransaction, Mosaic, MosaicAddressRestrictionTransaction, MosaicAliasTransaction, MosaicDefinitionTransaction, MosaicGlobalRestrictionTransaction, MosaicId, MosaicMetadataTransaction, MosaicSupplyChangeTransaction, MultisigAccountModificationTransaction, NamespaceMetadataTransaction, NamespaceRegistrationTransaction, NetworkType, PublicAccount, SecretLockTransaction, SecretProofTransaction, SignedTransaction, Transaction, TransactionType, TransferTransaction, UInt64} from 'symbol-sdk'
+import { Store } from 'vuex'
+import {
+  Account,
+  AccountAddressRestrictionTransaction,
+  AccountLinkTransaction,
+  AccountMetadataTransaction,
+  AccountMosaicRestrictionTransaction,
+  AccountOperationRestrictionTransaction,
+  AddressAliasTransaction,
+  AggregateTransaction,
+  BlockInfo,
+  CosignatureSignedTransaction,
+  CosignatureTransaction,
+  Deadline,
+  HashLockTransaction,
+  LockFundsTransaction,
+  Mosaic,
+  MosaicAddressRestrictionTransaction,
+  MosaicAliasTransaction,
+  MosaicDefinitionTransaction,
+  MosaicGlobalRestrictionTransaction,
+  MosaicId,
+  MosaicMetadataTransaction,
+  MosaicSupplyChangeTransaction,
+  MultisigAccountModificationTransaction,
+  NamespaceMetadataTransaction,
+  NamespaceRegistrationTransaction,
+  NetworkType,
+  PublicAccount,
+  SecretLockTransaction,
+  SecretProofTransaction,
+  SignedTransaction,
+  Transaction,
+  TransactionType,
+  TransferTransaction,
+  UInt64,
+} from 'symbol-sdk'
 // internal dependencies
 import { AbstractService } from './AbstractService'
 import { AccountModel } from '@/core/database/entities/AccountModel'
@@ -282,7 +317,7 @@ export class TransactionService extends AbstractService {
     const generationHash: string = this.$store.getters['network/generationHash']
     const signedTransactions = []
 
-    if (!transactions.length){
+    if (!transactions.length) {
       return signedTransactions
     }
 
@@ -339,7 +374,7 @@ export class TransactionService extends AbstractService {
     const generationHash: string = this.$store.getters['network/generationHash']
     const signedTransactions = []
 
-    if (!transactions.length){
+    if (!transactions.length) {
       return signedTransactions
     }
 

@@ -77,16 +77,18 @@ export class TransactionDetailsHeaderTs extends Vue {
   public getFeeAmount(): number {
     if (!this.view) return 0
     const effectiveFee = this.view.values.get('effectiveFee')
-    if (effectiveFee !== undefined)
-    {return effectiveFee}
+    if (effectiveFee !== undefined) {
+      return effectiveFee
+    }
     const maxFee = this.view.values.get('maxFee')
-    if (maxFee !== undefined)
-    {return maxFee}
+    if (maxFee !== undefined) {
+      return maxFee
+    }
     return 0
   }
 
   public getFeeKey(): string {
-    if (this.view && this.view.values.get('effectiveFee') != undefined){
+    if (this.view && this.view.values.get('effectiveFee') != undefined) {
       return 'paid_fee'
     }
     return 'max_fee'
