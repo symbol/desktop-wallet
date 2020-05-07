@@ -125,7 +125,7 @@ export class AccountSelectorPanelTs extends Vue {
    */
   public validationRules = ValidationRuleset
 
-  public get isLedger(): boolean{
+  public get isLedger(): boolean {
     return this.currentAccount.type == AccountType.fromDescriptor('Ledger')
   }
 

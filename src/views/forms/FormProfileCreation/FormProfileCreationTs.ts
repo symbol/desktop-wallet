@@ -55,9 +55,9 @@ export class FormProfileCreationTs extends Vue {
    * @var {string}
    */
   public currentProfile: ProfileModel
-  isLedger = false;
+  isLedger = false
   created() {
-    const {isLedger} = this.$route.meta
+    const { isLedger } = this.$route.meta
     this.isLedger = isLedger
   }
 
@@ -159,9 +159,9 @@ export class FormProfileCreationTs extends Vue {
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
     // flush and continue
-    if(!this.isLedger){
-      this.$router.push({name: this.nextPage})}
-    else{
+    if (!this.isLedger) {
+      this.$router.push({ name: this.nextPage })
+    } else {
       this.$router.push('importLedger')
     }
   }

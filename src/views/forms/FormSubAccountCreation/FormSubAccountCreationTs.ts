@@ -18,13 +18,13 @@ import { mapGetters } from 'vuex'
 import { Account, NetworkType, Password, Crypto } from 'symbol-sdk'
 import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
-import {SymbolLedger} from '@/core/utils/Ledger'
+import { SymbolLedger } from '@/core/utils/Ledger'
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 import { DerivationService } from '@/services/DerivationService'
 import { NotificationType } from '@/core/utils/NotificationType'
 import { AccountService } from '@/services/AccountService'
-import { AccountModel,AccountType } from '@/core/database/entities/AccountModel'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
@@ -38,7 +38,7 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
 // configuration
 import appConfig from '@/../config/app.conf.json'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
+import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage'
 
 const { MAX_SEED_ACCOUNTS_NUMBER } = appConfig.constants
 
@@ -156,21 +156,18 @@ export class FormSubAccountCreationTs extends Vue {
    * @return {void}
    */
 
-  public get isLedger(): boolean{
+  public get isLedger(): boolean {
     return this.currentAccount.type == AccountType.fromDescriptor('Ledger')
   }
 
   public onSubmit() {
-    const values = {...this.formItems}
-    
-    const type = values.type && [ 'child_account', 'privatekey_account' ].includes(values.type)
-      ? values.type
-      : 'child_account'
-    if (this.isLedger && type == 'child_account'){
+    const values = { ...this.formItems }
+
+    const type =
+      values.type && ['child_account', 'privatekey_account'].includes(values.type) ? values.type : 'child_account'
+    if (this.isLedger && type == 'child_account') {
       this.deriveNextChildAccount(values.name)
-    } 
-    
-    else this.hasAccountUnlockModal = true
+    } else this.hasAccountUnlockModal = true
   }
 
   /**
@@ -251,10 +248,9 @@ export class FormSubAccountCreationTs extends Vue {
       )
       return null
     }
-    if(this.isLedger){
+    if (this.isLedger) {
       this.importSubAccountFromLedger(childAccountName)
-      .then(
-        (res)=>{
+        .then((res) => {
           this.accountService.saveAccount(res)
           // - update app state
           this.$store.dispatch('profile/ADD_ACCOUNT', res)
@@ -262,11 +258,8 @@ export class FormSubAccountCreationTs extends Vue {
           this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', this.currentProfile.accounts)
           this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
           this.$emit('submit', this.formItems)
-        },
-      )
-      .catch(
-        (err)=> console.log(err),
-      )
+        })
+        .catch((err) => console.log(err))
     } else {
       // - get next path
       const nextPath = this.paths.getNextAccountPath(this.knownPaths)
@@ -289,13 +282,13 @@ export class FormSubAccountCreationTs extends Vue {
       )
     }
   }
-  async importSubAccountFromLedger(childAccountName: string): Promise<AccountModel> |null{
+  async importSubAccountFromLedger(childAccountName: string): Promise<AccountModel> | null {
     const subAccountName = childAccountName
     const accountPath = this.currentAccount.path
-    const currentAccountIndex = accountPath.substring(accountPath.length - 2,accountPath.length - 1)
+    const currentAccountIndex = accountPath.substring(accountPath.length - 2, accountPath.length - 1)
     const numAccount = this.knownPaths.length
     let accountIndex
-    if(numAccount <= Number(currentAccountIndex) ){
+    if (numAccount <= Number(currentAccountIndex)) {
       accountIndex = numAccount + Number(currentAccountIndex)
     } else {
       accountIndex = numAccount + 1
@@ -318,7 +311,7 @@ export class FormSubAccountCreationTs extends Vue {
         type: AccountType.fromDescriptor('Seed'),
         address: address.toUpperCase(),
         publicKey: publicKey.toUpperCase(),
-        encryptedPrivateKey:'',
+        encryptedPrivateKey: '',
         path: path,
         isMultisig: false,
       }

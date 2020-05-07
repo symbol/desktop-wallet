@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Account, NetworkType,Address, Password, Crypto } from 'symbol-sdk'
+import { Account, NetworkType, Address, Password, Crypto } from 'symbol-sdk'
 import { Component, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 // internal dependencies
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
-import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
-import {AccountService} from '@/services/AccountService'
-import {ProfileService} from '@/services/ProfileService'
-import {NotificationType} from '@/core/utils/NotificationType'
+import { WalletModel, WalletType } from '@/core/database/entities/WalletModel'
+import { AccountService } from '@/services/AccountService'
+import { ProfileService } from '@/services/ProfileService'
+import { NotificationType } from '@/core/utils/NotificationType'
 
 // child components
 import { ValidationProvider } from 'vee-validate'
@@ -84,10 +84,10 @@ export class FormProfileUnlockTs extends Vue {
    * .
    * @return {void}
    */
-  public get isLedger(): boolean{
+  public get isLedger(): boolean {
     return this.currentAccount.type == AccountType.fromDescriptor('Ledger')
   }
-  
+
   public accountService = new ProfileService()
 
   public processVerification() {
@@ -102,20 +102,19 @@ export class FormProfileUnlockTs extends Vue {
       if (accountPass !== passwordHash) {
         return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
       }
-    
-      if(this.isLedger && accountPass == passwordHash){
+
+      if (this.isLedger && accountPass == passwordHash) {
         const publickey = this.currentAccount.publicKey
-        const addr = Address.createFromPublicKey(publickey,this.networkType)
-        return this.$emit('success',{account: this.currentAccount,addr, password})
-      } 
-      else {
+        const addr = Address.createFromPublicKey(publickey, this.networkType)
+        return this.$emit('success', { account: this.currentAccount, addr, password })
+      } else {
         const privateKey: string = Crypto.decrypt(this.currentAccount.encryptedPrivateKey, password.value)
 
         if (privateKey.length === 64) {
           const unlockedAccount = Account.createFromPrivateKey(privateKey, this.networkType)
-          return this.$emit('success', {account: unlockedAccount, password})
+          return this.$emit('success', { account: unlockedAccount, password })
         }
-      } 
+      }
 
       return this.$emit('error', this.$t('error_invalid_password'))
     } catch (e) {

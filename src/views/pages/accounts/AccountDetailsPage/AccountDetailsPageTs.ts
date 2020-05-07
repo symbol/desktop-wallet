@@ -71,7 +71,7 @@ export class AccountDetailsPageTs extends Vue {
    */
   public currentAccount: AccountModel
 
-  public get isLedger(): boolean{
+  public get isLedger(): boolean {
     return this.currentAccount.type == AccountType.fromDescriptor('Ledger')
   }
 }
