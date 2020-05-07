@@ -288,7 +288,6 @@ export class TransactionService extends AbstractService {
       const signedTx = account.sign(staged, generationHash)
       this.$store.commit('account/addSignedTransaction', signedTx)
       signedTransactions.push(signedTx)
-
       // - notify diagnostics
       this.$store.dispatch(
         'diagnostic/ADD_DEBUG',

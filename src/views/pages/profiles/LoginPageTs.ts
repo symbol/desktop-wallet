@@ -21,7 +21,7 @@ import { $eventBus } from '@/events'
 import { NotificationType } from '@/core/utils/NotificationType'
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 import { ProfileService } from '@/services/ProfileService'
 // child components
 // @ts-ignore
@@ -164,6 +164,22 @@ export default class LoginPageTs extends Vue {
    * Process login request.
    * @return {void}
    */
+
+  isHardwareAccount(): boolean {
+    const profileService = new ProfileService()
+    const currentProfileName = this.formItems.currentProfileName
+    const profile = profileService.getProfileByName(currentProfileName)
+    const existingLedgerAccounts = profile.accounts.find((w) => {
+      if (this.accountService.getAccount(w).type == AccountType.fromDescriptor('Ledger')) {
+        return w
+      }
+    })
+    if (existingLedgerAccounts !== ('' || undefined)) {
+      return true
+    }
+    return false
+  }
+
   private async processLogin() {
     const currentProfileName = this.formItems.currentProfileName
     const profile = this.profileService.getProfileByName(currentProfileName)
@@ -191,7 +207,7 @@ export default class LoginPageTs extends Vue {
     }
 
     // if profile setup was not finalized, redirect
-    if (!profile.seed) {
+    if (!profile.seed && !this.isHardwareAccount()) {
       this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile)
       this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
       this.$store.dispatch(

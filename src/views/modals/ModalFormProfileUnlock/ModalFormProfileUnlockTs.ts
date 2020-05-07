@@ -15,8 +15,8 @@
  */
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Account, Password } from 'symbol-sdk'
-import {mapGetters} from 'vuex'
-import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
+import { mapGetters } from 'vuex'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 // internal dependencies
 // child components
 // @ts-ignore
@@ -26,10 +26,12 @@ import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock
   components: {
     FormProfileUnlock,
   },
-  computed: {...mapGetters({
-    currentAccount: 'account/currentAccount',
-    currentWallet: 'wallet/currentWallet',
-  })},
+  computed: {
+    ...mapGetters({
+      currentAccount: 'account/currentAccount',
+      // currentWallet: 'wallet/currentWallet',
+    }),
+  },
 })
 export class ModalFormProfileUnlockTs extends Vue {
   @Prop({
@@ -66,21 +68,20 @@ export class ModalFormProfileUnlockTs extends Vue {
    * @return {void}
    */
 
-  public currentWallet: WalletModel
+  public currentAccount: AccountModel
 
-  public get isLedger(): boolean{
-    return this.currentWallet.type == WalletType.fromDescriptor('Ledger')
+  public get isLedger(): boolean {
+    return this.currentAccount.type == AccountType.fromDescriptor('Ledger')
   }
 
-  public onAccountUnlocked(payload: { account: Account; addr:any; password: Password }) {
+  public onAccountUnlocked(payload: { account: Account; addr: any; password: Password }) {
     // - log about unlock success
-    if(!this.isLedger){
+    if (!this.isLedger) {
       this.$store.dispatch('diagnostic/ADD_INFO', `Account ${payload.account.address.plain()} unlocked successfully.`)
-    } else
-    {
+    } else {
       this.$store.dispatch('diagnostic/ADD_INFO', `Account ${payload.addr.plain()} unlocked successfully.`)
     }
-    
+
     // - emit success
     this.$emit('success', payload.account.publicAccount)
 

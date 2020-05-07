@@ -1,18 +1,17 @@
-import {Component, Vue} from 'vue-property-decorator'
-import {mapGetters} from 'vuex'
+import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
-import {NetworkType} from 'symbol-sdk'
-import {SymbolLedger} from '@/core/utils/Ledger'
-import {MnemonicPassPhrase} from 'symbol-hd-wallets'
+import { NetworkType } from 'symbol-sdk'
+import { SymbolLedger } from '@/core/utils/Ledger'
+import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 // internal dependencies
-import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
-import { AccountModel } from '@/core/database/entities/AccountModel'
-import {NotificationType} from '@/core/utils/NotificationType'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
+import { NotificationType } from '@/core/utils/NotificationType'
 import { Password } from 'symbol-sdk'
-import {AccountService} from '@/services/AccountService'
-import {ProfileService} from '@/services/ProfileService'
-import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
+import { AccountService } from '@/services/AccountService'
+import { ProfileService } from '@/services/ProfileService'
+import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage'
 
 // child components
 // @ts-ignore
@@ -21,37 +20,51 @@ import {SimpleObjectStorage} from '@/core/database/backends/SimpleObjectStorage'
   // components: {
   //   WalletBackupOptions,
   // },
-  computed: {...mapGetters({
-    currentWallet: 'wallet/currentWallet',
-    currentAccount: 'account/currentAccount',
-    currentPassword: 'temporary/password',
-    currentMnemonic: 'temporary/mnemonic',
-    knownWallets: 'wallet/knownWallets',
-    // activeAccount:'account',
-    app:'app',
-  })},
+  computed: {
+    ...mapGetters({
+      currentAccount: 'account/currentAccount',
+      currentProfile: 'profile/currentProfile',
+      currentPassword: 'temporary/password',
+      currentMnemonic: 'temporary/mnemonic',
+      knownAccounts: 'wallet/knownAccounts',
+      generationHash: 'network/generationHash',
+      // activeAccount:'account',
+      app: 'app',
+    }),
+  },
 })
 export class WalletImportLedgerTs extends Vue {
+  /**
+   * Currently active profile
+   * @see {Store.Profile}
+   * @var {string}
+   */
+  public currentProfile: ProfileModel
+
+  /**
+   * Currently active network type
+   * @see {Store.Network}
+   * @var {string}
+   */
+  public generationHash: string
+
   /**
    * Currently active wallet
    * @see {Store.Wallet}
    * @var {WalletsModel}
    */
-  public currentAccount: ProfileModel
+  public currentAccount: AccountModel
   public currentPassword: Password
   public currentMnemonic: MnemonicPassPhrase
-  public walletService: AccountService
-  public accountService: ProfileService
-  public knownWallets: string[]
-  public networkTypeList: {value: NetworkType, label: string}[] = [
-    {value: NetworkType.MIJIN_TEST, label: 'MIJIN_TEST'},
-    {value: NetworkType.MAIN_NET, label: 'MAIN_NET'},
-    {value: NetworkType.TEST_NET, label: 'TEST_NET'},
-    {value: NetworkType.MIJIN, label: 'MIJIN'},
+  public accountService: AccountService
+  public profileService: ProfileService
+  public knownAccounts: string[]
+  public networkTypeList: { value: NetworkType; label: string }[] = [
+    { value: NetworkType.MIJIN_TEST, label: 'MIJIN_TEST' },
+    { value: NetworkType.MAIN_NET, label: 'MAIN_NET' },
+    { value: NetworkType.TEST_NET, label: 'TEST_NET' },
+    { value: NetworkType.MIJIN, label: 'MIJIN' },
   ]
-  // activeAccount: StoreAccount
-  // app:AppInfo
-  public currentWallet: WalletModel
 
   ledgerForm = {
     networkType: NetworkType.TEST_NET,
@@ -60,10 +73,10 @@ export class WalletImportLedgerTs extends Vue {
   }
 
   public created() {
-    this.walletService = new AccountService()
+    this.accountService = new AccountService()
   }
 
-  toWalletDetails() {
+  toAccountDetails() {
     this.$Notice.success({
       title: this['$t']('Imported_wallet_successfully') + '',
     })
@@ -74,25 +87,25 @@ export class WalletImportLedgerTs extends Vue {
     this.$store.dispatch('account/RESET_STATE')
     this.$router.push('/accounts/create')
   }
-  onNetworkSelected(){
+  onNetworkSelected() {
     this.ledgerForm = this.getDefaultFormValues(this.ledgerForm.networkType)
   }
-  numExistingLedgerWallets(networkType){
+  numExistingLedgerAccounts(networkType) {
     let num = 0
-    const existingWallets = this.walletService.getAccounts()
-    existingWallets.filter(wallet=>{
+    const existingWallets = this.accountService.getAccounts()
+    existingWallets.filter((wallet) => {
       const accountName1 = wallet.profileName
       let networkTypeLocal
-      for (let i = 0, m = existingWallets.length; i < m; i ++) {
-        const accounts = this.accountService.getProfiles()
+      for (let i = 0, m = existingWallets.length; i < m; i++) {
+        const accounts = this.profileService.getProfiles()
         const account = accounts[i]
         const accountName2 = account.profileName
-        if (accountName2 == accountName1){
+        if (accountName2 == accountName1) {
           networkTypeLocal = account.networkType
-          if ( networkTypeLocal == networkType && wallet.type === WalletType.fromDescriptor('Ledger')){
-            num += 1 
-          } 
-        }    
+          if (networkTypeLocal == networkType && wallet.type === AccountType.fromDescriptor('Ledger')) {
+            num += 1
+          }
+        }
       }
       return num
     })
@@ -100,34 +113,38 @@ export class WalletImportLedgerTs extends Vue {
   }
 
   getDefaultFormValues(networkType) {
-    const numExistingLedgerWallets = this.numExistingLedgerWallets(networkType)
-    const networkName = this.networkTypeList.find(network => network.value === networkType).label
+    const numExistingLedgerAccounts = this.numExistingLedgerAccounts(networkType)
+    const networkName = this.networkTypeList.find((network) => network.value === networkType).label
 
     return {
       networkType: networkType,
-      accountIndex: numExistingLedgerWallets,
-      walletName: `${networkName} Ledger Account ${numExistingLedgerWallets + 1}`,
+      accountIndex: numExistingLedgerAccounts,
+      walletName: `${networkName} Ledger Account ${numExistingLedgerAccounts + 1}`,
     }
   }
 
-  public onSubmit(){
-    this.importAccountFromLedger().then(
-      (res)=>{
+  public onSubmit() {
+    this.importAccountFromLedger()
+      .then((res) => {
         // - use repositories for storage
-        this.walletService.saveAccount(res)
-
+        this.accountService.saveAccount(res)
         // - update app state
-        this.$store.dispatch('account/ADD_WALLET', res)
-        this.$store.dispatch('wallet/SET_CURRENT_WALLET', res)
-        this.$store.dispatch('wallet/SET_KNOWN_WALLETS', this.currentAccount.accounts)
+        this.$store.dispatch('profile/ADD_ACCOUNT', res)
+        this.$store.dispatch('account/SET_CURRENT_ACCOUNT', res)
+        this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', [res.id])
+        this.$store.dispatch('temporary/RESET_STATE')
         this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
-        this.toWalletDetails()
-        this.$store.dispatch('SET_UI_DISABLED', {
-          isDisabled: false,
-          message: '',
-        })
-      },
-    )
+        this.toAccountDetails()
+        // this.$store.dispatch('SET_UI_DISABLED', {
+        //   isDisabled: false,
+        //   message: '',
+        // })
+      })
+      .catch((error) => {
+        {
+          console.error(error)
+        }
+      })
   }
   async importAccountFromLedger(): Promise<AccountModel> {
     const { accountIndex, networkType, walletName } = this.ledgerForm
@@ -141,19 +158,18 @@ export class WalletImportLedgerTs extends Vue {
       const { address, publicKey, path } = accountResult
       transport.close()
 
-      // add wallet to list
-      
-      const accName = this.currentAccount.profileName
+      // add account to list
+      const accName = this.currentProfile.profileName
 
       return {
         id: SimpleObjectStorage.generateIdentifier(),
         name: walletName,
-        profileName:accName,
+        profileName: accName,
         node: '',
-        type:  WalletType.fromDescriptor('Ledger'),
-        address:address,
-        publicKey: publicKey,
-        encryptedPrivateKey:'',
+        type: AccountType.fromDescriptor('Ledger'),
+        address: address.toUpperCase(),
+        publicKey: publicKey.toUpperCase(),
+        encryptedPrivateKey: '',
         path: path,
         isMultisig: false,
       }

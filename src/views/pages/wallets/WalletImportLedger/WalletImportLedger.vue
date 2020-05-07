@@ -21,26 +21,31 @@
         {{ $t('choose_account_index') }}
         <div class="gray_content">
           <input
-            v-model="ledgerForm.accountIndex" class="absolute" type="number"
-            min="0" max="1000000"
+            v-model="ledgerForm.accountIndex"
+            class="absolute"
+            type="number"
+            min="0"
+            max="1000000"
             :placeholder="$t('choose_account_index')"
-          >
+          />
         </div>
       </li>
       <li>
         {{ $t('set_the_wallet_name') }}
         <div class="gray_content">
           <input
-            v-model="ledgerForm.walletName" class="absolute" type="text"
+            v-model="ledgerForm.walletName"
+            class="absolute"
+            type="text"
             :placeholder="$t('set_the_wallet_name')"
-          >
+          />
         </div>
       </li>
     </ul>
 
-    <div class="bottom_button ">
+    <div class="bottom_button">
       <span class="back left" @click="toBack"> {{ $t('back') }}</span>
-      <span class="import right" @click="importAccountFromLedger">{{ $t('connect_ledger_prompt') }}</span>
+      <span class="import right" @click="onSubmit">{{ $t('connect_ledger_prompt') }}</span>
     </div>
   </div>
 </template>
@@ -49,5 +54,5 @@
 // @ts-ignore
 import { WalletImportLedgerTs } from '@/views/pages/wallets/WalletImportLedger/WalletImportLedgerTs.ts'
 import './WalletImportLedger.less'
-export default class WalletImportLedger extends WalletImportLedgerTs { }
+export default class WalletImportLedger extends WalletImportLedgerTs {}
 </script>

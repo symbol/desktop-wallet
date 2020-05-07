@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+import { Account, NetworkType, Address, Password, Crypto } from 'symbol-sdk'
 import { Component, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
-import {Account, Password, EncryptedPrivateKey, NetworkType,Address, Crypto } from 'symbol-sdk'
-
-// internal dependencies
-import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
-import {AccountService} from '@/services/AccountService'
-import {ProfileService} from '@/services/ProfileService'
-import {NotificationType} from '@/core/utils/NotificationType'
+import { WalletModel, WalletType } from '@/core/database/entities/WalletModel'
+import { AccountService } from '@/services/AccountService'
+import { ProfileService } from '@/services/ProfileService'
+import { NotificationType } from '@/core/utils/NotificationType'
 
 // child components
 import { ValidationProvider } from 'vee-validate'
@@ -42,12 +40,13 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
     FormRow,
     ErrorTooltip,
   },
-  computed: {...mapGetters({
-    networkType: 'network/networkType',
-    currentAccount: 'account/currentAccount',
-    currentWallet: 'wallet/currentWallet',
-    currentPass: 'temporary/password',
-  })},
+  computed: {
+    ...mapGetters({
+      networkType: 'network/networkType',
+      currentAccount: 'account/currentAccount',
+      currentPass: 'temporary/password',
+    }),
+  },
 })
 export class FormProfileUnlockTs extends Vue {
   /**
@@ -61,12 +60,6 @@ export class FormProfileUnlockTs extends Vue {
    * @var {AccountModel}
    */
   public currentAccount: AccountModel
-
-    /**
-   * Currently active wallet
-   * @var {WalletModel}
-   */
-  public currentWallet: WalletModel
 
   public currentPass: Password
   /**
@@ -91,44 +84,37 @@ export class FormProfileUnlockTs extends Vue {
    * .
    * @return {void}
    */
-  public get isLedger(): boolean{
-    return this.currentWallet.type == WalletType.fromDescriptor('Ledger')
+  public get isLedger(): boolean {
+    return this.currentAccount.type == AccountType.fromDescriptor('Ledger')
   }
 
   public accountService = new ProfileService()
 
   public processVerification() {
-    // - create encrypted payload for active wallet
-     const encrypted = new EncryptedPrivateKey(
-      this.currentWallet.encPrivate,
-      this.currentWallet.encIv,
-    )
-
     try {
       const password = new Password(this.formItems.password)
       // const privateKey: string = Crypto.decrypt(this.currentAccount.encryptedPrivateKey, password.value)
       const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password))
       // read account's password hash and compare
-      const currentAccount = this.accountService.getProfileByName(this.currentWallet.accountName)
-      const accountPass = currentAccount.password
+      const currentProfile = this.accountService.getProfileByName(this.currentAccount.profileName)
+      const accountPass = currentProfile.password
 
-       if (accountPass !== passwordHash) {
+      if (accountPass !== passwordHash) {
         return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
       }
-        
-      if(this.isLedger && accountPass == passwordHash){
-        const publickey = this.currentWallet.publicKey
-        const addr = Address.createFromPublicKey(publickey,this.networkType)
-        return this.$emit('success',{account: currentAccount,addr, password})
-      } 
-      else {
-        const privateKey: string = encrypted.decrypt(password)
+
+      if (this.isLedger && accountPass == passwordHash) {
+        const publickey = this.currentAccount.publicKey
+        const addr = Address.createFromPublicKey(publickey, this.networkType)
+        return this.$emit('success', { account: this.currentAccount, addr, password })
+      } else {
+        const privateKey: string = Crypto.decrypt(this.currentAccount.encryptedPrivateKey, password.value)
 
         if (privateKey.length === 64) {
           const unlockedAccount = Account.createFromPrivateKey(privateKey, this.networkType)
-          return this.$emit('success', {account: unlockedAccount, password})
+          return this.$emit('success', { account: unlockedAccount, password })
         }
-      } 
+      }
 
       return this.$emit('error', this.$t('error_invalid_password'))
     } catch (e) {
