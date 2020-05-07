@@ -1,6 +1,12 @@
 import * as BIPPath from 'bip32-path'
 import app from '@/main'
-import { Transaction, SignedTransaction, Convert, CosignatureSignedTransaction, AggregateTransaction } from 'symbol-sdk'
+import { 
+  Transaction,
+  SignedTransaction,
+  Convert,
+  CosignatureSignedTransaction,
+  AggregateTransaction,
+} from 'symbol-sdk'
 
 /**
  * NEM API
@@ -24,21 +30,21 @@ export class SymbolLedger {
 
   constructor(transport: any, scrambleKey: string) {
     this.transport = transport
-    transport.decorateAppAPIMethods(this, ['getAddress', 'signTransaction', 'getAppConfiguration'], scrambleKey)
+    transport.decorateAppAPIMethods(this, [ 'getAddress', 'signTransaction', 'getAppConfiguration' ], scrambleKey)
   }
 
   /**
-   * get NEM address for a given BIP 32 path.
-   *
-   * @param path a path in BIP 32 format
-   * @param display optionally enable or not the display
-   * @param chainCode optionally enable or not the chainCode request
-   * @param ed25519
-   * @return an object with a publicKey, address and (optionally) chainCode
-   * @example
-   * const result = await NemLedger.getAddress(bip32path);
-   * const { publicKey, address } = result;
-   */
+     * get NEM address for a given BIP 32 path.
+     *
+     * @param path a path in BIP 32 format
+     * @param display optionally enable or not the display
+     * @param chainCode optionally enable or not the chainCode request
+     * @param ed25519
+     * @return an object with a publicKey, address and (optionally) chainCode
+     * @example
+     * const result = await NemLedger.getAddress(bip32path);
+     * const { publicKey, address } = result;
+     */
   async getAccount(path) {
     const display = false
     const chainCode = false
@@ -75,19 +81,19 @@ export class SymbolLedger {
   }
 
   /**
-   * sign a NEM transaction with a given BIP 32 path
-   *
-   * @param path a path in BIP 32 format
-   * @param rawPayload a raw payload transaction hex string
-   * @param networkGenerationHash the network generation hash of block 1
-   * @return a SignedTransaction
-   * @example
-   * const signature = await NemLedger.signTransaction(bip32path,
-   * "B40000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-   * 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000190544140420F000
-   * 0000000FBA412E61900000090FC443D62754C19452DC196C3C8CDC86782F36565BEC9A41D1000010057656C636F6D6520546F204E454D
-   * 32B0348BFF6E081A7A0100000000000000", "DEEF3950CFF3995F3AAD88AA5C593ADA6A6833D744611769E3E66F3942B2838B");
-   */
+     * sign a NEM transaction with a given BIP 32 path
+     *
+     * @param path a path in BIP 32 format
+     * @param rawPayload a raw payload transaction hex string
+     * @param networkGenerationHash the network generation hash of block 1
+     * @return a SignedTransaction
+     * @example
+     * const signature = await NemLedger.signTransaction(bip32path, 
+     * "B40000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+     * 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000190544140420F000
+     * 0000000FBA412E61900000090FC443D62754C19452DC196C3C8CDC86782F36565BEC9A41D1000010057656C636F6D6520546F204E454D
+     * 32B0348BFF6E081A7A0100000000000000", "DEEF3950CFF3995F3AAD88AA5C593ADA6A6833D744611769E3E66F3942B2838B");
+     */
   // public signingBytes:any
   async signTransaction(path: string, transferTransaction: any, networkGenerationHash: string, signer: string) {
     const rawPayload = transferTransaction.serialize()
@@ -105,38 +111,43 @@ export class SymbolLedger {
     }
 
     let response
-    await this.generateDataUnit(rawTx, path, twiceTransfer)
-      .then((res) => {
+    await this.generateDataUnit(rawTx,path,twiceTransfer).then(
+      (res)=>{
         response = res
-      })
-      .catch((err) => console.log(err))
+      },
+    ).catch(
+      (err)=> console.log(err),      
+    )
 
     // Response from Ledger
     const h = response.toString('hex')
 
     const signature = h.slice(0, 128)
 
-    const payload = rawPayload.slice(0, 16) + signature + signer + rawPayload.slice(16 + 128 + 64, rawPayload.length)
+    const payload = rawPayload.slice(0, 16) + 
+            signature + 
+            signer + 
+            rawPayload.slice(16 + 128 + 64, rawPayload.length)
 
     const generationHashBytes = Array.from(Convert.hexToUint8(networkGenerationHash))
 
-    const transactionHash = Transaction.createTransactionHash(payload, generationHashBytes)
+    const transactionHash = Transaction.createTransactionHash(
+      payload,
+      generationHashBytes
+    )
 
     const signedTransaction = new SignedTransaction(
       payload,
       transactionHash,
       signer,
       transferTransaction.type,
-      transferTransaction.networkType,
-    )
+      transferTransaction.networkType)
     return signedTransaction
   }
-  async signCosignatureTransaction(
-    path: string,
-    transferTransaction: AggregateTransaction,
-    networkGenerationHash: string,
-    signer: string,
-  ) {
+  async signCosignatureTransaction(path: string, 
+    transferTransaction: AggregateTransaction, 
+    networkGenerationHash: string, 
+    signer: string) {
     const rawPayload = transferTransaction.serialize()
     const signingBytes = transferTransaction.transactionInfo.hash + rawPayload.slice(216)
     const rawTx = Buffer.from(signingBytes, 'hex')
@@ -151,11 +162,13 @@ export class SymbolLedger {
     }
 
     let response
-    await this.generateDataUnit(rawTx, path, twiceTransfer)
-      .then((res) => {
+    await this.generateDataUnit(rawTx,path,twiceTransfer).then(
+      (res)=>{
         response = res
-      })
-      .catch((err) => console.log(err))
+      },
+    ).catch(
+      (err)=> console.log(err),      
+    )
 
     // Response from Ledger
     const h = response.toString('hex')
@@ -168,12 +181,12 @@ export class SymbolLedger {
     return cosignatureSignedTransaction
   }
 
-  async generateDataUnit(rawTx: Buffer, path: string, twiceTransfer: any) {
+  async generateDataUnit(rawTx: Buffer,path: string, twiceTransfer: any ){
     let offset = 0
     const curveMask = 0x80
     const bipPath = BIPPath.fromString(path).toPathArray()
     const apdus = []
-
+    
     while (offset !== rawTx.length) {
       const maxChunkSize = offset === 0 ? MAX_CHUNK_SIZE - 1 - bipPath.length * 4 : MAX_CHUNK_SIZE
       const chunkSize = offset + maxChunkSize > rawTx.length ? rawTx.length - offset : maxChunkSize

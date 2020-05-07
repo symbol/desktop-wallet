@@ -17,11 +17,11 @@ import { mapGetters } from 'vuex'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { AggregateTransaction, MosaicId, Transaction } from 'symbol-sdk'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
-import { SymbolLedger } from '@/core/utils/Ledger'
+import {SymbolLedger} from '@/core/utils/Ledger'
 // internal dependencies
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 import { TransactionService } from '@/services/TransactionService'
-import { WalletModel, WalletType } from '@/core/database/entities/WalletModel'
+import {WalletModel,WalletType} from '@/core/database/entities/WalletModel'
 // child components
 // @ts-ignore
 import ModalTransactionCosignature from '@/views/modals/ModalTransactionCosignature/ModalTransactionCosignature.vue'
@@ -35,7 +35,7 @@ import TransactionListFilters from '@/components/TransactionList/TransactionList
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
 import { TransactionGroup } from '@/store/Transaction'
 
-import { BroadcastResult } from '@/core/transactions/BroadcastResult'
+import {BroadcastResult} from '@/core/transactions/BroadcastResult'
 @Component({
   components: {
     ModalTransactionCosignature,
@@ -76,7 +76,7 @@ export class TransactionListTs extends Vue {
    */
   public currentAccount: AccountModel
 
-  /**
+    /**
    * Currently active wallet
    * @see {Store.Wallet}
    * @var {WalletModel}
@@ -241,26 +241,29 @@ export class TransactionListTs extends Vue {
    * Hook called when a transaction is clicked
    * @param {Transaction} transaction
    */
-  public async onClickTransaction(transaction: any) {
-    //Transaction | AggregateTransaction
+  public async onClickTransaction(transaction: any ) {//Transaction | AggregateTransaction
     const isSigner = transaction.signer.address.plain() == this.currentAccount.address ? true : false
-    if (transaction.hasMissingSignatures()) {
+    if (transaction.hasMissingSignatures() ) {
       let isCosignatorSigned = false
-      if (transaction.cosignatures.length != 0) {
-        transaction.cosignatures.find((res) => {
-          if (this.currentAccount.publicKey.toUpperCase() != res.signer.publicKey) {
-            isCosignatorSigned = false
-          } else isCosignatorSigned = true
-        })
-      }
+      if(transaction.cosignatures.length != 0){
+        transaction.cosignatures.find(
+          (res)=>{
+            if (this.currentAccount.publicKey.toUpperCase() != res.signer.publicKey ){
+              isCosignatorSigned = false
+            } else isCosignatorSigned = true
+          },
+        )
+      } 
 
-      if (this.currentAccount.type == AccountType.fromDescriptor('Ledger') && !isCosignatorSigned && !isSigner) {
+      if(this.currentAccount.type == AccountType.fromDescriptor('Ledger') && !isCosignatorSigned && !isSigner){
         this.signWithLedger(transaction)
-      } else {
+      }
+      else {
         this.activePartialTransaction = transaction as AggregateTransaction
         this.hasCosignatureModal = true
-      }
-    } else {
+      }  
+    }
+    else {
       this.activeTransaction = transaction
       this.hasDetailModal = true
     }
@@ -285,37 +288,32 @@ export class TransactionListTs extends Vue {
     this.currentPage = page
   }
 
-  async signWithLedger(transaction: AggregateTransaction) {
+  async signWithLedger(transaction: AggregateTransaction){
     this.$Notice.success({
       title: this['$t']('Verify information in your device!') + '',
     })
     const transport = await TransportWebUSB.create()
-    const currentPath = this.currentAccount.path
-    const addr = this.currentAccount.address
+    const currentPath = this.currentAccount.path 
+    const addr = this.currentAccount.address      
     const symbolLedger = new SymbolLedger(transport, 'XYM')
     const signerPublickey = this.currentAccount.publicKey
-    const signature = await symbolLedger.signCosignatureTransaction(
-      currentPath,
+    const signature = await symbolLedger.signCosignatureTransaction(currentPath,
       transaction,
       this.generationHash,
-      signerPublickey,
-    )
+      signerPublickey)
     transport.close()
-    this.$store.dispatch(
-      'diagnostic/ADD_DEBUG',
-      `Co-signed transaction with account ${addr} and result: ${JSON.stringify({
-        parentHash: signature.parentHash,
-        signature: signature.signature,
-      })}`,
-    )
+    this.$store.dispatch('diagnostic/ADD_DEBUG', `Co-signed transaction with account ${addr} and result: ${JSON.stringify({
+      parentHash: signature.parentHash,
+      signature: signature.signature,
+    })}`)
     // in modal transactioncosignature
     // - broadcast signed transactions
     const service = new TransactionService(this.$store)
     const results: BroadcastResult[] = await service.announceCosignatureTransactions([signature])
     // - notify about errors
-    const errors = results.filter((result) => false === result.success)
+    const errors = results.filter(result => false === result.success)
     if (errors.length) {
-      return errors.map((result) => this.$store.dispatch('notification/ADD_ERROR', result.error))
+      return errors.map(result => this.$store.dispatch('notification/ADD_ERROR', result.error))
     }
     this.$Notice.success({
       title: this['$t']('Transaction announce successfully!') + '',

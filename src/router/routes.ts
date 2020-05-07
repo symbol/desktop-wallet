@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { createStepImage, importStepImage, importLedgerStepImage, officialIcons } from '@/views/resources/Images'
+import { createStepImage, importStepImage,importLedgerStepImage, officialIcons } from '@/views/resources/Images'
 import { AppRoute } from './AppRoute'
 
 export const routes: AppRoute[] = [
@@ -164,8 +164,8 @@ export const routes: AppRoute[] = [
                 path: 'inputLedgerAccountInfo',
                 name: 'accounts.importLedgerAccount',
                 meta: {
-                  protected: false,
-                  isLedger: true,
+                  protected:false,
+                  isLedger: true, 
                   icon: importLedgerStepImage.importLedgerStepImage1,
                 },
                 // @ts-ignore
@@ -176,13 +176,13 @@ export const routes: AppRoute[] = [
                 name: 'accounts.importLedger',
                 meta: {
                   protected: false,
-                  isLedger: true,
+                  isLedger: true, 
                   icon: importLedgerStepImage.importLedgerStepImage2,
+
                 },
                 // @ts-ignore
                 component: () => import('@/views/pages/wallets/WalletImportLedger/WalletImportLedger.vue'),
-              },
-            ],
+              }],
           },
           {
             path: 'import',
@@ -195,8 +195,8 @@ export const routes: AppRoute[] = [
                 path: 'inputLedgerAccountInfo',
                 name: 'accounts.importLedgerAccount',
                 meta: {
-                  protected: false,
-                  isLedger: true,
+                  protected:false,
+                  isLedger: true, 
                   icon: importLedgerStepImage.importLedgerStepImage1,
                 },
                 // @ts-ignore
@@ -207,13 +207,13 @@ export const routes: AppRoute[] = [
                 name: 'accounts.importLedger',
                 meta: {
                   protected: false,
-                  isLedger: true,
+                  isLedger: true, 
                   icon: importLedgerStepImage.importLedgerStepImage2,
+
                 },
                 // @ts-ignore
                 component: () => import('@/views/pages/wallets/WalletImportLedger/WalletImportLedger.vue'),
-              },
-            ],
+              }],
           },
         ],
       },

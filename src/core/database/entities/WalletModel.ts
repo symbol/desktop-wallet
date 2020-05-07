@@ -14,7 +14,7 @@
  *
  */
 
-import { Address, PublicAccount } from 'symbol-sdk'
+import {Address, PublicAccount} from 'symbol-sdk'
 
 export class WalletType {
   public static readonly SEED: number = 1
@@ -40,12 +40,14 @@ export class WalletType {
   }
 }
 
+
 /**
  * Stored POJO that holds user provided wallet information.
  *
  * The object is serialized and deserialized to/from JSON. no method or complex attributes can be fined.
  */
 export class WalletModel {
+
   public readonly id: string
   public readonly name: string
   public readonly accountName: string
@@ -62,9 +64,10 @@ export class WalletModel {
    * Permits to return specific field's mapped object instances
    * @return any
    */
-  public static getObjects(model: WalletModel): { address: Address; publicAccount: PublicAccount } {
+  public static getObjects(model: WalletModel): { address: Address, publicAccount: PublicAccount } {
     const address = Address.createFromRawAddress(model.address)
     const publicAccount = PublicAccount.createFromPublicKey(model.publicKey, address.networkType)
-    return { address, publicAccount }
+    return {address, publicAccount}
   }
+
 }
