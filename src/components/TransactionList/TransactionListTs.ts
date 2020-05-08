@@ -21,7 +21,6 @@ import { SymbolLedger } from '@/core/utils/Ledger'
 // internal dependencies
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 import { TransactionService } from '@/services/TransactionService'
-import { WalletModel, WalletType } from '@/core/database/entities/WalletModel'
 // child components
 // @ts-ignore
 import ModalTransactionCosignature from '@/views/modals/ModalTransactionCosignature/ModalTransactionCosignature.vue'
@@ -47,9 +46,7 @@ import { BroadcastResult } from '@/core/transactions/BroadcastResult'
   computed: {
     ...mapGetters({
       currentAccount: 'account/currentAccount',
-      // currentWallet: 'wallet/currentWallet',
       networkMosaic: 'mosaic/networkMosaic',
-      currentHeight: 'network/currentHeight',
       // use partial+unconfirmed from store because
       // of ephemeral nature (websocket only here)
       confirmedTransactions: 'transaction/confirmedTransactions',
@@ -75,20 +72,6 @@ export class TransactionListTs extends Vue {
    * @var {AccountModel}
    */
   public currentAccount: AccountModel
-
-  /**
-   * Currently active wallet
-   * @see {Store.Wallet}
-   * @var {WalletModel}
-   */
-  // public currentWallet: WalletModel
-
-  /**
-   * Network block height
-   * @see {Store.Network}
-   * @var {number}
-   */
-  public currentHeight: number
 
   /**
    * Network mosaic id

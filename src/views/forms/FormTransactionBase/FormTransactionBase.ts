@@ -18,7 +18,6 @@ import {
   Mosaic,
   Deadline,
   UInt64,
-  Account,
   AggregateTransaction,
   SignedTransaction,
   LockFundsTransaction,
@@ -41,7 +40,6 @@ import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyMo
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
 import { SymbolLedger } from '@/core/utils/Ledger'
 // internal dependencies
-import { WalletModel, WalletType } from '@/core/database/entities/WalletModel'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 
 @Component({
@@ -320,7 +318,7 @@ export class FormTransactionBase extends Vue {
       const networkType = this.currentProfile.networkType
       const accountResult = await symbolLedger.getAccount(currentPath)
       const { address, publicKey, path } = accountResult
-      const defaultFee = this.$store.getters['app/defaultFee']
+      // const defaultFee = this.$store.getters['app/defaultFee']
       const currentSigner = this.$store.getters['account/currentSigner']
       const signedTransactions = []
       try {

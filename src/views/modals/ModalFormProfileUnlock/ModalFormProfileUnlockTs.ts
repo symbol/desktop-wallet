@@ -29,7 +29,6 @@ import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock
   computed: {
     ...mapGetters({
       currentAccount: 'account/currentAccount',
-      // currentWallet: 'wallet/currentWallet',
     }),
   },
 })

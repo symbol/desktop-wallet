@@ -19,8 +19,6 @@ import { mapGetters } from 'vuex'
 // internal dependencies
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
-import { WalletModel, WalletType } from '@/core/database/entities/WalletModel'
-import { AccountService } from '@/services/AccountService'
 import { ProfileService } from '@/services/ProfileService'
 import { NotificationType } from '@/core/utils/NotificationType'
 

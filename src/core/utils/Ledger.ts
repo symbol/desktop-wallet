@@ -17,7 +17,6 @@ import { Transaction, SignedTransaction, Convert, CosignatureSignedTransaction, 
  */
 
 const MAX_CHUNK_SIZE = 255
-const ADPUS = []
 
 export class SymbolLedger {
   transport: any
