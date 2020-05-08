@@ -470,23 +470,26 @@ export class TransactionService extends AbstractService {
 
     // - validate hash lock availability
     if (undefined === hashLockTransaction) {
-      throw new Error('Partial transactions (aggregate bonded) must be preceeded by a hash lock transaction.')
+      return [
+        new BroadcastResult(
+          hashLockTransaction,
+          false,
+          'Partial transactions (aggregate bonded) must be preceeded by a hash lock transaction.',
+        ),
+      ]
     }
 
-    // - announce lock, await confirmation and announce partial
-    const result = await this.$store.dispatch('account/REST_ANNOUNCE_PARTIAL', {
-      issuer: issuer.address.plain(),
-      signedLock: hashLockTransaction,
-      signedPartial: aggregateTransaction,
-    })
-
-    // - reset signature flow
     this.$store.commit('account/stageOptions', {
       isAggregate: false,
       isMultisig: false,
     })
 
-    return [result]
+    // - announce lock, await confirmation and announce partial
+    return this.$store.dispatch('account/REST_ANNOUNCE_PARTIAL', {
+      issuer: issuer.address.plain(),
+      signedLock: hashLockTransaction,
+      signedPartial: aggregateTransaction,
+    })
   }
 
   /**

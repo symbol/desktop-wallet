@@ -37,6 +37,7 @@ import * as _ from 'lodash'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
 import { AccountService } from '@/services/AccountService'
 import { catchError, map } from 'rxjs/operators'
+import { AggregateBoundedAnnounceService } from '@/services/AggregateBoundedAnnounceService'
 
 /// region globals
 const Lock = AwaitLock.create()
@@ -493,10 +494,8 @@ export default {
     async REST_ANNOUNCE_PARTIAL(
       { commit, dispatch, rootGetters },
       { issuer, signedLock, signedPartial },
-    ): Promise<BroadcastResult> {
-      if (!issuer || issuer.length !== 40) {
-        return
-      }
+    ): Promise<BroadcastResult[]> {
+      if (!issuer || issuer.length !== 40) return
 
       dispatch(
         'diagnostic/ADD_DEBUG',
@@ -509,39 +508,19 @@ export default {
         { root: true },
       )
 
-      try {
-        // - prepare REST parameters
-        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
-        const transactionHttp = repositoryFactory.createTransactionRepository()
+      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
 
-        // - prepare scoped *confirmation listener*
-        const listener = repositoryFactory.createListener()
-        await listener.open()
+      const broadcastResult = await new AggregateBoundedAnnounceService(
+        signedLock,
+        signedPartial,
+        repositoryFactory.createTransactionRepository(),
+        repositoryFactory.createListener(),
+      ).start()
 
-        // - announce hash lock transaction and await confirmation
-        transactionHttp.announce(signedLock)
+      commit('removeSignedTransaction', signedLock)
+      commit('removeSignedTransaction', signedPartial)
 
-        // - listen for hash lock confirmation
-        return new Promise((resolve, reject) => {
-          const address = Address.createFromRawAddress(issuer)
-          return listener.confirmed(address).subscribe(
-            async () => {
-              // - hash lock confirmed, now announce partial
-              await transactionHttp.announceAggregateBonded(signedPartial)
-              commit('removeSignedTransaction', signedLock)
-              commit('removeSignedTransaction', signedPartial)
-              return resolve(new BroadcastResult(signedPartial, true))
-            },
-            () => {
-              commit('removeSignedTransaction', signedLock)
-              commit('removeSignedTransaction', signedPartial)
-              reject(new BroadcastResult(signedPartial, false))
-            },
-          )
-        })
-      } catch (e) {
-        return new BroadcastResult(signedPartial, false, e.toString())
-      }
+      return [broadcastResult]
     },
     async REST_ANNOUNCE_TRANSACTION(
       { commit, dispatch, rootGetters },
