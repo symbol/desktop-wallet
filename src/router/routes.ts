@@ -382,53 +382,6 @@ export const routes: AppRoute[] = [
           },
         ],
       },
-      {
-        path: '/settings',
-        name: 'settings',
-        redirect: '/settings/general',
-        meta: {
-          protected: true,
-          clickable: true,
-          title: 'sidebar_item_settings',
-          icon: officialIcons.settings,
-        },
-        // @ts-ignore
-        component: () => import('@/views/pages/settings/Settings.vue'),
-        /// region settings children
-        children: [
-          {
-            path: 'general',
-            name: 'settings.general',
-            meta: {
-              protected: true,
-              title: 'page_title_settings_general',
-            },
-            // @ts-ignore
-            component: () => import('@/views/forms/FormGeneralSettings/FormGeneralSettings.vue'),
-          },
-          {
-            path: 'password-reset',
-            name: 'settings.password',
-            meta: {
-              protected: true,
-              title: 'page_title_settings_password',
-            },
-            // @ts-ignore
-            component: () => import('@/views/forms/FormProfilePasswordUpdate/FormProfilePasswordUpdate.vue'),
-          },
-          {
-            path: 'about',
-            name: 'settings.about',
-            meta: {
-              protected: true,
-              title: 'page_title_settings_about',
-            },
-            // @ts-ignore
-            component: () => import('@/views/pages/settings/AboutPage/AboutPage.vue'),
-          },
-        ],
-        /// end-region settings children
-      },
     ],
     /// end-region PageLayout children
   },

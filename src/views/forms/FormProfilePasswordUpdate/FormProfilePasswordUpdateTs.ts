@@ -47,6 +47,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
     ...mapGetters({
       currentProfile: 'profile/currentProfile',
       networkConfiguration: 'network/networkConfiguration',
+      isSettingVisible: 'profile/isSettingVisible',
     }),
   },
 })
@@ -90,7 +91,7 @@ export class FormProfilePasswordUpdateTs extends Vue {
   public $refs!: {
     observer: InstanceType<typeof ValidationObserver>
   }
-
+  public isSettingVisible: boolean
   /// region computed properties getter/setter
   public get hasAccountUnlockModal(): boolean {
     return this.isUnlockingAccount
@@ -141,6 +142,7 @@ export class FormProfilePasswordUpdateTs extends Vue {
 
       // - update state and finalize
       this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS_PASSWORD_CHANGED)
+      this.isSettingVisible && this.$store.commit('profile/toggleSetting')
       await this.$store.dispatch('profile/LOG_OUT')
       setTimeout(() => {
         this.$router.push({ name: 'profiles.login' })

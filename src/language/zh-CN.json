@@ -540,5 +540,15 @@
   "warning_already_a_cosignatory": "此帐户已是联名用户！",
   "welcome": "Welcome",
   "word": "字",
-  "x_seconds": "{seconds}秒"
+  "x_seconds": "{seconds}秒",
+  "current_network": "当前网络类型",
+  "node_list": "节点列表",
+  "node_url": "节点URL",
+  "automatically_generated_by_node_url": "通过输入的节点URL自动形成",
+  "network_type": "网络类型",
+  "peer_tip": "你可以使用 {setting} 来管理节点或者是配置一个新的网络",
+  "network_settings": "网络设置",
+  "current_speed": "当前网速",
+  "unknown": "未知",
+  "input_here": "这里输入..."
 }

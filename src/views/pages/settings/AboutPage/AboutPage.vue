@@ -147,6 +147,7 @@ export default class AboutPage extends Vue {
 </script>
 
 <style lang="less" scoped>
+@import '../../../resources/css/variables.less';
 .about-container {
   display: block;
   width: 100%;
@@ -155,21 +156,9 @@ export default class AboutPage extends Vue {
 
   .form-row {
     width: 100%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-
-    .label {
-      float: left;
-      font-size: 20px;
-      width: 250px;
-    }
-
-    .value {
-      float: left;
-      margin-left: 50px;
-      font-size: 20px;
-      font-weight: bolder;
-    }
+    display: grid;
+    grid-template-columns: 20% 80%;
+    font-size: @smallFont;
   }
 
   .subtitle {

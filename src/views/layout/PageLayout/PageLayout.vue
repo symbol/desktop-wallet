@@ -29,6 +29,7 @@
 
           <PeerSelector />
           <LanguageSelector />
+          <Settings />
           <AccountSelectorField @input="onChangeAccount" />
         </div>
       </div>

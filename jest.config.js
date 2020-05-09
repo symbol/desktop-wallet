@@ -19,7 +19,7 @@ module.exports = {
     "^.+\\.ts$": "ts-jest",
   },
   transformIgnorePatterns: [
-    '<rootDir>/node_modules/',
+    '<rootDir>/node_modules/?!(vee-validate/dist/rules)',
   ],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",

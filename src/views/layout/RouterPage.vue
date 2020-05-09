@@ -5,9 +5,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-
-export default class Login extends Vue {}
+import { Component, Vue } from 'vue-property-decorator'
+@Component
+export default class RouterPage extends Vue {}
 </script>
 <style lang="less" scoped>
 @import './RouterPage.less';

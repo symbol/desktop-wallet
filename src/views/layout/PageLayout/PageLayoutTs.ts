@@ -36,6 +36,8 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 import AccountSelectorField from '@/components/AccountSelectorField/AccountSelectorField.vue'
 // @ts-ignore
 import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue'
+//@ts-ignore
+import Settings from '@/components/Settings/Settings.vue'
 import { URLInfo } from '@/core/utils/URLInfo'
 
 @Component({
@@ -48,6 +50,7 @@ import { URLInfo } from '@/core/utils/URLInfo'
     LanguageSelector,
     AccountSelectorField,
     ModalDebugConsole,
+    Settings,
   },
   computed: {
     ...mapGetters({

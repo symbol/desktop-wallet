@@ -111,4 +111,5 @@ export enum NotificationType {
   WRONG_PASSWORD_ERROR = 'password_error',
   WRONG_WALLET_NAME_ERROR = 'wrong_wallet_name_error',
   COPY_FAILED = 'copy_failed',
+  INVALID_NODE = 'invalid_node',
 }

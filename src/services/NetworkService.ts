@@ -18,7 +18,7 @@ import { NetworkModel } from '@/core/database/entities/NetworkModel'
 import { NetworkConfiguration, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk'
 import { URLHelpers } from '@/core/utils/URLHelpers'
 import { combineLatest, defer, EMPTY, from, Observable } from 'rxjs'
-import { catchError, concatMap, flatMap, map, take, tap } from 'rxjs/operators'
+import { catchError, concatMap, flatMap, map, take, tap, isEmpty } from 'rxjs/operators'
 import * as _ from 'lodash'
 
 import { ObservableHelpers } from '@/core/utils/ObservableHelpers'
@@ -60,13 +60,24 @@ export class NetworkService {
     fallback: boolean
     networkModel: NetworkModel
     repositoryFactory: RepositoryFactory
+    isCandidateUrlAvailable: boolean
   }> {
     const possibleUrls = this.resolveCandidates(
       candidateUrl,
       this.storage.get(generationHash) || this.storage.getLatest(),
     )
+    let isCandidateUrlAvailable: boolean = true
     const repositoryFactoryObservable = from(possibleUrls)
-      .pipe(concatMap((url) => this.createRepositoryFactory(url)))
+      .pipe(
+        concatMap((url) => {
+          if (url === candidateUrl) {
+            this.createRepositoryFactory(url)
+              .pipe(isEmpty())
+              .subscribe((isEmpty) => (isCandidateUrlAvailable = !isEmpty))
+          }
+          return this.createRepositoryFactory(url)
+        }),
+      )
       .pipe(take(1))
     return repositoryFactoryObservable.pipe(
       flatMap(({ url, repositoryFactory }) => {
@@ -118,6 +129,7 @@ export class NetworkService {
                     nodeInfo,
                   ),
                   repositoryFactory,
+                  isCandidateUrlAvailable,
                 }
               }),
               tap((p) => this.storage.set(generationHash, p.networkModel)),
