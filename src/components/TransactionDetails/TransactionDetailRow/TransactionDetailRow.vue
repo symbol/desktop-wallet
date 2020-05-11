@@ -36,8 +36,11 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 
 // child components
+// @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
+// @ts-ignore
 import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue'
+// @ts-ignore
 import PaidFeeDisplay from '@/components/PaidFeeDisplay/PaidFeeDisplay.vue'
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
 

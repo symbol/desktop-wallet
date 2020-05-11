@@ -27,6 +27,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 // internal dependencies
 // child components
 import { TransactionView } from '@/core/transactions/TransactionView'
+// @ts-ignore
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
 
 @Component({ components: { TransactionDetailRow } })

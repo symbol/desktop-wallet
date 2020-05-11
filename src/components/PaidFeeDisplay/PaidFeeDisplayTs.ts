@@ -16,6 +16,7 @@
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Transaction } from 'symbol-sdk'
+// @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 import { BlockInfoModel } from '@/core/database/entities/BlockInfoModel'
 // configuration

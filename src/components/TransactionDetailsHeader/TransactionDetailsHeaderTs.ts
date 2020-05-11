@@ -22,6 +22,7 @@ import { Formatters } from '@/core/utils/Formatters'
 // child components
 // @ts-ignore
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
+// @ts-ignore
 import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
 
 @Component({
