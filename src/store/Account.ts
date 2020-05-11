@@ -473,12 +473,12 @@ export default {
       // get all subscriptions
       const subscriptions: Record<string, SubscriptionType[]> = getters.getSubscriptions
       // subscriptions to close
-      const subscrptionTypes = (subscriptions && subscriptions[plainAddress]) || []
+      const subscriptionTypes = (subscriptions && subscriptions[plainAddress]) || []
 
-      if (!subscrptionTypes.length) return
+      if (!subscriptionTypes.length) return
 
       // close subscriptions
-      for (const subscriptionType of subscrptionTypes) {
+      for (const subscriptionType of subscriptionTypes) {
         const { listener, subscriptions } = subscriptionType
         for (const subscription of subscriptions) subscription.unsubscribe()
         listener.close()
