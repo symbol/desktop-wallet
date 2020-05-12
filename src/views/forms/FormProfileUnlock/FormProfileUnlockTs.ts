@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Account, NetworkType, Password, Crypto } from 'symbol-sdk'
+import { Account, NetworkType, Address, Password, Crypto } from 'symbol-sdk'
 import { Component, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { ProfileService } from '@/services/ProfileService'
+import { NotificationType } from '@/core/utils/NotificationType'
+
 // child components
 import { ValidationProvider } from 'vee-validate'
 // @ts-ignore
@@ -39,6 +42,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
     ...mapGetters({
       networkType: 'network/networkType',
       currentAccount: 'account/currentAccount',
+      currentPass: 'temporary/password',
     }),
   },
 })
@@ -55,6 +59,7 @@ export class FormProfileUnlockTs extends Vue {
    */
   public currentAccount: AccountModel
 
+  public currentPass: Password
   /**
    * Validation rules
    * @var {ValidationRuleset}
@@ -77,14 +82,37 @@ export class FormProfileUnlockTs extends Vue {
    * .
    * @return {void}
    */
+  public get isLedger(): boolean {
+    return this.currentAccount.type == AccountType.fromDescriptor('Ledger')
+  }
+
+  public accountService = new ProfileService()
+
   public processVerification() {
     try {
       const password = new Password(this.formItems.password)
-      const privateKey: string = Crypto.decrypt(this.currentAccount.encryptedPrivateKey, password.value)
+      // const privateKey: string = Crypto.decrypt(this.currentAccount.encryptedPrivateKey, password.value)
+      const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password))
+      // read account's password hash and compare
+      const currentProfile = this.accountService.getProfileByName(this.currentAccount.profileName)
+      const accountPass = currentProfile.password
 
-      if (privateKey.length === 64) {
-        const unlockedAccount = Account.createFromPrivateKey(privateKey, this.networkType)
-        return this.$emit('success', { account: unlockedAccount, password })
+      if (accountPass !== passwordHash) {
+        return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
+      }
+
+      console.log('isLedger is', this.isLedger)
+      if (this.isLedger && accountPass == passwordHash) {
+        const publickey = this.currentAccount.publicKey
+        const addr = Address.createFromPublicKey(publickey, this.networkType)
+        return this.$emit('success', { account: this.currentAccount, addr, password })
+      } else {
+        const privateKey: string = Crypto.decrypt(this.currentAccount.encryptedPrivateKey, password.value)
+
+        if (privateKey.length === 64) {
+          const unlockedAccount = Account.createFromPrivateKey(privateKey, this.networkType)
+          return this.$emit('success', { account: unlockedAccount, password })
+        }
       }
 
       return this.$emit('error', this.$t('error_invalid_password'))
