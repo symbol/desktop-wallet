@@ -101,7 +101,6 @@ export class FormProfileUnlockTs extends Vue {
         return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
       }
 
-      console.log('isLedger is', this.isLedger)
       if (this.isLedger && accountPass == passwordHash) {
         const publickey = this.currentAccount.publicKey
         const addr = Address.createFromPublicKey(publickey, this.networkType)
