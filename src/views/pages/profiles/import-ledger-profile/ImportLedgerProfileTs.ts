@@ -63,7 +63,7 @@ export class ImportLedgerProfileTs extends Vue {
   ledgerForm = {
     networkType: NetworkType.TEST_NET,
     accountIndex: 0,
-    walletName: 'Ledger Wallet',
+    walletName: 'Ledger Account',
   }
 
   public created() {
@@ -72,7 +72,7 @@ export class ImportLedgerProfileTs extends Vue {
 
   toAccountDetails() {
     this.$Notice.success({
-      title: this['$t']('Imported_wallet_successfully') + '',
+      title: this['$t']('Imported Account Successfully') + '',
     })
     this.$router.push('/dashboard')
   }
@@ -86,11 +86,11 @@ export class ImportLedgerProfileTs extends Vue {
   }
   numExistingLedgerAccounts(networkType) {
     let num = 0
-    const existingWallets = this.accountService.getAccounts()
-    existingWallets.filter((wallet) => {
+    const existingAccounts = this.accountService.getAccounts()
+    existingAccounts.filter((wallet) => {
       const accountName1 = wallet.profileName
       let networkTypeLocal
-      for (let i = 0, m = existingWallets.length; i < m; i++) {
+      for (let i = 0, m = existingAccounts.length; i < m; i++) {
         const accounts = this.profileService.getProfiles()
         const account = accounts[i]
         const accountName2 = account.profileName
