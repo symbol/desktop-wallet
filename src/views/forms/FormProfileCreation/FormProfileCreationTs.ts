@@ -55,6 +55,11 @@ export class FormProfileCreationTs extends Vue {
    * @var {string}
    */
   public currentProfile: ProfileModel
+  isLedger = false
+  created() {
+    const { isLedger } = this.$route.meta
+    this.isLedger = isLedger
+  }
 
   /**
    * Currently active network type
@@ -154,6 +159,10 @@ export class FormProfileCreationTs extends Vue {
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
     // flush and continue
-    this.$router.push({ name: this.nextPage })
+    if (!this.isLedger) {
+      this.$router.push({ name: this.nextPage })
+    } else {
+      this.$router.push('importLedger')
+    }
   }
 }
