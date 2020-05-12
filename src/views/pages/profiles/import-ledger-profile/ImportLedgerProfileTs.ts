@@ -61,8 +61,9 @@ export class ImportLedgerProfileTs extends Vue {
   ]
 
   ledgerForm = {
+    networkType: NetworkType.TEST_NET,
     accountIndex: 0,
-    accountName: 'Ledger Account',
+    walletName: 'Ledger Wallet',
   }
 
   public created() {
@@ -71,7 +72,7 @@ export class ImportLedgerProfileTs extends Vue {
 
   toAccountDetails() {
     this.$Notice.success({
-      title: this['$t']('Imported Account Successfully') + '',
+      title: this['$t']('Imported_wallet_successfully') + '',
     })
     this.$router.push('/dashboard')
   }
