@@ -19,7 +19,7 @@ import { MosaicId, NetworkType } from 'symbol-sdk'
 import { ValidationProvider } from 'vee-validate'
 // internal dependencies
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 import { AccountService } from '@/services/AccountService'
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 // child components
@@ -124,6 +124,10 @@ export class AccountSelectorPanelTs extends Vue {
    * @var {ValidationRuleset}
    */
   public validationRules = ValidationRuleset
+
+  public get isLedger(): boolean {
+    return this.currentAccount.type == AccountType.fromDescriptor('Ledger')
+  }
 
   /**
    * Hook called when the component is created
