@@ -16,31 +16,41 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
 // internal dependencies
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { createValidationRuleSet } from '@/core/validation/ValidationRuleset'
 
 // child components
 import { ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import { mapGetters } from 'vuex'
+import { MosaicModel } from '@/core/database/entities/MosaicModel'
+import NetworkConfig from '../../../config/network.conf.json'
 
 @Component({
   components: {
     ValidationProvider,
     ErrorTooltip,
   },
+  computed: {
+    ...mapGetters({
+      mosaics: 'mosaic/mosaics',
+    }),
+  },
 })
 export class AmountInputTs extends Vue {
-  @Prop({
-    default: '',
-  })
-  value: string
-
+  @Prop({ default: '' }) value: string
+  @Prop({ default: '' }) mosaicHex: string
   /**
    * Validation rules
    * @var {ValidationRuleset}
    */
-  public validationRules = ValidationRuleset
-
+  public mosaics: MosaicModel[]
+  public get validationRules() {
+    const chosenMosaic = this.mosaics.find((mosaic) => this.mosaicHex == mosaic.mosaicIdHex)
+    const networkConfigurationDefaults = NetworkConfig.networkConfigurationDefaults
+    networkConfigurationDefaults.maxMosaicDivisibility = chosenMosaic.divisibility
+    return createValidationRuleSet(networkConfigurationDefaults)
+  }
   /// region computed properties getter/setter
   public get relativeValue(): string {
     return this.value
