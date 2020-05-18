@@ -148,13 +148,12 @@ export class CustomValidationRules {
       },
       message: `${i18n.t('error_new_password_format')}`,
     }),
-
-    extend('in', {
-      validate: (value, array: string[]) => {
-        if (!array) return false
-        return array.includes(value)
-      },
-      message: `${i18n.t('error_not_exist')}`,
-    })
+      extend('in', {
+        validate: (value, array: string[]) => {
+          if (!array) return false
+          return array.includes(value)
+        },
+        message: `${i18n.t('error_not_exist')}`,
+      })
   }
 }

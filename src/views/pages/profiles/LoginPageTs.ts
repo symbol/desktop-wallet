@@ -97,7 +97,7 @@ export default class LoginPageTs extends Vue {
    * All known profiles names
    */
   protected get profileNames(): string[] {
-    return this.profiles.map(({profileName}) => profileName)
+    return this.profiles.map(({ profileName }) => profileName)
   }
   /**
    * Hook called when the page is mounted
