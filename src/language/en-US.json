@@ -667,7 +667,7 @@
   "please_input_divisibility": "Please enter a divisibility (0-6)",
   "PRIVATE_KEY_INVALID_ERROR": "This private key is invalid.",
   "address_unknown": "This address is unknown to the network, please try with its public key instead",
-  "please_enter_a_custom_nod_address": "Enter a custom node URL",
+  "please_enter_a_custom_node_address": "Enter a custom node URL",
   "filter_peers": "Filter peers",
   "cosigners": "Co-signatories",
   "address_invalid": "This address is invalid",
@@ -1133,5 +1133,7 @@
   "copy_failed": "Copy failed",
   "news_read_more": "Read more",
   "latest_news_articles": "Latest news articles",
-  "article_by": "By {creator}"
+  "article_by": "By {creator}",
+  "current_network": "Current Network",
+  "node_list": "Node list"
 }
