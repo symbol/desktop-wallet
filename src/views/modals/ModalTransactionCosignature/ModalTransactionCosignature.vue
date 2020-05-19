@@ -42,7 +42,7 @@
           <p>{{ $t('transaction_needs_cosignature_explain') }}</p>
         </div>
 
-        <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onTransactionsSigned" @error="onError" />
+        <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
         <FormProfileUnlock v-else @success="onAccountUnlocked" @error="onError" />
       </div>
     </Modal>

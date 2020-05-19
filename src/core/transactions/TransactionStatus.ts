@@ -13,28 +13,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-// external dependencies
-import { Store } from 'vuex'
-import VueI18n from 'vue-i18n'
-// internal dependencies
-import { IService } from './IService'
 
-export abstract class AbstractService implements IService {
-  /**
-   * Service name
-   * @var {string}
-   */
-  public name: string = ''
-
-  /**
-   * Vuex Store
-   * @var {Vuex.Store}
-   */
-  public $store: Store<any>
-
-  /**
-   * Vuex Store
-   * @var {VueI18n}
-   */
-  public $i18n: VueI18n
+export enum TransactionStatus {
+  confirmed = 'confirmed',
+  unconfirmed = 'unconfirmed',
+  partial = 'partial',
 }
