@@ -162,7 +162,7 @@ export class FormProfileCreationTs extends Vue {
     if (!this.isLedger) {
       this.$router.push({ name: this.nextPage })
     } else {
-      this.$router.push('importLedger')
+      this.$router.push({name:'accounts.importLedger'})
     }
   }
 }

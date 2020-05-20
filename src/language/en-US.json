@@ -419,6 +419,7 @@
   "CREATE_LOCK_PASSWORD": "Create lock password",
   "This_password_is_used_for_desktop_account_locking": "This password is used to unlock the application",
   "Set_the_password": "Enter your password",
+  "Set_the_Ledger_account_name": "Set the Ledger Account name",
   "Confirm_the_password": "Confirm your password",
   "Set_the_password_prompts": "Set a password hint",
   "skip": "Skip",
