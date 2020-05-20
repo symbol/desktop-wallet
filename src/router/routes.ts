@@ -151,15 +151,6 @@ export const routes: AppRoute[] = [
                 // @ts-ignore
                 component: () => import('@/views/pages/profiles/import-profile/finalize/Finalize.vue'),
               },
-            ],
-          },
-          {
-            path: 'import',
-            name: 'profiles.importLedgerProfile',
-            meta: { protected: false },
-            // @ts-ignore
-            component: () => import('@/views/pages/profiles/import-profile/ImportProfile.vue'),
-            children: [
               {
                 path: 'inputLedgerAccountInfo',
                 name: 'profiles.importLedgerProfile',
@@ -174,37 +165,6 @@ export const routes: AppRoute[] = [
               {
                 path: 'importLedger',
                 name: 'accounts.importLedger',
-                meta: {
-                  protected: false,
-                  isLedger: true,
-                  icon: importLedgerStepImage.importLedgerStepImage2,
-                },
-                // @ts-ignore
-                component: () => import('@/views/pages/profiles/import-ledger-profile/ImportLedgerProfile.vue'),
-              },
-            ],
-          },
-          {
-            path: 'import',
-            name: 'profiles.importLedgerProfile',
-            meta: { protected: false },
-            // @ts-ignore
-            component: () => import('@/views/pages/profiles/import-profile/ImportProfile.vue'),
-            children: [
-              {
-                path: 'inputLedgerAccountInfo',
-                name: 'profiles.importLedgerProfile',
-                meta: {
-                  protected: false,
-                  isLedger: true,
-                  icon: importLedgerStepImage.importLedgerStepImage1,
-                },
-                // @ts-ignore
-                component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
-              },
-              {
-                path: 'importLedger',
-                name: 'profiles.importLedger',
                 meta: {
                   protected: false,
                   isLedger: true,

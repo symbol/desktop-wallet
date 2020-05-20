@@ -61,9 +61,8 @@ export class ImportLedgerProfileTs extends Vue {
   ]
 
   ledgerForm = {
-    networkType: NetworkType.TEST_NET,
     accountIndex: 0,
-    walletName: 'Ledger Account',
+    accountName: 'Ledger Account',
   }
 
   public created() {
@@ -77,13 +76,10 @@ export class ImportLedgerProfileTs extends Vue {
     this.$router.push('/dashboard')
   }
   toBack() {
-    // this.deleteAccountAndBack();
     this.$store.dispatch('account/RESET_STATE')
-    this.$router.push('/accounts/create')
+    this.$router.push('/profiles/create')
   }
-  onNetworkSelected() {
-    this.ledgerForm = this.getDefaultFormValues(this.ledgerForm.networkType)
-  }
+
   numExistingLedgerAccounts(networkType) {
     let num = 0
     const existingAccounts = this.accountService.getAccounts()
@@ -106,17 +102,6 @@ export class ImportLedgerProfileTs extends Vue {
     return num
   }
 
-  getDefaultFormValues(networkType) {
-    const numExistingLedgerAccounts = this.numExistingLedgerAccounts(networkType)
-    const networkName = this.networkTypeList.find((network) => network.value === networkType).label
-
-    return {
-      networkType: networkType,
-      accountIndex: numExistingLedgerAccounts,
-      walletName: `${networkName} Ledger Account ${numExistingLedgerAccounts + 1}`,
-    }
-  }
-
   public onSubmit() {
     this.importAccountFromLedger()
       .then((res) => {
@@ -130,10 +115,6 @@ export class ImportLedgerProfileTs extends Vue {
         this.$store.dispatch('temporary/RESET_STATE')
         this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
         this.toAccountDetails()
-        // this.$store.dispatch('SET_UI_DISABLED', {
-        //   isDisabled: false,
-        //   message: '',
-        // })
       })
       .catch((error) => {
         {
@@ -142,7 +123,8 @@ export class ImportLedgerProfileTs extends Vue {
       })
   }
   async importAccountFromLedger(): Promise<AccountModel> {
-    const { accountIndex, networkType, walletName } = this.ledgerForm
+    const { accountIndex, accountName } = this.ledgerForm
+    const networkType = this.$store.getters['network/networkType']
     try {
       this.$Notice.success({
         title: this['$t']('Verify information in your device!') + '',
@@ -158,7 +140,7 @@ export class ImportLedgerProfileTs extends Vue {
 
       return {
         id: SimpleObjectStorage.generateIdentifier(),
-        name: walletName,
+        name: accountName,
         profileName: accName,
         node: '',
         type: AccountType.fromDescriptor('Ledger'),
