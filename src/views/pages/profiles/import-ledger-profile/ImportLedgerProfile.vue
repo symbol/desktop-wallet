@@ -8,16 +8,6 @@
     </div>
     <ul>
       <li>
-        {{ $t('choose_network') }}
-        <div class="gray_content">
-          <Select v-model="ledgerForm.networkType" :placeholder="$t('choose_network')" @on-change="onNetworkSelected">
-            <Option v-for="item in networkTypeList" :key="item.value" :value="item.value">
-              {{ item.label }}
-            </Option>
-          </Select>
-        </div>
-      </li>
-      <li>
         {{ $t('choose_account_index') }}
         <div class="gray_content">
           <input
@@ -31,13 +21,13 @@
         </div>
       </li>
       <li>
-        {{ $t('set_the_wallet_name') }}
+        {{ $t('Set_the_Ledger_account_name') }}
         <div class="gray_content">
           <input
             v-model="ledgerForm.walletName"
             class="absolute"
             type="text"
-            :placeholder="$t('set_the_wallet_name')"
+            :placeholder="$t('Set_the_Ledger_account_name')"
           />
         </div>
       </li>
