@@ -98,7 +98,6 @@ export class ModalTransactionCosignatureTs extends Vue {
     return this.transaction.cosignatures
   }
 
-
   /**
    * Hook called when child component FormProfileUnlock emits
    * the 'success' event.
