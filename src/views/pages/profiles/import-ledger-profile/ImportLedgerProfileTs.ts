@@ -61,9 +61,8 @@ export class ImportLedgerProfileTs extends Vue {
   ]
 
   ledgerForm = {
-    networkType: NetworkType.TEST_NET,
     accountIndex: 0,
-    walletName: 'Ledger Account',
+    accountName: 'Ledger Account',
   }
 
   public created() {
