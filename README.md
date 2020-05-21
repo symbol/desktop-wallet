@@ -56,6 +56,10 @@ This project is developed and maintained by NEM Foundation.
 Contributions are welcome and appreciated. 
 Check [CONTRIBUTING](CONTRIBUTING.md) for information on how to contribute.
 
+## Dev-Ledger2 Environment setup
+
+Through this [link](https://github.com/nemfoundation/symbol-desktop-wallet/wiki) to setup environment for dev-ledger2 branch.
+
 ## License
 
 Copyright 2018-present NEM
