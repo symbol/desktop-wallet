@@ -48,6 +48,7 @@
               v-model="formItems.namespaceFullName"
               label="form_label_choose_namespace"
               :namespaces="linkableNamespaces"
+              :disable-linked="true"
             />
 
             <FormRow v-if="aliasTargetType === 'mosaic'">

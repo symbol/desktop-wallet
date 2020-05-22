@@ -30,6 +30,7 @@
             :value="formItems.parentNamespaceName"
             label="form_label_parent_namespace"
             :namespaces="fertileNamespaces"
+            :parent-namespace="true"
             @input="setParentNamespaceName"
           />
 

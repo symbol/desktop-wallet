@@ -50,10 +50,80 @@ export class NamespaceSelectorTs extends Vue {
   @Prop({ default: null }) value: string
 
   /**
+   * Namespaces that are not linked
+   * @type {boolean}
+   */
+  @Prop({ default: false }) disableLinked: boolean
+
+  /**
+   * Namespaces that are linked to an alias
+   * @type {boolean}
+   */
+  @Prop({ default: false }) disableUnlinked: boolean
+
+  /**
+   * Level 1,2 namespace
+   * @type {boolean}
+   */
+  @Prop({ default: false }) parentNamespace: boolean
+
+  /**
+   * Level 3 namespace
+   * @type {boolean}
+   */
+  @Prop({ default: false }) nonParentNamespace: boolean
+
+  /**
    * Namespaces names
    * @type {[h: string]: string}
    */
   public namespaces: NamespaceModel[]
+
+  /**
+   * Filter Namespaces
+   */
+  get filteredNamespaces() {
+    if (this.disableLinked) return this.linkableNamespaces
+    if (this.disableUnlinked) return this.unlinkableNamespaces
+    if (this.parentNamespace) return this.parentNamespaces
+    if (this.nonParentNamespace) return this.nonParentNamespaces
+    return this.allNamespaces
+  }
+
+  /**
+   * Namespaces that are not linked
+   */
+  get linkableNamespaces() {
+    return this.namespaces.filter((n) => n.aliasType === 0)
+  }
+
+  /**
+   * Namespaces that are linked to an alias
+   */
+  get unlinkableNamespaces() {
+    return this.namespaces.filter((n) => n.aliasType !== 0)
+  }
+
+  /**
+   * Filter out of level 3 when creating a subnamespace
+   */
+  get parentNamespaces() {
+    return this.namespaces.filter((n) => n.depth !== 3)
+  }
+
+  /**
+   * Filter level 3 subnamespace
+   */
+  get nonParentNamespaces() {
+    return this.namespaces.filter((n) => n.depth === 3)
+  }
+
+  /**
+   * all namespaces
+   */
+  get allNamespaces() {
+    return this.namespaces
+  }
 
   /// region computed properties getter/setter
   /**
@@ -87,8 +157,8 @@ export class NamespaceSelectorTs extends Vue {
    */
   public mounted(): void {
     // set default value to the first namespace in the list
-    if (this.namespaces.length) {
-      this.chosenValue = this.getName(this.namespaces[0])
+    if (this.filteredNamespaces.length) {
+      this.chosenValue = this.getName(this.filteredNamespaces[0])
     }
   }
 }
