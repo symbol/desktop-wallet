@@ -39,33 +39,35 @@
             {{ areAllMosaicsShown() ? $t('uncheck_all') : $t('select_all') }}
           </span>
         </div>
-
-        <div
-          v-for="(entry, index) in allBalanceEntries"
-          :key="index"
-          :class="['mosaic_data', index === 0 ? 'padding_top_0' : '']"
-          class="mosaic_data pointer"
-          @click="toggleMosaicDisplay(entry.id)"
-        >
-          <span class="namege_img">
-            <img
-              class="small_icon"
-              :src="isMosaicHidden(entry.id) ? dashboardImages.unselected : dashboardImages.selected"
-            />
-            <img
-              v-if="entry.id.equals(networkMosaic)"
-              src="@/views/resources/img/symbol/XYMCoin.png"
-              class="mosaicIcon"
-            />
-            <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="mosaicIcon grayed-xym-logo" />
-          </span>
-          <span class="mosaic_name">
-            {{ entry.name }}
-          </span>
-          <span class="mosaic_value">
-            <MosaicAmountDisplay :id="entry.id" :absolute-amount="entry.amount" :size="'normal'" />
-          </span>
+        <div class="mosaic-data-list">
+          <div
+            v-for="(entry, index) in allBalanceEntries"
+            :key="index"
+            :class="['mosaic_data', index === 0 ? 'padding_top_0' : '']"
+            class="mosaic_data pointer"
+            @click="toggleMosaicDisplay(entry.id)"
+          >
+            <span class="namege_img">
+              <img
+                class="small_icon"
+                :src="isMosaicHidden(entry.id) ? dashboardImages.unselected : dashboardImages.selected"
+              />
+              <img
+                v-if="entry.id.equals(networkMosaic)"
+                src="@/views/resources/img/symbol/XYMCoin.png"
+                class="mosaicIcon"
+              />
+              <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="mosaicIcon grayed-xym-logo" />
+            </span>
+            <span class="mosaic_name">
+              {{ entry.name }}
+            </span>
+            <span class="mosaic_value">
+              <MosaicAmountDisplay :id="entry.id" :absolute-amount="entry.amount" :size="'normal'" />
+            </span>
+          </div>
         </div>
+
         <div class="complete_container">
           <div class="complete" @click="isEditionMode = false">
             {{ $t('Close') }}
