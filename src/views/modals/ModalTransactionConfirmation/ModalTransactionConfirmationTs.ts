@@ -186,15 +186,15 @@ export class ModalTransactionConfirmationTs extends Vue {
       const currentSigner: Signer = this.$store.getters['account/currentSigner']
       const multisigAccount = PublicAccount.createFromPublicKey(currentSigner.publicKey, this.networkType)
       // - use multisig public account and cosignatory to sign
-      signedTransactions = service.signMultisigStagedTransactions(multisigAccount, account)
+      signedTransactions = await service.signMultisigStagedTransactions(multisigAccount, account)
     }
     // - case 2 "is aggregate": must aggregate staged transactions and sign
     else if (options.isAggregate) {
-      signedTransactions = service.signAggregateStagedTransactions(account)
+      signedTransactions = await service.signAggregateStagedTransactions(account)
     }
     // - case 3 "normal": must sign staged transactions
     else {
-      signedTransactions = service.signStagedTransactions(account)
+      signedTransactions = await service.signStagedTransactions(account)
     }
 
     // - reset transaction stage

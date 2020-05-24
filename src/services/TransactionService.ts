@@ -39,8 +39,10 @@ import {
   UInt64,
 } from 'symbol-sdk'
 // internal dependencies
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
+import { SymbolLedger } from '@/core/utils/Ledger'
 import { AbstractService } from './AbstractService'
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 import { BroadcastResult } from '@/core/transactions/BroadcastResult'
 import { ViewMosaicDefinitionTransaction } from '@/core/transactions/ViewMosaicDefinitionTransaction'
 import { ViewMosaicSupplyChangeTransaction } from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
@@ -187,18 +189,28 @@ export class TransactionService extends AbstractService {
    * @param {Account} account
    * @return {SignedTransaction[]}
    */
-  public signStagedTransactions(account: Account): SignedTransaction[] {
+  public async signStagedTransactions(account: Account): Promise<SignedTransaction[]> {
     // - shortcuts
     const transactions: Transaction[] = this.$store.getters['account/stagedTransactions']
     const generationHash: string = this.$store.getters['network/generationHash']
     const signedTransactions = []
+    const currentAccount: AccountModel = this.$store.getters['account/currentAccount']
     // - iterate transaction that are "on stage"
     for (let i = 0, m = transactions.length; i < m; i++) {
       // - read transaction from stage
       const staged = transactions[i]
 
       // - sign transaction with \a account
-      const signedTx = account.sign(staged, generationHash)
+      let signedTx
+      if (this.isLedgerAccount()) {
+        const transport = await TransportWebUSB.create()
+        const symbolLedger = new SymbolLedger(transport, 'XYM')
+        signedTx = await this.ledgerSignTransaction(currentAccount, staged, generationHash, account, symbolLedger)
+        transport.close()
+      } else {
+        signedTx = account.sign(staged, generationHash)
+      }
+
       this.$store.commit('account/addSignedTransaction', signedTx)
       signedTransactions.push(signedTx)
 
@@ -223,7 +235,7 @@ export class TransactionService extends AbstractService {
    * @param {Account} account
    * @return {SignedTransaction[]}
    */
-  public signAggregateStagedTransactions(account: Account): SignedTransaction[] {
+  public async signAggregateStagedTransactions(account: Account | PublicAccount): Promise<SignedTransaction[]> {
     // - shortcuts
     const networkType: NetworkType = this.$store.getters['network/networkType']
     const transactions: Transaction[] = this.$store.getters['account/stagedTransactions']
@@ -234,34 +246,61 @@ export class TransactionService extends AbstractService {
       return signedTransactions
     }
 
-    // - aggregate staged transactions
     const maxFee = transactions.sort((a, b) => a.maxFee.compare(b.maxFee))[0].maxFee
 
-    // - aggregate staged transactions
-    const aggregateTx = AggregateTransaction.createComplete(
-      Deadline.create(),
-      // - format as `InnerTransaction`
-      transactions.map((t) => t.toAggregate(account.publicAccount)),
-      networkType,
-      [],
-      maxFee,
-    )
-
     // - sign aggregate transaction
-    const signedTx = account.sign(aggregateTx, generationHash)
-    this.$store.commit('account/addSignedTransaction', signedTx)
-    signedTransactions.push(signedTx)
+    const currentAccount: AccountModel = this.$store.getters['account/currentAccount']
+    let signedTx
+    if (this.isLedgerAccount()) {
+      const transport = await TransportWebUSB.create()
+      const symbolLedger = new SymbolLedger(transport, 'XYM')
+      const aggregateTx = AggregateTransaction.createComplete(
+        Deadline.create(),
+        // - format as `InnerTransaction`
+        transactions.map((t) => t.toAggregate(account as PublicAccount)),
+        networkType,
+        [],
+        maxFee,
+      )
 
-    // - notify diagnostics
-    this.$store.dispatch(
-      'diagnostic/ADD_DEBUG',
-      `Signed aggregate transaction with account ${account.address.plain()} and result: ${JSON.stringify({
-        hash: signedTx.hash,
-        payload: signedTx.payload,
-      })}`,
-    )
+      signedTx = await this.ledgerSignTransaction(currentAccount, aggregateTx, generationHash, account, symbolLedger)
+      transport.close()
+      this.$store.commit('account/addSignedTransaction', signedTx)
+      signedTransactions.push(signedTx)
 
-    return signedTransactions
+      // - notify diagnostics
+      this.$store.dispatch(
+        'diagnostic/ADD_DEBUG',
+        `Signed aggregate transaction with account ${account.address.plain()} and result: ${JSON.stringify({
+          hash: signedTx.hash,
+          payload: signedTx.payload,
+        })}`,
+      )
+      return signedTransactions
+    } else {
+      const aggregateTx = await AggregateTransaction.createComplete(
+        Deadline.create(),
+        // - format as `InnerTransaction`
+        transactions.map((t) => t.toAggregate((account as Account).publicAccount)),
+        networkType,
+        [],
+        maxFee,
+      )
+      signedTx = await (account as Account).sign(aggregateTx, generationHash)
+      this.$store.commit('account/addSignedTransaction', signedTx)
+      signedTransactions.push(signedTx)
+
+      // - notify diagnostics
+      this.$store.dispatch(
+        'diagnostic/ADD_DEBUG',
+        `Signed aggregate transaction with account ${account.address.plain()} and result: ${JSON.stringify({
+          hash: signedTx.hash,
+          payload: signedTx.payload,
+        })}`,
+      )
+
+      return signedTransactions
+    }
   }
 
   /**
@@ -277,10 +316,10 @@ export class TransactionService extends AbstractService {
    * @param {Account} account
    * @return {SignedTransaction[]}
    */
-  public signMultisigStagedTransactions(
+  public async signMultisigStagedTransactions(
     multisigAccount: PublicAccount,
-    cosignatoryAccount: Account,
-  ): SignedTransaction[] {
+    cosignatoryAccount: Account | PublicAccount,
+  ): Promise<SignedTransaction[]> {
     // - shortcuts
     const networkType: NetworkType = this.$store.getters['network/networkType']
     const transactions: Transaction[] = this.$store.getters['account/stagedTransactions']
@@ -304,12 +343,38 @@ export class TransactionService extends AbstractService {
     )
 
     // - sign aggregate transaction and create lock
-    const signedTx = cosignatoryAccount.sign(aggregateTx, generationHash)
-    const hashLock = this.createHashLockTransaction(signedTx, maxFee)
+    const currentAccount: AccountModel = this.$store.getters['account/currentAccount']
+    let signedTx, hashLock, signedLock
 
-    // - sign hash lock and push
-    const signedLock = cosignatoryAccount.sign(hashLock, generationHash)
+    if (this.isLedgerAccount()) {
+      const transport = await TransportWebUSB.create()
+      const symbolLedger = new SymbolLedger(transport, 'XYM')
+      signedTx = await this.ledgerSignTransaction(
+        currentAccount,
+        aggregateTx,
+        generationHash,
+        cosignatoryAccount,
+        symbolLedger,
+      )
+      hashLock = await this.createHashLockTransaction(signedTx, maxFee)
+      signedLock = await this.ledgerSignTransaction(
+        currentAccount,
+        hashLock,
+        generationHash,
+        cosignatoryAccount,
+        symbolLedger,
+      )
+      transport.close()
+    } else {
+      signedTx = (cosignatoryAccount as Account).sign(aggregateTx, generationHash)
+      hashLock = this.createHashLockTransaction(signedTx, maxFee)
+      signedLock = (cosignatoryAccount as Account).sign(hashLock, generationHash)
+    }
+    await this.pushSignedTxAndNotify(signedTransactions, signedLock, signedTx, multisigAccount, cosignatoryAccount)
+    return signedTransactions
+  }
 
+  public async pushSignedTxAndNotify(signedTransactions, signedLock, signedTx, multisigAccount, cosignatoryAccount) {
     // - push signed transactions (order matters)
     this.$store.commit('account/addSignedTransaction', signedLock)
     this.$store.commit('account/addSignedTransaction', signedTx)
@@ -326,8 +391,6 @@ export class TransactionService extends AbstractService {
         },
       )}`,
     )
-
-    return signedTransactions
   }
 
   /**
@@ -471,5 +534,16 @@ export class TransactionService extends AbstractService {
         this.$store.dispatch('diagnostic/ADD_ERROR', `View not implemented for transaction type '${transaction.type}'`)
         throw new Error(`View not implemented for transaction type '${transaction.type}'`)
     }
+  }
+
+  public isLedgerAccount(): boolean {
+    const currentAccount: AccountModel = this.$store.getters['account/currentAccount']
+    return currentAccount.type == AccountType.fromDescriptor('Ledger')
+  }
+
+  public ledgerSignTransaction(currentAccount, aggregateTx, generationHash, currentSigner, symbolLedger) {
+    const currentPath = currentAccount.path
+    const signature = symbolLedger.signTransaction(currentPath, aggregateTx, generationHash, currentSigner.publicKey)
+    return signature
   }
 }
