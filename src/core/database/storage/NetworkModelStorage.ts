@@ -27,7 +27,7 @@ export class NetworkModelStorage extends VersionedNetworkBasedObjectStorage<Netw
     super('networkCache', [
       {
         description: 'Update networkCache to 0.9.5.1 network',
-        migrate: (from: any) => undefined
+        migrate: () => undefined,
       },
     ])
   }
