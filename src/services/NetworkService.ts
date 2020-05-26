@@ -15,7 +15,7 @@
  */
 
 import { NetworkModel } from '@/core/database/entities/NetworkModel'
-import { Listener, NetworkConfiguration, RepositoryFactory, RepositoryFactoryHttp, NamespaceHttp } from 'symbol-sdk'
+import { NetworkConfiguration, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk'
 import { URLHelpers } from '@/core/utils/URLHelpers'
 import { combineLatest, defer, EMPTY, Observable } from 'rxjs'
 import { catchError, concatMap, flatMap, map, take, tap } from 'rxjs/operators'
@@ -167,7 +167,7 @@ export class NetworkService {
   public static createRepositoryFactory(url: string): RepositoryFactory {
     return new RepositoryFactoryHttp(url, {
       websocketUrl: URLHelpers.httpToWsUrl(url) + '/ws',
-      websocketInjected: WebSocket
+      websocketInjected: WebSocket,
     })
   }
 }
