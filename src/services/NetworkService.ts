@@ -165,11 +165,9 @@ export class NetworkService {
    * @param url the url.
    */
   public static createRepositoryFactory(url: string): RepositoryFactory {
-    const repositoryFactory = new RepositoryFactoryHttp(url)
-    const wsUrl = URLHelpers.httpToWsUrl(url)
-    repositoryFactory.createListener = () => {
-      return new Listener(wsUrl, new NamespaceHttp(url), WebSocket)
-    }
-    return repositoryFactory
+    return new RepositoryFactoryHttp(url, {
+      websocketUrl: URLHelpers.httpToWsUrl(url) + '/ws',
+      websocketInjected: WebSocket
+    })
   }
 }
