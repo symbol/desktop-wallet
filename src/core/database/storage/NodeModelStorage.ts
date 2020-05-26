@@ -16,17 +16,6 @@
 
 import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
 import { NodeModel } from '@/core/database/entities/NodeModel'
-import { NodeService } from '@/services/NodeService'
-
-const resetPeers = (from: any) => {
-  const nodes = Object.keys(from)
-  if (!nodes.length) {
-    return
-  }
-
-  const nodeService = new NodeService()
-  nodeService.reset()
-}
 
 export class NodeModelStorage extends VersionedObjectStorage<NodeModel[]> {
   /**
@@ -38,10 +27,7 @@ export class NodeModelStorage extends VersionedObjectStorage<NodeModel[]> {
     super('node', [
       {
         description: 'Update node to 0.9.5.1 network',
-        migrate: (from: any) => {
-          // remove all pre-0.9.5.1 nodes
-          resetPeers(from)
-        },
+        migrate: (from: any) => undefined
       },
     ])
   }
