@@ -36,11 +36,9 @@ export class NetworkModelStorage extends VersionedNetworkBasedObjectStorage<Netw
         migrate: (from: any) => {
           // remove all pre-0.9.5.1 networks
           const networks = Object.keys(from)
-          networks.map(
-            (networkGenHash) => resetNetwork(networkGenHash)
-          )
-        }
-      }
+          networks.map((networkGenHash) => resetNetwork(networkGenHash))
+        },
+      },
     ])
   }
 }
