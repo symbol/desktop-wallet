@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
+    "@babel/compat-data": "^7.9.6",
     "@types/jest": "^23.3.1",
     "@types/lodash": "^4.14.149",
     "@types/node": "^9.6.50",
@@ -102,6 +103,9 @@
     "utf-8-validate": "^5.0.2",
     "vue-jest": "^3.0.5",
     "vue-template-compiler": "^2.6.10"
+  },
+  "resolutions": {
+    "@babel/preset-env": "7.5.5"
   },
   "main": "./public/build.js",
   "build": {
