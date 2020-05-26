@@ -16,6 +16,12 @@
 
 import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
 import { NetworkModel } from '@/core/database/entities/NetworkModel'
+import { NetworkService } from '@/services/NetworkService'
+
+const resetNetwork = (genHash: string) => {
+  const networkService = new NetworkService()
+  networkService.reset(genHash)
+}
 
 export class NetworkModelStorage extends VersionedNetworkBasedObjectStorage<NetworkModel> {
   /**
@@ -24,6 +30,17 @@ export class NetworkModelStorage extends VersionedNetworkBasedObjectStorage<Netw
   public static INSTANCE = new NetworkModelStorage()
 
   private constructor() {
-    super('networkCache')
+    super('networkCache', [
+      {
+        description: 'Update networkCache to 0.9.5.1 network',
+        migrate: (from: any) => {
+          // remove all pre-0.9.5.1 networks
+          const networks = Object.keys(from)
+          networks.map(
+            (networkGenHash) => resetNetwork(networkGenHash)
+          )
+        }
+      }
+    ])
   }
 }
