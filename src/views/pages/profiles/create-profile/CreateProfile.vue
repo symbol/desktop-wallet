@@ -2,7 +2,7 @@
   <div class="create-profile-wrapper radius">
     <div class="inner-container">
       <p class="create-profile-box">
-        {{ $t('Generate_a_new_profile') }}
+        {{ $t('generate_a_new_profile') }}
       </p>
       <div class="step-bar-container">
         <img :src="$route.meta.icon" />
@@ -19,7 +19,8 @@
 
 <script lang="ts">
 import CreateProfileTs from './CreateProfileTs'
-import './CreateProfile.less'
-
 export default class CreateProfile extends CreateProfileTs {}
 </script>
+<style lang="less" scoped>
+@import './CreateProfile.less';
+</style>

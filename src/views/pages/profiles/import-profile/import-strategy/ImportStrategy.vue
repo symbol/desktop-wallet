@@ -25,14 +25,15 @@
           </p>
         </div>
       </div>
-      <div class="bottom-text">{{ $t('More_Access_Tool_is_working') }}...</div>
+      <div class="bottom-text">{{ $t('more_access_tool_is_working') }}...</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import ImportStrategyTs from './ImportStrategyTs'
-import './ImportStrategy.less'
-
 export default class ImportStrategy extends ImportStrategyTs {}
 </script>
+<style lang="less" scoped>
+@import './ImportStrategy.less';
+</style>

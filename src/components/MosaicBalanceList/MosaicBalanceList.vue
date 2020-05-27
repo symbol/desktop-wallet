@@ -68,7 +68,7 @@
         </div>
         <div class="complete_container">
           <div class="complete" @click="isEditionMode = false">
-            {{ $t('Close') }}
+            {{ $t('close') }}
           </div>
         </div>
       </div>
@@ -78,7 +78,8 @@
 
 <script lang="ts">
 import { MosaicBalanceListTs } from './MosaicBalanceListTs'
-import './MosaicBalanceList.less'
-
 export default class MosaicBalanceList extends MosaicBalanceListTs {}
 </script>
+<style lang="less" scoped>
+@import './MosaicBalanceList.less';
+</style>

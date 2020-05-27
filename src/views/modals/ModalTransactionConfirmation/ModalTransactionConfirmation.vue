@@ -26,10 +26,10 @@ import { ModalTransactionConfirmationTs } from './ModalTransactionConfirmationTs
 export default class ModalTransactionConfirmation extends ModalTransactionConfirmationTs {}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '../../resources/css/variables.less';
 
-.modal-transaction-confirmation {
+/deep/.modal-transaction-confirmation {
   min-width: 8.5rem;
   max-width: 12rem;
   margin: 0 auto;
@@ -45,7 +45,7 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
   }
 }
 
-.modal-footer {
+/deep/.modal-footer {
   height: 0.46rem;
   padding-right: 0.4rem;
 }

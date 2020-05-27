@@ -18,7 +18,7 @@
           </div>
 
           <FormRow>
-            <template v-slot:label> {{ $t('Set_account_name') }}: </template>
+            <template v-slot:label> {{ $t('set_account_name') }}: </template>
             <template v-slot:inputs>
               <ValidationProvider
                 v-slot="{ errors }"
@@ -42,7 +42,7 @@
           </FormRow>
 
           <FormRow>
-            <template v-slot:label> {{ $t('Set_network_type') }}: </template>
+            <template v-slot:label> {{ $t('set_network_type') }}: </template>
             <template v-slot:inputs>
               <div class="inputs-container select-container">
                 <select
@@ -109,7 +109,7 @@
           </FormRow>
 
           <FormRow>
-            <template v-slot:label> {{ $t('Password_hint') }}: </template>
+            <template v-slot:label> {{ $t('password_hint') }}: </template>
             <template v-slot:inputs>
               <ValidationProvider
                 v-slot="{ errors }"
@@ -128,12 +128,16 @@
 
           <div class="form-line-container form-row">
             <div class="flex-container mt-3">
-              <button type="button" class="button-style back-button" @click="$router.back(-1)">
+              <button
+                type="button"
+                class="button-style back-button"
+                @click="$router.push({ name: 'profiles.importProfile.importStrategy' })"
+              >
                 {{ $t('back') }}
               </button>
               <button type="submit" class="button-style validation-button" @click="handleSubmit(submit)">
                 {{
-                  $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'Restore_Mnemonic' : 'Generating_mnemonic')
+                  $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'restore_mnemonic' : 'generating_mnemonic')
                 }}
               </button>
             </div>
@@ -164,7 +168,7 @@ import { FormProfileCreationTs } from './FormProfileCreationTs'
 export default class FormProfileCreation extends FormProfileCreationTs {}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .right-hints-section {
   display: block;
   width: 5rem;

@@ -78,7 +78,7 @@
 
               <div class="password-tip">
                 <span class="prompt pointer" @click="formItems.hasHint = !formItems.hasHint">{{
-                  $t('Password_hint')
+                  $t('password_hint')
                 }}</span>
                 <span
                   class="pointer create-profile"
@@ -91,7 +91,7 @@
                   {{ $t('create_a_new_account') }}?
                 </span>
               </div>
-              <div v-if="formItems.hasHint" class="hint">{{ $t('Password_hint') }}: {{ getPasswordHint() }}</div>
+              <div v-if="formItems.hasHint" class="hint">{{ $t('password_hint') }}: {{ getPasswordHint() }}</div>
               <button
                 v-if="profilesClassifiedByNetworkType"
                 class="pointer button"
@@ -117,7 +117,8 @@
 
 <script lang="ts">
 import LoginPageTs from './LoginPageTs'
-import './LoginPage.less'
-
 export default class LoginPage extends LoginPageTs {}
 </script>
+<style lang="less" scoped>
+@import './LoginPage.less';
+</style>

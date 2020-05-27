@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="clearfix centered">
-      <span class="qr-code-title">{{ $t('Address_QR_code') }}</span>
+      <span class="qr-code-title">{{ $t('address_qr_code') }}</span>
     </div>
 
     <div class="clearfix centered">
@@ -15,7 +15,7 @@ import { AccountContactQRTs } from './AccountContactQRTs'
 export default class AccountContactQR extends AccountContactQRTs {}
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .centered {
   text-align: center;
 }

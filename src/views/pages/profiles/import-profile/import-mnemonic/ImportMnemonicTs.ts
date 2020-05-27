@@ -73,10 +73,11 @@ export default class ImportMnemonicTs extends Vue {
    * @return {void}
    */
   public deleteProfileAndBack() {
-    // - delete the temporary profile from storage
-    this.profileService.deleteProfile(this.currentProfile.profileName)
-    this.$store.dispatch('profile/RESET_STATE')
-
+    if (this.currentProfile) {
+      // - delete the temporary profile from storage
+      this.profileService.deleteProfile(this.currentProfile.profileName)
+      this.$store.dispatch('profile/RESET_STATE')
+    }
     // - back to previous page
     this.$router.push({ name: 'profiles.importProfile.info' })
   }
@@ -115,7 +116,7 @@ export default class ImportMnemonicTs extends Vue {
       this.profileService.updateSeed(this.currentProfile, encSeed)
 
       // update state
-      this.$store.dispatch('notification/ADD_SUCCESS', this.$t('Generate_entropy_increase_success'))
+      this.$store.dispatch('notification/ADD_SUCCESS', this.$t('generate_entropy_increase_success'))
       this.$store.dispatch('temporary/SET_MNEMONIC', mnemonic.plain)
 
       // redirect
