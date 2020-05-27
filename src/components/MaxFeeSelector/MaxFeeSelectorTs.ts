@@ -84,7 +84,7 @@ export class MaxFeeSelectorTs extends Vue {
    * @type {number}
    */
   @Prop({
-    default: feesConfig.normal,
+    default: feesConfig.median,
   })
   value: number
 
