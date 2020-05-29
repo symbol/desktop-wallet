@@ -29,7 +29,7 @@ export class ViewMosaicSupplyChangeTransaction extends TransactionView<MosaicSup
     const delta = this.transaction.delta
 
     return [
-      { key: 'mosaicId', value: mosaicId.toHex() },
+      { key: 'mosaic_id', value: mosaicId.toHex() },
       {
         key: 'direction',
         value: `${i18n.t(action === MosaicSupplyChangeAction.Increase ? 'Increase' : 'Decrease')}`,

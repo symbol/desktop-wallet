@@ -28,7 +28,7 @@ export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefin
     const mosaicFlags: MosaicFlags = this.transaction.flags
 
     return [
-      { key: 'mosaicId', value: mosaicId.toHex() },
+      { key: 'mosaic_id', value: mosaicId.toHex() },
       {
         key: 'table_header_divisibility',
         value: `${divisibility}`,
