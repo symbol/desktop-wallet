@@ -452,6 +452,8 @@
   "sidebar_item_multisig": "多签",
   "sidebar_item_namespaces": "命名空间",
   "sidebar_item_settings": "设置",
+  "signature": "签名",
+  "signer_public_key": "签名者公钥",
   "skip": "跳过",
   "speed": "产块速度",
   "status": "状态",

@@ -455,6 +455,8 @@
   "sidebar_item_multisig": "Multisig",
   "sidebar_item_namespaces": "Namespaces",
   "sidebar_item_settings": "Settings",
+  "signature": "Signature",
+  "signer_public_key": "Signer public key",
   "skip": "Skip",
   "speed": "Speed",
   "status": "Status",
