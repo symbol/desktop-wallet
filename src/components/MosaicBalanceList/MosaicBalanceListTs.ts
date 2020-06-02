@@ -22,9 +22,10 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 // resources
 import { dashboardImages } from '@/views/resources/Images'
 import { MosaicService } from '@/services/MosaicService'
-import { MosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel'
+import { AccountMosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel'
 import { MosaicModel } from '@/core/database/entities/MosaicModel'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { AccountModel } from '@/core/database/entities/AccountModel'
 
 export interface BalanceEntry {
   id: MosaicId
@@ -39,11 +40,12 @@ export interface BalanceEntry {
   },
   computed: {
     ...mapGetters({
-      mosaicConfigurations: 'mosaic/mosaicConfigurations',
+      accountMosaicConfigurations: 'mosaic/accountMosaicConfigurations',
       balanceMosaics: 'mosaic/balanceMosaics',
       networkMosaic: 'mosaic/networkMosaic',
       currentHeight: 'network/currentHeight',
       networkConfiguration: 'network/networkConfiguration',
+      currentAccount: 'account/currentAccount',
     }),
   },
 })
@@ -70,8 +72,12 @@ export class MosaicBalanceListTs extends Vue {
    * List of mosaics that are hidden
    * @var {string[]}
    */
-  public mosaicConfigurations: Record<string, MosaicConfigurationModel>
+  public accountMosaicConfigurations: AccountMosaicConfigurationModel
 
+  /**
+   * Current account info
+   */
+  public currentAccount: AccountModel
   /**
    * Whether the component is in edition mode
    * @var {boolean}
@@ -137,7 +143,7 @@ export class MosaicBalanceListTs extends Vue {
    * @return {boolean}
    */
   public isMosaicHidden(mosaicId: MosaicId | NamespaceId): boolean {
-    const mosaicConfiguration = this.mosaicConfigurations[mosaicId.toHex()]
+    const mosaicConfiguration = this.accountMosaicConfigurations[mosaicId.toHex()]
     return mosaicConfiguration && mosaicConfiguration.hidden
   }
 
@@ -146,7 +152,7 @@ export class MosaicBalanceListTs extends Vue {
    * @returns {boolean}
    */
   public areAllMosaicsShown(): boolean {
-    return !Object.values(this.mosaicConfigurations).find((c) => c.hidden)
+    return !Object.values(this.accountMosaicConfigurations).find((c) => c.hidden)
   }
 
   /**
@@ -158,13 +164,16 @@ export class MosaicBalanceListTs extends Vue {
     if (mosaicId !== undefined) {
       const isHidden = this.isMosaicHidden(mosaicId)
       const action = isHidden ? 'SHOW_MOSAIC' : 'HIDE_MOSAIC'
-      return this.$store.dispatch('mosaic/' + action, mosaicId)
+      return this.$store.dispatch('mosaic/' + action, { mosaicId: mosaicId, account: this.currentAccount })
     }
 
     // - update state
     const action = this.areAllMosaicsShown() ? 'HIDE_MOSAIC' : 'SHOW_MOSAIC'
     return this.balanceMosaics.forEach((mosaic) =>
-      this.$store.dispatch('mosaic/' + action, new MosaicId(mosaic.mosaicIdHex)),
+      this.$store.dispatch('mosaic/' + action, {
+        mosaicId: new MosaicId(mosaic.mosaicIdHex),
+        account: this.currentAccount,
+      }),
     )
   }
 }
