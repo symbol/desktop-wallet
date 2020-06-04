@@ -17,11 +17,6 @@ export default class ModalFormSubAccountCreation extends ModalFormSubAccountCrea
 </script>
 
 <style lang="less" scoped>
-.modal-footer {
-  height: 0.46rem;
-  padding-right: 0.4rem;
-}
-
 .float-right {
   float: right;
 }

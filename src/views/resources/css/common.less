@@ -105,7 +105,9 @@ input {
 input::placeholder {
   color: @grayDark;
 }
-
+button:focus {
+  outline: none;
+}
 #app {
   background-color: @white;
   height: auto;
@@ -357,15 +359,6 @@ textarea {
   color: @purple;
 }
 
-.ivu-modal-header-inner {
-  font-size: 20px !important;
-  padding: 20px 30px !important;
-}
-
-.ivu-modal-body {
-  padding: 20px 50px !important;
-}
-
 .justify_text {
   text-align-last: justify;
   text-align: justify;
@@ -381,15 +374,6 @@ textarea {
   color: @purple;
 }
 
-.ivu-modal-header-inner {
-  font-size: 20px !important;
-  padding: 20px 30px !important;
-}
-
-.ivu-modal-body {
-  padding: 20px 50px !important;
-}
-
 .justify_text {
   text-align-last: justify;
   text-align: justify;
@@ -397,21 +381,6 @@ textarea {
 }
 
 .confirm-alert-container {
-  .ivu-modal-mask {
-    z-index: 99999999 !important;
-  }
-  .ivu-modal-wrap {
-    z-index: 99999999 !important;
-  }
-  .ivu-modal-body {
-    padding: 0 !important;
-  }
-  .ivu-modal-footer {
-    border: none;
-  }
-  .ivu-modal-header {
-    border: none;
-  }
   .ivu-btn-primary {
     background-color: @purple !important;
     border: none !important;

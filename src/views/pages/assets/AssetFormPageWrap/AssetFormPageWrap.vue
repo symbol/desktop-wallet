@@ -5,13 +5,10 @@
     </div>
     <Icon type="ios-help-circle-outline" size="20" @click="hasHelpModal = true" />
     <div class="container">
-      <Modal v-model="hasHelpModal" :footer-hide="true" :transfer="false">
-        <h1 slot="header">
-          {{ $t('rules_describe') }}
-        </h1>
-        <p>
+      <Modal v-model="hasHelpModal" :transfer="false" :title="$t('rules_describe')">
+        <div>
           <slot name="form-description" />
-        </p>
+        </div>
       </Modal>
     </div>
   </div>

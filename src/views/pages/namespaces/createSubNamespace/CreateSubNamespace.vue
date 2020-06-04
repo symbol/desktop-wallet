@@ -13,13 +13,13 @@
       <div class="asset-description-text">
         {{ $t('namespace_tips_key_1') }}
       </div>
-      <div class="asset-description-emphasis">
+      <div class="asset-description-text">
         {{ $t('namespace_tips_value_1') }}
       </div>
       <div class="asset-description-text">
         {{ $t('namespace_tips_key_2') }}
       </div>
-      <div class="asset-description-emphasis">
+      <div class="asset-description-text">
         {{ $t('namespace_tips_value_2') }}
       </div>
       <div class="asset-description-text">
