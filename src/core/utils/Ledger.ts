@@ -10,7 +10,6 @@ import { Transaction, SignedTransaction, Convert, CosignatureSignedTransaction, 
  * const nem = new Nem(transport);
    recognize networkId by bip32Path;
       "44'/43'/networkId'/walletIndex'/accountIndex'"
-
    const bip32path_mijin_testnet = "44'/43'/144'/1'/2'"
    const bip32path_mijin_mainnet "44'/43'/96'/3'/1'"
    const bip32path_nem_mainnet = "44'/43'/104'/5'/1'"
