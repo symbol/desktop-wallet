@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { createStepImage, importStepImage, officialIcons } from '@/views/resources/Images'
+import { createStepImage, importStepImage, importLedgerStepImage, officialIcons } from '@/views/resources/Images'
 import { AppRoute } from './AppRoute'
 
 export const routes: AppRoute[] = [
@@ -150,6 +150,28 @@ export const routes: AppRoute[] = [
                 },
                 // @ts-ignore
                 component: () => import('@/views/pages/profiles/import-profile/finalize/Finalize.vue'),
+              },
+              {
+                path: 'inputLedgerAccountInfo',
+                name: 'profiles.importLedgerProfile',
+                meta: {
+                  protected: false,
+                  isLedger: true,
+                  icon: importLedgerStepImage.importLedgerStepImage1,
+                },
+                // @ts-ignore
+                component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
+              },
+              {
+                path: 'importLedger',
+                name: 'profiles.importLedger',
+                meta: {
+                  protected: false,
+                  isLedger: true,
+                  icon: importLedgerStepImage.importLedgerStepImage2,
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/profiles/import-ledger-profile/ImportLedgerProfile.vue'),
               },
             ],
           },

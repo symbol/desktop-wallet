@@ -17,12 +17,14 @@ import { Component, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 import { Account, NetworkType, Password, Crypto } from 'symbol-sdk'
 import { MnemonicPassPhrase } from 'symbol-hd-wallets'
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
+import { SymbolLedger } from '@/core/utils/Ledger'
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 import { DerivationService } from '@/services/DerivationService'
 import { NotificationType } from '@/core/utils/NotificationType'
 import { AccountService } from '@/services/AccountService'
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
@@ -37,6 +39,7 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
 import appConfig from '@/../config/app.conf.json'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
 import { FilterHelpers } from '@/core/utils/FilterHelpers'
+import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage'
 
 const { MAX_SEED_ACCOUNTS_NUMBER } = appConfig.constants
 
@@ -54,6 +57,7 @@ const { MAX_SEED_ACCOUNTS_NUMBER } = appConfig.constants
       networkType: 'network/networkType',
       currentProfile: 'profile/currentProfile',
       knownAccounts: 'account/knownAccounts',
+      currentAccount: 'account/currentAccount',
     }),
   },
 })
@@ -63,6 +67,7 @@ export class FormSubAccountCreationTs extends Vue {
    */
   public currentProfile: ProfileModel
 
+  public currentAccount: AccountModel
   /**
    * Known accounts identifiers
    */
@@ -141,6 +146,9 @@ export class FormSubAccountCreationTs extends Vue {
     return this.knownAccounts.map((a) => a.path).filter((p) => p)
   }
 
+  public get isLedger(): boolean {
+    return this.currentAccount.type == AccountType.fromDescriptor('Ledger')
+  }
   /// end-region computed properties getter/setter
 
   /**
@@ -148,12 +156,13 @@ export class FormSubAccountCreationTs extends Vue {
    * @return {void}
    */
   public onSubmit() {
-    this.hasAccountUnlockModal = true
+    const values = { ...this.formItems }
 
-    // // resets form validation
-    // this.$nextTick(() => {
-    //   this.$refs.observer.reset()
-    // })
+    const type =
+      values.type && ['child_account', 'privatekey_account'].includes(values.type) ? values.type : 'child_account'
+    if (this.isLedger && type == 'child_account') {
+      this.deriveNextChildAccount(values.name)
+    } else this.hasAccountUnlockModal = true
   }
 
   /**
@@ -235,30 +244,88 @@ export class FormSubAccountCreationTs extends Vue {
       return null
     }
 
-    // - get next path
-    const nextPath = this.paths.getNextAccountPath(this.knownPaths)
+    if (this.isLedger) {
+      this.importSubAccountFromLedger(childAccountName)
+        .then((res) => {
+          this.accountService.saveAccount(res)
+          // - update app state
+          this.$store.dispatch('profile/ADD_ACCOUNT', res)
+          this.$store.dispatch('account/SET_CURRENT_ACCOUNT', res)
+          this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', this.currentProfile.accounts)
+          this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+          this.$emit('submit', this.formItems)
+        })
+        .catch((err) => console.log(err))
+    } else {
+      // - get next path
+      const nextPath = this.paths.getNextAccountPath(this.knownPaths)
 
-    this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding child account with derivation path: ' + nextPath)
+      this.$store.dispatch('diagnostic/ADD_DEBUG', 'Adding child account with derivation path: ' + nextPath)
 
-    // - decrypt mnemonic
-    const encSeed = this.currentProfile.seed
-    const passphrase = Crypto.decrypt(encSeed, this.currentPassword.value)
-    const mnemonic = new MnemonicPassPhrase(passphrase)
+      // - decrypt mnemonic
+      const encSeed = this.currentProfile.seed
+      const passphrase = Crypto.decrypt(encSeed, this.currentPassword.value)
+      const mnemonic = new MnemonicPassPhrase(passphrase)
 
-    // create account by mnemonic
-    return this.accountService.getChildAccountByPath(
-      this.currentProfile,
-      this.currentPassword,
-      mnemonic,
-      nextPath,
-      this.networkType,
-      childAccountName,
-    )
+      // create account by mnemonic
+      return this.accountService.getChildAccountByPath(
+        this.currentProfile,
+        this.currentPassword,
+        mnemonic,
+        nextPath,
+        this.networkType,
+        childAccountName,
+      )
+    }
   }
   /**
    * filter tags
    */
   public stripTagsAccountName() {
     this.formItems.name = FilterHelpers.stripFilter(this.formItems.name)
+  }
+
+  async importSubAccountFromLedger(childAccountName: string): Promise<AccountModel> | null {
+    const subAccountName = childAccountName
+    const accountPath = this.currentAccount.path
+    const currentAccountIndex = accountPath.substring(accountPath.length - 2, accountPath.length - 1)
+    const numAccount = this.knownPaths.length
+    let accountIndex
+    if (numAccount <= Number(currentAccountIndex)) {
+      accountIndex = numAccount + Number(currentAccountIndex)
+    } else {
+      accountIndex = numAccount + 1
+    }
+    try {
+      this.$Notice.success({
+        title: this['$t']('Verify information in your device!') + '',
+      })
+      const transport = await TransportWebUSB.create()
+      const symbolLedger = new SymbolLedger(transport, 'XYM')
+      const accountResult = await symbolLedger.getAccount(`m/44'/4343'/${this.networkType}'/0'/${accountIndex}'`)
+      const { address, publicKey, path } = accountResult
+      transport.close()
+      const accName = Object.values(this.currentAccount)[1]
+      return {
+        id: SimpleObjectStorage.generateIdentifier(),
+        name: subAccountName,
+        profileName: accName,
+        node: '',
+        type: AccountType.fromDescriptor('Ledger'),
+        address: address.toUpperCase(),
+        publicKey: publicKey.toUpperCase(),
+        encryptedPrivateKey: '',
+        path: path,
+        isMultisig: false,
+      }
+    } catch (e) {
+      this.$store.dispatch('SET_UI_DISABLED', {
+        isDisabled: false,
+        message: '',
+      })
+      this.$Notice.error({
+        title: this['$t']('CONDITIONS_OF_USE_NOT_SATISFIED') + '',
+      })
+    }
   }
 }

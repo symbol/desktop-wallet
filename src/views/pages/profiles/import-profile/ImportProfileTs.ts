@@ -23,6 +23,20 @@ export default class ImportProfileTs extends Vue {
    */
   public StepBarTitleList = ['create_profile', 'mnemonic_phrase', 'select_accounts', 'finish']
 
+  public LedgerStepBarTitleList = ['Create Account', 'Import Ledger']
+
+  isLedger = false
+  public titleList = []
+
+  public created() {
+    const { isLedger } = this.$route.meta
+    if (isLedger) {
+      this.titleList = this.LedgerStepBarTitleList
+    } else {
+      this.titleList = this.StepBarTitleList
+    }
+  }
+
   /**
    * Hook called when the page is mounted
    * @return {void}
@@ -32,16 +46,27 @@ export default class ImportProfileTs extends Vue {
   }
 
   public getCurrentStep(): number {
-    switch (this.$route.name) {
-      default:
-      case 'profiles.importProfile.info':
-        return 0
-      case 'profiles.importProfile.importMnemonic':
-        return 1
-      case 'profiles.importProfile.walletSelection':
-        return 2
-      case 'profiles.importProfile.finalize':
-        return 3
+    const { isLedger } = this.$route.meta
+    if (isLedger) {
+      switch (this.$route.name) {
+        default:
+        case 'profiles.importLedgerProfile':
+          return 0
+        case 'profiles.importLedger':
+          return 1
+      }
+    } else {
+      switch (this.$route.name) {
+        default:
+        case 'profiles.importProfile.info':
+          return 0
+        case 'profiles.importProfile.importMnemonic':
+          return 1
+        case 'profiles.importProfile.walletSelection':
+          return 2
+        case 'profiles.importProfile.finalize':
+          return 3
+      }
     }
   }
 
