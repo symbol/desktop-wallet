@@ -82,6 +82,7 @@ export class FormProfileUnlockTs extends Vue {
    * Whether to disable submit button
    */
   @Prop({ default: false }) disableSubmit: boolean
+  public currentPass: Password
 
   /// region computed properties getter/setter
   /// end-region computed properties getter/setter
