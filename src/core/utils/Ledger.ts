@@ -11,7 +11,11 @@ import { Transaction, SignedTransaction, Convert, CosignatureSignedTransaction, 
    recognize networkId by bip32Path;
       "44'/43'/networkId'/walletIndex'/accountIndex'"
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> update code ledger with new version
 =======
 
 >>>>>>> update code ledger with new version
@@ -101,9 +105,8 @@ export class SymbolLedger {
     let twiceTransfer
     // The length of the APDU buffer is 255Bytes
     if (rawTx.length > 446) {
-      console.log('Length of rawTx is over than 446')
       app.$Notice.error({
-        title: 'Transaction length is over the limit.' + '',
+        title: this['$t']('Transaction length is over the limit.') + '',
       })
     } else {
       twiceTransfer = rawTx.length > 234 ? true : false
