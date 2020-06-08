@@ -34,7 +34,7 @@
       <span class="add-account pointer" @click="hasAddAccountModal = true">
         <Icon type="md-add-circle" />{{ $t('button_add_account') }}
       </span>
-      <div class="account-switch-header-right-container" @click="hasMnemonicExportModal = true">
+      <div v-if="!isLedger" class="account-switch-header-right-container" @click="hasMnemonicExportModal = true">
         <span>
           <img src="@/views/resources/img/back-up.png" alt="" />
         </span>
