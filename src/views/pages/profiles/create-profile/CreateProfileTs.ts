@@ -29,6 +29,17 @@ export default class CreateProfileTs extends Vue {
     'finish',
   ]
 
+  public LedgerStepBarTitleList = ['Create Account', 'Import Ledger']
+  isLedger = false
+  public titleList = []
+  public created() {
+    const { isLedger } = this.$route.meta
+    if (isLedger) {
+      this.titleList = this.LedgerStepBarTitleList
+    } else {
+      this.titleList = this.StepBarTitleList
+    }
+  }
   /**
    * Hook called when the page is mounted
    * @return {void}
