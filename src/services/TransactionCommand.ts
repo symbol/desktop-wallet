@@ -82,7 +82,7 @@ export class TransactionCommand {
     )
   }
 
-  private announceHashAndAggregateBonded(
+  public announceHashAndAggregateBonded(
     service: TransactionAnnouncerService,
     signedTransactions: Observable<SignedTransaction>[],
   ): Observable<BroadcastResult> {
@@ -97,7 +97,7 @@ export class TransactionCommand {
     )
   }
 
-  private announceSimple(
+  public announceSimple(
     service: TransactionAnnouncerService,
     signedTransactions: Observable<SignedTransaction>[],
   ): Observable<BroadcastResult>[] {
@@ -163,7 +163,7 @@ export class TransactionCommand {
     }
   }
 
-  private calculateSuggestedMaxFee(transaction: Transaction): Transaction {
+  public calculateSuggestedMaxFee(transaction: Transaction): Transaction {
     const feeMultiplier = this.resolveFeeMultipler(transaction)
     if (!feeMultiplier) {
       return transaction

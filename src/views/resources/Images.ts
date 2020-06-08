@@ -32,6 +32,10 @@ import importStepImage3 from '@/views/resources/img/login/3_4.png'
 // @ts-ignore
 import importStepImage4 from '@/views/resources/img/login/4_4.png'
 // @ts-ignore
+import importLedgerStepImage1 from '@/views/resources/img/login/1_2.png'
+// @ts-ignore
+import importLedgerStepImage2 from '@/views/resources/img/login/2_2.png'
+// @ts-ignore
 import createStepImage1 from '@/views/resources/img/login/1_5.png'
 // @ts-ignore
 import createStepImage2 from '@/views/resources/img/login/2_5.png'
@@ -226,6 +230,11 @@ export const importStepImage = {
   importStepImage2,
   importStepImage3,
   importStepImage4,
+}
+
+export const importLedgerStepImage = {
+  importLedgerStepImage1,
+  importLedgerStepImage2,
 }
 
 export const createStepImage = {
