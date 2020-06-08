@@ -13,23 +13,42 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { MosaicId, MultisigAccountInfo, NetworkType, PublicAccount, Transaction, TransactionFees } from 'symbol-sdk'
+import {
+  MosaicId,
+  MultisigAccountInfo,
+  NetworkType,
+  PublicAccount,
+  Transaction,
+  TransactionFees,
+  SignedTransaction,
+  AggregateTransaction,
+  Deadline,
+  LockFundsTransaction,
+  Mosaic,
+  UInt64,
+} from 'symbol-sdk'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
 import { ValidationObserver } from 'vee-validate'
 import { Signer } from '@/store/Account'
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
 import { TransactionCommand, TransactionCommandMode } from '@/services/TransactionCommand'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
-
+// @ts-ignore
+import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerService'
+import { Observable, of } from 'rxjs'
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
+import { SymbolLedger } from '@/core/utils/Ledger'
 @Component({
   computed: {
     ...mapGetters({
       generationHash: 'network/generationHash',
       networkType: 'network/networkType',
       defaultFee: 'app/defaultFee',
+      currentProfile: 'profile/currentProfile',
       currentAccount: 'account/currentAccount',
       selectedSigner: 'account/currentSigner',
       currentSignerMultisigInfo: 'account/currentSignerMultisigInfo',
@@ -105,6 +124,8 @@ export class FormTransactionBase extends Vue {
    * Public key of the current signer
    * @var {any}
    */
+  public currentProfile: ProfileModel
+
   public currentSigner: PublicAccount
 
   public signers: Signer[]
@@ -273,12 +294,104 @@ export class FormTransactionBase extends Vue {
    * Process form input
    * @return {void}
    */
-  public onSubmit() {
-    // - open signature modal
-    this.command = this.createTransactionCommand()
-    this.onShowConfirmationModal()
-  }
+  public async onSubmit() {
+    if (this.currentAccount.type != AccountType.fromDescriptor('Ledger')) {
+      // - open signature modal
+      this.command = this.createTransactionCommand()
+      this.onShowConfirmationModal()
+    } else {
+      this.$Notice.success({
+        title: this['$t']('Verify information in your device!') + '',
+      })
+      const transport = await TransportWebUSB.create()
+      const symbolLedger = new SymbolLedger(transport, 'XYM')
+      const currentPath = this.currentAccount.path
+      const networkType = this.currentProfile.networkType
+      const accountResult = await symbolLedger.getAccount(currentPath)
+      const publicKey = accountResult.publicKey
+      const ledgerAccount = PublicAccount.createFromPublicKey(publicKey.toUpperCase(), networkType)
+      const multisigAccount = PublicAccount.createFromPublicKey(this.selectedSigner.publicKey, this.networkType)
+      this.command = this.createTransactionCommand()
+      const stageTransactions = this.command.stageTransactions
+      const maxFee = stageTransactions.sort((a, b) => a.maxFee.compare(b.maxFee))[0].maxFee
+      // - open signature modal
 
+      const txMode = this.command.mode
+
+      if (txMode == 'SIMPLE') {
+        stageTransactions.map(async (t) => {
+          const transaction = this.command.calculateSuggestedMaxFee(t)
+          await symbolLedger
+            .signTransaction(currentPath, transaction, this.generationHash, ledgerAccount.publicKey)
+            .then((res) => {
+              const services = new TransactionAnnouncerService(this.$store)
+              services.announce(res)
+            })
+            .catch((err) => console.error(err))
+        })
+      } else if (txMode == 'AGGREGATE') {
+        const aggregate = this.command.calculateSuggestedMaxFee(
+          AggregateTransaction.createComplete(
+            Deadline.create(),
+            stageTransactions.map((t) => t.toAggregate(multisigAccount)),
+            this.networkType,
+            [],
+            maxFee,
+          ),
+        )
+        await symbolLedger
+          .signTransaction(currentPath, aggregate, this.generationHash, ledgerAccount.publicKey)
+          .then((res) => {
+            const services = new TransactionAnnouncerService(this.$store)
+            services.announce(res)
+          })
+          .catch((err) => console.error(err))
+      } else {
+        const aggregate = this.command.calculateSuggestedMaxFee(
+          AggregateTransaction.createBonded(
+            Deadline.create(),
+            stageTransactions.map((t) => t.toAggregate(multisigAccount)),
+            this.networkType,
+            [],
+            maxFee,
+          ),
+        )
+        const signedAggregateTransaction = await symbolLedger
+          .signTransaction(currentPath, aggregate, this.generationHash, ledgerAccount.publicKey)
+          .then((signedAggregateTransaction) => {
+            return signedAggregateTransaction
+          })
+        const hashLock = this.command.calculateSuggestedMaxFee(
+          LockFundsTransaction.create(
+            Deadline.create(),
+            new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
+            UInt64.fromUint(1000),
+            signedAggregateTransaction,
+            this.networkType,
+            maxFee,
+          ),
+        )
+        const signedHashLock = await symbolLedger
+          .signTransaction(currentPath, hashLock, this.generationHash, ledgerAccount.publicKey)
+          .then((res) => {
+            return res
+          })
+        const signedTransactions: Observable<SignedTransaction>[] = [of(signedHashLock), of(signedAggregateTransaction)]
+        const service = new TransactionAnnouncerService(this.$store)
+        const announcements = await of(this.command.announceHashAndAggregateBonded(service, signedTransactions))
+        announcements.forEach((announcement) => {
+          announcement.subscribe((res) => {
+            if (!res.success) {
+              this.$store.dispatch('notification/ADD_ERROR', res.error, { root: true })
+            }
+          })
+        })
+        // - notify about successful transaction announce
+        this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
+        this.$emit('success')
+      }
+    }
+  }
   /**
    * Hook called when the child component ModalTransactionConfirmation triggers
    * the event 'success'
