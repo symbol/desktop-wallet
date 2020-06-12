@@ -105,8 +105,9 @@ export class SymbolLedger {
     let twiceTransfer
     // The length of the APDU buffer is 255Bytes
     if (rawTx.length > 446) {
+      console.log('Length of rawTx is over than 446')
       app.$Notice.error({
-        title: this['$t']('Transaction length is over the limit.') + '',
+        title: 'Transaction length is over the limit.' + '',
       })
     } else {
       twiceTransfer = rawTx.length > 234 ? true : false
