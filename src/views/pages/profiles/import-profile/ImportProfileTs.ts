@@ -23,7 +23,7 @@ export default class ImportProfileTs extends Vue {
    */
   public StepBarTitleList = ['create_profile', 'mnemonic_phrase', 'select_accounts', 'finish']
 
-  public LedgerStepBarTitleList = ['Create Account', 'Import Ledger']
+  public LedgerStepBarTitleList = ['Create Ledger Account']
 
   isLedger = false
   public titleList = []

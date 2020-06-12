@@ -15,7 +15,7 @@
  */
 import { Component, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
-import { Password } from 'symbol-sdk'
+import { Password, NetworkType, PublicAccount } from 'symbol-sdk'
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 import { NotificationType } from '@/core/utils/NotificationType'
@@ -31,6 +31,12 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
 import FormRow from '@/components/FormRow/FormRow.vue'
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper'
 import { FilterHelpers } from '@/core/utils/FilterHelpers'
+import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage'
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
+import { SymbolLedger } from '@/core/utils/Ledger'
+import { AccountService } from '@/services/AccountService'
+import Account from '@/store/Account'
 
 /// end-region custom types
 
@@ -57,8 +63,11 @@ export class FormProfileCreationTs extends Vue {
    */
   public currentProfile: ProfileModel
 
+  public accountService: AccountService
+
   isLedger = false
   created() {
+    this.accountService = new AccountService()
     const { isLedger } = this.$route.meta
     this.isLedger = isLedger
   }
@@ -74,7 +83,7 @@ export class FormProfileCreationTs extends Vue {
    * Accounts repository
    * @var {ProfileService}
    */
-  public accountService = new ProfileService()
+  public profileService = new ProfileService()
 
   /**
    * Validation rules
@@ -143,7 +152,7 @@ export class FormProfileCreationTs extends Vue {
     // -  password stored as hash (never plain.)
     const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password))
 
-    const account: ProfileModel = {
+    const profile: ProfileModel = {
       profileName: this.formItems.profileName,
       accounts: [],
       seed: '',
@@ -153,10 +162,10 @@ export class FormProfileCreationTs extends Vue {
       generationHash: this.generationHash,
     }
     // use repository for storage
-    this.accountService.saveProfile(account)
+    this.profileService.saveProfile(profile)
 
     // execute store actions
-    this.$store.dispatch('profile/SET_CURRENT_PROFILE', account)
+    this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile)
     this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
     this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
 
@@ -164,7 +173,22 @@ export class FormProfileCreationTs extends Vue {
     if (!this.isLedger) {
       this.$router.push({ name: this.nextPage })
     } else {
-      this.$router.push({ name: 'profiles.importLedger' })
+      this.importAccountFromLedger()
+        .then((res) => {
+          this.accountService.saveAccount(res)
+          // - update app state
+          this.$store.dispatch('profile/ADD_ACCOUNT', res)
+          this.$store.dispatch('account/SET_CURRENT_ACCOUNT', res)
+          this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', [res.id])
+          this.$store.dispatch('temporary/RESET_STATE')
+          this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS)
+          this.toAccountDetails()
+        })
+        .catch((error) => {
+          {
+            console.error(error)
+          }
+        })
     }
   }
 
@@ -174,5 +198,47 @@ export class FormProfileCreationTs extends Vue {
   public stripTagsProfile() {
     this.formItems.profileName = FilterHelpers.stripFilter(this.formItems.profileName)
     this.formItems.hint = FilterHelpers.stripFilter(this.formItems.hint)
+  }
+
+  toAccountDetails() {
+    this.$Notice.success({
+      title: this['$t']('Imported Account Successfully') + '',
+    })
+    this.$router.push('/dashboard')
+  }
+
+  async importAccountFromLedger(): Promise<AccountModel> {
+    const profileName = this.formItems.profileName
+    // try {
+    this.$Notice.success({
+      title: this['$t']('Verify information in your device!') + '',
+    })
+    const transport = await TransportWebUSB.create()
+    const symbolLedger = new SymbolLedger(transport, 'XYM')
+    const accountResult = await symbolLedger.getAccount(`m/44'/4343'/0'/0'/0'`)
+    const { publicKey, path } = accountResult
+    const address = PublicAccount.createFromPublicKey(publicKey, this.formItems.networkType).address
+    transport.close()
+
+    // add account to list
+    const accName = this.currentProfile.profileName
+
+    return {
+      id: SimpleObjectStorage.generateIdentifier(),
+      name: accName,
+      profileName: profileName,
+      node: '',
+      type: AccountType.fromDescriptor('Ledger'),
+      address: address.plain(),
+      publicKey: publicKey.toUpperCase(),
+      encryptedPrivateKey: '',
+      path: path,
+      isMultisig: false,
+    }
+    // } catch (e) {
+    //   this.$Notice.error({
+    //     title: this['$t']('CONDITIONS OF USE NOT SATISFIED') + '',
+    //   })
+    // }
   }
 }
