@@ -20,10 +20,7 @@ import {
   PublicAccount,
   Transaction,
   TransactionFees,
-<<<<<<< HEAD
   Address,
-=======
->>>>>>> update code ledger with new version
   SignedTransaction,
   AggregateTransaction,
   Deadline,
