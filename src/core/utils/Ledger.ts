@@ -61,14 +61,15 @@ export class SymbolLedger {
     const response = await this.transport.send(cla, ins, p1, p2, data)
 
     const result = {
-      address: '',
+      // address: '',
       publicKey: '',
       path: '',
     }
-    const addressLength = response[0]
-    const publicKeyLength = response[1 + addressLength]
-    result.address = response.slice(1, 1 + addressLength).toString('ascii')
-    result.publicKey = response.slice(1 + addressLength + 1, 1 + addressLength + 1 + publicKeyLength).toString('hex')
+    // const addressLength = response[0]
+    const publicKeyLength = response[0]
+    // result.address = response.slice(1, 1 + addressLength).toString('ascii')
+    result.publicKey = response.slice(1, 1 + publicKeyLength).toString('hex')
+    // result.publicKey = response.slice(1 + addressLength + 1, 1 + addressLength + 1 + publicKeyLength).toString('hex')
     result.path = path
     return result
   }
@@ -96,8 +97,9 @@ export class SymbolLedger {
     let twiceTransfer
     // The length of the APDU buffer is 255Bytes
     if (rawTx.length > 446) {
+      console.log('Length of rawTx is over than 446')
       app.$Notice.error({
-        title: this['$t']('Transaction length is over the limit.') + '',
+        title: 'Transaction length is over the limit.' + '',
       })
     } else {
       twiceTransfer = rawTx.length > 234 ? true : false
@@ -108,7 +110,12 @@ export class SymbolLedger {
       .then((res) => {
         response = res
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err)
+        app.$Notice.error({
+          title: 'Transaction canceled.' + '',
+        })
+      })
 
     // Response from Ledger
     const h = response.toString('hex')
