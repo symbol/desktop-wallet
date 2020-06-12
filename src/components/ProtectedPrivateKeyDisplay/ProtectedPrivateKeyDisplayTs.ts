@@ -17,15 +17,17 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Account } from 'symbol-sdk'
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel'
-import { UIHelpers } from '@/core/utils/UIHelpers'
 // child components
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
+//@ts-ignore
+import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
 const defaultCount: number = 10
 const defaultTimerDuration: number = 1000
 @Component({
   components: {
     ModalFormProfileUnlock,
+    ButtonCopyToClipboard,
   },
 })
 export class ProtectedPrivateKeyDisplayTs extends Vue {
@@ -33,12 +35,6 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
     default: null,
   })
   account: AccountModel
-
-  /**
-   * UI Helpers
-   * @var {UIHelpers}
-   */
-  public uiHelpers = UIHelpers
 
   /**
    * Whether account is currently being unlocked

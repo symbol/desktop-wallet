@@ -3,11 +3,9 @@
     <span class="label">{{ $t('private_key') }}</span>
     <div v-if="hasPlainPrivateKey" class="value">
       {{ plainInformation }}
-      <img
-        src="@/views/resources/img/account/copyIcon.png"
-        class="copy-icon"
-        @click="uiHelpers.copyToClipboard(plainInformation)"
-      />
+      <ButtonCopyToClipboard v-model="plainInformation">
+        <img src="@/views/resources/img/account/copyIcon.png" class="copy-icon" />
+      </ButtonCopyToClipboard>
       <span class="timer-span"> &nbsp; ({{ $t('x_seconds', { seconds: secondsCounter }) }})</span>
     </div>
     <div v-else>
