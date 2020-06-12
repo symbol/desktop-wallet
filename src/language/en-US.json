@@ -415,6 +415,7 @@
   "profile_description_tips2": "The password will be used to secure the access to your profile, it is used to encrypt your mnemonic passphrase. Multiple addresses can be managed under one profile and you can switch between profiles on the startup page.",
   "profile_description_tips3": "Please, backup both your password and 24-words mnemonic passphrase.",
   "profile_import": "Profile import",
+  "ledger_profile_import": "Ledger Profile import",
   "profile_name": "Profile name",
   "profile_name_already_exists": "Profile name already taken",
   "profile_name_error": "Invalid profile name",

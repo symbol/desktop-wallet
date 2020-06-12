@@ -262,7 +262,8 @@ export class TransactionListTs extends Vue {
     const currentPath = this.currentAccount.path
     const addr = this.currentAccount.address
     const symbolLedger = new SymbolLedger(transport, 'XYM')
-    const signerPublickey = this.currentAccount.publicKey
+    const accountResult = await symbolLedger.getAccount(currentPath)
+    const signerPublickey = accountResult.publicKey
     const signature = await symbolLedger.signCosignatureTransaction(currentPath, transaction, signerPublickey)
     transport.close()
     this.$store.dispatch(
@@ -278,7 +279,7 @@ export class TransactionListTs extends Vue {
       .toPromise()
     if (res.success) {
       this.$emit('success')
-      // this.show = false
+      this.$emit('close')
     } else {
       this.$store.dispatch('notification/ADD_ERROR', res.error, { root: true })
     }
