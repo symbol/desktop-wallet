@@ -1,9 +1,16 @@
 <template>
   <div class="import-profile-wrapper radius">
     <div class="inner-container">
-      <p class="create-profile-box">
-        {{ $t('profile_import') }}
-      </p>
+      <div v-if="isLedger">
+        <p class="create-profile-box">
+          {{ $t('profile_import') }}
+        </p>
+      </div>
+      <div v-if="!isLedger">
+        <p class="create-profile-box">
+          {{ $t('ledger_profile_import') }}
+        </p>
+      </div>
       <div class="step-bar-container">
         <img :src="$route.meta.icon" />
         <div class="step-text-container">

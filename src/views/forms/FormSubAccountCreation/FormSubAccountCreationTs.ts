@@ -15,7 +15,7 @@
  */
 import { Component, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
-import { Account, NetworkType, Password, Crypto } from 'symbol-sdk'
+import { Account, NetworkType, Password, Crypto, PublicAccount } from 'symbol-sdk'
 import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
 import { SymbolLedger } from '@/core/utils/Ledger'
@@ -302,8 +302,10 @@ export class FormSubAccountCreationTs extends Vue {
       })
       const transport = await TransportWebUSB.create()
       const symbolLedger = new SymbolLedger(transport, 'XYM')
-      const accountResult = await symbolLedger.getAccount(`m/44'/4343'/${this.networkType}'/0'/${accountIndex}'`)
-      const { address, publicKey, path } = accountResult
+      const rawPath = this.paths.incrementPathLevel(accountPath)
+      const accountResult = await symbolLedger.getAccount(rawPath)
+      const { publicKey, path } = accountResult
+      const address = PublicAccount.createFromPublicKey(publicKey, this.networkType).address
       transport.close()
       const accName = Object.values(this.currentAccount)[1]
       return {
@@ -312,7 +314,7 @@ export class FormSubAccountCreationTs extends Vue {
         profileName: accName,
         node: '',
         type: AccountType.fromDescriptor('Ledger'),
-        address: address.toUpperCase(),
+        address: address.plain(),
         publicKey: publicKey.toUpperCase(),
         encryptedPrivateKey: '',
         path: path,
