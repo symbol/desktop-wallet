@@ -157,21 +157,10 @@ export const routes: AppRoute[] = [
                 meta: {
                   protected: false,
                   isLedger: true,
-                  icon: importLedgerStepImage.importLedgerStepImage1,
+                  // icon: importLedgerStepImage.importLedgerStepImage1,
                 },
                 // @ts-ignore
                 component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
-              },
-              {
-                path: 'importLedger',
-                name: 'profiles.importLedger',
-                meta: {
-                  protected: false,
-                  isLedger: true,
-                  icon: importLedgerStepImage.importLedgerStepImage2,
-                },
-                // @ts-ignore
-                component: () => import('@/views/pages/profiles/import-ledger-profile/ImportLedgerProfile.vue'),
               },
             ],
           },
