@@ -15,7 +15,7 @@
  */
 import { Component, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
-import { Password, NetworkType, PublicAccount } from 'symbol-sdk'
+import { Password, PublicAccount } from 'symbol-sdk'
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 import { NotificationType } from '@/core/utils/NotificationType'
@@ -36,7 +36,6 @@ import { AccountModel, AccountType } from '@/core/database/entities/AccountModel
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
 import { SymbolLedger } from '@/core/utils/Ledger'
 import { AccountService } from '@/services/AccountService'
-import Account from '@/store/Account'
 
 /// end-region custom types
 
