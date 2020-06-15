@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { createStepImage, importStepImage, importLedgerStepImage, officialIcons } from '@/views/resources/Images'
+import { createStepImage, importStepImage, officialIcons } from '@/views/resources/Images'
 import { AppRoute } from './AppRoute'
 
 export const routes: AppRoute[] = [
