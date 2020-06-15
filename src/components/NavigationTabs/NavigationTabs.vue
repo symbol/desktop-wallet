@@ -1,7 +1,7 @@
 <template>
   <div :class="[direction === 'horizontal' ? 'tabs' : '', direction]">
     <span
-      v-for="(tabEntry, index) in tabEntries"
+      v-for="(tabEntry, index) in entries"
       :key="index"
       :class="['tab-item', tabEntry.isActive($route) ? 'active' : '']"
       @click="tabEntry.isActive($route) ? '' : $router.push({ name: tabEntry.route }).catch((err) => {})"
