@@ -286,31 +286,21 @@ export class FormSubAccountCreationTs extends Vue {
   }
 
   async importSubAccountFromLedger(childAccountName: string): Promise<AccountModel> | null {
-    const subAccountName = childAccountName
-    const accountPath = this.currentAccount.path
-    const currentAccountIndex = accountPath.substring(accountPath.length - 2, accountPath.length - 1)
-    const numAccount = this.knownPaths.length
-    let accountIndex
-    if (numAccount <= Number(currentAccountIndex)) {
-      accountIndex = numAccount + Number(currentAccountIndex)
-    } else {
-      accountIndex = numAccount + 1
-    }
     try {
       this.$Notice.success({
         title: this['$t']('Verify information in your device!') + '',
       })
       const transport = await TransportWebUSB.create()
       const symbolLedger = new SymbolLedger(transport, 'XYM')
-      const rawPath = this.paths.incrementPathLevel(accountPath)
-      const accountResult = await symbolLedger.getAccount(rawPath)
+      const nextPath = this.paths.getNextAccountPath(this.knownPaths)
+      const accountResult = await symbolLedger.getAccount(nextPath)
       const { publicKey, path } = accountResult
       const address = PublicAccount.createFromPublicKey(publicKey, this.networkType).address
       transport.close()
       const accName = Object.values(this.currentAccount)[1]
       return {
         id: SimpleObjectStorage.generateIdentifier(),
-        name: subAccountName,
+        name: childAccountName,
         profileName: accName,
         node: '',
         type: AccountType.fromDescriptor('Ledger'),
