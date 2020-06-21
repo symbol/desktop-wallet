@@ -37,7 +37,7 @@ interface MosaicState {
   networkMosaicId: MosaicId
   networkMosaicName: string
   networkMosaicTicker: string
-  mosaicConfigurations: Record<string, MosaicConfigurationModel>
+  accountMosaicConfigurations: Record<string, MosaicConfigurationModel>
 }
 
 // mosaic state initial definition
@@ -51,7 +51,7 @@ const mosaicState: MosaicState = {
   networkCurrency: null,
   networkMosaicName: '',
   networkMosaicTicker: '',
-  mosaicConfigurations: {},
+  accountMosaicConfigurations: {},
 }
 
 export default {
@@ -66,7 +66,7 @@ export default {
     balanceMosaics: (state: MosaicState) => state.balanceMosaics,
     networkMosaic: (state: MosaicState) => state.networkMosaicId,
     networkMosaicTicker: (state: MosaicState) => state.networkMosaicTicker,
-    mosaicConfigurations: (state: MosaicState) => state.mosaicConfigurations,
+    accountMosaicConfigurations: (state: MosaicState) => state.accountMosaicConfigurations,
     networkMosaicName: (state: MosaicState) => state.networkMosaicName,
   },
   mutations: {
@@ -128,14 +128,14 @@ export default {
         holdMosaics.filter((m) => m.ownerRawPlain === currentSignerAddress.plain() || m.balance > 0),
       )
     },
-    mosaicConfigurations: (state: MosaicState, mosaicConfigurations: Record<string, MosaicConfigurationModel>) =>
-      Vue.set(state, 'mosaicConfigurations', mosaicConfigurations),
+    accountMosaicConfigurations: (
+      state: MosaicState,
+      accountMosaicConfigurations: Record<string, MosaicConfigurationModel>,
+    ) => Vue.set(state, 'accountMosaicConfigurations', accountMosaicConfigurations),
   },
   actions: {
     async initialize({ commit, getters }) {
       const callback = async () => {
-        const mosaicService = new MosaicService()
-        commit('mosaicConfigurations', mosaicService.getMosaicConfigurations())
         commit('setInitialized', true)
       }
       // acquire async lock until initialized
@@ -194,6 +194,11 @@ export default {
       if (!currentSignerAddress) {
         return
       }
+      const mosaicService = new MosaicService()
+      commit(
+        'accountMosaicConfigurations',
+        mosaicService.getMosaicConfigurationsByAccount(rootGetters['account/currentAccount']),
+      )
       commit('mosaics', {
         mosaics: getters['mosaics'],
         currentSignerAddress,
@@ -201,18 +206,18 @@ export default {
       })
     },
 
-    HIDE_MOSAIC({ commit }, mosaicId) {
+    HIDE_MOSAIC({ commit }, { mosaicId, account }) {
       commit(
-        'mosaicConfigurations',
-        new MosaicService().changeMosaicConfiguration(mosaicId, {
+        'accountMosaicConfigurations',
+        new MosaicService().changeMosaicConfiguration(mosaicId, account, {
           hidden: true,
         }),
       )
     },
-    SHOW_MOSAIC({ commit }, mosaicId) {
+    SHOW_MOSAIC({ commit }, { mosaicId, account }) {
       commit(
-        'mosaicConfigurations',
-        new MosaicService().changeMosaicConfiguration(mosaicId, {
+        'accountMosaicConfigurations',
+        new MosaicService().changeMosaicConfiguration(mosaicId, account, {
           hidden: false,
         }),
       )

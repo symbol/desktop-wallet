@@ -28,7 +28,10 @@ import {
 import { combineLatest, forkJoin, from, Observable, of } from 'rxjs'
 import { flatMap, map, tap, toArray } from 'rxjs/operators'
 // internal dependencies
-import { MosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel'
+import {
+  MosaicConfigurationModel,
+  AccountMosaicConfigurationModel,
+} from '@/core/database/entities/MosaicConfigurationModel'
 import { MosaicModel } from '@/core/database/entities/MosaicModel'
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
 import { ObservableHelpers } from '@/core/utils/ObservableHelpers'
@@ -38,6 +41,7 @@ import { NetworkCurrenciesModel } from '@/core/database/entities/NetworkCurrenci
 import { MosaicModelStorage } from '@/core/database/storage/MosaicModelStorage'
 import { NetworkCurrenciesModelStorage } from '@/core/database/storage/NetworkCurrenciesModelStorage'
 import { MosaicConfigurationModelStorage } from '@/core/database/storage/MosaicConfigurationModelStorage'
+import { AccountModel } from '@/core/database/entities/AccountModel'
 
 // custom types
 export type ExpirationStatus = 'unlimited' | 'expired' | string | number
@@ -351,21 +355,30 @@ export class MosaicService {
     return TimeHelpers.durationToRelativeTime(expiresIn, blockGenerationTargetTime)
   }
 
-  public getMosaicConfigurations(): Record<string, MosaicConfigurationModel> {
+  public getMosaicConfigurationsByAccount(account: AccountModel): AccountMosaicConfigurationModel {
+    return this.getMosaicConfigurations()[account.id] || {}
+  }
+
+  public getMosaicConfiguration(mosaicId: MosaicId, account: AccountModel): MosaicConfigurationModel {
+    return this.getMosaicConfigurationsByAccount(account)[mosaicId.toHex()] || new MosaicConfigurationModel()
+  }
+  public getMosaicConfigurations(): Record<string, AccountMosaicConfigurationModel> {
     return this.mosaicConfigurationsStorage.get() || {}
   }
-
-  public getMosaicConfiguration(mosaicId: MosaicId): MosaicConfigurationModel {
-    return this.getMosaicConfigurations()[mosaicId.toHex()] || new MosaicConfigurationModel()
-  }
-
-  public changeMosaicConfiguration(mosaicId: MosaicId, newConfigs: any): Record<string, MosaicConfigurationModel> {
+  public changeMosaicConfiguration(
+    mosaicId: MosaicId,
+    account: AccountModel,
+    newConfigs: any,
+  ): Record<string, MosaicConfigurationModel> {
     const mosaicConfigurationsStorage = this.getMosaicConfigurations()
-    mosaicConfigurationsStorage[mosaicId.toHex()] = {
-      ...this.getMosaicConfiguration(mosaicId),
+    mosaicConfigurationsStorage[account.id] = mosaicConfigurationsStorage[account.id]
+      ? mosaicConfigurationsStorage[account.id]
+      : {}
+    mosaicConfigurationsStorage[account.id][mosaicId.toHex()] = {
+      ...this.getMosaicConfiguration(mosaicId, account),
       ...newConfigs,
     }
     this.mosaicConfigurationsStorage.set(mosaicConfigurationsStorage)
-    return mosaicConfigurationsStorage
+    return mosaicConfigurationsStorage[account.id]
   }
 }

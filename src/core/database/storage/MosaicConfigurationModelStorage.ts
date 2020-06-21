@@ -15,9 +15,10 @@
  */
 
 import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
-import { MosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel'
-
-export class MosaicConfigurationModelStorage extends VersionedObjectStorage<Record<string, MosaicConfigurationModel>> {
+import { AccountMosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel'
+export class MosaicConfigurationModelStorage extends VersionedObjectStorage<
+  Record<string, AccountMosaicConfigurationModel>
+> {
   /**
    * Singleton instance as we want to run the migration just once
    */

@@ -21,3 +21,4 @@
 export class MosaicConfigurationModel {
   constructor(public readonly hidden: boolean = false) {}
 }
+export type AccountMosaicConfigurationModel = Record<string, MosaicConfigurationModel>
