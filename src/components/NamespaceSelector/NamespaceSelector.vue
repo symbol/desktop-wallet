@@ -14,7 +14,7 @@
         <ErrorTooltip :errors="errors">
           <Select v-model="chosenValue" class="select-size select-style" :placeholder="$t('select_a_namespace')">
             <Option
-              v-for="namespaceModel in namespaces"
+              v-for="namespaceModel in filteredNamespaces"
               :key="getName(namespaceModel)"
               :value="getName(namespaceModel)"
             >
