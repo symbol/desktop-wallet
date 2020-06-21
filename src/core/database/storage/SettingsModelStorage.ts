@@ -24,6 +24,11 @@ export class SettingsModelStorage extends VersionedObjectStorage<Record<string, 
   public static INSTANCE = new SettingsModelStorage()
 
   private constructor() {
-    super('settings')
+    super('settings', [
+      {
+        description: 'Update settings to 0.9.5.1 network',
+        migrate: () => undefined,
+      },
+    ])
   }
 }
