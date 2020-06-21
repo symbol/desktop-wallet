@@ -8,24 +8,26 @@
         {{ $t('namespace_name') }}
       </div>
       <div class="asset-description-text">
-        {{ $t('namespace_tips_key_1') }}
-      </div>
-      <div class="asset-description-emphasis">
-        {{ $t('namespace_tips_value_1') }}
-      </div>
-      <div class="asset-description-text">
-        {{ $t('namespace_tips_key_2') }}
-      </div>
-      <div class="asset-description-emphasis">
-        {{ $t('namespace_tips_value_2') }}
-      </div>
-      <div class="asset-description-text">
-        {{ $t('namespace_tips_key_3') }}
+        <div>
+          {{ $t('namespace_tips_key_1') }}
+        </div>
+        <div>
+          {{ $t('namespace_tips_value_1') }}
+        </div>
+        <div>
+          {{ $t('namespace_tips_key_2') }}
+        </div>
+        <div>
+          {{ $t('namespace_tips_value_2') }}
+        </div>
+        <div>
+          {{ $t('namespace_tips_key_3') }}
+        </div>
       </div>
       <div class="asset-description-sub-title">
         {{ $t('duration') }}
       </div>
-      <div class="asset-description-emphasis">
+      <div class="asset-description-text">
         {{ $t('namespace_duration_tip_1') }}
       </div>
     </template>

@@ -28,28 +28,6 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
 
 <style lang="less" scoped>
 @import '../../resources/css/variables.less';
-
-/deep/.modal-transaction-confirmation {
-  min-width: 8.5rem;
-  max-width: 12rem;
-  margin: 0 auto;
-  overflow: hidden;
-  .ivu-modal {
-    width: 12rem !important;
-  }
-
-  .ivu-modal-content {
-    width: 100%;
-    max-height: 80vh;
-    overflow-y: scroll;
-  }
-}
-
-/deep/.modal-footer {
-  height: 0.46rem;
-  padding-right: 0.4rem;
-}
-
 .float-right {
   float: right;
 }

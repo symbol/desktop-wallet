@@ -9,29 +9,6 @@
         </template>
       </TableDisplay>
     </template>
-    <template v-slot:asset-description>
-      <div class="asset-description-title">
-        {{ $t('namespace') }}
-      </div>
-      <div class="asset-description-sub-title">
-        {{ $t('define') }}
-      </div>
-      <div class="asset-description-emphasis">
-        {{ $t('namespace_definition') }}
-      </div>
-      <div class="asset-description-sub-title">
-        {{ $t('namespace_description') }}
-      </div>
-      <div class="asset-description-emphasis">
-        {{ $t('namespace_name_constraint') }}
-      </div>
-      <div class="asset-description-sub-title">
-        {{ $t('scenes_to_be_used') }}
-      </div>
-      <div class="asset-description-text">
-        {{ $t('used_to_bind_a_account_address') }}
-      </div>
-    </template>
   </AssetListPageWrap>
 </template>
 

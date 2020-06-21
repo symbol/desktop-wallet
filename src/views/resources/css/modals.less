@@ -1,22 +1,38 @@
-.modal-container {
-  .ivu-modal {
-    width: unset !important;
+@import './variables.less';
+
+.ivu-modal {
+  width: 12rem !important;
+  top: 10vh;
+
+  .ivu-modal-header {
+    text-align: left;
+    padding: 0.25rem 0.3rem;
+
+    .ivu-modal-header-inner {
+      display: block;
+      color: @purpleDark;
+      font-size: @fontSize24;
+      padding: 0;
+      overflow: unset;
+    }
   }
-  .ivu-modal-content {
-    min-width: 8.5rem;
-    max-width: 12rem;
-    margin: auto;
-    width: 100%;
-    position: relative;
-    max-height: 80vh;
-    overflow-x: hidden;
-    overflow-y: scroll;
+
+  .ivu-modal-body {
+    max-height: calc(80vh - 0.71rem - 0.76rem);
+    overflow-y: auto;
+    padding: 0.15rem 0.3rem;
   }
-  .modal-footer {
-    height: 0.46rem;
-    padding-right: 0.4rem;
+
+  .ivu-modal-footer {
+    height: 0.76rem;
+    padding: 0.15rem 0.3rem;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
-  .float-right {
-    float: right;
+
+  .ivu-modal-close {
+    top: 0.195rem;
   }
 }
