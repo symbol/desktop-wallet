@@ -335,6 +335,8 @@
   "no_mnemonic": "ニーモニックなし",
   "no_network_currency_alert": "ウォレットにはネットワーク通貨に関するデータを取得できません (例: symbol:xym) 有効なノードに接続してください。",
   "no_profiles_in_database": "ウォレットデータベースにプロファイルはありません",
+  "no_unconfirmed_transactions": "未承認トランザクションなし",
+  "no_confirmed_transactions": "承認済トランザクションなし",
   "node_connection_failed": "ノード接続に失敗",
   "node_connection_succeeded": "ノード接続に成功",
   "node_exists_error": "ノードは既に存在します",
