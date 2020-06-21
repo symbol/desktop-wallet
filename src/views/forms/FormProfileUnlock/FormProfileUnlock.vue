@@ -7,7 +7,6 @@
           <div class="row-75-25 inputs-container">
             <ValidationProvider
               v-slot="{ errors }"
-              mode="lazy"
               vid="password"
               :name="$t('password')"
               :rules="validationRules.profilePassword"
