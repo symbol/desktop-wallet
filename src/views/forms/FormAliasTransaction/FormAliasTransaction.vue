@@ -29,16 +29,22 @@
                 mode="lazy"
                 vid="registrationType"
                 tag="div"
-                class="inputs-container select-container"
+                class="select-container"
               >
-                <select v-model="aliasTargetType" class="select-size select-style" @change="formItems.aliasTarget = ''">
-                  <option value="mosaic">
-                    {{ $t('option_link_mosaic') }}
-                  </option>
-                  <option v-show="assetType === 'namespace'" value="address">
-                    {{ $t('option_link_address') }}
-                  </option>
-                </select>
+                <div class="position-relative">
+                  <Select
+                    v-model="aliasTargetType"
+                    class="select-size select-style"
+                    @on-change="formItems.aliasTarget = ''"
+                  >
+                    <Option value="mosaic">
+                      {{ $t('option_link_mosaic') }}
+                    </Option>
+                    <Option v-show="assetType === 'namespace'" value="address">
+                      {{ $t('option_link_address') }}
+                    </Option>
+                  </Select>
+                </div>
               </ValidationProvider>
             </template>
           </FormRow>

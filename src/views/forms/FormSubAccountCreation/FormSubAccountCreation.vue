@@ -6,14 +6,18 @@
           <FormRow>
             <template v-slot:label> {{ $t('form_label_new_account_type') }}: </template>
             <template v-slot:inputs>
-              <select v-model="formItems.type" class="input-size input-style">
-                <option value="child_account">
-                  {{ $t('option_child_account') }}
-                </option>
-                <option value="privatekey_account">
-                  {{ $t('option_privatekey_account') }}
-                </option>
-              </select>
+              <div class="inputs-container">
+                <div class="select-container">
+                  <Select v-model="formItems.type" class="select-size select-style">
+                    <Option value="child_account">
+                      {{ $t('option_child_account') }}
+                    </Option>
+                    <Option value="privatekey_account">
+                      {{ $t('option_privatekey_account') }}
+                    </Option>
+                  </Select>
+                </div>
+              </div>
             </template>
           </FormRow>
 
@@ -104,5 +108,9 @@ export default class FormSubAccountCreation extends FormSubAccountCreationTs {}
   width: 100%;
   clear: both;
   min-height: 1rem;
+}
+/deep/.form-row-inner-container {
+  text-align: left;
+  grid-template-columns: 25% 75%;
 }
 </style>
