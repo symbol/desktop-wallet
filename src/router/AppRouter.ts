@@ -14,7 +14,7 @@
  *
  */
 // external dependencies
-import Router from 'vue-router'
+import Router, { RawLocation } from 'vue-router'
 // internal dependencies
 import { routes } from '@/router/routes'
 import { AppRoute } from './AppRoute'
@@ -36,6 +36,12 @@ export class AppRouter extends Router {
   constructor(options) {
     super(options)
     this.routes = options.routes
+    const originalPush = this.push
+    this.push = (location: RawLocation) => {
+      return originalPush.call(this, location).catch(() => {
+        /* eslint */
+      })
+    }
     this.beforeEach((to, from, next) => {
       const service = new ProfileService()
       const hasAccounts = service.getProfiles().length > 0
