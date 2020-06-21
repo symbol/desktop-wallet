@@ -329,28 +329,23 @@ textarea {
   -webkit-animation: fadeIn 0.5s;
 }
 
+.ivu-input {
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid @border;
+}
+
+.ivu-input:focus {
+  box-shadow: none;
+  border-bottom: 1px solid @border;
+}
 .wrap {
-  .ivu-input {
-    border: none;
-    border-radius: 0;
-    border-bottom: 1px solid @border;
-  }
-
-  .ivu-input:focus {
-    box-shadow: none;
-    border-bottom: 1px solid @border;
-  }
-
   .input_point {
     input {
       border: none;
       border-bottom: 1px solid @border;
     }
   }
-}
-
-.ivu-modal-wrap {
-  z-index: 99999991 !important;
 }
 
 .url_text {
@@ -452,4 +447,7 @@ textarea {
       border-bottom: 0.01rem solid @line;
     }
   }
+}
+button:disabled {
+  cursor: not-allowed;
 }

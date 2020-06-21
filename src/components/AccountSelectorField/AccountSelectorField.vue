@@ -11,6 +11,7 @@
         'select-size select-style': defaultFormStyle,
         'max-z-index': true,
       }"
+      :transfer="true"
     >
       <i-option v-for="{ id, name } in currentAccounts" :key="id" :value="id">
         {{ truncate(name) }}

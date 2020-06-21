@@ -274,7 +274,6 @@ export default {
       }
       commit('addPeer', peerUrl)
     },
-
     REMOVE_KNOWN_PEER({ commit }, peerUrl) {
       commit('removePeer', peerUrl)
     },

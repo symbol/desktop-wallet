@@ -31,12 +31,14 @@ interface ProfileState {
   initialized: boolean
   currentProfile: ProfileModel
   isAuthenticated: boolean
+  isSettingsVisible: boolean
 }
 
 const profileState: ProfileState = {
   initialized: false,
   currentProfile: null,
   isAuthenticated: false,
+  isSettingsVisible: false,
 }
 export default {
   namespaced: true,
@@ -45,6 +47,7 @@ export default {
     getInitialized: (state: ProfileState) => state.initialized,
     currentProfile: (state: ProfileState) => state.currentProfile,
     isAuthenticated: (state: ProfileState) => state.isAuthenticated,
+    isSettingsVisible: (state: ProfileState) => state.isSettingsVisible,
   },
   mutations: {
     setInitialized: (state: ProfileState, initialized: boolean) => {
@@ -54,13 +57,15 @@ export default {
       Vue.set(state, 'currentProfile', currentProfile),
     setAuthenticated: (state: ProfileState, isAuthenticated: boolean) =>
       Vue.set(state, 'isAuthenticated', isAuthenticated),
+    toggleSettings: (state: ProfileState) => {
+      state.isSettingsVisible = !state.isSettingsVisible
+    },
   },
   actions: {
     async initialize({ commit, getters }) {
       const callback = async () => {
         commit('setInitialized', true)
       }
-
       // aquire async lock until initialized
       await Lock.initialize(callback, { getters })
     },

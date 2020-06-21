@@ -1,6 +1,12 @@
 <template>
   <div :class="[isConnected ? 'endpoint-healthy' : 'endpoint-unhealthy']">
-    <Poptip v-model="poptipVisible" placement="bottom-end" class="endpoint-poptip" @on-popper-show="onPopTipShow">
+    <Poptip
+      v-if="!isEmbedded"
+      v-model="poptipVisible"
+      placement="bottom-end"
+      class="endpoint-poptip"
+      @on-popper-show="onPopTipShow"
+    >
       <i class="pointer point" />
       <span v-if="isConnected" class="network-text pointer">{{ $t(networkTypeText) }}</span>
       <div slot="content" class="node-selector-container">
@@ -12,8 +18,8 @@
           <Row>
             <i-col span="6">{{ $t('current_endpoint') }}:</i-col>
             <i-col span="18" class="overflow_ellipsis" :title="currentPeerInfo.url + currentPeerInfo.friendlyName">
-              {{ currentPeerInfo.url }} - {{ currentPeerInfo.friendlyName }}</i-col
-            >
+              {{ currentPeerInfo.url }} - {{ currentPeerInfo.friendlyName }}
+            </i-col>
           </Row>
         </div>
         <div class="node-list-container">
@@ -35,14 +41,38 @@
             </ul>
           </div>
           <div class="node-list-text">
-            <Icon type="ios-help-circle-outline" /><span
-              >You can use the <a @click="goSetting()">Settings</a> page for node management or to configure a new
-              network</span
-            >
+            <Icon type="ios-help-circle-outline" />
+            <i18n path="peer_tip">
+              <template v-slot:setting>
+                <a @click="goSettings()">{{ $t('sidebar_item_settings') }}</a>
+              </template>
+            </i18n>
           </div>
         </div>
       </div>
     </Poptip>
+    <div v-else class="node-selector-container">
+      <div class="node-list-container">
+        <div class="node-list-head">
+          <span>{{ $t('node_list') }}</span
+          ><span>({{ peersList.length }})</span>
+        </div>
+        <div class="node-list-content">
+          <ul v-auto-scroll="'active'">
+            <li
+              v-for="({ url, friendlyName }, index) in peersList"
+              :key="`sep${index}`"
+              class="list-item pointer"
+              :class="[{ active: currentPeerInfo.url == url }]"
+            >
+              <div class="node-url overflow_ellipsis" :title="url + friendlyName">
+                {{ url }}{{ friendlyName ? '-' + friendlyName : '' }}
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
