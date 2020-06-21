@@ -1,7 +1,7 @@
 <template>
   <div>
     <Select v-model="selectedStatus" size="large">
-      <Icon slot="prefix" type="md-apps" size="24" />
+      <Icon slot="prefix" type="md-apps" />
       <Option class="select-all" :value="'all'">
         Recent
       </Option>
