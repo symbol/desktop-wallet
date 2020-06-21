@@ -6,7 +6,12 @@
     <template v-slot:inputs>
       <div class="row-mosaic-attachment-input inputs-container">
         <MosaicSelector v-model="chosenValue.mosaicHex" :mosaic-hex-ids="mosaicHexIds" @input="onChangeMosaic" />
-        <AmountInput v-model="relativeAmount" class="pl-2" @input="onChangeAmount" />
+        <AmountInput
+          v-model="relativeAmount"
+          :mosaic-hex="chosenValue.mosaicHex"
+          class="pl-2"
+          @input="onChangeAmount"
+        />
         <div v-show="isShowDelete" class="delete-mosaic-container">
           <span class="delete-mosaic-icon" @click="$emit('input-deleted', uid)" />
         </div>

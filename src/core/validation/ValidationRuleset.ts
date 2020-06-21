@@ -21,7 +21,7 @@ import networkConfig from '../../../config/network.conf.json'
 
 const { MIN_PASSWORD_LENGTH } = appConfig.constants
 
-export const createValidationRuleset = ({
+export const createValidationRuleSet = ({
   maxMessageSize,
   maxMosaicAtomicUnits,
   maxMosaicDivisibility,
@@ -62,4 +62,4 @@ export const createValidationRuleset = ({
 
 // TODO ValidationRuleset needs to be created when the network configuration is resolved, UI needs
 // to use the resolved ValidationResulset ATM rules are using the hardocded ones
-export const ValidationRuleset = createValidationRuleset(networkConfig.networkConfigurationDefaults)
+export const ValidationRuleset = createValidationRuleSet(networkConfig.networkConfigurationDefaults)

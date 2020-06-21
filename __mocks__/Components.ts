@@ -16,6 +16,7 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { createStore } from '@MOCKS/Store'
+import i18n from '@/language/index'
 
 /// region globals
 const localVue = createLocalVue()
@@ -58,6 +59,7 @@ export const getComponent = (
   const store = createStore({ modules })
   const params = {
     store,
+    i18n,
     localVue,
   }
 
