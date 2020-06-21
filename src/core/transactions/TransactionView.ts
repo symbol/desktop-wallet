@@ -125,7 +125,7 @@ export abstract class TransactionView<T extends Transaction> {
         value: this.transaction.signature,
       },
       {
-        key: 'signerPublicKey',
+        key: 'signer_public_key',
         value: (this.transaction.signer && this.transaction.signer.publicKey) || undefined,
       },
     ].filter((pair) => pair.value)
