@@ -23,15 +23,15 @@ export class UrlValidator {
    * @param {*} value
    * @returns {boolean}
    */
-  public static validate(value: any): boolean {
-    const pattern = new RegExp(
-      '^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port
-        '(\\#[-a-z\\d_]*)?$',
-      'i',
-    )
+  public static validate(value: string): boolean {
+    const regStr =
+      '^' + // position at start
+      '(https?:\\/\\/)?' + //protocol
+      '((([a-zA-Z\\d]{1,}([-\\.]{1}[a-zA-Z\\d]{1,})*\\.[a-zA-Z]+)' + // domain name
+      '|((\\d{1,3}\\.){3}\\d{1,3}))' + // ip(v4) address
+      '(\\:\\d+)?)' + // port
+      '|localhost\\:\\d+' // localhost:8080
+    const pattern = new RegExp(regStr, 'i')
     return pattern.test(value)
   }
 }
