@@ -47,6 +47,12 @@ export class DivisibilityInputTs extends Vue {
   }
 
   public set chosenValue(amount: string) {
+    if (parseInt(amount) > 6) {
+      amount = '6'
+    }
+    if (parseInt(amount) < 0) {
+      amount = '0'
+    }
     this.$emit('input', amount)
   }
   /// end-region computed properties getter/setter
