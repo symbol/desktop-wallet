@@ -17,6 +17,8 @@ import { MosaicDefinitionTransaction, MosaicFlags, MosaicId } from 'symbol-sdk'
 // internal dependencies
 import { TransactionView } from './TransactionView'
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { TimeHelpers } from '@/core/utils/TimeHelpers'
 
 export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefinitionTransaction> {
   /**
@@ -26,6 +28,9 @@ export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefin
     const mosaicId: MosaicId = this.transaction.mosaicId
     const divisibility: number = this.transaction.divisibility
     const mosaicFlags: MosaicFlags = this.transaction.flags
+    const duration = this.transaction.duration.toString()
+    const networkConfiguration: NetworkConfigurationModel = this.$store.getters['network/networkConfiguration']
+    const blockGenerationTargetTime = networkConfiguration.blockGenerationTargetTime
 
     return [
       { key: 'mosaic_id', value: mosaicId.toHex() },
@@ -35,7 +40,10 @@ export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefin
       },
       {
         key: 'duration',
-        value: this.transaction.duration.compact(),
+        value:
+          duration === '0'
+            ? 'unlimited'
+            : TimeHelpers.durationToRelativeTime(parseInt(duration), blockGenerationTargetTime),
       },
       {
         key: 'table_header_transferable',
