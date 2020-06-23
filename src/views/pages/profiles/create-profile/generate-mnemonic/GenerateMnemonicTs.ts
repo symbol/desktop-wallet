@@ -94,8 +94,7 @@ export default class GenerateMnemonicTs extends Vue {
   private async saveMnemonicAndGoToNextPage() {
     try {
       // act
-      const entropy = CryptoJS.SHA256(this.entropy).toString()
-      const seed = MnemonicPassPhrase.createFromEntropy(entropy)
+      const seed = this.filterRepeatedWords()
 
       // encrypt seed for storage
       const encSeed = Crypto.encrypt(seed.plain, this.currentPassword.value)
@@ -114,5 +113,18 @@ export default class GenerateMnemonicTs extends Vue {
       console.log('An error happened while generating Mnenomic:', error)
       this.$store.dispatch('notification/ADD_ERROR', NotificationType.MNEMONIC_GENERATION_ERROR)
     }
+  }
+
+  /**
+   * Filter repeating words in Mnemonic phrase
+   * retrun seed
+   */
+  private filterRepeatedWords() {
+    const entropy = CryptoJS.SHA256(this.entropy + Crypto.randomBytes(8)).toString()
+    const seed = MnemonicPassPhrase.createFromEntropy(entropy)
+    if (new Set(seed.toArray()).size != seed.toArray().length) {
+      return this.filterRepeatedWords()
+    }
+    return seed
   }
 }
