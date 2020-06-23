@@ -97,7 +97,14 @@ export class ModalTransactionCosignatureTs extends Vue {
   public get cosignatures(): AggregateTransactionCosignature[] {
     return this.transaction.cosignatures
   }
-
+  public get hasMissSignatures(): boolean {
+    //merkleComponentHash ==='000000000000...' present that the transaction is still lack of signature
+    return (
+      this.transaction.transactionInfo != null &&
+      this.transaction.transactionInfo.merkleComponentHash !== undefined &&
+      this.transaction.transactionInfo.merkleComponentHash.startsWith('000000000000')
+    )
+  }
   /**
    * Hook called when child component FormProfileUnlock emits
    * the 'success' event.
