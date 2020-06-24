@@ -53,6 +53,7 @@ export class AccountModel {
   public readonly encryptedPrivateKey: string
   public readonly path: string
   public readonly isMultisig: boolean
+  public readonly encRemoteAccountPrivateKey?: string
 
   /**
    * Permits to return specific field's mapped object instances

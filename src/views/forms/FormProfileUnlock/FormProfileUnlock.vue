@@ -22,8 +22,13 @@
                 />
               </ErrorTooltip>
             </ValidationProvider>
-            <button class="button-style validation-button right-side-button" type="submit" @click="processVerification">
-              {{ $t('confirm') }}
+            <button
+              v-if="!disableSubmit"
+              class="button-style validation-button right-side-button"
+              type="submit"
+              @click="processVerification"
+            >
+              {{ $t(buttonText) }}
             </button>
           </div>
         </template>

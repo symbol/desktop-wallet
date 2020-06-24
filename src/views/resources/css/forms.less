@@ -432,11 +432,16 @@
   display: grid;
 }
 
-.validation-button:hover {
+.validation-button:hover:enabled {
   box-shadow: 0 0 0.1rem @purple;
   background-color: @purple !important;
   color: @white !important;
   opacity: 0.8 !important;
+}
+
+.validation-button:disabled {
+  background: @grayLight;
+  color: @grayDark;
 }
 
 .back-button {

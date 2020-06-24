@@ -19,15 +19,22 @@ import { mapGetters } from 'vuex'
 // child components
 // @ts-ignore
 import AnimatedNumber from '@/components/AnimatedNumber/AnimatedNumber.vue'
+// @ts-ignore
+import ModalHarvestingWizard from '@/views/modals/ModalHarvestingWizard/ModalHarvestingWizard.vue'
+import { officialIcons } from '@/views/resources/Images'
+
+import { AccountModel, AccountType as ProfileType } from '@/core/database/entities/AccountModel'
 import { NodeModel } from '@/core/database/entities/NodeModel'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 
 @Component({
   components: {
     AnimatedNumber,
+    ModalHarvestingWizard,
   },
   computed: {
     ...mapGetters({
+      currentAccount: 'account/currentAccount',
       networkConfiguration: 'network/networkConfiguration',
       countTransactions: 'statistics/countTransactions',
       countAccounts: 'statistics/countAccounts',
@@ -38,6 +45,16 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
   },
 })
 export class NetworkStatisticsPanelTs extends Vue {
+  /**
+   * The icons resources.
+   */
+  public officialIcons = officialIcons
+
+  /**
+   * The current account.
+   */
+  private currentAccount: AccountModel
+
   /**
    * The network configuration.
    */
@@ -69,9 +86,30 @@ export class NetworkStatisticsPanelTs extends Vue {
   public currentPeerInfo: NodeModel
 
   /**
+   * Whether harvesting wizard is currently displayed
+   */
+  protected isHarvestingWizardDisplayed = false
+
+  /**
+   * The supported profile types for harvesting
+   */
+  protected harvestingSupportedProfileTypes: ProfileType[] = [ProfileType.SEED]
+
+  /**
+   * Whether harvesting is enabled for current account
+   */
+  protected isHarvestingEnabled = false
+
+  /**
    * Current network target block time
    */
   protected get blockGenerationTargetTime(): number {
     return this.networkConfiguration.blockGenerationTargetTime
+  }
+
+  public created() {
+    if (this.currentAccount) {
+      this.isHarvestingEnabled = this.harvestingSupportedProfileTypes.includes(this.currentAccount.type)
+    }
   }
 }

@@ -12,7 +12,7 @@
           </div>
 
           <div class="detail-row">
-            <AccountAddressDisplay :account="currentAccount" />
+            <AccountAddressDisplay :address="currentAccount.address" />
           </div>
 
           <div class="detail-row">

@@ -1,0 +1,2781 @@
+diff --git a/__mocks__/Accounts.ts b/__mocks__/Accounts.ts
+index ad68e985..77b35339 100644
+--- a/__mocks__/Accounts.ts
++++ b/__mocks__/Accounts.ts
+@@ -35,15 +35,51 @@ export const simpleWallet1 = SimpleWallet.createFromPrivateKey(
+   account1Params.networkType,
+ )
+ 
+-export const WalletsModel1: AccountModel = {
++export const AccountModel1: AccountModel = {
+   id: 'someId',
+   node: '',
+-  profileName: 'profile_name',
++  profileName: 'profile1',
+   name: account1Params.accountName,
+-  type: AccountType.PRIVATE_KEY,
++  type: AccountType.SEED,
+   address: simpleWallet1.address.plain(),
+   publicKey: account1.publicKey,
+   encryptedPrivateKey: simpleWallet1.encryptedPrivateKey,
+-  path: '',
++  path: "m/44'/4343'/1'/0'/0'",
+   isMultisig: false,
+ }
++
++const TEST_ACCOUNTS = {
++  cosigner1: {
++    networkType: NetworkType.MIJIN_TEST,
++    privateKey: '27002B109810E4C25E8E6AE964FAF129CC3BFD1A95CB99062E0205060041D0C9',
++  },
++  remoteTestnet: {
++    networkType: NetworkType.TEST_NET,
++    privateKey: '803040D4A33983C4B233C6C2054A24B9C655E8CAC6C06AECCED56B8FE424FF2B',
++  },
++  remoteMijin: {
++    networkType: NetworkType.MIJIN_TEST,
++    privateKey: '803040D4A33983C4B233C6C2054A24B9C655E8CAC6C06AECCED56B8FE424FF2B',
++  },
++  cosigner2: {
++    networkType: NetworkType.MIJIN_TEST,
++    privateKey: '8472FA74A64A97C85F0A285299D9FD2D44D71CB5698FE9C7E88C33001F9DD83F',
++  },
++  multisig1: {
++    networkType: NetworkType.MIJIN_TEST,
++    privateKey: 'CAD57FEC0C7F2106AD8A6203DA67EE675A1A3C232C676945306448DF5B4124F8',
++  },
++  multisig2: {
++    networkType: NetworkType.MIJIN_TEST,
++    privateKey: '72B08ACF80558B285EADA206BB1226A44038C65AC4649108B2284591641657B5',
++  },
++}
++
++export const getTestAccount = (name: string): Account => {
++  if (!(name in TEST_ACCOUNTS)) {
++    throw new Error('Test account with name: ' + name + ' could not be found in __mocks__/accounts.ts')
++  }
++
++  const spec = TEST_ACCOUNTS[name]
++  return Account.createFromPrivateKey(spec.privateKey, spec.networkType)
++}
+diff --git a/__mocks__/profiles.ts b/__mocks__/profiles.ts
+index b62a7b83..16e0d75a 100644
+--- a/__mocks__/profiles.ts
++++ b/__mocks__/profiles.ts
+@@ -13,40 +13,27 @@
+  * See the License for the specific language governing permissions and limitations under the License.
+  *
+  */
+-import { Account, NetworkType } from 'symbol-sdk'
+ 
+-const TEST_ACCOUNTS = {
+-  cosigner1: {
+-    networkType: NetworkType.MIJIN_TEST,
+-    privateKey: '27002B109810E4C25E8E6AE964FAF129CC3BFD1A95CB99062E0205060041D0C9',
+-  },
+-  remoteTestnet: {
+-    networkType: NetworkType.TEST_NET,
+-    privateKey: '803040D4A33983C4B233C6C2054A24B9C655E8CAC6C06AECCED56B8FE424FF2B',
+-  },
+-  remoteMijin: {
+-    networkType: NetworkType.MIJIN_TEST,
+-    privateKey: '803040D4A33983C4B233C6C2054A24B9C655E8CAC6C06AECCED56B8FE424FF2B',
+-  },
+-  cosigner2: {
+-    networkType: NetworkType.MIJIN_TEST,
+-    privateKey: '8472FA74A64A97C85F0A285299D9FD2D44D71CB5698FE9C7E88C33001F9DD83F',
+-  },
+-  multisig1: {
+-    networkType: NetworkType.MIJIN_TEST,
+-    privateKey: 'CAD57FEC0C7F2106AD8A6203DA67EE675A1A3C232C676945306448DF5B4124F8',
+-  },
+-  multisig2: {
++import { NetworkType } from 'symbol-sdk'
++import { ProfileModel } from '@/core/database/entities/ProfileModel'
++
++const TEST_PROFILES = {
++  profile1: {
++    generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
++    profileName: 'profile1',
++    hint: 'password is password',
+     networkType: NetworkType.MIJIN_TEST,
+-    privateKey: '72B08ACF80558B285EADA206BB1226A44038C65AC4649108B2284591641657B5',
++    password: '0b831096cf25adbd7324ad2dbb3d99a829b40b53c6f76dd50fb2ef56fceded2f2kixTXdr/q/ci5PPwWVCiA==',
++    accounts: "['AccountModel1']",
++    seed:
++      '4fcd1e1b896551f68c3d5314be1f8d2fad48d7b492e65ecf4ac1ac2dfc9749a08CyBF9Q5APg07qXEMWQzQIcN+/KBekkw0T2hBPfdAd5VxXkdzWikv46dIaYxyHCn9hdr839ITfgIWYnAiE54jRWfFKkDvyEZL4pchX6mAqCcc0Ew9VGFfHjKStHWFeBezrhp/MlNeSw/EbxiCFo5C2pmeSuGz5NABUXT+BoDi62gB8r6gyF9hjB8J7Lz6D4SBf6J4cvj9krCXzkkWX1jqg==',
+   },
+ }
+ 
+-export const getTestAccount = (name: string): Account => {
+-  if (!(name in TEST_ACCOUNTS)) {
++export const getTestProfile = (name: string): ProfileModel => {
++  if (!(name in TEST_PROFILES)) {
+     throw new Error('Test account with name: ' + name + ' could not be found in __mocks__/accounts.ts')
+   }
+ 
+-  const spec = TEST_ACCOUNTS[name]
+-  return Account.createFromPrivateKey(spec.privateKey, spec.networkType)
++  return TEST_PROFILES[name]
+ }
+diff --git a/__tests__/components/AmountInput.spec.ts b/__tests__/components/AmountInput.spec.ts
+index 9f632243..e78cd338 100644
+--- a/__tests__/components/AmountInput.spec.ts
++++ b/__tests__/components/AmountInput.spec.ts
+@@ -68,22 +68,15 @@ describe('AmountInput', () => {
+     await flushPromises()
+     expect(wrapper.emitted().input[0]).toEqual(['10.1234567'])
+   })
+-  test("divisibility of the mosaic '534CD11F6D984B4B' is 6", async () => {
+-    const rule = wrapper.vm.validationRules.amount
+-    const falseResult = await validate('10.1234567', rule)
+-    expect(falseResult.valid).toBeFalsy()
+-    const rightResult = await validate('10.123456', rule)
+-    expect(rightResult.valid).toBeTruthy()
+-  })
+-  test("divisibility of the mosaic '534CD11F6D984B4B' is 5 ", async () => {
++  test("divisibility of the mosaic '519FC24B9223E0B4' is 6", async () => {
+     wrapper.setProps({
+-      mosaicHex: '534CD11F6D984B4B',
++      mosaicHex: '519FC24B9223E0B4',
+     })
+     await flushPromises()
+     const rule = wrapper.vm.validationRules.amount
+-    const falseResult = await validate('10.123456', rule)
++    const falseResult = await validate('10.1234567', rule)
+     expect(falseResult.valid).toBeFalsy()
+-    const rightResult = await validate('10.12345', rule)
++    const rightResult = await validate('10.123456', rule)
+     expect(rightResult.valid).toBeTruthy()
+   })
+ })
+diff --git a/__tests__/services/AccountService.spec.ts b/__tests__/services/AccountService.spec.ts
+index 05de99b8..72a3bba4 100644
+--- a/__tests__/services/AccountService.spec.ts
++++ b/__tests__/services/AccountService.spec.ts
+@@ -16,7 +16,7 @@
+ import { NetworkType, Account, Password, Crypto } from 'symbol-sdk'
+ import { AccountService } from '@/services/AccountService'
+ import { MnemonicPassPhrase } from 'symbol-hd-wallets'
+-import { account1Params, WalletsModel1 } from '@MOCKS/Accounts'
++import { account1Params, AccountModel1 } from '@MOCKS/Accounts'
+ 
+ // Sample mnemonic passphrase
+ const mnemonic = new MnemonicPassPhrase(
+@@ -46,7 +46,7 @@ const expectedAccounts = Object.values(expectedPrivateKeys).map((key) =>
+ const generatedAccounts = new AccountService().generateAccountsFromMnemonic(mnemonic, NetworkType.TEST_NET, 2)
+ const generatedAddresses = new AccountService().getAddressesFromMnemonic(mnemonic, NetworkType.TEST_NET, 2)
+ 
+-describe('services/WalletServices', () => {
++describe('services/AccountService', () => {
+   describe('generateAccountsFromMnemonic() should', () => {
+     test('generate correct child account given mnemonic', () => {
+       expect(generatedAccounts).toBeDefined()
+@@ -109,11 +109,11 @@ describe('services/WalletServices', () => {
+       const service = new AccountService()
+ 
+       // get initial encrypted private key values
+-      const initialEncPrivate = WalletsModel1.encryptedPrivateKey
++      const initialEncPrivate = AccountModel1.encryptedPrivateKey
+ 
+       // update the model
+       const updatedWallet = service.updateWalletPassword(
+-        WalletsModel1,
++        AccountModel1,
+         account1Params.password,
+         new Password('password2'),
+       )
+@@ -132,7 +132,7 @@ describe('services/WalletServices', () => {
+     test('should throw if provided with an incorrect password', () => {
+       const service = new AccountService()
+       expect(() => {
+-        service.updateWalletPassword(WalletsModel1, new Password('wrong_password'), new Password('password2'))
++        service.updateWalletPassword(AccountModel1, new Password('wrong_password'), new Password('password2'))
+       }).toThrow()
+     })
+   })
+diff --git a/__tests__/services/RemoteAccountService.spec.ts b/__tests__/services/RemoteAccountService.spec.ts
+new file mode 100644
+index 00000000..2b4b0fc6
+--- /dev/null
++++ b/__tests__/services/RemoteAccountService.spec.ts
+@@ -0,0 +1,72 @@
++/*
++ * Copyright 2020 NEM Foundation (https://nem.io)
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and limitations under the License.
++ *
++ */
++import { NetworkType, Password, RepositoryFactoryHttp, Address, AccountInfo, UInt64, AccountType } from 'symbol-sdk'
++import { RemoteAccountService } from '@/services/RemoteAccountService'
++import { AccountModel1 } from '@MOCKS/Accounts'
++import { getTestProfile } from '@MOCKS/profiles'
++import { of } from 'rxjs'
++
++describe('services/RemoteAccountService', () => {
++  describe('getAvailableRemotePublicKey()', () => {
++    test('should return the first linkable public key', async (done) => {
++      // prepare
++      const accountRepository = new RepositoryFactoryHttp('http://localhost:3000').createAccountRepository()
++      accountRepository.getAccountsInfo = jest.fn(() => of([]))
++
++      // act
++      const remoteAccount = await new RemoteAccountService(
++        AccountModel1,
++        getTestProfile('profile1'),
++        accountRepository,
++      ).getAvailableRemoteAccount(new Password('password'))
++
++      expect(remoteAccount.publicKey).toBe('BB6FF99C52B3C9D880D5E59C10AD696D90CF84A8E825CCA16F584A8BCE4D17E6')
++      done()
++    })
++
++    test('should return the second public key if the first one is not availalbe', async (done) => {
++      // prepare
++      const accountRepository = new RepositoryFactoryHttp('http://localhost:3000').createAccountRepository()
++      const fakeLinkedAccount = new AccountInfo(
++        Address.createFromPublicKey(
++          'BB6FF99C52B3C9D880D5E59C10AD696D90CF84A8E825CCA16F584A8BCE4D17E6',
++          NetworkType.MIJIN_TEST,
++        ),
++        UInt64.fromUint(0),
++        'BB6FF99C52B3C9D880D5E59C10AD696D90CF84A8E825CCA16F584A8BCE4D17E6',
++        UInt64.fromUint(0),
++        AccountType.Remote,
++        [],
++        [],
++        [],
++        UInt64.fromUint(0),
++        UInt64.fromUint(0),
++      )
++
++      accountRepository.getAccountsInfo = jest.fn(() => of([fakeLinkedAccount]))
++
++      // act
++      const remoteAccount = await new RemoteAccountService(
++        AccountModel1,
++        getTestProfile('profile1'),
++        accountRepository,
++      ).getAvailableRemoteAccount(new Password('password'))
++
++      expect(remoteAccount.publicKey).toBe('FA0939C5F11FC89A8EB997329C64AC785CDD23AE9D73C3E060D3B5FF0BABC2A4')
++      done()
++    })
++  })
++})
+diff --git a/__tests__/transactions/ViewAliasTransaction.spec.ts b/__tests__/transactions/ViewAliasTransaction.spec.ts
+deleted file mode 100644
+index e6dce7ec..00000000
+--- a/__tests__/transactions/ViewAliasTransaction.spec.ts
++++ /dev/null
+@@ -1,46 +0,0 @@
+-/*
+- * Copyright 2020 NEM Foundation (https://nem.io)
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and limitations under the License.
+- *
+- */
+-import { AliasAction, Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, NetworkType } from 'symbol-sdk'
+-import { createStore } from '@MOCKS/Store'
+-import { ViewAliasTransaction } from '@/core/transactions/ViewAliasTransaction'
+-
+-const store = createStore({})
+-
+-describe('transactions/ViewAliasTransaction', () => {
+-  describe('use() should', () => {
+-    test('populate mosaic alias transaction fields', () => {
+-      const namespaceId = new NamespaceId('alias')
+-      const mosaicId = new MosaicId('747B276C30626442')
+-      const alias = MosaicAliasTransaction.create(
+-        Deadline.create(),
+-        AliasAction.Link,
+-        namespaceId,
+-        mosaicId,
+-        NetworkType.MIJIN_TEST,
+-      )
+-
+-      const view = new ViewAliasTransaction(store, alias)
+-
+-      // assert
+-      expect(view).toBeDefined()
+-      expect(view.transaction).toBeDefined()
+-      expect(view.detailItems.length).toBe(3)
+-    })
+-
+-    // XXX test recognition of Namespace vs Address for recipient
+-    // XXX test recognition of Namespace vs MosaicId for mosaics
+-  })
+-})
+diff --git a/__tests__/transactions/ViewHashLockTransaction.spec.ts b/__tests__/transactions/ViewHashLockTransaction.spec.ts
+deleted file mode 100644
+index e6bd8bb3..00000000
+--- a/__tests__/transactions/ViewHashLockTransaction.spec.ts
++++ /dev/null
+@@ -1,53 +0,0 @@
+-/*
+- * Copyright 2020 NEM Foundation (https://nem.io)
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and limitations under the License.
+- *
+- */
+-import {
+-  AggregateTransaction,
+-  Deadline,
+-  LockFundsTransaction,
+-  NetworkCurrencyLocal,
+-  NetworkType,
+-  UInt64,
+-} from 'symbol-sdk'
+-import { createStore } from '@MOCKS/Store'
+-import { getTestAccount } from '@MOCKS/profiles'
+-import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction'
+-
+-const store = createStore({})
+-
+-describe('transactions/ViewHashLockTransaction', () => {
+-  describe('use() should', () => {
+-    test('populate hash lock transaction fields', () => {
+-      const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6'
+-      const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, [])
+-      const signedTransaction = getTestAccount('cosigner1').sign(aggregateTransaction, generationHash)
+-      const hashLock = LockFundsTransaction.create(
+-        Deadline.create(),
+-        NetworkCurrencyLocal.createRelative(10),
+-        UInt64.fromUint(10),
+-        signedTransaction,
+-        NetworkType.MIJIN_TEST,
+-      )
+-
+-      // act
+-      const view = new ViewHashLockTransaction(store, hashLock)
+-
+-      // assert
+-      expect(view).toBeDefined()
+-      expect(view.transaction).toBeDefined()
+-      expect(view.detailItems.length).toBe(3)
+-    })
+-  })
+-})
+diff --git a/__tests__/transactions/ViewTransferTransaction.spec.ts b/__tests__/transactions/ViewTransferTransaction.spec.ts
+deleted file mode 100644
+index 38745102..00000000
+--- a/__tests__/transactions/ViewTransferTransaction.spec.ts
++++ /dev/null
+@@ -1,48 +0,0 @@
+-/*
+- * Copyright 2020 NEM Foundation (https://nem.io)
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and limitations under the License.
+- *
+- */
+-import { Account, Deadline, NamespaceId, NetworkType, PlainMessage, TransferTransaction } from 'symbol-sdk'
+-import { createStore } from '@MOCKS/Store'
+-import { ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction'
+-
+-const store = createStore({})
+-
+-describe('transactions/ViewTransferTransaction', () => {
+-  describe('use() should', () => {
+-    test('populate transfer transaction fields', () => {
+-      // prepare
+-      const alias = new NamespaceId('test')
+-
+-      const transferTransaction = TransferTransaction.create(
+-        Deadline.create(),
+-        alias,
+-        [],
+-        PlainMessage.create('test-message'),
+-        NetworkType.MIJIN_TEST,
+-      )
+-
+-      store.getters['account/currentSignerAddress'] = Account.generateNewAccount(NetworkType.MAIN_NET).address
+-
+-      // act
+-      const view = new ViewTransferTransaction(store, transferTransaction)
+-
+-      // assert
+-      expect(view).toBeDefined()
+-      expect(view.transaction).toBeDefined()
+-
+-      expect(view.detailItems.length).toBe(3)
+-    })
+-  })
+-})
+diff --git a/src/components/AccountAddressDisplay/AccountAddressDisplay.vue b/src/components/AccountAddressDisplay/AccountAddressDisplay.vue
+index c6393141..714ac1f7 100644
+--- a/src/components/AccountAddressDisplay/AccountAddressDisplay.vue
++++ b/src/components/AccountAddressDisplay/AccountAddressDisplay.vue
+@@ -2,8 +2,8 @@
+   <div class="account-detail-row-3cols">
+     <span class="label">{{ $t('account_address') }}</span>
+     <div class="value accountAddress">
+-      {{ getAccountPrettyAddress() }}
+-      <ButtonCopyToClipboard v-model="account.address">
++      {{ getPrettyAddress() }}
++      <ButtonCopyToClipboard v-model="address">
+         <img src="@/views/resources/img/account/copyIcon.png" class="copy-icon" />
+       </ButtonCopyToClipboard>
+     </div>
+diff --git a/src/components/AccountAddressDisplay/AccountAddressDisplayTs.ts b/src/components/AccountAddressDisplay/AccountAddressDisplayTs.ts
+index d862100d..8633cabe 100644
+--- a/src/components/AccountAddressDisplay/AccountAddressDisplayTs.ts
++++ b/src/components/AccountAddressDisplay/AccountAddressDisplayTs.ts
+@@ -13,11 +13,14 @@
+  * See the License for the specific language governing permissions and limitations under the License.
+  *
+  */
++// external dependencies
++import { Address } from 'symbol-sdk'
+ import { Component, Prop, Vue } from 'vue-property-decorator'
++
+ // internal dependencies
+-import { AccountModel } from '@/core/database/entities/AccountModel'
+ //@ts-ignore
+ import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
++import { UIHelpers } from '@/core/utils/UIHelpers'
+ 
+ @Component({
+   components: {
+@@ -28,12 +31,15 @@ export class AccountAddressDisplayTs extends Vue {
+   @Prop({
+     default: null,
+   })
+-  account: AccountModel
++  address: string
+ 
+-  public getAccountPrettyAddress(): string {
+-    return (this.account && AccountModel.getObjects(this.account).address.pretty()) || ''
+-  }
++  /**
++   * UI Helpers
++   * @var {UIHelpers}
++   */
++  public uiHelpers = UIHelpers
+ 
+-  /// region computed properties getter/setter
+-  /// end-region computed properties getter/setter
++  public getPrettyAddress(): string {
++    return this.address ? Address.createFromRawAddress(this.address).pretty() : ''
++  }
+ }
+diff --git a/src/components/MaxFeeSelector/MaxFeeSelectorTs.ts b/src/components/MaxFeeSelector/MaxFeeSelectorTs.ts
+index 459b2efe..07d4c011 100644
+--- a/src/components/MaxFeeSelector/MaxFeeSelectorTs.ts
++++ b/src/components/MaxFeeSelector/MaxFeeSelectorTs.ts
+@@ -19,11 +19,14 @@ import { mapGetters } from 'vuex'
+ import feesConfig from '@/../config/fees.conf.json'
+ // @ts-ignore
+ import FormLabel from '@/components/FormLabel/FormLabel.vue'
++// @ts-ignore
++import FormRow from '@/components/FormRow/FormRow.vue'
+ import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
+ 
+ @Component({
+   components: {
+     FormLabel,
++    FormRow,
+   },
+   computed: {
+     ...mapGetters({
+@@ -39,6 +42,11 @@ export class MaxFeeSelectorTs extends Vue {
+   })
+   public className: string
+ 
++  @Prop({
++    default: false,
++  })
++  withLabel: boolean
++
+   /**
+    * Networks currency mosaic name
+    * @var {string}
+diff --git a/src/components/NetworkNodeSelector/NetworkNodeSelector.vue b/src/components/NetworkNodeSelector/NetworkNodeSelector.vue
+new file mode 100644
+index 00000000..bca73dde
+--- /dev/null
++++ b/src/components/NetworkNodeSelector/NetworkNodeSelector.vue
+@@ -0,0 +1,23 @@
++<template>
++  <FormRow class-name="emphasis">
++    <template v-slot:label> {{ $t('Node_URL') }}: </template>
++    <template v-slot:inputs>
++      <div class="row-75-25 inputs-container">
++        <AutoComplete
++          v-model="formItems.nodeUrl"
++          :data="customNodeData"
++          class="auto-complete-size auto-complete-style"
++          :placeholder="$t('form_label_network_node_url')"
++          @on-select="fetchNodePublicKey"
++          @on-change="handleInput"
++        ></AutoComplete>
++
++        <Icon v-if="isFetchingNodeInfo" type="ios-loading" size="18" class="demo-spin-icon-load"></Icon>
++      </div>
++    </template>
++  </FormRow>
++</template>
++<script lang="ts">
++import { NetworkNodeSelectorTs } from './NetworkNodeSelectorTs'
++export default class NetworkNodeSelector extends NetworkNodeSelectorTs {}
++</script>
+diff --git a/src/components/NetworkNodeSelector/NetworkNodeSelectorTs.ts b/src/components/NetworkNodeSelector/NetworkNodeSelectorTs.ts
+new file mode 100644
+index 00000000..d40c4886
+--- /dev/null
++++ b/src/components/NetworkNodeSelector/NetworkNodeSelectorTs.ts
+@@ -0,0 +1,101 @@
++// external dependencies
++import { Component, Vue, Prop } from 'vue-property-decorator'
++import { NodeHttp, NodeInfo } from 'symbol-sdk'
++import { mapGetters } from 'vuex'
++
++// internal dependencies
++import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
++import { URLHelpers } from '@/core/utils/URLHelpers'
++import { NodeModel } from '@/core/database/entities/NodeModel'
++
++// @ts-ignore
++import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
++// @ts-ignore
++import FormRow from '@/components/FormRow/FormRow.vue'
++
++@Component({
++  components: {
++    FormWrapper,
++    FormRow,
++  },
++  computed: {
++    ...mapGetters({
++      knowNodes: 'network/knowNodes',
++      repositoryFactory: 'network/repositoryFactory',
++    }),
++  },
++})
++export class NetworkNodeSelectorTs extends Vue {
++  @Prop({ default: () => [] }) excludeRoles: number[]
++
++  /**
++   * Validation rules
++   */
++  public validationRules = ValidationRuleset
++
++  public knowNodes: NodeModel[]
++
++  /**
++   * Form items
++   */
++  protected formItems = { nodeUrl: '' }
++
++  public customNodeData = []
++  public isFetchingNodeInfo = false
++
++  /**
++   * Hook called when the submit button is clicked
++   * @protected
++   * @returns {Promise<void>}
++   */
++  protected async handleInput(): Promise<void> {
++    try {
++      const nodeUrl = URLHelpers.getNodeUrl(this.formItems.nodeUrl)
++      new URL(nodeUrl)
++
++      const publicKey = await this.fetchNodePublicKey()
++
++      if (publicKey && publicKey.length) {
++        this.$emit('input', publicKey)
++
++        const associationValues: Array<string> = /.+\u003a\d{2,}/.test(nodeUrl) ? [nodeUrl] : [nodeUrl + ':3000']
++        this.customNodeData = associationValues
++      }
++    } catch (error) {
++      // set error in the error tooltip
++      this.$emit('error', error.message)
++    }
++  }
++
++  /**
++   * Checks if the given node is eligible for harvesting
++   * @protected
++   * @returns {Promise<void>}
++   */
++  protected async fetchNodePublicKey(): Promise<string> {
++    if (!this.formItems.nodeUrl.length) {
++      return ''
++    }
++
++    let nodeInfo: NodeInfo
++    this.isFetchingNodeInfo = true
++    try {
++      const nodeUrl = URLHelpers.getNodeUrl(this.formItems.nodeUrl)
++      nodeInfo = await new NodeHttp(nodeUrl).getNodeInfo().toPromise()
++    } catch (error) {
++      console.log(error)
++      throw new Error('Node_connection_failed')
++    } finally {
++      this.isFetchingNodeInfo = false
++    }
++
++    if (this.excludeRoles.length && this.excludeRoles.includes(nodeInfo.roles))
++      throw new Error('harvesting_node_not_eligible')
++
++    return nodeInfo.publicKey
++  }
++
++  public created() {
++    this.customNodeData = this.knowNodes.map((n) => n.url)
++  }
++}
+diff --git a/src/components/NetworkStatisticsPanel/NetworkStatisticsPanel.less b/src/components/NetworkStatisticsPanel/NetworkStatisticsPanel.less
+index 7a1a3020..e1785b7d 100644
+--- a/src/components/NetworkStatisticsPanel/NetworkStatisticsPanel.less
++++ b/src/components/NetworkStatisticsPanel/NetworkStatisticsPanel.less
+@@ -59,6 +59,10 @@
+       display: inline-block;
+       color: #5200c6;
+       line-height: 40px;
++
++      button.button-style {
++        padding: 0;
++      }
+     }
+ 
+     .speed {
+diff --git a/src/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue b/src/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue
+index ac18c560..cc44cee1 100644
+--- a/src/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue
++++ b/src/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue
+@@ -1,6 +1,20 @@
+ <template>
+   <div class="top_network_info radius">
+     <div class="top_account_info">
++      <div class="xym-outline account-info-tile">
++        <div class="title">
++          <span class="title_txt">{{ $t('harvesting') }}</span>
++        </div>
++        <img :src="officialIcons.harvest" />
++        <div class="txt_info">
++          <button
++            class="centered-button button-style validation-button submit-button"
++            @click="isHarvestingWizardDisplayed = !isHarvestingWizardDisplayed"
++          >
++            {{ $t('show_wizard') }}
++          </button>
++        </div>
++      </div>
+       <div class="xym-outline account-info-tile">
+         <div class="title">
+           <span class="title_txt">{{ $t('accounts') }}</span>
+@@ -19,14 +33,6 @@
+           <AnimatedNumber v-model="currentHeight" />
+         </span>
+       </div>
+-      <div class="xym-outline account-info-tile">
+-        <div class="title">
+-          <span class="title_txt">{{ $t('speed') }}</span>
+-        </div>
+-        <img src="@/views/resources/img/monitor/speed.png" />
+-        <span class="txt_info speed"> {{ blockGenerationTargetTime }}s </span>
+-        <span class="speed-blocks">/{{ $t('block') }}</span>
+-      </div>
+       <div class="xym-outline account-info-tile">
+         <div class="title">
+           <span class="title_txt">{{ $t('peers_number') }}</span>
+@@ -37,6 +43,12 @@
+         </span>
+       </div>
+     </div>
++
++    <ModalHarvestingWizard
++      v-if="isHarvestingWizardDisplayed"
++      :visible="isHarvestingWizardDisplayed"
++      @close="isHarvestingWizardDisplayed = false"
++    />
+   </div>
+ </template>
+ 
+diff --git a/src/components/NetworkStatisticsPanel/NetworkStatisticsPanelTs.ts b/src/components/NetworkStatisticsPanel/NetworkStatisticsPanelTs.ts
+index d2a6edf6..a514da6e 100644
+--- a/src/components/NetworkStatisticsPanel/NetworkStatisticsPanelTs.ts
++++ b/src/components/NetworkStatisticsPanel/NetworkStatisticsPanelTs.ts
+@@ -19,12 +19,17 @@ import { mapGetters } from 'vuex'
+ // child components
+ // @ts-ignore
+ import AnimatedNumber from '@/components/AnimatedNumber/AnimatedNumber.vue'
++// @ts-ignore
++import ModalHarvestingWizard from '@/views/modals/ModalHarvestingWizard/ModalHarvestingWizard.vue'
++import { officialIcons } from '@/views/resources/Images'
++
+ import { NodeModel } from '@/core/database/entities/NodeModel'
+ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+ 
+ @Component({
+   components: {
+     AnimatedNumber,
++    ModalHarvestingWizard,
+   },
+   computed: {
+     ...mapGetters({
+@@ -38,6 +43,8 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
+   },
+ })
+ export class NetworkStatisticsPanelTs extends Vue {
++  public officialIcons = officialIcons
++
+   /**
+    * The network configuration.
+    */
+@@ -68,6 +75,11 @@ export class NetworkStatisticsPanelTs extends Vue {
+    */
+   public currentPeerInfo: NodeModel
+ 
++  /**
++   * Whether harvesting wizard is currently displayed
++   */
++  protected isHarvestingWizardDisplayed = false
++
+   /**
+    * Current network target block time
+    */
+diff --git a/src/components/ProtectedPrivateKeyDisplay/ProtectedPrivateKeyDisplayTs.ts b/src/components/ProtectedPrivateKeyDisplay/ProtectedPrivateKeyDisplayTs.ts
+index c3fc93d0..b98dbf23 100644
+--- a/src/components/ProtectedPrivateKeyDisplay/ProtectedPrivateKeyDisplayTs.ts
++++ b/src/components/ProtectedPrivateKeyDisplay/ProtectedPrivateKeyDisplayTs.ts
+@@ -34,7 +34,7 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
+   @Prop({
+     default: null,
+   })
+-  account: AccountModel
++  account: AccountModel | Account
+ 
+   /**
+    * Whether account is currently being unlocked
+@@ -53,7 +53,7 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
+    * @internal
+    * @var {string}
+    */
+-  private plainInformation: string = ''
++  protected plainInformation: string = ''
+ 
+   /**
+    * seconds counter
+@@ -113,6 +113,13 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
+    * @return {void}
+    */
+   public onClickDisplay() {
++    // don't prompt for password when an Account is povided as a prop
++    if (this.account instanceof Account) {
++      this.onAccountUnlocked(this.account)
++      return
++    }
++
++    // prompt for password when an AccountModel is provided as a prop
+     this.hasAccountUnlockModal = true
+   }
+ 
+diff --git a/src/core/database/entities/AccountModel.ts b/src/core/database/entities/AccountModel.ts
+index 4543ebfb..89d64232 100644
+--- a/src/core/database/entities/AccountModel.ts
++++ b/src/core/database/entities/AccountModel.ts
+@@ -53,6 +53,7 @@ export class AccountModel {
+   public readonly encryptedPrivateKey: string
+   public readonly path: string
+   public readonly isMultisig: boolean
++  public readonly encRemoteAccountPrivateKey?: string
+ 
+   /**
+    * Permits to return specific field's mapped object instances
+diff --git a/src/core/transactions/TransactionViewFactory.ts b/src/core/transactions/TransactionViewFactory.ts
+index 89d50427..9ec06a6a 100644
+--- a/src/core/transactions/TransactionViewFactory.ts
++++ b/src/core/transactions/TransactionViewFactory.ts
+@@ -24,6 +24,7 @@ import {
+   Transaction,
+   TransactionType,
+   TransferTransaction,
++  AccountKeyLinkTransaction,
+ } from 'symbol-sdk'
+ import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction'
+ import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction'
+@@ -33,6 +34,7 @@ import { ViewMosaicSupplyChangeTransaction } from '@/core/transactions/ViewMosai
+ import { ViewNamespaceRegistrationTransaction } from '@/core/transactions/ViewNamespaceRegistrationTransaction'
+ import { ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction'
+ import { ViewAliasTransaction } from '@/core/transactions/ViewAliasTransaction'
++import { ViewAccountKeyLinkTransaction } from '@/core/transactions/ViewAccountKeyLinkTransaction'
+ import { Store } from 'vuex'
+ import { TransactionView } from '@/core/transactions/TransactionView'
+ 
+@@ -50,7 +52,6 @@ export class TransactionViewFactory {
+     switch (transaction.type) {
+       /// region XXX views for transaction types not yet implemented
+       case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
+-      case TransactionType.ACCOUNT_KEY_LINK:
+       case TransactionType.VOTING_KEY_LINK:
+       case TransactionType.VRF_KEY_LINK:
+       case TransactionType.NODE_KEY_LINK:
+@@ -86,6 +87,8 @@ export class TransactionViewFactory {
+         return new ViewAliasTransaction($store, transaction as MosaicAliasTransaction)
+       case TransactionType.ADDRESS_ALIAS:
+         return new ViewAliasTransaction($store, transaction as AddressAliasTransaction)
++      case TransactionType.ACCOUNT_KEY_LINK:
++        return new ViewAccountKeyLinkTransaction($store, transaction as AccountKeyLinkTransaction)
+       default:
+         throw new Error(`View not implemented for transaction type '${transaction.type}'`)
+     }
+diff --git a/src/core/transactions/ViewAccountKeyLinkTransaction.ts b/src/core/transactions/ViewAccountKeyLinkTransaction.ts
+new file mode 100644
+index 00000000..511b5b24
+--- /dev/null
++++ b/src/core/transactions/ViewAccountKeyLinkTransaction.ts
+@@ -0,0 +1,35 @@
++/**
++ *
++ * Copyright 2020 Grégory Saive for NEM (https://nem.io)
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++// external dependencies
++import { AccountKeyLinkTransaction } from 'symbol-sdk'
++
++// internal dependencies
++import { TransactionView } from './TransactionView'
++import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
++
++// eslint-disable-next-line max-len
++export class ViewAccountKeyLinkTransaction extends TransactionView<AccountKeyLinkTransaction> {
++  /**
++   * Displayed items
++   */
++  protected resolveDetailItems(): TransactionDetailItem[] {
++    return [
++      { key: 'remotePublicKey', value: this.transaction.linkedPublicKey },
++      { key: 'linkAction', value: this.transaction.linkAction },
++    ]
++  }
++}
+diff --git a/src/language/en-US.json b/src/language/en-US.json
+index 175cc9c2..f1746e01 100644
+--- a/src/language/en-US.json
++++ b/src/language/en-US.json
+@@ -553,7 +553,6 @@
+   "word": "Word",
+   "x_seconds": "{seconds}s.",
+   "network_type": "Network type",
+-  "current_network": "Current Network",
+   "node_list": "List of nodes",
+   "node_url": "Node url",
+   "automatically_generated_by_node_url": "Automatically generated by node url",
+@@ -561,5 +560,28 @@
+   "network_settings": "Network settings",
+   "current_speed": "The current speed",
+   "unknown": "Unknown",
+-  "input_here": "Input here"
++  "input_here": "Input here",
++  "harvesting_subtitle_overview": "Overview",
++  "harvesting_subtitle_delegation": "Node selection",
++  "harvesting_subtitle_confirmation": "Overview",
++  "harvesting_remote_account": "remote account",
++  "harvesting_create_remote_account": "You will first need to setup a remote account, if you have not done this before.",
++  "harvesting_remote_account_description_1": "For security reasons, we will create a remote account (proxy) for delegated harvesting.",
++  "harvesting_remote_account_description_3": "Enter your password and click \"Start\" to create a remote account.",
++  "harvesting_remote_account_creation_successful_1": "Your remote account has been created successfully. Please keep its private key secure",
++  "harvesting_remote_linked_description_1": "Your account is currently linked to the following remote account (proxy) for delegated harvesting.",
++  "harvesting_remote_linked_description_2": "You can unlink your account from this remote account in the Accounts section. Click Next to configure a delegation request for the harvesting node of your choice.",
++  "harvesting_delegation_description_1": "Select the account that should start harvesting and select the harvesting node to which you want to send a delegation request.",
++  "harvesting_delegation_description_2": "Then, select a max fee to include in the transaction. You can send delegation requests to multiple nodes.",
++  "harvesting_confirmation_description_1": "You can see the transaction(s) details displayed below. After you have entered your password, and pressed the Next button, these transaction(s) will be announced to the network.",
++  "harvesting_confirmation_description_2": "Harvesting will be activated automatically provided that the network node is harvesting and accepts delegation requests.",
++  "harvesting_node_get_node_info": "Get node info ",
++  "harvesting_node_not_eligible": "This not is not eligible for harvesting",
++  "ACCOUNT_LINK": "Account link",
++  "SET_UP": "Node selection",
++  "CONFIRMATION": "Confirmation",
++  "news_read_more": "Read more",
++  "article_by": "Article by {creator}",
++  "harvesting": "Harvesting",
++  "show_wizard": "Show wizard"
+ }
+diff --git a/src/language/ja-JP.json b/src/language/ja-JP.json
+index dc412bb6..508bf3f9 100644
+--- a/src/language/ja-JP.json
++++ b/src/language/ja-JP.json
+@@ -134,6 +134,7 @@
+   "create_sub_namespace": "サブネームスペース作成",
+   "creation_successful": "おめでとうございます、プロファイルは正常に作成されました！",
+   "current_endpoint": "現在のノード",
++  "current_network": "Current Network",
+   "current_validity": "有効期限",
+   "deadline": "期限",
+   "decrease": "減少",
+@@ -267,6 +268,7 @@
+   "label_of": "{min} / {max}",
+   "label_postfix_multisig": "(マルチシグ)",
+   "label_signed_by": "連署者の署名 =>",
++  "latest_news_articles": "Latest news articles",
+   "link": "リンク",
+   "loading": "読込中…",
+   "locked_mosaic": "ロック済みモザイク",
+@@ -338,6 +340,7 @@
+   "no_mnemonic": "ニーモニックなし",
+   "no_network_currency_alert": "ウォレットにはネットワーク通貨に関するデータを取得できません (例: symbol:xym) 有効なノードに接続してください。",
+   "no_profiles_in_database": "ウォレットデータベースにプロファイルはありません",
++  "no_partial_transactions": "There are currently no partial transactions",
+   "no_unconfirmed_transactions": "未承認トランザクションなし",
+   "no_confirmed_transactions": "承認済トランザクションなし",
+   "node_connection_failed": "ノード接続に失敗",
+@@ -428,6 +431,7 @@
+   "relative": "相対",
+   "removal_greater_than_cosignatories": "There are {delta} more required cosignatories for min removal than available cosignatories. Please add cosignatories or reduce the min. removal number.",
+   "repeat_password_label": "パスワードの再確認",
++  "reset": "Reset",
+   "resolving_address": "アドレス {address} 解決中...",
+   "restore_mnemonic": "ニーモニック語群のリストア",
+   "restrictable": "制限可",
+@@ -457,6 +461,8 @@
+   "sidebar_item_multisig": "マルチシグ",
+   "sidebar_item_namespaces": "ネームスペース",
+   "sidebar_item_settings": "設定",
++  "signature": "Signature",
++  "signer_public_key": "Signer public key",
+   "skip": "スキップ",
+   "speed": "速度",
+   "status": "ステータス",
+@@ -545,5 +551,37 @@
+   "warning_already_a_cosignatory": "このアカウントは既に連署者です",
+   "welcome": "Catapult ウォレット",
+   "word": "文字",
+-  "x_seconds": "{seconds}秒"
++  "x_seconds": "{seconds}秒",
++  "network_type": "Network type",
++  "node_list": "List of nodes",
++  "node_url": "Node url",
++  "automatically_generated_by_node_url": "Automatically generated by node url",
++  "peer_tip": "You can use the {setting} page for node management or to configure a new network",
++  "network_settings": "Network settings",
++  "current_speed": "The current speed",
++  "unknown": "Unknown",
++  "input_here": "Input here",
++  "harvesting_subtitle_overview": "Overview",
++  "harvesting_subtitle_delegation": "Node selection",
++  "harvesting_subtitle_confirmation": "Overview",
++  "harvesting_remote_account": "remote account",
++  "harvesting_create_remote_account": "You will first need to setup a remote account, if you have not done this before.",
++  "harvesting_remote_account_description_1": "For security reasons, we will create a remote account (proxy) for delegated harvesting.",
++  "harvesting_remote_account_description_3": "Enter your password and click \"Start\" to create a remote account.",
++  "harvesting_remote_account_creation_successful_1": "Your remote account has been created successfully. Please keep its private key secure",
++  "harvesting_remote_linked_description_1": "Your account is currently linked to the following remote account (proxy) for delegated harvesting.",
++  "harvesting_remote_linked_description_2": "You can unlink your account from this remote account in the Accounts section. Click Next to configure a delegation request for the harvesting node of your choice.",
++  "harvesting_delegation_description_1": "Select the account that should start harvesting and select the harvesting node to which you want to send a delegation request.",
++  "harvesting_delegation_description_2": "Then, select a max fee to include in the transaction. You can send delegation requests to multiple nodes.",
++  "harvesting_confirmation_description_1": "You can see the transaction(s) details displayed below. After you have entered your password, and pressed the Next button, these transaction(s) will be announced to the network.",
++  "harvesting_confirmation_description_2": "Harvesting will be activated automatically provided that the network node is harvesting and accepts delegation requests.",
++  "harvesting_node_get_node_info": "Get node info ",
++  "harvesting_node_not_eligible": "This not is not eligible for harvesting",
++  "ACCOUNT_LINK": "Account link",
++  "SET_UP": "Node selection",
++  "CONFIRMATION": "Confirmation",
++  "news_read_more": "Read more",
++  "article_by": "Article by {creator}",
++  "harvesting": "Harvesting",
++  "show_wizard": "Show wizard"
+ }
+diff --git a/src/language/zh-CN.json b/src/language/zh-CN.json
+index 2efbc129..25487906 100644
+--- a/src/language/zh-CN.json
++++ b/src/language/zh-CN.json
+@@ -134,7 +134,7 @@
+   "create_sub_namespace": "创建子命名空间",
+   "creation_successful": "恭喜，创建账户成功！",
+   "current_endpoint": "当前节点",
+-  "current_network": "当前网络",
++  "current_network": "当前网络类型",
+   "current_validity": "当前有效期",
+   "deadline": "截止时间",
+   "decrease": "减少",
+@@ -552,7 +552,6 @@
+   "welcome": "Welcome",
+   "word": "字",
+   "x_seconds": "{seconds}秒",
+-  "current_network": "当前网络类型",
+   "node_list": "节点列表",
+   "node_url": "节点URL",
+   "automatically_generated_by_node_url": "通过输入的节点URL自动形成",
+@@ -561,5 +560,28 @@
+   "network_settings": "网络设置",
+   "current_speed": "当前网速",
+   "unknown": "未知",
+-  "input_here": "这里输入..."
++  "input_here": "这里输入...",
++  "harvesting_subtitle_overview": "Overview",
++  "harvesting_subtitle_delegation": "Node selection",
++  "harvesting_subtitle_confirmation": "Overview",
++  "harvesting_remote_account": "remote account",
++  "harvesting_create_remote_account": "You will first need to setup a remote account, if you have not done this before.",
++  "harvesting_remote_account_description_1": "For security reasons, we will create a remote account (proxy) for delegated harvesting.",
++  "harvesting_remote_account_description_3": "Enter your password and click \"Start\" to create a remote account.",
++  "harvesting_remote_account_creation_successful_1": "Your remote account has been created successfully. Please keep its private key secure",
++  "harvesting_remote_linked_description_1": "Your account is currently linked to the following remote account (proxy) for delegated harvesting.",
++  "harvesting_remote_linked_description_2": "You can unlink your account from this remote account in the Accounts section. Click Next to configure a delegation request for the harvesting node of your choice.",
++  "harvesting_delegation_description_1": "Select the account that should start harvesting and select the harvesting node to which you want to send a delegation request.",
++  "harvesting_delegation_description_2": "Then, select a max fee to include in the transaction. You can send delegation requests to multiple nodes.",
++  "harvesting_confirmation_description_1": "You can see the transaction(s) details displayed below. After you have entered your password, and pressed the Next button, these transaction(s) will be announced to the network.",
++  "harvesting_confirmation_description_2": "Harvesting will be activated automatically provided that the network node is harvesting and accepts delegation requests.",
++  "harvesting_node_get_node_info": "Get node info ",
++  "harvesting_node_not_eligible": "This not is not eligible for harvesting",
++  "ACCOUNT_LINK": "Account link",
++  "SET_UP": "Node selection",
++  "CONFIRMATION": "Confirmation",
++  "news_read_more": "Read more",
++  "article_by": "Article by {creator}",
++  "harvesting": "Harvesting",
++  "show_wizard": "Show wizard"
+ }
+diff --git a/src/router/routes.ts b/src/router/routes.ts
+index c660c12f..1051a011 100644
+--- a/src/router/routes.ts
++++ b/src/router/routes.ts
+@@ -360,6 +360,18 @@ export const routes: AppRoute[] = [
+           },
+         ],
+       },
++      // {
++      //   path: '/harvesting',
++      //   name: 'harvesting',
++      //   meta: {
++      //     protected: true,
++      //     clickable: true,
++      //     title: 'sidebar_item_harvesting',
++      //     icon: officialIcons.harvest,
++      //   },
++      //   // @ts-ignore
++      //   component: () => import('@/views/pages/harvesting/Harvesting.vue'),
++      // },
+       {
+         path: '/communityPanel',
+         name: 'community',
+diff --git a/src/services/AccountService.ts b/src/services/AccountService.ts
+index dd9021a8..0dda42fd 100755
+--- a/src/services/AccountService.ts
++++ b/src/services/AccountService.ts
+@@ -55,6 +55,10 @@ export class AccountService {
+     return this.saveAccount(Object.assign(account, { name }))
+   }
+ 
++  public updateRemoteAccount(account: AccountModel, encRemoteAccountPrivateKey: string): AccountModel {
++    return this.saveAccount(Object.assign(account, { encRemoteAccountPrivateKey }))
++  }
++
+   /**
+    * Derive \a path using \a mnemonic pass phrase
+    */
+diff --git a/src/services/RemoteAccountService.ts b/src/services/RemoteAccountService.ts
+new file mode 100644
+index 00000000..cac1e913
+--- /dev/null
++++ b/src/services/RemoteAccountService.ts
+@@ -0,0 +1,133 @@
++/**
++ * Copyright 2020 NEM Foundation (https://nem.io)
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++// external dependencies
++import { Crypto, Password, Account, AccountRepository, AccountInfo, AccountType as sdkAccountType } from 'symbol-sdk'
++
++// internal dependencies
++import { AccountService } from './AccountService'
++import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
++import { DerivationPathLevels, DerivationService } from './DerivationService'
++import { ProfileModel } from '@/core/database/entities/ProfileModel'
++import { MnemonicPassPhrase } from 'symbol-hd-wallets'
++
++export class RemoteAccountService extends AccountService {
++  /**
++   * Derivation service
++   */
++  private readonly derivationService = new DerivationService()
++
++  /**
++   * Creates an instance of RemoteAccountService.
++   * @param {AccountModel} account
++   * @param {ProfileModel} profile
++   * @param {AccountRepository} accountRepository
++   */
++  public constructor(
++    private readonly account: AccountModel,
++    private readonly profile: ProfileModel,
++    private readonly accountRepository: AccountRepository,
++  ) {
++    super()
++  }
++
++  /**
++   * Gets the first available remote account
++   * @param {Password} password
++   * @returns {Promise<Account>}
++   */
++  public async getAvailableRemoteAccount(password: Password): Promise<Account> {
++    const candidates = this.getRemoteAccounts(password)
++    const addresses = candidates.map(({ address }) => address)
++    const accountsInfo = await this.accountRepository.getAccountsInfo(addresses).toPromise()
++    return this.getFirstFreeRemoteAccount(candidates, accountsInfo)
++  }
++
++  /**
++   * Gets remote account candidates from the derivation of the account seed
++   * @private
++   * @param {Password} password
++   * @param {number} [numberOfPaths=10]
++   * @returns {Account[]}
++   */
++  private getRemoteAccounts(password: Password, numberOfPaths = 10): Account[] {
++    switch (this.account.type) {
++      case AccountType.SEED:
++        return this.getRemoteAccountsFromSeed(password, numberOfPaths)
++
++      // @TODO: implement private key
++      // @TODO: show error to the user
++      case AccountType.KEYSTORE:
++      case AccountType.PRIVATE_KEY:
++        throw new Error('remote account generation from Private Key is not supported')
++      case AccountType.TREZOR:
++        throw new Error('remote account generation from Trezor wallet is not supported')
++
++      default:
++        throw new Error('Something went wrong at getRemoteAccountPrivateKey')
++    }
++  }
++
++  /**
++   * Gets remote account candidates from the derivation of the account seed
++   * @private
++   * @param {Password} password
++   * @param {number} [numberOfPaths=10]
++   * @returns {Account[]}
++   */
++  private getRemoteAccountsFromSeed(password: Password, numberOfPaths = 10): Account[] {
++    const paths = [...Array(numberOfPaths).keys()].map((i) =>
++      this.derivationService.incrementPathLevel(this.account.path, DerivationPathLevels.Remote, i),
++    )
++
++    const encSeed = this.profile.seed
++    const passphrase = Crypto.decrypt(encSeed, password.value)
++    const mnemonic = new MnemonicPassPhrase(passphrase)
++    return this.generateAccountsFromPaths(mnemonic, this.profile.networkType, paths)
++  }
++
++  /**
++   * Query the network with the remote account candidates,
++   * Returns the first eligible account
++   * @private
++   * @param {Account[]} remoteAccounts
++   * @param {AccountInfo[]} accountsInfo
++   * @returns {Account}
++   */
++  private getFirstFreeRemoteAccount(remoteAccounts: Account[], accountsInfo: AccountInfo[]): Account {
++    if (!accountsInfo.length) return remoteAccounts[0]
++
++    const linkableRemoteAccounts = remoteAccounts.filter(({ address }) => {
++      const matchedAccountInfo = accountsInfo.find((ai) => ai.address.plain() === address.plain())
++      return matchedAccountInfo === undefined || RemoteAccountService.isLinkable(matchedAccountInfo)
++    })
++
++    if (!linkableRemoteAccounts.length) {
++      throw new Error('Could not find a free remote account')
++    }
++
++    return linkableRemoteAccounts[0]
++  }
++
++  /**
++   * Whether an account is linkable as a remote account
++   * @static
++   * @param {AccountInfo} accountInfo
++   * @returns {boolean}
++   */
++  static isLinkable(accountInfo: AccountInfo): boolean {
++    return accountInfo?.accountType === sdkAccountType.Remote_Unlinked
++  }
++}
+diff --git a/src/store/Account.ts b/src/store/Account.ts
+index 3550fe11..8d6bec7e 100644
+--- a/src/store/Account.ts
++++ b/src/store/Account.ts
+@@ -98,16 +98,19 @@ export default {
+     },
+     signers: (state: AccountState): Signer[] => state.signers,
+     currentSigner: (state: AccountState): Signer => state.currentSigner,
++    accountsInfo: (state: AccountState) => state.accountsInfo,
+     currentAccountAddress: (state: AccountState) => state.currentAccountAddress,
+-    knownAddresses: (state: AccountState) => state.knownAddresses,
++    currentAccountAccountInfo: (state: AccountState): AccountInfo => {
++      return state.accountsInfo.find(({ publicKey }) => publicKey === state.currentAccount.publicKey)
++    },
+     currentAccountMultisigInfo: (state: AccountState) => state.currentAccountMultisigInfo,
++    currentSignerAddress: (state: AccountState) => state.currentSignerAddress,
+     currentSignerMultisigInfo: (state: AccountState) => state.currentSignerMultisigInfo,
++    getSubscriptions: (state: AccountState) => state.subscriptions,
+     isCosignatoryMode: (state: AccountState) => state.isCosignatoryMode,
+-    currentSignerAddress: (state: AccountState) => state.currentSignerAddress,
+     knownAccounts: (state: AccountState) => state.knownAccounts,
+-    accountsInfo: (state: AccountState) => state.accountsInfo,
++    knownAddresses: (state: AccountState) => state.knownAddresses,
+     multisigAccountsInfo: (state: AccountState) => state.multisigAccountsInfo,
+-    getSubscriptions: (state: AccountState) => state.subscriptions,
+   },
+   mutations: {
+     setInitialized: (state: AccountState, initialized: boolean) => {
+@@ -369,6 +372,21 @@ export default {
+       commit('knownAccounts', knownAccounts)
+     },
+ 
++    UPDATE_CURRENT_ACCOUNT_REMOTE_ACCOUNT({ commit, getters, rootGetters }, encRemoteAccountPrivateKey: string) {
++      const currentAccount: AccountModel = getters.currentAccount
++      if (!currentAccount) {
++        return
++      }
++      const currentProfile: ProfileModel = rootGetters['profile/currentProfile']
++      if (!currentProfile) {
++        return
++      }
++      const accountService = new AccountService()
++      accountService.updateRemoteAccount(currentAccount, encRemoteAccountPrivateKey)
++      const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts)
++      commit('knownAccounts', knownAccounts)
++    },
++
+     SET_KNOWN_ACCOUNTS({ commit }, accounts: string[]) {
+       commit('knownAccounts', new AccountService().getKnownAccounts(accounts))
+     },
+diff --git a/src/views/forms/FormAccountKeyLinkTransaction/FormAccountKeyLinkTransaction.vue b/src/views/forms/FormAccountKeyLinkTransaction/FormAccountKeyLinkTransaction.vue
+new file mode 100644
+index 00000000..bb203651
+--- /dev/null
++++ b/src/views/forms/FormAccountKeyLinkTransaction/FormAccountKeyLinkTransaction.vue
+@@ -0,0 +1,24 @@
++<template>
++  <div>
++    {{ $t('Proxy_settings') }}
++    <FormWrapper>
++      <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
++        <form onsubmit="event.preventDefault()">
++          <MaxFeeAndSubmit v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
++        </form>
++      </ValidationObserver>
++    </FormWrapper>
++    <ModalTransactionConfirmation
++      v-if="hasConfirmationModal"
++      :visible="hasConfirmationModal"
++      @success="onConfirmationSuccess"
++      @error="onConfirmationError"
++      @close="onConfirmationCancel"
++    />
++  </div>
++</template>
++
++<script lang="ts">
++import { FormAccountKeyLinkTransactionTs } from './FormAccountKeyLinkTransactionTs'
++export default class FormAccountKeyLinkTransaction extends FormAccountKeyLinkTransactionTs {}
++</script>
+diff --git a/src/views/forms/FormAccountKeyLinkTransaction/FormAccountKeyLinkTransactionTs.ts b/src/views/forms/FormAccountKeyLinkTransaction/FormAccountKeyLinkTransactionTs.ts
+new file mode 100644
+index 00000000..0e30cc1c
+--- /dev/null
++++ b/src/views/forms/FormAccountKeyLinkTransaction/FormAccountKeyLinkTransactionTs.ts
+@@ -0,0 +1,119 @@
++/**
++ * Copyright 2020 NEM Foundation (https://nem.io)
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++import { Deadline, UInt64, LinkAction, AccountKeyLinkTransaction } from 'symbol-sdk'
++import { Component, Prop } from 'vue-property-decorator'
++import { mapGetters } from 'vuex'
++
++// internal dependencies
++import { Formatters } from '@/core/utils/Formatters'
++import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
++
++// child components
++import { ValidationObserver } from 'vee-validate'
++// @ts-ignore
++import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
++// @ts-ignore
++import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
++// @ts-ignore
++import FormRow from '@/components/FormRow/FormRow.vue'
++
++const defaultFormItems = {
++  signerPublicKey: '',
++  linkAction: LinkAction.Link,
++  maxFee: 0,
++}
++
++@Component({
++  components: {
++    FormWrapper,
++    FormRow,
++    ValidationObserver,
++    MaxFeeAndSubmit,
++  },
++  computed: mapGetters({
++    currentAccountAccountInfo: 'account/currentAccountAccountInfo',
++    currentPeer: 'network/currentPeer',
++  }),
++})
++export class FormAccountKeyLinkTransactionTs extends FormTransactionBase {
++  @Prop({ required: true }) remoteAccountPublicKey: string
++
++  /**
++   * Formatters helpers
++   */
++  public formatters = Formatters
++
++  /**
++   * Form items
++   */
++  public formItems = { ...defaultFormItems }
++
++  /**
++   * Reset the form with properties
++   */
++  protected resetForm() {
++    this.formItems = {
++      ...defaultFormItems,
++      signerPublicKey: this.currentAccount.publicKey,
++    }
++  }
++
++  /**
++   * Getter for transactions that will be staged
++   * @see {FormTransactionBase}
++   * @return {AccountKeyLinkTransaction[]}
++   */
++  protected getTransactions(): AccountKeyLinkTransaction[] {
++    const maxFee = UInt64.fromUint(this.formItems.maxFee)
++    return [
++      AccountKeyLinkTransaction.create(
++        Deadline.create(),
++        this.remoteAccountPublicKey,
++        this.formItems.linkAction,
++        this.networkType,
++        maxFee,
++      ),
++    ]
++  }
++
++  /**
++   * Setter for Alias transactions that will be staged
++   * @see {FormTransactionBase}
++   * @param {AliasTransaction[]} transactions
++   * @throws {Error} If not overloaded in derivate component
++   */
++  protected setTransactions(transactions: AccountKeyLinkTransaction[]) {
++    // - this form creates only 1 transaction
++    const transaction = transactions.shift()
++    if (!transaction) return
++
++    // - populate for items if transaction is an address alias
++    if (transaction instanceof AccountKeyLinkTransaction) {
++      this.remoteAccountPublicKey = transaction.linkedPublicKey
++      this.formItems.linkAction = transaction.linkAction
++    }
++
++    // - populate maxFee
++    this.formItems.maxFee = transaction.maxFee.compact()
++  }
++
++  /**
++   * Hook called when the component is mounted
++   */
++  public async created() {
++    this.$emit('toggleNext', false)
++  }
++}
+diff --git a/src/views/forms/FormPersistentDelegationRequestTransaction/FormPersistentDelegationRequestTransaction.vue b/src/views/forms/FormPersistentDelegationRequestTransaction/FormPersistentDelegationRequestTransaction.vue
+new file mode 100644
+index 00000000..29109e04
+--- /dev/null
++++ b/src/views/forms/FormPersistentDelegationRequestTransaction/FormPersistentDelegationRequestTransaction.vue
+@@ -0,0 +1,31 @@
++<template>
++  <div class="form-persistent-delegation-request">
++    <FormWrapper>
++      <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
++        <form onsubmit="event.preventDefault()">
++          <h2>{{ $t('harvesting_subtitle_delegation') }}</h2>
++          <p>{{ $t('harvesting_delegation_description_1') }} {{ $t('harvesting_delegation_description_2') }}</p>
++
++          <!-- Transaction signer selector -->
++          <SignerSelector v-model="formItems.signerPublicKey" :signers="signers" @input="onChangeSigner" />
++
++          <!-- Node URL Selector -->
++          <NetworkNodeSelector v-model="formItems.nodePublicKey" @change="(v) => $emit('setNodePublicKey', v)" />
++
++          <!-- Transaction fee selector and submit button -->
++          <FormRow class-name="emphasis">
++            <template v-slot:label> {{ $t('fee') }}: </template>
++            <template v-slot:inputs>
++              <MaxFeeSelector v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
++            </template>
++          </FormRow>
++        </form>
++      </ValidationObserver>
++    </FormWrapper>
++  </div>
++</template>
++
++<script lang="ts">
++import { FormPersistentDelegationRequestTransactionTs } from './FormPersistentDelegationRequestTransactionTs'
++export default class FormPersistentDelegationRequestTransaction extends FormPersistentDelegationRequestTransactionTs {}
++</script>
+diff --git a/src/views/forms/FormPersistentDelegationRequestTransaction/FormPersistentDelegationRequestTransactionTs.ts b/src/views/forms/FormPersistentDelegationRequestTransaction/FormPersistentDelegationRequestTransactionTs.ts
+new file mode 100644
+index 00000000..2a4cc115
+--- /dev/null
++++ b/src/views/forms/FormPersistentDelegationRequestTransaction/FormPersistentDelegationRequestTransactionTs.ts
+@@ -0,0 +1,156 @@
++/*
++ * Copyright 2020 NEM Foundation (https://nem.io)
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and limitations under the License.
++ *
++ */
++import {
++  Address,
++  Deadline,
++  TransferTransaction,
++  UInt64,
++  PersistentHarvestingDelegationMessage,
++  AccountKeyLinkTransaction,
++  LinkAction,
++  Transaction,
++  PublicAccount,
++} from 'symbol-sdk'
++import { Component, Prop } from 'vue-property-decorator'
++import { mapGetters } from 'vuex'
++
++// internal dependencies
++import { Formatters } from '@/core/utils/Formatters'
++import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
++
++// child components
++import { ValidationObserver } from 'vee-validate'
++// @ts-ignore
++import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
++// @ts-ignore
++import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
++// @ts-ignore
++import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
++// @ts-ignore
++import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
++// @ts-ignore
++import NetworkNodeSelector from '@/components/NetworkNodeSelector/NetworkNodeSelector.vue'
++// @ts-ignore
++import FormRow from '@/components/FormRow/FormRow.vue'
++
++@Component({
++  components: {
++    FormWrapper,
++    ModalTransactionConfirmation,
++    SignerSelector,
++    ValidationObserver,
++    MaxFeeSelector,
++    FormRow,
++    NetworkNodeSelector,
++  },
++  computed: {
++    ...mapGetters({
++      currentHeight: 'network/currentHeight',
++    }),
++  },
++})
++export class FormPersistentDelegationRequestTransactionTs extends FormTransactionBase {
++  @Prop({ required: true }) remoteAccount: PublicAccount
++  @Prop({ default: null }) signerPublicKey: string
++  @Prop({ default: true }) withLink: boolean
++
++  /**
++   * Formatters helpers
++   */
++  public formatters = Formatters
++
++  /**
++   * Form items
++   */
++  public formItems = {
++    nodePublicKey: '',
++    signerPublicKey: '',
++    maxFee: 0,
++  }
++
++  /**
++   * Reset the form with properties
++   * @return {void}
++   */
++  protected resetForm() {
++    // - set default form values
++    this.formItems.signerPublicKey = this.signerPublicKey || this.selectedSigner.publicKey
++    this.formItems.nodePublicKey = ''
++    // - maxFee must be absolute
++    this.formItems.maxFee = this.defaultFee
++  }
++
++  /**
++   * Getter for PERSISTENT DELEGATION REQUEST transactions that will be staged
++   * @see {FormTransactionBase}
++   * @return {TransferTransaction[]}
++   */
++  protected getTransactions(): Transaction[] {
++    const maxFee = UInt64.fromUint(this.formItems.maxFee)
++    const message = PersistentHarvestingDelegationMessage.create(
++      this.remoteAccount.publicKey,
++      this.formItems.nodePublicKey,
++      this.networkType,
++    )
++
++    const linkTx = AccountKeyLinkTransaction.create(
++      Deadline.create(),
++      this.remoteAccount.publicKey,
++      LinkAction.Link,
++      this.networkType,
++      maxFee,
++    )
++    const transferTx = TransferTransaction.create(
++      Deadline.create(),
++      this.instantiatedRecipient,
++      [],
++      message,
++      this.networkType,
++      maxFee,
++    )
++
++    if (this.withLink === true) {
++      return [linkTx, transferTx]
++    }
++
++    return [transferTx]
++  }
++
++  /**
++   * Setter for TRANSFER transactions that will be staged
++   * @see {FormTransactionBase}
++   * @throws {Error} If not overloaded in derivate component
++   */
++  protected setTransactions() {
++    throw new Error('This transaction can not be staged')
++  }
++
++  /**
++   * Recipient used in the transaction
++   * @readonly
++   * @protected
++   * @type {Address}
++   */
++  protected get instantiatedRecipient(): Address {
++    return Address.createFromPublicKey(this.formItems.nodePublicKey, this.networkType)
++  }
++
++  public onSubmit() {
++    // - open signature modal
++    this.command = this.createTransactionCommand()
++    return this.command
++  }
++}
+diff --git a/src/views/forms/FormProfileUnlock/FormProfileUnlock.vue b/src/views/forms/FormProfileUnlock/FormProfileUnlock.vue
+index b273d730..d847aec5 100644
+--- a/src/views/forms/FormProfileUnlock/FormProfileUnlock.vue
++++ b/src/views/forms/FormProfileUnlock/FormProfileUnlock.vue
+@@ -22,8 +22,13 @@
+                 />
+               </ErrorTooltip>
+             </ValidationProvider>
+-            <button class="button-style validation-button right-side-button" type="submit" @click="processVerification">
+-              {{ $t('confirm') }}
++            <button
++              v-if="!disableSubmit"
++              class="button-style validation-button right-side-button"
++              type="submit"
++              @click="processVerification"
++            >
++              {{ $t(buttonText) }}
+             </button>
+           </div>
+         </template>
+diff --git a/src/views/forms/FormProfileUnlock/FormProfileUnlockTs.ts b/src/views/forms/FormProfileUnlock/FormProfileUnlockTs.ts
+index 4c0330cd..3cd6f716 100644
+--- a/src/views/forms/FormProfileUnlock/FormProfileUnlockTs.ts
++++ b/src/views/forms/FormProfileUnlock/FormProfileUnlockTs.ts
+@@ -14,7 +14,7 @@
+  *
+  */
+ import { Account, NetworkType, Password, Crypto } from 'symbol-sdk'
+-import { Component, Vue } from 'vue-property-decorator'
++import { Component, Vue, Prop } from 'vue-property-decorator'
+ import { mapGetters } from 'vuex'
+ // internal dependencies
+ import { AccountModel } from '@/core/database/entities/AccountModel'
+@@ -69,6 +69,17 @@ export class FormProfileUnlockTs extends Vue {
+     password: '',
+   }
+ 
++  /**
++   * Text shown in the confirmation button
++   * @type {string}
++   */
++  @Prop({ default: 'confirm' }) buttonText: string
++
++  /**
++   * Whether to disable submit button
++   */
++  @Prop({ default: false }) disableSubmit: boolean
++
+   /// region computed properties getter/setter
+   /// end-region computed properties getter/setter
+ 
+diff --git a/src/views/forms/FormRemoteAccountCreation/FormRemoteAccountCreation.vue b/src/views/forms/FormRemoteAccountCreation/FormRemoteAccountCreation.vue
+new file mode 100644
+index 00000000..3c83f2da
+--- /dev/null
++++ b/src/views/forms/FormRemoteAccountCreation/FormRemoteAccountCreation.vue
+@@ -0,0 +1,30 @@
++<template>
++  <div class="form-remote-account">
++    <div>
++      <h2>{{ $t('harvesting_subtitle_overview') }}</h2>
++      <p>
++        {{ $t('harvesting_remote_account_description_1') }} {{ $t('harvesting_create_remote_account') }}
++        {{ $t('harvesting_remote_account_description_3') }}
++      </p>
++      <FormProfileUnlock v-if="!remoteAccount" button-text="create" @success="onAccountUnlocked" @error="onError" />
++    </div>
++
++    <div v-if="remoteAccount" class="account-details-grid">
++      <p class="detail-row">
++        <AccountAddressDisplay :address="remoteAccount.address.plain()" />
++      </p>
++
++      <p class="detail-row">
++        <AccountPublicKeyDisplay :account="remoteAccount" />
++      </p>
++
++      <p class="detail-row">
++        <ProtectedPrivateKeyDisplay :account="remoteAccount" />
++      </p>
++    </div>
++  </div>
++</template>
++<script lang="ts">
++import { FormRemoteAccountCreationTs } from './FormRemoteAccountCreationTs'
++export default class FormRemoteAccountCreation extends FormRemoteAccountCreationTs {}
++</script>
+diff --git a/src/views/forms/FormRemoteAccountCreation/FormRemoteAccountCreationTs.ts b/src/views/forms/FormRemoteAccountCreation/FormRemoteAccountCreationTs.ts
+new file mode 100644
+index 00000000..14b93dc5
+--- /dev/null
++++ b/src/views/forms/FormRemoteAccountCreation/FormRemoteAccountCreationTs.ts
+@@ -0,0 +1,125 @@
++// external dependencies
++import { Component, Vue } from 'vue-property-decorator'
++import { Password, Account, RepositoryFactory, Crypto } from 'symbol-sdk'
++import { mapGetters } from 'vuex'
++
++// internal dependencies
++import { RemoteAccountService } from '@/services/RemoteAccountService'
++import { AccountModel } from '@/core/database/entities/AccountModel'
++import { ProfileModel } from '@/core/database/entities/ProfileModel'
++
++// child components
++// @ts-ignore
++import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue'
++// @ts-ignore
++import AccountAddressDisplay from '@/components/AccountAddressDisplay/AccountAddressDisplay.vue'
++// @ts-ignore
++import AccountPublicKeyDisplay from '@/components/AccountPublicKeyDisplay/AccountPublicKeyDisplay.vue'
++// @ts-ignore
++import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/ProtectedPrivateKeyDisplay.vue'
++
++@Component({
++  components: {
++    FormProfileUnlock,
++    AccountAddressDisplay,
++    AccountPublicKeyDisplay,
++    ProtectedPrivateKeyDisplay,
++  },
++  computed: {
++    ...mapGetters({
++      currentAccount: 'account/currentAccount',
++      currentProfile: 'profile/currentProfile',
++      repositoryFactory: 'network/repositoryFactory',
++    }),
++  },
++})
++export class FormRemoteAccountCreationTs extends Vue {
++  /**
++   * Remote account to be created
++   */
++  protected remoteAccount: Account = null
++  /**
++   * Currently selected account
++   */
++  private currentAccount: AccountModel
++  /**
++   * Current profile
++   */
++  private currentProfile: ProfileModel
++  /**
++   * Repository factory
++   */
++  private repositoryFactory: RepositoryFactory
++
++  /**
++   * Hook called when child component FormProfileUnlock emits
++   * the 'success' event.
++   * @param {Password} password
++   * @return {void}
++   */
++  public async onAccountUnlocked({ password, account }): Promise<void> {
++    this.$store.dispatch('diagnostic/ADD_INFO', `Account ${account.address.plain()} unlocked successfully.`)
++
++    if (this.currentAccount.encRemoteAccountPrivateKey) {
++      // the current account already has a remote account
++      this.createRemoteAccountFromEncPrivateKey(password)
++    } else {
++      // a new remote account has to be created
++      await this.createRemoteAccount(password)
++      this.persistRemoteAccount(password)
++    }
++
++    this.$emit('setRemoteAccount', this.remoteAccount)
++    this.$emit('toggleNext', true)
++  }
++
++  /**
++   * Decrypts an existing encrypted remote account private key from the current account
++   * @private
++   * @param {Password} password
++   */
++  private createRemoteAccountFromEncPrivateKey(password: Password): void {
++    const remoteAccountPrivateKey = Crypto.decrypt(this.currentAccount.encRemoteAccountPrivateKey, password.value)
++    this.remoteAccount = Account.createFromPrivateKey(remoteAccountPrivateKey, this.currentProfile.networkType)
++  }
++  /**
++   * Creates a remote account
++   * @private
++   * @param {Password} password
++   * @returns {Promise<void>}
++   */
++  private async createRemoteAccount(password: Password): Promise<void> {
++    this.remoteAccount = await new RemoteAccountService(
++      this.currentAccount,
++      this.currentProfile,
++      this.repositoryFactory.createAccountRepository(),
++    ).getAvailableRemoteAccount(password)
++  }
++
++  /**
++   * Perists the remote account in the current account object
++   * @private
++   * @param {Password} password
++   */
++  private persistRemoteAccount(password: Password): void {
++    const encRemoteAccountPrivateKey = Crypto.encrypt(this.remoteAccount.privateKey, password.value)
++    this.$store.dispatch('account/UPDATE_CURRENT_ACCOUNT_REMOTE_ACCOUNT', encRemoteAccountPrivateKey)
++  }
++
++  /**
++   * Hook called when child component FormProfileUnlock or
++   * HardwareConfirmationButton emit the 'error' event.
++   * @param {string} message
++   * @return {void}
++   */
++  public onError(error: string) {
++    this.$emit('error', error)
++  }
++
++  /**
++   * Hook called when the component is mounted
++   */
++  public created() {
++    this.$emit('toggleNext', false)
++  }
++}
+diff --git a/src/views/forms/FormTransactionConfirmation/FormTransactionConfirmation.vue b/src/views/forms/FormTransactionConfirmation/FormTransactionConfirmation.vue
+new file mode 100644
+index 00000000..b95ae494
+--- /dev/null
++++ b/src/views/forms/FormTransactionConfirmation/FormTransactionConfirmation.vue
+@@ -0,0 +1,41 @@
++<template>
++  <div class="form-transaction-confirmation">
++    <FormWrapper :whitelisted="true">
++      <form onsubmit="event.preventDefault()">
++        <div class="transactionConfirmationBody">
++          <div v-if="!!stagedTransactions" class="stepItem1">
++            <div v-for="(transaction, index) in stagedTransactions" :key="index" class="info_container">
++              <TransactionDetails :transaction="transaction" />
++            </div>
++
++            <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
++            <FormProfileUnlock
++              v-else
++              ref="unlockForm"
++              :disable-submit="disableSubmit"
++              @success="onAccountUnlocked"
++              @error="onError"
++            />
++          </div>
++        </div>
++      </form>
++    </FormWrapper>
++  </div>
++</template>
++
++<script lang="ts">
++import { FormTransactionConfirmationTs } from './FormTransactionConfirmationTs'
++export default class FormTransactionConfirmation extends FormTransactionConfirmationTs {}
++</script>
++
++<style lang="less" scoped>
++@import '../../resources/css/variables.less';
++.float-right {
++  float: right;
++}
++
++.clear-staged-transactions {
++  font-size: @smallFont;
++  cursor: pointer;
++}
++</style>
+diff --git a/src/views/forms/FormTransactionConfirmation/FormTransactionConfirmationTs.ts b/src/views/forms/FormTransactionConfirmation/FormTransactionConfirmationTs.ts
+new file mode 100644
+index 00000000..b92b40cd
+--- /dev/null
++++ b/src/views/forms/FormTransactionConfirmation/FormTransactionConfirmationTs.ts
+@@ -0,0 +1,146 @@
++/*
++ * Copyright 2020 NEM Foundation (https://nem.io)
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and limitations under the License.
++ *
++ */
++import { Component, Prop, Vue } from 'vue-property-decorator'
++import { mapGetters } from 'vuex'
++import { Account, Transaction } from 'symbol-sdk'
++// internal dependencies
++import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
++import {
++  AccountTransactionSigner,
++  TransactionAnnouncerService,
++  TransactionSigner,
++} from '@/services/TransactionAnnouncerService'
++// child components
++// @ts-ignore
++import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
++// @ts-ignore
++import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue'
++// @ts-ignore
++import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue'
++// @ts-ignore
++import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue'
++import { TransactionCommand } from '@/services/TransactionCommand'
++
++@Component({
++  components: {
++    FormWrapper,
++    TransactionDetails,
++    FormProfileUnlock,
++    HardwareConfirmationButton,
++  },
++  computed: {
++    ...mapGetters({
++      currentAccount: 'account/currentAccount',
++    }),
++  },
++})
++export class FormTransactionConfirmationTs extends Vue {
++  @Prop({
++    required: true,
++  })
++  public command: TransactionCommand
++
++  /**
++   * Whether to disable submit button
++   */
++  @Prop({ default: false }) disableSubmit: boolean
++
++  /**
++   * Currently active account
++   * @see {Store.Account}
++   * @var {AccountModel}
++   */
++  public currentAccount: AccountModel
++
++  /**
++   * List of transactions on-stage
++   * @see {Store.Account}
++   * @var {Transaction[]}
++   */
++  public stagedTransactions: Transaction[] = []
++
++  public async mounted() {
++    this.stagedTransactions = await this.command.resolveTransactions().toPromise()
++  }
++
++  /// region computed properties getter/setter
++  /**
++   * Returns whether current account is a hardware wallet
++   * @return {boolean}
++   */
++  public get isUsingHardwareWallet(): boolean {
++    // XXX should use "stagedTransaction.signer" to identify account
++    return AccountType.TREZOR === this.currentAccount.type
++  }
++  /// end-region computed properties getter/setter
++
++  /**
++   * Hook called when child component FormProfileUnlock emits
++   * the 'success' event.
++   *
++   * This hook shall *sign transactions* with the \a account
++   * that has been unlocked. Subsequently it will also announce
++   * the signed transaction.
++   *
++   */
++  public async onAccountUnlocked({ account }: { account: Account }): Promise<void> {
++    // - log about unlock success
++    this.$store.dispatch('diagnostic/ADD_INFO', `Account ${account.address.plain()} unlocked successfully.`)
++    // - get transaction stage config
++    return this.onSigner(new AccountTransactionSigner(account))
++  }
++
++  /**
++   * Hook called when child component FormProfileUnlock emits
++   * the 'success' event.
++   *
++   * This hook shall *sign transactions* with the \a account
++   * that has been unlocked. Subsequently it will also announce
++   * the signed transaction.
++   *
++   */
++  public async onSigner(transactionSigner: TransactionSigner): Promise<void> {
++    // - log about unlock success
++    // - get transaction stage config
++    const announcements = await this.command
++      .announce(new TransactionAnnouncerService(this.$store), transactionSigner)
++      .toPromise()
++    announcements.forEach((announcement) => {
++      announcement.subscribe((res) => {
++        if (!res.success) {
++          this.$store.dispatch('notification/ADD_ERROR', res.error, { root: true })
++        }
++      })
++    })
++    // - notify about successful transaction announce
++    this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed')
++    this.$emit('success')
++  }
++
++  /**
++   * Hook called when child component FormProfileUnlock or
++   * HardwareConfirmationButton emit the 'error' event.
++   * @param {string} message
++   * @return {void}
++   */
++  public onError(error: string) {
++    this.$emit('error', error)
++  }
++
++  public onSubmit() {
++    ;(this.$refs.unlockForm as FormProfileUnlock).processVerification()
++  }
++}
+diff --git a/src/views/forms/FormTransferTransaction/FormTransferTransaction.vue b/src/views/forms/FormTransferTransaction/FormTransferTransaction.vue
+index 870fa3c1..0d80c844 100644
+--- a/src/views/forms/FormTransferTransaction/FormTransferTransaction.vue
++++ b/src/views/forms/FormTransferTransaction/FormTransferTransaction.vue
+@@ -35,7 +35,7 @@
+           </div>
+ 
+           <!-- Transfer message input field -->
+-          <MessageInput v-model="formItems.messagePlain" @input="onChangeMessage" />
++          <MessageInput v-model="formItems.plainMessage" @input="onChangeMessage" />
+ 
+           <!-- Transaction fee selector and submit button -->
+           <MaxFeeAndSubmit
+diff --git a/src/views/forms/FormTransferTransaction/FormTransferTransactionTs.ts b/src/views/forms/FormTransferTransaction/FormTransferTransactionTs.ts
+index f563e5fe..14e4cf1e 100644
+--- a/src/views/forms/FormTransferTransaction/FormTransferTransactionTs.ts
++++ b/src/views/forms/FormTransferTransaction/FormTransferTransactionTs.ts
+@@ -127,7 +127,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
+     recipient: null,
+     selectedMosaicHex: '',
+     relativeAmount: 0,
+-    messagePlain: '',
++    plainMessage: '',
+     maxFee: 0,
+   }
+ 
+@@ -168,7 +168,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
+       },
+     ]
+ 
+-    this.formItems.messagePlain = !!this.message ? Formatters.hexToUtf8(this.message.payload) : ''
++    this.formItems.plainMessage = this.message ? Formatters.hexToUtf8(this.message.payload) : ''
++
+     // - maxFee must be absolute
+     this.formItems.maxFee = this.defaultFee
+     // - initialize mosaics input manager
+@@ -232,7 +233,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
+         Deadline.create(),
+         this.instantiatedRecipient,
+         mosaics,
+-        PlainMessage.create(this.formItems.messagePlain || ''),
++        PlainMessage.create(this.formItems.plainMessage || ''),
+         this.networkType,
+         UInt64.fromUint(this.formItems.maxFee),
+       ),
+@@ -259,7 +260,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
+     this.formItems.attachedMosaics = this.mosaicsToAttachments(transaction.mosaics)
+ 
+     // - convert and populate message
+-    this.formItems.messagePlain = Formatters.hexToUtf8(transaction.message.payload)
++    this.formItems.plainMessage = Formatters.hexToUtf8(transaction.message.payload)
+ 
+     // - populate maxFee
+     this.formItems.maxFee = transaction.maxFee.compact()
+diff --git a/src/views/modals/ModalHarvestingWizard/ModalHarvestingWizard.vue b/src/views/modals/ModalHarvestingWizard/ModalHarvestingWizard.vue
+new file mode 100644
+index 00000000..91b60d00
+--- /dev/null
++++ b/src/views/modals/ModalHarvestingWizard/ModalHarvestingWizard.vue
+@@ -0,0 +1,228 @@
++<template>
++  <div class="container">
++    <Modal v-model="show" class-name="modal-harvesting-wizard" :footer-hide="true">
++      <ModalWizardDisplay :items="wizardStepsItems" :icons="wizardStepsIcons" :current-item-index="currentStepIndex" />
++
++      <div v-if="wizardSteps[currentStepIndex] === 'ACCOUNT_LINK'">
++        <div v-if="!supportedProfileTypes.includes(currentAccount.type)">
++          <h2>Upps! Harvesting is available only for HD Accounts!</h2>
++        </div>
++        <div v-else-if="!isCurrentAccountLinked">
++          <FormRemoteAccountCreation @setRemoteAccount="onSetRemoteAccount" @toggleNext="onNextToggled" />
++        </div>
++        <div v-else-if="!!linkedAccount" class="form-remote-account">
++          <h2>{{ $t('harvesting_subtitle_overview') }}</h2>
++          <p>{{ $t('harvesting_remote_linked_description_1') }} {{ $t('harvesting_remote_linked_description_2') }}</p>
++
++          <div class="account-details-grid">
++            <p class="detail-row">
++              <AccountAddressDisplay :address="linkedAccount.address.plain()" />
++            </p>
++
++            <p class="detail-row">
++              <AccountPublicKeyDisplay :account="linkedAccount" />
++            </p>
++          </div>
++        </div>
++      </div>
++      <div v-if="wizardSteps[currentStepIndex] === 'SET_UP'">
++        <div class="form-remote-account">
++          <h2>{{ $t('harvesting_subtitle_overview') }}</h2>
++          <p>
++            {{ $t('harvesting_remote_account_description_1') }} {{ $t('harvesting_create_remote_account') }}
++            {{ $t('harvesting_remote_account_description_3') }}
++          </p>
++
++          <div v-if="!!remoteAccount" class="account-details-grid">
++            <p class="detail-row">
++              <AccountAddressDisplay :address="remoteAccount.address.plain()" />
++            </p>
++
++            <p class="detail-row">
++              <AccountPublicKeyDisplay :account="remoteAccount" />
++            </p>
++
++            <p class="detail-row">
++              <ProtectedPrivateKeyDisplay :account="remoteAccount" />
++            </p>
++          </div>
++          <div v-else-if="!!linkedAccount" class="account-details-grid">
++            <p class="detail-row">
++              <AccountAddressDisplay :address="linkedAccount.address.plain()" />
++            </p>
++
++            <p class="detail-row">
++              <AccountPublicKeyDisplay :account="linkedAccount" />
++            </p>
++          </div>
++        </div>
++
++        <FormPersistentDelegationRequestTransaction
++          ref="delegationRequest"
++          :remote-account="!!remoteAccount ? remoteAccount.publicAccount : linkedAccount"
++          :with-link="!linkedAccount"
++          @setNodePublicKey="onSetNodePublicKey"
++          @error="(e) => form.setErrors({ endpoint: e })"
++        />
++      </div>
++      <div v-if="wizardSteps[currentStepIndex] === 'CONFIRMATION'">
++        <div class="form-remote-account">
++          <h2>{{ $t('harvesting_subtitle_confirmation') }}</h2>
++          <p>{{ $t('harvesting_confirmation_description_1') }} {{ $t('harvesting_confirmation_description_2') }}</p>
++
++          <FormTransactionConfirmation
++            ref="confirmationForm"
++            :command="command"
++            :disable-submit="true"
++            @success="onConfirmationSuccess"
++            @error="onConfirmationError"
++            @close="onConfirmationCancel"
++          />
++        </div>
++      </div>
++
++      <div v-if="!!linkedAccount || !!remoteAccount" class="stepper-pagination">
++        <div class="left">
++          <button
++            v-if="currentStepIndex > 0"
++            class="centered-button button-style validation-button cancel-button"
++            @click="onPreviousClicked"
++          >
++            {{ $t('previous') }}
++          </button>
++        </div>
++        <div class="right">
++          <button
++            v-if="!!linkedAccount || !!remoteAccount"
++            class="centered-button button-style validation-button submit-button"
++            @click="onNextClicked"
++          >
++            {{ $t('next') }}
++          </button>
++        </div>
++      </div>
++    </Modal>
++  </div>
++</template>
++
++<script lang="ts">
++import { ModalHarvestingWizardTs } from './ModalHarvestingWizardTs'
++export default class ModalHarvestingWizard extends ModalHarvestingWizardTs {}
++</script>
++
++<style lang="less" scoped>
++@import '../../resources/css/variables.less';
++
++/deep/.modal-harvesting-wizard {
++  .ivu-steps.ivu-steps-small {
++    width: 50%;
++    margin: auto;
++
++    .ivu-steps-item {
++      text-align: center;
++
++      .ivu-steps-head-inner {
++        width: 0.64rem !important;
++        height: 0.64rem !important;
++        line-height: 0.58rem;
++        background-color: @grayDark;
++        font-weight: 800;
++        border-radius: 50%;
++
++        span {
++          font-size: 0.32rem;
++          color: @white;
++          padding-top: 0.15rem;
++          width: 0.32rem;
++          height: 0.32rem;
++        }
++      }
++    }
++
++    .ivu-steps-item.active {
++      .ivu-steps-head-inner {
++        background-color: @primary;
++      }
++    }
++
++    .ivu-steps-item.completed {
++      .ivu-steps-head-inner {
++        background-color: @primary;
++      }
++    }
++
++    .ivu-steps-item:last-child {
++      flex: 1;
++    }
++
++    .ivu-steps-tail {
++      display: none;
++    }
++
++    .ivu-steps-main {
++      display: block;
++
++      .ivu-steps-title {
++        font-family: @symbolFont;
++        font-size: @normalFont;
++      }
++    }
++  }
++
++  .form-remote-account,
++  .form-persistent-delegation-request {
++    h2 {
++      font-family: @symbolFont;
++      font-size: @subtitleFont;
++      color: @secondary;
++      font-weight: 900;
++      margin-top: 0.15rem;
++      margin-bottom: 0.15rem;
++    }
++
++    p {
++      font-family: @symbolFont;
++      font-size: 0.22rem;
++      font-weight: 400;
++      color: @secondary;
++      margin-bottom: 0.05rem;
++    }
++
++    .account-detail-row-3cols {
++      display: flex;
++      color: @black;
++
++      .label {
++        width: 1.5rem;
++      }
++
++      .value {
++        font-weight: 600;
++      }
++    }
++  }
++
++  .stepper-pagination {
++    display: grid;
++    width: 100%;
++    grid-template-columns: repeat(2, 50%);
++
++    .left {
++      padding-right: 50%;
++    }
++
++    .right {
++      padding-left: 50%;
++      justify-self: right;
++    }
++  }
++
++  .form-row-inner-container {
++    grid-template-columns: 12% 85%;
++  }
++
++  .ivu-modal-body {
++    max-height: inherit;
++  }
++}
++</style>
+diff --git a/src/views/modals/ModalHarvestingWizard/ModalHarvestingWizardTs.ts b/src/views/modals/ModalHarvestingWizard/ModalHarvestingWizardTs.ts
+new file mode 100644
+index 00000000..4aa4f9ce
+--- /dev/null
++++ b/src/views/modals/ModalHarvestingWizard/ModalHarvestingWizardTs.ts
+@@ -0,0 +1,252 @@
++// external dependencies
++import { Account, AccountInfo, AccountType, AccountKeyType, PublicAccount, NetworkType } from 'symbol-sdk'
++import { AccountModel, AccountType as ProfileType } from '@/core/database/entities/AccountModel'
++import { Component, Vue, Prop } from 'vue-property-decorator'
++import { mapGetters } from 'vuex'
++import { TransactionCommand } from '@/services/TransactionCommand'
++
++// child components
++// @ts-ignore
++import ModalWizardDisplay from '@/views/modals/ModalWizardDisplay/ModalWizardDisplay.vue'
++// @ts-ignore
++import FormRow from '@/components/FormRow/FormRow.vue'
++// @ts-ignore
++import FormRemoteAccountCreation from '@/views/forms/FormRemoteAccountCreation/FormRemoteAccountCreation.vue'
++// @ts-ignore
++import FormAccountKeyLinkTransaction from '@/views/forms/FormAccountKeyLinkTransaction/FormAccountKeyLinkTransaction.vue'
++// @ts-ignore
++import FormPersistentDelegationRequestTransaction from '@/views/forms/FormPersistentDelegationRequestTransaction/FormPersistentDelegationRequestTransaction.vue'
++// @ts-ignore
++import AccountAddressDisplay from '@/components/AccountAddressDisplay/AccountAddressDisplay.vue'
++// @ts-ignore
++import AccountPublicKeyDisplay from '@/components/AccountPublicKeyDisplay/AccountPublicKeyDisplay.vue'
++// @ts-ignore
++import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/ProtectedPrivateKeyDisplay.vue'
++// @ts-ignore
++import FormTransactionConfirmation from '@/views/forms/FormTransactionConfirmation/FormTransactionConfirmation.vue'
++
++/**
++ * Wizard steps
++ */
++enum HarvestingWizardSteps {
++  ACCOUNT_LINK = 0,
++  SET_UP = 1,
++  CONFIRMATION = 2,
++}
++
++@Component({
++  components: {
++    ModalWizardDisplay,
++    FormRow,
++    FormRemoteAccountCreation,
++    FormAccountKeyLinkTransaction,
++    FormPersistentDelegationRequestTransaction,
++    AccountAddressDisplay,
++    AccountPublicKeyDisplay,
++    ProtectedPrivateKeyDisplay,
++    FormTransactionConfirmation,
++  },
++  computed: mapGetters({
++    currentAccount: 'account/currentAccount',
++    currentAccountAccountInfo: 'account/currentAccountAccountInfo',
++    networkType: 'network/networkType',
++  }),
++})
++export class ModalHarvestingWizardTs extends Vue {
++  /**
++   * Enum representing the wizard steps
++   */
++  protected wizardSteps = HarvestingWizardSteps
++
++  protected supportedProfileTypes: ProfileType[] = [ProfileType.SEED]
++
++  /**
++   * Current account
++   */
++  private currentAccount: AccountModel
++
++  /**
++   * Current account account info
++   */
++  private currentAccountAccountInfo: AccountInfo
++
++  /**
++   * The current network type
++   */
++  private networkType: NetworkType
++
++  /**
++   * Items that will be shown in the ModalWizardDisplay
++   */
++  protected wizardStepsItems = Object.keys(HarvestingWizardSteps).filter((key) => Number.isNaN(parseInt(key)))
++
++  /**
++   * Icons that will be shown in the ModalWizardDisplay
++   */
++  protected wizardStepsIcons = Object.keys(HarvestingWizardSteps)
++    .filter((key) => Number.isNaN(parseInt(key)))
++    .map((item) => {
++      switch (item) {
++        default:
++        case 'ACCOUNT_LINK':
++          return 'ios-card'
++        case 'SET_UP':
++          return 'ios-globe'
++        case 'CONFIRMATION':
++          return 'md-time'
++      }
++    })
++
++  /**
++   * Currently active step
++   */
++  protected currentStepIndex = 0
++
++  /**
++   * Sets the disabled property of the next button
++   */
++  protected isNextEnabled = true
++
++  /**
++   * Remote account
++   */
++  protected remoteAccount: Account = null
++
++  /**
++   * Node public key
++   */
++  protected nodePublicKey: string = null
++
++  private form: any
++  private command: TransactionCommand
++
++  /**
++   * Modal visibility state from parent
++   * @type {string}
++   */
++  @Prop({ default: false }) visible: boolean
++
++  /**
++   * Internal visibility state
++   * @type {boolean}
++   */
++  protected get show(): boolean {
++    return this.visible
++  }
++
++  /**
++   * Emits close event
++   */
++  protected set show(val) {
++    if (!val) {
++      this.$emit('close')
++    }
++  }
++
++  /**
++   * Hook called when the next button is clicked
++   */
++  protected onNextClicked(): void {
++    let nextStepIndex = (this.currentStepIndex += 1)
++
++    // skip the account link step if the current account is already linked
++    if (nextStepIndex === this.wizardSteps.ACCOUNT_LINK && this.isCurrentAccountLinked) {
++      nextStepIndex += 1
++    }
++
++    if (nextStepIndex === this.wizardSteps.CONFIRMATION) {
++      this.command = (this.$refs.delegationRequest as FormPersistentDelegationRequestTransaction).onSubmit()
++    } else if (nextStepIndex === this.wizardSteps.CONFIRMATION + 1) {
++      ;(this.$refs.confirmationForm as FormTransactionConfirmation).onSubmit()
++      this.show = false
++      return
++    }
++
++    this.currentStepIndex = nextStepIndex
++  }
++
++  private get isCurrentAccountLinked(): boolean {
++    return this.currentAccountAccountInfo && this.currentAccountAccountInfo.accountType === AccountType.Main
++  }
++
++  private get linkedAccount(): PublicAccount {
++    if (!this.currentAccountAccountInfo || !this.currentAccountAccountInfo.supplementalAccountKeys.length)
++      return undefined
++
++    return PublicAccount.createFromPublicKey(
++      this.currentAccountAccountInfo.supplementalAccountKeys.filter((k) => k.keyType === AccountKeyType.Linked).shift()
++        .key,
++      this.networkType,
++    )
++  }
++
++  /**
++   * Hook called when the previous button is called
++   */
++  protected onPreviousClicked(): void {
++    this.currentStepIndex = this.currentStepIndex -= 1
++  }
++
++  /**
++   * Hook called when a child component toggles the disabled state of the next button
++   * @param {boolean} bool
++   */
++  protected onNextToggled(bool: boolean): void {
++    this.isNextEnabled = bool
++  }
++
++  /**
++   * Hook called when a child component sets the remote account
++   * @param {Account} remoteAccount
++   */
++  protected onSetRemoteAccount(remoteAccount: Account): void {
++    this.remoteAccount = remoteAccount
++    this.onNextClicked()
++  }
++
++  /**
++   * Hook called when a child component sets the node public key
++   * @param {string} nodePublicKey
++   */
++  protected onSetNodePublicKey(nodePublicKey: string): void {
++    this.nodePublicKey = nodePublicKey
++  }
++
++  /**
++   * Hook called when the child component ModalTransactionConfirmation triggers
++   * the event 'success'
++   */
++  public onConfirmationSuccess() {
++    this.$emit('on-confirmation-success')
++  }
++
++  /**
++   * Hook called when the child component ModalTransactionConfirmation triggers
++   * the event 'error'
++   * @return {void}
++   */
++  public onConfirmationError(error: string) {
++    this.$store.dispatch('notification/ADD_ERROR', error)
++  }
++
++  /**
++   * Hook called when the child component ModalTransactionConfirmation triggers
++   * the event 'close'
++   * @return {void}
++   */
++  public onConfirmationCancel() {
++    this.show = false
++  }
++
++  /**
++   * Hook called when the component is created
++   */
++  public created() {
++    this.$emit('toggleNext', false)
++    this.form = this.$refs.form
++
++    if (!this.supportedProfileTypes.includes(this.currentAccount.type)) {
++      this.wizardStepsItems = ['ACCOUNT_LINK']
++    }
++  }
++}
+diff --git a/src/views/modals/ModalWizardDisplay/ModalWizardDisplay.vue b/src/views/modals/ModalWizardDisplay/ModalWizardDisplay.vue
+new file mode 100644
+index 00000000..1b045eb9
+--- /dev/null
++++ b/src/views/modals/ModalWizardDisplay/ModalWizardDisplay.vue
+@@ -0,0 +1,37 @@
++<template>
++  <Steps :current="currentItemIndex" size="small">
++    <Step
++      v-for="(item, index) in items"
++      :key="index"
++      :title="$t(item)"
++      :icon="getIcon(item)"
++      :class="{
++        active: currentItemIndex >= index,
++      }"
++    />
++  </Steps>
++</template>
++<script lang="ts">
++// external dependencies
++import { Component, Vue, Prop } from 'vue-property-decorator'
++
++@Component
++export default class ModalWizardDisplay extends Vue {
++  protected isDisplayed = false
++
++  @Prop({ default: () => [] }) items: string[]
++  @Prop({ default: () => [] }) icons: string[]
++  @Prop({ default: 0 }) currentItemIndex: number
++
++  protected showWizard(): void {
++    this.isDisplayed = true
++  }
++
++  protected getIcon(item: string) {
++    if (!this.icons.length) return undefined
++
++    const idx = this.items.findIndex((i) => i === item)
++    return this.icons[idx]
++  }
++}
++</script>
+diff --git a/src/views/pages/accounts/AccountDetailsPage/AccountDetailsPage.vue b/src/views/pages/accounts/AccountDetailsPage/AccountDetailsPage.vue
+index c7be4708..57e11ae3 100644
+--- a/src/views/pages/accounts/AccountDetailsPage/AccountDetailsPage.vue
++++ b/src/views/pages/accounts/AccountDetailsPage/AccountDetailsPage.vue
+@@ -8,11 +8,7 @@
+           </div>
+ 
+           <div class="detail-row">
+-            <ImportanceScoreDisplay :address="currentAccount.address" />
+-          </div>
+-
+-          <div class="detail-row">
+-            <AccountAddressDisplay :account="currentAccount" />
++            <AccountAddressDisplay :address="currentAccount.address" />
+           </div>
+ 
+           <div class="detail-row">
+diff --git a/src/views/pages/community/information/Information.vue b/src/views/pages/community/information/Information.vue
+index c5ce32e6..ec166f06 100644
+--- a/src/views/pages/community/information/Information.vue
++++ b/src/views/pages/community/information/Information.vue
+@@ -6,7 +6,7 @@
+         <div class="article-inner-container">
+           <div class="article-left-section">
+             <span class="article-date">{{ a.pubDate | moment('ddd, MMMM Do YYYY') }}</span>
+-            <span class="article-from">{{ $t('article_by', { creator: a.creator }) }}</span>
++            <span class="article-from">{{ $t('article_by', { creator: getPublisher(a) }) }}</span>
+             <span class="article-link">
+               <Icon type="md-open" size="20" class="link-icon" />
+               <a :href="a.link" target="_blank">{{ $t('news_read_more') }}</a>
+diff --git a/src/views/pages/community/information/InformationTs.ts b/src/views/pages/community/information/InformationTs.ts
+index 3af8239b..3d005668 100644
+--- a/src/views/pages/community/information/InformationTs.ts
++++ b/src/views/pages/community/information/InformationTs.ts
+@@ -35,4 +35,17 @@ export class InformationTs extends Vue {
+   public async mounted() {
+     await this.$store.dispatch('community/initialize')
+   }
++
++  public getPublisher(article: ArticleEntry) {
++    const r_flash = new RegExp(/nemflash\.io/)
++    const r_blog = new RegExp(/blog\.nem\.io/)
++
++    if (r_flash.test(article.link)) {
++      return 'nemflash.io'
++    } else if (r_blog.test(article.link)) {
++      return 'blog.nem.io'
++    }
++
++    return 'Unknown'
++  }
+ }
+diff --git a/src/views/pages/harvesting/Harvesting.vue b/src/views/pages/harvesting/Harvesting.vue
+new file mode 100644
+index 00000000..c551d4bd
+--- /dev/null
++++ b/src/views/pages/harvesting/Harvesting.vue
+@@ -0,0 +1,23 @@
++<template>
++  <div>
++    <button @click="hasHarvestingWizard = !hasHarvestingWizard">
++      Show remote harvesting wizard
++    </button>
++    <ModalHarvestingWizard
++      v-if="hasHarvestingWizard"
++      :visible="hasHarvestingWizard"
++      @close="hasHarvestingWizard = false"
++    />
++  </div>
++</template>
++
++<script lang="ts">
++import { Component, Vue } from 'vue-property-decorator'
++// @ts-ignore
++import ModalHarvestingWizard from '@/views/modals/ModalHarvestingWizard/ModalHarvestingWizard.vue'
++
++@Component({ components: { ModalHarvestingWizard } })
++export default class Harvesting extends Vue {
++  protected hasHarvestingWizard = false
++}
++</script>
+diff --git a/src/views/resources/css/forms.less b/src/views/resources/css/forms.less
+index 6000a59d..741b1cf5 100644
+--- a/src/views/resources/css/forms.less
++++ b/src/views/resources/css/forms.less
+@@ -432,13 +432,18 @@
+   display: grid;
+ }
+ 
+-.validation-button:hover {
++.validation-button:hover:enabled {
+   box-shadow: 0 0 0.1rem @purple;
+   background-color: @purple !important;
+   color: @white !important;
+   opacity: 0.8 !important;
+ }
+ 
++.validation-button:disabled {
++  background: @grayLight;
++  color: @grayDark;
++}
++
+ .back-button {
+   background: @grayLight;
+   color: @purpleDark;
+diff --git a/src/views/resources/css/variables.less b/src/views/resources/css/variables.less
+index cedb347d..e647fa5d 100644
+--- a/src/views/resources/css/variables.less
++++ b/src/views/resources/css/variables.less
+@@ -70,6 +70,7 @@
+ @normalFont: 20px;
+ @fontSize24: 24px;
+ @biggerFont: 25px;
++@subtitleFont: 35px;
+ @biggestFont: 45px;
+ @bold: 600;
+ @bolder: 800;

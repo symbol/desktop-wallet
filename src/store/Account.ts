@@ -106,6 +106,9 @@ export default {
     currentSignerAddress: (state: AccountState) => state.currentSignerAddress,
     knownAccounts: (state: AccountState) => state.knownAccounts,
     accountsInfo: (state: AccountState) => state.accountsInfo,
+    currentAccountAccountInfo: (state: AccountState): AccountInfo => {
+      return state.accountsInfo.find(({ publicKey }) => publicKey === state.currentAccount.publicKey)
+    },
     multisigAccountsInfo: (state: AccountState) => state.multisigAccountsInfo,
     getSubscriptions: (state: AccountState) => state.subscriptions,
   },
@@ -365,6 +368,21 @@ export default {
       }
       const accountService = new AccountService()
       accountService.updateName(currentAccount, name)
+      const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts)
+      commit('knownAccounts', knownAccounts)
+    },
+
+    UPDATE_CURRENT_ACCOUNT_REMOTE_ACCOUNT({ commit, getters, rootGetters }, encRemoteAccountPrivateKey: string) {
+      const currentAccount: AccountModel = getters.currentAccount
+      if (!currentAccount) {
+        return
+      }
+      const currentProfile: ProfileModel = rootGetters['profile/currentProfile']
+      if (!currentProfile) {
+        return
+      }
+      const accountService = new AccountService()
+      accountService.updateRemoteAccount(currentAccount, encRemoteAccountPrivateKey)
       const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts)
       commit('knownAccounts', knownAccounts)
     },

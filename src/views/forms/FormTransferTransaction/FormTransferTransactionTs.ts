@@ -168,7 +168,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
       },
     ]
 
-    this.formItems.messagePlain = !!this.message ? Formatters.hexToUtf8(this.message.payload) : ''
+    this.formItems.messagePlain = this.message ? Formatters.hexToUtf8(this.message.payload) : ''
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
     // - initialize mosaics input manager

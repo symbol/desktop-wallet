@@ -6,7 +6,7 @@
         <div class="article-inner-container">
           <div class="article-left-section">
             <span class="article-date">{{ a.pubDate | moment('ddd, MMMM Do YYYY') }}</span>
-            <span class="article-from">{{ $t('article_by', { creator: a.creator }) }}</span>
+            <span class="article-from">{{ $t('article_by', { creator: getPublisher(a) }) }}</span>
             <span class="article-link">
               <Icon type="md-open" size="20" class="link-icon" />
               <a :href="a.link" target="_blank">{{ $t('news_read_more') }}</a>

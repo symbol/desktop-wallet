@@ -13,40 +13,26 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Account, NetworkType } from 'symbol-sdk'
+import { NetworkType } from 'symbol-sdk'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
 
-const TEST_ACCOUNTS = {
-  cosigner1: {
+const TEST_PROFILES = {
+  profile1: {
+    generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
+    profileName: 'profile1',
+    hint: 'password is password',
     networkType: NetworkType.MIJIN_TEST,
-    privateKey: '27002B109810E4C25E8E6AE964FAF129CC3BFD1A95CB99062E0205060041D0C9',
-  },
-  remoteTestnet: {
-    networkType: NetworkType.TEST_NET,
-    privateKey: '803040D4A33983C4B233C6C2054A24B9C655E8CAC6C06AECCED56B8FE424FF2B',
-  },
-  remoteMijin: {
-    networkType: NetworkType.MIJIN_TEST,
-    privateKey: '803040D4A33983C4B233C6C2054A24B9C655E8CAC6C06AECCED56B8FE424FF2B',
-  },
-  cosigner2: {
-    networkType: NetworkType.MIJIN_TEST,
-    privateKey: '8472FA74A64A97C85F0A285299D9FD2D44D71CB5698FE9C7E88C33001F9DD83F',
-  },
-  multisig1: {
-    networkType: NetworkType.MIJIN_TEST,
-    privateKey: 'CAD57FEC0C7F2106AD8A6203DA67EE675A1A3C232C676945306448DF5B4124F8',
-  },
-  multisig2: {
-    networkType: NetworkType.MIJIN_TEST,
-    privateKey: '72B08ACF80558B285EADA206BB1226A44038C65AC4649108B2284591641657B5',
+    password: '0b831096cf25adbd7324ad2dbb3d99a829b40b53c6f76dd50fb2ef56fceded2f2kixTXdr/q/ci5PPwWVCiA==',
+    accounts: "['WalletsModel2']",
+    seed:
+      '4fcd1e1b896551f68c3d5314be1f8d2fad48d7b492e65ecf4ac1ac2dfc9749a08CyBF9Q5APg07qXEMWQzQIcN+/KBekkw0T2hBPfdAd5VxXkdzWikv46dIaYxyHCn9hdr839ITfgIWYnAiE54jRWfFKkDvyEZL4pchX6mAqCcc0Ew9VGFfHjKStHWFeBezrhp/MlNeSw/EbxiCFo5C2pmeSuGz5NABUXT+BoDi62gB8r6gyF9hjB8J7Lz6D4SBf6J4cvj9krCXzkkWX1jqg==',
   },
 }
 
-export const getTestAccount = (name: string): Account => {
-  if (!(name in TEST_ACCOUNTS)) {
+export const getTestProfile = (name: string): ProfileModel => {
+  if (!(name in TEST_PROFILES)) {
     throw new Error('Test account with name: ' + name + ' could not be found in __mocks__/accounts.ts')
   }
 
-  const spec = TEST_ACCOUNTS[name]
-  return Account.createFromPrivateKey(spec.privateKey, spec.networkType)
+  return TEST_PROFILES[name]
 }

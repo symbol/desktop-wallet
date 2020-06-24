@@ -55,6 +55,10 @@ export class AccountService {
     return this.saveAccount(Object.assign(account, { name }))
   }
 
+  public updateRemoteAccount(account: AccountModel, encRemoteAccountPrivateKey: string): AccountModel {
+    return this.saveAccount(Object.assign(account, { encRemoteAccountPrivateKey }))
+  }
+
   /**
    * Derive \a path using \a mnemonic pass phrase
    */
