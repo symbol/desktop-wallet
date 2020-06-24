@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+import { Address } from 'symbol-sdk'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel'
@@ -28,10 +29,10 @@ export class AccountAddressDisplayTs extends Vue {
   @Prop({
     default: null,
   })
-  account: AccountModel
+  address: string
 
-  public getAccountPrettyAddress(): string {
-    return (this.account && AccountModel.getObjects(this.account).address.pretty()) || ''
+  public getPrettyAddress(): string {
+    return this.address ? Address.createFromRawAddress(this.address).pretty() : ''
   }
 
   /// region computed properties getter/setter

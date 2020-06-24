@@ -20,5 +20,5 @@
 
 <script lang="ts">
 import { FormAccountKeyLinkTransactionTs } from './FormAccountKeyLinkTransactionTs'
-expFormAccountKeyLinkTransaction.vueort default class FormAccountKeyLinkTransaction extends FormAccountKeyLinkTransactionTs {}
+export default class FormAccountKeyLinkTransaction extends FormAccountKeyLinkTransactionTs {}
 </script>

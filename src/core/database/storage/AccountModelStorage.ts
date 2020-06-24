@@ -24,6 +24,24 @@ export class AccountModelStorage extends VersionedObjectStorage<Record<string, A
   public static INSTANCE = new AccountModelStorage()
 
   private constructor() {
-    super('accounts')
+    super('accounts', [
+      {
+        description: 'Update accounts to hold encRemoteAccountPrivateKey',
+        migrate: (from: any) => {
+          // update all accounts
+          const accounts = Object.keys(from)
+
+          const modified: any = from
+          accounts.map((name: string) => {
+            modified[name] = {
+              ...modified[name],
+              encRemoteAccountPrivateKey: '',
+            }
+          })
+
+          return modified
+        },
+      },
+    ])
   }
 }

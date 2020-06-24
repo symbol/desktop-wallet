@@ -25,7 +25,7 @@ describe('services/RemoteAccountService', () => {
       // prepare
       const accountRepository = new RepositoryFactoryHttp('http://localhost:3000', {
         networkType: NetworkType.TEST_NET,
-        generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4'
+        generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
       }).createAccountRepository()
       accountRepository.getAccountsInfo = jest.fn(() => of([]))
 
@@ -44,7 +44,7 @@ describe('services/RemoteAccountService', () => {
       // prepare
       const accountRepository = new RepositoryFactoryHttp('http://localhost:3000', {
         networkType: NetworkType.TEST_NET,
-        generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4'
+        generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
       }).createAccountRepository()
       const fakeLinkedAccount = new AccountInfo(
         Address.createFromPublicKey(

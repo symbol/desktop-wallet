@@ -1,10 +1,8 @@
 <template>
   <div class="top_network_info radius">
     <div class="top_account_info">
-
       <!-- harvesting is conditional -->
-      <div v-if="isHarvestingEnabled"
-           class="xym-outline account-info-tile">
+      <div v-if="isHarvestingEnabled" class="xym-outline account-info-tile">
         <div class="title">
           <span class="title_txt">{{ $t('harvesting') }}</span>
         </div>
@@ -19,8 +17,7 @@
         </div>
       </div>
 
-      <div v-else
-           class="xym-outline account-info-tile">
+      <div v-else class="xym-outline account-info-tile">
         <div class="title">
           <span class="title_txt">{{ $t('speed') }}</span>
         </div>

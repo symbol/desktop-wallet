@@ -372,6 +372,21 @@ export default {
       commit('knownAccounts', knownAccounts)
     },
 
+    UPDATE_CURRENT_ACCOUNT_REMOTE_ACCOUNT({ commit, getters, rootGetters }, encRemoteAccountPrivateKey: string) {
+      const currentAccount: AccountModel = getters.currentAccount
+      if (!currentAccount) {
+        return
+      }
+      const currentProfile: ProfileModel = rootGetters['profile/currentProfile']
+      if (!currentProfile) {
+        return
+      }
+      const accountService = new AccountService()
+      accountService.updateRemoteAccount(currentAccount, encRemoteAccountPrivateKey)
+      const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts)
+      commit('knownAccounts', knownAccounts)
+    },
+
     SET_KNOWN_ACCOUNTS({ commit }, accounts: string[]) {
       commit('knownAccounts', new AccountService().getKnownAccounts(accounts))
     },
