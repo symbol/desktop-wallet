@@ -40,6 +40,15 @@ const TEST_ACCOUNTS = {
     networkType: NetworkType.MIJIN_TEST,
     privateKey: '72B08ACF80558B285EADA206BB1226A44038C65AC4649108B2284591641657B5',
   },
+  profile1: {
+    generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
+    profileName: 'profile1',
+    hint: 'password is password',
+    networkType: NetworkType.MIJIN_TEST,
+    password: '0b831096cf25adbd7324ad2dbb3d99a829b40b53c6f76dd50fb2ef56fceded2f2kixTXdr/q/ci5PPwWVCiA==',
+    accounts: "['WalletsModel2']",
+    seed: '4fcd1e1b896551f68c3d5314be1f8d2fad48d7b492e65ecf4ac1ac2dfc9749a08CyBF9Q5APg07qXEMWQzQIcN+/KBekkw0T2hBPfdAd5VxXkdzWikv46dIaYxyHCn9hdr839ITfgIWYnAiE54jRWfFKkDvyEZL4pchX6mAqCcc0Ew9VGFfHjKStHWFeBezrhp/MlNeSw/EbxiCFo5C2pmeSuGz5NABUXT+BoDi62gB8r6gyF9hjB8J7Lz6D4SBf6J4cvj9krCXzkkWX1jqg==',
+  }
 }
 
 export const getTestAccount = (name: string): Account => {
@@ -50,3 +59,5 @@ export const getTestAccount = (name: string): Account => {
   const spec = TEST_ACCOUNTS[name]
   return Account.createFromPrivateKey(spec.privateKey, spec.networkType)
 }
+
+export const getTestProfile = getTestAccount

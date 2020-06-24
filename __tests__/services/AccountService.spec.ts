@@ -46,7 +46,7 @@ const expectedAccounts = Object.values(expectedPrivateKeys).map((key) =>
 const generatedAccounts = new AccountService().generateAccountsFromMnemonic(mnemonic, NetworkType.TEST_NET, 2)
 const generatedAddresses = new AccountService().getAddressesFromMnemonic(mnemonic, NetworkType.TEST_NET, 2)
 
-describe('services/WalletServices', () => {
+describe('services/AccountService', () => {
   describe('generateAccountsFromMnemonic() should', () => {
     test('generate correct child account given mnemonic', () => {
       expect(generatedAccounts).toBeDefined()

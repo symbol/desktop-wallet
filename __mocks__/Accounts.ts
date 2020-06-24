@@ -47,3 +47,16 @@ export const WalletsModel1: AccountModel = {
   path: '',
   isMultisig: false,
 }
+
+export const WalletsModel2: AccountModel = {
+  id: 'someId2',
+  node: '',
+  profileName: 'profile_name2',
+  name: account1Params.accountName,
+  type: AccountType.SEED,
+  address: simpleWallet1.address.plain(),
+  publicKey: account1.publicKey,
+  encryptedPrivateKey: simpleWallet1.encryptedPrivateKey,
+  path: "m/44'/4343'/1'/0'/0'",
+  isMultisig: false,
+}

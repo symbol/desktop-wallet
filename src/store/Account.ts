@@ -106,6 +106,9 @@ export default {
     currentSignerAddress: (state: AccountState) => state.currentSignerAddress,
     knownAccounts: (state: AccountState) => state.knownAccounts,
     accountsInfo: (state: AccountState) => state.accountsInfo,
+    currentAccountAccountInfo: (state: AccountState): AccountInfo => {
+      return state.accountsInfo.find(({ publicKey }) => publicKey === state.currentAccount.publicKey)
+    },
     multisigAccountsInfo: (state: AccountState) => state.multisigAccountsInfo,
     getSubscriptions: (state: AccountState) => state.subscriptions,
   },

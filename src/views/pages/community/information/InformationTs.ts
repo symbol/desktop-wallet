@@ -35,4 +35,17 @@ export class InformationTs extends Vue {
   public async mounted() {
     await this.$store.dispatch('community/initialize')
   }
+
+  public getPublisher(article: ArticleEntry) {
+    const r_flash = new RegExp(/nemflash\.io/)
+    const r_blog = new RegExp(/blog\.nem\.io/)
+
+    if (r_flash.test(article.link)) {
+      return 'nemflash.io'
+    } else if (r_blog.test(article.link)) {
+      return 'blog.nem.io'
+    }
+
+    return 'Unknown'
+  }
 }

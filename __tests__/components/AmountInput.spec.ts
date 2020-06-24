@@ -68,7 +68,7 @@ describe('AmountInput', () => {
     await flushPromises()
     expect(wrapper.emitted().input[0]).toEqual(['10.1234567'])
   })
-  test("divisibility of the mosaic '534CD11F6D984B4B' is 6", async () => {
+  test("divisibility of the mosaic '519FC24B9223E0B4' is 6", async () => {
     const rule = wrapper.vm.validationRules.amount
     const falseResult = await validate('10.1234567', rule)
     expect(falseResult.valid).toBeFalsy()
