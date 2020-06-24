@@ -20,7 +20,7 @@
                 {{ $t('login') }}
               </p>
               <p class="profile-name">
-                {{ $t('account_name') }}
+                {{ $t('profile_name') }}
               </p>
               <ValidationProvider v-slot="{ errors }" :name="$t('profile_name')" :rules="`in:${profileNames}`" slim>
                 <ErrorTooltip field-name="profile_name" :errors="errors">
@@ -33,7 +33,7 @@
                   >
                     <div class="auto-complete-sub-container scroll">
                       <div class="tips-in-sub-container">
-                        {{ $t(profilesClassifiedByNetworkType ? 'Select_a_profile' : 'no_profiles_in_database') }}
+                        {{ $t(profilesClassifiedByNetworkType ? 'select_a_profile' : 'no_profiles_in_database') }}
                       </div>
                       <div v-if="profilesClassifiedByNetworkType">
                         <div v-for="pair in profilesClassifiedByNetworkType" :key="pair.networkType">
