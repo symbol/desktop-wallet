@@ -4,6 +4,7 @@
     <template v-slot:inputs>
       <div class="row-75-25 inputs-container">
         <AutoComplete
+          name="endpoint"
           v-model="formItems.nodeUrl"
           :data="customNodeData"
           class="auto-complete-size auto-complete-style"
