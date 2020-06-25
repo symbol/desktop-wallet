@@ -150,8 +150,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
   public onSubmit() {
     if (!this.formItems.nodePublicKey.length) {
-      this.$refs.observer.setErrors({'endpoint': this.$t('invalid_node').toString()})
-      return ;
+      this.$refs.observer.setErrors({ endpoint: this.$t('invalid_node').toString() })
+      return
     }
 
     // - open signature modal
