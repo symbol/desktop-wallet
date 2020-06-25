@@ -10,9 +10,12 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 #### Added
 
 - Added first implementation of Harvesting setup wizard for HD Profiles (fixes #326)
+- Added AccountKeyLink transaction wrapping with PersistentDelegationRequestTransaction
 - Added possibility to create unlimited duration mosaics (fixes #413)
 - Added settings modal box with new custom node selector (fixes #348)
 - Separated mosaic configuration for different accounts (fixes #379, #380)
+- Improved news module and added several bugfixes related to news
+- Removed duplicate menu actions on menu clicks
 
 #### Fixed
 
