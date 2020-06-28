@@ -143,6 +143,8 @@ export class MosaicAttachmentInputTs extends Vue {
 
     return true
   }
-
+  mounted() {
+    this.emitChange()
+  }
   /// end-region computed properties getter/setter
 }
