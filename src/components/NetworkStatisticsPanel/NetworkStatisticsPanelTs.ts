@@ -18,8 +18,6 @@ import { mapGetters } from 'vuex'
 // configuration
 // child components
 // @ts-ignore
-import AnimatedNumber from '@/components/AnimatedNumber/AnimatedNumber.vue'
-// @ts-ignore
 import ModalHarvestingWizard from '@/views/modals/ModalHarvestingWizard/ModalHarvestingWizard.vue'
 import { officialIcons } from '@/views/resources/Images'
 
@@ -29,7 +27,6 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
 
 @Component({
   components: {
-    AnimatedNumber,
     ModalHarvestingWizard,
   },
   computed: {
