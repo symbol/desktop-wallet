@@ -155,7 +155,8 @@ export class ModalHarvestingWizardTs extends Vue {
     }
 
     if (nextStepIndex === this.wizardSteps.CONFIRMATION) {
-      this.command = (this.$refs.delegationRequest as FormPersistentDelegationRequestTransaction).onSubmit()
+      this.command = ((this.$refs
+        .delegationRequest as FormPersistentDelegationRequestTransaction).onSubmit() as unknown) as TransactionCommand
     } else if (nextStepIndex === this.wizardSteps.CONFIRMATION + 1) {
       ;(this.$refs.confirmationForm as FormTransactionConfirmation).onSubmit()
       this.show = false
