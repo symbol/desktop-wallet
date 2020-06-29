@@ -5,8 +5,8 @@
     <div v-if="transactions.length" class="transaction-rows-outer-container">
       <div class="transaction-rows-inner-container">
         <TransactionRow
-          v-for="(transaction, index) in transactions"
-          :key="index"
+          v-for="transaction in transactions"
+          :key="transaction.transactionInfo.id"
           :transaction="transaction"
           @click="$emit('click', transaction)"
         />
