@@ -15,8 +15,6 @@
  */
 import { Address } from 'symbol-sdk'
 import { Component, Prop, Vue } from 'vue-property-decorator'
-// internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
 //@ts-ignore
 import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
 
