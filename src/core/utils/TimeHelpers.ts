@@ -49,6 +49,10 @@ export class TimeHelpers {
       second = second % 60
     }
     let result = ''
+    // seconds less than 60s
+    if (second > 0 && m == 0 && h == 0 && d == 0) {
+      result = `${second} s ${result}`
+    }
     if (m > 0 || h > 0 || d > 0) {
       result = `${m} m ${result}`
     }
