@@ -15,7 +15,10 @@
  */
 import { Address } from 'symbol-sdk'
 import { Component, Prop, Vue } from 'vue-property-decorator'
+<<<<<<< HEAD
 // internal dependencies
+=======
+>>>>>>> fix conflict
 //@ts-ignore
 import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
 
