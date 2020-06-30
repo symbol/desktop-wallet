@@ -5,6 +5,7 @@
       <div class="row-75-25 inputs-container">
         <AutoComplete
           v-model="formItems.nodeUrl"
+          name="endpoint"
           :data="customNodeData"
           class="auto-complete-size auto-complete-style"
           :placeholder="$t('form_label_network_node_url')"

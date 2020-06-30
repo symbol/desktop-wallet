@@ -3,6 +3,27 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.11.0][v0.11.0] - 24-Jun-2020
+
+### Milestone: [catapult-server@v0.9.5.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.5.1)
+
+#### Added
+
+- Added first implementation of Harvesting setup wizard for HD Profiles (fixes #326)
+- Added AccountKeyLink transaction wrapping with PersistentDelegationRequestTransaction
+- Added possibility to create unlimited duration mosaics (fixes #413)
+- Added settings modal box with new custom node selector (fixes #348)
+- Separated mosaic configuration for different accounts (fixes #379, #380)
+- Improved news module and added several bugfixes related to news
+- Removed duplicate menu actions on menu clicks
+
+#### Fixed
+
+- Fixed namespace name validator to use same as SDK (fixes #412)
+- Fixed login page visual bug (fixes #431)
+- Fixed selector fields consistency to use iView's Select component (fixes #388, #347)
+- Fixed private key display replication bug (fixes #403)
+- Several wording and UI fixes on languages files (fixes #390, #391, #404, #252)
 
 ## [0.10.0][v0.10.0] - 27-May-2020
 
@@ -218,6 +239,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Some missing UI fixes for Symbol rebrand
 
 
+[v0.11.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.10.0...v0.11.0
 [v0.10.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.9...v0.10.0
 [v0.9.9]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.8-beta1...v0.9.9
 [v0.9.8]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.8-beta1
