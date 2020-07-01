@@ -72,17 +72,26 @@ export abstract class TransactionView<T extends Transaction> {
    * @param transaction the transaction.
    */
   public static getTransactionStatus(transaction: Transaction): TransactionStatus {
-    if (!transaction.signer) {
-      return TransactionStatus.unconfirmed
-    } else if (transaction.isConfirmed()) {
+    if (transaction.isConfirmed()) {
       return TransactionStatus.confirmed
-    } else if (transaction.isUnconfirmed()) {
-      return TransactionStatus.unconfirmed
     } else {
-      return TransactionStatus.partial
+      return TransactionView.isPartial(transaction) ? TransactionStatus.partial : TransactionStatus.unconfirmed
     }
   }
 
+  /**
+   * @description: transaction.transactionInfo.merkleComponentHash==='00000...' -> status of this transaction is Partial
+   * @param {Transaction}
+   * @return: boolean
+   */
+
+  public static isPartial(transaction: Transaction): boolean {
+    return (
+      transaction.transactionInfo &&
+      transaction.transactionInfo.merkleComponentHash &&
+      parseInt(transaction.transactionInfo.merkleComponentHash) === 0
+    )
+  }
   /**
    * It returns a list that that it easy to render when displaying TransactionDetailRow components.
    */
