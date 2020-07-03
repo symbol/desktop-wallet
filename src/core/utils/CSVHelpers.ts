@@ -13,27 +13,20 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Address } from 'symbol-sdk'
-import { Component, Prop, Vue } from 'vue-property-decorator'
-// internal dependencies
-//@ts-ignore
-import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
+import { Parser } from 'json2csv'
+import FileSaver from 'file-saver'
 
-@Component({
-  components: {
-    ButtonCopyToClipboard,
-  },
-})
-export class AccountAddressDisplayTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  address: string
-
-  public getPrettyAddress(): string {
-    return this.address ? Address.createFromRawAddress(this.address).pretty() : ''
+export class CSVHelpers {
+  /**
+   * Exoprt to csv file
+   * @param data The json data
+   * @param filename Prefix the name of the CSV file
+   */
+  public static exportCSV(data: any, filename: string) {
+    const json2csvParser = new Parser()
+    const csvData = json2csvParser.parse(data)
+    const blob = new Blob(['\uFEFF' + csvData], { type: 'text/plain;charset=utf-8;' })
+    const exportFilename = `${filename}-${Date.now()}.csv`
+    return FileSaver.saveAs(blob, exportFilename)
   }
-
-  /// region computed properties getter/setter
-  /// end-region computed properties getter/setter
 }
