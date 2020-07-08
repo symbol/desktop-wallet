@@ -25,7 +25,14 @@ export default class ImportProfileTs extends Vue {
 
   public LedgerStepBarTitleList = ['Create Ledger Account']
 
-  isLedger = false
+  public get isLedger(): boolean {
+    return this.$route.meta.isLedger
+  }
+
+  public set isLedger(f: boolean) {
+    this.$route.meta = f
+  }
+
   public titleList = []
 
   public created() {
