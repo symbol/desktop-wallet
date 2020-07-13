@@ -2,7 +2,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export class SymbolTabsTs extends Vue {
-  @Prop({ default: 'direction' }) direction: string
+  @Prop({ default: 'vertical' }) direction: string
   public tabPaneNavigators: Array<any> = []
   public activeNavIndex: number = 0
   public contentStyle = {
@@ -23,7 +23,7 @@ export class SymbolTabsTs extends Vue {
     return tabPanes
   }
   public onTabChange(index) {
-    this.activeNavIndex = index = parseInt(index)
+    this.activeNavIndex = parseInt(index)
     this.contentStyle.transform = index === 0 ? `translateX(${index})` : `translateX(-${index}00%)`
   }
   mounted() {

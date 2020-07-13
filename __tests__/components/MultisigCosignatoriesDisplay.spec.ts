@@ -36,7 +36,7 @@ const account4 = PublicAccount.createFromPublicKey(
   '1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B',
   networkType,
 )
-const multisigInfo = new MultisigAccountInfo(account1, 1, 1, [account2, account3], [])
+const multisigInfo = new MultisigAccountInfo(account1.address, 1, 1, [account2.address, account3.address], [])
 
 describe('MultisigCosignatoriesDisplay', () => {
   test('Getters should return correct values when no modifications', () => {
