@@ -16,6 +16,8 @@
 
 import { NetworkCurrenciesModel } from '@/core/database/entities/NetworkCurrenciesModel'
 import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
+import { trimEnd } from 'lodash'
+import { NetworkCurrencyModel } from '../entities/NetworkCurrencyModel'
 
 export class NetworkCurrenciesModelStorage extends VersionedNetworkBasedObjectStorage<NetworkCurrenciesModel> {
   /**
@@ -24,6 +26,24 @@ export class NetworkCurrenciesModelStorage extends VersionedNetworkBasedObjectSt
   public static INSTANCE = new NetworkCurrenciesModelStorage()
 
   private constructor() {
-    super('networkCurrencyCache')
+    super('networkCurrencyCache', [
+      {
+        description: 'Reset networkCurrencyCache for 0.9.6.3 network (id changes)',
+        migrate: (from: any) => {
+          const xymMosaic96x = new NetworkCurrencyModel(
+            '5E62990DCAC5BE8A',
+            'E74B99BA41F4AFEE',
+            'symbol.xym',
+            6,
+            true,
+            false,
+            false,
+            'XYM'
+          )
+          // reset table for new cache
+          return new NetworkCurrenciesModel(xymMosaic96x, xymMosaic96x)
+        },
+      },
+    ])
   }
 }

@@ -116,10 +116,10 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
    */
   protected getTransactions(): Transaction[] {
     const maxFee = UInt64.fromUint(this.formItems.maxFee)
-    const publicAccount = PublicAccount.createFromPublicKey(this.selectedSigner.publicKey, this.networkType)
+    //const publicAccount = PublicAccount.createFromPublicKey(this.selectedSigner.publicKey, this.networkType)
     const randomNonce = MosaicNonce.createRandom()
     // - read form for definition
-    const mosaicId = MosaicId.createFromNonce(randomNonce, publicAccount)
+    const mosaicId = MosaicId.createFromNonce(randomNonce, this.selectedSigner.address)
     // the duration must be 0 when the permanent value of true
     if (this.formItems.permanent) this.formItems.duration = 0
     const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(

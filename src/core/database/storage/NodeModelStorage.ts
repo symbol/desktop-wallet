@@ -29,6 +29,10 @@ export class NodeModelStorage extends VersionedObjectStorage<NodeModel[]> {
         description: 'Update node to 0.9.5.1 network',
         migrate: () => undefined,
       },
+      {
+        description: 'Update node for 0.9.6.3 network (known nodes)',
+        migrate: (from: any) => undefined,
+      },
     ])
   }
 }

@@ -3,7 +3,7 @@
     <FormRow>
       <template v-slot:inputs>
         <div
-          v-for="{ publicKey, address, addOrRemove } in modifications"
+          v-for="{ address, addOrRemove } in modifications"
           :key="publicKey"
           class="row-cosignatory-modification-display inputs-container gray-background mx-1"
         >

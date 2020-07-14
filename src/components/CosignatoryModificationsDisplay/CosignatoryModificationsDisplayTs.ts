@@ -52,13 +52,11 @@ export class CosignatoryModificationsDisplayTs extends Vue {
   private networkType: NetworkType
 
   get modifications(): {
-    publicKey: string
     address: string
     addOrRemove: 'add' | 'remove'
   }[] {
     return Object.values(this.cosignatoryModifications).map(({ addOrRemove, cosignatory }) => ({
-      publicKey: cosignatory.publicKey,
-      address: Address.createFromPublicKey(cosignatory.publicKey, this.networkType).pretty(),
+      address: cosignatory.pretty(),
       addOrRemove,
     }))
   }
