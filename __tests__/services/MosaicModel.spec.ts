@@ -20,7 +20,7 @@ describe('services/MosaicData', () => {
   describe('serialization', () => {
     test('canSerializeDeserialize', () => {
       // act
-      const address = Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000')
+      const address = Address.createFromEncoded('917E7E29A01014C2F3000000000000000000000000000000')
 
       const id = new MosaicId('85BBEA6CC462B244')
       const mosaicInfo = new MosaicInfo(

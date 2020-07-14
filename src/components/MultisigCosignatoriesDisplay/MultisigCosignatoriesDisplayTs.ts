@@ -109,15 +109,15 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
    * Hook called when a cosignatory is removed
    * @param {string} publicKey
    */
-  protected onRemoveCosignatory(address: string): void {
-    this.$emit('remove', Address.createFromRawAddress(address))
+  protected onRemoveCosignatory(address: Address): void {
+    this.$emit('remove', address)
   }
 
   /**
    * Hook called when a cosignatory modification is undone
    * @param {string} thePublicKey
    */
-  protected onUndoModification(theAddress: string): void {
-    this.$emit('undo', Address.createFromRawAddress(theAddress))
+  protected onUndoModification(theAddress: Address): void {
+    this.$emit('undo', theAddress)
   }
 }

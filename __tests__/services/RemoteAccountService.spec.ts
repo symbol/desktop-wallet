@@ -13,27 +13,39 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { NetworkType, Password, RepositoryFactoryHttp, Address, AccountInfo, UInt64, AccountType, SupplementalPublicKeys } from 'symbol-sdk'
+import { NetworkType, Password, RepositoryFactoryHttp, Address, AccountInfo, UInt64, AccountType, SupplementalPublicKeys, AccountRepository } from 'symbol-sdk'
 import { RemoteAccountService } from '@/services/RemoteAccountService'
 import { WalletsModel2 } from '@MOCKS/Accounts'
 import { getTestProfile } from '@MOCKS/profiles'
-import { of } from 'rxjs'
+import { Observable, of } from 'rxjs'
 
 describe('services/RemoteAccountService', () => {
   describe('getAvailableRemotePublicKey()', () => {
     test('should return the first linkable public key', async (done) => {
       // prepare
-      const accountRepository = new RepositoryFactoryHttp('http://localhost:3000', {
+      const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+        createAccountRepository(): AccountRepository {
+          return new (class AccountRepositoryForTest implements AccountRepository {
+            getAccountInfo(address: Address): Observable<AccountInfo> {
+              return of({address: Address.createFromRawAddress(WalletsModel2.address)} as AccountInfo)
+            }
+
+            getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
+              return of([{address: Address.createFromRawAddress(WalletsModel2.address)} as AccountInfo])
+            }
+          })()
+        }
+      })('http://localhost:3000', {
         networkType: NetworkType.TEST_NET,
         generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
-      }).createAccountRepository()
-      accountRepository.getAccountsInfo = jest.fn(() => of([]))
+      })
+      repositoryFactory.getNetworkType = jest.fn(() => of(NetworkType.MIJIN_TEST))
 
       // act
       const remoteAccount = await new RemoteAccountService(
         WalletsModel2,
         getTestProfile('profile1'),
-        accountRepository,
+        repositoryFactory.createAccountRepository(),
       ).getAvailableRemoteAccount(new Password('password'))
 
       expect(remoteAccount.publicKey).toBe('BB6FF99C52B3C9D880D5E59C10AD696D90CF84A8E825CCA16F584A8BCE4D17E6')
@@ -42,10 +54,6 @@ describe('services/RemoteAccountService', () => {
 
     test('should return the second public key if the first one is not availalbe', async (done) => {
       // prepare
-      const accountRepository = new RepositoryFactoryHttp('http://localhost:3000', {
-        networkType: NetworkType.TEST_NET,
-        generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
-      }).createAccountRepository()
       const fakeLinkedAccount = new AccountInfo(
         Address.createFromPublicKey(
           'BB6FF99C52B3C9D880D5E59C10AD696D90CF84A8E825CCA16F584A8BCE4D17E6',
@@ -62,13 +70,29 @@ describe('services/RemoteAccountService', () => {
         UInt64.fromUint(0),
       )
 
-      accountRepository.getAccountsInfo = jest.fn(() => of([fakeLinkedAccount]))
+      const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+        createAccountRepository(): AccountRepository {
+          return new (class AccountRepositoryForTest implements AccountRepository {
+            getAccountInfo(address: Address): Observable<AccountInfo> {
+              return of({address: fakeLinkedAccount.address} as AccountInfo)
+            }
+
+            getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
+              return of([fakeLinkedAccount])
+            }
+          })()
+        }
+      })('http://localhost:3000', {
+        networkType: NetworkType.TEST_NET,
+        generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
+      })
+      repositoryFactory.getNetworkType = jest.fn(() => of(NetworkType.MIJIN_TEST))
 
       // act
       const remoteAccount = await new RemoteAccountService(
         WalletsModel2,
         getTestProfile('profile1'),
-        accountRepository,
+        repositoryFactory.createAccountRepository(),
       ).getAvailableRemoteAccount(new Password('password'))
 
       expect(remoteAccount.publicKey).toBe('FA0939C5F11FC89A8EB997329C64AC785CDD23AE9D73C3E060D3B5FF0BABC2A4')
