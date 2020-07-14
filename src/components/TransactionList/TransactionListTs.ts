@@ -29,7 +29,7 @@ import PageTitle from '@/components/PageTitle/PageTitle.vue'
 import TransactionListFilters from '@/components/TransactionList/TransactionListFilters/TransactionListFilters.vue'
 // @ts-ignore
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
-import { TransactionGroup } from '@/store/Transaction'
+import { TransactionGroupState } from '@/store/Transaction'
 
 @Component({
   components: {
@@ -95,7 +95,7 @@ export class TransactionListTs extends Vue {
   /**
    * set the default to select all
    */
-  public displayedTransactionStatus: TransactionGroup
+  public displayedTransactionStatus: TransactionGroupState
   /**
    * The current page number
    * @var {number}
@@ -127,7 +127,7 @@ export class TransactionListTs extends Vue {
   public isAwaitingCosignature: boolean = false
 
   public getEmptyMessage() {
-    return this.displayedTransactionStatus === TransactionGroup.all
+    return this.displayedTransactionStatus === TransactionGroupState.all
       ? 'no_data_transactions'
       : `no_${this.displayedTransactionStatus}_transactions`
   }
@@ -165,11 +165,11 @@ export class TransactionListTs extends Vue {
    * @param {TabName} group
    * @returns {Transaction[]}
    */
-  public getCurrentTabTransactions(group: TransactionGroup): Transaction[] {
-    if (group === TransactionGroup.confirmed) return this.confirmedTransactions
-    if (group === TransactionGroup.unconfirmed) return this.unconfirmedTransactions
-    if (group === TransactionGroup.partial) return this.partialTransactions
-    if (group === TransactionGroup.all) {
+  public getCurrentTabTransactions(group: TransactionGroupState): Transaction[] {
+    if (group === TransactionGroupState.confirmed) return this.confirmedTransactions
+    if (group === TransactionGroupState.unconfirmed) return this.unconfirmedTransactions
+    if (group === TransactionGroupState.partial) return this.partialTransactions
+    if (group === TransactionGroupState.all) {
       return [...this.unconfirmedTransactions, ...this.partialTransactions, ...this.confirmedTransactions]
     }
 
@@ -197,7 +197,7 @@ export class TransactionListTs extends Vue {
    * Refresh transaction list
    * @return {void}
    */
-  /* public async getTransactionListByOption(filter: TransactionGroup) {
+  /* public async getTransactionListByOption(filter: TransactionGroupState) {
     this.selectedOption = filter
   } */
 

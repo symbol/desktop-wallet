@@ -24,6 +24,8 @@ import {
   TransactionType,
   PublicAccount,
   AggregateTransactionCosignature,
+  TransactionGroup,
+  Page,
 } from 'symbol-sdk'
 import { combineLatest, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
@@ -34,7 +36,7 @@ import { AwaitLock } from './AwaitLock'
 
 const Lock = AwaitLock.create()
 
-export enum TransactionGroup {
+export enum TransactionGroupState {
   confirmed = 'confirmed',
   unconfirmed = 'unconfirmed',
   partial = 'partial',
@@ -49,7 +51,7 @@ export enum TransactionGroup {
  * @return {string} One of 'confirmedTransactions', 'unconfirmedTransactions' or
  *   'partialTransactions'
  */
-const transactionGroupToStateVariable = (group: TransactionGroup): string => {
+const transactionGroupToStateVariable = (group: TransactionGroupState): string => {
   return group + 'Transactions'
 }
 
@@ -79,7 +81,7 @@ interface TransactionState {
   confirmedTransactions: Transaction[]
   unconfirmedTransactions: Transaction[]
   partialTransactions: Transaction[]
-  displayedTransactionStatus: TransactionGroup
+  displayedTransactionStatus: TransactionGroupState
 }
 
 const transactionState: TransactionState = {
@@ -88,7 +90,7 @@ const transactionState: TransactionState = {
   confirmedTransactions: [],
   unconfirmedTransactions: [],
   partialTransactions: [],
-  displayedTransactionStatus: TransactionGroup.all,
+  displayedTransactionStatus: TransactionGroupState.all,
 }
 export default {
   namespaced: true,
@@ -117,7 +119,7 @@ export default {
     partialTransactions: (state: TransactionState, partialTransactions: Transaction[] | undefined) => {
       state.partialTransactions = conditionalSort(partialTransactions, transactionComparator)
     },
-    setDisplayedTransactionStatus: (state: TransactionState, displayedTransactionStatus: TransactionGroup) => {
+    setDisplayedTransactionStatus: (state: TransactionState, displayedTransactionStatus: TransactionGroupState) => {
       state.displayedTransactionStatus = displayedTransactionStatus
     },
   },
@@ -141,24 +143,24 @@ export default {
 
     LOAD_TRANSACTIONS(
       { commit, rootGetters },
-      { group }: { group: TransactionGroup } = { group: TransactionGroup.all },
+      { group }: { group: TransactionGroupState } = { group: TransactionGroupState.all },
     ) {
       const currentSignerAddress: Address = rootGetters['account/currentSignerAddress']
       if (!currentSignerAddress) {
         return
       }
       const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory']
-      const accountRepository = repositoryFactory.createAccountRepository()
+      const transactionRepository = repositoryFactory.createTransactionRepository()
       const subscribeTransactions = (
-        group: TransactionGroup,
-        transactionCall: Observable<Transaction[]>,
+        group: TransactionGroupState,
+        transactionCall: Observable<Page<Transaction>>,
       ): Observable<Transaction[]> => {
         const attributeName = transactionGroupToStateVariable(group)
         commit(attributeName, [])
         return transactionCall.pipe(
-          map((transactions) => {
-            commit(attributeName, transactions)
-            return transactions
+          map((transactionsPage) => {
+            commit(attributeName, transactionsPage.data)
+            return transactionsPage.data
           }),
         )
       }
@@ -167,28 +169,28 @@ export default {
       commit('isFetchingTransactions', true)
 
       const queryParams = new QueryParams({ pageSize: 100 })
-      if (group == undefined || group === TransactionGroup.all || group === TransactionGroup.confirmed) {
+      if (group == undefined || group === TransactionGroupState.all || group === TransactionGroupState.confirmed) {
         subscriptions.push(
           subscribeTransactions(
-            TransactionGroup.confirmed,
-            accountRepository.getAccountTransactions(currentSignerAddress, queryParams),
+            TransactionGroupState.confirmed,
+            transactionRepository.search({group: TransactionGroup.Confirmed, address: currentSignerAddress, pageSize: 100}),
           ),
         )
       }
-      if (group == undefined || group === TransactionGroup.all || group === TransactionGroup.unconfirmed) {
+      if (group == undefined || group === TransactionGroupState.all || group === TransactionGroupState.unconfirmed) {
         subscriptions.push(
           subscribeTransactions(
-            TransactionGroup.unconfirmed,
-            accountRepository.getAccountUnconfirmedTransactions(currentSignerAddress, queryParams),
+            TransactionGroupState.unconfirmed,
+            transactionRepository.search({group: TransactionGroup.Unconfirmed, address: currentSignerAddress, pageSize: 100}),
           ),
         )
       }
 
-      if (group == undefined || group === TransactionGroup.all || group === TransactionGroup.partial) {
+      if (group == undefined || group === TransactionGroupState.all || group === TransactionGroupState.partial) {
         subscriptions.push(
           subscribeTransactions(
-            TransactionGroup.partial,
-            accountRepository.getAccountPartialTransactions(currentSignerAddress, queryParams),
+            TransactionGroupState.partial,
+            transactionRepository.search({group: TransactionGroup.Partial, address: currentSignerAddress, pageSize: 100}),
           ),
         )
       }
@@ -203,8 +205,8 @@ export default {
     },
 
     RESET_TRANSACTIONS({ commit }) {
-      Object.keys(TransactionGroup).forEach((group: TransactionGroup) => {
-        if (group !== TransactionGroup.all) {
+      Object.keys(TransactionGroupState).forEach((group: TransactionGroupState) => {
+        if (group !== TransactionGroupState.all) {
           commit(transactionGroupToStateVariable(group), [])
         }
       })
@@ -212,7 +214,7 @@ export default {
 
     ADD_TRANSACTION(
       { commit, getters },
-      { group, transaction }: { group: TransactionGroup; transaction: Transaction },
+      { group, transaction }: { group: TransactionGroupState; transaction: Transaction },
     ) {
       if (!group) {
         throw Error("Missing mandatory field 'group' for action transaction/ADD_TRANSACTION.")
@@ -234,7 +236,7 @@ export default {
 
     REMOVE_TRANSACTION(
       { commit, getters },
-      { group, transactionHash }: { group: TransactionGroup; transactionHash: string },
+      { group, transactionHash }: { group: TransactionGroupState; transactionHash: string },
     ) {
       if (!group) {
         throw Error("Missing mandatory field 'group' for action transaction/REMOVE_TRANSACTION.")
@@ -284,7 +286,7 @@ export default {
       if (!transaction || !transaction.parentHash) {
         throw Error("Missing mandatory field 'parentHash' for action transaction/ADD_COSIGNATURE.")
       }
-      const transactionAttribute = transactionGroupToStateVariable(TransactionGroup.partial)
+      const transactionAttribute = transactionGroupToStateVariable(TransactionGroupState.partial)
       const transactions: AggregateTransaction[] = getters[transactionAttribute] || []
 
       // return if no transactions

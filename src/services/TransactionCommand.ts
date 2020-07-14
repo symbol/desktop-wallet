@@ -51,6 +51,7 @@ export class TransactionCommand {
   constructor(
     public readonly mode: TransactionCommandMode,
     public readonly signer: Signer,
+    public readonly signerPublicKey: string,
     public readonly stageTransactions: Transaction[],
     public readonly networkMosaic: MosaicId,
     public readonly generationHash: string,
@@ -117,7 +118,7 @@ export class TransactionCommand {
     if (this.mode === TransactionCommandMode.SIMPLE) {
       return of(this.stageTransactions.map((t) => this.calculateSuggestedMaxFee(t)))
     } else {
-      const currentSigner = PublicAccount.createFromPublicKey(this.signer.publicKey, this.networkType)
+      const currentSigner = PublicAccount.createFromPublicKey(this.signerPublicKey, this.networkType)
       if (this.mode === TransactionCommandMode.AGGREGATE) {
         const aggregate = this.calculateSuggestedMaxFee(
           AggregateTransaction.createComplete(

@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs'
 // internal dependencies
 import { AddressValidator } from '@/core/validation/validators'
 import { NotificationType } from '@/core/utils/NotificationType'
-import { TransactionGroup } from '@/store/Transaction'
+import { TransactionGroupState } from '@/store/Transaction'
 
 /**
  * This Service is more like a static helper now. All the methods are statics. Rename and move.
@@ -60,7 +60,7 @@ export class RESTService {
       (transaction) => {
         context.dispatch(
           'transaction/ADD_TRANSACTION',
-          { group: TransactionGroup.unconfirmed, transaction },
+          { group: TransactionGroupState.unconfirmed, transaction },
           { root: true },
         )
         context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_UNCONFIRMED_TRANSACTION, { root: true })
@@ -72,7 +72,7 @@ export class RESTService {
       (transactionHash) =>
         context.dispatch(
           'transaction/REMOVE_TRANSACTION',
-          { group: TransactionGroup.unconfirmed, transactionHash },
+          { group: TransactionGroupState.unconfirmed, transactionHash },
           { root: true },
         ),
       (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
@@ -93,7 +93,7 @@ export class RESTService {
       (transaction) => {
         context.dispatch(
           'transaction/ADD_TRANSACTION',
-          { group: TransactionGroup.partial, transaction },
+          { group: TransactionGroupState.partial, transaction },
           { root: true },
         )
         context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_AGGREGATE_BONDED, { root: true })
@@ -105,7 +105,7 @@ export class RESTService {
       (transactionHash) =>
         context.dispatch(
           'transaction/REMOVE_TRANSACTION',
-          { group: TransactionGroup.partial, transactionHash },
+          { group: TransactionGroupState.partial, transactionHash },
           { root: true },
         ),
       (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
@@ -116,7 +116,7 @@ export class RESTService {
       (transaction) => {
         context.dispatch(
           'transaction/ADD_TRANSACTION',
-          { group: TransactionGroup.confirmed, transaction },
+          { group: TransactionGroupState.confirmed, transaction },
           { root: true },
         )
         context.dispatch('transaction/ON_NEW_TRANSACTION', transaction, {

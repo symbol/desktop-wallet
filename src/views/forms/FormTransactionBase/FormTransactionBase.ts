@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { MosaicId, MultisigAccountInfo, NetworkType, PublicAccount, Transaction, TransactionFees } from 'symbol-sdk'
+import { MosaicId, MultisigAccountInfo, NetworkType, PublicAccount, Transaction, TransactionFees, Address } from 'symbol-sdk'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 // internal dependencies
@@ -32,6 +32,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
       defaultFee: 'app/defaultFee',
       currentAccount: 'account/currentAccount',
       selectedSigner: 'account/currentSigner',
+      currentSignerPublicKey: 'account/currentSignerPublicKey',
       currentSignerMultisigInfo: 'account/currentSignerMultisigInfo',
       currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
       isCosignatoryMode: 'account/isCosignatoryMode',
@@ -70,6 +71,11 @@ export class FormTransactionBase extends Vue {
    * Currently active signer
    */
   public selectedSigner: Signer
+
+  /**
+   * Currently active signer's public key
+   */
+  public currentSignerPublicKey: string
 
   /**
    * Current account multisig info
@@ -158,9 +164,9 @@ export class FormTransactionBase extends Vue {
    */
   public beforeDestroy() {
     // reset the selected signer if it is not the current account
-    if (this.selectedSigner.publicKey !== this.currentAccount.publicKey) {
+    if (!this.selectedSigner.address.equals(Address.createFromRawAddress(this.currentAccount.address))) {
       this.$store.dispatch('account/SET_CURRENT_SIGNER', {
-        publicKey: this.currentAccount.publicKey,
+        address: Address.createFromRawAddress(this.currentAccount.address),
       })
     }
   }
@@ -238,9 +244,9 @@ export class FormTransactionBase extends Vue {
    * Hook called when a signer is selected.
    * @param {string} publicKey
    */
-  public async onChangeSigner(publicKey: string) {
+  public async onChangeSigner(address: string) {
     // this.currentSigner = PublicAccount.createFromPublicKey(publicKey, this.networkType)
-    await this.$store.dispatch('account/SET_CURRENT_SIGNER', { publicKey })
+    await this.$store.dispatch('account/SET_CURRENT_SIGNER', { address })
   }
 
   protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
@@ -260,6 +266,7 @@ export class FormTransactionBase extends Vue {
     return new TransactionCommand(
       mode,
       this.selectedSigner,
+      this.currentSignerPublicKey,
       transactions,
       this.networkMosaic,
       this.generationHash,

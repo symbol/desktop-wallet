@@ -25,7 +25,7 @@ import TransactionStatusFilter from '@/components/TransactionList/TransactionLis
 import ButtonRefresh from '@/components/ButtonRefresh/ButtonRefresh.vue'
 import { Signer } from '@/store/Account'
 import { AccountModel } from '@/core/database/entities/AccountModel'
-import { TransactionGroup } from '@/store/Transaction'
+import { TransactionGroupState } from '@/store/Transaction'
 
 @Component({
   components: { TransactionAddressFilter, TransactionStatusFilter, ButtonRefresh },
@@ -59,7 +59,7 @@ export class TransactionListFiltersTs extends Vue {
     }
   }
 
-  protected onStatusSelectorChange(filter: TransactionGroup) {
+  protected onStatusSelectorChange(filter: TransactionGroupState) {
     this.$store.commit('transaction/setDisplayedTransactionStatus', filter)
   }
   public refresh() {

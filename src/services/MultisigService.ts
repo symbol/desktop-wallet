@@ -26,11 +26,11 @@ export class MultisigService {
    * @returns {MultisigAccountInfo[]} multisig info
    */
   public static getMultisigInfoFromMultisigGraphInfo(graphInfo: MultisigAccountGraphInfo): MultisigAccountInfo[] {
-    const { multisigAccounts } = graphInfo
+    const { multisigEntries } = graphInfo
 
-    const multisigsInfo = [...multisigAccounts.keys()]
+    const multisigsInfo = [...multisigEntries.keys()]
       .sort((a, b) => b - a) // Get addresses from top to bottom
-      .map((key) => multisigAccounts.get(key) || [])
+      .map((key) => multisigEntries.get(key) || [])
       .filter((x) => x.length > 0)
 
     return [].concat(...multisigsInfo).map((item) => item) // flatten
@@ -41,12 +41,12 @@ export class MultisigService {
     knownAccounts: AccountModel[],
     currentAccount: AccountModel,
     currentAccountMultisigInfo: MultisigAccountInfo | undefined,
+    multisigAccountsInfo: MultisigAccountInfo[] | undefined,
   ): Signer[] {
     if (!currentAccount) return []
     const self: Signer[] = [
       {
         address: Address.createFromRawAddress(currentAccount.address),
-        publicKey: currentAccount.publicKey,
         label: currentAccount.name,
         multisig: currentAccountMultisigInfo && currentAccountMultisigInfo.isMultisig(),
         requiredCosignatures: (currentAccountMultisigInfo && currentAccountMultisigInfo.minApproval) || 0,
@@ -58,13 +58,14 @@ export class MultisigService {
     }
 
     return self.concat(
-      ...currentAccountMultisigInfo.multisigAccounts.map(({ publicKey, address }) => ({
-        address,
-        publicKey,
-        multisig: true,
-        label: this.getAccountLabel(address, knownAccounts),
-        requiredCosignatures: (currentAccountMultisigInfo && currentAccountMultisigInfo.minApproval) || 0,
-      })),
+      ...currentAccountMultisigInfo.multisigAddresses.map((address) => {
+        return {
+          address,
+          multisig: true,
+          label: this.getAccountLabel(address, knownAccounts),
+          requiredCosignatures: (currentAccountMultisigInfo && currentAccountMultisigInfo.minApproval) || 0,
+        }
+      }),
     )
   }
 
