@@ -38,7 +38,7 @@ export class NetworkCurrenciesModelStorage extends VersionedNetworkBasedObjectSt
             true,
             false,
             false,
-            'XYM'
+            'XYM',
           )
           // reset table for new cache
           return new NetworkCurrenciesModel(xymMosaic96x, xymMosaic96x)

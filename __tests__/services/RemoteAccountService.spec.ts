@@ -13,7 +13,17 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { NetworkType, Password, RepositoryFactoryHttp, Address, AccountInfo, UInt64, AccountType, SupplementalPublicKeys, AccountRepository } from 'symbol-sdk'
+import {
+  NetworkType,
+  Password,
+  RepositoryFactoryHttp,
+  Address,
+  AccountInfo,
+  UInt64,
+  AccountType,
+  SupplementalPublicKeys,
+  AccountRepository,
+} from 'symbol-sdk'
 import { RemoteAccountService } from '@/services/RemoteAccountService'
 import { WalletsModel2 } from '@MOCKS/Accounts'
 import { getTestProfile } from '@MOCKS/profiles'
@@ -27,11 +37,11 @@ describe('services/RemoteAccountService', () => {
         createAccountRepository(): AccountRepository {
           return new (class AccountRepositoryForTest implements AccountRepository {
             getAccountInfo(address: Address): Observable<AccountInfo> {
-              return of({address: Address.createFromRawAddress(WalletsModel2.address)} as AccountInfo)
+              return of({ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo)
             }
 
             getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
-              return of([{address: Address.createFromRawAddress(WalletsModel2.address)} as AccountInfo])
+              return of([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo])
             }
           })()
         }
@@ -74,7 +84,7 @@ describe('services/RemoteAccountService', () => {
         createAccountRepository(): AccountRepository {
           return new (class AccountRepositoryForTest implements AccountRepository {
             getAccountInfo(address: Address): Observable<AccountInfo> {
-              return of({address: fakeLinkedAccount.address} as AccountInfo)
+              return of({ address: fakeLinkedAccount.address } as AccountInfo)
             }
 
             getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {

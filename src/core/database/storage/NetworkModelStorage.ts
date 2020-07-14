@@ -50,8 +50,8 @@ export class NetworkModelStorage extends VersionedNetworkBasedObjectStorage<Netw
               0,
               RoleType.ApiNode,
               '',
-              'api-01-eu-central-1'
-            )
+              'api-01-eu-central-1',
+            ),
           )
 
           return modified

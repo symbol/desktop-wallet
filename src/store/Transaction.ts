@@ -173,7 +173,11 @@ export default {
         subscriptions.push(
           subscribeTransactions(
             TransactionGroupState.confirmed,
-            transactionRepository.search({group: TransactionGroup.Confirmed, address: currentSignerAddress, pageSize: 100}),
+            transactionRepository.search({
+              group: TransactionGroup.Confirmed,
+              address: currentSignerAddress,
+              pageSize: 100,
+            }),
           ),
         )
       }
@@ -181,7 +185,11 @@ export default {
         subscriptions.push(
           subscribeTransactions(
             TransactionGroupState.unconfirmed,
-            transactionRepository.search({group: TransactionGroup.Unconfirmed, address: currentSignerAddress, pageSize: 100}),
+            transactionRepository.search({
+              group: TransactionGroup.Unconfirmed,
+              address: currentSignerAddress,
+              pageSize: 100,
+            }),
           ),
         )
       }
@@ -190,7 +198,11 @@ export default {
         subscriptions.push(
           subscribeTransactions(
             TransactionGroupState.partial,
-            transactionRepository.search({group: TransactionGroup.Partial, address: currentSignerAddress, pageSize: 100}),
+            transactionRepository.search({
+              group: TransactionGroup.Partial,
+              address: currentSignerAddress,
+              pageSize: 100,
+            }),
           ),
         )
       }

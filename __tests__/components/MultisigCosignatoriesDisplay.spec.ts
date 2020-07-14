@@ -77,9 +77,7 @@ describe('MultisigCosignatoriesDisplay', () => {
     const component = wrapper.vm as MultisigCosignatoriesDisplay
 
     expect(component.addModifications).toEqual([{ address: account4.address.pretty() }])
-    expect(component.removeModifications).toEqual([
-      { address: account3.address.pretty() },
-    ])
+    expect(component.removeModifications).toEqual([{ address: account3.address.pretty() }])
     expect(component.cosignatories).toEqual([{ address: account2.address.pretty() }])
 
     wrapper.destroy()

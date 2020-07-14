@@ -111,7 +111,7 @@ export class MosaicService {
     const accountAddresses = accountsInfo.map((a) => a.address)
     const mosaicsFromAccountsObservable = repositoryFactory
       .createMosaicRepository()
-      .search({ownerAddress: accountAddresses[0]})
+      .search({ ownerAddress: accountAddresses[0] })
 
     return combineLatest([resolvedBalancesObservable, mosaicsFromAccountsObservable])
       .pipe(

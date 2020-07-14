@@ -86,8 +86,8 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
     if (!this.multisig) return []
 
     return this.multisig.cosignatoryAddresses
-      .filter(( address ) => !this.cosignatoryModifications[address.plain()])
-      .map(( address ) => ({ address: address.pretty() }))
+      .filter((address) => !this.cosignatoryModifications[address.plain()])
+      .map((address) => ({ address: address.pretty() }))
   }
 
   /**

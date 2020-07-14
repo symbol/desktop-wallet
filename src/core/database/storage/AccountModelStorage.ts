@@ -54,7 +54,7 @@ export class AccountModelStorage extends VersionedObjectStorage<Record<string, A
             modified[name] = {
               ...modified[name],
               // re-generating address from public key (0.9.6.x changes in addresses format)
-              address: Address.createFromPublicKey(modified[name].publicKey, modified[name].networkType).plain()
+              address: Address.createFromPublicKey(modified[name].publicKey, modified[name].networkType).plain(),
             }
           })
 

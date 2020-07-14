@@ -13,7 +13,20 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Address, RepositoryFactoryHttp, MosaicRepository, Page, TransactionSearchCriteria, NamespaceRepository, MosaicInfo, MosaicId, UInt64, NetworkType, MosaicFlags, AccountRepository, AccountInfo } from 'symbol-sdk'
+import {
+  Address,
+  RepositoryFactoryHttp,
+  MosaicRepository,
+  Page,
+  TransactionSearchCriteria,
+  MosaicInfo,
+  MosaicId,
+  UInt64,
+  NetworkType,
+  MosaicFlags,
+  AccountRepository,
+  AccountInfo,
+} from 'symbol-sdk'
 import { MosaicService } from '@/services/MosaicService'
 import networkConfig from '../../config/network.conf.json'
 import { Observable, of } from 'rxjs'
@@ -41,27 +54,33 @@ const fakeMosaicInfo = new MosaicInfo(
   new MosaicFlags(7),
   3,
   UInt64.fromNumericString('1000'),
-);
+)
 const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
   createMosaicRepository(): MosaicRepository {
     return new (class MosaicRepositoryForTest implements MosaicRepository {
-      getMosaic(mosaicId: MosaicId): Observable<MosaicInfo> { return of(fakeMosaicInfo) }
-      getMosaics(mosaicIds: MosaicId[]): Observable<MosaicInfo[]> { return of([fakeMosaicInfo]) }
-      search(criteria: TransactionSearchCriteria): Observable<Page<MosaicInfo>> { return of(new Page([fakeMosaicInfo], 1, 1, 1, 1)) }
+      getMosaic(mosaicId: MosaicId): Observable<MosaicInfo> {
+        return of(fakeMosaicInfo)
+      }
+      getMosaics(mosaicIds: MosaicId[]): Observable<MosaicInfo[]> {
+        return of([fakeMosaicInfo])
+      }
+      search(criteria: TransactionSearchCriteria): Observable<Page<MosaicInfo>> {
+        return of(new Page([fakeMosaicInfo], 1, 1, 1, 1))
+      }
     })()
   }
   createAccountRepository(): AccountRepository {
     return new (class AccountRepositoryForTest implements AccountRepository {
       getAccountInfo(address: Address): Observable<AccountInfo> {
-        return of({address: Address.createFromRawAddress(WalletsModel2.address)} as AccountInfo)
+        return of({ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo)
       }
 
       getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
-        return of([{address: Address.createFromRawAddress(WalletsModel2.address)} as AccountInfo])
+        return of([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo])
       }
     })()
   }
-})('http://localhost:3000', {
+})(realUrl, {
   networkType: NetworkType.TEST_NET,
   generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
 })

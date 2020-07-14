@@ -1,7 +1,9 @@
 <template>
   <div>
     <FormRow
-      v-if="!(multisig && multisig.cosignatoryAddresses.length) && !addModifications.length && !removeModifications.length"
+      v-if="
+        !(multisig && multisig.cosignatoryAddresses.length) && !addModifications.length && !removeModifications.length
+      "
     >
       <template v-slot:inputs>
         <div>
