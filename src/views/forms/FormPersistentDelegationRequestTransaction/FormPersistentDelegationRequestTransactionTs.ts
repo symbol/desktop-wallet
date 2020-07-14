@@ -87,7 +87,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
    */
   protected resetForm() {
     // - set default form values
-    this.formItems.signerAddress = this.signerAddress || (this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address)
+    this.formItems.signerAddress =
+      this.signerAddress || (this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address)
     this.formItems.nodePublicKey = ''
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee

@@ -134,7 +134,9 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     this.formItems.minApprovalDelta = !!this.minApprovalDelta ? this.minApprovalDelta : defaultMinApprovalDelta
     this.formItems.minRemovalDelta = !!this.minRemovalDelta ? this.minRemovalDelta : defaultMinRemovalDelta
     this.formItems.cosignatoryModifications = {}
-    this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address
+    this.formItems.signerAddress = this.selectedSigner
+      ? this.selectedSigner.address.plain()
+      : this.currentAccount.address
 
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee

@@ -21,7 +21,9 @@ export class TransactionAddressFilterTs extends Vue {
   public currentSigner: Signer
 
   public selectedSigner: string =
-    (this.currentSigner && this.currentSigner.address.plain()) || (this.signers.length && this.signers[0].address.plain()) || ''
+    (this.currentSigner && this.currentSigner.address.plain()) ||
+    (this.signers.length && this.signers[0].address.plain()) ||
+    ''
 
   /**
    * onAddressChange

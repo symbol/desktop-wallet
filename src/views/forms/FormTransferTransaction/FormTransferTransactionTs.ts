@@ -146,7 +146,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     this.formItems.attachedMosaics = []
 
     // - set default form values
-    this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address
+    this.formItems.signerAddress = this.selectedSigner
+      ? this.selectedSigner.address.plain()
+      : this.currentAccount.address
     this.formItems.selectedMosaicHex = this.networkMosaic.toHex()
     // default currentAccount Address to recipientRaw
     if (this.$route.path.indexOf('invoice') > -1) {

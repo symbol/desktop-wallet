@@ -98,7 +98,9 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     // }
 
     // - set default form values
-    this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address
+    this.formItems.signerAddress = this.selectedSigner
+      ? this.selectedSigner.address.plain()
+      : this.currentAccount.address
     this.formItems.supplyMutable = false
     this.formItems.restrictable = false
     this.formItems.permanent = false

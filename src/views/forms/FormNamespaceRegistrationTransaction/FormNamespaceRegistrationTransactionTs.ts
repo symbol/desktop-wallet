@@ -127,7 +127,9 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    */
   protected resetForm() {
     // - set default form values
-    this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address
+    this.formItems.signerAddress = this.selectedSigner
+      ? this.selectedSigner.address.plain()
+      : this.currentAccount.address
     this.formItems.registrationType = this.registrationType || NamespaceRegistrationType.RootNamespace
     this.formItems.newNamespaceName = this.namespaceId ? this.namespaceId.fullName : ''
     this.formItems.parentNamespaceName = this.parentNamespaceId ? this.parentNamespaceId.fullName : ''
