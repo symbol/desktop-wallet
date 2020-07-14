@@ -68,7 +68,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
    * @var {Record<string, any>}
    */
   public formItems = {
-    signerPublicKey: '',
+    signerAddress: '',
     supply: 500000000,
     divisibility: 0,
     supplyMutable: true,
@@ -98,7 +98,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     // }
 
     // - set default form values
-    this.formItems.signerPublicKey = this.currentAccount.publicKey
+    this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address
     this.formItems.supplyMutable = false
     this.formItems.restrictable = false
     this.formItems.permanent = false

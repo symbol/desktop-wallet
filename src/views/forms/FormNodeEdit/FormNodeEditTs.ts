@@ -48,6 +48,7 @@ export class FormNodeEditTs extends Vue {
   public validationRules = ValidationRuleset
   public knowNodes: NodeModel[]
   public nodeDelay: number = 0
+
   public onSubmit() {
     this.addPeer()
   }

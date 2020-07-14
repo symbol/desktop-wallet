@@ -6,7 +6,7 @@
           <!-- Transaction signer selector -->
           <SignerSelector
             v-if="!hideSigner"
-            v-model="formItems.signerPublicKey"
+            v-model="formItems.signerAddress"
             :signers="signers"
             @input="onChangeSigner"
           />

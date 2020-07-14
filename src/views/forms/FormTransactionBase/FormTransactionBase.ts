@@ -41,6 +41,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
       currentAccount: 'account/currentAccount',
       selectedSigner: 'account/currentSigner',
       currentSignerPublicKey: 'account/currentSignerPublicKey',
+      currentSignerAddress: 'account/currentSignerAddress',
       currentSignerMultisigInfo: 'account/currentSignerMultisigInfo',
       currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
       isCosignatoryMode: 'account/isCosignatoryMode',
@@ -84,6 +85,11 @@ export class FormTransactionBase extends Vue {
    * Currently active signer's public key
    */
   public currentSignerPublicKey: string
+
+  /**
+   * Currently active signer's address
+   */
+  public currentSignerAddress: Address
 
   /**
    * Current account multisig info
@@ -254,7 +260,7 @@ export class FormTransactionBase extends Vue {
    */
   public async onChangeSigner(address: string) {
     // this.currentSigner = PublicAccount.createFromPublicKey(publicKey, this.networkType)
-    await this.$store.dispatch('account/SET_CURRENT_SIGNER', { address })
+    await this.$store.dispatch('account/SET_CURRENT_SIGNER', { address: Address.createFromRawAddress(address) })
   }
 
   protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {

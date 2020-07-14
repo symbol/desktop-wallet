@@ -31,7 +31,7 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 import FormRow from '@/components/FormRow/FormRow.vue'
 
 const defaultFormItems = {
-  signerPublicKey: '',
+  signerAddress: '',
   linkAction: LinkAction.Link,
   maxFee: 0,
 }
@@ -67,7 +67,7 @@ export class FormAccountKeyLinkTransactionTs extends FormTransactionBase {
   protected resetForm() {
     this.formItems = {
       ...defaultFormItems,
-      signerPublicKey: this.currentAccount.publicKey,
+      signerAddress: this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address,
     }
   }
 

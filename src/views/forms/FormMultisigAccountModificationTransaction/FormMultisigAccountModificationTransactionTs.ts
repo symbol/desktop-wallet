@@ -102,7 +102,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @var {any}
    */
   public formItems = {
-    signerPublicKey: '',
+    signerAddress: '',
     minApprovalDelta: 0,
     minRemovalDelta: 0,
     cosignatoryModifications: {},
@@ -134,7 +134,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     this.formItems.minApprovalDelta = !!this.minApprovalDelta ? this.minApprovalDelta : defaultMinApprovalDelta
     this.formItems.minRemovalDelta = !!this.minRemovalDelta ? this.minRemovalDelta : defaultMinRemovalDelta
     this.formItems.cosignatoryModifications = {}
-    this.formItems.signerPublicKey = this.currentAccount.publicKey
+    this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address
 
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
@@ -235,7 +235,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
 
     await this.$store.dispatch('account/SET_CURRENT_SIGNER', { address: Address.createFromRawAddress(address) })
 
-    this.formItems.signerPublicKey = this.currentSignerPublicKey
+    this.formItems.signerAddress = address
     /// end-region super.onChangeSigner
   }
 
