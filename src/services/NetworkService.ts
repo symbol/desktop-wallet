@@ -109,6 +109,10 @@ export class NetworkService {
               .createNetworkRepository()
               .getTransactionFees()
               .pipe(ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.transactionFees))
+            const rentalFeesObservable = repositoryFactory
+              .createNetworkRepository()
+              .getRentalFees()
+              .pipe(ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.rentalFees))
 
             return combineLatest([
               networkTypeObservable,
@@ -116,8 +120,9 @@ export class NetworkService {
               networkPropertiesObservable,
               nodeInfoObservable,
               transactionFeesObservable,
+              rentalFeesObservable,
             ]).pipe(
-              map(([networkType, generationHash, networkProperties, nodeInfo, transactionFees]) => {
+              map(([networkType, generationHash, networkProperties, nodeInfo, transactionFees, rentalFees]) => {
                 return {
                   fallback: !!candidateUrl && candidateUrl !== url,
                   networkModel: new NetworkModel(
@@ -126,6 +131,7 @@ export class NetworkService {
                     generationHash,
                     networkProperties,
                     transactionFees,
+                    rentalFees,
                     nodeInfo,
                   ),
                   repositoryFactory,

@@ -14,7 +14,7 @@
  *
  */
 import Vue from 'vue'
-import { BlockInfo, IListener, Listener, NetworkType, RepositoryFactory, TransactionFees } from 'symbol-sdk'
+import { BlockInfo, IListener, Listener, NetworkType, RepositoryFactory, TransactionFees, RentalFees } from 'symbol-sdk'
 import { Subscription } from 'rxjs'
 // internal dependencies
 import { $eventBus } from '../events'
@@ -67,6 +67,8 @@ interface NetworkState {
   currentHeight: number
   subscriptions: Subscription[]
   transactionFees: TransactionFees
+  rentalFees: RentalFees
+  currentRentalFee?: number
 }
 
 const defaultPeer = URLHelpers.formatUrl(networkConfig.defaultNodeUrl)
@@ -82,10 +84,12 @@ const networkState: NetworkState = {
   repositoryFactory: NetworkService.createRepositoryFactory(networkConfig.defaultNodeUrl),
   listener: undefined,
   transactionFees: undefined,
+  rentalFees: undefined,
   isConnected: false,
   knowNodes: [],
   currentHeight: 0,
   subscriptions: [],
+  currentRentalFee: 0,
 }
 export default {
   namespaced: true,
@@ -105,6 +109,8 @@ export default {
     knowNodes: (state: NetworkState) => state.knowNodes,
     currentHeight: (state: NetworkState) => state.currentHeight,
     transactionFees: (state: NetworkState) => state.transactionFees,
+    rentalFees: (state: NetworkState) => state.rentalFees,
+    currentRentalFee: (state: NetworkState) => state.currentRentalFee,
   },
   mutations: {
     setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -129,7 +135,12 @@ export default {
     transactionFees: (state: NetworkState, transactionFees: TransactionFees) => {
       state.transactionFees = transactionFees
     },
-
+    rentalFees: (state: NetworkState, rentalFees: RentalFees) => {
+      state.rentalFees = rentalFees
+    },
+    currentRentalFee: (state: NetworkState, amount: number) => {
+      state.currentRentalFee = amount
+    },
     addPeer: (state: NetworkState, peerUrl: string) => {
       const knowNodes: NodeModel[] = state.knowNodes
       const existNode = knowNodes.find((p: NodeModel) => p.url === peerUrl)
@@ -201,6 +212,7 @@ export default {
       commit('networkModel', networkModel)
       commit('networkConfiguration', networkModel.networkConfiguration)
       commit('transactionFees', networkModel.transactionFees)
+      commit('rentalFees', networkModel.rentalFees)
       commit('networkType', networkModel.networkType)
       commit('generationHash', networkModel.generationHash)
       commit('repositoryFactory', repositoryFactory)

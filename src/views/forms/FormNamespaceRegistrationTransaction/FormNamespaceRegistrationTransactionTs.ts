@@ -44,6 +44,10 @@ import DurationInput from '@/components/DurationInput/DurationInput.vue'
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
+//@ts-ignore
+import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
+//@ts-ignore
+import RentalFee from '@/components/RentalFee/RentalFee.vue'
 // configuration
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
 import { NamespaceService } from '@/services/NamespaceService'
@@ -60,7 +64,9 @@ import { FilterHelpers } from '@/core/utils/FilterHelpers'
     NamespaceSelector,
     DurationInput,
     ModalTransactionConfirmation,
+    MosaicAmountDisplay,
     MaxFeeAndSubmit,
+    RentalFee,
   },
   computed: {
     ...mapGetters({

@@ -119,6 +119,14 @@ export abstract class TransactionView<T extends Transaction> {
       },
       this.getFeeDetailItem(),
       {
+        key: 'current_rental_fee',
+        value: {
+          amount: this.$store.getters['network/currentRentalFee'],
+          color: 'red',
+        },
+        isMosaic: true,
+      },
+      {
         key: 'block_height',
         value:
           this.info && this.info.height && this.info.height.compact()
@@ -137,7 +145,12 @@ export abstract class TransactionView<T extends Transaction> {
         key: 'signer_public_key',
         value: (this.transaction.signer && this.transaction.signer.publicKey) || undefined,
       },
-    ].filter((pair) => pair.value)
+    ].filter((pair) => {
+      if (pair.key === 'current_rental_fee') {
+        return pair.value.amount
+      }
+      return pair.value
+    })
   }
 
   protected getFeeDetailItem(): TransactionDetailItem {

@@ -47,6 +47,10 @@ import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirm
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
+//@ts-ignore
+import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
+//@ts-ignore
+import RentalFee from '@/components/RentalFee/RentalFee.vue'
 
 @Component({
   components: {
@@ -60,6 +64,8 @@ import FormRow from '@/components/FormRow/FormRow.vue'
     ModalTransactionConfirmation,
     MaxFeeAndSubmit,
     FormRow,
+    MosaicAmountDisplay,
+    RentalFee,
   },
 })
 export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {

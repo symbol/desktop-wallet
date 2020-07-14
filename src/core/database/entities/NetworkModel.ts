@@ -14,7 +14,7 @@
  *
  */
 
-import { NetworkType, NodeInfo, TransactionFees } from 'symbol-sdk'
+import { NetworkType, NodeInfo, TransactionFees, RentalFees } from 'symbol-sdk'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 
 /**
@@ -32,6 +32,7 @@ export class NetworkModel {
     public readonly generationHash: string,
     public readonly networkConfiguration: NetworkConfigurationModel,
     public readonly transactionFees: TransactionFees,
+    public readonly rentalFees: RentalFees,
     public readonly nodeInfo: NodeInfo,
   ) {}
 }
