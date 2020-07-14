@@ -60,6 +60,10 @@ export class ProfileModelStorage extends VersionedObjectStorage<Record<string, P
           return modified
         },
       },
+      {
+        description: 'Reset profiles for 0.9.6.3 network (non backwards compatible)',
+        migrate: () => undefined,
+      },
     ])
   }
 }

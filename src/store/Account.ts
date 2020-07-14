@@ -226,7 +226,7 @@ export default {
 
       // reset current signer
       dispatch('SET_CURRENT_SIGNER', {
-        address: Address.createFromRawAddress(currentAccount.address),
+        address: currentAccountAddress,
       })
       $eventBus.$emit('onAccountChange', currentAccountAddress.plain())
     },
