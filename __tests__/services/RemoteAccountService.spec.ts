@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { NetworkType, Password, RepositoryFactoryHttp, Address, AccountInfo, UInt64, AccountType } from 'symbol-sdk'
+import { NetworkType, Password, RepositoryFactoryHttp, Address, AccountInfo, UInt64, AccountType, SupplementalPublicKeys } from 'symbol-sdk'
 import { RemoteAccountService } from '@/services/RemoteAccountService'
 import { WalletsModel2 } from '@MOCKS/Accounts'
 import { getTestProfile } from '@MOCKS/profiles'
@@ -55,7 +55,7 @@ describe('services/RemoteAccountService', () => {
         'BB6FF99C52B3C9D880D5E59C10AD696D90CF84A8E825CCA16F584A8BCE4D17E6',
         UInt64.fromUint(0),
         AccountType.Remote,
-        [],
+        new SupplementalPublicKeys(),
         [],
         [],
         UInt64.fromUint(0),

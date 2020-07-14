@@ -17,7 +17,7 @@
       <FormRow v-if="cosignatories && cosignatories.length">
         <template v-slot:inputs>
           <div
-            v-for="({ publicKey, address }, index) in cosignatories"
+            v-for="({ address }, index) in cosignatories"
             :key="index"
             :class="[
               'row-cosignatory-modification-display',
@@ -36,7 +36,7 @@
               type="md-trash"
               size="21"
               class="icon-button"
-              @click="onRemoveCosignatory(publicKey)"
+              @click="onRemoveCosignatory(address)"
             />
             <span v-else>&nbsp;</span>
           </div>
@@ -50,7 +50,7 @@
         </template>
         <template v-slot:inputs>
           <div
-            v-for="({ publicKey, address }, index) in removeModifications"
+            v-for="({ address }, index) in removeModifications"
             :key="index"
             :class="[
               'row-cosignatory-modification-display',
@@ -64,7 +64,7 @@
             <div class="cosignatory-address-container">
               <span class="cosignatory-removed">{{ address }}</span>
             </div>
-            <Icon type="ios-undo" size="21" class="icon-button" @click="onUndoModification(publicKey)" />
+            <Icon type="ios-undo" size="21" class="icon-button" @click="onUndoModification(address)" />
           </div>
         </template>
       </FormRow>
@@ -76,7 +76,7 @@
         </template>
         <template v-slot:inputs>
           <div
-            v-for="({ publicKey, address }, index) in addModifications"
+            v-for="({ address }, index) in addModifications"
             :key="index"
             :class="[
               'row-cosignatory-modification-display',
@@ -90,7 +90,7 @@
             <div class="cosignatory-address-container">
               <span>{{ address }}</span>
             </div>
-            <Icon type="md-trash" size="21" class="icon-button" @click="onUndoModification(publicKey)" />
+            <Icon type="md-trash" size="21" class="icon-button" @click="onUndoModification(address)" />
           </div>
         </template>
       </FormRow>
