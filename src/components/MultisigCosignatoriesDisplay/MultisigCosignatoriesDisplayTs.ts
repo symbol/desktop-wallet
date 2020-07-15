@@ -95,7 +95,7 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
    * @param {PublicAccount} publicAccount
    */
   protected onAddCosignatory(cosigAddress: Address): void {
-    const isCosignatory = this.cosignatories.find(({address}) => cosigAddress.plain() === address.plain())
+    const isCosignatory = this.cosignatories.find(({ address }) => cosigAddress.plain() === address.plain())
 
     if (isCosignatory || this.cosignatoryModifications[cosigAddress.plain()]) {
       this.$store.dispatch('notification/ADD_WARNING', 'warning_already_a_cosignatory')
