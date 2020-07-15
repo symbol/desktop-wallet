@@ -368,15 +368,23 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * @protected
    */
   protected addMosaicAttachmentInput(): void {
-    if (!this.mosaicInputsManager.hasFreeSlots()) return
+    if (!this.mosaicInputsManager.hasFreeSlots()) {
+      return
+    }
+
+    // generate id and prepare mosaic for slot
     const uid = Math.floor(Math.random() * 10e6)
     const [mosaicToAffectToNewInput] = this.mosaicInputsManager.getMosaicsBySlot(uid)
+
+    // update inputs manager and form items
     this.mosaicInputsManager.setSlot(mosaicToAffectToNewInput, uid)
     this.formItems.attachedMosaics.push({
       mosaicHex: mosaicToAffectToNewInput,
       amount: 0,
       uid,
     })
+
+    this.triggerChange()
   }
 
   /**
