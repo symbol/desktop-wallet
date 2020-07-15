@@ -7,7 +7,7 @@
           <p>{{ $t('harvesting_delegation_description_1') }} {{ $t('harvesting_delegation_description_2') }}</p>
 
           <!-- Transaction signer selector -->
-          <SignerSelector v-model="formItems.signerPublicKey" :signers="signers" @input="onChangeSigner" />
+          <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
           <!-- Node URL Selector -->
           <NetworkNodeSelector v-model="formItems.nodePublicKey" @change="(v) => $emit('setNodePublicKey', v)" />

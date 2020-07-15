@@ -48,7 +48,7 @@ export class MosaicModel {
     this.supplyMutable = mosaicInfo.isSupplyMutable()
     this.restrictable = mosaicInfo.isRestrictable()
     this.duration = mosaicInfo.duration.compact()
-    this.height = mosaicInfo.height.compact()
+    this.height = mosaicInfo.startHeight.compact()
     this.supply = mosaicInfo.supply.compact()
   }
 }

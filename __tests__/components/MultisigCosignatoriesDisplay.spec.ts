@@ -36,7 +36,7 @@ const account4 = PublicAccount.createFromPublicKey(
   '1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B',
   networkType,
 )
-const multisigInfo = new MultisigAccountInfo(account1, 1, 1, [account2, account3], [])
+const multisigInfo = new MultisigAccountInfo(account1.address, 1, 1, [account2.address, account3.address], [])
 
 describe('MultisigCosignatoriesDisplay', () => {
   test('Getters should return correct values when no modifications', () => {
@@ -54,8 +54,8 @@ describe('MultisigCosignatoriesDisplay', () => {
     expect(component.addModifications).toEqual([])
     expect(component.removeModifications).toEqual([])
     expect(component.cosignatories).toEqual([
-      { publicKey: account2.publicKey, address: account2.address.pretty() },
-      { publicKey: account3.publicKey, address: account3.address.pretty() },
+      { address: account2.address.pretty() },
+      { address: account3.address.pretty() },
     ])
 
     wrapper.destroy()
@@ -68,19 +68,17 @@ describe('MultisigCosignatoriesDisplay', () => {
         multisig: multisigInfo,
         modifiable: true,
         cosignatoryModifications: {
-          [account4.publicKey]: { cosignatory: account4, addOrRemove: 'add' },
-          [account3.publicKey]: { cosignatory: account3, addOrRemove: 'remove' },
+          [account4.address.plain()]: { cosignatory: account4.address, addOrRemove: 'add' },
+          [account3.address.plain()]: { cosignatory: account3.address, addOrRemove: 'remove' },
         },
       },
     })
 
     const component = wrapper.vm as MultisigCosignatoriesDisplay
 
-    expect(component.addModifications).toEqual([{ publicKey: account4.publicKey, address: account4.address.pretty() }])
-    expect(component.removeModifications).toEqual([
-      { publicKey: account3.publicKey, address: account3.address.pretty() },
-    ])
-    expect(component.cosignatories).toEqual([{ publicKey: account2.publicKey, address: account2.address.pretty() }])
+    expect(component.addModifications).toEqual([{ address: account4.address.pretty() }])
+    expect(component.removeModifications).toEqual([{ address: account3.address.pretty() }])
+    expect(component.cosignatories).toEqual([{ address: account2.address.pretty() }])
 
     wrapper.destroy()
   })
@@ -104,7 +102,7 @@ describe('MultisigCosignatoriesDisplay', () => {
 
     const component = wrapper.vm as MultisigCosignatoriesDisplay
 
-    component.onAddCosignatory(account2)
+    component.onAddCosignatory(account2.address)
 
     expect(mockStoreDispatch).toHaveBeenCalledWith('notification/ADD_WARNING', 'warning_already_a_cosignatory')
     wrapper.destroy()
@@ -119,7 +117,7 @@ describe('MultisigCosignatoriesDisplay', () => {
         multisig: multisigInfo,
         modifiable: true,
         cosignatoryModifications: {
-          [account4.publicKey]: { cosignatory: account4, addOrRemove: 'add' },
+          [account4.address.plain()]: { cosignatory: account4.address, addOrRemove: 'add' },
         },
       },
       mocks: {
@@ -131,7 +129,7 @@ describe('MultisigCosignatoriesDisplay', () => {
 
     const component = wrapper.vm as MultisigCosignatoriesDisplay
 
-    component.onAddCosignatory(account4)
+    component.onAddCosignatory(account4.address)
 
     expect(mockStoreDispatch).toHaveBeenCalledWith('notification/ADD_WARNING', 'warning_already_a_cosignatory')
     wrapper.destroy()
@@ -149,9 +147,9 @@ describe('MultisigCosignatoriesDisplay', () => {
 
     const component = wrapper.vm as MultisigCosignatoriesDisplay
 
-    component.onAddCosignatory(account4)
+    component.onAddCosignatory(account4.address)
     expect(wrapper.emitted('add')).toBeTruthy()
-    expect(wrapper.emitted().add[0]).toEqual([account4])
+    expect(wrapper.emitted().add[0]).toEqual([account4.address])
     wrapper.destroy()
   })
 
@@ -167,9 +165,9 @@ describe('MultisigCosignatoriesDisplay', () => {
 
     const component = wrapper.vm as MultisigCosignatoriesDisplay
 
-    component.onRemoveCosignatory(account2)
+    component.onRemoveCosignatory(account2.address)
     expect(wrapper.emitted('remove')).toBeTruthy()
-    expect(wrapper.emitted().remove[0]).toEqual([account2])
+    expect(wrapper.emitted().remove[0]).toEqual([account2.address])
     wrapper.destroy()
   })
 })

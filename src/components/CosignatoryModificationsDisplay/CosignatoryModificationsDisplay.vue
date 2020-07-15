@@ -3,8 +3,8 @@
     <FormRow>
       <template v-slot:inputs>
         <div
-          v-for="{ publicKey, address, addOrRemove } in modifications"
-          :key="publicKey"
+          v-for="{ address, addOrRemove } in modifications"
+          :key="address"
           class="row-cosignatory-modification-display inputs-container gray-background mx-1"
         >
           <Icon v-if="addOrRemove === 'add'" class="modification-type-icon" type="md-person-add" />
@@ -12,7 +12,7 @@
           <div class="cosignatory-address-container">
             <span>{{ address }}</span>
           </div>
-          <span class="delete-icon" @click="$emit('on-remove-cosignatory-modification', publicKey)" />
+          <span class="delete-icon" @click="$emit('on-remove-cosignatory-modification', address)" />
         </div>
       </template>
     </FormRow>

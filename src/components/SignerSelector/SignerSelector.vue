@@ -5,8 +5,8 @@
     </template>
     <template v-slot:inputs>
       <div v-if="signers.length > 1" class="inputs-container select-container">
-        <Select v-model="chosenSigner" :placeholder="$t('public_key')" class="select-size select-style">
-          <Option v-for="item in signers" :key="item.publicKey" :value="item.publicKey">
+        <Select v-model="chosenSigner" :placeholder="$t('address')" class="select-size select-style">
+          <Option v-for="item in signers" :key="item.address.plain()" :value="item.address.plain()">
             {{ item.label }}
             {{ item.multisig ? $t('label_postfix_multisig') : '' }}
           </Option>

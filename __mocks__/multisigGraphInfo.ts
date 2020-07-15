@@ -50,15 +50,15 @@ const multisigAccountGraphInfoDTO = {
   multisigEntries: [
     {
       multisig: {
-        account: multisigGraphInfoPublicAccount1,
-        cosignatories: [
-          multisigGraphInfoPublicAccount2,
-          multisigGraphInfoPublicAccount3,
-          multisigGraphInfoPublicAccount4,
+        accountAddress: multisigGraphInfoPublicAccount1.address,
+        cosignatoryAddresses: [
+          multisigGraphInfoPublicAccount2.address,
+          multisigGraphInfoPublicAccount3.address,
+          multisigGraphInfoPublicAccount4.address,
         ],
         minApproval: 3,
         minRemoval: 3,
-        multisigAccounts: [multisigGraphInfoPublicAccount5],
+        multisigAddresses: [multisigGraphInfoPublicAccount5.address],
       },
     },
   ],
@@ -67,11 +67,11 @@ const multisigAccountGraphInfoDTO = {
 export const multisigEntries1 = multisigAccountGraphInfoDTO.multisigEntries.map(
   (multisigAccountInfoDTO) =>
     new MultisigAccountInfo(
-      multisigAccountInfoDTO.multisig.account,
+      multisigAccountInfoDTO.multisig.accountAddress,
       multisigAccountInfoDTO.multisig.minApproval,
       multisigAccountInfoDTO.multisig.minRemoval,
-      multisigAccountInfoDTO.multisig.cosignatories,
-      multisigAccountInfoDTO.multisig.multisigAccounts,
+      multisigAccountInfoDTO.multisig.cosignatoryAddresses,
+      multisigAccountInfoDTO.multisig.multisigAddresses,
     ),
 )
 
@@ -80,11 +80,11 @@ const multisigAccountGraphInfoDTO2 = {
   multisigEntries: [
     {
       multisig: {
-        account: multisigGraphInfoPublicAccount5,
-        cosignatories: [multisigGraphInfoPublicAccount1],
+        accountAddress: multisigGraphInfoPublicAccount5.address,
+        cosignatoryAddresses: [multisigGraphInfoPublicAccount1.address],
         minApproval: 1,
         minRemoval: 1,
-        multisigAccounts: [],
+        multisigAddresses: [],
       },
     },
   ],
@@ -93,11 +93,11 @@ const multisigAccountGraphInfoDTO2 = {
 export const multisigEntries2 = multisigAccountGraphInfoDTO2.multisigEntries.map(
   (multisigAccountInfoDTO) =>
     new MultisigAccountInfo(
-      multisigAccountInfoDTO.multisig.account,
+      multisigAccountInfoDTO.multisig.accountAddress,
       multisigAccountInfoDTO.multisig.minApproval,
       multisigAccountInfoDTO.multisig.minRemoval,
-      multisigAccountInfoDTO.multisig.cosignatories,
-      multisigAccountInfoDTO.multisig.multisigAccounts,
+      multisigAccountInfoDTO.multisig.cosignatoryAddresses,
+      multisigAccountInfoDTO.multisig.multisigAddresses,
     ),
 )
 

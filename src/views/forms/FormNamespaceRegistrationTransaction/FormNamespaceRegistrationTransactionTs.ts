@@ -103,7 +103,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    * @var {Record<string, any>}
    */
   public formItems = {
-    signerPublicKey: '',
+    signerAddress: '',
     registrationType: NamespaceRegistrationType.RootNamespace,
     newNamespaceName: '',
     parentNamespaceName: '',
@@ -127,7 +127,9 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    */
   protected resetForm() {
     // - set default form values
-    this.formItems.signerPublicKey = this.currentAccount.publicKey
+    this.formItems.signerAddress = this.selectedSigner
+      ? this.selectedSigner.address.plain()
+      : this.currentAccount.address
     this.formItems.registrationType = this.registrationType || NamespaceRegistrationType.RootNamespace
     this.formItems.newNamespaceName = this.namespaceId ? this.namespaceId.fullName : ''
     this.formItems.parentNamespaceName = this.parentNamespaceId ? this.parentNamespaceId.fullName : ''
@@ -193,11 +195,13 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   public getTimeByparentNamespaceName() {
     const selectedNamespace = this.ownedNamespaces.find((item) => item.name === this.formItems.parentNamespaceName)
 
-    this.relativeTimetoParent = NamespaceService.getExpiration(
-      this.networkConfiguration,
-      this.currentHeight,
-      selectedNamespace.endHeight,
-    ).expiration
+    if (selectedNamespace) {
+      this.relativeTimetoParent = NamespaceService.getExpiration(
+        this.networkConfiguration,
+        this.currentHeight,
+        selectedNamespace.endHeight,
+      ).expiration
+    }
   }
 
   setParentNamespaceName(val) {

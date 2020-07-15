@@ -1,7 +1,9 @@
 <template>
   <div>
     <FormRow
-      v-if="!(multisig && multisig.cosignatories.length) && !addModifications.length && !removeModifications.length"
+      v-if="
+        !(multisig && multisig.cosignatoryAddresses.length) && !addModifications.length && !removeModifications.length
+      "
     >
       <template v-slot:inputs>
         <div>
@@ -17,7 +19,7 @@
       <FormRow v-if="cosignatories && cosignatories.length">
         <template v-slot:inputs>
           <div
-            v-for="({ publicKey, address }, index) in cosignatories"
+            v-for="({ cosignatory }, index) in cosignatories"
             :key="index"
             :class="[
               'row-cosignatory-modification-display',
@@ -29,14 +31,14 @@
             ]"
           >
             <div class="cosignatory-address-container">
-              <span>{{ address }}</span>
+              <span>{{ cosignatory.address.pretty() }}</span>
             </div>
             <Icon
               v-if="modifiable"
               type="md-trash"
               size="21"
               class="icon-button"
-              @click="onRemoveCosignatory(publicKey)"
+              @click="onRemoveCosignatory(cosignatory.address)"
             />
             <span v-else>&nbsp;</span>
           </div>
@@ -50,7 +52,7 @@
         </template>
         <template v-slot:inputs>
           <div
-            v-for="({ publicKey, address }, index) in removeModifications"
+            v-for="({ cosignatory }, index) in removeModifications"
             :key="index"
             :class="[
               'row-cosignatory-modification-display',
@@ -62,9 +64,9 @@
             ]"
           >
             <div class="cosignatory-address-container">
-              <span class="cosignatory-removed">{{ address }}</span>
+              <span class="cosignatory-removed">{{ cosignatory.address.pretty() }}</span>
             </div>
-            <Icon type="ios-undo" size="21" class="icon-button" @click="onUndoModification(publicKey)" />
+            <Icon type="ios-undo" size="21" class="icon-button" @click="onUndoModification(cosignatory.address)" />
           </div>
         </template>
       </FormRow>
@@ -76,7 +78,7 @@
         </template>
         <template v-slot:inputs>
           <div
-            v-for="({ publicKey, address }, index) in addModifications"
+            v-for="({ cosignatory }, index) in addModifications"
             :key="index"
             :class="[
               'row-cosignatory-modification-display',
@@ -88,9 +90,9 @@
             ]"
           >
             <div class="cosignatory-address-container">
-              <span>{{ address }}</span>
+              <span>{{ cosignatory.address }}</span>
             </div>
-            <Icon type="md-trash" size="21" class="icon-button" @click="onUndoModification(publicKey)" />
+            <Icon type="md-trash" size="21" class="icon-button" @click="onUndoModification(cosignatory.address)" />
           </div>
         </template>
       </FormRow>

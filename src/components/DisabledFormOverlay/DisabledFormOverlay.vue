@@ -54,7 +54,7 @@ export default class DisabledFormOverlay extends Vue {
     }
 
     // Disable the forms to accounts with cosignatories
-    return this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.cosignatories.length > 0
+    return this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.cosignatoryAddresses.length > 0
   }
 
   /**

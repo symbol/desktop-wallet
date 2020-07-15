@@ -159,6 +159,8 @@ export default class AboutPage extends Vue {
     display: grid;
     grid-template-columns: 20% 80%;
     font-size: @smallFont;
+
+    min-height: unset;
   }
 
   .subtitle {

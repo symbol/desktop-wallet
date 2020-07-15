@@ -20,6 +20,7 @@ import {
   MultisigAccountModificationTransaction,
   PublicAccount,
   UInt64,
+  Address,
 } from 'symbol-sdk'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 // internal dependencies
@@ -50,11 +51,11 @@ import MultisigCosignatoriesDisplay from '@/components/MultisigCosignatoriesDisp
 /// region custom types
 export interface CosignatoryModification {
   addOrRemove: 'add' | 'remove'
-  cosignatory: PublicAccount
+  cosignatory: Address
 }
 
 export type CosignatoryModifications = {
-  [publicKey: string]: CosignatoryModification
+  [address: string]: CosignatoryModification
 }
 
 @Component({
@@ -101,7 +102,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @var {any}
    */
   public formItems = {
-    signerPublicKey: '',
+    signerAddress: '',
     minApprovalDelta: 0,
     minRemovalDelta: 0,
     cosignatoryModifications: {},
@@ -133,7 +134,9 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     this.formItems.minApprovalDelta = !!this.minApprovalDelta ? this.minApprovalDelta : defaultMinApprovalDelta
     this.formItems.minRemovalDelta = !!this.minRemovalDelta ? this.minRemovalDelta : defaultMinRemovalDelta
     this.formItems.cosignatoryModifications = {}
-    this.formItems.signerPublicKey = this.currentAccount.publicKey
+    this.formItems.signerAddress = this.selectedSigner
+      ? this.selectedSigner.address.plain()
+      : this.currentAccount.address
 
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
@@ -154,11 +157,11 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @return {MultisigAccountModificationTransaction[]}
    */
   protected getTransactions(): MultisigAccountModificationTransaction[] {
-    const publicKeyAdditions = Object.values(this.formItems.cosignatoryModifications)
+    const addressAdditions = Object.values(this.formItems.cosignatoryModifications)
       .filter(({ addOrRemove }) => addOrRemove === 'add')
       .map(({ cosignatory }) => cosignatory)
 
-    const publicKeyDeletions = Object.values(this.formItems.cosignatoryModifications)
+    const addressDeletions = Object.values(this.formItems.cosignatoryModifications)
       .filter(({ addOrRemove }) => addOrRemove === 'remove')
       .map(({ cosignatory }) => cosignatory)
 
@@ -167,8 +170,8 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
         Deadline.create(),
         this.formItems.minApprovalDelta,
         this.formItems.minRemovalDelta,
-        publicKeyAdditions,
-        publicKeyDeletions,
+        addressAdditions,
+        addressDeletions,
         this.networkType,
         UInt64.fromUint(this.formItems.maxFee),
       ),
@@ -193,20 +196,20 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
   private getCosignatoryModificationsFromTransaction(
     transaction: MultisigAccountModificationTransaction,
   ): CosignatoryModifications {
-    const additions: CosignatoryModification[] = transaction.publicKeyAdditions.map((publicAccount) => ({
+    const additions: CosignatoryModification[] = transaction.addressAdditions.map((address: Address) => ({
       addOrRemove: 'add',
-      cosignatory: publicAccount,
+      cosignatory: address,
     }))
 
-    const deletions: CosignatoryModification[] = transaction.publicKeyDeletions.map((publicAccount) => ({
+    const deletions: CosignatoryModification[] = transaction.addressDeletions.map((address: Address) => ({
       addOrRemove: 'remove',
-      cosignatory: publicAccount,
+      cosignatory: address,
     }))
 
     return [...additions, ...deletions].reduce(
       (acc, modification) => ({
         ...acc,
-        [modification.cosignatory.publicKey]: modification,
+        [modification.cosignatory.plain()]: modification,
       }),
       {},
     )
@@ -221,19 +224,20 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * of long-loading (e.g. fetch of multisig data).
    *
    * @override
-   * @param {string} publicKey
+   * @param {string} address
    */
-  public async onChangeSigner(publicKey: string) {
+  public async onChangeSigner(address: string) {
     // whether the new signer is a multisig account
-    const signerIsMultisigAccount = this.currentAccount.publicKey !== publicKey
+    const signerIsMultisigAccount = this.currentAccount.address !== address
 
     // force update form fields
     this.formItems.minApprovalDelta = signerIsMultisigAccount ? 0 : 1
     this.formItems.minRemovalDelta = signerIsMultisigAccount ? 0 : 1
-    this.formItems.signerPublicKey = publicKey
     this.formItems.cosignatoryModifications = {}
 
-    await this.$store.dispatch('account/SET_CURRENT_SIGNER', { publicKey })
+    await this.$store.dispatch('account/SET_CURRENT_SIGNER', { address: Address.createFromRawAddress(address) })
+
+    this.formItems.signerAddress = address
     /// end-region super.onChangeSigner
   }
 
@@ -313,7 +317,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     const numberOfAddedCosigners = modificationNumber - removalsNumber
 
     const newCosignatoryNumber = this.currentMultisigInfo
-      ? this.currentMultisigInfo.cosignatories.length + numberOfAddedCosigners
+      ? this.currentMultisigInfo.cosignatoryAddresses.length + numberOfAddedCosigners
       : numberOfAddedCosigners
 
     return {

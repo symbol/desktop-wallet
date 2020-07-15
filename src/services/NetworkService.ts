@@ -188,7 +188,7 @@ export class NetworkService {
         storedNetworkModel && storedNetworkModel.url,
         networkConfig.defaultNodeUrl,
         ...networkConfig.nodes.map((n) => n.url),
-      ].filter((p) => p),
+      ].filter((p) => p !== undefined && p.length),
     )
   }
 

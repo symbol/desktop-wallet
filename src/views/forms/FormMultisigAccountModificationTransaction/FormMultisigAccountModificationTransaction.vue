@@ -25,7 +25,7 @@
           </template>
           <template v-slot:inputs>
             <SignerSelector
-              v-model="formItems.signerPublicKey"
+              v-model="formItems.signerAddress"
               :signers="signers"
               :no-label="true"
               @input="onChangeSigner"

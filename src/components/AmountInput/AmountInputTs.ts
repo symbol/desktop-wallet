@@ -40,17 +40,28 @@ import NetworkConfig from '../../../config/network.conf.json'
 export class AmountInputTs extends Vue {
   @Prop({ default: '' }) value: string
   @Prop({ default: '' }) mosaicHex: string
+
+  /**
+   * Available mosaics models
+   */
+  public mosaics: MosaicModel[]
+
   /**
    * Validation rules
    * @var {ValidationRuleset}
    */
-  public mosaics: MosaicModel[]
-  public get validationRules() {
-    const chosenMosaic = this.mosaics.find((mosaic) => this.mosaicHex == mosaic.mosaicIdHex)
+  public validationRules
+
+  created() {
+    // update validation rule to reflect correct mosaic divisibility
+    const chosenMosaic = this.mosaics.find((mosaic) => this.mosaicHex === mosaic.mosaicIdHex)
     const networkConfigurationDefaults = NetworkConfig.networkConfigurationDefaults
-    networkConfigurationDefaults.maxMosaicDivisibility = chosenMosaic.divisibility
-    return createValidationRuleSet(networkConfigurationDefaults)
+    networkConfigurationDefaults.maxMosaicDivisibility = chosenMosaic ? chosenMosaic.divisibility : 6
+
+    // set validation rules for this field
+    this.validationRules = createValidationRuleSet(networkConfigurationDefaults)
   }
+
   /// region computed properties getter/setter
   public get relativeValue(): string {
     return this.value

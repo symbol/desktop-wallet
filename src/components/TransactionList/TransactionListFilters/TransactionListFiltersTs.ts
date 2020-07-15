@@ -25,7 +25,8 @@ import TransactionStatusFilter from '@/components/TransactionList/TransactionLis
 import ButtonRefresh from '@/components/ButtonRefresh/ButtonRefresh.vue'
 import { Signer } from '@/store/Account'
 import { AccountModel } from '@/core/database/entities/AccountModel'
-import { TransactionGroup } from '@/store/Transaction'
+import { TransactionGroupState } from '@/store/Transaction'
+import { Address } from 'symbol-sdk'
 
 @Component({
   components: { TransactionAddressFilter, TransactionStatusFilter, ButtonRefresh },
@@ -52,14 +53,14 @@ export class TransactionListFiltersTs extends Vue {
    * Hook called when the signer selector has changed
    * @protected
    */
-  protected onSignerSelectorChange(publicKey: string): void {
+  protected onSignerSelectorChange(address: string): void {
     // clear previous account transactions
-    if (publicKey) {
-      this.$store.dispatch('account/SET_CURRENT_SIGNER', { publicKey })
+    if (address) {
+      this.$store.dispatch('account/SET_CURRENT_SIGNER', { address: Address.createFromRawAddress(address) })
     }
   }
 
-  protected onStatusSelectorChange(filter: TransactionGroup) {
+  protected onStatusSelectorChange(filter: TransactionGroupState) {
     this.$store.commit('transaction/setDisplayedTransactionStatus', filter)
   }
   public refresh() {
@@ -72,7 +73,7 @@ export class TransactionListFiltersTs extends Vue {
   beforeDestroy(): void {
     // reset the selected signer if it is not the current account
     if (this.currentAccount) {
-      this.onSignerSelectorChange(this.currentAccount.publicKey)
+      this.onSignerSelectorChange(this.currentAccount.address)
     }
   }
 }

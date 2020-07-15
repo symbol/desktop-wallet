@@ -43,7 +43,7 @@ export class NamespaceModel {
     this.name = name
     this.isRoot = namespaceInfo.isRoot()
     this.aliasType = namespaceInfo.alias.type
-    this.ownerAddressRawPlain = namespaceInfo.owner.address.plain()
+    this.ownerAddressRawPlain = namespaceInfo.ownerAddress.plain()
     this.aliasTargetAddressRawPlain =
       (namespaceInfo.alias && namespaceInfo.alias.address && namespaceInfo.alias.address.plain()) || undefined
     this.aliasTargetMosaicIdHex =

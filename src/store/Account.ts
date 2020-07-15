@@ -42,7 +42,6 @@ type SubscriptionType = {
 
 export type Signer = {
   label: string
-  publicKey: string
   address: Address
   multisig: boolean
   requiredCosignatures: number
@@ -58,6 +57,7 @@ interface AccountState {
   signers: Signer[]
   currentSigner: Signer
   currentSignerAddress: Address
+  currentSignerPublicKey: string
   currentSignerMultisigInfo: MultisigAccountInfo
   // Known accounts database identifiers
   knownAccounts: AccountModel[]
@@ -77,6 +77,7 @@ const accountState: AccountState = {
   signers: [],
   currentSigner: null,
   currentSignerAddress: null,
+  currentSignerPublicKey: null,
   currentSignerMultisigInfo: null,
   knownAccounts: [],
   knownAddresses: [],
@@ -104,6 +105,7 @@ export default {
     currentSignerMultisigInfo: (state: AccountState) => state.currentSignerMultisigInfo,
     isCosignatoryMode: (state: AccountState) => state.isCosignatoryMode,
     currentSignerAddress: (state: AccountState) => state.currentSignerAddress,
+    currentSignerPublicKey: (state: AccountState) => state.currentSignerPublicKey,
     knownAccounts: (state: AccountState) => state.knownAccounts,
     accountsInfo: (state: AccountState) => state.accountsInfo,
     currentAccountAccountInfo: (state: AccountState): AccountInfo => {
@@ -130,6 +132,9 @@ export default {
     },
     currentSignerAddress: (state: AccountState, signerAddress) => {
       state.currentSignerAddress = signerAddress
+    },
+    currentSignerPublicKey: (state: AccountState, signerPubKey) => {
+      state.currentSignerPublicKey = signerPubKey
     },
     knownAccounts: (state: AccountState, knownAccounts: AccountModel[]) => {
       state.knownAccounts = knownAccounts
@@ -221,7 +226,7 @@ export default {
 
       // reset current signer
       dispatch('SET_CURRENT_SIGNER', {
-        publicKey: currentAccount.publicKey,
+        address: currentAccountAddress,
       })
       $eventBus.$emit('onAccountChange', currentAccountAddress.plain())
     },
@@ -231,18 +236,19 @@ export default {
       commit('currentAccount', null)
       commit('currentAccountAddress', null)
       commit('currentSignerAddress', null)
+      commit('currentSignerPublicKey', null)
     },
 
-    async SET_CURRENT_SIGNER({ commit, dispatch, getters, rootGetters }, { publicKey }: { publicKey: string }) {
-      if (!publicKey) {
-        throw new Error('Public Key must be provided when calling account/SET_CURRENT_SIGNER!')
+    async SET_CURRENT_SIGNER({ commit, dispatch, getters, rootGetters }, { address }: { address: Address }) {
+      if (!address) {
+        throw new Error('Address must be provided when calling account/SET_CURRENT_SIGNER!')
       }
       const networkType: NetworkType = rootGetters['network/networkType']
       const currentProfile: ProfileModel = rootGetters['profile/currentProfile']
       const currentAccount: AccountModel = getters.currentAccount
       const previousSignerAddress: Address = getters.currentSignerAddress
 
-      const currentSignerAddress: Address = Address.createFromPublicKey(publicKey, networkType)
+      const currentSignerAddress: Address = address
 
       if (previousSignerAddress && previousSignerAddress.equals(currentSignerAddress)) return
 
@@ -319,15 +325,16 @@ export default {
       const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise
 
       const currentAccountMultisigInfo = multisigAccountsInfo.find((m) =>
-        m.account.address.equals(currentAccountAddress),
+        m.accountAddress.equals(currentAccountAddress),
       )
-      const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.account.address.equals(currentSignerAddress))
+      const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress))
 
       const signers = new MultisigService().getSigners(
         networkType,
         knownAccounts,
         currentAccount,
         currentAccountMultisigInfo,
+        multisigAccountsInfo,
       )
 
       const knownAddresses = _.uniqBy(
@@ -355,6 +362,12 @@ export default {
       const accountsInfo = await getAccountsInfoPromise
 
       commit('accountsInfo', accountsInfo)
+
+      // read signer info to get public key
+      const signerModel = knownAccounts.find((w) => w.address === currentSignerAddress.plain())
+      if (signerModel !== undefined) {
+        commit('currentSignerPublicKey', signerModel.publicKey)
+      }
     },
 
     UPDATE_CURRENT_ACCOUNT_NAME({ commit, getters, rootGetters }, name: string) {

@@ -1,3 +1,4 @@
+import { Address } from 'symbol-sdk'
 //@ts-ignore
 import TransactionListFilters from '@/components/TransactionList/TransactionListFilters/TransactionListFilters.vue'
 import { getComponent } from '@MOCKS/Components'
@@ -18,12 +19,13 @@ beforeEach(() => {
 afterEach(() => {
   wrapper.destroy()
 })
+const addr = Address.createFromRawAddress('TAD5BAHLOIXCRRB6GU2H72HPXMBBVAEUQRYPHBY')
 describe('TransactionListFilters', () => {
-  test("should call the 'account/SET_CURRENT_SIGNER' with publicKey", () => {
-    vm.onSignerSelectorChange('123')
-    expect(vm.$store.dispatch).toBeCalledWith('account/SET_CURRENT_SIGNER', { publicKey: '123' })
+  test("should call the 'account/SET_CURRENT_SIGNER' with address", () => {
+    vm.onSignerSelectorChange('TAD5BAHLOIXCRRB6GU2H72HPXMBBVAEUQRYPHBY')
+    expect(vm.$store.dispatch).toBeCalledWith('account/SET_CURRENT_SIGNER', { address: addr })
   })
-  test("should not call the 'account/SET_CURRENT_SIGNER' without publicKey", () => {
+  test("should not call the 'account/SET_CURRENT_SIGNER' without address", () => {
     vm.onSignerSelectorChange()
     expect(vm.$store.dispatch).not.toBeCalled()
   })

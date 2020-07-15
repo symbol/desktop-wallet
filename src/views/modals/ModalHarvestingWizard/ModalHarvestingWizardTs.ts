@@ -1,5 +1,5 @@
 // external dependencies
-import { Account, AccountInfo, AccountType, AccountKeyType, PublicAccount, NetworkType } from 'symbol-sdk'
+import { Account, AccountInfo, AccountType, AccountKeyTypeFlags, PublicAccount, NetworkType } from 'symbol-sdk'
 import { AccountModel, AccountType as ProfileType } from '@/core/database/entities/AccountModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
@@ -175,12 +175,11 @@ export class ModalHarvestingWizardTs extends Vue {
   }
 
   private get linkedAccount(): PublicAccount {
-    if (!this.currentAccountAccountInfo || !this.currentAccountAccountInfo.supplementalAccountKeys.length)
+    if (!this.currentAccountAccountInfo || !this.currentAccountAccountInfo.supplementalPublicKeys.linked)
       return undefined
 
     return PublicAccount.createFromPublicKey(
-      this.currentAccountAccountInfo.supplementalAccountKeys.filter((k) => k.keyType === AccountKeyType.Linked).shift()
-        .key,
+      this.currentAccountAccountInfo.supplementalPublicKeys.linked.publicKey,
       this.networkType,
     )
   }

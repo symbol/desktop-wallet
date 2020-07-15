@@ -583,5 +583,9 @@
   "article_by": "{creator} 著",
   "harvesting": "ハーベスティング",
   "show_wizard": "ウィザードを表示",
-  "form_label_network_node_url": "ハーベスティングノードURLを入力 (例: http://localhost:3000)"
+  "form_label_network_node_url": "ハーベスティングノードURLを入力 (例: http://localhost:3000)",
+  "settings_tab_general": "General settings",
+  "settings_tab_password": "Profile password",
+  "settings_tab_network": "Network settings",
+  "settings_tab_about": "About"
 }

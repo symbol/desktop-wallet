@@ -64,7 +64,7 @@ import FormRow from '@/components/FormRow/FormRow.vue'
 })
 export class FormPersistentDelegationRequestTransactionTs extends FormTransactionBase {
   @Prop({ required: true }) remoteAccount: PublicAccount
-  @Prop({ default: null }) signerPublicKey: string
+  @Prop({ default: null }) signerAddress: string
   @Prop({ default: true }) withLink: boolean
 
   /**
@@ -77,7 +77,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
    */
   public formItems = {
     nodePublicKey: '',
-    signerPublicKey: '',
+    signerAddress: '',
     maxFee: 0,
   }
 
@@ -87,7 +87,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
    */
   protected resetForm() {
     // - set default form values
-    this.formItems.signerPublicKey = this.signerPublicKey || this.selectedSigner.publicKey
+    this.formItems.signerAddress =
+      this.signerAddress || (this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address)
     this.formItems.nodePublicKey = ''
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee

@@ -47,14 +47,27 @@ const options = {
   stubs: ['Tooltip'],
   sync: false,
 }
+const options2 = {
+  localVue,
+  i18n,
+  store,
+  propsData: {
+    mosaicHex: '534CD11F6D984B4B',
+  },
+  stubs: ['Tooltip'],
+  sync: false,
+}
 let wrapper
+let wrapper2
 
 describe('AmountInput', () => {
   beforeEach(() => {
     wrapper = mount(AmountInput, options)
+    wrapper2 = mount(AmountInput, options2)
   })
   afterEach(() => {
     wrapper.destroy()
+    wrapper2 = mount(AmountInput, options2)
   })
   test.skip('input correctly', async () => {
     wrapper.setProps({
@@ -76,11 +89,11 @@ describe('AmountInput', () => {
     expect(rightResult.valid).toBeTruthy()
   })
   test("divisibility of the mosaic '534CD11F6D984B4B' is 5 ", async () => {
-    wrapper.setProps({
+    wrapper2.setProps({
       mosaicHex: '534CD11F6D984B4B',
     })
     await flushPromises()
-    const rule = wrapper.vm.validationRules.amount
+    const rule = wrapper2.vm.validationRules.amount
     const falseResult = await validate('10.123456', rule)
     expect(falseResult.valid).toBeFalsy()
     const rightResult = await validate('10.12345', rule)

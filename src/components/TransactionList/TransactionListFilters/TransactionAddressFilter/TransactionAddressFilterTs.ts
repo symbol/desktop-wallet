@@ -20,8 +20,10 @@ export class TransactionAddressFilterTs extends Vue {
    */
   public currentSigner: Signer
 
-  public selectedSigner =
-    (this.currentSigner && this.currentSigner.publicKey) || (this.signers.length && this.signers[0].publicKey) || ''
+  public selectedSigner: string =
+    (this.currentSigner && this.currentSigner.address.plain()) ||
+    (this.signers.length && this.signers[0].address.plain()) ||
+    ''
 
   /**
    * onAddressChange
@@ -32,6 +34,6 @@ export class TransactionAddressFilterTs extends Vue {
 
   @Watch('currentSigner')
   onCurrentSignerChange() {
-    this.selectedSigner = this.currentSigner.publicKey
+    this.selectedSigner = this.currentSigner.address.plain()
   }
 }

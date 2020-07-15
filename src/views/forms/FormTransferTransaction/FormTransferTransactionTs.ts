@@ -121,7 +121,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * @var {any}
    */
   public formItems = {
-    signerPublicKey: '',
+    signerAddress: '',
     attachedMosaics: [],
     recipientRaw: '',
     recipient: null,
@@ -146,7 +146,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     this.formItems.attachedMosaics = []
 
     // - set default form values
-    this.formItems.signerPublicKey = this.selectedSigner.publicKey
+    this.formItems.signerAddress = this.selectedSigner
+      ? this.selectedSigner.address.plain()
+      : this.currentAccount.address
     this.formItems.selectedMosaicHex = this.networkMosaic.toHex()
     // default currentAccount Address to recipientRaw
     if (this.$route.path.indexOf('invoice') > -1) {
@@ -366,15 +368,23 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * @protected
    */
   protected addMosaicAttachmentInput(): void {
-    if (!this.mosaicInputsManager.hasFreeSlots()) return
+    if (!this.mosaicInputsManager.hasFreeSlots()) {
+      return
+    }
+
+    // generate id and prepare mosaic for slot
     const uid = Math.floor(Math.random() * 10e6)
     const [mosaicToAffectToNewInput] = this.mosaicInputsManager.getMosaicsBySlot(uid)
+
+    // update inputs manager and form items
     this.mosaicInputsManager.setSlot(mosaicToAffectToNewInput, uid)
     this.formItems.attachedMosaics.push({
       mosaicHex: mosaicToAffectToNewInput,
       amount: 0,
       uid,
     })
+
+    this.triggerChange()
   }
 
   /**

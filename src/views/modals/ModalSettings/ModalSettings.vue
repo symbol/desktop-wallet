@@ -1,25 +1,28 @@
 <template>
   <div>
-    <Modal
-      v-model="isShowModal"
-      class="settings-modal-container"
-      :footer-hide="true"
-      :title="$t('sidebar_item_settings')"
-    >
-      <SymbolTabs class="settings-tabs-container">
-        <SymbolTabPane v-if="!$route.path.match(/^\/profiles/)" :label="$t('page_title_settings_general')">
-          <FormGeneralSettings />
-        </SymbolTabPane>
-        <SymbolTabPane v-if="!$route.path.match(/^\/profiles/)" :label="$t('page_title_settings_password')">
-          <FormProfilePasswordUpdate />
-        </SymbolTabPane>
-        <SymbolTabPane :label="$t('network_settings')">
-          <FormNodeEdit />
-        </SymbolTabPane>
-        <SymbolTabPane v-if="!$route.path.match(/^\/profiles/)" :label="$t('page_title_settings_about')">
-          <AboutPage />
-        </SymbolTabPane>
-      </SymbolTabs>
+    <Modal v-model="show" class="settings-modal-container" :footer-hide="true" :title="$t('sidebar_item_settings')">
+      <NavigationLinks
+        class="settings-tabs-container"
+        :items="availableTabs"
+        :current-item-index="currentTabIndex"
+        @selected="onTabChange"
+      />
+
+      <div v-if="knownTabs[currentTabIndex] === 'GENERAL' && !!currentAccount">
+        <FormGeneralSettings />
+      </div>
+
+      <div v-if="knownTabs[currentTabIndex] === 'PASSWORD' && !!currentAccount">
+        <FormProfilePasswordUpdate />
+      </div>
+
+      <div v-if="knownTabs[currentTabIndex] === 'NETWORK' || !currentAccount">
+        <FormNodeEdit />
+      </div>
+
+      <div v-if="knownTabs[currentTabIndex] === 'ABOUT' && !!currentAccount">
+        <AboutPage />
+      </div>
     </Modal>
   </div>
 </template>

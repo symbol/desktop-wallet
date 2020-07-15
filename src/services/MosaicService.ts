@@ -111,17 +111,17 @@ export class MosaicService {
     const accountAddresses = accountsInfo.map((a) => a.address)
     const mosaicsFromAccountsObservable = repositoryFactory
       .createMosaicRepository()
-      .getMosaicsFromAccounts(accountAddresses)
+      .search({ ownerAddress: accountAddresses[0] })
 
     return combineLatest([resolvedBalancesObservable, mosaicsFromAccountsObservable])
       .pipe(
         flatMap(([balances, owedMosaics]) => {
           const mosaicIds: MosaicId[] = _.uniqBy(
-            [...balances.map((m) => m.mosaicId), ...owedMosaics.map((o) => o.id)],
+            [...balances.map((m) => m.mosaicId), ...owedMosaics.data.map((o) => o.id)],
             (m) => m.toHex(),
           )
           const nameObservables = repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds)
-          const mosaicInfoObservable = this.loadMosaic(repositoryFactory, mosaicIds, owedMosaics)
+          const mosaicInfoObservable = this.loadMosaic(repositoryFactory, mosaicIds, owedMosaics.data)
           return combineLatest([nameObservables, mosaicInfoObservable]).pipe(
             map(([names, mosaicInfos]) => {
               return this.toMosaicDtos(balances, mosaicInfos, names, networkCurrency, accountAddresses)
@@ -179,7 +179,7 @@ export class MosaicService {
           )
           return new MosaicModel(
             address.plain(),
-            mosaicDto.owner.address.plain(),
+            mosaicDto.ownerAddress.plain(),
             name,
             isCurrencyMosaic,
             (balance && balance.amount.compact()) || 0,
