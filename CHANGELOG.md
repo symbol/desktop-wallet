@@ -3,6 +3,24 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.12.0][]v0.12.0] - 16-Jul-2020
+
+### Milestone: [catapult-server@v0.9.5.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.6.3)
+
+#### Added
+
+- Added compatibility for 0.9.6.3 server transactions and blocks(fixes #415)
+- Added compatibility for 0.9.6.3 server entities changes from public key to addresses(fixes #414)
+- Added database migrations for 0.9.6.3 testnet network reset including profiles and accounts table (**BREAKING CHANGE**)
+- Added new **signerAddress** storage instead of signerPublicKey where necessary
+- Added more japanese translations (Thanks @44uk)
+
+#### Fixed
+
+- Fixed settings screen not appeaering on MacOS (fixes #448)
+- Fixed Add mosaic button on FormTransferTransaction (fixes #437)
+- Aligned all language files to prepare adding further translated languages
+
 ## [0.11.0][v0.11.0] - 24-Jun-2020
 
 ### Milestone: [catapult-server@v0.9.5.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.5.1)
@@ -239,6 +257,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Some missing UI fixes for Symbol rebrand
 
 
+[v0.12.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.11.0...v0.12.0
 [v0.11.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.10.0...v0.11.0
 [v0.10.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.9...v0.10.0
 [v0.9.9]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.8-beta1...v0.9.9
