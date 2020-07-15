@@ -3,9 +3,9 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.12.0][]v0.12.0] - 16-Jul-2020
+## [0.12.0][v0.12.0] - 16-Jul-2020
 
-### Milestone: [catapult-server@v0.9.5.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.6.3)
+### Milestone: [catapult-server@v0.9.6.3](https://github.com/nemtech/catapult-server/releases/tag/v0.9.6.3)
 
 #### Added
 
