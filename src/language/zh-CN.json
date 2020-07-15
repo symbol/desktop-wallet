@@ -584,5 +584,9 @@
   "article_by": "Article by {creator}",
   "harvesting": "Harvesting",
   "show_wizard": "Show wizard",
-  "form_label_network_node_url": "Enter a harvesting node URL here (e.g: http://localhost:3000)"
+  "form_label_network_node_url": "Enter a harvesting node URL here (e.g: http://localhost:3000)",
+  "settings_tab_general": "General settings",
+  "settings_tab_password": "Profile password",
+  "settings_tab_network": "Network settings",
+  "settings_tab_about": "About"
 }

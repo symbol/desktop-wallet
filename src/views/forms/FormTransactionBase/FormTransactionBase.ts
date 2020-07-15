@@ -178,8 +178,8 @@ export class FormTransactionBase extends Vue {
    */
   public beforeDestroy() {
     // reset the selected signer if it is not the current account
-    if (!this.currentAccount) {
-      return ;
+    if (!this.currentAccount) {
+      return
     }
 
     if (!this.selectedSigner.address.equals(Address.createFromRawAddress(this.currentAccount.address))) {
