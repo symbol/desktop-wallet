@@ -48,7 +48,7 @@ export class AmountInputTs extends Vue {
   public get validationRules() {
     const chosenMosaic = this.mosaics.find((mosaic) => this.mosaicHex == mosaic.mosaicIdHex)
     const networkConfigurationDefaults = NetworkConfig.networkConfigurationDefaults
-    networkConfigurationDefaults.maxMosaicDivisibility = chosenMosaic.divisibility
+    networkConfigurationDefaults.maxMosaicDivisibility = chosenMosaic ? chosenMosaic.divisibility : 6
     return createValidationRuleSet(networkConfigurationDefaults)
   }
   /// region computed properties getter/setter
