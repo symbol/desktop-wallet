@@ -4,7 +4,7 @@
       <div v-if="!noLabel">{{ $t(label) }}:</div>
     </template>
     <template v-slot:inputs>
-      <div v-if="signers.length > 1" class="inputs-container select-container">
+      <div v-if="signers && signers.length > 1" class="inputs-container select-container">
         <Select v-model="chosenSigner" :placeholder="$t('address')" class="select-size select-style">
           <Option v-for="item in signers" :key="item.address.plain()" :value="item.address.plain()">
             {{ item.label }}

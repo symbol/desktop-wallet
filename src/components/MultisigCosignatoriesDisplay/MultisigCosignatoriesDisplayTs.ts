@@ -31,7 +31,7 @@ interface Modification {
   addOrRemove: AddOrRemove
 }
 
-type Cosignatories = { address: string }[]
+type Cosignatories = { address: Address }[]
 
 @Component({
   components: {
@@ -74,7 +74,7 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
     return Object.values(this.cosignatoryModifications)
       .filter(({ addOrRemove }) => addOrRemove === addOrRemoveFilter)
       .map(({ cosignatory }) => ({
-        address: cosignatory.pretty(),
+        address: cosignatory,
       }))
   }
 
@@ -82,12 +82,12 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
    * The multisig account cosignatories after modifications
    * @type {{ publicKey: string; address: string }[]}
    */
-  protected get cosignatories(): { address: string }[] {
+  protected get cosignatories(): { address: Address }[] {
     if (!this.multisig) return []
 
     return this.multisig.cosignatoryAddresses
       .filter((address) => !this.cosignatoryModifications[address.plain()])
-      .map((address) => ({ address: address.pretty() }))
+      .map((address) => ({ address }))
   }
 
   /**
@@ -95,7 +95,7 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
    * @param {PublicAccount} publicAccount
    */
   protected onAddCosignatory(cosigAddress: Address): void {
-    const isCosignatory = this.cosignatories.find((a) => cosigAddress.pretty() === a.address)
+    const isCosignatory = this.cosignatories.find(({address}) => cosigAddress.plain() === address.plain())
 
     if (isCosignatory || this.cosignatoryModifications[cosigAddress.plain()]) {
       this.$store.dispatch('notification/ADD_WARNING', 'warning_already_a_cosignatory')

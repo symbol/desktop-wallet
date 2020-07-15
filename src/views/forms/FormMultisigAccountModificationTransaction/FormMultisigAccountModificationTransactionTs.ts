@@ -215,6 +215,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     )
   }
 
+  /// region super.onChangeSigner
   /**
    * Hook called when a signer is selected.
    *
@@ -231,15 +232,14 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     const signerIsMultisigAccount = this.currentAccount.address !== address
 
     // force update form fields
+    this.formItems.signerAddress = address
     this.formItems.minApprovalDelta = signerIsMultisigAccount ? 0 : 1
     this.formItems.minRemovalDelta = signerIsMultisigAccount ? 0 : 1
     this.formItems.cosignatoryModifications = {}
 
     await this.$store.dispatch('account/SET_CURRENT_SIGNER', { address: Address.createFromRawAddress(address) })
-
-    this.formItems.signerAddress = address
-    /// end-region super.onChangeSigner
   }
+  /// end-region super.onChangeSigner
 
   /**
    * Hook called when the subcomponent MultisigCosignatoriesDisplay
