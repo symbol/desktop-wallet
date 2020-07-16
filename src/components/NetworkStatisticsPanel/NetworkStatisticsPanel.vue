@@ -33,7 +33,7 @@
         </div>
         <img src="@/views/resources/img/monitor/peer_number.png" />
         <span class="txt_info">
-          <AnimatedNumber v-model="countAccounts" />
+          {{ countAccounts }}
         </span>
       </div>
       <div class="xym-outline account-info-tile">
@@ -42,7 +42,7 @@
         </div>
         <img src="@/views/resources/img/monitor/height.png" />
         <span class="txt_info">
-          <AnimatedNumber v-model="currentHeight" />
+          {{ currentHeight }}
         </span>
       </div>
       <div class="xym-outline account-info-tile">
@@ -51,7 +51,7 @@
         </div>
         <img src="@/views/resources/img/monitor/peer.png" />
         <span class="txt_info">
-          <AnimatedNumber v-model="countNodes" />
+          {{ countNodes }}
         </span>
       </div>
     </div>
