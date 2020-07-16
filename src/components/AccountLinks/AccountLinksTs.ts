@@ -43,6 +43,6 @@ export class AccountLinksTs extends Vue {
   }
 
   public get faucetUrl() {
-    return this.faucetBaseUrl
+    return this.faucetBaseUrl+ '?recipient="' + this.account.address + '"'
   }
 }
