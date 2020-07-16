@@ -245,21 +245,20 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * Hook called when the subcomponent MultisigCosignatoriesDisplay
    * emits the event `remove`.
    *
-   * @param {string} publicKey
+   * @param {Address} address
    */
-  public onClickRemove(publicKey: string) {
+  public onClickRemove(address: Address) {
     const modifications = this.formItems.cosignatoryModifications
 
-    // - in case public key is part of "modifications"
-    if (modifications && modifications[publicKey]) {
-      Vue.delete(this.formItems.cosignatoryModifications, publicKey)
+    // - in case address is part of "modifications"
+    if (modifications && modifications[address.plain()]) {
+      Vue.delete(this.formItems.cosignatoryModifications, address.plain())
       return
     }
-    // - in case public key is part of "cosignatories", register modification
+    // - in case address is part of "cosignatories", register modification
     else {
-      const publicAccount = PublicAccount.createFromPublicKey(publicKey, this.networkType)
-      Vue.set(this.formItems.cosignatoryModifications, publicKey, {
-        cosignatory: publicAccount,
+      Vue.set(this.formItems.cosignatoryModifications, address.plain(), {
+        cosignatory: address,
         addOrRemove: 'remove',
       })
     }
@@ -271,15 +270,15 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    *
    * @param {PublicAccount} publicAccount
    */
-  public onClickAdd(publicAccount: PublicAccount) {
-    Vue.set(this.formItems.cosignatoryModifications, publicAccount.publicKey, {
-      cosignatory: publicAccount,
+  public onClickAdd(address: Address) {
+    Vue.set(this.formItems.cosignatoryModifications, address.plain(), {
+      cosignatory: address,
       addOrRemove: 'add',
     })
   }
 
-  public onClickUndo(publicKey: string) {
-    Vue.delete(this.formItems.cosignatoryModifications, publicKey)
+  public onClickUndo(address: Address) {
+    Vue.delete(this.formItems.cosignatoryModifications, address.plain())
   }
 
   /// region validation handling
