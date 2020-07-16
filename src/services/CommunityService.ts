@@ -69,15 +69,23 @@ export class CommunityService {
 
     // *safely* parse stream
     let parsedStream
-    try { parsedStream = await new RSSParser().parseString(data) }
-    catch (e) { parsedStream = { items: [] } }
+    try {
+      parsedStream = await new RSSParser().parseString(data)
+    } catch (e) {
+      parsedStream = { items: [] }
+    }
 
     return parsedStream.items.map(({ pubDate, creator, title, contentSnippet, link }) => ({
       pubDate,
       creator,
       title,
       contentSnippet,
-      link: link && link.length && link.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g) ? link : '#',
+      link:
+        link &&
+        link.length &&
+        link.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g)
+          ? link
+          : '#',
     }))
   }
 }
