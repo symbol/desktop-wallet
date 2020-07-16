@@ -498,7 +498,7 @@
   "to_symbol": "Symbol へ",
   "too_many_cosignatories": "署名者の最大数は {maxCosignatoriesPerAccount} です。 {delta} 署名者を削除してください。",
   "top_window_console": "コンソール",
-  "transactions":"トランザクション",
+  "transactions": "トランザクション",
   "transaction_descriptor_16724": "転送",
   "transaction_descriptor_16718": "ネームスペース登録",
   "transaction_descriptor_16974": "アドレスエイリアス",

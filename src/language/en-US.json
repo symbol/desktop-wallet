@@ -498,7 +498,7 @@
   "to_symbol": "to Symbol",
   "too_many_cosignatories": "The maximum number of cosignatories is {maxCosignatoriesPerAccount}, please remove {delta} cosignatories",
   "top_window_console": "Console",
-  "transactions":"Transactions",
+  "transactions": "Transactions",
   "transaction_descriptor_16724": "Transfer",
   "transaction_descriptor_16718": "Namespace registration",
   "transaction_descriptor_16974": "Address alias",
