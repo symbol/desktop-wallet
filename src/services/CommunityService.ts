@@ -77,7 +77,7 @@ export class CommunityService {
       creator,
       title,
       contentSnippet,
-      link,
+      link: link && link.length && link.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g) ? link : '#',
     }))
   }
 }
