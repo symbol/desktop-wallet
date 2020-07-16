@@ -55,7 +55,7 @@ module.exports = {
   // plugins
   pluginOptions: {
     "process.env": {
-      NODE_DEV: '"development"'
+      NODE_ENV: '"development"'
     }
   }
 }
