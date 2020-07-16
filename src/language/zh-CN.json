@@ -498,6 +498,7 @@
   "to_symbol": "to Symbol",
   "too_many_cosignatories": "最大联名签字人数量为 {maxCosignatoriesPerAccount} ，请删除 {delta} 联名签字人",
   "top_window_console": "控制台",
+  "transactions":"交易",
   "transaction_descriptor_16724": "转账",
   "transaction_descriptor_16718": "注册命名空间",
   "transaction_descriptor_16974": "地址别名",

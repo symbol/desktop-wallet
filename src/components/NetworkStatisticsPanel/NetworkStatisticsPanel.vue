@@ -19,16 +19,6 @@
 
       <div v-else class="xym-outline account-info-tile">
         <div class="title">
-          <span class="title_txt">{{ $t('speed') }}</span>
-        </div>
-        <img src="@/views/resources/img/monitor/speed.png" />
-        <span class="txt_info speed"> {{ blockGenerationTargetTime }}s </span>
-        <span class="speed-blocks">/{{ $t('block') }}</span>
-      </div>
-      <!-- end conditional -->
-
-      <div class="xym-outline account-info-tile">
-        <div class="title">
           <span class="title_txt">{{ $t('accounts') }}</span>
         </div>
         <img src="@/views/resources/img/monitor/peer_number.png" />
@@ -36,6 +26,8 @@
           {{ countAccounts }}
         </span>
       </div>
+      <!-- end conditional -->
+
       <div class="xym-outline account-info-tile">
         <div class="title">
           <span class="title_txt">{{ $t('chain_height') }}</span>
@@ -45,6 +37,15 @@
           {{ currentHeight }}
         </span>
       </div>
+
+      <div class="xym-outline account-info-tile">
+        <div class="title">
+          <span class="title_txt">{{ $t('transactions') }}</span>
+        </div>
+        <img src="@/views/resources/img/monitor/speed.png" />
+        <span class="txt_info speed"> {{ countTransactions }} </span>
+      </div>
+
       <div class="xym-outline account-info-tile">
         <div class="title">
           <span class="title_txt">{{ $t('peers_number') }}</span>
