@@ -66,7 +66,11 @@ export class CommunityService {
    */
   public async getLatestArticles(): Promise<ArticleEntry[]> {
     const data = await request()
-    const parsedStream = await new RSSParser().parseString(data)
+
+    // *safely* parse stream
+    let parsedStream
+    try { parsedStream = await new RSSParser().parseString(data) }
+    catch (e) { parsedStream = { items: [] } }
 
     return parsedStream.items.map(({ pubDate, creator, title, contentSnippet, link }) => ({
       pubDate,

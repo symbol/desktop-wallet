@@ -45,7 +45,7 @@ module.exports = {
     },
     proxy: {
       '/nemflash': {
-        target: 'https://nemflash.io/feed/',
+        target: 'http://rssmix.com/u/11801188/rss.xml',
         ws: true,
         changeOrigin: true,
         pathRewrite: { '^/nemflash': '' }
