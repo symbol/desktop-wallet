@@ -5,9 +5,7 @@
     </div>
     <div class="transaction-details-row-value-container">
       <span v-if="label === 'hash' || label === 'inner_transaction_hash'">
-        <a class="url_text" target="_blank" :href="(explorerBaseUrl + '/transaction/' + item.value)">{{
-          item.value
-        }}</a>
+        <a class="url_text" target="_blank" :href="(explorerBaseUrl + 'transaction/' + item.value)">{{ item.value }}</a>
       </span>
       <span v-else-if="item.isMosaic">
         <MosaicAmountDisplay
