@@ -33,7 +33,7 @@
         <a
           class="url_text"
           target="_blank"
-          :href="(explorerBaseUrl + 'transaction/' + transaction.transactionInfo.hash)"
+          :href="explorerUrl"
         >
           {{ formatters.miniHash(transaction.transactionInfo.hash) }}
         </a>
