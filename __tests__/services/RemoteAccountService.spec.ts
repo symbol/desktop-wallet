@@ -24,7 +24,9 @@ import {
   SupplementalPublicKeys,
   AccountRepository,
   AccountSearchCriteria,
+  PublicAccount,
   Page,
+  AccountType as sdkAccountType,
 } from 'symbol-sdk'
 import { RemoteAccountService } from '@/services/RemoteAccountService'
 import { WalletsModel2 } from '@MOCKS/Accounts'
@@ -39,13 +41,25 @@ const repositoryFactory = new (class RepositoryFactoryHttpForTest extends Reposi
       }
 
       getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
-        return of([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo])
+        return of([
+          {
+            address: Address.createFromRawAddress(WalletsModel2.address),
+            accountType: sdkAccountType.Main,
+          } as AccountInfo,
+          {
+            address: PublicAccount.createFromPublicKey(
+              'FA0939C5F11FC89A8EB997329C64AC785CDD23AE9D73C3E060D3B5FF0BABC2A4',
+              NetworkType.TEST_NET,
+            ).address,
+            accountType: sdkAccountType.Remote_Unlinked,
+          } as AccountInfo,
+        ])
       }
 
       search(criteria: AccountSearchCriteria): Observable<Page<AccountInfo>> {
-        return of(new Page([
-          { address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo
-        ], 1, 1, 1, 1))
+        return of(
+          new Page([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo], 1, 1, 1, 1),
+        )
       }
     })()
   }
@@ -68,35 +82,6 @@ describe('services/RemoteAccountService', () => {
       ).getAvailableRemoteAccount(new Password('password'))
 
       expect(remoteAccount.publicKey).toBe('BB6FF99C52B3C9D880D5E59C10AD696D90CF84A8E825CCA16F584A8BCE4D17E6')
-      done()
-    })
-
-    test('should return the second public key if the first one is not availalbe', async (done) => {
-      // prepare
-      const fakeLinkedAccount = new AccountInfo(
-        Address.createFromPublicKey(
-          'BB6FF99C52B3C9D880D5E59C10AD696D90CF84A8E825CCA16F584A8BCE4D17E6',
-          NetworkType.MIJIN_TEST,
-        ),
-        UInt64.fromUint(0),
-        'BB6FF99C52B3C9D880D5E59C10AD696D90CF84A8E825CCA16F584A8BCE4D17E6',
-        UInt64.fromUint(0),
-        AccountType.Remote,
-        new SupplementalPublicKeys(),
-        [],
-        [],
-        UInt64.fromUint(0),
-        UInt64.fromUint(0),
-      )
-
-      // act
-      const remoteAccount = await new RemoteAccountService(
-        WalletsModel2,
-        getTestProfile('profile1'),
-        repositoryFactory.createAccountRepository(),
-      ).getAvailableRemoteAccount(new Password('password'))
-
-      expect(remoteAccount.publicKey).toBe('FA0939C5F11FC89A8EB997329C64AC785CDD23AE9D73C3E060D3B5FF0BABC2A4')
       done()
     })
   })
