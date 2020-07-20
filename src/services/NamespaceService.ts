@@ -53,29 +53,33 @@ export class NamespaceService {
     const namespaceModelList = this.namespaceModelStorage.get(generationHash) || []
     const namespaceRepository = repositoryFactory.createNamespaceRepository()
 
-    return addresses.map((address: Address): Observable<NamespaceModel[]> => {
-      return namespaceRepository
-        .search({ownerAddress: address})
-        .pipe(
-          flatMap((namespaceInfos) => {
-            return namespaceRepository.getNamespacesNames(namespaceInfos.data.map((info) => info.id)).pipe(
-              map((names) => {
-                return namespaceInfos.data.map((namespaceInfo) => {
-                  const reference = _.first(names.filter((n) => n.namespaceId.toHex() === namespaceInfo.id.toHex()))
-                  return new NamespaceModel(
-                    namespaceInfo,
-                    NamespaceService.getFullNameFromNamespaceNames(reference, names),
-                  )
-                })
+    return addresses
+      .map(
+        (address: Address): Observable<NamespaceModel[]> => {
+          return namespaceRepository
+            .search({ ownerAddress: address })
+            .pipe(
+              flatMap((namespaceInfos) => {
+                return namespaceRepository.getNamespacesNames(namespaceInfos.data.map((info) => info.id)).pipe(
+                  map((names) => {
+                    return namespaceInfos.data.map((namespaceInfo) => {
+                      const reference = _.first(names.filter((n) => n.namespaceId.toHex() === namespaceInfo.id.toHex()))
+                      return new NamespaceModel(
+                        namespaceInfo,
+                        NamespaceService.getFullNameFromNamespaceNames(reference, names),
+                      )
+                    })
+                  }),
+                )
               }),
             )
-          }),
-        )
-        .pipe(
-          tap((d: NamespaceModel[]) => this.namespaceModelStorage.set(generationHash, d)),
-          ObservableHelpers.defaultFirst(namespaceModelList)
-        )
-    }).reduce((previous, current, all) => previous.pipe(combineAll()))
+            .pipe(
+              tap((d: NamespaceModel[]) => this.namespaceModelStorage.set(generationHash, d)),
+              ObservableHelpers.defaultFirst(namespaceModelList),
+            )
+        },
+      )
+      .reduce((previous, current, all) => previous.pipe(combineAll()))
   }
 
   public static getExpiration(
