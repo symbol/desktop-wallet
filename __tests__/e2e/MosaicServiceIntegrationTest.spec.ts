@@ -26,6 +26,7 @@ import {
   MosaicFlags,
   AccountRepository,
   AccountInfo,
+  AccountSearchCriteria,
 } from 'symbol-sdk'
 import { MosaicService } from '@/services/MosaicService'
 import networkConfig from '../../config/network.conf.json'
@@ -64,6 +65,7 @@ const repositoryFactory = new (class RepositoryFactoryHttpForTest extends Reposi
       getMosaics(mosaicIds: MosaicId[]): Observable<MosaicInfo[]> {
         return of([fakeMosaicInfo])
       }
+      // XXX MosaicSearchCriteria not exported
       search(criteria: TransactionSearchCriteria): Observable<Page<MosaicInfo>> {
         return of(new Page([fakeMosaicInfo], 1, 1, 1, 1))
       }
@@ -77,6 +79,12 @@ const repositoryFactory = new (class RepositoryFactoryHttpForTest extends Reposi
 
       getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
         return of([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo])
+      }
+
+      search(criteria: AccountSearchCriteria): Observable<Page<AccountInfo>> {
+        return of(new Page([
+          { address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo
+        ], 1, 1, 1, 1))
       }
     })()
   }
