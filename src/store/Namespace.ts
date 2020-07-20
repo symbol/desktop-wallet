@@ -126,7 +126,7 @@ export default {
       const namespaceInfo = await namespaceRepository.getNamespace(namespaceId).toPromise()
 
       // map by hex if names available
-      const namespaceName = await namespaceRepository.getNamespacesName([namespaceId]).toPromise()
+      const namespaceName = await namespaceRepository.getNamespacesNames([namespaceId]).toPromise()
 
       // Note, fullName may not be full. How can we load it without needing to load each parent recursively?.
       const model = new NamespaceModel(

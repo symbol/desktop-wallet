@@ -17,7 +17,7 @@
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
 import { Address, NamespaceName, RepositoryFactory } from 'symbol-sdk'
 import { Observable, of } from 'rxjs'
-import { flatMap, map, tap } from 'rxjs/operators'
+import { flatMap, map, tap, combineAll } from 'rxjs/operators'
 import { ObservableHelpers } from '@/core/utils/ObservableHelpers'
 import * as _ from 'lodash'
 import { TimeHelpers } from '@/core/utils/TimeHelpers'
@@ -52,27 +52,30 @@ export class NamespaceService {
 
     const namespaceModelList = this.namespaceModelStorage.get(generationHash) || []
     const namespaceRepository = repositoryFactory.createNamespaceRepository()
-    return namespaceRepository
-      .getNamespacesFromAccounts(addresses)
-      .pipe(
-        flatMap((namespaceInfos) => {
-          return namespaceRepository.getNamespacesName(namespaceInfos.map((info) => info.id)).pipe(
-            map((names) => {
-              return namespaceInfos.map((namespaceInfo) => {
-                const reference = _.first(names.filter((n) => n.namespaceId.toHex() === namespaceInfo.id.toHex()))
-                return new NamespaceModel(
-                  namespaceInfo,
-                  NamespaceService.getFullNameFromNamespaceNames(reference, names),
-                )
-              })
-            }),
-          )
-        }),
-      )
-      .pipe(
-        tap((d) => this.namespaceModelStorage.set(generationHash, d)),
-        ObservableHelpers.defaultFirst(namespaceModelList),
-      )
+
+    return addresses.map((address: Address): Observable<NamespaceModel[]> => {
+      return namespaceRepository
+        .search({ownerAddress: address})
+        .pipe(
+          flatMap((namespaceInfos) => {
+            return namespaceRepository.getNamespacesNames(namespaceInfos.data.map((info) => info.id)).pipe(
+              map((names) => {
+                return namespaceInfos.data.map((namespaceInfo) => {
+                  const reference = _.first(names.filter((n) => n.namespaceId.toHex() === namespaceInfo.id.toHex()))
+                  return new NamespaceModel(
+                    namespaceInfo,
+                    NamespaceService.getFullNameFromNamespaceNames(reference, names),
+                  )
+                })
+              }),
+            )
+          }),
+        )
+        .pipe(
+          tap((d: NamespaceModel[]) => this.namespaceModelStorage.set(generationHash, d)),
+          ObservableHelpers.defaultFirst(namespaceModelList)
+        )
+    }).reduce((previous, current, all) => previous.pipe(combineAll()))
   }
 
   public static getExpiration(
