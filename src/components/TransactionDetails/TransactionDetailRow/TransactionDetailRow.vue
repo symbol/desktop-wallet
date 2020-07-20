@@ -61,7 +61,7 @@ export default class TransactionDetailRow extends Vue {
    * Returns the explorer url
    */
   public get explorerUrl() {
-    return this.explorerBaseUrl.replace(/\/+$/,'') + '/transaction/' + this.item.value
+    return this.explorerBaseUrl.replace(/\/+$/, '') + '/transaction/' + this.item.value
   }
 }
 </script>

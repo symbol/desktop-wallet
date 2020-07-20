@@ -30,11 +30,7 @@
     <!-- FIFTH COLUMN -->
     <div class="hash-cell">
       <span class="hash-cell-transaction-hash">
-        <a
-          class="url_text"
-          target="_blank"
-          :href="explorerUrl"
-        >
+        <a class="url_text" target="_blank" :href="explorerUrl">
           {{ formatters.miniHash(transaction.transactionInfo.hash) }}
         </a>
       </span>
