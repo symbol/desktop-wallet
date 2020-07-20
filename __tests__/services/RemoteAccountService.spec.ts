@@ -23,33 +23,42 @@ import {
   AccountType,
   SupplementalPublicKeys,
   AccountRepository,
+  AccountSearchCriteria,
+  Page,
 } from 'symbol-sdk'
 import { RemoteAccountService } from '@/services/RemoteAccountService'
 import { WalletsModel2 } from '@MOCKS/Accounts'
 import { getTestProfile } from '@MOCKS/profiles'
 import { Observable, of } from 'rxjs'
 
+const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+  createAccountRepository(): AccountRepository {
+    return new (class AccountRepositoryForTest implements AccountRepository {
+      getAccountInfo(address: Address): Observable<AccountInfo> {
+        return of({ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo)
+      }
+
+      getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
+        return of([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo])
+      }
+
+      search(criteria: AccountSearchCriteria): Observable<Page<AccountInfo>> {
+        return of(new Page([
+          { address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo
+        ], 1, 1, 1, 1))
+      }
+    })()
+  }
+})('http://localhost:3000', {
+  networkType: NetworkType.TEST_NET,
+  generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
+})
+repositoryFactory.getNetworkType = jest.fn(() => of(NetworkType.MIJIN_TEST))
+
 describe('services/RemoteAccountService', () => {
   describe('getAvailableRemotePublicKey()', () => {
     test('should return the first linkable public key', async (done) => {
       // prepare
-      const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
-        createAccountRepository(): AccountRepository {
-          return new (class AccountRepositoryForTest implements AccountRepository {
-            getAccountInfo(address: Address): Observable<AccountInfo> {
-              return of({ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo)
-            }
-
-            getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
-              return of([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo])
-            }
-          })()
-        }
-      })('http://localhost:3000', {
-        networkType: NetworkType.TEST_NET,
-        generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
-      })
-      repositoryFactory.getNetworkType = jest.fn(() => of(NetworkType.MIJIN_TEST))
 
       // act
       const remoteAccount = await new RemoteAccountService(
@@ -79,24 +88,6 @@ describe('services/RemoteAccountService', () => {
         UInt64.fromUint(0),
         UInt64.fromUint(0),
       )
-
-      const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
-        createAccountRepository(): AccountRepository {
-          return new (class AccountRepositoryForTest implements AccountRepository {
-            getAccountInfo(address: Address): Observable<AccountInfo> {
-              return of({ address: fakeLinkedAccount.address } as AccountInfo)
-            }
-
-            getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
-              return of([fakeLinkedAccount])
-            }
-          })()
-        }
-      })('http://localhost:3000', {
-        networkType: NetworkType.TEST_NET,
-        generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
-      })
-      repositoryFactory.getNetworkType = jest.fn(() => of(NetworkType.MIJIN_TEST))
 
       // act
       const remoteAccount = await new RemoteAccountService(
