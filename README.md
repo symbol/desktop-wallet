@@ -1,6 +1,6 @@
 ## Symbol Desktop Wallet
 
-[![Build Status](https://travis-ci.com/nemfoundation/symbol-desktop-wallet.svg?branch=master)](https://travis-ci.com/nemfoundation/symbol-desktop-wallet)
+[![Build Status](https://travis-ci.com/nemgrouplimited/symbol-desktop-wallet.svg?branch=master)](https://travis-ci.com/nemgrouplimited/symbol-desktop-wallet)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Cross-platform client for Symbol to manage accounts, mosaics, namespaces, and issue transactions.
