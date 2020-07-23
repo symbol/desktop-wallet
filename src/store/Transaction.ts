@@ -242,8 +242,12 @@ export default {
       // register transaction
       const transactions = getters[transactionAttribute] || []
       if (!transactions.find((t) => t.transactionInfo.hash === transaction.transactionInfo.hash)) {
-        if (transaction['recipientAddress'].plain() == currentSignerAddress.plain())
-          commit(transactionAttribute, [transaction, ...transactions])
+        if (
+          transaction['type'] == TransactionType.TRANSFER &&
+          transaction['recipientAddress'].plain() !== currentSignerAddress.plain()
+        )
+          return
+        else commit(transactionAttribute, [transaction, ...transactions])
       }
     },
 
