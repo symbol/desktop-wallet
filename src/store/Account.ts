@@ -426,11 +426,11 @@ export default {
     },
 
     // Unsubscribe an address open websocket connections
-    async UNSUBSCRIBE({ commit, getters }, plainAddress: string) {
+    async UNSUBSCRIBE({ commit, getters }, plainAddress: Address) {
       // get all subscriptions
       const subscriptions: Record<string, SubscriptionType[]> = getters.getSubscriptions
       // subscriptions to close
-      const subscriptionTypes = (subscriptions && subscriptions[plainAddress]) || []
+      const subscriptionTypes = (subscriptions && subscriptions[plainAddress.plain()]) || []
 
       if (!subscriptionTypes.length) return
 
@@ -443,7 +443,7 @@ export default {
 
       // update state of listeners & subscriptions
       const payload: { address: string; subscriptions: SubscriptionType } = {
-        address: plainAddress,
+        address: plainAddress.plain(),
         subscriptions: null,
       }
       commit('updateSubscriptions', payload)

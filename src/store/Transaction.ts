@@ -225,7 +225,7 @@ export default {
     },
 
     ADD_TRANSACTION(
-      { commit, getters, rootGetters },
+      { commit, getters },
       { group, transaction }: { group: TransactionGroupState; transaction: Transaction },
     ) {
       if (!group) {
@@ -237,17 +237,12 @@ export default {
       }
       // format transactionAttribute to store variable name
       const transactionAttribute = transactionGroupToStateVariable(group)
-      const currentSignerAddress: Address = rootGetters['account/currentSignerAddress']
 
       // register transaction
       const transactions = getters[transactionAttribute] || []
       if (!transactions.find((t) => t.transactionInfo.hash === transaction.transactionInfo.hash)) {
-        if (
-          transaction['type'] == TransactionType.TRANSFER &&
-          transaction['recipientAddress'].plain() !== currentSignerAddress.plain()
-        )
-          return
-        else commit(transactionAttribute, [transaction, ...transactions])
+        // update state
+        commit(transactionAttribute, [transaction, ...transactions])
       }
     },
 
