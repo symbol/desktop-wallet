@@ -436,6 +436,7 @@
   "restrictable": "是否可限制",
   "return_password_setting": "返回密码设置",
   "rules_describe": "规则描述",
+  "removal_or_approval_is_zero": "如果列表中有 {delta} 个签署者，则“最小批准”和“最小删除”不能设置为零",
   "safe_storage_tips": "安全储存提示：",
   "save_backups": "在多个位置保存备份",
   "scenes_to_be_used": "使用场景",

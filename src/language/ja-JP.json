@@ -436,6 +436,7 @@
   "restrictable": "制限可",
   "return_password_setting": "パスワード設定に戻る",
   "rules_describe": "ルール説明",
+  "removal_or_approval_is_zero": "リストに {delta} つの署名者がいる場合、最小承認と最小削除をゼロに設定することはできません",
   "safe_storage_tips": "安全な保管の知恵 =>",
   "save_backups": "複数のコピーをオフラインで作成し、複数の場所にバックアップを保存します。デジタルバックアップには暗号化されたディスクを使用してください。",
   "scenes_to_be_used": "使用例",

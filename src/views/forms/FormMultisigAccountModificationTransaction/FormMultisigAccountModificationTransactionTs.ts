@@ -309,11 +309,13 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
       : this.formItems.minRemovalDelta
 
     // calculate the delta of added cosigners
-    const modificationNumber = Object.keys(this.formItems.cosignatoryModifications).length
+    const additionsNumber = Object.values(this.formItems.cosignatoryModifications).filter(
+      ({ addOrRemove }) => addOrRemove === 'add',
+    ).length
     const removalsNumber = Object.values(this.formItems.cosignatoryModifications).filter(
       ({ addOrRemove }) => addOrRemove === 'remove',
     ).length
-    const numberOfAddedCosigners = modificationNumber - removalsNumber
+    const numberOfAddedCosigners = additionsNumber - removalsNumber
 
     const newCosignatoryNumber = this.currentMultisigInfo
       ? this.currentMultisigInfo.cosignatoryAddresses.length + numberOfAddedCosigners
@@ -337,7 +339,8 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     const maxCosignatoriesPerAccount = this.networkConfiguration.maxCosignatoriesPerAccount
     return cosignatoryNumber >= minApproval &&
       cosignatoryNumber >= minRemoval &&
-      cosignatoryNumber <= maxCosignatoriesPerAccount
+      cosignatoryNumber <= maxCosignatoriesPerAccount &&
+      !(cosignatoryNumber > 0 && (minApproval == 0 || minRemoval == 0))
       ? 'OK'
       : false
   }
@@ -378,6 +381,11 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
       return `${this.$t('too_many_cosignatories', {
         maxCosignatoriesPerAccount,
         delta: cosignatoryNumber - maxCosignatoriesPerAccount,
+      })}`
+    }
+    if (cosignatoryNumber > 0 && (minApproval == 0 || minRemoval == 0)) {
+      return `${this.$t('removal_or_approval_is_zero', {
+        delta: cosignatoryNumber,
       })}`
     }
   }
