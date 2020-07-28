@@ -524,6 +524,7 @@
   "transaction_needs_cosignature": "連署名待機トランザクション",
   "transaction_needs_cosignature_explain": "このマルチシグトランザクションは承認される前に複数の当事者が署名する必要があります。パスワードを入力し、署名を追加することを確認してください。",
   "transaction_needs_cosignature_explain_signed": "このトランザクションには、共同署名を送信して承認する複数の当事者が必要です。このトランザクションの共同署名はすでに送信されています。他の共同署名者が承認するまでお待ちください。",
+  "transaction_received_cosignature_explain": "Received the minimum required co-signatories",
   "transaction_type": "タイプ",
   "transaction_status_confirmed": "承認済",
   "transaction_status_unconfirmed": "未承認",
