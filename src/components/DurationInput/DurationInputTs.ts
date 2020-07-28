@@ -84,7 +84,12 @@ export class DurationInputTs extends Vue {
    * @return relativeTime example: 56d 21h 18m
    */
   public get relativeTime() {
-    return TimeHelpers.durationToRelativeTime(parseInt(this.value), this.networkConfiguration.blockGenerationTargetTime)
+    const duration = parseInt(this.value)
+    if (isNaN(duration) || 0 === duration) {
+      return this.$t('label_duration_unlimited')
+    }
+
+    return TimeHelpers.durationToRelativeTime(duration, this.networkConfiguration.blockGenerationTargetTime)
   }
 
   public get validationRule(): string {

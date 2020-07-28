@@ -589,5 +589,6 @@
   "settings_tab_general": "General settings",
   "settings_tab_password": "Profile password",
   "settings_tab_network": "Network settings",
-  "settings_tab_about": "About"
+  "settings_tab_about": "About",
+  "label_duration_unlimited": "Unlimited"
 }
