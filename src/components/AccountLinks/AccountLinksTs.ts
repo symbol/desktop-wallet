@@ -39,10 +39,10 @@ export class AccountLinksTs extends Vue {
   /// end-region computed properties getter/setter
 
   public get explorerUrl() {
-    return this.explorerBaseUrl + '/account/' + this.account.address
+    return this.explorerBaseUrl.replace(/\/+$/, '') + '/account/' + this.account.address
   }
 
   public get faucetUrl() {
-    return this.faucetBaseUrl
+    return this.faucetBaseUrl + '?recipient=' + this.account.address
   }
 }

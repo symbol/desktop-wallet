@@ -23,5 +23,6 @@ module.exports = {
     "no-extra-boolean-cast": 0,
     // @TODO: remove v-html
     "vue/no-v-html": "off",
+    "no-useless-escape": "off"
   },
 };

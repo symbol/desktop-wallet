@@ -16,5 +16,5 @@
     {"value": "ja-JP", "label": "日本語"}
   ],
   "marketServerUrl": "http://app.nemcn.io",
-  "articlesFeedUrl": "https://nemflash.io/feed/"
+  "articlesFeedUrl": "http://rssmix.com/u/11801188/rss.xml"
 }

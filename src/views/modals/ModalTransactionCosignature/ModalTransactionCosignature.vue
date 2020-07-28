@@ -30,21 +30,27 @@
           </div>
         </div>
       </div>
+      <div v-if="hasMissSignatures">
+        <div v-if="!needsCosignature">
+          <div class="explain">
+            <span class="subtitle">{{ $t('transaction_needs_cosignature') }}</span>
+            <p>{{ $t('transaction_needs_cosignature_explain_signed') }}</p>
+          </div>
+        </div>
+        <div v-else>
+          <div class="explain">
+            <span class="subtitle">{{ $t('transaction_needs_cosignature') }}</span>
+            <p>{{ $t('transaction_needs_cosignature_explain') }}</p>
+          </div>
 
-      <div v-if="!needsCosignature">
-        <div class="explain">
-          <span class="subtitle">{{ $t('transaction_needs_cosignature') }}</span>
-          <p>{{ $t('transaction_needs_cosignature_explain_signed') }}</p>
+          <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
+          <FormProfileUnlock v-else @success="onAccountUnlocked" @error="onError" />
         </div>
       </div>
       <div v-else>
         <div class="explain">
-          <span class="subtitle">{{ $t('transaction_needs_cosignature') }}</span>
-          <p>{{ $t('transaction_needs_cosignature_explain') }}</p>
+          <span class="subtitle">{{ $t('transaction_received_cosignature_explain') }}</span>
         </div>
-
-        <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
-        <FormProfileUnlock v-else @success="onAccountUnlocked" @error="onError" />
       </div>
     </Modal>
   </div>
