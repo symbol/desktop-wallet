@@ -589,5 +589,6 @@
   "settings_tab_general": "一般設定",
   "settings_tab_password": "プロファイルパスワード",
   "settings_tab_network": "ネットワーク設定",
-  "settings_tab_about": "ソフトウェア情報"
+  "settings_tab_about": "ソフトウェア情報",
+  "label_duration_unlimited": "Unlimited"
 }
