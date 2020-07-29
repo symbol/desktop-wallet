@@ -212,6 +212,31 @@ export default {
       })
     },
 
+    LOAD_TRANSACTION_DETAILS(
+      { commit, rootGetters },
+      { group, transactionHash }: { group: TransactionGroupState; transactionHash: string },
+    ): Promise<Transaction | AggregateTransaction> {
+      if (!group) {
+        throw Error("Missing mandatory field 'group' for action transaction/LOAD_TRANSACTION_DETAILS.")
+      }
+
+      if (!transactionHash) {
+        throw Error("Missing mandatory field 'transactionHash' for action transaction/LOAD_TRANSACTION_DETAILS.")
+      }
+
+      // prepare
+      const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory']
+      const transactionRepository = repositoryFactory.createTransactionRepository()
+
+      let sdkGroup = TransactionGroup.Confirmed
+      if (![TransactionGroupState.all, TransactionGroupState.confirmed].includes(group)) {
+        sdkGroup = group === TransactionGroupState.partial ? TransactionGroup.Partial : TransactionGroup.Unconfirmed
+      }
+
+      // fetch transaction details
+      return transactionRepository.getTransaction(transactionHash, sdkGroup).toPromise()
+    },
+
     SIGNER_CHANGED({ dispatch }) {
       dispatch('LOAD_TRANSACTIONS')
     },
