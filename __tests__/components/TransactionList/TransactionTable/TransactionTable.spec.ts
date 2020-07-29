@@ -53,7 +53,7 @@ const transaction1 = new TransferTransaction(
   1,
   Deadline.create(),
   new UInt64([0, 160000]),
-  Address.createFromRawAddress('TCVSJSKTHNXNH6L7QX2YXBWD3MWN2FYK7QFO643N'),
+  Address.createFromRawAddress('TCVSJSKTHNXNH6L7QX2YXBWD3MWN2FYK7QFO643'),
   [mosaic],
   PlainMessage.create(''),
   '1F30AE84B51DA5E321C973A1D80B337CBED4D11C13366C72100D6297E689326B12E5266E1FF8A678D1F86643FAF0ED9D78C0008180CB16ACC21F84526DCCFF09',
@@ -69,7 +69,7 @@ const transaction2 = new TransferTransaction(
   1,
   Deadline.create(),
   new UInt64([0, 160000]),
-  Address.createFromRawAddress('TCIQUGLHHZY7TMMHIBLQJBS7V4TBJFVSDXD24J4H'),
+  Address.createFromRawAddress('TCIQUGLHHZY7TMMHIBLQJBS7V4TBJFVSDXD24J4'),
   [mosaic],
   PlainMessage.create(''),
   '1F30AE84B51DA5E321C973A1D80B337CBED4D11C13366C72100D6297E689326B12E5266E1FF8A678D1F86643FAF0ED9D78C0008180CB16ACC21F84526DCCFF09',
@@ -93,7 +93,7 @@ describe('TransactionTable', () => {
     const transactions = wrapper.findAll('transactionrow-stub')
     expect(transactions.length).toBe(1)
     expect(transactions.at(0)['vnode'].data.attrs.transaction.recipientAddress.address).toBe(
-      'TCVSJSKTHNXNH6L7QX2YXBWD3MWN2FYK7QFO643N',
+      'TCVSJSKTHNXNH6L7QX2YXBWD3MWN2FYK7QFO643',
     )
     wrapper.setProps({
       transactions: [transaction2],
@@ -101,7 +101,7 @@ describe('TransactionTable', () => {
     await flushPromises()
     const transaction = wrapper.find('transactionrow-stub')
     expect(transaction['vnode'].data.attrs.transaction.recipientAddress.address).toBe(
-      'TCIQUGLHHZY7TMMHIBLQJBS7V4TBJFVSDXD24J4H',
+      'TCIQUGLHHZY7TMMHIBLQJBS7V4TBJFVSDXD24J4',
     )
     wrapper.setProps({
       transactions: [],
