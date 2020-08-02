@@ -24,6 +24,7 @@ import {
   MosaicSupplyChangeTransaction,
   Transaction,
   UInt64,
+  RentalFees,
 } from 'symbol-sdk'
 import { Component } from 'vue-property-decorator'
 // internal dependencies
@@ -46,6 +47,8 @@ import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirm
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
+//@ts-ignore
+import RentalFee from '@/components/RentalFees/RentalFee.vue'
 
 @Component({
   components: {
@@ -59,6 +62,7 @@ import FormRow from '@/components/FormRow/FormRow.vue'
     ModalTransactionConfirmation,
     MaxFeeAndSubmit,
     FormRow,
+    RentalFee,
   },
 })
 export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
@@ -76,8 +80,16 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     permanent: true,
     duration: 10000,
     maxFee: 0,
+    rentalFees: 0,
   }
 
+  private rentalFees: RentalFees
+
+  public async mounted() {
+    this.rentalFees = await this.$store.dispatch('network/RENTAL_FEE')
+    console.log(this.rentalFees)
+    this.formItems.rentalFees = this.rentalFees.effectiveMosaicRentalFee.compact()
+  }
   /**
    * Reset the form with properties
    * @return {void}
@@ -104,6 +116,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     this.formItems.restrictable = false
     this.formItems.permanent = false
     this.formItems.duration = 10000
+    this.formItems.rentalFees = 0
 
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee

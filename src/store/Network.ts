@@ -14,7 +14,7 @@
  *
  */
 import Vue from 'vue'
-import { BlockInfo, IListener, Listener, NetworkType, RepositoryFactory, TransactionFees } from 'symbol-sdk'
+import { BlockInfo, IListener, Listener, NetworkType, RepositoryFactory, TransactionFees, RentalFees } from 'symbol-sdk'
 import { Subscription } from 'rxjs'
 // internal dependencies
 import { $eventBus } from '../events'
@@ -67,6 +67,7 @@ interface NetworkState {
   currentHeight: number
   subscriptions: Subscription[]
   transactionFees: TransactionFees
+  currentRentalFee?: number
 }
 
 const defaultPeer = URLHelpers.formatUrl(networkConfig.defaultNodeUrl)
@@ -86,6 +87,7 @@ const networkState: NetworkState = {
   knowNodes: [],
   currentHeight: 0,
   subscriptions: [],
+  currentRentalFee: 0,
 }
 export default {
   namespaced: true,
@@ -105,6 +107,7 @@ export default {
     knowNodes: (state: NetworkState) => state.knowNodes,
     currentHeight: (state: NetworkState) => state.currentHeight,
     transactionFees: (state: NetworkState) => state.transactionFees,
+    currentRentalFee: (state: NetworkState) => state.currentRentalFee,
   },
   mutations: {
     setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -128,6 +131,9 @@ export default {
     currentPeer: (state: NetworkState, currentPeer: URLInfo) => Vue.set(state, 'currentPeer', currentPeer),
     transactionFees: (state: NetworkState, transactionFees: TransactionFees) => {
       state.transactionFees = transactionFees
+    },
+    currentRentalFee: (state: NetworkState, amount: number) => {
+      state.currentRentalFee = amount
     },
 
     addPeer: (state: NetworkState, peerUrl: string) => {
@@ -266,6 +272,12 @@ export default {
         // - hide loading overlay
         dispatch('app/SET_LOADING_OVERLAY', { show: false }, { root: true })
       }
+    },
+
+    RENTAL_FEE({ rootGetters }): Promise<RentalFees> {
+      const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory']
+      const rentalFee = repositoryFactory.createNetworkRepository().getRentalFees()
+      return rentalFee.toPromise()
     },
 
     ADD_KNOWN_PEER({ commit }, peerUrl) {

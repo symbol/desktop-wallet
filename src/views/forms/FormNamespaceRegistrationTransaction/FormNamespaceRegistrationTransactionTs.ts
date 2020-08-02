@@ -21,6 +21,7 @@ import {
   NamespaceRegistrationType,
   Transaction,
   UInt64,
+  RentalFees,
 } from 'symbol-sdk'
 import { Component, Prop } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
@@ -44,6 +45,8 @@ import DurationInput from '@/components/DurationInput/DurationInput.vue'
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
+//@ts-ignore
+import RentalFee from '@/components/RentalFees/RentalFee.vue'
 // configuration
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
 import { NamespaceService } from '@/services/NamespaceService'
@@ -61,6 +64,7 @@ import { FilterHelpers } from '@/core/utils/FilterHelpers'
     DurationInput,
     ModalTransactionConfirmation,
     MaxFeeAndSubmit,
+    RentalFee,
   },
   computed: {
     ...mapGetters({
@@ -86,7 +90,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    * @var {NamespaceRegistrationType}
    */
   public typeRootNamespace = NamespaceRegistrationType.RootNamespace
-
+  private rentalFees: RentalFees
   /**
    * Sub namespace type exposed to view
    * @var {NamespaceRegistrationType}
@@ -109,6 +113,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     parentNamespaceName: '',
     duration: 172800,
     maxFee: 0,
+    rentalFees: 0,
   }
 
   /**
@@ -120,7 +125,13 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     const maxNamespaceDepth = this.networkConfiguration.maxNamespaceDepth
     return this.ownedNamespaces.filter(({ depth }) => depth < maxNamespaceDepth)
   }
-
+  public async mounted() {
+    this.rentalFees = await this.$store.dispatch('network/RENTAL_FEE')
+    this.formItems.rentalFees =
+      this.formItems.registrationType === this.typeRootNamespace
+        ? this.rentalFees.effectiveRootNamespaceRentalFeePerBlock.compact()
+        : this.rentalFees.effectiveMosaicRentalFee.compact()
+  }
   /**
    * Reset the form with properties
    * @return {void}
@@ -134,7 +145,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     this.formItems.newNamespaceName = this.namespaceId ? this.namespaceId.fullName : ''
     this.formItems.parentNamespaceName = this.parentNamespaceId ? this.parentNamespaceId.fullName : ''
     this.formItems.duration = this.duration || 172800
-
+    this.formItems.rentalFees = 0
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
   }

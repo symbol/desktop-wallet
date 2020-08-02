@@ -33,7 +33,7 @@
             </div>
           </template>
         </FormRow>
-
+        <RentalFee :rental-type="'mosaic'" :rental-fee="formItems.rentalFees"></RentalFee>
         <MaxFeeAndSubmit v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
       </form>
     </ValidationObserver>
