@@ -135,6 +135,7 @@
   "creation_successful": "Congratulations, the profile was created successfully!",
   "current_endpoint": "Current Node",
   "current_validity": "Expires in",
+  "current_rental_fee": "Current rental fee",
   "deadline": "Deadline",
   "decrease": "Decrease",
   "define": "Registration",

@@ -119,6 +119,14 @@ export abstract class TransactionView<T extends Transaction> {
       },
       this.getFeeDetailItem(),
       {
+        key: 'current_rental_fee',
+        value: {
+          amount: this.$store.getters['network/currentRentalFee'],
+          color: 'red',
+        },
+        isMosaic: true,
+      },
+      {
         key: 'block_height',
         value:
           this.info && this.info.height && this.info.height.compact()
