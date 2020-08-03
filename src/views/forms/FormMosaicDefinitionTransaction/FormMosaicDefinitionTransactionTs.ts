@@ -84,7 +84,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
   }
   /**
    * Rental Fees
-   * 
+   *
    */
   private rentalFees: RentalFees
 
