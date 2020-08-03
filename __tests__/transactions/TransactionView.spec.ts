@@ -46,7 +46,7 @@ describe('transactions/TransactionView', () => {
       // assert
       expect(view).toBeDefined()
       expect(view.detailItems.length).toBe(0)
-      expect(view.headerItems.length).toBe(4)
+      expect(view.headerItems.length).toBe(5)
     })
   })
 })
