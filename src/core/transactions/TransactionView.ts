@@ -117,15 +117,7 @@ export abstract class TransactionView<T extends Transaction> {
         key: 'hash',
         value: (this.info && this.info.hash) || undefined,
       },
-      this.getFeeDetailItem(),
-      {
-        key: 'current_rental_fee',
-        value: {
-          amount: this.$store.getters['network/currentRentalFee'],
-          color: 'red',
-        },
-        isMosaic: true,
-      },
+      // this.getFeeDetailItem(),
       {
         key: 'block_height',
         value:
@@ -145,25 +137,39 @@ export abstract class TransactionView<T extends Transaction> {
         key: 'signer_public_key',
         value: (this.transaction.signer && this.transaction.signer.publicKey) || undefined,
       },
-    ].filter((pair) => pair.value)
+    ]
+      .concat(this.getFeeDetailItem())
+      .filter((pair) => pair.value)
   }
 
-  protected getFeeDetailItem(): TransactionDetailItem {
+  protected getFeeDetailItem(): TransactionDetailItem[] {
     if (this.transaction.isConfirmed()) {
-      return {
-        key: 'paid_fee',
-        value: this.transaction,
-        isPaidFee: true,
-      }
-    } else {
-      return {
-        key: 'max_fee',
-        value: {
-          amount: this.transaction.maxFee.compact() || 0,
-          color: 'red',
+      return [
+        {
+          key: 'paid_fee',
+          value: this.transaction,
+          isPaidFee: true,
         },
-        isMosaic: true,
-      }
+      ]
+    } else {
+      return [
+        {
+          key: 'max_fee',
+          value: {
+            amount: this.transaction.maxFee.compact() || 0,
+            color: 'red',
+          },
+          isMosaic: true,
+        },
+        {
+          key: 'current_rental_fee',
+          value: {
+            amount: this.$store.getters['network/currentRentalFee'],
+            color: 'red',
+          },
+          isMosaic: true,
+        },
+      ]
     }
   }
 }

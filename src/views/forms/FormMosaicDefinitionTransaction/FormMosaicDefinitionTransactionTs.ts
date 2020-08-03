@@ -82,14 +82,12 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     maxFee: 0,
     rentalFees: 0,
   }
-
+  /**
+   * Rental Fees
+   * 
+   */
   private rentalFees: RentalFees
 
-  public async mounted() {
-    this.rentalFees = await this.$store.dispatch('network/RENTAL_FEE')
-    console.log(this.rentalFees)
-    this.formItems.rentalFees = this.rentalFees.effectiveMosaicRentalFee.compact()
-  }
   /**
    * Reset the form with properties
    * @return {void}
@@ -181,5 +179,10 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
 
     // - populate maxFee
     this.formItems.maxFee = definition.maxFee.compact()
+  }
+
+  public async mounted() {
+    this.rentalFees = await this.$store.dispatch('network/RENTAL_FEE')
+    this.formItems.rentalFees = this.rentalFees.effectiveMosaicRentalFee.compact()
   }
 }

@@ -125,13 +125,6 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     const maxNamespaceDepth = this.networkConfiguration.maxNamespaceDepth
     return this.ownedNamespaces.filter(({ depth }) => depth < maxNamespaceDepth)
   }
-  public async mounted() {
-    this.rentalFees = await this.$store.dispatch('network/RENTAL_FEE')
-    this.formItems.rentalFees =
-      this.formItems.registrationType === this.typeRootNamespace
-        ? this.rentalFees.effectiveRootNamespaceRentalFeePerBlock.compact()
-        : this.rentalFees.effectiveMosaicRentalFee.compact()
-  }
   /**
    * Reset the form with properties
    * @return {void}
@@ -224,5 +217,13 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    */
   public stripTagsNamesapceName() {
     this.formItems.newNamespaceName = FilterHelpers.stripFilter(this.formItems.newNamespaceName)
+  }
+
+  async mounted() {
+    this.rentalFees = await this.$store.dispatch('network/RENTAL_FEE')
+    this.formItems.rentalFees =
+      this.formItems.registrationType === this.typeRootNamespace
+        ? this.rentalFees.effectiveRootNamespaceRentalFeePerBlock.compact()
+        : this.rentalFees.effectiveMosaicRentalFee.compact()
   }
 }
