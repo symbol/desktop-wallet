@@ -18,7 +18,6 @@ import {
   Address,
   AggregateTransaction,
   CosignatureSignedTransaction,
-  QueryParams,
   RepositoryFactory,
   Transaction,
   TransactionType,
@@ -168,7 +167,6 @@ export default {
       const subscriptions: Observable<Transaction[]>[] = []
       commit('isFetchingTransactions', true)
 
-      const queryParams = new QueryParams({ pageSize: 100 })
       if (group == undefined || group === TransactionGroupState.all || group === TransactionGroupState.confirmed) {
         subscriptions.push(
           subscribeTransactions(

@@ -14,14 +14,7 @@
  *
  */
 // external dependencies
-import {
-  Deadline,
-  MultisigAccountInfo,
-  MultisigAccountModificationTransaction,
-  PublicAccount,
-  UInt64,
-  Address,
-} from 'symbol-sdk'
+import { Deadline, MultisigAccountInfo, MultisigAccountModificationTransaction, UInt64, Address } from 'symbol-sdk'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 // internal dependencies
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'

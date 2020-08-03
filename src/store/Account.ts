@@ -243,7 +243,6 @@ export default {
       if (!address) {
         throw new Error('Address must be provided when calling account/SET_CURRENT_SIGNER!')
       }
-      const networkType: NetworkType = rootGetters['network/networkType']
       const currentProfile: ProfileModel = rootGetters['profile/currentProfile']
       const currentAccount: AccountModel = getters.currentAccount
       const previousSignerAddress: Address = getters.currentSignerAddress

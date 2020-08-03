@@ -16,7 +16,6 @@
 
 import { NetworkCurrenciesModel } from '@/core/database/entities/NetworkCurrenciesModel'
 import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
-import { trimEnd } from 'lodash'
 import { NetworkCurrencyModel } from '../entities/NetworkCurrencyModel'
 
 export class NetworkCurrenciesModelStorage extends VersionedNetworkBasedObjectStorage<NetworkCurrenciesModel> {
