@@ -18,7 +18,7 @@ import { Component, Prop } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 // internal dependencies
 import { FormNamespaceRegistrationTransactionTs } from '../FormNamespaceRegistrationTransaction/FormNamespaceRegistrationTransactionTs'
-import { NamespaceId } from 'symbol-sdk'
+import { NamespaceId, RentalFees } from 'symbol-sdk'
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 // configuration
 // child components
@@ -26,11 +26,13 @@ import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
+// @ts-ignore
+import RentalFee from '@/components/RentalFees/RentalFee.vue'
 import { NamespaceService } from '@/services/NamespaceService'
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
 
 @Component({
-  components: { ErrorTooltip, ModalTransactionConfirmation },
+  components: { ErrorTooltip, ModalTransactionConfirmation, RentalFee },
   computed: {
     ...mapGetters({
       namespaces: 'namespace/namespaces',
@@ -41,12 +43,12 @@ export class FormExtendNamespaceDurationTransactionTs extends FormNamespaceRegis
   @Prop({ default: null, required: true }) namespaceId: NamespaceId
 
   private namespaces: NamespaceModel[]
+  private rentalFee: RentalFees
   /**
    * Validation rules
    * @var {ValidationRuleset}
    */
   public validationRules = ValidationRuleset
-
   /**
    * Current namespace info
    * @readonly
@@ -115,5 +117,10 @@ export class FormExtendNamespaceDurationTransactionTs extends FormNamespaceRegis
    */
   private getExpirationInfoFromEndHeight(endHeight: number): { expiration: string; expired: boolean } {
     return NamespaceService.getExpiration(this.networkConfiguration, this.currentHeight, endHeight)
+  }
+
+  async mounted() {
+    this.rentalFee = await this.$store.dispatch('network/RENTAL_FEE')
+    this.formItems.rentalFees = this.rentalFee.effectiveRootNamespaceRentalFeePerBlock.compact()
   }
 }
