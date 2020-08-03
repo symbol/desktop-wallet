@@ -17,6 +17,7 @@ import Vue from 'vue'
 // internal dependencies
 import app from '@/main'
 import { AwaitLock } from './AwaitLock'
+import { FilterHelpers } from '../core/utils/FilterHelpers'
 
 const Lock = AwaitLock.create()
 
@@ -45,16 +46,18 @@ export default {
       state.initialized = initialized
     },
     add: (state, payload) => {
+      // strip tags to remove XSS vulnerability
+      const message = FilterHelpers.stripFilter(payload.message)
       const history = state.history
       history.push({
         level: payload.level || 'warning',
-        message: payload.message,
+        message: message,
       })
       Vue.set(state, 'history', history)
 
       /// region trigger notice UI
       app.$Notice.destroy()
-      app.$Notice[payload.level]({ title: app.$t(payload.message) })
+      app.$Notice[payload.level]({ title: app.$t(message) })
       /// end-region trigger notice UI
     },
   },
