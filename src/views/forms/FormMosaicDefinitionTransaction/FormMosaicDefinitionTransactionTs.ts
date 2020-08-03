@@ -22,7 +22,6 @@ import {
   MosaicNonce,
   MosaicSupplyChangeAction,
   MosaicSupplyChangeTransaction,
-  PublicAccount,
   Transaction,
   UInt64,
 } from 'symbol-sdk'

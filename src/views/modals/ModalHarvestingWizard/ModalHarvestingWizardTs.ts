@@ -1,5 +1,5 @@
 // external dependencies
-import { Account, AccountInfo, AccountType, AccountKeyTypeFlags, PublicAccount, NetworkType } from 'symbol-sdk'
+import { Account, AccountInfo, AccountType, PublicAccount, NetworkType } from 'symbol-sdk'
 import { AccountModel, AccountType as ProfileType } from '@/core/database/entities/AccountModel'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'

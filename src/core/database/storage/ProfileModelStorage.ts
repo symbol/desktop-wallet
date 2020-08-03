@@ -16,7 +16,6 @@
 
 import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
-import { Address } from 'symbol-sdk'
 
 export class ProfileModelStorage extends VersionedObjectStorage<Record<string, ProfileModel>> {
   /**
