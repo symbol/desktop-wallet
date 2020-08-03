@@ -117,7 +117,6 @@ export abstract class TransactionView<T extends Transaction> {
         key: 'hash',
         value: (this.info && this.info.hash) || undefined,
       },
-      // this.getFeeDetailItem(),
       {
         key: 'block_height',
         value:
