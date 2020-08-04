@@ -21,7 +21,6 @@ import {
   NamespaceRegistrationType,
   Transaction,
   UInt64,
-  RentalFees,
 } from 'symbol-sdk'
 import { Component, Prop } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
@@ -90,7 +89,6 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    * @var {NamespaceRegistrationType}
    */
   public typeRootNamespace = NamespaceRegistrationType.RootNamespace
-  private rentalFees: RentalFees
   /**
    * Sub namespace type exposed to view
    * @var {NamespaceRegistrationType}
@@ -113,7 +111,6 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     parentNamespaceName: '',
     duration: 172800,
     maxFee: 0,
-    rentalFees: 0,
   }
 
   /**
@@ -138,7 +135,6 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     this.formItems.newNamespaceName = this.namespaceId ? this.namespaceId.fullName : ''
     this.formItems.parentNamespaceName = this.parentNamespaceId ? this.parentNamespaceId.fullName : ''
     this.formItems.duration = this.duration || 172800
-    this.formItems.rentalFees = 0
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
   }
@@ -219,11 +215,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     this.formItems.newNamespaceName = FilterHelpers.stripFilter(this.formItems.newNamespaceName)
   }
 
-  async mounted() {
-    this.rentalFees = await this.$store.dispatch('network/RENTAL_FEE')
-    this.formItems.rentalFees =
-      this.formItems.registrationType === this.typeRootNamespace
-        ? this.rentalFees.effectiveRootNamespaceRentalFeePerBlock.compact()
-        : this.rentalFees.effectiveMosaicRentalFee.compact()
+  mounted() {
+    this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES')
   }
 }

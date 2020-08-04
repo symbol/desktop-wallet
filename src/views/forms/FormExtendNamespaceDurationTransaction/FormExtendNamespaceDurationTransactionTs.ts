@@ -18,7 +18,7 @@ import { Component, Prop } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 // internal dependencies
 import { FormNamespaceRegistrationTransactionTs } from '../FormNamespaceRegistrationTransaction/FormNamespaceRegistrationTransactionTs'
-import { NamespaceId, RentalFees } from 'symbol-sdk'
+import { NamespaceId } from 'symbol-sdk'
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 // configuration
 // child components
@@ -43,7 +43,6 @@ export class FormExtendNamespaceDurationTransactionTs extends FormNamespaceRegis
   @Prop({ default: null, required: true }) namespaceId: NamespaceId
 
   private namespaces: NamespaceModel[]
-  private rentalFee: RentalFees
   /**
    * Validation rules
    * @var {ValidationRuleset}
@@ -120,7 +119,6 @@ export class FormExtendNamespaceDurationTransactionTs extends FormNamespaceRegis
   }
 
   async mounted() {
-    this.rentalFee = await this.$store.dispatch('network/RENTAL_FEE')
-    this.formItems.rentalFees = this.rentalFee.effectiveRootNamespaceRentalFeePerBlock.compact()
+    this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES')
   }
 }

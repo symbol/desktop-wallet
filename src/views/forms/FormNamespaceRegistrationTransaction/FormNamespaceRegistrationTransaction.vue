@@ -60,7 +60,6 @@
           <RentalFee
             :rental-type="formItems.registrationType === typeRootNamespace ? 'root-namespace' : 'child-namespace'"
             :duration="formItems.duration"
-            :rental-fee="formItems.rentalFees"
           />
           <MaxFeeAndSubmit v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
         </form>

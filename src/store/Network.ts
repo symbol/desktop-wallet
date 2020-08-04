@@ -67,7 +67,7 @@ interface NetworkState {
   currentHeight: number
   subscriptions: Subscription[]
   transactionFees: TransactionFees
-  currentRentalFee?: number
+  rentalFeeEstimation: RentalFees
 }
 
 const defaultPeer = URLHelpers.formatUrl(networkConfig.defaultNodeUrl)
@@ -87,7 +87,7 @@ const networkState: NetworkState = {
   knowNodes: [],
   currentHeight: 0,
   subscriptions: [],
-  currentRentalFee: 0,
+  rentalFeeEstimation: undefined,
 }
 export default {
   namespaced: true,
@@ -107,7 +107,7 @@ export default {
     knowNodes: (state: NetworkState) => state.knowNodes,
     currentHeight: (state: NetworkState) => state.currentHeight,
     transactionFees: (state: NetworkState) => state.transactionFees,
-    currentRentalFee: (state: NetworkState) => state.currentRentalFee,
+    rentalFeeEstimation: (state: NetworkState) => state.rentalFeeEstimation,
   },
   mutations: {
     setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -132,8 +132,8 @@ export default {
     transactionFees: (state: NetworkState, transactionFees: TransactionFees) => {
       state.transactionFees = transactionFees
     },
-    currentRentalFee: (state: NetworkState, amount: number) => {
-      state.currentRentalFee = amount
+    rentalFeeEstimation: (state: NetworkState, amount: RentalFees) => {
+      state.rentalFeeEstimation = amount
     },
 
     addPeer: (state: NetworkState, peerUrl: string) => {
@@ -274,10 +274,18 @@ export default {
       }
     },
 
-    RENTAL_FEE({ rootGetters }): Promise<RentalFees> {
+    REST_NETWORK_RENTAL_FEES({ rootGetters, dispatch }) {
       const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory']
-      const rentalFee = repositoryFactory.createNetworkRepository().getRentalFees()
-      return rentalFee.toPromise()
+      repositoryFactory
+        .createNetworkRepository()
+        .getRentalFees()
+        .subscribe((rentalFee: RentalFees) => {
+          dispatch('SET_RENTAL_FEE_ESTIMATE', rentalFee)
+        })
+    },
+
+    SET_RENTAL_FEE_ESTIMATE({ commit }, rentalFee) {
+      commit('rentalFeeEstimation', rentalFee)
     },
 
     ADD_KNOWN_PEER({ commit }, peerUrl) {

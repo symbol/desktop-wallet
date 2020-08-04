@@ -24,7 +24,6 @@ import {
   MosaicSupplyChangeTransaction,
   Transaction,
   UInt64,
-  RentalFees,
 } from 'symbol-sdk'
 import { Component } from 'vue-property-decorator'
 // internal dependencies
@@ -80,13 +79,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     permanent: true,
     duration: 10000,
     maxFee: 0,
-    rentalFees: 0,
   }
-  /**
-   * Rental Fees
-   *
-   */
-  private rentalFees: RentalFees
 
   /**
    * Reset the form with properties
@@ -114,7 +107,6 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     this.formItems.restrictable = false
     this.formItems.permanent = false
     this.formItems.duration = 10000
-    this.formItems.rentalFees = 0
 
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
@@ -181,8 +173,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     this.formItems.maxFee = definition.maxFee.compact()
   }
 
-  public async mounted() {
-    this.rentalFees = await this.$store.dispatch('network/RENTAL_FEE')
-    this.formItems.rentalFees = this.rentalFees.effectiveMosaicRentalFee.compact()
+  mounted() {
+    this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES')
   }
 }

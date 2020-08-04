@@ -57,6 +57,14 @@ export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefin
         key: 'table_header_restrictable',
         value: mosaicFlags.restrictable,
       },
+      {
+        key: 'estimated_rental_fee',
+        value: {
+          amount: this.$store.getters['network/rentalFeeEstimation'].effectiveMosaicRentalFee.compact(),
+          color: 'red',
+        },
+        isMosaic: true,
+      },
     ]
   }
 }

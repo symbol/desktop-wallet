@@ -117,6 +117,7 @@ export abstract class TransactionView<T extends Transaction> {
         key: 'hash',
         value: (this.info && this.info.hash) || undefined,
       },
+      this.getFeeDetailItem(),
       {
         key: 'block_height',
         value:
@@ -136,39 +137,25 @@ export abstract class TransactionView<T extends Transaction> {
         key: 'signer_public_key',
         value: (this.transaction.signer && this.transaction.signer.publicKey) || undefined,
       },
-    ]
-      .concat(this.getFeeDetailItem())
-      .filter((pair) => pair.value)
+    ].filter((pair) => pair.value)
   }
 
-  protected getFeeDetailItem(): TransactionDetailItem[] {
+  protected getFeeDetailItem(): TransactionDetailItem {
     if (this.transaction.isConfirmed()) {
-      return [
-        {
-          key: 'paid_fee',
-          value: this.transaction,
-          isPaidFee: true,
-        },
-      ]
+      return {
+        key: 'paid_fee',
+        value: this.transaction,
+        isPaidFee: true,
+      }
     } else {
-      return [
-        {
-          key: 'max_fee',
-          value: {
-            amount: this.transaction.maxFee.compact() || 0,
-            color: 'red',
-          },
-          isMosaic: true,
+      return {
+        key: 'max_fee',
+        value: {
+          amount: this.transaction.maxFee.compact() || 0,
+          color: 'red',
         },
-        {
-          key: 'current_rental_fee',
-          value: {
-            amount: this.$store.getters['network/currentRentalFee'],
-            color: 'red',
-          },
-          isMosaic: true,
-        },
-      ]
+        isMosaic: true,
+      }
     }
   }
 }
