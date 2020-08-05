@@ -214,8 +214,4 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   public stripTagsNamesapceName() {
     this.formItems.newNamespaceName = FilterHelpers.stripFilter(this.formItems.newNamespaceName)
   }
-
-  mounted() {
-    this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES')
-  }
 }

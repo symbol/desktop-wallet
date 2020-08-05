@@ -172,8 +172,4 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     // - populate maxFee
     this.formItems.maxFee = definition.maxFee.compact()
   }
-
-  mounted() {
-    this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES')
-  }
 }

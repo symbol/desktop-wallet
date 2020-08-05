@@ -45,60 +45,40 @@ export class ViewNamespaceRegistrationTransaction extends TransactionView<Namesp
     const duration = transaction.duration
     const networkConfiguration: NetworkConfigurationModel = this.$store.getters['network/networkConfiguration']
     const blockGenerationTargetTime = networkConfiguration.blockGenerationTargetTime
-    if (transaction.isUnconfirmed()) {
-      if (registrationType === NamespaceRegistrationType.RootNamespace) {
-        return [
-          { key: 'namespace_name', value: rootNamespaceName },
-          {
-            key: 'duration',
-            value: TimeHelpers.durationToRelativeTime(parseInt(duration.toString()), blockGenerationTargetTime),
-          },
-          {
-            key: 'estimated_rental_fee',
-            value: {
-              amount:
-                this.$store.getters['network/rentalFeeEstimation'].effectiveRootNamespaceRentalFeePerBlock.compact() *
-                this.transaction['duration'].compact(),
-              color: 'red',
-            },
-            isMosaic: true,
-          },
-        ]
-      }
-
+    if (registrationType === NamespaceRegistrationType.RootNamespace) {
       return [
-        { key: 'namespace_name', value: subNamespaceName },
+        { key: 'namespace_name', value: rootNamespaceName },
         {
-          key: 'parent_namespace',
-          value: rootNamespaceName,
+          key: 'duration',
+          value: TimeHelpers.durationToRelativeTime(parseInt(duration.toString()), blockGenerationTargetTime),
         },
         {
           key: 'estimated_rental_fee',
           value: {
-            amount: this.$store.getters['network/rentalFeeEstimation'].effectiveChildNamespaceRentalFee.compact(),
+            amount:
+              this.$store.getters['network/rentalFeeEstimation'].effectiveRootNamespaceRentalFeePerBlock.compact() *
+              this.transaction['duration'].compact(),
             color: 'red',
           },
           isMosaic: true,
         },
       ]
-    } else {
-      if (registrationType === NamespaceRegistrationType.RootNamespace) {
-        return [
-          { key: 'namespace_name', value: rootNamespaceName },
-          {
-            key: 'duration',
-            value: TimeHelpers.durationToRelativeTime(parseInt(duration.toString()), blockGenerationTargetTime),
-          },
-        ]
-      }
-
-      return [
-        { key: 'namespace_name', value: subNamespaceName },
-        {
-          key: 'parent_namespace',
-          value: rootNamespaceName,
-        },
-      ]
     }
+
+    return [
+      { key: 'namespace_name', value: subNamespaceName },
+      {
+        key: 'parent_namespace',
+        value: rootNamespaceName,
+      },
+      {
+        key: 'estimated_rental_fee',
+        value: {
+          amount: this.$store.getters['network/rentalFeeEstimation'].effectiveChildNamespaceRentalFee.compact(),
+          color: 'red',
+        },
+        isMosaic: true,
+      },
+    ]
   }
 }

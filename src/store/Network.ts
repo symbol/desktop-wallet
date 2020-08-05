@@ -167,6 +167,7 @@ export default {
       const callback = async () => {
         // commit('knowNodes', new NodeService().getKnowNodesOnly())
         await dispatch('CONNECT')
+        dispatch('REST_NETWORK_RENTAL_FEES')
         // update store
         commit('setInitialized', true)
       }
