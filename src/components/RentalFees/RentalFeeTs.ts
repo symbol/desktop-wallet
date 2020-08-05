@@ -1,4 +1,4 @@
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 //@ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
 //@ts-ignore
@@ -29,13 +29,13 @@ export class RentalFeeTs extends Vue {
     if (this.rentalEstimation) {
       switch (this.rentalType) {
         case 'mosaic':
-          feeAmountRaw = this.rentalEstimation.effectiveMosaicRentalFee.compact()
+          feeAmountRaw = this.rentalEstimation['effectiveMosaicRentalFee'].compact()
           break
         case 'root-namespace':
-          feeAmountRaw = this.rentalEstimation.effectiveRootNamespaceRentalFeePerBlock.compact() * this.duration
+          feeAmountRaw = this.rentalEstimation['effectiveRootNamespaceRentalFeePerBlock'].compact() * this.duration
           break
         case 'child-namespace':
-          feeAmountRaw = this.rentalEstimation.effectiveChildNamespaceRentalFee.compact()
+          feeAmountRaw = this.rentalEstimation['effectiveChildNamespaceRentalFee'].compact()
           break
         default:
           feeAmountRaw = 0

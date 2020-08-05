@@ -31,40 +31,68 @@ export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefin
     const duration = this.transaction.duration.toString()
     const networkConfiguration: NetworkConfigurationModel = this.$store.getters['network/networkConfiguration']
     const blockGenerationTargetTime = networkConfiguration.blockGenerationTargetTime
-
-    return [
-      { key: 'mosaic_id', value: mosaicId.toHex() },
-      {
-        key: 'table_header_divisibility',
-        value: `${divisibility}`,
-      },
-      {
-        key: 'duration',
-        value:
-          duration === '0'
-            ? 'unlimited'
-            : TimeHelpers.durationToRelativeTime(parseInt(duration), blockGenerationTargetTime),
-      },
-      {
-        key: 'table_header_transferable',
-        value: mosaicFlags.transferable,
-      },
-      {
-        key: 'table_header_supply_mutable',
-        value: mosaicFlags.supplyMutable,
-      },
-      {
-        key: 'table_header_restrictable',
-        value: mosaicFlags.restrictable,
-      },
-      {
-        key: 'estimated_rental_fee',
-        value: {
-          amount: this.$store.getters['network/rentalFeeEstimation'].effectiveMosaicRentalFee.compact(),
-          color: 'red',
+    if (this.transaction.isUnconfirmed()) {
+      return [
+        { key: 'mosaic_id', value: mosaicId.toHex() },
+        {
+          key: 'table_header_divisibility',
+          value: `${divisibility}`,
         },
-        isMosaic: true,
-      },
-    ]
+        {
+          key: 'duration',
+          value:
+            duration === '0'
+              ? 'unlimited'
+              : TimeHelpers.durationToRelativeTime(parseInt(duration), blockGenerationTargetTime),
+        },
+        {
+          key: 'table_header_transferable',
+          value: mosaicFlags.transferable,
+        },
+        {
+          key: 'table_header_supply_mutable',
+          value: mosaicFlags.supplyMutable,
+        },
+        {
+          key: 'table_header_restrictable',
+          value: mosaicFlags.restrictable,
+        },
+        {
+          key: 'estimated_rental_fee',
+          value: {
+            amount: this.$store.getters['network/rentalFeeEstimation'].effectiveMosaicRentalFee.compact() || 0,
+            color: 'red',
+          },
+          isMosaic: true,
+        },
+      ]
+    } else {
+      return [
+        { key: 'mosaic_id', value: mosaicId.toHex() },
+        {
+          key: 'table_header_divisibility',
+          value: `${divisibility}`,
+        },
+        {
+          key: 'duration',
+          value:
+            duration === '0'
+              ? 'unlimited'
+              : TimeHelpers.durationToRelativeTime(parseInt(duration), blockGenerationTargetTime),
+        },
+        {
+          key: 'table_header_transferable',
+          value: mosaicFlags.transferable,
+        },
+        {
+          key: 'table_header_supply_mutable',
+          value: mosaicFlags.supplyMutable,
+        },
+        {
+          key: 'table_header_restrictable',
+          value: mosaicFlags.restrictable,
+        },
+      ]
+    }
   }
 }

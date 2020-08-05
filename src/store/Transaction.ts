@@ -211,7 +211,7 @@ export default {
     },
 
     LOAD_TRANSACTION_DETAILS(
-      { commit, rootGetters },
+      { rootGetters },
       { group, transactionHash }: { group: TransactionGroupState; transactionHash: string },
     ): Promise<Transaction | AggregateTransaction> {
       if (!group) {
