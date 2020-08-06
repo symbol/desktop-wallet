@@ -58,7 +58,10 @@ export class TransactionDetailsTs extends Vue {
       return
     }
 
-    this.views = [this.getView(this.transaction)]
+    this.views = [
+      this.getView(this.transaction),
+      ...this.transaction['innerTransactions'].map((tx) => this.getView(tx)),
+    ]
   }
 
   private getView(transaction: Transaction): TransactionView<Transaction> {
