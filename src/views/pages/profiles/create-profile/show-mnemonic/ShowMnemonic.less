@@ -64,13 +64,19 @@
     position: relative;
     .copy-button {
       position: absolute;
-      bottom: 0.1rem;
-      right: 0.1rem;
+      bottom: 0.17rem;
+      right: 2.3rem;
     }
+  }
+
+  .mnemonic-container > div:first-child {
+    display: flex;
+    flex-direction: row;
   }
 
   .mnemonic-list {
     padding: 10px;
+    border-right: 1px solid #eae6e6;
 
     span {
       display: inline-block;
@@ -80,6 +86,15 @@
       margin: 5px;
       font-size: @smallFont;
       color: rgba(255, 255, 255, 0.9);
+    }
+  }
+
+  .mnemonic-qrcode {
+    padding: 0.05rem 0.1rem;
+    text-align: center;
+
+    img {
+      width: 2rem;
     }
   }
 }
