@@ -14,10 +14,19 @@
               </button>
             </div>
             <div v-else>
-              <div class="mnemonic-list">
+              <div class="mnemonic-list" >
                 <span v-for="(m, index) in mnemonicWordsList" :key="index">{{ m }}</span>
+                <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" />
               </div>
-              <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" />
+              <div class="mnemonic-qrcode">
+                <img id="qrImg" :src="qrBase64" alt="Mnemonic QR code" />
+                <span>
+                  {{ $t('scan_qrcode') }} |
+                  <a :href="qrBase64" :download="'qr_account_mnemonic_' + currentProfile.profileName">
+                    {{ $t('button_download_qr') }}
+                  </a>
+                </span>
+              </div>
             </div>
           </div>
         </MnemonicDisplay>
