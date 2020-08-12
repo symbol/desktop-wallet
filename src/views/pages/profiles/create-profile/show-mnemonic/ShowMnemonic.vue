@@ -21,7 +21,6 @@
               <div class="mnemonic-qrcode">
                 <img id="qrImg" :src="qrBase64" alt="Mnemonic QR code" />
                 <span>
-                  {{ $t('scan_qrcode') }} |
                   <a :href="qrBase64" :download="'qr_account_mnemonic_' + currentProfile.profileName">
                     {{ $t('button_download_qr') }}
                   </a>
@@ -50,15 +49,33 @@
         </div>
       </div>
       <div class="create-mnemonic-right">
-        <p class="text1">
-          {{ $t('tips') }}
-        </p>
-        <p class="text">
-          {{ $t('don_not_disclose') }}
-        </p>
-        <p class="text">
-          {{ $t('please_backup_mnemonic_passphrase') }}
-        </p>
+        <Alert type="warning" show-icon>
+          {{ $t('don_not_disclose_title') }}
+          <template slot="desc">
+            {{ $t('don_not_disclose') }}
+          </template>
+        </Alert>
+        <Alert type="success" show-icon>
+          {{ $t('please_backup_mnemonic_passphrase_title') }}
+          <template slot="desc">
+            {{ $t('please_backup_mnemonic_passphrase') }}
+
+            <div class="mnemonic-backup-options-desc">
+              <span>
+                <p>
+                  <Icon type="md-download" />
+                  {{ $t('mnemonic_backup_options_download_desc') }}
+                </p>
+              </span>
+              <span>
+                <p>
+                  <Icon type="md-copy" />
+                  {{ $t('mnemonic_backup_options_copy_desc') }}
+                </p>
+              </span>
+            </div>
+          </template>
+        </Alert>
       </div>
     </div>
   </div>
