@@ -443,7 +443,6 @@
   "removal_or_approval_is_zero": "Minimum approval and/or minimum removal cannot be set to 0 while there are {delta} cosignatories in your list",
   "safe_storage_tips": "Safe storage tips=>",
   "save_backups": "Make multiple copies offline and save backups in multiple locations. Use encrypted disks for digital backups.",
-  "scan_qrcode": "Scan QR Code",
   "scenes_to_be_used": "Use cases",
   "see_transactions_other_account": "Display multi-signature account transactions",
   "seed_account_can_not_be_more_than_10": "You have reached the limit of accounts that can be created in one profile. Please use a different profile to create a new account.",

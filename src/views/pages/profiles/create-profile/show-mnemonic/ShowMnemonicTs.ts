@@ -24,7 +24,6 @@ import { Formatters } from '@/core/utils/Formatters'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
 import { NotificationType } from '@/core/utils/NotificationType'
 import { MnemonicQR, QRCodeGenerator } from 'symbol-qr-library'
-
 // @ts-ignore
 import failureIcon from '@/views/resources/img/monitor/failure.png'
 
@@ -68,7 +67,7 @@ export default class ShowMnemonicTs extends Vue {
    * @var {MnemonicQR}
    */
   public exportMnemonicQR: MnemonicQR
-  
+
   /**
    * Hook called when the component is mounted
    */
@@ -77,9 +76,9 @@ export default class ShowMnemonicTs extends Vue {
       this.currentMnemonic,
       this.currentProfile.password,
       this.currentProfile.networkType,
-      this.currentProfile.generationHash
+      this.currentProfile.generationHash,
     )
-    this.exportMnemonicQR.toBase64().subscribe(base64 => this.qrBase64 = base64)
+    this.exportMnemonicQR.toBase64().subscribe((base64) => (this.qrBase64 = base64))
   }
 
   /// region computed properties getter/setter
