@@ -14,7 +14,7 @@
               </button>
             </div>
             <div v-else>
-              <div class="mnemonic-list" >
+              <div class="mnemonic-list">
                 <span v-for="(m, index) in mnemonicWordsList" :key="index">{{ m }}</span>
                 <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" />
               </div>
