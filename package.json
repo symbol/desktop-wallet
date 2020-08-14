@@ -27,6 +27,7 @@
     "prettier:fix": "prettier --write ./src ./__tests__ ./__mocks__",
     "version": "echo $npm_package_version"
   },
+  "author": "Greg Saive <greg.saive@nem.software>",
   "contributors": [
     {
       "name": "Greg Saive",
