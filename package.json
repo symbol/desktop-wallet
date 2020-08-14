@@ -27,6 +27,12 @@
     "prettier:fix": "prettier --write ./src ./__tests__ ./__mocks__",
     "version": "echo $npm_package_version"
   },
+  "contributors": [
+    {
+      "name": "Greg Saive",
+      "email": "greg.saive@nem.software"
+    }
+  ],
   "dependencies": {
     "animate.css": "^3.7.2",
     "await-lock": "^2.0.1",
