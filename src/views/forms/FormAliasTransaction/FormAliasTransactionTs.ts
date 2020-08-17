@@ -177,6 +177,10 @@ export class FormAliasTransactionTs extends FormTransactionBase {
     // TransactionType.ADDRESS_ALIAS, ) this.setTransactions([transaction as AliasTransaction])
     // this.isAwaitingSignature = true return }
 
+    this.formItems.signerAddress = this.selectedSigner
+      ? this.selectedSigner.address.plain()
+      : this.currentAccount.address
+
     /**
      * Helper function to get the alias target as a string
      * @param {(MosaicId | Address)} aliasTarget
