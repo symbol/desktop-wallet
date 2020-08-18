@@ -50,9 +50,9 @@
       </div>
       <div class="create-mnemonic-right">
         <Alert type="warning" show-icon>
-          {{ $t('don_not_disclose_title') }}
+          {{ $t('do_not_disclose_title') }}
           <template slot="desc">
-            {{ $t('don_not_disclose') }}
+            {{ $t('do_not_disclose') }}
           </template>
         </Alert>
         <Alert type="success" show-icon>
