@@ -3,12 +3,12 @@
     <div class="inner-container">
       <div v-if="isLedger">
         <p class="create-profile-box">
-          {{ $t('profile_import') }}
+          {{ $t('ledger_profile_import') }}
         </p>
       </div>
-      <div v-if="!isLedger">
+      <div v-if="isLedger === undefined">
         <p class="create-profile-box">
-          {{ $t('ledger_profile_import') }}
+          {{ $t('profile_import') }}
         </p>
       </div>
       <div class="step-bar-container">

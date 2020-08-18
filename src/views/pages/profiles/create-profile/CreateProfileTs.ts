@@ -29,7 +29,7 @@ export default class CreateProfileTs extends Vue {
     'finish',
   ]
 
-  public LedgerStepBarTitleList = ['Create Ledger Profile']
+  public LedgerStepBarTitleList = []
   isLedger = false
   public titleList = []
   public created() {
