@@ -309,6 +309,7 @@
   "mosaic_name_can_not_be_null": "Mosaic name cannot be null/empty",
   "mosaic_not_set": "Select a mosaic",
   "mosaics_list": "Mosaics List",
+  "mosaic_expired": "Expired",
   "move_your_mouse": "Please move your mouse to improve randomness when generating the mnemonic passphrase",
   "multisig_accounts_can_not_send_a_transaction_by_themselves": "Multi-signature accounts cannot initiate transactions. Please, use co-signatories accounts.",
   "namespace": "Namespace",

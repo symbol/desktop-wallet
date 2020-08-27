@@ -309,6 +309,7 @@
   "mosaic_name_can_not_be_null": "モザイク名は空にできません",
   "mosaic_not_set": "モザイクを選択してください",
   "mosaics_list": "モザイクリスト",
+  "mosaic_expired": "期限切れ",
   "move_your_mouse": "複雑さの高いランダムなニーモニックパス語群を生成するためにマウスを動かしてください。",
   "multisig_accounts_can_not_send_a_transaction_by_themselves": "マルチシグアカウントはトランザクションを開始できません。連署者のアカウントを使用してください。",
   "namespace": "ネームスペース",

@@ -309,6 +309,7 @@
   "mosaic_name_can_not_be_null": "马赛克名称不能为空",
   "mosaic_not_set": "请选择马赛克",
   "mosaics_list": "马赛克列表",
+  "mosaic_expired": "已过期",
   "move_your_mouse": "请移动你的鼠标，产生墒增，帮助产生随机助记词",
   "multisig_accounts_can_not_send_a_transaction_by_themselves": "Multisig 账户不能通过本账户发起交易。",
   "namespace": "命名空间",
