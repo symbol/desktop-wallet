@@ -31,7 +31,7 @@ import TransactionListFilters from '@/components/TransactionList/TransactionList
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
 // @ts-ignore
 import ModalTransactionExport from '@/views/modals/ModalTransactionExport/ModalTransactionExport.vue'
-import { TransactionGroup } from '@/store/Transaction'
+import { TransactionGroupState } from '@/store/Transaction'
 @Component({
   components: {
     ModalTransactionCosignature,

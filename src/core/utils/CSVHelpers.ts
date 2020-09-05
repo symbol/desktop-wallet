@@ -29,7 +29,7 @@ export class CSVHelpers {
    * Export to csv file
    * @param data array of transactions
    * returns new array with parsed aggregate transaction objects
-  */
+   */
   private static constructAggregateTransactionsObject(transaction: AggregateTransaction) {
     let merged = {}
     const result = {}
@@ -60,7 +60,7 @@ export class CSVHelpers {
    * Export to csv file
    * @param data array of transactions
    * returns new array with parsed transaction objects
-  */
+   */
   private static constructTransactionsObject(transaction: Transaction) {
     this.views = [TransactionViewFactory.getView(store, transaction)]
     const result = {}
@@ -78,7 +78,7 @@ export class CSVHelpers {
     }
     return result
   }
-  
+
   /**
    * Export to csv file
    * @param data array of transactions
