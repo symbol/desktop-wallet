@@ -187,6 +187,9 @@ export const routes: AppRoute[] = [
             },
             // @ts-ignore
             component: () => import('@/views/pages/dashboard/transfer/DashboardTransferPage.vue'),
+            props: (route) => ({
+              recipientAddress: route.query.recipientAddress,
+            }),
           },
           {
             path: '/invoice',
