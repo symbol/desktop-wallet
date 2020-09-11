@@ -18,7 +18,7 @@ import FileSaver from 'file-saver'
 import store from '@/store/index.ts'
 import { TransactionViewFactory } from '@/core/transactions/TransactionViewFactory'
 import { TransactionView } from '@/core/transactions/TransactionView'
-import { AggregateTransaction, Transaction } from 'symbol-sdk'
+import { AggregateTransaction, Transaction, TransactionType } from 'symbol-sdk'
 import * as _ from 'lodash'
 
 export class CSVHelpers {
@@ -26,8 +26,8 @@ export class CSVHelpers {
   private static transactionsArray = []
 
   /**
-   * Export to csv file
-   * @param data array of transactions
+   * returns object of a parsed aggregate transaction
+   * @param transaction aggregate transaction
    * returns new array with parsed aggregate transaction objects
    */
   private static constructAggregateTransactionsObject(transaction: AggregateTransaction) {
@@ -57,9 +57,9 @@ export class CSVHelpers {
   }
 
   /**
-   * Export to csv file
-   * @param data array of transactions
-   * returns new array with parsed transaction objects
+   * Constructs transaction object
+   * @param transaction a transaction
+   * returns object of a parsed transaction
    */
   private static constructTransactionsObject(transaction: Transaction) {
     this.views = [TransactionViewFactory.getView(store, transaction)]
@@ -81,7 +81,7 @@ export class CSVHelpers {
 
   /**
    * Export to csv file
-   * @param data array of transactions
+   * @param data array of parssed transactions
    * returns new array with parsed transaction objects
    */
 
@@ -89,7 +89,11 @@ export class CSVHelpers {
     this.transactionsArray = []
     data.forEach((transaction) => {
       let result = {}
-      if (transaction instanceof AggregateTransaction) {
+      if (
+        transaction['type'] == TransactionType.AGGREGATE_BONDED ||
+        transaction['type'] == TransactionType.AGGREGATE_COMPLETE
+      ) {
+        console.log(transaction)
         result = this.constructAggregateTransactionsObject(transaction)
       } else {
         result = this.constructTransactionsObject(transaction)
