@@ -68,11 +68,12 @@ export default class TransactionQRActionTs extends Vue {
   }
 
   public onSubmit() {
+    const tran = (this.qrCode.transaction as unknown) as TransferTransaction
     this.onSuccess()
     this.$router.push({
       name: 'dashboard.transfer',
       // @ts-ignore
-      params: { transaction: this.qrCode.transaction },
+      params: { transaction: tran, recipientAddress: (tran.recipientAddress as Address).plain() },
     })
   }
 }

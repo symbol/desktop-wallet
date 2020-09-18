@@ -576,7 +576,7 @@
   "transaction_descriptor_17232": "账户操作约束",
   "transaction_details": "事务细节",
   "transaction_has_cosignature": "已接收的联合签名",
-  "transaction_needs_cosignature": "等待联署的交易",
+  "transaction_needs_cosignature": "等待共同签名的交易",
   "transaction_needs_cosignature_explain": "这笔交易需要多方联署审批，请立即解锁您的帐户以发送联名交易。",
   "transaction_needs_cosignature_explain_signed": "这笔交易需要多方联署审批，您已经为此交易发送了联合签名，请等待其他联署人同意。",
   "transaction_qr_action_desc": "单击继续以打开包含这些详细信息的传输页面。",
@@ -622,5 +622,8 @@
   "warning_already_a_cosignatory": "此帐户已是联名用户！",
   "welcome": "Welcome",
   "word": "字",
-  "x_seconds": "{seconds}秒"
+  "x_seconds": "{seconds}秒",
+  "cosignature_qr_action_desc": "继续到交易详细信息页面以签名。",
+  "transaction_expired": "交易已过期",
+  "qrcode_detail_item_type_cosignatureqr": "要求共同签名"
 }

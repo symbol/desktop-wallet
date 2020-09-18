@@ -24,7 +24,7 @@
     <ModalTransactionCosignature
       v-if="hasCosignatureModal"
       :visible="hasCosignatureModal"
-      :transaction="activePartialTransaction"
+      :transaction-hash="aggregateTransactionHash"
       @close="onCloseCosignatureModal"
     />
   </div>
