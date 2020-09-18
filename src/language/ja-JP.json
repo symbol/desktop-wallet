@@ -577,7 +577,7 @@
   "transaction_has_cosignature": "連署名の受信",
   "transaction_needs_cosignature": "連署名待機トランザクション",
   "transaction_needs_cosignature_explain": "このマルチシグトランザクションは承認される前に複数の当事者が署名する必要があります。パスワードを入力し、署名を追加することを確認してください。",
-  "transaction_needs_cosignature_explain_signed": "このトランザクションには、共同署名を送信して承認する複数の当事者が必要です。このトランザクションの共同署名はすでに送信されています。他の共同署名者が承認するまでお待ちください。",
+  "transaction_needs_cosignature_explain_signed": "このトランザクションでは、共同署名を送信して承認するために複数の当事者が必要です。\nこの取引の共同署名は既に送信されています。\n他の署名者が承認するまでお待ちください。 \nQRコードをダウンロードし、他の共同署名者に送信して、簡単に署名することができます。",
   "transaction_qr_action_desc": "[続行]をクリックして、これらの詳細が記載された転送ページを開きます。",
   "transaction_qr_code": "トランザクションQRコード",
   "transaction_received_cosignature_explain": "Received the minimum required co-signatories",
@@ -621,5 +621,8 @@
   "warning_already_a_cosignatory": "このアカウントは既に連署者です",
   "welcome": "ようこそ",
   "word": "文字",
-  "x_seconds": "{seconds}秒"
+  "x_seconds": "{seconds}秒",
+  "cosignature_qr_action_desc": "取引の詳細ページに進み、署名をしてください。",
+  "transaction_expired": "取引の期限が切れました",
+  "qrcode_detail_item_type_cosignatureqr": "署名のリクエスト"
 }

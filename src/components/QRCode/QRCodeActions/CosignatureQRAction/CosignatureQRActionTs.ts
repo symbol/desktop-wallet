@@ -14,17 +14,24 @@
  *
  */
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { ContactQR } from 'symbol-qr-library'
-import { NetworkType } from 'symbol-sdk'
+import { CosignatureQR } from 'symbol-qr-library'
+import { NetworkType, TransferTransaction, Address, AggregateTransaction, Transaction } from 'symbol-sdk'
+
 import { QRCodeDetailItem } from '@/components/QRCode/QRCodeActions/TemplateQRAction/TemplateQRActionTs'
 // @ts-ignore
 import TemplateQRAction from '@/components/QRCode/QRCodeActions/TemplateQRAction/TemplateQRAction.vue'
+// @ts-ignore
+import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
+// @ts-ignore
+import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue'
+// @ts-ignore
+import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue'
 
 @Component({
-  components: { TemplateQRAction },
+  components: { TemplateQRAction, MosaicAmountDisplay, MaxFeeSelector, TransactionDetails },
 })
-export default class ContactQRActionTs extends Vue {
-  @Prop({ default: null }) readonly qrCode!: ContactQR
+export default class CosignatureQRActionTs extends Vue {
+  @Prop({ default: null }) readonly qrCode!: CosignatureQR
 
   @Prop({ default: null }) readonly onSuccess: () => void
 
@@ -38,7 +45,7 @@ export default class ContactQRActionTs extends Vue {
     items.push(
       new QRCodeDetailItem(
         this.$t('qrcode_detail_item_type').toString(),
-        this.$t('qrcode_detail_item_type_contactqr').toString(),
+        this.$t('qrcode_detail_item_type_cosignatureqr').toString(),
         true,
       ),
     )
@@ -50,19 +57,15 @@ export default class ContactQRActionTs extends Vue {
       ),
     )
 
-    items.push(new QRCodeDetailItem(this.$t('qrcode_detail_item_contact_name').toString(), this.qrCode.name, true))
-    items.push(
-      new QRCodeDetailItem(this.$t('qrcode_detail_item_address').toString(), this.qrCode.account.address.plain(), true),
-    )
-
     return items
   }
 
   public onSubmit() {
     this.onSuccess()
     this.$router.push({
-      name: 'dashboard.transfer',
-      params: { recipientAddress: this.qrCode.account.address.plain() },
+      name: 'dashboard.index',
+      // @ts-ignore
+      params: { transaction: this.qrCode.transaction, action: 'transaction-details' },
     })
   }
 }

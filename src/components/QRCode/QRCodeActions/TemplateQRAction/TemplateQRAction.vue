@@ -7,11 +7,12 @@
           <div v-for="(item, index) in detailItems" :key="index" class="qrcode-details-row">
             <slot name="detailItem" :item="item">
               <div class="qrcode-details-row-inner">
-                <div class="qrcode-details-row-label">{{ item.label }}</div>
+                <div class="qrcode-details-row-label">{{ item.label }}:</div>
                 <div class="qrcode-details-row-value">{{ item.value }}</div>
               </div>
             </slot>
           </div>
+          <slot name="other-details"> </slot>
         </div>
       </slot>
       <slot name="qrcode-action">

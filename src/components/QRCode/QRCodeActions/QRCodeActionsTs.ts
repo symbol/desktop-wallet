@@ -24,9 +24,11 @@ import ContactQRAction from '@/components/QRCode/QRCodeActions/ContactQRAction/C
 import MnemonicQRAction from '@/components/QRCode/QRCodeActions/MnemonicQRAction/MnemonicQRAction.vue'
 // @ts-ignore
 import TransactionQRAction from '@/components/QRCode/QRCodeActions/TransactionQRAction/TransactionQRAction.vue'
+// @ts-ignore
+import CosignatureQRAction from '@/components/QRCode/QRCodeActions/CosignatureQRAction/CosignatureQRAction.vue'
 
 @Component({
-  components: { QRCodeDisplay, ContactQRAction, MnemonicQRAction, TransactionQRAction },
+  components: { QRCodeDisplay, ContactQRAction, MnemonicQRAction, TransactionQRAction, CosignatureQRAction },
 })
 export default class QRCodeActionsTs extends Vue {
   @Prop({ default: null }) readonly qrCode: QRCode
