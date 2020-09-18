@@ -26,6 +26,7 @@ import { NotificationType } from '@/core/utils/NotificationType'
 import { MnemonicQR, QRCodeGenerator } from 'symbol-qr-library'
 // @ts-ignore
 import failureIcon from '@/views/resources/img/monitor/failure.png'
+import { Password } from 'symbol-sdk'
 
 @Component({
   components: { MnemonicDisplay, ButtonCopyToClipboard },
@@ -33,6 +34,7 @@ import failureIcon from '@/views/resources/img/monitor/failure.png'
     ...mapGetters({
       currentProfile: 'profile/currentProfile',
       currentMnemonic: 'temporary/mnemonic',
+      currentPassword: 'temporary/password',
     }),
   },
 })
@@ -63,6 +65,13 @@ export default class ShowMnemonicTs extends Vue {
   public qrBase64: string = failureIcon
 
   /**
+   * Temporary stored password
+   * @see {Store.Temporary}
+   * @var {Password}
+   */
+  public currentPassword: Password
+
+  /**
    * Mnemonic QR Code to be exported
    * @var {MnemonicQR}
    */
@@ -74,7 +83,7 @@ export default class ShowMnemonicTs extends Vue {
   public created() {
     this.exportMnemonicQR = QRCodeGenerator.createExportMnemonic(
       this.currentMnemonic,
-      this.currentProfile.password,
+      this.currentPassword.value,
       this.currentProfile.networkType,
       this.currentProfile.generationHash,
     )
