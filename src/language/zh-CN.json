@@ -131,6 +131,7 @@
   "copy_failed": "复制失败",
   "copy_mnemonic": "复制助记词",
   "cosignature_added": "已接收联署",
+  "cosignature_qr_action_desc": "继续到交易详细信息页面以签名。",
   "create_a_new_account": "创建一个新账户",
   "create_a_new_profile": "建立一个新的账户",
   "create_lock_check_pw_remind": "两次密码不一致",
@@ -466,6 +467,7 @@
   "qrcode_detail_item_network_type": "网络类型",
   "qrcode_detail_item_type": "QR码类型",
   "qrcode_detail_item_type_contactqr": "地址",
+  "qrcode_detail_item_type_cosignatureqr": "要求共同签名",
   "qrcode_detail_item_type_mnemonicqr": "导入助记符",
   "qrcode_detail_item_type_transactionqr": "发票",
   "qrcode_password_info": "上载的QR码受密码保护。\n请在生成此二维码时输入您的密码。",
@@ -575,6 +577,7 @@
   "transaction_descriptor_17230": "马赛克别名",
   "transaction_descriptor_17232": "账户操作约束",
   "transaction_details": "事务细节",
+  "transaction_expired": "交易已过期",
   "transaction_has_cosignature": "已接收的联合签名",
   "transaction_needs_cosignature": "等待共同签名的交易",
   "transaction_needs_cosignature_explain": "这笔交易需要多方联署审批，请立即解锁您的帐户以发送联名交易。",
@@ -622,8 +625,5 @@
   "warning_already_a_cosignatory": "此帐户已是联名用户！",
   "welcome": "Welcome",
   "word": "字",
-  "x_seconds": "{seconds}秒",
-  "cosignature_qr_action_desc": "继续到交易详细信息页面以签名。",
-  "transaction_expired": "交易已过期",
-  "qrcode_detail_item_type_cosignatureqr": "要求共同签名"
+  "x_seconds": "{seconds}秒"
 }

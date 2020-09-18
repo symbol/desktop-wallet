@@ -131,6 +131,7 @@
   "copy_failed": "Copy failed",
   "copy_mnemonic": "Copy mnemonic",
   "cosignature_added": "Cosignature received",
+  "cosignature_qr_action_desc": "Continue to transaction details page to sign your part.",
   "create_a_new_account": "Create a new profile",
   "create_a_new_profile": "Create a new profile",
   "create_lock_check_pw_remind": "Two passwords are inconsistent",
@@ -465,6 +466,7 @@
   "qrcode_detail_item_network_type": "Network Type",
   "qrcode_detail_item_type": "QR Code Type",
   "qrcode_detail_item_type_contactqr": "Address",
+  "qrcode_detail_item_type_cosignatureqr": "Request Cosignature",
   "qrcode_detail_item_type_mnemonicqr": "Import Mnemonic",
   "qrcode_detail_item_type_transactionqr": "Invoice",
   "qrcode_password_info": "Uploaded QR Code is password protected. Please enter your password at the time this QR Code was generated.",
@@ -574,6 +576,7 @@
   "transaction_descriptor_17230": "Mosaic alias",
   "transaction_descriptor_17232": "Account operation restriction",
   "transaction_details": "Transaction details",
+  "transaction_expired": "Transaction has expired",
   "transaction_has_cosignature": "Co-signatures received",
   "transaction_needs_cosignature": "Transaction awaiting co-signature(s)",
   "transaction_needs_cosignature_explain": "This multisignature transaction needs multiple parties to sign it before it is approved. Please enter your password and confirm to add your signature.",
@@ -621,8 +624,5 @@
   "warning_already_a_cosignatory": "This account is already a cosignatory!",
   "welcome": "Welcome",
   "word": "Word",
-  "x_seconds": "{seconds}s.",
-  "qrcode_detail_item_type_cosignatureqr": "Request Cosignature",
-  "cosignature_qr_action_desc": "Continue to transaction details page to sign your part.",
-  "transaction_expired": "Transaction has expired"
+  "x_seconds": "{seconds}s."
 }
