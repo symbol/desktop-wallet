@@ -47,15 +47,20 @@ export class TransactionDetailsTs extends Vue {
   public formatters = Formatters
 
   public async mounted() {
-    if (this.transaction instanceof AggregateTransaction) {
+    if (this.transaction instanceof AggregateTransaction && this.transaction.transactionInfo) {
       //XXX should query transaction details
-      const transaction: AggregateTransaction = (await this.$store.dispatch('transaction/LOAD_TRANSACTION_DETAILS', {
-        group: 'confirmed',
-        transactionHash: this.transaction.transactionInfo.hash,
-      })) as AggregateTransaction
+      try {
+        const transaction: AggregateTransaction = (await this.$store.dispatch('transaction/LOAD_TRANSACTION_DETAILS', {
+          group: 'confirmed',
+          transactionHash: this.transaction.transactionInfo.hash,
+        })) as AggregateTransaction
 
-      this.views = [this.getView(transaction), ...transaction.innerTransactions.map((tx) => this.getView(tx))]
-      return
+        this.views = [this.getView(transaction), ...transaction.innerTransactions.map((tx) => this.getView(tx))]
+        return
+      } catch (e) {
+        // fallback
+        this.views = [this.getView(this.transaction)]
+      }
     }
 
     this.views = [this.getView(this.transaction)]

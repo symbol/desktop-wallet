@@ -77,6 +77,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
    */
   public formItems = {
     nodePublicKey: '',
+    vrfPublicKey: '',
     signerAddress: '',
     maxFee: 0,
   }
@@ -90,6 +91,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     this.formItems.signerAddress =
       this.signerAddress || (this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address)
     this.formItems.nodePublicKey = ''
+    this.formItems.vrfPublicKey = ''
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
   }
@@ -103,6 +105,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     const maxFee = UInt64.fromUint(this.formItems.maxFee)
     const message = PersistentHarvestingDelegationMessage.create(
       this.remoteAccount.publicKey,
+      this.formItems.vrfPublicKey,
       this.formItems.nodePublicKey,
       this.networkType,
     )
