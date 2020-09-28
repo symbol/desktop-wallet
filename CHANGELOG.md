@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.0][v0.13.0] - 25-Sep-2020
+
+### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0)
+
+#### Changes
+
+- Upgraded symbol-hd-wallets and symbol-qr-library to use `next` tag
+- Upgraded symbol-sdk to latest v0.20.8 alpha (0.10.x compat)
+- Added new testnet nodes in config/network.conf.json
+
+#### Fixed
+
+- Multiple fixes on breaking changes of upcoming 0.21 SDK
+- Updated block height reader to use /chain/info
+- Fixed a WebSocket CLOSED state due to invalid UNSUBSCRIBE order
+
 ## [0.12.0][v0.12.0] - 16-Jul-2020
 
 ### Milestone: [catapult-server@v0.9.6.3](https://github.com/nemtech/catapult-server/releases/tag/v0.9.6.3)
@@ -257,6 +273,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Some missing UI fixes for Symbol rebrand
 
 
+[v0.13.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.11.0...v0.13.0
 [v0.12.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.11.0...v0.12.0
 [v0.11.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.10.0...v0.11.0
 [v0.10.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.9...v0.10.0

@@ -305,6 +305,9 @@ export default {
       const currentAccountAddress: Address = getters.currentAccountAddress
       const knownAccounts: AccountModel[] = getters.knownAccounts
 
+      // avoid calls if no account set
+      if (!currentAccount || !currentAccountAddress) return
+
       // remote calls:
 
       const getMultisigAccountGraphInfoPromise = repositoryFactory

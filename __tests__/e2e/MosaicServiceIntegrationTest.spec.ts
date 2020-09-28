@@ -67,7 +67,7 @@ const repositoryFactory = new (class RepositoryFactoryHttpForTest extends Reposi
       }
       // XXX MosaicSearchCriteria not exported
       search(criteria: TransactionSearchCriteria): Observable<Page<MosaicInfo>> {
-        return of(new Page([fakeMosaicInfo], 1, 1, 1, 1))
+        return of(new Page([fakeMosaicInfo], 1, 1))
       }
     })()
   }
@@ -82,9 +82,7 @@ const repositoryFactory = new (class RepositoryFactoryHttpForTest extends Reposi
       }
 
       search(criteria: AccountSearchCriteria): Observable<Page<AccountInfo>> {
-        return of(
-          new Page([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo], 1, 1, 1, 1),
-        )
+        return of(new Page([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo], 1, 1))
       }
     })()
   }

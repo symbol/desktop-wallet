@@ -89,8 +89,8 @@ export class NetworkNodeSelectorTs extends Vue {
       this.isFetchingNodeInfo = false
     }
 
-    if (this.excludeRoles.length && this.excludeRoles.includes(nodeInfo.roles))
-      throw new Error('harvesting_node_not_eligible')
+    // if (this.excludeRoles.length && this.excludeRoles.includes(nodeInfo.roles))
+    //   throw new Error('harvesting_node_not_eligible')
 
     return nodeInfo.publicKey
   }

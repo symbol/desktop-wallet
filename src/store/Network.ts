@@ -198,9 +198,9 @@ export default {
       }
       const oldGenerationHash = getters['generationHash']
       const getNodesPromise = nodeService.getNodes(repositoryFactory, networkModel.url).toPromise()
-      const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getBlockchainHeight().toPromise()
+      const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getChainInfo().toPromise()
       const nodes = await getNodesPromise
-      const currentHeight = (await getBlockchainHeightPromise).compact()
+      const currentHeight = (await getBlockchainHeightPromise).height.compact()
       const listener = repositoryFactory.createListener()
 
       const currentPeer = URLHelpers.getNodeUrl(networkModel.url)
@@ -226,8 +226,8 @@ export default {
         dispatch('account/NETWORK_CHANGED', {}, { root: true })
         dispatch('statistics/LOAD', {}, { root: true })
       }
-      await listener.open()
       await dispatch('UNSUBSCRIBE')
+      await listener.open()
       dispatch('SUBSCRIBE')
     },
 
@@ -316,12 +316,14 @@ export default {
     async SUBSCRIBE({ commit, dispatch, getters }) {
       // use RESTService to open websocket channel subscriptions
       const listener = getters['listener'] as Listener
-      const subscription = listener.newBlock().subscribe((block: BlockInfo) => {
-        dispatch('SET_CURRENT_HEIGHT', block.height.compact())
-        dispatch('diagnostic/ADD_INFO', 'New block height: ' + block.height.compact(), { root: true })
+      listener.open().then(() => {
+        const subscription = listener.newBlock().subscribe((block: BlockInfo) => {
+          dispatch('SET_CURRENT_HEIGHT', block.height.compact())
+          dispatch('diagnostic/ADD_INFO', 'New block height: ' + block.height.compact(), { root: true })
+        })
+        // update state of listeners & subscriptions
+        commit('addSubscriptions', subscription)
       })
-      // update state of listeners & subscriptions
-      commit('addSubscriptions', subscription)
     },
 
     // Unsubscribe from all open websocket connections
