@@ -3,6 +3,12 @@
     <FormWrapper>
       <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
         <form onsubmit="event.preventDefault()">
+          <div v-if="showTransactionActions" class="transfer-actions">
+            <a @click="isImportTransactionUriModalVisible = true">
+              <Icon type="md-arrow-round-down" />{{ $t('import_transaction_uri') }}
+            </a>
+          </div>
+
           <!-- Transaction signer selector -->
           <SignerSelector
             v-if="!hideSigner"
@@ -44,6 +50,13 @@
             @button-clicked="handleSubmit(onSubmit)"
             @input="onChangeMaxFee"
           />
+
+          <!-- Transaction URI display-->
+          <FormRow v-if="transactions && transactions.length > 0" class="transaction-uri-display-row">
+            <template v-slot:inputs>
+              <TransactionUriDisplay :transaction="transactions[0]" />
+            </template>
+          </FormRow>
         </form>
       </ValidationObserver>
 
@@ -55,12 +68,17 @@
         @error="onConfirmationError"
         @close="onConfirmationCancel"
       />
+
+      <ModalTransactionUriImport
+        v-if="isImportTransactionUriModalVisible"
+        :visible="isImportTransactionUriModalVisible"
+        @close="onImportTransactionURIModalClose"
+        @importTransaction="onImportTransaction"
+      />
     </FormWrapper>
 
     <!-- force mosaic list reactivity -->
-    <div v-show="false">
-      {{ currentMosaicList() }}
-    </div>
+    <div v-show="false">{{ currentMosaicList() }}</div>
   </div>
 </template>
 
