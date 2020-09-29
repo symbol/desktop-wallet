@@ -293,7 +293,7 @@ export class FormSubAccountCreationTs extends Vue {
       const transport = await TransportWebUSB.create()
       const symbolLedger = new SymbolLedger(transport, 'XYM')
       const nextPath = this.paths.getNextAccountPath(this.knownPaths)
-      const accountResult = await symbolLedger.getAccount(nextPath)
+      const accountResult = await symbolLedger.getAccount(nextPath, true)
       const { publicKey, path } = accountResult
       const address = PublicAccount.createFromPublicKey(publicKey, this.networkType).address
       transport.close()

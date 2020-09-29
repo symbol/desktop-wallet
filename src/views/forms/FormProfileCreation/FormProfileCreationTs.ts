@@ -214,7 +214,7 @@ export class FormProfileCreationTs extends Vue {
     })
     const transport = await TransportWebUSB.create()
     const symbolLedger = new SymbolLedger(transport, 'XYM')
-    const accountResult = await symbolLedger.getAccount(`m/44'/4343'/0'/0'/0'`)
+    const accountResult = await symbolLedger.getAccount(`m/44'/4343'/0'/0'/0'`, true)
     const { publicKey, path } = accountResult
     const address = PublicAccount.createFromPublicKey(publicKey, this.formItems.networkType).address
     transport.close()

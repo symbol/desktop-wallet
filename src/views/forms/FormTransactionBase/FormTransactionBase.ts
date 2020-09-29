@@ -326,7 +326,7 @@ export class FormTransactionBase extends Vue {
         const symbolLedger = new SymbolLedger(transport, 'XYM')
         const currentPath = this.currentAccount.path
         const networkType = this.currentProfile.networkType
-        const accountResult = await symbolLedger.getAccount(currentPath)
+        const accountResult = await symbolLedger.getAccount(currentPath, false)
         const publicKey = accountResult.publicKey
         const ledgerAccount = PublicAccount.createFromPublicKey(publicKey.toUpperCase(), networkType)
         this.command = this.createTransactionCommand()

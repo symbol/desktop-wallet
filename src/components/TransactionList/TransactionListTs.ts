@@ -262,7 +262,7 @@ export class TransactionListTs extends Vue {
     const currentPath = this.currentAccount.path
     const addr = this.currentAccount.address
     const symbolLedger = new SymbolLedger(transport, 'XYM')
-    const accountResult = await symbolLedger.getAccount(currentPath)
+    const accountResult = await symbolLedger.getAccount(currentPath, false)
     const signerPublickey = accountResult.publicKey
     const signature = await symbolLedger.signCosignatureTransaction(currentPath, transaction, signerPublickey)
     transport.close()

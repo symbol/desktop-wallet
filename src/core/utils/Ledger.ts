@@ -1,21 +1,34 @@
-import * as BIPPath from 'bip32-path'
+/*
+ * Copyright 2020 NEM Foundation (https://nem.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ */
+// internal dependencies
 import app from '@/main'
+import * as BIPPath from 'bip32-path'
+// configuration
 import { Transaction, SignedTransaction, Convert, CosignatureSignedTransaction, AggregateTransaction } from 'symbol-sdk'
 
+const MAX_CHUNK_SIZE = 255
+
 /**
- * NEM API
+ * SYMBOL API
  *
  * @example
- * import { SymbolLedger } from "./api/LedgerApi"
- * const nem = new Nem(transport);
-   recognize networkId by bip32Path;
-      "44'/43'/networkId'/walletIndex'/accountIndex'"
-   const bip32path_mijin_testnet = "44'/43'/144'/1'/2'"
-   const bip32path_mijin_mainnet "44'/43'/96'/3'/1'"
-   const bip32path_nem_mainnet = "44'/43'/104'/5'/1'"
+ * import { SymbolLedger } from '@/core/utils/Ledger'
+ * const sym = new SymbolLedger(transport);
+      "44'/4343'/account'/change/accountIndex"
  */
-
-const MAX_CHUNK_SIZE = 255
 
 export class SymbolLedger {
   transport: any
@@ -26,19 +39,18 @@ export class SymbolLedger {
   }
 
   /**
-   * get NEM address for a given BIP 32 path.
+   * get Symbol's address for a given BIP 44 path from the Ledger
    *
-   * @param path a path in BIP 32 format
+   * @param path a path in BIP 44 format
    * @param display optionally enable or not the display
    * @param chainCode optionally enable or not the chainCode request
    * @param ed25519
    * @return an object with a publicKey, address and (optionally) chainCode
    * @example
-   * const result = await NemLedger.getAddress(bip32path);
-   * const { publicKey, address } = result;
+   * const result = await Ledger.getAccount(bip44path);
+   * const { publicKey, bip44path } = result;
    */
-  async getAccount(path) {
-    const display = false
+  async getAccount(path: string, display: boolean) {
     const chainCode = false
     const ed25519 = true
 
@@ -57,55 +69,35 @@ export class SymbolLedger {
       data.writeUInt32BE(segment, 1 + index * 4)
     })
 
+    // Response from Ledger
     const response = await this.transport.send(cla, ins, p1, p2, data)
-
     const result = {
-      // address: '',
       publicKey: '',
       path: '',
     }
-    // const addressLength = response[0]
+
     const publicKeyLength = response[0]
-    // result.address = response.slice(1, 1 + addressLength).toString('ascii')
     result.publicKey = response.slice(1, 1 + publicKeyLength).toString('hex')
-    // result.publicKey = response.slice(1 + addressLength + 1, 1 + addressLength + 1 + publicKeyLength).toString('hex')
     result.path = path
     return result
   }
 
   /**
-   * sign a NEM transaction with a given BIP 32 path
+   * sign a Symbol transaction by account on Ledger at given BIP 44 path
    *
-   * @param path a path in BIP 32 format
-   * @param rawPayload a raw payload transaction hex string
+   * @param path a path in BIP 44 format
+   * @param transferTransaction a transfer transaction needs to be signed
    * @param networkGenerationHash the network generation hash of block 1
-   * @return a SignedTransaction
-   * @example
-   * const signature = await NemLedger.signTransaction(bip32path,
-   * "B40000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-   * 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000190544140420F000
-   * 0000000FBA412E61900000090FC443D62754C19452DC196C3C8CDC86782F36565BEC9A41D1000010057656C636F6D6520546F204E454D
-   * 32B0348BFF6E081A7A0100000000000000", "DEEF3950CFF3995F3AAD88AA5C593ADA6A6833D744611769E3E66F3942B2838B");
+   * @param signer the public key of signer
+   * @return a signed Transaction which is signed by account at path on Ledger
    */
-  // public signingBytes:any
   async signTransaction(path: string, transferTransaction: any, networkGenerationHash: string, signer: string) {
     const rawPayload = transferTransaction.serialize()
     const signingBytes = networkGenerationHash + rawPayload.slice(216)
     const rawTx = Buffer.from(signingBytes, 'hex')
-    // symbol-sdk 0.17.3
-    let twiceTransfer
-    // The length of the APDU buffer is 255Bytes
-    if (rawTx.length > 446) {
-      console.log('Length of rawTx is over than 446')
-      app.$Notice.error({
-        title: 'Transaction length is over the limit.' + '',
-      })
-    } else {
-      twiceTransfer = rawTx.length > 234 ? true : false
-    }
 
     let response
-    await this.generateDataUnit(rawTx, path, twiceTransfer)
+    await this.generateDataUnit(path, rawTx)
       .then((res) => {
         response = res
       })
@@ -118,15 +110,10 @@ export class SymbolLedger {
 
     // Response from Ledger
     const h = response.toString('hex')
-
     const signature = h.slice(0, 128)
-
     const payload = rawPayload.slice(0, 16) + signature + signer + rawPayload.slice(16 + 128 + 64, rawPayload.length)
-
     const generationHashBytes = Array.from(Convert.hexToUint8(networkGenerationHash))
-
     const transactionHash = Transaction.createTransactionHash(payload, generationHashBytes)
-
     const signedTransaction = new SignedTransaction(
       payload,
       transactionHash,
@@ -136,22 +123,22 @@ export class SymbolLedger {
     )
     return signedTransaction
   }
-  async signCosignatureTransaction(path: string, transferTransaction: AggregateTransaction, signer: string) {
-    const rawPayload = transferTransaction.serialize()
-    const signingBytes = transferTransaction.transactionInfo.hash + rawPayload.slice(216)
+
+  /**
+   * sign a Symbol Cosignature transaction with a given BIP 44 path
+   *
+   * @param path a path in BIP 44 format
+   * @param transferTransaction a transfer transaction needs to be signed
+   * @param networkGenerationHash the network generation hash of block 1
+   * @return a Signed Cosignature Transaction
+   */
+  async signCosignatureTransaction(path: string, cosignatureTransaction: AggregateTransaction, signer: string) {
+    const rawPayload = cosignatureTransaction.serialize()
+    const signingBytes = cosignatureTransaction.transactionInfo.hash + rawPayload.slice(216)
     const rawTx = Buffer.from(signingBytes, 'hex')
-    let twiceTransfer
-    // The length of the APDU buffer is 255Bytes
-    if (rawTx.length > 446) {
-      app.$Notice.error({
-        title: this['$t']('Transaction length is over the limit.') + '',
-      })
-    } else {
-      twiceTransfer = rawTx.length > 234 ? true : false
-    }
 
     let response
-    await this.generateDataUnit(rawTx, path, twiceTransfer)
+    await this.generateDataUnit(path, rawTx)
       .then((res) => {
         response = res
       })
@@ -161,16 +148,21 @@ export class SymbolLedger {
     const h = response.toString('hex')
     const signature = h.slice(0, 128)
     const cosignatureSignedTransaction = new CosignatureSignedTransaction(
-      transferTransaction.transactionInfo.hash,
+      cosignatureTransaction.transactionInfo.hash,
       signature,
       signer,
     )
     return cosignatureSignedTransaction
   }
-
-  async generateDataUnit(rawTx: Buffer, path: string, twiceTransfer: any) {
+  /**
+   * handle sending and receiving packages between Ledger and Wallet
+   * @param path a path in BIP 44 format
+   * @param rawTx a raw payload transaction hex string
+   * @returns respond package from Ledger
+   */
+  async generateDataUnit(path: string, rawTx: Buffer) {
     let offset = 0
-    const curveMask = 0x80
+    const curveMask = 0x81
     const bipPath = BIPPath.fromString(path).toPathArray()
     const apdus = []
 
@@ -180,7 +172,7 @@ export class SymbolLedger {
       const apdu = {
         cla: 0xe0,
         ins: 0x04,
-        p1: offset === 0 ? 0x00 : 0x80,
+        p1: offset === 0 ? (chunkSize < maxChunkSize ? 0x00 : 0x80) : chunkSize < maxChunkSize ? 0x01 : 0x81,
         p2: curveMask,
         data: offset === 0 ? Buffer.alloc(1 + bipPath.length * 4 + chunkSize) : Buffer.alloc(chunkSize),
       }
@@ -191,9 +183,6 @@ export class SymbolLedger {
           apdu.data.writeUInt32BE(segment, 1 + index * 4)
         })
         rawTx.copy(apdu.data, 1 + bipPath.length * 4, offset, offset + chunkSize)
-        if (!twiceTransfer) {
-          apdu.p1 = 0x90
-        }
       } else {
         rawTx.copy(apdu.data, 0, offset, offset + chunkSize)
       }
@@ -205,6 +194,9 @@ export class SymbolLedger {
     for (const apdu of apdus) {
       response = await this.transport.send(apdu.cla, apdu.ins, apdu.p1, apdu.p2, apdu.data)
     }
-    return response
+
+    if (response.toString() != '0x9000') {
+      return response
+    }
   }
 }
