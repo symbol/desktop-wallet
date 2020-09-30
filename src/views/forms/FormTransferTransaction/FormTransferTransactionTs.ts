@@ -176,13 +176,24 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     // - initialize mosaics input manager
     this.mosaicInputsManager = MosaicInputsManager.initialize(currentMosaics)
 
-    // - set attachedMosaics and allocate slots
-    Vue.nextTick(() => {
-      attachedMosaics.forEach((attachedMosaic, index) => {
-        this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid)
-        Vue.set(this.formItems.attachedMosaics, index, attachedMosaic)
+    // transaction details passed via router
+    if (this.$route.params.transaction) {
+      // @ts-ignore
+      this.setTransactions([this.$route.params.transaction])
+      Vue.nextTick(() => {
+        this.formItems.attachedMosaics.forEach((attachedMosaic, index) => {
+          this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid)
+        })
       })
-    })
+    } else {
+      // - set attachedMosaics and allocate slots
+      Vue.nextTick(() => {
+        attachedMosaics.forEach((attachedMosaic, index) => {
+          this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid)
+          Vue.set(this.formItems.attachedMosaics, index, attachedMosaic)
+        })
+      })
+    }
     this.triggerChange()
   }
 
@@ -250,15 +261,15 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     // - populate recipient
     this.formItems.recipientRaw =
-      transaction.recipientAddress instanceof Address
-        ? transaction.recipientAddress.plain()
-        : (transaction.recipientAddress as NamespaceId).fullName
+      transaction.recipientAddress instanceof NamespaceId
+        ? transaction.recipientAddress.fullName
+        : transaction.recipientAddress.plain()
 
     // - populate attached mosaics
     this.formItems.attachedMosaics = this.mosaicsToAttachments(transaction.mosaics)
 
-    // - convert and populate message
-    this.formItems.messagePlain = Formatters.hexToUtf8(transaction.message.payload)
+    // - populate message
+    this.formItems.messagePlain = transaction.message.payload
 
     // - populate maxFee
     this.formItems.maxFee = transaction.maxFee.compact()

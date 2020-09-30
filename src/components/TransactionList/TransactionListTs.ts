@@ -15,7 +15,7 @@
  */
 import { mapGetters } from 'vuex'
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { AggregateTransaction, MosaicId, Transaction } from 'symbol-sdk'
+import { AggregateTransaction, Convert, MosaicId, Transaction } from 'symbol-sdk'
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel'
 // child components
@@ -49,6 +49,7 @@ import { TransactionGroupState } from '@/store/Transaction'
       partialTransactions: 'transaction/partialTransactions',
       unconfirmedTransactions: 'transaction/unconfirmedTransactions',
       displayedTransactionStatus: 'transaction/displayedTransactionStatus',
+      generationHash: 'network/generationHash',
     }),
   },
 })
@@ -126,6 +127,8 @@ export class TransactionListTs extends Vue {
    */
   public isAwaitingCosignature: boolean = false
 
+  public generationHash: string
+
   public getEmptyMessage() {
     return this.displayedTransactionStatus === TransactionGroupState.all
       ? 'no_data_transactions'
@@ -192,7 +195,26 @@ export class TransactionListTs extends Vue {
     this.isAwaitingCosignature = f
   }
 
+  public get aggregateTransactionHash() {
+    if (!this.activePartialTransaction.transactionInfo) {
+      return Transaction.createTransactionHash(
+        this.activePartialTransaction.serialize(),
+        Array.from(Convert.hexToUint8(this.generationHash)),
+      )
+    }
+    return this.activePartialTransaction.transactionInfo.hash
+  }
+
   /// end-region computed properties getter/setter
+
+  created() {
+    if (this.$route.params.transaction) {
+      // @ts-ignore
+      this.activePartialTransaction = this.$route.params.transaction as AggregateTransaction
+      this.hasCosignatureModal = true
+    }
+  }
+
   /**
    * Refresh transaction list
    * @return {void}
@@ -223,6 +245,7 @@ export class TransactionListTs extends Vue {
   public onCloseCosignatureModal() {
     this.hasCosignatureModal = false
     this.activePartialTransaction = undefined
+    this.$router.push({ name: 'dashboard.index' })
   }
 
   /**
