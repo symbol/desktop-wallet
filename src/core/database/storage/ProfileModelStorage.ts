@@ -64,21 +64,8 @@ export class ProfileModelStorage extends VersionedObjectStorage<Record<string, P
         migrate: () => undefined,
       },
       {
-        description: 'Update profiles for 0.10.x network (generation hash)',
-        migrate: (from: any) => {
-          // update all pre-0.9.6.x profiles
-          const profiles = Object.keys(from)
-
-          const modified: any = from
-          profiles.map((name: string) => {
-            modified[name] = {
-              ...modified[name],
-              generationHash: '6C1B92391CCB41C96478471C2634C111D9E989DECD66130C0430B5B8D20117CD',
-            }
-          })
-
-          return modified
-        },
+        description: 'Update profiles for 0.10.x network (non backwards compatible due to HD and private key profile separation)',
+        migrate: () => undefined,
       },
     ])
   }
