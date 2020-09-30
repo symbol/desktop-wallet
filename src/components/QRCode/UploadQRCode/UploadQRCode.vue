@@ -64,8 +64,6 @@
 <script lang="ts">
 import UploadQRCodeTs from './UploadQRCodeTs'
 
-import * as _ from 'lodash'
-
 export default class UploadQRCode extends UploadQRCodeTs {}
 </script>
 
