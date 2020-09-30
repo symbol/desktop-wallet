@@ -14,7 +14,7 @@
             <ImportQRButton valid-qr-types="[6]">
               <template v-slot:trigger="importQRButton">
                 <button type="button" class="button-style back-button" @click="importQRButton.trigger">
-                  $t('from_qr_code')
+                  {{ $t('from_qr_code') }}
                 </button>
               </template>
             </ImportQRButton>

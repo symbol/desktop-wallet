@@ -217,7 +217,7 @@ export const routes: AppRoute[] = [
         component: () => import('@/views/pages/dashboard/Dashboard.vue'),
         children: [
           {
-            path: '/home',
+            path: '/home/:action?',
             name: 'dashboard.index',
             meta: {
               protected: true,
@@ -227,7 +227,7 @@ export const routes: AppRoute[] = [
             component: () => import('@/views/pages/dashboard/home/DashboardHomePage.vue'),
           },
           {
-            path: '/transfer',
+            path: '/transfer/:recipientAddress?',
             name: 'dashboard.transfer',
             meta: {
               protected: true,
@@ -235,9 +235,7 @@ export const routes: AppRoute[] = [
             },
             // @ts-ignore
             component: () => import('@/views/pages/dashboard/transfer/DashboardTransferPage.vue'),
-            props: (route) => ({
-              recipientAddress: route.query.recipientAddress,
-            }),
+            props: true,
           },
           {
             path: '/invoice',

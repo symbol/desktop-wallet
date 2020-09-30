@@ -8,7 +8,7 @@
     >
       <template v-slot:detailItem="slotProps">
         <div class="qrcode-details-row-inner">
-          <div class="qrcode-details-row-label">{{ slotProps.item.label }}</div>
+          <div class="qrcode-details-row-label">{{ slotProps.item.label }}:</div>
           <div v-if="slotProps.item.label == $t('amount')" class="qrcode-details-row-value">
             <MosaicAmountDisplay
               :id="tran.mosaics[0].id"
