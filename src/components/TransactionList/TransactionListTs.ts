@@ -29,8 +29,9 @@ import PageTitle from '@/components/PageTitle/PageTitle.vue'
 import TransactionListFilters from '@/components/TransactionList/TransactionListFilters/TransactionListFilters.vue'
 // @ts-ignore
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
+// @ts-ignore
+import ModalTransactionExport from '@/views/modals/ModalTransactionExport/ModalTransactionExport.vue'
 import { TransactionGroupState } from '@/store/Transaction'
-
 @Component({
   components: {
     ModalTransactionCosignature,
@@ -38,6 +39,7 @@ import { TransactionGroupState } from '@/store/Transaction'
     PageTitle,
     TransactionListFilters,
     TransactionTable,
+    ModalTransactionExport,
   },
   computed: {
     ...mapGetters({
@@ -128,6 +130,11 @@ export class TransactionListTs extends Vue {
   public isAwaitingCosignature: boolean = false
 
   public generationHash: string
+  /**
+   * Whether currently viewing export
+   * @var {boolean}
+   */
+  public isViewingExportModal: boolean = false
 
   public getEmptyMessage() {
     return this.displayedTransactionStatus === TransactionGroupState.all
@@ -255,5 +262,16 @@ export class TransactionListTs extends Vue {
     if (page > this.countPages) page = this.countPages
     else if (page < 1) page = 1
     this.currentPage = page
+  }
+
+  public get hasTransactionExportModal(): boolean {
+    return this.isViewingExportModal
+  }
+
+  public set hasTransactionExportModal(f: boolean) {
+    this.isViewingExportModal = f
+  }
+  public downloadTransaction() {
+    this.hasTransactionExportModal = true
   }
 }
