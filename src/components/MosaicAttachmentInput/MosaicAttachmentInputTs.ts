@@ -117,7 +117,7 @@ export class MosaicAttachmentInputTs extends Vue {
    */
   public formItems = {
     selectedMosaicHex: '',
-    relativeAmount: 0,
+    relativeAmount: this.chosenValue?.amount | 0,
   }
 
   get selectedMosaic(): string {
