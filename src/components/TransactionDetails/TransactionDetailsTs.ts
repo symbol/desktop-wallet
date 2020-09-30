@@ -62,7 +62,6 @@ export class TransactionDetailsTs extends Vue {
         this.views = [this.getView(this.transaction)]
       }
     }
-
     this.views = [this.getView(this.transaction)]
   }
 
