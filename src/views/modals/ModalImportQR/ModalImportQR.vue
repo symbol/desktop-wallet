@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Modal v-model="show" class="modal-importqr-container" :title="$t('import_qr_code')" footer-hide="true">
+    <Modal v-model="show" class="modal-importqr-container" :title="$t('import_qr_code')" :footer-hide="true">
       <ModalWizardDisplay
         :items="wizardSteps.items"
         :icons="wizardSteps.icons"

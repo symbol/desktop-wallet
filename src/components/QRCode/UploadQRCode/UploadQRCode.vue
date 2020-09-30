@@ -8,7 +8,7 @@
           :label="$t('upload_qr_tab_upload_image')"
           icon="md-cloud-upload"
         >
-          <Upload multiple="false" action="no action" type="drag" :before-upload="onBeforeUpload">
+          <Upload :multiple="false" action="no action" type="drag" :before-upload="onBeforeUpload">
             <div>
               <div v-if="imageFileName" class="upload-qrcode-preview">
                 <div>

@@ -22,6 +22,7 @@ import {
   NamespaceId,
   PlainMessage,
   RawUInt64,
+  Transaction,
   TransferTransaction,
   UInt64,
 } from 'symbol-sdk'
@@ -54,6 +55,11 @@ import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
 // @ts-ignore
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 // @ts-ignore
+import ModalTransactionUriImport from '@/views/modals/ModalTransactionUriImport/ModalTransactionUriImport.vue'
+// @ts-ignore
+import TransactionUriDisplay from '@/components/TransactionUri/TransactionUriDisplay/TransactionUriDisplay.vue'
+
+// @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
 import { MosaicService } from '@/services/MosaicService'
 import { MosaicModel } from '@/core/database/entities/MosaicModel'
@@ -80,6 +86,8 @@ export interface MosaicAttachment {
     ValidationObserver,
     MaxFeeAndSubmit,
     FormRow,
+    ModalTransactionUriImport,
+    TransactionUriDisplay,
   },
   computed: {
     ...mapGetters({
@@ -108,6 +116,12 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     default: false,
   })
   hideSigner: boolean
+
+  @Prop({
+    default: false,
+  })
+  showTransactionActions: boolean
+
   /// end-region component properties
 
   /**
@@ -131,11 +145,26 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     maxFee: 0,
   }
 
-  protected mosaicInputsManager = MosaicInputsManager.initialize([])
-
   public currentHeight: number
 
+  protected mosaicInputsManager
+
   private balanceMosaics: MosaicModel[]
+
+  /**
+   * Whether ModalTransactionUriImport is visible
+   */
+  private isImportTransactionUriModalVisible = false
+
+  /**
+   * Transaction imported via transaction URI
+   */
+  private importedTransaction: Transaction
+
+  /**
+   * Holds the just in time transactions
+   */
+  public transactions: TransferTransaction[] = []
 
   /**
    * Reset the form with properties
@@ -177,9 +206,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     this.mosaicInputsManager = MosaicInputsManager.initialize(currentMosaics)
 
     // transaction details passed via router
-    if (this.$route.params.transaction) {
+    if (this.$route.params.transaction || this.importedTransaction) {
       // @ts-ignore
-      this.setTransactions([this.$route.params.transaction])
+      this.setTransactions([!!this.importedTransaction ? this.importedTransaction : this.$route.params.transaction])
       Vue.nextTick(() => {
         this.formItems.attachedMosaics.forEach((attachedMosaic, index) => {
           this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid)
@@ -422,11 +451,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
   triggerChange() {
     if (this.formItems.recipientRaw && this.formItems.recipientRaw !== '') {
-      const transactions = this.getTransactions()
+      this.transactions = this.getTransactions()
       // avoid error
-      if (transactions) {
+      if (this.transactions) {
         const data: ITransactionEntry[] = []
-        transactions.map((item: TransferTransaction) => {
+        this.transactions.map((item: TransferTransaction) => {
           data.push({
             transaction: item,
             attachments: this.mosaicsToAttachments(item.mosaics),
@@ -435,6 +464,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
         this.$emit('onTransactionsChange', data)
       }
+    } else {
+      this.transactions = null
     }
   }
 
@@ -445,5 +476,21 @@ export class FormTransferTransactionTs extends FormTransactionBase {
   @Watch('selectedSigner')
   onSelectedSignerChange() {
     if (this.isMultisigMode) this.resetForm()
+  }
+
+  /**
+   * ModalTransactionUriImport modal page close event handler
+   */
+  onImportTransactionURIModalClose() {
+    this.isImportTransactionUriModalVisible = false
+  }
+
+  /**
+   * Import transactionURI complete event handler
+   * @param transaction transaction to be imported
+   */
+  onImportTransaction(transaction: Transaction) {
+    this.importedTransaction = transaction
+    this.resetForm()
   }
 }
