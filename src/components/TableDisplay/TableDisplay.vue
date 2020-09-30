@@ -4,7 +4,7 @@
       <div class="table-title-container section-title">
         <slot name="table-title" />
         <div class="user-operation">
-          <Checkbox class="table-filter-item-container" v-model="showExpired">
+          <Checkbox v-model="showExpired" class="table-filter-item-container">
             <span v-show="assetType === 'mosaic'">{{ $t('show_expired_mosaics') }}</span>
             <span v-show="assetType === 'namespace'">{{ $t('show_expired_namespaces') }}</span>
           </Checkbox>
