@@ -48,7 +48,7 @@ export class NetworkModelStorage extends VersionedNetworkBasedObjectStorage<Netw
               7900,
               NetworkType.TEST_NET,
               0,
-              RoleType.ApiNode,
+              [RoleType.ApiNode],
               '',
               'api-01-eu-central-1',
             ),

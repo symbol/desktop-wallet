@@ -36,7 +36,7 @@ const fakeNodeInfo = new NodeInfo(
   1234,
   NetworkType.TEST_NET,
   4567,
-  RoleType.ApiNode,
+  [RoleType.ApiNode],
   'Some Host',
   'Some Friendly Name',
 )

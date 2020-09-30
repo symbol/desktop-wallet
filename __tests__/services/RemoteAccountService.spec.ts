@@ -19,9 +19,6 @@ import {
   RepositoryFactoryHttp,
   Address,
   AccountInfo,
-  UInt64,
-  AccountType,
-  SupplementalPublicKeys,
   AccountRepository,
   AccountSearchCriteria,
   PublicAccount,
@@ -57,9 +54,7 @@ const repositoryFactory = new (class RepositoryFactoryHttpForTest extends Reposi
       }
 
       search(criteria: AccountSearchCriteria): Observable<Page<AccountInfo>> {
-        return of(
-          new Page([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo], 1, 1, 1, 1),
-        )
+        return of(new Page([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo], 1, 1))
       }
     })()
   }

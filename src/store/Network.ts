@@ -14,7 +14,7 @@
  *
  */
 import Vue from 'vue'
-import { BlockInfo, IListener, Listener, NetworkType, RepositoryFactory, TransactionFees } from 'symbol-sdk'
+import { BlockInfo, IListener, Listener, NetworkType, RepositoryFactory, TransactionFees, RentalFees } from 'symbol-sdk'
 import { Subscription } from 'rxjs'
 // internal dependencies
 import { $eventBus } from '../events'
@@ -67,6 +67,7 @@ interface NetworkState {
   currentHeight: number
   subscriptions: Subscription[]
   transactionFees: TransactionFees
+  rentalFeeEstimation: RentalFees
 }
 
 const defaultPeer = URLHelpers.formatUrl(networkConfig.defaultNodeUrl)
@@ -86,6 +87,7 @@ const networkState: NetworkState = {
   knowNodes: [],
   currentHeight: 0,
   subscriptions: [],
+  rentalFeeEstimation: undefined,
 }
 export default {
   namespaced: true,
@@ -105,6 +107,7 @@ export default {
     knowNodes: (state: NetworkState) => state.knowNodes,
     currentHeight: (state: NetworkState) => state.currentHeight,
     transactionFees: (state: NetworkState) => state.transactionFees,
+    rentalFeeEstimation: (state: NetworkState) => state.rentalFeeEstimation,
   },
   mutations: {
     setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -128,6 +131,9 @@ export default {
     currentPeer: (state: NetworkState, currentPeer: URLInfo) => Vue.set(state, 'currentPeer', currentPeer),
     transactionFees: (state: NetworkState, transactionFees: TransactionFees) => {
       state.transactionFees = transactionFees
+    },
+    rentalFeeEstimation: (state: NetworkState, amount: RentalFees) => {
+      state.rentalFeeEstimation = amount
     },
 
     addPeer: (state: NetworkState, peerUrl: string) => {
@@ -161,6 +167,7 @@ export default {
       const callback = async () => {
         // commit('knowNodes', new NodeService().getKnowNodesOnly())
         await dispatch('CONNECT')
+        dispatch('REST_NETWORK_RENTAL_FEES')
         // update store
         commit('setInitialized', true)
       }
@@ -191,9 +198,9 @@ export default {
       }
       const oldGenerationHash = getters['generationHash']
       const getNodesPromise = nodeService.getNodes(repositoryFactory, networkModel.url).toPromise()
-      const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getBlockchainHeight().toPromise()
+      const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getChainInfo().toPromise()
       const nodes = await getNodesPromise
-      const currentHeight = (await getBlockchainHeightPromise).compact()
+      const currentHeight = (await getBlockchainHeightPromise).height.compact()
       const listener = repositoryFactory.createListener()
 
       const currentPeer = URLHelpers.getNodeUrl(networkModel.url)
@@ -219,8 +226,8 @@ export default {
         dispatch('account/NETWORK_CHANGED', {}, { root: true })
         dispatch('statistics/LOAD', {}, { root: true })
       }
-      await listener.open()
       await dispatch('UNSUBSCRIBE')
+      await listener.open()
       dispatch('SUBSCRIBE')
     },
 
@@ -268,6 +275,20 @@ export default {
       }
     },
 
+    REST_NETWORK_RENTAL_FEES({ rootGetters, dispatch }) {
+      const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory']
+      repositoryFactory
+        .createNetworkRepository()
+        .getRentalFees()
+        .subscribe((rentalFee: RentalFees) => {
+          dispatch('SET_RENTAL_FEE_ESTIMATE', rentalFee)
+        })
+    },
+
+    SET_RENTAL_FEE_ESTIMATE({ commit }, rentalFee) {
+      commit('rentalFeeEstimation', rentalFee)
+    },
+
     ADD_KNOWN_PEER({ commit }, peerUrl) {
       if (!UrlValidator.validate(peerUrl)) {
         throw Error('Cannot add node. URL is not valid: ' + peerUrl)
@@ -295,12 +316,14 @@ export default {
     async SUBSCRIBE({ commit, dispatch, getters }) {
       // use RESTService to open websocket channel subscriptions
       const listener = getters['listener'] as Listener
-      const subscription = listener.newBlock().subscribe((block: BlockInfo) => {
-        dispatch('SET_CURRENT_HEIGHT', block.height.compact())
-        dispatch('diagnostic/ADD_INFO', 'New block height: ' + block.height.compact(), { root: true })
+      listener.open().then(() => {
+        const subscription = listener.newBlock().subscribe((block: BlockInfo) => {
+          dispatch('SET_CURRENT_HEIGHT', block.height.compact())
+          dispatch('diagnostic/ADD_INFO', 'New block height: ' + block.height.compact(), { root: true })
+        })
+        // update state of listeners & subscriptions
+        commit('addSubscriptions', subscription)
       })
-      // update state of listeners & subscriptions
-      commit('addSubscriptions', subscription)
     },
 
     // Unsubscribe from all open websocket connections

@@ -266,14 +266,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
           )
         },
       )
-    if (!mosaics.length) {
-      return []
-    }
     return [
       TransferTransaction.create(
         Deadline.create(),
         this.instantiatedRecipient,
-        mosaics,
+        mosaics.length ? mosaics : [],
         PlainMessage.create(this.formItems.messagePlain || ''),
         this.networkType,
         UInt64.fromUint(this.formItems.maxFee),

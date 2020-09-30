@@ -2,7 +2,7 @@
   "name": "symbol-desktop-wallet",
   "description": "Symbol Wallet",
   "homepage": "https://github.com/nemgrouplimited/symbol-desktop-wallet",
-  "version": "0.12.2",
+  "version": "0.13.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/nemgrouplimited/symbol-desktop-wallet.git"
@@ -38,6 +38,8 @@
     "animate.css": "^3.7.2",
     "await-lock": "^2.0.1",
     "axios": "^0.19.0",
+    "file-saver": "^2.0.2",
+    "json2csv": "^5.0.1",
     "request": "^2.88.0",
     "rss-parser": "^3.7.3",
     "rxjs": "^6.5.2",
@@ -58,9 +60,11 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.2",
     "@babel/compat-data": "^7.9.6",
+    "@babel/core": "^7.7.2",
+    "@types/file-saver": "^2.0.1",
     "@types/jest": "^23.3.1",
+    "@types/json2csv": "^5.0.1",
     "@types/lodash": "^4.14.149",
     "@types/node": "^9.6.50",
     "@types/request": "^2.47.1",
@@ -100,9 +104,9 @@
     "postcss-pxtorem": "^4.0.1",
     "prettier": "2.0.5",
     "rimraf": "^3.0.2",
-    "symbol-hd-wallets": "^0.12.0",
-    "symbol-qr-library": "^0.12.0",
-    "symbol-sdk": "0.20.7-alpha-202007190849",
+    "symbol-hd-wallets": "next",
+    "symbol-qr-library": "next",
+    "symbol-sdk": "0.20.8-alpha-202009180859",
     "ts-jest": "^25.3.0",
     "typescript": "^3.7.2",
     "utf-8-validate": "^5.0.2",
