@@ -12,9 +12,6 @@
                     <Option v-show="!isPrivateKeyProfile" value="child_account">
                       {{ $t('option_child_account') }}
                     </Option>
-                    <Option v-show="!isPrivateKeyProfile" value="privatekey_account">
-                      {{ $t('option_privatekey_account') }}
-                    </Option>
                   </Select>
                 </div>
               </div>
