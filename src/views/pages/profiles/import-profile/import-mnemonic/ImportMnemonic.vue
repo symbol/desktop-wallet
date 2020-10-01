@@ -6,10 +6,10 @@
     <div class="create-mnemonic-col">
       <div class="create-mnemonic-left">
         <MnemonicInput :seed="importedMnemonic" @handle-words="setSeed" />
-        <div class="button-container">
+        <div class="form-line-container form-row">
           <div class="flex-container mt-3">
             <button type="button" class="button-style back-button" @click="deleteProfileAndBack">
-              {{ $t('return_password_setting') }}
+              {{ $t('back') }}
             </button>
             <ImportQRButton valid-qr-types="[6]">
               <template v-slot:trigger="importQRButton">
