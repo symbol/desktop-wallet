@@ -103,41 +103,12 @@ export class AddCosignatoryInputTs extends Vue {
   }
 
   /**
-   * Emits onAddCosignatory event when cosignatory is input as a public key
+   * Emits onAddCosignatory event when cosignatory is input as an address
    * @private
    * @return {void}
    */
   private async addCosignerFromAddress() {
-    const address = Address.createFromRawAddress(this.cosignatory)
-    this.$store.dispatch('app/SET_LOADING_OVERLAY', {
-      show: true,
-      message: `${this.$t('resolving_address', { address: address.pretty() })}`,
-    })
-
-    this.repositoryFactory
-      .createAccountRepository()
-      .getAccountInfo(address)
-      .pipe(
-        timeout(6000),
-        finalize(() => {
-          this.$store.dispatch('app/SET_LOADING_OVERLAY', {
-            show: false,
-            message: '',
-          })
-        }),
-      )
-      .subscribe(
-        (accountInfo) => {
-          if (accountInfo.publicKey === '0000000000000000000000000000000000000000000000000000000000000000') {
-            this.$store.dispatch('notification/ADD_WARNING', `${this.$t(NotificationType.ADDRESS_UNKNOWN)}`)
-            return
-          }
-          this.$emit('added', accountInfo.publicAccount.address)
-        },
-        () => {
-          this.$store.dispatch('notification/ADD_WARNING', `${this.$t(NotificationType.ADDRESS_UNKNOWN)}`)
-        },
-      )
+    this.$emit('added', Address.createFromRawAddress(this.cosignatory))
   }
   /**
    * filter tags

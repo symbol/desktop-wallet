@@ -40,6 +40,8 @@ import CosignatoryModificationsDisplay from '@/components/CosignatoryModificatio
 import ApprovalAndRemovalInput from '@/components/ApprovalAndRemovalInput/ApprovalAndRemovalInput.vue'
 // @ts-ignore
 import MultisigCosignatoriesDisplay from '@/components/MultisigCosignatoriesDisplay/MultisigCosignatoriesDisplay.vue'
+import { TransactionCommand } from '@/services/TransactionCommand'
+import { Signer } from '@/store/Account'
 
 /// region custom types
 export interface CosignatoryModification {
@@ -87,7 +89,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
   @Prop({
     default: false,
   })
-  disableSubmit: boolean
+  hideSubmit: boolean
   /// end-region component properties
 
   /**
@@ -127,9 +129,9 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     this.formItems.minApprovalDelta = !!this.minApprovalDelta ? this.minApprovalDelta : defaultMinApprovalDelta
     this.formItems.minRemovalDelta = !!this.minRemovalDelta ? this.minRemovalDelta : defaultMinRemovalDelta
     this.formItems.cosignatoryModifications = {}
-    this.formItems.signerAddress = this.selectedSigner
-      ? this.selectedSigner.address.plain()
-      : this.currentAccount.address
+    if (!!this.currentAccount) {
+      this.formItems.signerAddress = this.currentAccount.address // always select current account on form reset
+    }
 
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
@@ -150,25 +152,29 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @return {MultisigAccountModificationTransaction[]}
    */
   protected getTransactions(): MultisigAccountModificationTransaction[] {
-    const addressAdditions = Object.values(this.formItems.cosignatoryModifications)
-      .filter(({ addOrRemove }) => addOrRemove === 'add')
-      .map(({ cosignatory }) => cosignatory)
-
-    const addressDeletions = Object.values(this.formItems.cosignatoryModifications)
-      .filter(({ addOrRemove }) => addOrRemove === 'remove')
-      .map(({ cosignatory }) => cosignatory)
-
     return [
       MultisigAccountModificationTransaction.create(
         Deadline.create(),
         this.formItems.minApprovalDelta,
         this.formItems.minRemovalDelta,
-        addressAdditions,
-        addressDeletions,
+        this.addressAdditions,
+        this.addressDeletions,
         this.networkType,
         UInt64.fromUint(this.formItems.maxFee),
       ),
     ]
+  }
+
+  protected get addressAdditions() {
+    return Object.values(this.formItems.cosignatoryModifications)
+      .filter(({ addOrRemove }) => addOrRemove === 'add')
+      .map(({ cosignatory }) => cosignatory)
+  }
+
+  protected get addressDeletions() {
+    return Object.values(this.formItems.cosignatoryModifications)
+      .filter(({ addOrRemove }) => addOrRemove === 'remove')
+      .map(({ cosignatory }) => cosignatory)
   }
 
   /**
@@ -302,13 +308,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
       : this.formItems.minRemovalDelta
 
     // calculate the delta of added cosigners
-    const additionsNumber = Object.values(this.formItems.cosignatoryModifications).filter(
-      ({ addOrRemove }) => addOrRemove === 'add',
-    ).length
-    const removalsNumber = Object.values(this.formItems.cosignatoryModifications).filter(
-      ({ addOrRemove }) => addOrRemove === 'remove',
-    ).length
-    const numberOfAddedCosigners = additionsNumber - removalsNumber
+    const numberOfAddedCosigners = this.addressAdditions.length - this.addressDeletions.length
 
     const newCosignatoryNumber = this.currentMultisigInfo
       ? this.currentMultisigInfo.cosignatoryAddresses.length + numberOfAddedCosigners
@@ -384,4 +384,75 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
   }
 
   /// end-region validation handling
+
+  /**
+   * This method is overriden in order to provide custom requiredCosignatures calculation
+   * @see {requiredCosignatures}
+   * @override
+   * @return { TransactionCommand }
+   */
+  public createTransactionCommand(): TransactionCommand {
+    const transactions = this.getTransactions()
+    const mode = this.getTransactionCommandMode(transactions)
+    return new TransactionCommand(
+      mode,
+      this.selectedSigner,
+      this.currentSignerPublicKey,
+      transactions,
+      this.networkMosaic,
+      this.generationHash,
+      this.networkType,
+      this.networkConfiguration,
+      this.transactionFees,
+      this.requiredCosignatures,
+    )
+  }
+
+  /**
+   * Calculating number of requiredCosignatures to use in maxFee calculation
+   * @readonly
+   * @private
+   * @type number
+   */
+  private get requiredCosignatures(): number {
+    if (this.multisigOperationType === 'conversion') {
+      return this.addressAdditions.length
+    }
+    // proceed if modification
+
+    // if nothing is changed in the form or minApprovalDelta != 0 then the default value will be existing minApproval
+    let requiredCosignatures = this.currentMultisigInfo.minApproval
+
+    if (this.addressAdditions.length > 0) {
+      /* 
+      this is an edge case, since the new additions signatures are mandatory, there might be a case 
+      where all the existing cosignatories sign their parts before new additions do. 
+      So in order to stay safe we are adding all the cosignatories including the new additions.
+      */
+      requiredCosignatures = this.currentMultisigInfo.cosignatoryAddresses.length + this.addressAdditions.length
+    } else {
+      if (
+        (this.formItems.minRemovalDelta != 0 || this.addressDeletions.length > 0) &&
+        this.currentMultisigInfo.minRemoval > requiredCosignatures
+      ) {
+        requiredCosignatures = this.currentMultisigInfo.minRemoval
+      }
+    }
+
+    return requiredCosignatures
+  }
+
+  /**
+   * Whether form has any changes
+   * @readonly
+   * @return {boolean}
+   */
+  public get hasFormAnyChanges(): boolean {
+    return (
+      this.addressAdditions.length > 0 ||
+      this.addressDeletions.length > 0 ||
+      this.formItems.minApprovalDelta !== 0 ||
+      this.formItems.minRemovalDelta !== 0
+    )
+  }
 }

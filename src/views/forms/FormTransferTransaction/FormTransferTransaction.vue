@@ -46,7 +46,7 @@
           <!-- Transaction fee selector and submit button -->
           <MaxFeeAndSubmit
             v-model="formItems.maxFee"
-            :disable-submit="disableSubmit"
+            :hide-submit="hideSubmit"
             @button-clicked="handleSubmit(onSubmit)"
             @input="onChangeMaxFee"
           />

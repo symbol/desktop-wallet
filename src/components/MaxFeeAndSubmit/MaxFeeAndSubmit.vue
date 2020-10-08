@@ -4,10 +4,11 @@
     <template v-slot:inputs>
       <div class="row-75-25 inputs-container">
         <MaxFeeSelector v-model="maxFee" />
-        <div v-if="!disableSubmit" class="pl-2">
+        <div v-if="!hideSubmit" class="pl-2">
           <button
             type="submit"
             class="centered-button button-style validation-button submit-button"
+            :disabled="disableSubmit"
             @click="$emit('button-clicked')"
           >
             {{ $t('send') }}
@@ -35,7 +36,13 @@ export default class MaxFeeAndSubmit extends Vue {
   @Prop({ default: 0, required: true }) value: number
 
   /**
-   * Whether form submission is disabled
+   * Whether form submit button is hidden
+   * @type {boolean}
+   */
+  @Prop({ default: false }) hideSubmit: boolean
+
+  /**
+   * Whether form submit button is disabled
    * @type {boolean}
    */
   @Prop({ default: false }) disableSubmit: boolean

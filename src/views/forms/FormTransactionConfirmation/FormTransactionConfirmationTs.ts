@@ -54,9 +54,9 @@ export class FormTransactionConfirmationTs extends Vue {
   public command: TransactionCommand
 
   /**
-   * Whether to disable submit button
+   * Whether to hide submit button
    */
-  @Prop({ default: false }) disableSubmit: boolean
+  @Prop({ default: false }) hideSubmit: boolean
 
   /**
    * Currently active account
