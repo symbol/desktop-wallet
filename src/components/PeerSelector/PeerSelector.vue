@@ -1,4 +1,6 @@
 <template>
+  <!-- // put the modal here for logging out popup -->
+
   <div :class="[isConnected ? 'endpoint-healthy' : 'endpoint-unhealthy']">
     <Poptip
       v-if="!isEmbedded"
@@ -73,6 +75,11 @@
         </div>
       </div>
     </div>
+    <ModalNetworkNotMatchingProfile
+      v-if="networkIsNotMatchingProfile"
+      :visible="networkIsNotMatchingProfile"
+      @close="onCloseNetworkModal()"
+    />
   </div>
 </template>
 
