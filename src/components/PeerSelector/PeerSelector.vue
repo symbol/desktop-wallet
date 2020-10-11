@@ -1,6 +1,4 @@
 <template>
-  <!-- // put the modal here for logging out popup -->
-
   <div :class="[isConnected ? 'endpoint-healthy' : 'endpoint-unhealthy']">
     <Poptip
       v-if="!isEmbedded"
