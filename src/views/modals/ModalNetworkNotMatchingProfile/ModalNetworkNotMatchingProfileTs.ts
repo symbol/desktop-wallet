@@ -14,23 +14,7 @@
  *
  */
 import { Vue, Component, Prop } from 'vue-property-decorator'
-// import { officialIcons } from '@/views/resources/Images'
 
-// //@ts-ignore
-// import UploadQRCode from '@/components/QRCode/UploadQRCode/UploadQRCode.vue'
-
-// //@ts-ignore
-// import QRCodePassword from '@/components/QRCode/QRCodePassword/QRCodePassword.vue'
-
-// //@ts-ignore
-// import ModalWizardDisplay from '@/views/modals/ModalWizardDisplay/ModalWizardDisplay.vue'
-
-// // @ts-ignore
-// import QRCodeActions from '@/components/QRCode/QRCodeActions/QRCodeActions.vue'
-
-// @Component({
-//   components: { UploadQRCode, QRCodePassword, ModalWizardDisplay, QRCodeActions },
-// })
 @Component
 export class ModalNetworkNotMatchingProfileTs extends Vue {
   @Prop({ default: false }) visible: boolean
@@ -51,17 +35,20 @@ export class ModalNetworkNotMatchingProfileTs extends Vue {
     }
   }
 
+  /**
+   * Logout user and redirect to login page
+   */
   private async logout() {
     await this.$store.dispatch('profile/LOG_OUT')
     this.$emit('close')
     this.$router.push({ name: 'profiles.login' })
   }
+  /**
+   * Logout user and redirect to create profile page
+   */
   private async createNewProfile() {
     await this.$store.dispatch('profile/LOG_OUT')
     this.$emit('close')
     this.$router.push({ name: 'profiles.importProfile.importStrategy' })
-  }
-  private closeAndChangeNetwork() {
-    this.$emit('close')
   }
 }

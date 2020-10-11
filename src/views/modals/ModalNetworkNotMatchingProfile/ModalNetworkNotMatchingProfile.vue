@@ -22,7 +22,7 @@
           <button class="centered-button button-style validation-button right-space" @click="createNewProfile()">
             {{ $t('profile_not_matching_network_option_2') }}
           </button>
-          <button class="centered-button button-style validation-button" @click.self="$emit('close')">
+          <button class="centered-button button-style validation-button" @click="$emit('close')">
             {{ $t('profile_not_matching_network_option_3') }}
           </button>
         </div>

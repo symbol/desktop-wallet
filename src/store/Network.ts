@@ -231,17 +231,16 @@ export default {
       if (oldGenerationHash != networkModel.generationHash) {
         dispatch('account/NETWORK_CHANGED', {}, { root: true })
         dispatch('statistics/LOAD', {}, { root: true })
-        console.log(oldGenerationHash, networkModel.generationHash, currentProfile.generationHash)
+
+        // check if current profile network type and generation hash matches current network
         if (
           currentProfile &&
           (currentProfile.networkType !== networkModel.networkType ||
             currentProfile.generationHash !== networkModel.generationHash)
         ) {
-          console.log('should logout')
           dispatch('SET_NETWORK_IS_NOT_MATCHING_PROFILE', true)
         } else {
           dispatch('SET_NETWORK_IS_NOT_MATCHING_PROFILE', false)
-          console.log('should stay')
         }
       }
       await dispatch('UNSUBSCRIBE')
