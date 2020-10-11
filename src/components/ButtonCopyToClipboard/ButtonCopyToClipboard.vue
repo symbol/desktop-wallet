@@ -1,7 +1,7 @@
 <template>
-  <div class="copy-button-container v-h-centered" @click="copyToClipboard">
+  <div class="copy-button-container" @click="copyToClipboard">
     <slot v-if="type === 'button'">
-      <Button type="button">
+      <Button type="text">
         {{ $t('mnemonic_copy') }}
       </Button>
     </slot>
