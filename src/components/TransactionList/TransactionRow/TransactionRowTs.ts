@@ -171,6 +171,6 @@ export class TransactionRowTs extends Vue {
    * Returns the explorer url
    */
   public get explorerUrl() {
-    return this.explorerBaseUrl.replace(/\/+$/, '') + '/transaction/' + this.transaction.transactionInfo.hash
+    return this.explorerBaseUrl.replace(/\/+$/, '') + '/transactions/' + this.transaction.transactionInfo.hash
   }
 }
