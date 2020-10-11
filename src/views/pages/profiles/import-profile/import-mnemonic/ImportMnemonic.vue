@@ -5,12 +5,19 @@
     </p>
     <div class="create-mnemonic-col">
       <div class="create-mnemonic-left">
-        <MnemonicInput @handle-words="setSeed" />
-        <div class="button-container">
+        <MnemonicInput :seed="importedMnemonic" @handle-words="setSeed" />
+        <div class="form-line-container form-row">
           <div class="flex-container mt-3">
             <button type="button" class="button-style back-button" @click="deleteProfileAndBack">
-              {{ $t('return_password_setting') }}
+              {{ $t('back') }}
             </button>
+            <ImportQRButton valid-qr-types="[6]">
+              <template v-slot:trigger="importQRButton">
+                <button type="button" class="button-style back-button" @click="importQRButton.trigger">
+                  {{ $t('from_qr_code') }}
+                </button>
+              </template>
+            </ImportQRButton>
             <button
               type="submit"
               class="button-style validation-button"
