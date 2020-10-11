@@ -475,7 +475,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    */
   @Watch('selectedSigner')
   onSelectedSignerChange() {
-    if (this.isMultisigMode) this.resetForm()
+    if (this.isMultisigMode()) this.resetForm()
   }
 
   /**
