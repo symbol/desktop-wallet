@@ -31,7 +31,7 @@ import { Observable, of, OperatorFunction, throwError } from 'rxjs'
 import { catchError, flatMap, map } from 'rxjs/operators'
 import { TransactionAnnounceResponse } from 'symbol-sdk/dist/src/model/transaction/TransactionAnnounceResponse'
 // configuration
-import appConfig from '@/../config/app.conf.json'
+import { appConfig } from '@/config'
 import i18n from '@/language'
 import { timeoutWith } from 'rxjs/operators'
 

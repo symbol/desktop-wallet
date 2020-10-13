@@ -29,9 +29,9 @@ import {
   AccountSearchCriteria,
 } from 'symbol-sdk'
 import { MosaicService } from '@/services/MosaicService'
-import networkConfig from '../../config/network.conf.json'
 import { Observable, of } from 'rxjs'
 import { WalletsModel2 } from '@MOCKS/Accounts'
+import {networkConfig} from "@/config";
 
 const address1 = Address.createFromRawAddress('TAD5BAHLOIXCRRB6GU2H72HPXMBBVAEUQRYPHBY')
 const address2 = Address.createFromRawAddress('TAWJ2M7BGKWGBPOUGD5NDKHYDDQ7OQD26HJMMQQ')

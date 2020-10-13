@@ -16,7 +16,7 @@
 import { Address } from 'symbol-sdk'
 import { decode } from 'utf8'
 // configuration
-import networkConfig from '../../../config/network.conf.json'
+import { networkConfig } from '@/config'
 
 export class Formatters {
   public static formatNumber = (number: number): string => {

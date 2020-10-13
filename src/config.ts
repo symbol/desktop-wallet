@@ -13,26 +13,15 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
 
-// configuration
-import { appConfig } from '@/config'
+const resolvedNetworkConfig = window['networkConfig']
+console.log('networkConfig resolved!', resolvedNetworkConfig)
+export const networkConfig = resolvedNetworkConfig
 
-// import logo as an image
-// @ts-ignore
-import logo from '@/views/resources/symbol_from_nem.png'
+const resolvedAppConfig = window['appConfig']
+console.log('appConfig resolved!', resolvedAppConfig)
+export const appConfig = resolvedAppConfig
 
-@Component
-export class AppLogoTs extends Vue {
-  /**
-   * Logo image
-   * @var {any}
-   */
-  public readonly logo = logo
-
-  /**
-   * Title of the app
-   * @var {string}
-   */
-  public readonly appTitle = appConfig.title
-}
+const resolvedFeesConfig = window['feesConfig']
+console.log('feesConfig resolved!', resolvedFeesConfig)
+export const feesConfig = resolvedFeesConfig

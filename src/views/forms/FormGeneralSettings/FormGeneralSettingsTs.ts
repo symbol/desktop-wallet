@@ -39,7 +39,7 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
 import { SettingsModel } from '@/core/database/entities/SettingsModel'
 import { AccountModel } from '@/core/database/entities/AccountModel'
-import networkConfig from '@/../config/network.conf.json'
+import { networkConfig } from '@/config'
 
 @Component({
   components: {

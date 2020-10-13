@@ -15,9 +15,9 @@
  */
 import { SettingsModel } from '@/core/database/entities/SettingsModel'
 
-import feesConfig from '@/../config/fees.conf.json'
-import appConfig from '@/../config/app.conf.json'
-import networkConfig from '@/../config/network.conf.json'
+import { feesConfig } from '@/config'
+import { appConfig } from '@/config'
+import { networkConfig } from '@/config'
 import i18n from '@/language'
 import { SettingsModelStorage } from '@/core/database/storage/SettingsModelStorage'
 
