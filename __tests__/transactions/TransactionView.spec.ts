@@ -16,10 +16,12 @@
 import { Deadline, NamespaceId, NetworkType, PlainMessage, TransferTransaction } from 'symbol-sdk'
 import { createStore } from '@MOCKS/Store'
 import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction'
+import { Duration } from 'js-joda'
 
 const store = createStore({})
+const epochAdjustment = Duration.ofSeconds(1573430400);
 const transfer = TransferTransaction.create(
-  Deadline.create(),
+  Deadline.create(epochAdjustment),
   new NamespaceId('alias'),
   [],
   PlainMessage.create('test-message'),

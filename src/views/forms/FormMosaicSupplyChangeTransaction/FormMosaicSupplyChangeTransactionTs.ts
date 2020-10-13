@@ -182,7 +182,7 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
   protected getTransactions(): Transaction[] {
     return [
       MosaicSupplyChangeTransaction.create(
-        Deadline.create(),
+        this.createDeadline(),
         new MosaicId(this.formItems.mosaicHexId),
         this.formItems.action,
         UInt64.fromUint(this.formItems.delta),

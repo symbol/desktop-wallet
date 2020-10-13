@@ -146,7 +146,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    */
   protected getTransactions(): Transaction[] {
     const maxFee = UInt64.fromUint(this.formItems.maxFee)
-    const deadline = Deadline.create()
+    const deadline = this.createDeadline()
     if (NamespaceRegistrationType.RootNamespace === this.formItems.registrationType)
       return [
         NamespaceRegistrationTransaction.createRootNamespace(

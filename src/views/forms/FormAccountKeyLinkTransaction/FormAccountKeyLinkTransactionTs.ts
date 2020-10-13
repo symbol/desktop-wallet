@@ -80,7 +80,7 @@ export class FormAccountKeyLinkTransactionTs extends FormTransactionBase {
     const maxFee = UInt64.fromUint(this.formItems.maxFee)
     return [
       AccountKeyLinkTransaction.create(
-        Deadline.create(),
+        this.createDeadline(),
         this.remoteAccountPublicKey,
         this.formItems.linkAction,
         this.networkType,
@@ -116,4 +116,6 @@ export class FormAccountKeyLinkTransactionTs extends FormTransactionBase {
   public async created() {
     this.$emit('toggleNext', false)
   }
+
+
 }

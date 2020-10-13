@@ -160,6 +160,7 @@ export class NetworkService {
   private toNetworkConfigurationModel(dto: NetworkConfiguration): NetworkConfigurationModel {
     const fileDefaults: NetworkConfigurationModel = networkConfig.networkConfigurationDefaults
     const fromDto: NetworkConfigurationModel = {
+      epochAdjustment: NetworkConfigurationHelpers.epochAdjustment(dto),
       maxMosaicDivisibility: NetworkConfigurationHelpers.maxMosaicDivisibility(dto),
       namespaceGracePeriodDuration: NetworkConfigurationHelpers.namespaceGracePeriodDuration(dto),
       lockedFundsPerAggregate: NetworkConfigurationHelpers.lockedFundsPerAggregate(dto),

@@ -127,7 +127,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     // the duration must be 0 when the permanent value of true
     if (this.formItems.permanent) this.formItems.duration = 0
     const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-      Deadline.create(),
+      this.createDeadline(),
       randomNonce,
       mosaicId,
       MosaicFlags.create(this.formItems.supplyMutable, this.formItems.transferable, this.formItems.restrictable),
@@ -137,7 +137,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
       maxFee,
     )
     const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-      Deadline.create(),
+      this.createDeadline(),
       mosaicId,
       MosaicSupplyChangeAction.Increase,
       UInt64.fromUint(this.formItems.supply),

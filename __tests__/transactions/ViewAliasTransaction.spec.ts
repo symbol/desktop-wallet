@@ -16,16 +16,17 @@
 import { AliasAction, Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, NetworkType } from 'symbol-sdk'
 import { createStore } from '@MOCKS/Store'
 import { ViewAliasTransaction } from '@/core/transactions/ViewAliasTransaction'
+import {Duration} from "js-joda";
 
 const store = createStore({})
-
+const epochAdjustment = Duration.ofSeconds(1573430400);
 describe('transactions/ViewAliasTransaction', () => {
   describe('use() should', () => {
     test('populate mosaic alias transaction fields', () => {
       const namespaceId = new NamespaceId('alias')
       const mosaicId = new MosaicId('747B276C30626442')
       const alias = MosaicAliasTransaction.create(
-        Deadline.create(),
+        Deadline.create(epochAdjustment),
         AliasAction.Link,
         namespaceId,
         mosaicId,

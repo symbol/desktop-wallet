@@ -38,6 +38,7 @@ import {
 } from '@/services/TransactionAnnouncerService'
 import { BroadcastResult } from '@/core/transactions/BroadcastResult'
 import { flatMap, map } from 'rxjs/operators'
+import { Duration } from 'js-joda'
 
 export enum TransactionCommandMode {
   SIMPLE = 'SIMPLE',
@@ -56,6 +57,7 @@ export class TransactionCommand {
     public readonly networkMosaic: MosaicId,
     public readonly generationHash: string,
     public readonly networkType: NetworkType,
+    public readonly epochAdjustment: Duration,
     public readonly networkConfiguration: NetworkConfigurationModel,
     public readonly transactionFees: TransactionFees,
     public readonly requiredCosignatures: number,
@@ -123,7 +125,7 @@ export class TransactionCommand {
       if (this.mode === TransactionCommandMode.AGGREGATE) {
         const aggregate = this.calculateSuggestedMaxFee(
           AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(this.epochAdjustment),
             this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
             this.networkType,
             [],
@@ -134,7 +136,7 @@ export class TransactionCommand {
       } else {
         const aggregate = this.calculateSuggestedMaxFee(
           AggregateTransaction.createBonded(
-            Deadline.create(),
+            Deadline.create(this.epochAdjustment),
             this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
             this.networkType,
             [],
@@ -146,7 +148,7 @@ export class TransactionCommand {
           map((signedAggregateTransaction) => {
             const hashLock = this.calculateSuggestedMaxFee(
               LockFundsTransaction.create(
-                Deadline.create(),
+                Deadline.create(this.epochAdjustment),
                 new Mosaic(
                   this.networkMosaic,
                   UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate),

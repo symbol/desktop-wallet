@@ -268,7 +268,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
       )
     return [
       TransferTransaction.create(
-        Deadline.create(),
+        this.createDeadline(),
         this.instantiatedRecipient,
         mosaics.length ? mosaics : [],
         PlainMessage.create(this.formItems.messagePlain || ''),
