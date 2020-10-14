@@ -90,7 +90,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
    */
   public typeRootNamespace = NamespaceRegistrationType.RootNamespace
   /**
-   * Sub namespace type exposed to view
+   * Sub-namespace type exposed to view
    * @var {NamespaceRegistrationType}
    */
   public typeSubNamespace = NamespaceRegistrationType.SubNamespace

@@ -184,7 +184,7 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
       MosaicSupplyChangeTransaction.create(
         Deadline.create(),
         new MosaicId(this.formItems.mosaicHexId),
-        MosaicSupplyChangeAction.Increase,
+        this.formItems.action,
         UInt64.fromUint(this.formItems.delta),
         this.networkType,
         UInt64.fromUint(this.formItems.maxFee),
