@@ -367,7 +367,7 @@
   "move_your_mouse": "複雑さの高いランダムなニーモニックパス語群を生成するためにマウスを動かしてください。",
   "multisig_accounts_can_not_send_a_transaction_by_themselves": "マルチシグアカウントはトランザクションを開始できません。連署者のアカウントを使用してください。",
   "namespace": "ネームスペース",
-  "namespace_and_sub_namespace": "ネームスペースとサブネームスペース",
+  "namespace_and_sub_namespace": "名前空間とサブ名前空間",
   "namespace_can_only_contain_numbers_letters_and_other": "ネームスペース名には 0-9, A-Za-z, _, - の文字のみ使用できます。",
   "namespace_cannot_be_a_null_or_empty_string": "ネームスペース名を空文字にすることはできません",
   "namespace_cannot_use_forbidden_words": "このネームスペース名は保護されているため使用できません",

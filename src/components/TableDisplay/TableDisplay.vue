@@ -35,7 +35,7 @@
       <div>&nbsp;</div>
     </div>
     <div class="table-body-container">
-      <Spin v-show="loading" size="large" fix class="absolute" />
+      <Spin v-if="isLoading" size="large" fix class="absolute" />
       <div v-if="displayedValues.length" class="table-rows-container">
         <TableRow
           v-for="(rowValues, index) in currentPageRows"
@@ -48,7 +48,7 @@
           @on-show-mosaic-supply-change-form="showModifyMosaicSupplyForm"
         />
       </div>
-      <div v-else class="no-data-outer-container">
+      <div v-else-if="!isLoading && (!displayedValues || displayedValues.length === 0)" class="no-data-outer-container">
         <div class="no-data-message-container">
           <div>
             {{ assetType === 'mosaic' ? $t('no_data_mosaics') : $t('no_data_namespaces') }}
