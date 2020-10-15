@@ -14,14 +14,6 @@
  *
  */
 
-const resolvedNetworkConfig = window['networkConfig']
-console.log('networkConfig resolved!', resolvedNetworkConfig)
-export const networkConfig = resolvedNetworkConfig
-
-const resolvedAppConfig = window['appConfig']
-console.log('appConfig resolved!', resolvedAppConfig)
-export const appConfig = resolvedAppConfig
-
-const resolvedFeesConfig = window['feesConfig']
-console.log('feesConfig resolved!', resolvedFeesConfig)
-export const feesConfig = resolvedFeesConfig
+export * from './AppConfig';
+export * from './FeesConfig';
+export * from './NetworkConfig';
