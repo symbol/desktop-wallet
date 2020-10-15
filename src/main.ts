@@ -20,6 +20,7 @@ import moment from 'vue-moment'
 import iView from 'view-design'
 import locale from 'view-design/dist/locale/en-US'
 import 'view-design/dist/styles/iview.css'
+import infiniteScroll from 'vue-infinite-scroll'
 
 // internal dependencies
 import { UIBootstrapper } from '@/app/UIBootstrapper'
@@ -38,6 +39,7 @@ Vue.use(Router)
 Vue.use(VueRx)
 Vue.use(VueNumber)
 VeeValidateSetup.initialize()
+Vue.use(infiniteScroll)
 /// end-region UI plugins
 
 const app = new Vue({
