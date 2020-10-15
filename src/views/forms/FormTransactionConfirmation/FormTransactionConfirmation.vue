@@ -12,7 +12,7 @@
             <FormProfileUnlock
               v-else
               ref="unlockForm"
-              :disable-submit="disableSubmit"
+              :hide-submit="hideSubmit"
               @success="onAccountUnlocked"
               @error="onError"
             />

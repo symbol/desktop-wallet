@@ -3,9 +3,7 @@
     <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
       <form onsubmit="event.preventDefault()">
         <FormRow :class-name="'emphasis'">
-          <template v-slot:label>
-            {{ $t('form_label_multisig_operation_type') }}
-          </template>
+          <template v-slot:label> {{ $t('form_label_multisig_operation_type') }}: </template>
 
           <template v-slot:inputs>
             <div class="row-left-message">
@@ -18,9 +16,7 @@
 
         <FormRow>
           <template v-slot:label>
-            <div v-if="multisigOperationType === 'conversion'">
-              {{ $t('form_label_account_to_be_converted') }}
-            </div>
+            <div v-if="multisigOperationType === 'conversion'">{{ $t('form_label_account_to_be_converted') }}:</div>
             <div v-else>{{ $t('form_label_multisig_account') }}:</div>
           </template>
           <template v-slot:inputs>
@@ -34,9 +30,7 @@
         </FormRow>
 
         <FormRow v-if="multisigOperationType === 'modification' && currentMultisigInfo" :class-name="'emphasis'">
-          <template v-slot:label>
-            {{ $t('form_label_multisig_current_info') }}
-          </template>
+          <template v-slot:label> {{ $t('form_label_multisig_current_info') }}: </template>
 
           <template v-slot:inputs>
             <div class="row-left-message">
@@ -44,7 +38,7 @@
                 {{
                   $t('label_of', {
                     min: currentMultisigInfo.minApproval,
-                    max: currentMultisigInfo.cosignatories.length,
+                    max: currentMultisigInfo.cosignatoryAddresses.length,
                   })
                 }}
                 {{ $t('label_for_approvals') }}
@@ -53,7 +47,7 @@
                 {{
                   $t('label_of', {
                     min: currentMultisigInfo.minRemoval,
-                    max: currentMultisigInfo.cosignatories.length,
+                    max: currentMultisigInfo.cosignatoryAddresses.length,
                   })
                 }}
                 {{ $t('label_for_removals') }}
@@ -93,9 +87,9 @@
         <!-- Transaction fee selector -->
         <MaxFeeAndSubmit
           v-model="formItems.maxFee"
-          :disable-submit="disableSubmit"
+          :disable-submit="!hasFormAnyChanges"
           @button-clicked="
-            disableSubmit ? '' : handleSubmit(onSubmit)
+            hideSubmit ? '' : handleSubmit(onSubmit)
             showErrorNotification()
           "
         />

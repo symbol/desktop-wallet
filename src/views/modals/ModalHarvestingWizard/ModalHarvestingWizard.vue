@@ -73,7 +73,7 @@
           <FormTransactionConfirmation
             ref="confirmationForm"
             :command="command"
-            :disable-submit="true"
+            :hide-submit="true"
             @success="onConfirmationSuccess"
             @error="onConfirmationError"
             @close="onConfirmationCancel"

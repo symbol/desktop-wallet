@@ -76,9 +76,9 @@ export class FormProfileUnlockTs extends Vue {
   @Prop({ default: 'confirm' }) buttonText: string
 
   /**
-   * Whether to disable submit button
+   * Whether to hide submit button
    */
-  @Prop({ default: false }) disableSubmit: boolean
+  @Prop({ default: false }) hideSubmit: boolean
 
   /// region computed properties getter/setter
   /// end-region computed properties getter/setter

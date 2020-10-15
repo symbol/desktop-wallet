@@ -58,6 +58,7 @@ export class TransactionCommand {
     public readonly networkType: NetworkType,
     public readonly networkConfiguration: NetworkConfigurationModel,
     public readonly transactionFees: TransactionFees,
+    public readonly requiredCosignatures: number,
   ) {
     this.tempAccount = Account.generateNewAccount(this.networkType)
     this.tempTransactionSigner = new AccountTransactionSigner(this.tempAccount)
@@ -169,7 +170,7 @@ export class TransactionCommand {
       return transaction
     }
     if (transaction instanceof AggregateTransaction) {
-      return transaction.setMaxFeeForAggregate(feeMultiplier, this.signer.requiredCosignatures)
+      return transaction.setMaxFeeForAggregate(feeMultiplier, this.requiredCosignatures)
     } else {
       return transaction.setMaxFee(feeMultiplier)
     }
