@@ -64,6 +64,8 @@ import SignerFilter from '@/components/SignerFilter/SignerFilter.vue'
       ownedNamespaces: 'namespace/ownedNamespaces',
       networkConfiguration: 'network/networkConfiguration',
       signers: 'account/signers',
+      isFetchingNamespaces: 'namespace/isFetchingNamespaces',
+      isFetchingMosaics: 'mosaic/isFetchingMosaics',
     }),
   },
 })
@@ -76,12 +78,6 @@ export class TableDisplayTs extends Vue {
     default: 'mosaic',
   })
   assetType: string
-
-  /**
-   * Loading state of the data to be shown in the table
-   * @type {boolean}
-   */
-  loading: boolean = false
 
   /**
    * Current account owned mosaics
@@ -107,6 +103,18 @@ export class TableDisplayTs extends Vue {
    * current signers
    */
   public signers: Signer[]
+
+  public isFetchingNamespaces: boolean
+
+  public isFetchingMosaics: boolean
+
+  /**
+   * Loading state of the data to be shown in the table
+   * @type {boolean}
+   */
+  public get isLoading() {
+    return this.assetType === 'namespace' ? this.isFetchingNamespaces : this.isFetchingMosaics
+  }
 
   /**
    * Hook called when the signer selector has changed
@@ -292,13 +300,11 @@ export class TableDisplayTs extends Vue {
    * @returns {void}
    */
   private async refresh(): Promise<void> {
-    this.loading = true
     if ('mosaic' === this.assetType) {
       await this.$store.dispatch('mosaic/LOAD_MOSAICS')
     } else if ('namespace' === this.assetType) {
       await this.$store.dispatch('namespace/LOAD_NAMESPACES')
     }
-    this.loading = false
   }
 
   /**
