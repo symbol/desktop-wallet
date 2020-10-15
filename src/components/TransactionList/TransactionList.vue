@@ -4,8 +4,10 @@
       <div class="transaction-list-tabs-container">
         <TransactionListFilters />
         <TransactionTable
-          :transactions="getCurrentPageTransactions()"
+          :transactions="getTransactions()"
           :empty-message="getEmptyMessage()"
+          :load-more="loadMore"
+          :pagination-type="paginationType"
           @click="onClickTransaction"
         />
       </div>
@@ -16,7 +18,13 @@
         >
           {{ $t('button_download_qr') }}
         </button>
-        <Page :total="totalCountItems" class="page_content" @on-change="onPageChange" />
+        <Pagination
+          v-if="paginationType === 'pagination'"
+          page-size="pageSize"
+          :current="currentPage"
+          :last-page="isLastPage"
+          @targetPage="onPageChange"
+        />
       </div>
     </div>
 
