@@ -186,7 +186,6 @@ export default {
         transactionCall: Observable<Page<Transaction>>,
       ): Observable<Transaction[]> => {
         const attributeName = transactionGroupToStateVariable(group)
-        //commit(attributeName, [])
         return transactionCall.pipe(
           map((transactionsPage) => {
             commit(attributeName, {
@@ -231,6 +230,7 @@ export default {
                 address: currentSignerAddress,
                 pageSize: 100,
                 pageNumber: 1, // not paginating
+                order: Order.Desc,
               }),
             ),
           )
@@ -245,6 +245,7 @@ export default {
                 address: currentSignerAddress,
                 pageSize: 100,
                 pageNumber: 1, // not paginating
+                order: Order.Desc,
               }),
             ),
           )

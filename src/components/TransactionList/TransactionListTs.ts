@@ -66,6 +66,9 @@ export class TransactionListTs extends Vue {
   })
   address: string
 
+  /**
+   * Number of txs visible in each page
+   */
   @Prop({
     default: 10,
   })
@@ -75,6 +78,14 @@ export class TransactionListTs extends Vue {
     default: 'pagination',
   })
   paginationType: 'pagination' | 'scroll'
+
+  /**
+   * Number of txs to be loaded from repository in each request
+   */
+  @Prop({
+    default: 20,
+  })
+  requestPageSize: number
 
   /**
    * Currently active account
@@ -312,7 +323,7 @@ export class TransactionListTs extends Vue {
     if (!this.currentConfirmedPage.isLastPage) {
       this.$store.dispatch('transaction/LOAD_TRANSACTIONS', {
         pageNumber: ++this.currentConfirmedPage.pageNumber,
-        pageSize: 20,
+        pageSize: this.requestPageSize,
       })
     }
   }
