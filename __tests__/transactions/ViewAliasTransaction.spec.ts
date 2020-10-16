@@ -16,10 +16,9 @@
 import { AliasAction, Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, NetworkType } from 'symbol-sdk'
 import { createStore } from '@MOCKS/Store'
 import { ViewAliasTransaction } from '@/core/transactions/ViewAliasTransaction'
-import {Duration} from "js-joda";
 
 const store = createStore({})
-const epochAdjustment = Duration.ofSeconds(1573430400);
+const epochAdjustment = 1573430400;
 describe('transactions/ViewAliasTransaction', () => {
   describe('use() should', () => {
     test('populate mosaic alias transaction fields', () => {

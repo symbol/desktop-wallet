@@ -16,10 +16,9 @@
 import { Account, Deadline, NamespaceId, NetworkType, PlainMessage, TransferTransaction } from 'symbol-sdk'
 import { createStore } from '@MOCKS/Store'
 import { ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction'
-import {Duration} from "js-joda";
 
 const store = createStore({})
-const epochAdjustment = Duration.ofSeconds(1573430400);
+const epochAdjustment = 1573430400;
 describe('transactions/ViewTransferTransaction', () => {
   describe('use() should', () => {
     test('populate transfer transaction fields', () => {

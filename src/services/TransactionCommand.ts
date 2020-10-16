@@ -38,7 +38,6 @@ import {
 } from '@/services/TransactionAnnouncerService'
 import { BroadcastResult } from '@/core/transactions/BroadcastResult'
 import { flatMap, map } from 'rxjs/operators'
-import { Duration } from 'js-joda'
 
 export enum TransactionCommandMode {
   SIMPLE = 'SIMPLE',

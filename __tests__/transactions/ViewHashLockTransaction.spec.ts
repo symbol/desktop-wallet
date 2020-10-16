@@ -24,10 +24,9 @@ import {
 import { createStore } from '@MOCKS/Store'
 import { getTestAccount } from '@MOCKS/Accounts'
 import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction'
-import {Duration} from "js-joda";
 
 const store = createStore({})
-const epochAdjustment = Duration.ofSeconds(1573430400);
+const epochAdjustment = 1573430400;
 describe('transactions/ViewHashLockTransaction', () => {
   describe('use() should', () => {
     test('populate hash lock transaction fields', () => {
