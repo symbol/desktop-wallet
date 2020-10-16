@@ -34,7 +34,7 @@ import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
 // configuration
-import appConfig from '@/../config/app.conf.json'
+import { appConfig } from '@/config'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
 import { FilterHelpers } from '@/core/utils/FilterHelpers'
 

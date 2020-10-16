@@ -13,26 +13,29 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
 
-// configuration
-import { appConfig } from '@/config'
-
-// import logo as an image
-// @ts-ignore
-import logo from '@/views/resources/symbol_from_nem.png'
-
-@Component
-export class AppLogoTs extends Vue {
-  /**
-   * Logo image
-   * @var {any}
-   */
-  public readonly logo = logo
-
-  /**
-   * Title of the app
-   * @var {string}
-   */
-  public readonly appTitle = appConfig.title
+export interface FeesConfig {
+  normal: number
+  fast: number
+  median: number
+  slow: number
+  highest: number
+  fastest: number
+  free: number
+  slowest: number
 }
+
+const defaultFeesConfig: FeesConfig = {
+  median: 1,
+  highest: 2,
+  free: 0,
+  slowest: 5000,
+  slow: 30000,
+  normal: 50000,
+  fast: 100000,
+  fastest: 1000000,
+}
+
+const resolvedFeesConfig: FeesConfig = window['feesConfig'] || defaultFeesConfig
+console.log('feesConfig resolved!', resolvedFeesConfig)
+export const feesConfig = resolvedFeesConfig

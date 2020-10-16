@@ -16,7 +16,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 // configuration
-import feesConfig from '@/../config/fees.conf.json'
+import { feesConfig } from '@/config'
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue'
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
@@ -71,7 +71,10 @@ export class MaxFeeSelectorTs extends Vue {
   multiplier: number
 
   public created() {
-    this.fees = Object.entries(feesConfig).map((entry) => ({ label: this.getLabel(entry), maxFee: entry[1] }))
+    this.fees = Object.entries(feesConfig).map((entry) => ({
+      label: this.getLabel([entry[0], entry[1] as number]),
+      maxFee: entry[1] as number,
+    }))
   }
 
   private getLabel([key, value]: [string, number]) {

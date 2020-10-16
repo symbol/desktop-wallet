@@ -13,26 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
 
-// configuration
-import { appConfig } from '@/config'
-
-// import logo as an image
-// @ts-ignore
-import logo from '@/views/resources/symbol_from_nem.png'
-
-@Component
-export class AppLogoTs extends Vue {
-  /**
-   * Logo image
-   * @var {any}
-   */
-  public readonly logo = logo
-
-  /**
-   * Title of the app
-   * @var {string}
-   */
-  public readonly appTitle = appConfig.title
-}
+export * from './AppConfig'
+export * from './FeesConfig'
+export * from './NetworkConfig'

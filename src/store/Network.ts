@@ -22,7 +22,6 @@ import { URLHelpers } from '@/core/utils/URLHelpers'
 import app from '@/main'
 import { AwaitLock } from './AwaitLock'
 // configuration
-import networkConfig from '../../config/network.conf.json'
 import { UrlValidator } from '@/core/validation/validators'
 import { NetworkModel } from '@/core/database/entities/NetworkModel'
 import { NetworkService } from '@/services/NetworkService'
@@ -31,6 +30,7 @@ import { NodeModel } from '@/core/database/entities/NodeModel'
 import { URLInfo } from '@/core/utils/URLInfo'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { networkConfig } from '@/config'
 
 const Lock = AwaitLock.create()
 

@@ -14,8 +14,7 @@
  *
  */
 import { NetworkService } from '@/services/NetworkService'
-
-import networkConfig from '../../config/network.conf.json'
+import { networkConfig } from '@/config'
 
 const networkService = new NetworkService()
 describe.skip('services/NetworkService', () => {
