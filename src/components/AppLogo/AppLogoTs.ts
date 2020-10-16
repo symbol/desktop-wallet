@@ -16,7 +16,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 // configuration
-import appConfig from '@/../config/app.conf.json'
+import { appConfig } from '@/config'
 
 // import logo as an image
 // @ts-ignore

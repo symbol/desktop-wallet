@@ -20,7 +20,7 @@ import { ObservableHelpers } from '@/core/utils/ObservableHelpers'
 import { map, tap } from 'rxjs/operators'
 import { NodeModel } from '@/core/database/entities/NodeModel'
 import * as _ from 'lodash'
-import networkConfig from '@/../config/network.conf.json'
+import { networkConfig } from '@/config'
 import { NodeModelStorage } from '@/core/database/storage/NodeModelStorage'
 
 /**

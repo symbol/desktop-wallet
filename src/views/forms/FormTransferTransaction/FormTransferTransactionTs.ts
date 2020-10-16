@@ -110,7 +110,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
   @Prop({
     default: false,
   })
-  disableSubmit: boolean
+  hideSubmit: boolean
 
   @Prop({
     default: false,

@@ -16,7 +16,7 @@
 import RSSParser from 'rss-parser'
 import axios from 'axios'
 // configuration
-import appConfig from '@/../config/app.conf.json'
+import { appConfig } from '@/config'
 
 /// region protected helpers
 /**

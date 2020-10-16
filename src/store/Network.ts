@@ -22,7 +22,6 @@ import { URLHelpers } from '@/core/utils/URLHelpers'
 import app from '@/main'
 import { AwaitLock } from './AwaitLock'
 // configuration
-import networkConfig from '../../config/network.conf.json'
 import { UrlValidator } from '@/core/validation/validators'
 import { NetworkModel } from '@/core/database/entities/NetworkModel'
 import { NetworkService } from '@/services/NetworkService'
@@ -31,6 +30,7 @@ import { NodeModel } from '@/core/database/entities/NodeModel'
 import { URLInfo } from '@/core/utils/URLInfo'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { networkConfig } from '@/config'
 
 const Lock = AwaitLock.create()
 
@@ -68,6 +68,7 @@ interface NetworkState {
   subscriptions: Subscription[]
   transactionFees: TransactionFees
   rentalFeeEstimation: RentalFees
+  networkIsNotMatchingProfile: boolean
 }
 
 const defaultPeer = URLHelpers.formatUrl(networkConfig.defaultNodeUrl)
@@ -88,6 +89,7 @@ const networkState: NetworkState = {
   currentHeight: 0,
   subscriptions: [],
   rentalFeeEstimation: undefined,
+  networkIsNotMatchingProfile: false,
 }
 export default {
   namespaced: true,
@@ -108,6 +110,7 @@ export default {
     currentHeight: (state: NetworkState) => state.currentHeight,
     transactionFees: (state: NetworkState) => state.transactionFees,
     rentalFeeEstimation: (state: NetworkState) => state.rentalFeeEstimation,
+    networkIsNotMatchingProfile: (state: NetworkState) => state.networkIsNotMatchingProfile,
   },
   mutations: {
     setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -134,6 +137,9 @@ export default {
     },
     rentalFeeEstimation: (state: NetworkState, amount: RentalFees) => {
       state.rentalFeeEstimation = amount
+    },
+    networkIsNotMatchingProfile: (state: NetworkState, networkIsNotMatchingProfile: boolean) => {
+      Vue.set(state, 'networkIsNotMatchingProfile', networkIsNotMatchingProfile)
     },
 
     addPeer: (state: NetworkState, peerUrl: string) => {
@@ -225,6 +231,17 @@ export default {
       if (oldGenerationHash != networkModel.generationHash) {
         dispatch('account/NETWORK_CHANGED', {}, { root: true })
         dispatch('statistics/LOAD', {}, { root: true })
+
+        // check if current profile network type and generation hash matches current network
+        if (
+          currentProfile &&
+          (currentProfile.networkType !== networkModel.networkType ||
+            currentProfile.generationHash !== networkModel.generationHash)
+        ) {
+          dispatch('SET_NETWORK_IS_NOT_MATCHING_PROFILE', true)
+        } else {
+          dispatch('SET_NETWORK_IS_NOT_MATCHING_PROFILE', false)
+        }
       }
       await dispatch('UNSUBSCRIBE')
       await listener.open()
@@ -288,7 +305,9 @@ export default {
     SET_RENTAL_FEE_ESTIMATE({ commit }, rentalFee) {
       commit('rentalFeeEstimation', rentalFee)
     },
-
+    SET_NETWORK_IS_NOT_MATCHING_PROFILE({ commit }, networkIsNotMatchingProfile) {
+      commit('networkIsNotMatchingProfile', networkIsNotMatchingProfile)
+    },
     ADD_KNOWN_PEER({ commit }, peerUrl) {
       if (!UrlValidator.validate(peerUrl)) {
         throw Error('Cannot add node. URL is not valid: ' + peerUrl)

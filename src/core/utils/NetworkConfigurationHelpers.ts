@@ -18,7 +18,7 @@ import { NetworkConfiguration } from 'symbol-sdk'
 import { Formatters } from '@/core/utils/Formatters'
 import { TimeHelpers } from '@/core/utils/TimeHelpers'
 
-import networkConfig from '@/../config/network.conf.json'
+import { networkConfig } from '@/config'
 
 /**
  * Helper class that retrieves properties from the SDK's NetworkConfiguration object when

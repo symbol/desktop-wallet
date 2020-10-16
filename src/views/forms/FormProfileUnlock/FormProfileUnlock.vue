@@ -23,7 +23,7 @@
               </ErrorTooltip>
             </ValidationProvider>
             <button
-              v-if="!disableSubmit"
+              v-if="!hideSubmit"
               class="button-style validation-button right-side-button"
               type="submit"
               @click="processVerification"

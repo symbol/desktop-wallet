@@ -16,7 +16,7 @@
 
 import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
 import { SettingsModel } from '@/core/database/entities/SettingsModel'
-import networkConfig from '../../../../config/network.conf.json'
+import { networkConfig } from '@/config'
 
 export class SettingsModelStorage extends VersionedObjectStorage<Record<string, SettingsModel>> {
   /**

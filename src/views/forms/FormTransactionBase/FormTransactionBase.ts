@@ -135,7 +135,7 @@ export class FormTransactionBase extends Vue {
 
   public command: TransactionCommand
 
-  private transactionFees: TransactionFees
+  protected transactionFees: TransactionFees
 
   /**
    * Type the ValidationObserver refs
@@ -291,6 +291,9 @@ export class FormTransactionBase extends Vue {
       this.networkType,
       this.networkConfiguration,
       this.transactionFees,
+      this.currentSignerMultisigInfo!!
+        ? this.currentSignerMultisigInfo.minApproval
+        : this.selectedSigner.requiredCosignatures,
     )
   }
 

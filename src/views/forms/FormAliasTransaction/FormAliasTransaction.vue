@@ -82,8 +82,8 @@
 
         <MaxFeeAndSubmit
           v-model="formItems.maxFee"
-          :disable-submit="disableSubmit"
-          @button-clicked="disableSubmit ? '' : handleSubmit(onSubmit)"
+          :hide-submit="hideSubmit"
+          @button-clicked="hideSubmit ? '' : handleSubmit(onSubmit)"
         />
       </form>
     </ValidationObserver>
