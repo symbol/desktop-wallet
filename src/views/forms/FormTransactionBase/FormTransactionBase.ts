@@ -72,7 +72,7 @@ export class FormTransactionBase extends Vue {
   /**
    * The network configuration epochAdjustment.
    */
-  public epochAdjustment: Duration
+  public epochAdjustment: number
 
   /**
    * Default fee setting

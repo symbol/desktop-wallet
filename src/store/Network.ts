@@ -63,7 +63,7 @@ interface NetworkState {
   listener: Listener
   generationHash: string
   networkType: NetworkType
-  epochAdjustment: Duration
+  epochAdjustment: number
   isConnected: boolean
   knowNodes: NodeModel[]
   currentHeight: number
@@ -91,7 +91,7 @@ const networkState: NetworkState = {
   currentHeight: 0,
   subscriptions: [],
   rentalFeeEstimation: undefined,
-  epochAdjustment: Duration.ofSeconds(networkConfig.networkConfigurationDefaults.epochAdjustment),
+  epochAdjustment: networkConfig.networkConfigurationDefaults.epochAdjustment,
   networkIsNotMatchingProfile: false,
 }
 
@@ -136,7 +136,7 @@ export default {
     knowNodes: (state: NetworkState, knowNodes: NodeModel[]) => Vue.set(state, 'knowNodes', knowNodes),
     generationHash: (state: NetworkState, generationHash: string) => Vue.set(state, 'generationHash', generationHash),
     networkType: (state: NetworkState, networkType: NetworkType) => Vue.set(state, 'networkType', networkType),
-    epochAdjustment: (state: NetworkState, epochAdjustment: Duration) =>
+    epochAdjustment: (state: NetworkState, epochAdjustment: number) =>
       Vue.set(state, 'epochAdjustment', epochAdjustment),
     currentPeer: (state: NetworkState, currentPeer: URLInfo) => Vue.set(state, 'currentPeer', currentPeer),
     transactionFees: (state: NetworkState, transactionFees: TransactionFees) => {

@@ -57,7 +57,7 @@ export class TransactionCommand {
     public readonly networkMosaic: MosaicId,
     public readonly generationHash: string,
     public readonly networkType: NetworkType,
-    public readonly epochAdjustment: Duration,
+    public readonly epochAdjustment: number,
     public readonly networkConfiguration: NetworkConfigurationModel,
     public readonly transactionFees: TransactionFees,
     public readonly requiredCosignatures: number,
