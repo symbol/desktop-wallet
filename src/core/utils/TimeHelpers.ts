@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,9 @@ export class TimeHelpers {
   }
 
   public static formatSeconds = function (second: number): string {
-    if (!second && second !== 0) return ''
+    if (!second && second !== 0) {
+      return ''
+    }
     let d = 0,
       h = 0,
       m = 0

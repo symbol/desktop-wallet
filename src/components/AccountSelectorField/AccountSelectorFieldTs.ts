@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,9 @@ export class AccountSelectorFieldTs extends Vue {
 
   /// region computed properties getter/setter
   public get currentAccountIdentifier(): string {
-    if (this.value) return this.value
+    if (this.value) {
+      return this.value
+    }
 
     if (this.currentAccount) {
       return this.currentAccount.id
@@ -69,12 +71,16 @@ export class AccountSelectorFieldTs extends Vue {
   }
 
   public set currentAccountIdentifier(id: string) {
-    if (!id || !id.length) return
+    if (!id || !id.length) {
+      return
+    }
 
     this.$emit('input', id)
 
     const account = this.accountService.getAccount(id)
-    if (!account) return
+    if (!account) {
+      return
+    }
   }
 
   public get currentAccounts(): AccountModel[] {
@@ -89,7 +95,9 @@ export class AccountSelectorFieldTs extends Vue {
    */
   protected truncate(str: string): string {
     const maxStringLength = 15
-    if (str.length <= maxStringLength) return str
+    if (str.length <= maxStringLength) {
+      return str
+    }
     return `${str.substring(0, 9)}...${str.substring(str.length - 3)}`
   }
 

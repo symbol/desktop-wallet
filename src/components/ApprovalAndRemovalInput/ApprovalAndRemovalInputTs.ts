@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,8 +118,12 @@ export class ApprovalAndRemovalInputTs extends Vue {
    * @type {number}
    */
   protected get currentValue(): number {
-    if (!this.multisig) return 0
-    if (this.type === 'approval') return this.multisig.minApproval
+    if (!this.multisig) {
+      return 0
+    }
+    if (this.type === 'approval') {
+      return this.multisig.minApproval
+    }
     return this.multisig.minRemoval
   }
 

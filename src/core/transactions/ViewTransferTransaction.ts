@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,9 @@ export class ViewTransferTransaction extends TransactionView<TransferTransaction
    * @var {string}
    */
   private get sender(): string {
-    if (this.transaction.signer) return this.transaction.signer.address.pretty()
+    if (this.transaction.signer) {
+      return this.transaction.signer.address.pretty()
+    }
     const currentSignerAddress = this.$store.getters['account/currentSignerAddress']
     return currentSignerAddress ? currentSignerAddress.pretty() : ''
   }

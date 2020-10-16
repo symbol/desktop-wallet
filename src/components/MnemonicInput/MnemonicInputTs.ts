@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,7 +133,9 @@ export class MnemonicInputTs extends Vue {
    */
   @Watch('seed', { immediate: true })
   private handleSeed(seed: string) {
-    if (!seed) return
+    if (!seed) {
+      return
+    }
     const pasteDataArr: Array<string> = seed.trim().split(/\s+/g)
     pasteDataArr.forEach((pasteData) => {
       if (!!pasteData && this.wordsArray.length < 24) {

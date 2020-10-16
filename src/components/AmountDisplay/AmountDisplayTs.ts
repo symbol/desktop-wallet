@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,9 @@ export class AmountDisplayTs extends Vue {
 
   get fractionalPart(): string {
     const rest = this.value - Math.floor(this.value)
-    if (rest === 0) return ''
+    if (rest === 0) {
+      return ''
+    }
     const decimals = this.decimals === undefined ? this.networkConfiguration.maxMosaicDivisibility || 6 : this.decimals
     // remove leftmost-0 and rightmost-0
     return Number(rest.toFixed(decimals)).toPrecision().toString().replace(/^0/, '')

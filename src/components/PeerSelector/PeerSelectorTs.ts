@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,7 +87,9 @@ export class PeerSelectorTs extends Vue {
   }
 
   get networkTypeText(): string {
-    if (!this.isConnected) return this.$t('invalid_node').toString()
+    if (!this.isConnected) {
+      return this.$t('invalid_node').toString()
+    }
     return !!this.networkType ? NetworkTypeHelper.getNetworkTypeLabel(this.networkType) : this.$t('loading').toString()
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,9 @@ export class AppRouter extends Router {
    */
   public getRoutes(parentRouteName?: string): AppRoute[] {
     const parentRoute = this.getParentRoute(parentRouteName)
-    if (!parentRoute) return []
+    if (!parentRoute) {
+      return []
+    }
     return this.getChildRoutes(parentRoute)
   }
 
@@ -130,7 +132,9 @@ export class AppRouter extends Router {
    * @returns {AppRoute[]}
    */
   private getChildRoutes(parentRoute: AppRoute): AppRoute[] {
-    if (!parentRoute.children) return []
+    if (!parentRoute.children) {
+      return []
+    }
     return [...parentRoute.children].filter(({ meta }) => !meta.hideFromMenu)
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,9 @@ export class MultisigService {
     currentAccountMultisigInfo: MultisigAccountInfo | undefined,
     multisigAccountsInfo: MultisigAccountInfo[] | undefined,
   ): Signer[] {
-    if (!currentAccount) return []
+    if (!currentAccount) {
+      return []
+    }
     const self: Signer[] = [
       {
         address: Address.createFromRawAddress(currentAccount.address),

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,8 +116,10 @@ export default {
       })
     },
     SET_LOADING_OVERLAY({ commit }, loadingOverlay) {
-      // @ts-ignore
-      if (!loadingOverlay.show) app.$Spin.hide()
+      if (!loadingOverlay.show) {
+        // @ts-ignore
+        app.$Spin.hide()
+      }
       commit('toggleLoadingOverlay', loadingOverlay.show)
       commit('setLoadingOverlayMessage', loadingOverlay.message)
       commit('setLoadingDisableCloseButton', loadingOverlay.disableCloseButton || false)

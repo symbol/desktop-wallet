@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -187,7 +187,9 @@ export default {
      */
     async initialize({ commit, getters }, { address }) {
       const callback = async () => {
-        if (!address || !address.length) return
+        if (!address || !address.length) {
+          return
+        }
         commit('setInitialized', true)
       }
       await Lock.initialize(callback, { getters })
@@ -210,7 +212,9 @@ export default {
      */
     async SET_CURRENT_ACCOUNT({ commit, dispatch, getters }, currentAccount: AccountModel) {
       const previous: AccountModel = getters.currentAccount
-      if (previous && previous.address === currentAccount.address) return
+      if (previous && previous.address === currentAccount.address) {
+        return
+      }
 
       const currentAccountAddress: Address = Address.createFromRawAddress(currentAccount.address)
       dispatch(
@@ -249,7 +253,9 @@ export default {
 
       const currentSignerAddress: Address = address
 
-      if (previousSignerAddress && previousSignerAddress.equals(currentSignerAddress)) return
+      if (previousSignerAddress && previousSignerAddress.equals(currentSignerAddress)) {
+        return
+      }
 
       dispatch(
         'diagnostic/ADD_DEBUG',
@@ -275,7 +281,9 @@ export default {
       dispatch('transaction/SIGNER_CHANGED', {}, { root: true })
 
       // open / close websocket connections
-      if (previousSignerAddress) await dispatch('UNSUBSCRIBE', previousSignerAddress)
+      if (previousSignerAddress) {
+        await dispatch('UNSUBSCRIBE', previousSignerAddress)
+      }
       await dispatch('SUBSCRIBE', currentSignerAddress)
 
       await dispatch('LOAD_ACCOUNT_INFO')
@@ -306,11 +314,15 @@ export default {
       const knownAccounts: AccountModel[] = getters.knownAccounts
 
       // avoid calls if no account set
-      if (!currentAccount || !currentAccountAddress) return
+      if (!currentAccount || !currentAccountAddress) {
+        return
+      }
 
       // remote calls:
 
-      if (!currentAccountAddress) return
+      if (!currentAccountAddress) {
+        return
+      }
 
       const getMultisigAccountGraphInfoPromise = repositoryFactory
         .createMultisigRepository()
@@ -413,7 +425,9 @@ export default {
      */
     // Subscribe to latest account transactions.
     async SUBSCRIBE({ commit, dispatch, rootGetters }, address: Address) {
-      if (!address) return
+      if (!address) {
+        return
+      }
 
       const plainAddress = address.plain()
 
@@ -436,12 +450,16 @@ export default {
       // subscriptions to close
       const subscriptionTypes = (subscriptions && subscriptions[plainAddress.plain()]) || []
 
-      if (!subscriptionTypes.length) return
+      if (!subscriptionTypes.length) {
+        return
+      }
 
       // close subscriptions
       for (const subscriptionType of subscriptionTypes) {
         const { listener, subscriptions } = subscriptionType
-        for (const subscription of subscriptions) subscription.unsubscribe()
+        for (const subscription of subscriptions) {
+          subscription.unsubscribe()
+        }
         listener.close()
       }
 

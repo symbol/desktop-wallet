@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,10 +83,18 @@ export class NamespaceSelectorTs extends Vue {
    * Filter Namespaces
    */
   get filteredNamespaces() {
-    if (this.disableLinked) return this.linkableNamespaces
-    if (this.disableUnlinked) return this.unlinkableNamespaces
-    if (this.parentNamespace) return this.parentNamespaces
-    if (this.nonParentNamespace) return this.nonParentNamespaces
+    if (this.disableLinked) {
+      return this.linkableNamespaces
+    }
+    if (this.disableUnlinked) {
+      return this.unlinkableNamespaces
+    }
+    if (this.parentNamespace) {
+      return this.parentNamespaces
+    }
+    if (this.nonParentNamespace) {
+      return this.nonParentNamespaces
+    }
     return this.allNamespaces
   }
 

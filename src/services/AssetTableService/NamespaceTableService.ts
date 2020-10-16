@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,9 @@ export class NamespaceTableService extends AssetTableService {
    * @returns {('N/A' | 'address' | 'mosaic')}
    */
   private getAliasType(namespaceModel: NamespaceModel): 'N/A' | 'address' | 'mosaic' {
-    if (!namespaceModel.aliasTargetAddressRawPlain && !namespaceModel.aliasTargetMosaicIdHex) return 'N/A'
+    if (!namespaceModel.aliasTargetAddressRawPlain && !namespaceModel.aliasTargetMosaicIdHex) {
+      return 'N/A'
+    }
     return namespaceModel.aliasType === AliasType.Address ? 'address' : 'mosaic'
   }
 

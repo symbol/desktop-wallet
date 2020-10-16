@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,9 @@ export class TableRowTs extends Vue {
    * @type {boolean}
    */
   protected get isRootNamespace(): boolean {
-    if (!this.isNamespace) return false
+    if (!this.isNamespace) {
+      return false
+    }
     return this.rowValues.name.indexOf('.') === -1
   }
 
@@ -75,7 +77,9 @@ export class TableRowTs extends Vue {
    * @type {boolean}
    */
   protected get hasAvailableActions(): boolean {
-    if (this.rowValues.expiration === 'expired') return false
+    if (this.rowValues.expiration === 'expired') {
+      return false
+    }
     return this.ownedAssetHexIds.findIndex((hexId) => hexId === this.rowValues.hexId) > -1
   }
 
@@ -86,8 +90,12 @@ export class TableRowTs extends Vue {
    * @type {boolean}
    */
   protected get isSupplyMutableMosaic(): boolean {
-    if (Object.keys(this.rowValues).indexOf('supply') === -1) return false
-    if (!this.rowValues.supplyMutable) return false
+    if (Object.keys(this.rowValues).indexOf('supply') === -1) {
+      return false
+    }
+    if (!this.rowValues.supplyMutable) {
+      return false
+    }
     return this.rowValues.expiration !== 'expired'
   }
 
@@ -98,10 +106,14 @@ export class TableRowTs extends Vue {
    */
   protected get aliasActionLabel(): string {
     if (this.isNamespace) {
-      if (this.rowValues.aliasType === 'N/A') return 'action_label_alias_link'
+      if (this.rowValues.aliasType === 'N/A') {
+        return 'action_label_alias_link'
+      }
       return 'action_label_alias_unlink'
     }
-    if (this.rowValues.name === 'N/A') return 'action_label_alias_link'
+    if (this.rowValues.name === 'N/A') {
+      return 'action_label_alias_link'
+    }
     return 'action_label_alias_unlink'
   }
 }

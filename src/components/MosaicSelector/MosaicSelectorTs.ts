@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,9 @@ export class MosaicSelectorTs extends Vue {
    */
   public mounted(): void {
     // if a value is provided, return
-    if (this.value && this.value.length > 0) return
+    if (this.value && this.value.length > 0) {
+      return
+    }
 
     // else... set default value to network mosaic
     if (this.defaultMosaic === 'networkMosaic' && this.networkMosaic) {

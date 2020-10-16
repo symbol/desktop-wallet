@@ -26,8 +26,12 @@ export class ErrorTooltipTs extends Vue {
    * @type {string}
    */
   get fieldError(): string | null {
-    if (!this.errors) return null
-    if (!this.errors.length) return null
+    if (!this.errors) {
+      return null
+    }
+    if (!this.errors.length) {
+      return null
+    }
     return this.errors.shift() || null
   }
 
@@ -48,6 +52,8 @@ export class ErrorTooltipTs extends Vue {
    */
   @Watch('fieldError', { immediate: true })
   onFieldErrorChanged(newValue: string) {
-    if (newValue && newValue !== '') this.displayedError = newValue
+    if (newValue && newValue !== '') {
+      this.displayedError = newValue
+    }
   }
 }

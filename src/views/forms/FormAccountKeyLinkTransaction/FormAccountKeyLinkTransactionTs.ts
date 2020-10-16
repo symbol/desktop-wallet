@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,9 @@ export class FormAccountKeyLinkTransactionTs extends FormTransactionBase {
   protected setTransactions(transactions: AccountKeyLinkTransaction[]) {
     // - this form creates only 1 transaction
     const transaction = transactions.shift()
-    if (!transaction) return
+    if (!transaction) {
+      return
+    }
 
     // - populate for items if transaction is an address alias
     if (transaction instanceof AccountKeyLinkTransaction) {

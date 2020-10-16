@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -107,7 +107,9 @@ export class RemoteAccountService extends AccountService {
    * @returns {Account}
    */
   private getFirstFreeRemoteAccount(remoteAccounts: Account[], accountsInfo: AccountInfo[]): Account {
-    if (!accountsInfo.length) return remoteAccounts[0]
+    if (!accountsInfo.length) {
+      return remoteAccounts[0]
+    }
 
     const linkableRemoteAccounts = remoteAccounts.filter(({ address }) => {
       const matchedAccountInfo = accountsInfo.find((ai) => ai.address.plain() === address.plain())

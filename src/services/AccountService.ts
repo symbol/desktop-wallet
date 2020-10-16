@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,7 +110,9 @@ export class AccountService {
 
     // increment derivation path \a count times
     const paths = [...Array(count).keys()].map((index) => {
-      if (index == 0) return AccountService.DEFAULT_ACCOUNT_PATH
+      if (index == 0) {
+        return AccountService.DEFAULT_ACCOUNT_PATH
+      }
 
       return derivationService.incrementPathLevel(
         AccountService.DEFAULT_ACCOUNT_PATH,

@@ -36,7 +36,9 @@ export class MosaicInputsManager {
   public addMosaics(mosaics: MosaicModel[]): void {
     mosaics.forEach(({ mosaicIdHex }) => {
       // skip if the mosaic is known
-      if (this.mosaicMap[mosaicIdHex]) return
+      if (this.mosaicMap[mosaicIdHex]) {
+        return
+      }
       // add the mosaic
       Vue.set(this.mosaicMap, mosaicIdHex, null)
     })
@@ -86,7 +88,9 @@ export class MosaicInputsManager {
     const entry = this.getEntryBySlot(index)
 
     // ignore if the slot had no allocated entry
-    if (entry === undefined) return
+    if (entry === undefined) {
+      return
+    }
 
     // unset the entry slot allocation
     const [hexId] = entry

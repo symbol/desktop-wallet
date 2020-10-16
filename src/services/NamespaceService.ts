@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,9 @@ export class NamespaceService {
     generationHash: string,
     addresses: Address[],
   ): Observable<NamespaceModel[]> {
-    if (!addresses.length) return of([])
+    if (!addresses.length) {
+      return of([])
+    }
 
     const namespaceModelList = this.namespaceModelStorage.get(generationHash) || []
     const namespaceRepository = repositoryFactory.createNamespaceRepository()
@@ -111,12 +113,16 @@ export class NamespaceService {
     if (!reference) {
       return ''
     }
-    if (!reference.parentId) return reference.name
+    if (!reference.parentId) {
+      return reference.name
+    }
 
     const parent = namespaceNames.find(
       (namespaceName) => namespaceName.namespaceId.toHex() === reference.parentId.toHex(),
     )
-    if (parent === undefined) return reference.name
+    if (parent === undefined) {
+      return reference.name
+    }
     const parentName = NamespaceService.getFullNameFromNamespaceNames(parent, namespaceNames)
     return `${parentName}.${reference.name}`
   }

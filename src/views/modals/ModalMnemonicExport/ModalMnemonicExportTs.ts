@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -136,11 +136,15 @@ export class ModalMnemonicExportTs extends Vue {
    * @return {void}
    */
   public onDownloadQR() {
-    if (!this.exportMnemonicQR) return
+    if (!this.exportMnemonicQR) {
+      return
+    }
 
     // - read QR code base64
     const QRCode: any = document.querySelector('#qrImg')
-    if (!QRCode) return
+    if (!QRCode) {
+      return
+    }
     const url = QRCode.src
 
     // - create link (<a>)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -178,7 +178,9 @@ export class TransactionListTs extends Vue {
 
   /// region computed properties getter/setter
   public get countPages(): number {
-    if (!this.confirmedTransactions) return 0
+    if (!this.confirmedTransactions) {
+      return 0
+    }
     return Math.ceil([...this.confirmedTransactions].length / this.pageSize)
   }
 
@@ -210,9 +212,15 @@ export class TransactionListTs extends Vue {
    * @returns {Transaction[]}
    */
   public getCurrentTabTransactions(group: TransactionGroupState): Transaction[] {
-    if (group === TransactionGroupState.confirmed) return this.confirmedTransactions
-    if (group === TransactionGroupState.unconfirmed) return this.unconfirmedTransactions
-    if (group === TransactionGroupState.partial) return this.partialTransactions
+    if (group === TransactionGroupState.confirmed) {
+      return this.confirmedTransactions
+    }
+    if (group === TransactionGroupState.unconfirmed) {
+      return this.unconfirmedTransactions
+    }
+    if (group === TransactionGroupState.partial) {
+      return this.partialTransactions
+    }
     if (group === TransactionGroupState.all) {
       return [...this.unconfirmedTransactions, ...this.partialTransactions, ...this.confirmedTransactions]
     }

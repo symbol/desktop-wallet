@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,9 @@ export class MaxDecimalsValidator {
    * @returns {boolean}
    */
   public static validate(value: any, maxDecimalNumber: number): boolean {
-    if (Math.floor(value) == value) return true
+    if (Math.floor(value) == value) {
+      return true
+    }
     const decimalNumber = value.toString().split('.')[1].length || 0
     return decimalNumber <= maxDecimalNumber
   }

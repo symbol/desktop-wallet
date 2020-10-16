@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,7 +125,9 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     // - read form for definition
     const mosaicId = MosaicId.createFromNonce(randomNonce, this.selectedSigner.address)
     // the duration must be 0 when the permanent value of true
-    if (this.formItems.permanent) this.formItems.duration = 0
+    if (this.formItems.permanent) {
+      this.formItems.duration = 0
+    }
     const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
       Deadline.create(),
       randomNonce,

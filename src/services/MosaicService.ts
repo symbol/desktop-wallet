@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -345,12 +345,16 @@ export class MosaicService {
     const startHeight = mosaicInfo.height
 
     // unlimited duration mosaics are flagged as duration == 0
-    if (duration === 0) return 'unlimited'
+    if (duration === 0) {
+      return 'unlimited'
+    }
 
     // get current height
     // calculate expiration
     const expiresIn = startHeight + duration - (currentHeight || 0)
-    if (expiresIn <= 0) return 'expired'
+    if (expiresIn <= 0) {
+      return 'expired'
+    }
     // number of blocks remaining
     return TimeHelpers.durationToRelativeTime(expiresIn, blockGenerationTargetTime)
   }

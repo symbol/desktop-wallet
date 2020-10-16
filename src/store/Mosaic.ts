@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -182,7 +182,9 @@ export default {
         .getMosaics(repositoryFactory, generationHash, networkCurrency, accountsInfo)
         .subscribe((mosaics) => {
           const currentSignerAddress: Address = rootGetters['account/currentSignerAddress']
-          if (!currentSignerAddress) return
+          if (!currentSignerAddress) {
+            return
+          }
           commit('mosaics', {
             mosaics: mosaics,
             currentSignerAddress,

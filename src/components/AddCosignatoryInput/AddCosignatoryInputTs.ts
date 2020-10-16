@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +97,9 @@ export class AddCosignatoryInputTs extends Vue {
    * @return {void}
    */
   private addCosignerFromPublicKey(): void {
-    if (!this.cosignatory) return
+    if (!this.cosignatory) {
+      return
+    }
     const publicAccount = PublicAccount.createFromPublicKey(this.cosignatory, this.networkType)
     this.$emit('added', publicAccount.address)
   }

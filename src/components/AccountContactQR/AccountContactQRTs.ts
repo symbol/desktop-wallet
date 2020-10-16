@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,9 @@ import { mapGetters } from 'vuex'
     }).pipe(
       pluck('newValue'),
       concatMap((args) => {
-        if (args instanceof ContactQR) return args.toBase64()
+        if (args instanceof ContactQR) {
+          return args.toBase64()
+        }
         return of(failureIcon)
       }),
     )

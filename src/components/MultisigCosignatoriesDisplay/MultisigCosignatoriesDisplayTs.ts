@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,9 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
    * @type {{ publicKey: string; address: string }[]}
    */
   protected get cosignatories(): { address: Address }[] {
-    if (!this.multisig) return []
+    if (!this.multisig) {
+      return []
+    }
 
     return this.multisig.cosignatoryAddresses
       .filter((address) => !this.cosignatoryModifications[address.plain()])

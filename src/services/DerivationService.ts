@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,10 +79,14 @@ export class DerivationService {
     const defaultPath = AccountService.DEFAULT_ACCOUNT_PATH
 
     // return the default path if no path in the array
-    if (!paths.length) return defaultPath
+    if (!paths.length) {
+      return defaultPath
+    }
 
     // return the default path if it is not in the array
-    if (paths.indexOf(defaultPath) === -1) return defaultPath
+    if (paths.indexOf(defaultPath) === -1) {
+      return defaultPath
+    }
 
     // get the sorted path indexes for the given derivation path level
     const pathsSortedByIndexes = paths
@@ -97,10 +101,14 @@ export class DerivationService {
       // fill an array with indexes with no consecutive next index, and the last index
       .filter(({ pathIndex }, i, self) => {
         // the last path is always a candidate
-        if (i === self.length - 1) return true
+        if (i === self.length - 1) {
+          return true
+        }
 
         // next path is not consecutive, add it to candidates
-        if (self[i + 1].pathIndex !== pathIndex + 1) return true
+        if (self[i + 1].pathIndex !== pathIndex + 1) {
+          return true
+        }
 
         // next path is consecutive, skip
         return false
@@ -134,7 +142,9 @@ export class DerivationService {
 
     // calculate next index (decrement)
     let next = parseInt(parts[index].replace(/'/, '')) - (step <= 1 ? 1 : step)
-    if (next < 0) next = 0
+    if (next < 0) {
+      next = 0
+    }
 
     // modify affected level only
     return parts

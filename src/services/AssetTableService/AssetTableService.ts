@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -131,7 +131,9 @@ export abstract class AssetTableService {
       })
     } else if ('number' === typeof sampleValue) {
       return values[sortingMethod]((a, b) => {
-        if (!b[options.fieldName] || !a[options.fieldName]) return 1
+        if (!b[options.fieldName] || !a[options.fieldName]) {
+          return 1
+        }
         return b[options.fieldName] - a[options.fieldName]
       })
     }

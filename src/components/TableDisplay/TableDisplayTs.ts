@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -388,7 +388,9 @@ export class TableDisplayTs extends Vue {
      * @returns {(MosaicId | Address)}
      */
     const getInstantiatedAlias = (aliasType: string, aliasTarget: string): MosaicId | Address => {
-      if (aliasType === 'mosaic') return new MosaicId(aliasTarget)
+      if (aliasType === 'mosaic') {
+        return new MosaicId(aliasTarget)
+      }
       return Address.createFromRawAddress(aliasTarget)
     }
 

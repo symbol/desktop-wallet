@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,7 +147,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   protected getTransactions(): Transaction[] {
     const maxFee = UInt64.fromUint(this.formItems.maxFee)
     const deadline = Deadline.create()
-    if (NamespaceRegistrationType.RootNamespace === this.formItems.registrationType)
+    if (NamespaceRegistrationType.RootNamespace === this.formItems.registrationType) {
       return [
         NamespaceRegistrationTransaction.createRootNamespace(
           deadline,
@@ -157,7 +157,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
           maxFee,
         ),
       ]
-    else {
+    } else {
       return [
         NamespaceRegistrationTransaction.createSubNamespace(
           deadline,
