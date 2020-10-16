@@ -13,70 +13,70 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Convert, Password, SHA3Hasher } from 'symbol-sdk'
+import { Convert, Password, SHA3Hasher } from 'symbol-sdk';
 // internal dependencies
-import { ProfileModel } from '@/core/database/entities/ProfileModel'
-import { ProfileModelStorage } from '@/core/database/storage/ProfileModelStorage'
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { ProfileModelStorage } from '@/core/database/storage/ProfileModelStorage';
 
 /**
  * Service in charge of loading profiles information from the wallet.
  */
 export class ProfileService {
-  /**
-   * The storage to keep user configuration around mosaics.  For example, the balance hidden
-   * feature.
-   */
-  private readonly profilesStorage = ProfileModelStorage.INSTANCE
+    /**
+     * The storage to keep user configuration around mosaics.  For example, the balance hidden
+     * feature.
+     */
+    private readonly profilesStorage = ProfileModelStorage.INSTANCE;
 
-  public getProfiles(): ProfileModel[] {
-    return Object.values(this.getProfilesByProfileName())
-  }
+    public getProfiles(): ProfileModel[] {
+        return Object.values(this.getProfilesByProfileName());
+    }
 
-  public getProfileByName(profileName: string): ProfileModel | undefined {
-    return this.getProfilesByProfileName()[profileName]
-  }
+    public getProfileByName(profileName: string): ProfileModel | undefined {
+        return this.getProfilesByProfileName()[profileName];
+    }
 
-  public getProfilesByProfileName(): Record<string, ProfileModel> {
-    return this.profilesStorage.get() || {}
-  }
+    public getProfilesByProfileName(): Record<string, ProfileModel> {
+        return this.profilesStorage.get() || {};
+    }
 
-  public saveProfile(profile: ProfileModel): ProfileModel {
-    const profiles = this.getProfilesByProfileName()
-    profiles[profile.profileName] = profile
-    this.profilesStorage.set(profiles)
-    return profile
-  }
+    public saveProfile(profile: ProfileModel): ProfileModel {
+        const profiles = this.getProfilesByProfileName();
+        profiles[profile.profileName] = profile;
+        this.profilesStorage.set(profiles);
+        return profile;
+    }
 
-  public deleteProfile(profileName: string) {
-    const profiles = this.getProfilesByProfileName()
-    delete profiles[profileName]
-    this.profilesStorage.set(profiles)
-  }
+    public deleteProfile(profileName: string) {
+        const profiles = this.getProfilesByProfileName();
+        delete profiles[profileName];
+        this.profilesStorage.set(profiles);
+    }
 
-  public updateSeed(profile: ProfileModel, seed: string): ProfileModel {
-    return this.saveProfile(Object.assign(profile, { seed }))
-  }
+    public updateSeed(profile: ProfileModel, seed: string): ProfileModel {
+        return this.saveProfile(Object.assign(profile, { seed }));
+    }
 
-  public updatePassword(profile: ProfileModel, password: string, hint: string, seed: string): ProfileModel {
-    return this.saveProfile(Object.assign(profile, { password, hint, seed }))
-  }
+    public updatePassword(profile: ProfileModel, password: string, hint: string, seed: string): ProfileModel {
+        return this.saveProfile(Object.assign(profile, { password, hint, seed }));
+    }
 
-  public updateAccounts(profile: ProfileModel, accounts: string[]): ProfileModel {
-    return this.saveProfile(Object.assign(profile, { accounts }))
-  }
+    public updateAccounts(profile: ProfileModel, accounts: string[]): ProfileModel {
+        return this.saveProfile(Object.assign(profile, { accounts }));
+    }
 
-  /**
-   * Return password hash that can be compared
-   * @param password to be hashed
-   * @return the password hash
-   */
-  public static getPasswordHash(password: Password): string {
-    const hasher = SHA3Hasher.createHasher(64)
-    hasher.reset()
-    hasher.update(Convert.utf8ToHex(password.value))
+    /**
+     * Return password hash that can be compared
+     * @param password to be hashed
+     * @return the password hash
+     */
+    public static getPasswordHash(password: Password): string {
+        const hasher = SHA3Hasher.createHasher(64);
+        hasher.reset();
+        hasher.update(Convert.utf8ToHex(password.value));
 
-    const hash = new Uint8Array(64)
-    hasher.finalize(hash)
-    return Convert.uint8ToHex(hash)
-  }
+        const hash = new Uint8Array(64);
+        hasher.finalize(hash);
+        return Convert.uint8ToHex(hash);
+    }
 }

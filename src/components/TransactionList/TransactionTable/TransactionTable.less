@@ -20,96 +20,96 @@
 @maxDisplayedRow: 6;
 
 .transaction-tab-inner-container {
-  display: block;
-  position: relative;
+    display: block;
+    position: relative;
 }
 
 .transaction-table-container {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-template-columns: 100%;
-  grid-template-rows: @headerHeight calc(100% - @headerHeight);
-  .transaction-table-columns {
-    grid-template-columns: 0.65rem 5.05rem 1.8rem 2rem auto;
-  }
-
-  .transaction-rows-outer-container {
-    display: block;
-    position: relative;
-    width: 100%;
-    max-height: 100%;
-    overflow-y: auto;
-  }
-
-  .transaction-rows-inner-container {
-    display: grid;
-    grid-auto-rows: @rowHeight;
-    width: 100%;
-    position: relative;
-  }
-
-  .transaction-row-container:hover {
-    background: @accentPinkLight;
-  }
-
-  /deep/.transaction-row-container {
-    font-size: @smallFont;
     display: grid;
     width: 100%;
     height: 100%;
-    margin: 0;
-    cursor: pointer;
-    border-bottom: 0.01rem solid @line;
+    grid-template-columns: 100%;
+    grid-template-rows: @headerHeight calc(100% - @headerHeight);
+    .transaction-table-columns {
+        grid-template-columns: 0.65rem 5.05rem 1.8rem 2rem auto;
+    }
 
-    .icon-cell {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: block;
-      padding-top: 0.2rem;
-
-      .icon-cell-image {
-        width: 0.28rem;
-        height: 0.28rem;
-        margin: auto;
+    .transaction-rows-outer-container {
         display: block;
         position: relative;
-      }
+        width: 100%;
+        max-height: 100%;
+        overflow-y: auto;
     }
 
-    .address-cell {
-      display: grid;
-      width: 100%;
-      height: 100%;
-      grid-template-columns: 100%;
-      grid-template-rows: repeat(2, 50%);
-      padding: 0.1rem 0 0.1rem 0.1rem;
-      overflow: hidden;
+    .transaction-rows-inner-container {
+        display: grid;
+        grid-auto-rows: @rowHeight;
+        width: 100%;
+        position: relative;
     }
 
-    .amount-cell {
-      text-align: right;
-      padding: 0.2rem 0.13rem 0.2rem 0.3rem;
+    .transaction-row-container:hover {
+        background: @accentPinkLight;
     }
 
-    .confirmation-cell {
-      text-align: right;
-      padding: 0.2rem 0.5rem 0.2rem 0;
-    }
+    /deep/.transaction-row-container {
+        font-size: @smallFont;
+        display: grid;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        cursor: pointer;
+        border-bottom: 0.01rem solid @line;
 
-    .hash-cell {
-      text-align: left;
-      padding: 0.1rem 0 0.1rem 0;
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 100%;
-      grid-template-rows: repeat(2, 50%);
+        .icon-cell {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: block;
+            padding-top: 0.2rem;
 
-      .hash-cell-transaction-hash {
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+            .icon-cell-image {
+                width: 0.28rem;
+                height: 0.28rem;
+                margin: auto;
+                display: block;
+                position: relative;
+            }
+        }
+
+        .address-cell {
+            display: grid;
+            width: 100%;
+            height: 100%;
+            grid-template-columns: 100%;
+            grid-template-rows: repeat(2, 50%);
+            padding: 0.1rem 0 0.1rem 0.1rem;
+            overflow: hidden;
+        }
+
+        .amount-cell {
+            text-align: right;
+            padding: 0.2rem 0.13rem 0.2rem 0.3rem;
+        }
+
+        .confirmation-cell {
+            text-align: right;
+            padding: 0.2rem 0.5rem 0.2rem 0;
+        }
+
+        .hash-cell {
+            text-align: left;
+            padding: 0.1rem 0 0.1rem 0;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 100%;
+            grid-template-rows: repeat(2, 50%);
+
+            .hash-cell-transaction-hash {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
     }
-  }
 }

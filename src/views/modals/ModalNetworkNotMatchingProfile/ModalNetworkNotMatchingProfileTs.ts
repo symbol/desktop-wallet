@@ -13,42 +13,42 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator';
 
 @Component
 export class ModalNetworkNotMatchingProfileTs extends Vue {
-  @Prop({ default: false }) visible: boolean
-  /**
-   * Internal visibility state
-   * @type {boolean}
-   */
-  protected get show(): boolean {
-    return this.visible
-  }
-
-  /**
-   * Emits close event
-   */
-  protected set show(val) {
-    if (!val) {
-      this.$emit('close')
+    @Prop({ default: false }) visible: boolean;
+    /**
+     * Internal visibility state
+     * @type {boolean}
+     */
+    protected get show(): boolean {
+        return this.visible;
     }
-  }
 
-  /**
-   * Logout user and redirect to login page
-   */
-  private async logout() {
-    await this.$store.dispatch('profile/LOG_OUT')
-    this.$emit('close')
-    this.$router.push({ name: 'profiles.login' })
-  }
-  /**
-   * Logout user and redirect to create profile page
-   */
-  private async createNewProfile() {
-    await this.$store.dispatch('profile/LOG_OUT')
-    this.$emit('close')
-    this.$router.push({ name: 'profiles.importProfile.importStrategy' })
-  }
+    /**
+     * Emits close event
+     */
+    protected set show(val) {
+        if (!val) {
+            this.$emit('close');
+        }
+    }
+
+    /**
+     * Logout user and redirect to login page
+     */
+    private async logout() {
+        await this.$store.dispatch('profile/LOG_OUT');
+        this.$emit('close');
+        this.$router.push({ name: 'profiles.login' });
+    }
+    /**
+     * Logout user and redirect to create profile page
+     */
+    private async createNewProfile() {
+        await this.$store.dispatch('profile/LOG_OUT');
+        this.$emit('close');
+        this.$router.push({ name: 'profiles.importProfile.importStrategy' });
+    }
 }

@@ -14,35 +14,35 @@
  *
  */
 // external dependencies
-import { Route } from 'vue-router'
+import { Route } from 'vue-router';
 
 // internal dependencies
-import { AppRoute } from './AppRoute'
+import { AppRoute } from './AppRoute';
 
 export class TabEntry {
-  /**
-   * Get Tab Entries from routes
-   * @static
-   * @param {AppRoute[]} routes
-   * @returns {TabEntry[]}
-   */
-  public static getFromRoutes(routes: AppRoute[]): TabEntry[] {
-    return routes.map(({ meta, name }) => new TabEntry(meta?.title, name))
-  }
+    /**
+     * Get Tab Entries from routes
+     * @static
+     * @param {AppRoute[]} routes
+     * @returns {TabEntry[]}
+     */
+    public static getFromRoutes(routes: AppRoute[]): TabEntry[] {
+        return routes.map(({ meta, name }) => new TabEntry(meta?.title, name));
+    }
 
-  /**
-   * Checks if the Tab Entry is the current route
-   * @param {Route} activeRoute
-   * @returns {boolean}
-   */
-  public isActive(activeRoute: Route): boolean {
-    return activeRoute.matched.map(({ name }) => name).includes(this.route)
-  }
+    /**
+     * Checks if the Tab Entry is the current route
+     * @param {Route} activeRoute
+     * @returns {boolean}
+     */
+    public isActive(activeRoute: Route): boolean {
+        return activeRoute.matched.map(({ name }) => name).includes(this.route);
+    }
 
-  /**
-   * Creates an instance of TabEntry.
-   * @param {string} title
-   * @param {string} route
-   */
-  private constructor(public readonly title: string, public readonly route: string) {}
+    /**
+     * Creates an instance of TabEntry.
+     * @param {string} title
+     * @param {string} route
+     */
+    private constructor(public readonly title: string, public readonly route: string) {}
 }

@@ -16,37 +16,37 @@
 @import '../../resources/css/variables.less';
 
 .body {
-  width: 100%;
-  display: grid;
-  grid-template-rows: 1.4rem 2rem 1rem;
-  grid-template-columns: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-rows: 1.4rem 2rem 1rem;
+    grid-template-columns: 100%;
 
-  .explain {
-    padding: 0.2rem;
-    padding-left: 0.4rem;
-    font-size: @normalFont;
+    .explain {
+        padding: 0.2rem;
+        padding-left: 0.4rem;
+        font-size: @normalFont;
 
-    .subtitle {
-      color: @primary;
-      font-weight: @boldest;
+        .subtitle {
+            color: @primary;
+            font-weight: @boldest;
+        }
+
+        p {
+            padding-top: 0.05rem;
+            text-align: justify;
+        }
     }
 
-    p {
-      padding-top: 0.05rem;
-      text-align: justify;
+    .qr-image {
+        width: 2rem;
+        height: 2rem;
+        margin: auto;
     }
-  }
 
-  .qr-image {
-    width: 2rem;
-    height: 2rem;
-    margin: auto;
-  }
-
-  .download-button {
-    height: 0.35rem !important;
-    padding: 0 0.3rem;
-    width: 2rem;
-    margin: auto;
-  }
+    .download-button {
+        height: 0.35rem !important;
+        padding: 0 0.3rem;
+        width: 2rem;
+        margin: auto;
+    }
 }

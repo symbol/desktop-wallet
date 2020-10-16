@@ -19,6 +19,6 @@
  * The object is serialized and deserialized to/from JSON. no method or complex attributes can be fined.
  */
 export class MosaicConfigurationModel {
-  constructor(public readonly hidden: boolean = false) {}
+    constructor(public readonly hidden: boolean = false) {}
 }
-export type AccountMosaicConfigurationModel = Record<string, MosaicConfigurationModel>
+export type AccountMosaicConfigurationModel = Record<string, MosaicConfigurationModel>;

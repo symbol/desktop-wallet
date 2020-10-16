@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import draggable from 'vuedraggable'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import draggable from 'vuedraggable';
 
 // @ts-ignore
-import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
-import { Formatters } from '@/core/utils/Formatters'
+import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue';
+import { Formatters } from '@/core/utils/Formatters';
 
 @Component({
-  components: { draggable, ButtonCopyToClipboard },
+    components: { draggable, ButtonCopyToClipboard },
 })
 export class MnemonicDisplayTs extends Vue {
-  @Prop({
-    default: [],
-  })
-  words: string[]
-  public get waitingCopyString(): string {
-    return Formatters.splitArrayByDelimiter(this.words)
-  }
+    @Prop({
+        default: [],
+    })
+    words: string[];
+    public get waitingCopyString(): string {
+        return Formatters.splitArrayByDelimiter(this.words);
+    }
 }

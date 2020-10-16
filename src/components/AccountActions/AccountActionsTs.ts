@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator';
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel } from '@/core/database/entities/AccountModel';
 
 @Component
 export class AccountActionsTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  account: AccountModel
+    @Prop({
+        default: null,
+    })
+    account: AccountModel;
 
-  /// region computed properties getter/setter
-  /// end-region computed properties getter/setter
+    /// region computed properties getter/setter
+    /// end-region computed properties getter/setter
 }

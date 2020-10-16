@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { NetworkType, PublicAccount } from 'symbol-sdk'
+import { NetworkType, PublicAccount } from 'symbol-sdk';
 
 // internal dependencies
-import { Validator, staticImplements } from './Validator'
+import { Validator, staticImplements } from './Validator';
 
 @staticImplements<Validator>()
 export class PublicKeyValidator {
-  /**
-   * Executes the validator
-   * @static
-   * @param {*} value
-   * @returns {boolean}
-   */
-  public static validate(value: any): boolean {
-    try {
-      /** The NetworkType below is for public key testing only */
-      PublicAccount.createFromPublicKey(value, NetworkType.TEST_NET)
-      return value
-    } catch (error) {
-      return false
+    /**
+     * Executes the validator
+     * @static
+     * @param {*} value
+     * @returns {boolean}
+     */
+    public static validate(value: any): boolean {
+        try {
+            /** The NetworkType below is for public key testing only */
+            PublicAccount.createFromPublicKey(value, NetworkType.TEST_NET);
+            return value;
+        } catch (error) {
+            return false;
+        }
     }
-  }
 }

@@ -15,27 +15,27 @@
   -->
 
 <template>
-  <span>
-    <MosaicAmountDisplay v-show="!isLoading" :color="'red'" :absolute-amount="amount" :show-ticker="true" />
-    <span v-show="!isLoading && isMaxFee"> ({{ $t('max_fee') }})</span>
-    <Spin v-if="isLoading" v-show="isLoading" class="inline-spin" size="small"></Spin>
-  </span>
+    <span>
+        <MosaicAmountDisplay v-show="!isLoading" :color="'red'" :absolute-amount="amount" :show-ticker="true" />
+        <span v-show="!isLoading && isMaxFee"> ({{ $t('max_fee') }})</span>
+        <Spin v-if="isLoading" v-show="isLoading" class="inline-spin" size="small"></Spin>
+    </span>
 </template>
 
 <script lang="ts">
-import { PaidFeeDisplayTs } from './PaidFeeDisplayTs'
+import { PaidFeeDisplayTs } from './PaidFeeDisplayTs';
 
 export default class PaidFeeDisplay extends PaidFeeDisplayTs {}
 </script>
 <style lang="less" scoped>
 .inline-spin {
-  display: inline-block !important;
+    display: inline-block !important;
 }
 .inline-spin .ivu-spin-main {
-  display: inline-block !important;
+    display: inline-block !important;
 }
 .inline-spin .ivu-spin-dot {
-  display: inline-block !important;
-  margin: auto;
+    display: inline-block !important;
+    margin: auto;
 }
 </style>

@@ -1,23 +1,23 @@
 @import './variables.less';
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  scroll-behavior: smooth;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
 }
 
 html {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: hidden;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 a {
-  color: #515a6e;
-  &:hover {
-    color: #2d8cf0;
-  }
+    color: #515a6e;
+    &:hover {
+        color: #2d8cf0;
+    }
 }
 body,
 dl,
@@ -35,9 +35,9 @@ blockquote,
 th,
 td,
 hr {
-  font-weight: 400;
-  margin: 0;
-  padding: 0;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
 }
 
 h1,
@@ -46,19 +46,19 @@ h3,
 h4,
 h4,
 h5 {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  width: 100%;
-  height: 100%;
-  text-align: left;
-  font-family: @symbolFont;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    font-family: @symbolFont;
 }
 
 table {
-  border-collapse: collapse;
+    border-collapse: collapse;
 }
 
 address,
@@ -67,374 +67,374 @@ em,
 strong,
 th,
 i {
-  font-style: normal;
-  font-weight: 400;
+    font-style: normal;
+    font-weight: 400;
 }
 
 ol,
 ul {
-  list-style-image: none;
-  list-style-position: outside;
-  list-style-type: none;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
 }
 
 .left {
-  float: left;
+    float: left;
 }
 
 .right {
-  float: right;
+    float: right;
 }
 
 .clear::after,
 .clear::before {
-  content: '';
-  display: block;
-  clear: both;
+    content: '';
+    display: block;
+    clear: both;
 }
 
 .absolute {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
 }
 
 input {
-  background-color: transparent;
-  outline: none;
+    background-color: transparent;
+    outline: none;
 }
 
 input::placeholder {
-  color: @grayDark;
+    color: @grayDark;
 }
 button:focus {
-  outline: none;
+    outline: none;
 }
 #app {
-  background-color: @white;
-  height: auto;
-  min-height: 100vh;
-  max-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: hidden;
+    background-color: @white;
+    height: auto;
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .clear::after,
 .clear::before {
-  content: '';
-  display: block;
-  clear: both;
+    content: '';
+    display: block;
+    clear: both;
 }
 
 .absolute {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
 }
 
 .radius {
-  border-radius: 4px;
+    border-radius: 4px;
 }
 
 .hide_scroll,
 .scroll {
-  overflow-y: auto;
-  overflow-x: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .hide_scroll::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .un_click {
-  cursor: not-allowed !important;
+    cursor: not-allowed !important;
 }
 
 .letter_spacing {
-  letter-spacing: 1px;
+    letter-spacing: 1px;
 }
 
 .noData {
-  width: 76px;
-  text-align: center;
-  margin: 80px auto 0;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-
-  i {
-    display: block;
     width: 76px;
-    height: 78px;
-    margin-bottom: 10px;
+    text-align: center;
+    margin: 80px auto 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 
-    img {
-      display: block;
-      width: 100%;
-      height: 100%;
+    i {
+        display: block;
+        width: 76px;
+        height: 78px;
+        margin-bottom: 10px;
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
     }
-  }
 
-  p {
-    font-size: 16px;
-    font-weight: 400;
-    color: @border;
-    white-space: nowrap;
-  }
+    p {
+        font-size: 16px;
+        font-weight: 400;
+        color: @border;
+        white-space: nowrap;
+    }
 }
 
 .white_wrap {
-  width: 100%;
-  height: 100%;
-  background: @blackTransparent;
-  opacity: 0.6;
-  position: absolute;
-  color: @black;
-  font-size: 40px;
-  text-align: center;
-  line-height: 500px;
-  top: 0;
-  z-index: 99999 !important;
+    width: 100%;
+    height: 100%;
+    background: @blackTransparent;
+    opacity: 0.6;
+    position: absolute;
+    color: @black;
+    font-size: 40px;
+    text-align: center;
+    line-height: 500px;
+    top: 0;
+    z-index: 99999 !important;
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+    width: 5px;
+    height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  border-radius: 2.5px;
-  background-color: @whiteDark;
+    border-radius: 2.5px;
+    background-color: @whiteDark;
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background-color: @purple;
+    border-radius: 5px;
+    background-color: @purple;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: @purple;
+    background-color: @purple;
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background-color: @purple;
-  cursor: pointer;
+    background-color: @purple;
+    cursor: pointer;
 }
 
 .overflow_ellipsis {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .overflow_hidden {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 textarea {
-  border: none;
-  outline: none;
-  resize: none !important;
-  width: 100%;
-  height: 100%;
+    border: none;
+    outline: none;
+    resize: none !important;
+    width: 100%;
+    height: 100%;
 }
 
 .pointer {
-  cursor: pointer !important;
+    cursor: pointer !important;
 }
 
 .topo_graph_container {
-  .tooltip {
-    box-shadow: 0 0 5px @boxShadow;
-    padding: 20px;
-    max-width: 700px !important;
-    word-break: break-all;
-    word-wrap: break-word;
-    overflow: unset;
-    white-space: normal;
-    height: auto;
-    background-color: @white;
-    color: @purpleLight;
-  }
+    .tooltip {
+        box-shadow: 0 0 5px @boxShadow;
+        padding: 20px;
+        max-width: 700px !important;
+        word-break: break-all;
+        word-wrap: break-word;
+        overflow: unset;
+        white-space: normal;
+        height: auto;
+        background-color: @white;
+        color: @purpleLight;
+    }
 }
 
 .not_allowed {
-  color: @grayDark !important;
-  background-color: @grayLight !important;
-  cursor: not-allowed !important;
+    color: @grayDark !important;
+    background-color: @grayLight !important;
+    cursor: not-allowed !important;
 }
 
 .ivu-tooltip-inner {
-  max-width: unset !important;
+    max-width: unset !important;
 }
 
 // $notice
 .ivu-notice {
-  position: fixed !important;
-  top: 60px !important;
-  width: auto !important;
-  max-width: 500px !important;
-  // 1 less than the wallet selector
-  z-index: 2147483646 !important;
+    position: fixed !important;
+    top: 60px !important;
+    width: auto !important;
+    max-width: 500px !important;
+    // 1 less than the wallet selector
+    z-index: 2147483646 !important;
 
-  .ivu-notice-notice {
-    width: 100%;
-    height: auto;
-    background: @black;
-    display: flex;
-    align-items: center;
-    word-break: break-all;
-    word-wrap: break-word;
-    overflow: revert;
+    .ivu-notice-notice {
+        width: 100%;
+        height: auto;
+        background: @black;
+        display: flex;
+        align-items: center;
+        word-break: break-all;
+        word-wrap: break-word;
+        overflow: revert;
 
-    .ivu-notice-custom-content {
-      display: flex;
-      align-items: center;
-      align-content: center;
+        .ivu-notice-custom-content {
+            display: flex;
+            align-items: center;
+            align-content: center;
 
-      .ivu-notice-icon {
-        font-size: 40px;
-        position: relative !important;
-      }
+            .ivu-notice-icon {
+                font-size: 40px;
+                position: relative !important;
+            }
+        }
+
+        .ivu-notice-title {
+            max-width: 500px;
+            width: auto;
+            height: auto;
+            color: @white;
+            overflow: unset;
+            line-height: 24px !important;
+            font-size: 16px !important;
+            word-break: break-word;
+            white-space: unset;
+        }
+
+        .ivu-notice-notice-close {
+            i {
+                color: @white;
+            }
+        }
     }
-
-    .ivu-notice-title {
-      max-width: 500px;
-      width: auto;
-      height: auto;
-      color: @white;
-      overflow: unset;
-      line-height: 24px !important;
-      font-size: 16px !important;
-      word-break: break-word;
-      white-space: unset;
-    }
-
-    .ivu-notice-notice-close {
-      i {
-        color: @white;
-      }
-    }
-  }
 }
 
 .secondary_page_animate,
 .fade_in_animation {
-  animation: fadeIn 0.5s infinite;
-  -webkit-animation: fadeIn 0.5s;
+    animation: fadeIn 0.5s infinite;
+    -webkit-animation: fadeIn 0.5s;
 }
 
 .selection_animate {
-  animation: fadeIn 0.5s infinite;
-  -webkit-animation: fadeIn 0.5s;
+    animation: fadeIn 0.5s infinite;
+    -webkit-animation: fadeIn 0.5s;
 }
 
 .ivu-input {
-  border: none;
-  border-radius: 0;
-  border-bottom: 1px solid @border;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid @border;
 }
 
 .ivu-input:focus {
-  box-shadow: none;
-  border-bottom: 1px solid @border;
+    box-shadow: none;
+    border-bottom: 1px solid @border;
 }
 .wrap {
-  .input_point {
-    input {
-      border: none;
-      border-bottom: 1px solid @border;
+    .input_point {
+        input {
+            border: none;
+            border-bottom: 1px solid @border;
+        }
     }
-  }
 }
 
 .url_text {
-  color: @grayDark;
-  cursor: pointer;
+    color: @grayDark;
+    cursor: pointer;
 }
 
 .url_text:hover {
-  color: @purple;
+    color: @purple;
 }
 
 .justify_text {
-  text-align-last: justify;
-  text-align: justify;
-  text-justify: distribute-all-lines; // 这行必加，兼容ie浏览器
+    text-align-last: justify;
+    text-align: justify;
+    text-justify: distribute-all-lines; // 这行必加，兼容ie浏览器
 }
 
 .url_text {
-  color: @grayDark;
-  cursor: pointer;
+    color: @grayDark;
+    cursor: pointer;
 }
 
 .url_text:hover {
-  color: @purple;
+    color: @purple;
 }
 
 .justify_text {
-  text-align-last: justify;
-  text-align: justify;
-  text-justify: distribute-all-lines;
+    text-align-last: justify;
+    text-align: justify;
+    text-justify: distribute-all-lines;
 }
 
 .confirm-alert-container {
-  .ivu-btn-primary {
-    background-color: @purple !important;
-    border: none !important;
-  }
+    .ivu-btn-primary {
+        background-color: @purple !important;
+        border: none !important;
+    }
 }
 
 .xym-outline {
-  box-shadow: 0 0.01rem 0.15rem 0.01rem @boxShadow;
+    box-shadow: 0 0.01rem 0.15rem 0.01rem @boxShadow;
 }
 
 .no-data-outer-container {
-  display: block;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  .no-data-message-container {
-    position: absolute;
-    z-index: 1;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    > div {
-      font-size: @biggestFont;
-      color: @noDataColor;
-      white-space: nowrap;
-    }
-  }
-  .no-data-inner-container {
-    display: grid;
-    grid-template-rows: repeat(10, 10%);
+    display: block;
+    position: relative;
+    width: 100%;
     height: 100%;
-    > div {
-      border-bottom: 0.01rem solid @line;
+    .no-data-message-container {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        > div {
+            font-size: @biggestFont;
+            color: @noDataColor;
+            white-space: nowrap;
+        }
     }
-  }
+    .no-data-inner-container {
+        display: grid;
+        grid-template-rows: repeat(10, 10%);
+        height: 100%;
+        > div {
+            border-bottom: 0.01rem solid @line;
+        }
+    }
 }
 button:disabled {
-  cursor: not-allowed;
+    cursor: not-allowed;
 }
 .position-relative {
-  position: relative;
+    position: relative;
 }
 
 .v-h-centered {
-  top: 0;
-  left: 0;
-  margin: auto;
+    top: 0;
+    left: 0;
+    margin: auto;
 }
 
 .display-grid {
-  display: grid;
+    display: grid;
 }

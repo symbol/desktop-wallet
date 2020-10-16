@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Validator, staticImplements } from './Validator'
+import { Validator, staticImplements } from './Validator';
 
 @staticImplements<Validator>()
 export class UrlValidator {
-  /**
-   * Validates an URL
-   * @static
-   * @param {*} value
-   * @returns {boolean}
-   */
-  public static validate(value: string): boolean {
-    const regStr =
-      '^' + // position at start
-      '(https?:\\/\\/)?' + //protocol
-      '((([a-zA-Z\\d]{1,}([-\\.]{1}[a-zA-Z\\d]{1,})*\\.[a-zA-Z]+)' + // domain name
-      '|((\\d{1,3}\\.){3}\\d{1,3}))' + // ip(v4) address
-      '(\\:\\d+)?)' + // port
-      '|localhost\\:\\d+' // localhost:8080
-    const pattern = new RegExp(regStr, 'i')
-    return pattern.test(value)
-  }
+    /**
+     * Validates an URL
+     * @static
+     * @param {*} value
+     * @returns {boolean}
+     */
+    public static validate(value: string): boolean {
+        const regStr =
+            '^' + // position at start
+            '(https?:\\/\\/)?' + //protocol
+            '((([a-zA-Z\\d]{1,}([-\\.]{1}[a-zA-Z\\d]{1,})*\\.[a-zA-Z]+)' + // domain name
+            '|((\\d{1,3}\\.){3}\\d{1,3}))' + // ip(v4) address
+            '(\\:\\d+)?)' + // port
+            '|localhost\\:\\d+'; // localhost:8080
+        const pattern = new RegExp(regStr, 'i');
+        return pattern.test(value);
+    }
 }

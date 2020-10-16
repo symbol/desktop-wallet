@@ -13,35 +13,35 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { StandardValidationRules } from '@/core/validation/StandardValidationRules'
-import { CustomValidationRules } from '@/core/validation/CustomValidationRules'
-import { ErrorMessages } from '@/core/validation/ErrorMessages'
+import { StandardValidationRules } from '@/core/validation/StandardValidationRules';
+import { CustomValidationRules } from '@/core/validation/CustomValidationRules';
+import { ErrorMessages } from '@/core/validation/ErrorMessages';
 
 export class VeeValidateSetup {
-  /**
-   * Initialize Vee Validate custom settings
-   * @static
-   */
-  public static initialize() {
-    const setup = new VeeValidateSetup()
-    setup.registerValidationRules()
-    setup.loadErrorMessages()
-  }
+    /**
+     * Initialize Vee Validate custom settings
+     * @static
+     */
+    public static initialize() {
+        const setup = new VeeValidateSetup();
+        setup.registerValidationRules();
+        setup.loadErrorMessages();
+    }
 
-  /**
-   * Registers validation rules
-   * @private
-   */
-  private registerValidationRules() {
-    StandardValidationRules.register()
-    CustomValidationRules.register()
-  }
+    /**
+     * Registers validation rules
+     * @private
+     */
+    private registerValidationRules() {
+        StandardValidationRules.register();
+        CustomValidationRules.register();
+    }
 
-  /**
-   * Loads error messages
-   * @private
-   */
-  private loadErrorMessages() {
-    ErrorMessages.load()
-  }
+    /**
+     * Loads error messages
+     * @private
+     */
+    private loadErrorMessages() {
+        ErrorMessages.load();
+    }
 }

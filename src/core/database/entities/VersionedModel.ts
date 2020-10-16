@@ -15,5 +15,5 @@
  */
 
 export class VersionedModel<T> {
-  constructor(public readonly version: number, public readonly data: T) {}
+    constructor(public readonly version: number, public readonly data: T) {}
 }

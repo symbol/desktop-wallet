@@ -14,66 +14,66 @@
  *
  */
 // external dependencies
-import { mapGetters } from 'vuex'
-import { Component, Vue } from 'vue-property-decorator'
+import { mapGetters } from 'vuex';
+import { Component, Vue } from 'vue-property-decorator';
 // child components
 // @ts-ignore
-import SignerFilter from '@/components/SignerFilter/SignerFilter.vue'
+import SignerFilter from '@/components/SignerFilter/SignerFilter.vue';
 // @ts-ignore
-import TransactionStatusFilter from '@/components/TransactionList/TransactionListFilters/TransactionStatusFilter/TransactionStatusFilter.vue'
+import TransactionStatusFilter from '@/components/TransactionList/TransactionListFilters/TransactionStatusFilter/TransactionStatusFilter.vue';
 //@ts-ignore
-import ButtonRefresh from '@/components/ButtonRefresh/ButtonRefresh.vue'
-import { Signer } from '@/store/Account'
-import { AccountModel } from '@/core/database/entities/AccountModel'
-import { TransactionGroupState } from '@/store/Transaction'
-import { Address } from 'symbol-sdk'
+import ButtonRefresh from '@/components/ButtonRefresh/ButtonRefresh.vue';
+import { Signer } from '@/store/Account';
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { TransactionGroupState } from '@/store/Transaction';
+import { Address } from 'symbol-sdk';
 
 @Component({
-  components: { SignerFilter, TransactionStatusFilter, ButtonRefresh },
-  computed: {
-    ...mapGetters({
-      currentAccount: 'account/currentAccount',
-      signers: 'account/signers',
-    }),
-  },
+    components: { SignerFilter, TransactionStatusFilter, ButtonRefresh },
+    computed: {
+        ...mapGetters({
+            currentAccount: 'account/currentAccount',
+            signers: 'account/signers',
+        }),
+    },
 })
 export class TransactionListFiltersTs extends Vue {
-  /**
-   * Currently active account
-   * @var {AccountModel}
-   */
-  protected currentAccount: AccountModel
+    /**
+     * Currently active account
+     * @var {AccountModel}
+     */
+    protected currentAccount: AccountModel;
 
-  /**
-   * current signers
-   */
-  public signers: Signer[]
+    /**
+     * current signers
+     */
+    public signers: Signer[];
 
-  /**
-   * Hook called when the signer selector has changed
-   * @protected
-   */
-  protected onSignerSelectorChange(address: string): void {
-    // clear previous account transactions
-    if (address) {
-      this.$store.dispatch('account/SET_CURRENT_SIGNER', { address: Address.createFromRawAddress(address) })
+    /**
+     * Hook called when the signer selector has changed
+     * @protected
+     */
+    protected onSignerSelectorChange(address: string): void {
+        // clear previous account transactions
+        if (address) {
+            this.$store.dispatch('account/SET_CURRENT_SIGNER', { address: Address.createFromRawAddress(address) });
+        }
     }
-  }
 
-  protected onStatusSelectorChange(filter: TransactionGroupState) {
-    this.$store.commit('transaction/setDisplayedTransactionStatus', filter)
-  }
-  public refresh() {
-    this.$store.dispatch('transaction/LOAD_TRANSACTIONS')
-  }
-
-  /**
-   * Hook called before the component is destroyed
-   */
-  beforeDestroy(): void {
-    // reset the selected signer if it is not the current account
-    if (this.currentAccount) {
-      this.onSignerSelectorChange(this.currentAccount.address)
+    protected onStatusSelectorChange(filter: TransactionGroupState) {
+        this.$store.commit('transaction/setDisplayedTransactionStatus', filter);
     }
-  }
+    public refresh() {
+        this.$store.dispatch('transaction/LOAD_TRANSACTIONS');
+    }
+
+    /**
+     * Hook called before the component is destroyed
+     */
+    beforeDestroy(): void {
+        // reset the selected signer if it is not the current account
+        if (this.currentAccount) {
+            this.onSignerSelectorChange(this.currentAccount.address);
+        }
+    }
 }

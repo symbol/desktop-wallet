@@ -19,21 +19,21 @@
  * @interface Validator
  */
 export interface Validator {
-  new (): void
-  /**
-   * Validates a value
-   * @param {*} value
-   * @param {*} [args]
-   * @returns {boolean}
-   */
-  validate(value: any, args?: any): boolean
+    new (): void;
+    /**
+     * Validates a value
+     * @param {*} value
+     * @param {*} [args]
+     * @returns {boolean}
+     */
+    validate(value: any, args?: any): boolean;
 }
 
 /**
  * Decorator that enables typing classes with static methods
  */
 export function staticImplements<T>() {
-  return <U extends T>(constructor: U) => {
-    constructor
-  }
+    return <U extends T>(constructor: U) => {
+        constructor;
+    };
 }

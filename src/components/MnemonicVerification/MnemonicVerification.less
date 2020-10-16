@@ -14,75 +14,75 @@
  *
  */
 .mnemonic_container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-
-  .mnemonicWordDiv {
     width: 100%;
-    height: 200px;
-    background: #fff;
-    border: 1px solid #cccccc;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    overflow: hidden;
-    overflow-y: scroll;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
 
-    span {
-      font-size: 18px;
-      color: #222222;
-      margin: 8px;
-      float: left;
-      cursor: pointer;
-      line-height: 20px;
+    .mnemonicWordDiv {
+        width: 100%;
+        height: 200px;
+        background: #fff;
+        border: 1px solid #cccccc;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        overflow-y: scroll;
+
+        span {
+            font-size: 18px;
+            color: #222222;
+            margin: 8px;
+            float: left;
+            cursor: pointer;
+            line-height: 20px;
+        }
+
+        .ghost {
+            border-left: 6px solid rgb(0, 183, 255);
+            box-shadow: 10px 10px 5px 01px rgba(0, 0, 0, 0.14);
+            opacity: 0.7;
+        }
     }
 
-    .ghost {
-      border-left: 6px solid rgb(0, 183, 255);
-      box-shadow: 10px 10px 5px 01px rgba(0, 0, 0, 0.14);
-      opacity: 0.7;
-    }
-  }
-
-  .mnemonicWordDiv::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  .wordDiv {
-    width: 100%;
-
-    .confirmed_word {
-      background-color: orange;
-      color: white;
+    .mnemonicWordDiv::-webkit-scrollbar {
+        width: 5px;
     }
 
-    span {
-      font-size: 16px;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.8);
-      background: #6401ee;
-      padding: 8px 18px 10px;
-      border-radius: 4px;
-      margin-right: 20px;
-      margin-bottom: 20px;
-      float: left;
-      cursor: pointer;
-    }
-  }
+    .wordDiv {
+        width: 100%;
 
-  .buttons {
-    width: 70%;
-    button {
-      height: 40px;
-      vertical-align: center;
-    }
-  }
+        .confirmed_word {
+            background-color: orange;
+            color: white;
+        }
 
-  .ivu-tag {
-    height: auto;
-  }
+        span {
+            font-size: 16px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.8);
+            background: #6401ee;
+            padding: 8px 18px 10px;
+            border-radius: 4px;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            float: left;
+            cursor: pointer;
+        }
+    }
+
+    .buttons {
+        width: 70%;
+        button {
+            height: 40px;
+            vertical-align: center;
+        }
+    }
+
+    .ivu-tag {
+        height: auto;
+    }
 }

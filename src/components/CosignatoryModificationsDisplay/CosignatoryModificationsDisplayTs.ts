@@ -14,50 +14,50 @@
  *
  */
 // external dependencies
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-import { NetworkType } from 'symbol-sdk'
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
+import { NetworkType } from 'symbol-sdk';
 
 // child components
-import { ValidationProvider } from 'vee-validate'
+import { ValidationProvider } from 'vee-validate';
 // @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue'
+import FormRow from '@/components/FormRow/FormRow.vue';
 
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
-import { CosignatoryModifications } from '@/views/forms/FormMultisigAccountModificationTransaction/FormMultisigAccountModificationTransactionTs'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
+import { CosignatoryModifications } from '@/views/forms/FormMultisigAccountModificationTransaction/FormMultisigAccountModificationTransactionTs';
 
 @Component({
-  components: {
-    ValidationProvider,
-    ErrorTooltip,
-    FormRow,
-  },
-  computed: {
-    ...mapGetters({
-      networkType: 'network/networkType',
-    }),
-  },
+    components: {
+        ValidationProvider,
+        ErrorTooltip,
+        FormRow,
+    },
+    computed: {
+        ...mapGetters({
+            networkType: 'network/networkType',
+        }),
+    },
 })
 export class CosignatoryModificationsDisplayTs extends Vue {
-  /**
-   * Cosignatory modifications
-   * @type {CosignatoryModifications}
-   */
-  @Prop({
-    default: {},
-  })
-  cosignatoryModifications: CosignatoryModifications
+    /**
+     * Cosignatory modifications
+     * @type {CosignatoryModifications}
+     */
+    @Prop({
+        default: {},
+    })
+    cosignatoryModifications: CosignatoryModifications;
 
-  private networkType: NetworkType
+    private networkType: NetworkType;
 
-  get modifications(): {
-    address: string
-    addOrRemove: 'add' | 'remove'
-  }[] {
-    return Object.values(this.cosignatoryModifications).map(({ addOrRemove, cosignatory }) => ({
-      address: cosignatory.pretty(),
-      addOrRemove,
-    }))
-  }
+    get modifications(): {
+        address: string;
+        addOrRemove: 'add' | 'remove';
+    }[] {
+        return Object.values(this.cosignatoryModifications).map(({ addOrRemove, cosignatory }) => ({
+            address: cosignatory.pretty(),
+            addOrRemove,
+        }));
+    }
 }

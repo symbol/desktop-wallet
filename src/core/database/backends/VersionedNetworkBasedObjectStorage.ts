@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { INetworkBasedStorage } from '@/core/database/backends/INetworkBasedStorage'
-import { NetworkBasedObjectStorage } from '@/core/database/backends/NetworkBasedObjectStorage'
-import { Migration, VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
-import { NetworkBasedModel } from '@/core/database/entities/NetworkBasedModel'
+import { INetworkBasedStorage } from '@/core/database/backends/INetworkBasedStorage';
+import { NetworkBasedObjectStorage } from '@/core/database/backends/NetworkBasedObjectStorage';
+import { Migration, VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage';
+import { NetworkBasedModel } from '@/core/database/entities/NetworkBasedModel';
 
 /**
  * A storage that wraps the stored model with a {version: n, data:T} object and it handles the migration from old
  * version to new versions.
  *
  */
-export class VersionedNetworkBasedObjectStorage<E> extends NetworkBasedObjectStorage<E>
-  implements INetworkBasedStorage<E> {
-  constructor(storageKey: string, migrations: Migration[] = []) {
-    super(new VersionedObjectStorage<NetworkBasedModel<E>>(storageKey, migrations))
-  }
+export class VersionedNetworkBasedObjectStorage<E> extends NetworkBasedObjectStorage<E> implements INetworkBasedStorage<E> {
+    constructor(storageKey: string, migrations: Migration[] = []) {
+        super(new VersionedObjectStorage<NetworkBasedModel<E>>(storageKey, migrations));
+    }
 }

@@ -13,40 +13,40 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-import { MnemonicPassPhrase } from 'symbol-hd-wallets'
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
+import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 // internal dependencies
 // child components
 // @ts-ignore
-import MnemonicVerification from '@/components/MnemonicVerification/MnemonicVerification.vue'
-import { NotificationType } from '@/core/utils/NotificationType'
+import MnemonicVerification from '@/components/MnemonicVerification/MnemonicVerification.vue';
+import { NotificationType } from '@/core/utils/NotificationType';
 
 @Component({
-  components: {
-    MnemonicVerification,
-  },
-  computed: {
-    ...mapGetters({
-      currentMnemonic: 'temporary/mnemonic',
-    }),
-  },
+    components: {
+        MnemonicVerification,
+    },
+    computed: {
+        ...mapGetters({
+            currentMnemonic: 'temporary/mnemonic',
+        }),
+    },
 })
 export default class VerifyMnemonicTs extends Vue {
-  /**
-   * Temporary Mnemonic pass phrase
-   * @var {MnemonicPassPhrase}
-   */
-  public currentMnemonic: MnemonicPassPhrase
+    /**
+     * Temporary Mnemonic pass phrase
+     * @var {MnemonicPassPhrase}
+     */
+    public currentMnemonic: MnemonicPassPhrase;
 
-  /// region computed properties getter/setter
-  get mnemonicWordsList(): string[] {
-    if (this.currentMnemonic) {
-      return this.currentMnemonic.plain.split(' ')
+    /// region computed properties getter/setter
+    get mnemonicWordsList(): string[] {
+        if (this.currentMnemonic) {
+            return this.currentMnemonic.plain.split(' ');
+        }
+        this.$store.dispatch('notification/ADD_ERROR', NotificationType.NO_MNEMONIC_INFO);
+        this.$router.push({ name: 'profiles.createProfile.info' });
     }
-    this.$store.dispatch('notification/ADD_ERROR', NotificationType.NO_MNEMONIC_INFO)
-    this.$router.push({ name: 'profiles.createProfile.info' })
-  }
 
-  /// end-region computed properties getter/setter
+    /// end-region computed properties getter/setter
 }

@@ -13,60 +13,60 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
-import { UIHelpers } from '@/core/utils/UIHelpers'
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { UIHelpers } from '@/core/utils/UIHelpers';
 // child components
 // @ts-ignore
-import ModalMnemonicDisplay from '@/views/modals/ModalMnemonicDisplay/ModalMnemonicDisplay.vue'
+import ModalMnemonicDisplay from '@/views/modals/ModalMnemonicDisplay/ModalMnemonicDisplay.vue';
 
 @Component({
-  components: {
-    ModalMnemonicDisplay,
-  },
-  computed: {
-    ...mapGetters({
-      currentProfile: 'profile/currentProfile',
-      networkType: 'network/networkType',
-      generationHash: 'network/generationHash',
-    }),
-  },
+    components: {
+        ModalMnemonicDisplay,
+    },
+    computed: {
+        ...mapGetters({
+            currentProfile: 'profile/currentProfile',
+            networkType: 'network/networkType',
+            generationHash: 'network/generationHash',
+        }),
+    },
 })
 export class ProtectedMnemonicDisplayButtonTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  account: AccountModel
+    @Prop({
+        default: null,
+    })
+    account: AccountModel;
 
-  /**
-   * UI Helpers
-   * @var {UIHelpers}
-   */
-  public uiHelpers = UIHelpers
+    /**
+     * UI Helpers
+     * @var {UIHelpers}
+     */
+    public uiHelpers = UIHelpers;
 
-  /**
-   * Whether currently viewing export
-   * @var {boolean}
-   */
-  public isViewingExportModal: boolean = false
+    /**
+     * Whether currently viewing export
+     * @var {boolean}
+     */
+    public isViewingExportModal: boolean = false;
 
-  /// region computed properties getter/setter
-  public get hasMnemonicExportModal(): boolean {
-    return this.isViewingExportModal
-  }
+    /// region computed properties getter/setter
+    public get hasMnemonicExportModal(): boolean {
+        return this.isViewingExportModal;
+    }
 
-  public set hasMnemonicExportModal(f: boolean) {
-    this.isViewingExportModal = f
-  }
-  /// end-region computed properties getter/setter
+    public set hasMnemonicExportModal(f: boolean) {
+        this.isViewingExportModal = f;
+    }
+    /// end-region computed properties getter/setter
 
-  /**
-   * Hook called when the account unlock modal must open
-   * @return {void}
-   */
-  public onClickDisplay() {
-    this.hasMnemonicExportModal = true
-  }
+    /**
+     * Hook called when the account unlock modal must open
+     * @return {void}
+     */
+    public onClickDisplay() {
+        this.hasMnemonicExportModal = true;
+    }
 }

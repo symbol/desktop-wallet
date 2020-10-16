@@ -13,92 +13,92 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import draggable from 'vuedraggable'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import draggable from 'vuedraggable';
 // internal dependencies
-import { NotificationType } from '@/core/utils/NotificationType'
+import { NotificationType } from '@/core/utils/NotificationType';
 
 /**
  * Emits: success, error, canceled
  */
 @Component({
-  components: { draggable },
+    components: { draggable },
 })
 export class MnemonicVerificationTs extends Vue {
-  @Prop({ default: [] }) words: string[]
+    @Prop({ default: [] }) words: string[];
 
-  /**
-   * Randomized words
-   * @var {Record<number, string>}
-   */
-  public shuffledWords: Record<number, string> = {}
+    /**
+     * Randomized words
+     * @var {Record<number, string>}
+     */
+    public shuffledWords: Record<number, string> = {};
 
-  /**
-   * Randomized words indexes
-   * @var {number[]}
-   */
-  public shuffledWordsIndexes: number[] = []
+    /**
+     * Randomized words indexes
+     * @var {number[]}
+     */
+    public shuffledWordsIndexes: number[] = [];
 
-  /**
-   * Selected words indexes
-   * @var {number[]}
-   */
-  public selectedWordIndexes: number[] = []
+    /**
+     * Selected words indexes
+     * @var {number[]}
+     */
+    public selectedWordIndexes: number[] = [];
 
-  /**
-   * Hook called when the component is created
-   * @return {void}
-   */
-  public created() {
-    const shuffledWordsArray: string[] = [...this.words].sort((a, b) => a.localeCompare(b))
-    this.shuffledWords = shuffledWordsArray.reduce((acc, word, index) => ({ ...acc, ...{ [index]: word } }), {})
-    this.shuffledWordsIndexes = [...Array(shuffledWordsArray.length).keys()]
-  }
-
-  /**
-   * Toggle a word presence in the confirmed words
-   * @param {string} word
-   * @return {void}
-   */
-  public onWordClicked(index: number): void {
-    if (this.selectedWordIndexes.includes(index)) {
-      this.removeWord(index)
-      return
+    /**
+     * Hook called when the component is created
+     * @return {void}
+     */
+    public created() {
+        const shuffledWordsArray: string[] = [...this.words].sort((a, b) => a.localeCompare(b));
+        this.shuffledWords = shuffledWordsArray.reduce((acc, word, index) => ({ ...acc, ...{ [index]: word } }), {});
+        this.shuffledWordsIndexes = [...Array(shuffledWordsArray.length).keys()];
     }
 
-    this.selectedWordIndexes.push(index)
-  }
+    /**
+     * Toggle a word presence in the confirmed words
+     * @param {string} word
+     * @return {void}
+     */
+    public onWordClicked(index: number): void {
+        if (this.selectedWordIndexes.includes(index)) {
+            this.removeWord(index);
+            return;
+        }
 
-  /**
-   * Add confirmed word
-   * @param {string} word
-   * @return {string[]}
-   */
-  public removeWord(index: number): void {
-    this.selectedWordIndexes = [...this.selectedWordIndexes].filter((sel) => sel !== index)
-  }
-
-  /**
-   * Process verification of mnemonic
-   * @return {boolean}
-   */
-  public processVerification(): boolean {
-    const origin = this.words.join(' ')
-    const rebuilt = this.selectedWordIndexes.map((i) => this.shuffledWords[i]).join(' ')
-
-    // - origin words list does not match
-    if (origin !== rebuilt) {
-      const errorMsg =
-        this.selectedWordIndexes.length < 1
-          ? NotificationType.PLEASE_ENTER_MNEMONIC_INFO
-          : NotificationType.MNEMONIC_INCONSISTENCY_ERROR
-      this.$store.dispatch('notification/ADD_WARNING', errorMsg)
-      this.$emit('error', errorMsg)
-      return false
+        this.selectedWordIndexes.push(index);
     }
 
-    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS)
-    this.$emit('success')
-    return true
-  }
+    /**
+     * Add confirmed word
+     * @param {string} word
+     * @return {string[]}
+     */
+    public removeWord(index: number): void {
+        this.selectedWordIndexes = [...this.selectedWordIndexes].filter((sel) => sel !== index);
+    }
+
+    /**
+     * Process verification of mnemonic
+     * @return {boolean}
+     */
+    public processVerification(): boolean {
+        const origin = this.words.join(' ');
+        const rebuilt = this.selectedWordIndexes.map((i) => this.shuffledWords[i]).join(' ');
+
+        // - origin words list does not match
+        if (origin !== rebuilt) {
+            const errorMsg =
+                this.selectedWordIndexes.length < 1
+                    ? NotificationType.PLEASE_ENTER_MNEMONIC_INFO
+                    : NotificationType.MNEMONIC_INCONSISTENCY_ERROR;
+            this.$store.dispatch('notification/ADD_WARNING', errorMsg);
+            this.$emit('error', errorMsg);
+            return false;
+        }
+
+        this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS);
+        this.$emit('success');
+        return true;
+    }
 }

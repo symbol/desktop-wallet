@@ -13,55 +13,55 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator';
 // child components
 // @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue'
-import { Signer } from '@/store/Account'
+import FormRow from '@/components/FormRow/FormRow.vue';
+import { Signer } from '@/store/Account';
 
 @Component({
-  components: { FormRow },
+    components: { FormRow },
 })
 export class SignerSelectorTs extends Vue {
-  /**
-   * Value set by the parent component's v-model
-   * @type {string}
-   */
-  @Prop({
-    default: '',
-  })
-  value: string
+    /**
+     * Value set by the parent component's v-model
+     * @type {string}
+     */
+    @Prop({
+        default: '',
+    })
+    value: string;
 
-  @Prop({
-    default: () => [],
-  })
-  signers: Signer[]
+    @Prop({
+        default: () => [],
+    })
+    signers: Signer[];
 
-  @Prop({
-    default: 'sender',
-  })
-  label: string
+    @Prop({
+        default: 'sender',
+    })
+    label: string;
 
-  @Prop({
-    default: false,
-  })
-  noLabel: boolean
+    @Prop({
+        default: false,
+    })
+    noLabel: boolean;
 
-  /// region computed properties getter/setter
-  /**
-   * Value set by the parent component
-   * @type {string}
-   */
-  get chosenSigner(): string {
-    return this.value
-  }
+    /// region computed properties getter/setter
+    /**
+     * Value set by the parent component
+     * @type {string}
+     */
+    get chosenSigner(): string {
+        return this.value;
+    }
 
-  /**
-   * Emit value change
-   */
-  set chosenSigner(newValue: string) {
-    this.$emit('input', newValue)
-  }
+    /**
+     * Emit value change
+     */
+    set chosenSigner(newValue: string) {
+        this.$emit('input', newValue);
+    }
 
-  /// end-region computed properties getter/setter
+    /// end-region computed properties getter/setter
 }

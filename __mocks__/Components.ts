@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { shallowMount, createLocalVue } from '@vue/test-utils'
-import Vuex from 'vuex'
-import { createStore } from '@MOCKS/Store'
-import i18n from '@/language/index'
+import { shallowMount, createLocalVue } from '@vue/test-utils';
+import Vuex from 'vuex';
+import { createStore } from '@MOCKS/Store';
+import i18n from '@/language/index';
 
 /// region globals
-const localVue = createLocalVue()
-localVue.use(Vuex)
+const localVue = createLocalVue();
+localVue.use(Vuex);
 /// end-region globals
 
 /// region helpers
@@ -32,47 +32,47 @@ localVue.use(Vuex)
  * @param state
  */
 export const getComponent = (
-  component,
-  storeModules: { [name: string]: any },
-  stateChanges?: { [field: string]: any },
-  propsData?: { [field: string]: any },
-  stubsData?: { [field: string]: any },
+    component,
+    storeModules: { [name: string]: any },
+    stateChanges?: { [field: string]: any },
+    propsData?: { [field: string]: any },
+    stubsData?: { [field: string]: any },
 ) => {
-  // - format store module overwrites
-  const modules = Object.keys(storeModules)
-    .map((k) => ({
-      [k]: Object.assign({}, storeModules[k], {
-        // - map state overwrites to store module
-        state: Object.assign({}, storeModules[k].state, stateChanges),
-        // - map unmodified getters
-        getters: storeModules[k].getters,
-      }),
-    }))
-    .reduce((obj, item) => {
-      // - reducer to get {profile: x, account: y} format
-      const key = Object.keys(item).shift()
-      obj[key] = item[key]
-      return obj
-    }, {})
+    // - format store module overwrites
+    const modules = Object.keys(storeModules)
+        .map((k) => ({
+            [k]: Object.assign({}, storeModules[k], {
+                // - map state overwrites to store module
+                state: Object.assign({}, storeModules[k].state, stateChanges),
+                // - map unmodified getters
+                getters: storeModules[k].getters,
+            }),
+        }))
+        .reduce((obj, item) => {
+            // - reducer to get {profile: x, account: y} format
+            const key = Object.keys(item).shift();
+            obj[key] = item[key];
+            return obj;
+        }, {});
 
-  // - create fake store
-  const store = createStore({ modules })
-  const params = {
-    store,
-    i18n,
-    localVue,
-  }
+    // - create fake store
+    const store = createStore({ modules });
+    const params = {
+        store,
+        i18n,
+        localVue,
+    };
 
-  if (propsData && Object.keys(propsData).length) {
-    params['propsData'] = propsData
-  }
+    if (propsData && Object.keys(propsData).length) {
+        params['propsData'] = propsData;
+    }
 
-  if (stubsData && Object.keys(stubsData).length) {
-    params['stubs'] = stubsData
-  }
+    if (stubsData && Object.keys(stubsData).length) {
+        params['stubs'] = stubsData;
+    }
 
-  // - mount component
-  const wrapper = shallowMount(component, params)
-  return wrapper
-}
+    // - mount component
+    const wrapper = shallowMount(component, params);
+    return wrapper;
+};
 /// end-region helpers

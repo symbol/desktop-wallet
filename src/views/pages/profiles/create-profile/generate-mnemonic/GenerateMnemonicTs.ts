@@ -13,118 +13,118 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-import { Password, Crypto } from 'symbol-sdk'
-import { MnemonicPassPhrase } from 'symbol-hd-wallets'
-import CryptoJS from 'crypto-js'
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
+import { Password, Crypto } from 'symbol-sdk';
+import { MnemonicPassPhrase } from 'symbol-hd-wallets';
+import CryptoJS from 'crypto-js';
 // internal dependencies
-import { ProfileModel } from '@/core/database/entities/ProfileModel'
-import { NotificationType } from '@/core/utils/NotificationType'
-import { ProfileService } from '@/services/ProfileService'
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { NotificationType } from '@/core/utils/NotificationType';
+import { ProfileService } from '@/services/ProfileService';
 
 @Component({
-  computed: {
-    ...mapGetters({
-      currentProfile: 'profile/currentProfile',
-      currentPassword: 'temporary/password',
-    }),
-  },
+    computed: {
+        ...mapGetters({
+            currentProfile: 'profile/currentProfile',
+            currentPassword: 'temporary/password',
+        }),
+    },
 })
 export default class GenerateMnemonicTs extends Vue {
-  /**
-   * Currently active profile
-   * @see {Store.Profile}
-   * @var {string}
-   */
-  public currentProfile: ProfileModel
+    /**
+     * Currently active profile
+     * @see {Store.Profile}
+     * @var {string}
+     */
+    public currentProfile: ProfileModel;
 
-  /**
-   * Previous step's password
-   * @see {Store.Temporary}
-   * @var {Password}
-   */
-  public currentPassword: Password
+    /**
+     * Previous step's password
+     * @see {Store.Temporary}
+     * @var {Password}
+     */
+    public currentPassword: Password;
 
-  /**
-   * Profile repository
-   * @var {ProfileService}
-   */
-  public profileService: ProfileService = new ProfileService()
+    /**
+     * Profile repository
+     * @var {ProfileService}
+     */
+    public profileService: ProfileService = new ProfileService();
 
-  /**
-   * Whether component should track mouse move
-   * @var {boolean}
-   */
-  public shouldTrackMouse: boolean = true
+    /**
+     * Whether component should track mouse move
+     * @var {boolean}
+     */
+    public shouldTrackMouse: boolean = true;
 
-  /**
-   * Entropy storage
-   * @var {string}
-   */
-  private entropy = ''
+    /**
+     * Entropy storage
+     * @var {string}
+     */
+    private entropy = '';
 
-  /**
-   * Percentage of entropy generation process
-   * @var {number}
-   */
-  private percent: number = 0
+    /**
+     * Percentage of entropy generation process
+     * @var {number}
+     */
+    private percent: number = 0;
 
-  /**
-   * Track and handle mouse move event
-   * @param {Vue.Event} event
-   * @return {void}
-   */
-  public handleMousemove() {
-    if (this.percent < 100) {
-      this.entropy += Crypto.randomBytes(8)
-      this.percent++
-      return
+    /**
+     * Track and handle mouse move event
+     * @param {Vue.Event} event
+     * @return {void}
+     */
+    public handleMousemove() {
+        if (this.percent < 100) {
+            this.entropy += Crypto.randomBytes(8);
+            this.percent++;
+            return;
+        }
+
+        // stop tracking
+        this.shouldTrackMouse = false;
+        return this.saveMnemonicAndGoToNextPage();
     }
 
-    // stop tracking
-    this.shouldTrackMouse = false
-    return this.saveMnemonicAndGoToNextPage()
-  }
+    /**
+     * Save mnemonic and redirect to next page
+     * return {void}
+     */
+    private async saveMnemonicAndGoToNextPage() {
+        try {
+            // act
+            const seed = this.filterRepeatedWords();
 
-  /**
-   * Save mnemonic and redirect to next page
-   * return {void}
-   */
-  private async saveMnemonicAndGoToNextPage() {
-    try {
-      // act
-      const seed = this.filterRepeatedWords()
+            // encrypt seed for storage
+            const encSeed = Crypto.encrypt(seed.plain, this.currentPassword.value);
 
-      // encrypt seed for storage
-      const encSeed = Crypto.encrypt(seed.plain, this.currentPassword.value)
+            // update currentProfile instance and storage
+            this.profileService.updateSeed(this.currentProfile, encSeed);
 
-      // update currentProfile instance and storage
-      this.profileService.updateSeed(this.currentProfile, encSeed)
+            // update state
+            await this.$store.dispatch('profile/SET_CURRENT_PROFILE', this.currentProfile);
+            this.$store.dispatch('temporary/SET_MNEMONIC', seed);
+            this.$store.dispatch('notification/ADD_SUCCESS', this.$t('generate_entropy_increase_success'));
 
-      // update state
-      await this.$store.dispatch('profile/SET_CURRENT_PROFILE', this.currentProfile)
-      this.$store.dispatch('temporary/SET_MNEMONIC', seed)
-      this.$store.dispatch('notification/ADD_SUCCESS', this.$t('generate_entropy_increase_success'))
-
-      // redirect
-      return this.$router.push({ name: 'profiles.createProfile.showMnemonic' })
-    } catch (error) {
-      console.log('An error happened while generating Mnenomic:', error)
-      this.$store.dispatch('notification/ADD_ERROR', NotificationType.MNEMONIC_GENERATION_ERROR)
+            // redirect
+            return this.$router.push({ name: 'profiles.createProfile.showMnemonic' });
+        } catch (error) {
+            console.log('An error happened while generating Mnenomic:', error);
+            this.$store.dispatch('notification/ADD_ERROR', NotificationType.MNEMONIC_GENERATION_ERROR);
+        }
     }
-  }
 
-  /**
-   * Filter repeating words in Mnemonic phrase
-   * retrun seed
-   */
-  private filterRepeatedWords() {
-    const entropy = CryptoJS.SHA256(this.entropy + Crypto.randomBytes(8)).toString()
-    const seed = MnemonicPassPhrase.createFromEntropy(entropy)
-    if (new Set(seed.toArray()).size != seed.toArray().length) {
-      return this.filterRepeatedWords()
+    /**
+     * Filter repeating words in Mnemonic phrase
+     * retrun seed
+     */
+    private filterRepeatedWords() {
+        const entropy = CryptoJS.SHA256(this.entropy + Crypto.randomBytes(8)).toString();
+        const seed = MnemonicPassPhrase.createFromEntropy(entropy);
+        if (new Set(seed.toArray()).size != seed.toArray().length) {
+            return this.filterRepeatedWords();
+        }
+        return seed;
     }
-    return seed
-  }
 }

@@ -13,113 +13,113 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // configuration
-import { feesConfig } from '@/config'
+import { feesConfig } from '@/config';
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
-import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
+import FormLabel from '@/components/FormLabel/FormLabel.vue';
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 
 @Component({
-  components: {
-    FormLabel,
-  },
-  computed: {
-    ...mapGetters({
-      defaultFee: 'app/defaultFee',
-      networkMosaicName: 'mosaic/networkMosaicName',
-      networkCurrency: 'mosaic/networkCurrency',
-    }),
-  },
+    components: {
+        FormLabel,
+    },
+    computed: {
+        ...mapGetters({
+            defaultFee: 'app/defaultFee',
+            networkMosaicName: 'mosaic/networkMosaicName',
+            networkCurrency: 'mosaic/networkCurrency',
+        }),
+    },
 })
 export class MaxFeeSelectorTs extends Vue {
-  @Prop({
-    default: 'form-line-container',
-  })
-  public className: string
+    @Prop({
+        default: 'form-line-container',
+    })
+    public className: string;
 
-  @Prop({ default: false })
-  public displayOnly!: boolean
+    @Prop({ default: false })
+    public displayOnly!: boolean;
 
-  /**
-   * Networks currency mosaic name
-   * @var {string}
-   */
-  private networkMosaicName: string
+    /**
+     * Networks currency mosaic name
+     * @var {string}
+     */
+    private networkMosaicName: string;
 
-  /**
-   * Known mosaics info
-   * @var {MosaicInfo[]}
-   */
-  private networkCurrency: NetworkCurrencyModel
+    /**
+     * Known mosaics info
+     * @var {MosaicInfo[]}
+     */
+    private networkCurrency: NetworkCurrencyModel;
 
-  /**
-   * Default fee setting
-   * @var {number}
-   */
-  private defaultFee: number
+    /**
+     * Default fee setting
+     * @var {number}
+     */
+    private defaultFee: number;
 
-  /**
-   * The fees to be displayed in the dropw down.
-   */
-  private fees: { label: string; maxFee: number }[]
+    /**
+     * The fees to be displayed in the dropw down.
+     */
+    private fees: { label: string; maxFee: number }[];
 
-  @Prop({
-    default: 1,
-  })
-  multiplier: number
+    @Prop({
+        default: 1,
+    })
+    multiplier: number;
 
-  public created() {
-    this.fees = Object.entries(feesConfig).map((entry) => ({
-      label: this.getLabel([entry[0], entry[1] as number]),
-      maxFee: entry[1] as number,
-    }))
-  }
-
-  private getLabel([key, value]: [string, number]) {
-    //SPECIAL VALUES!!!
-    if (value == 1 || value == 2) {
-      return this.$t('fee_speed_' + key).toString()
+    public created() {
+        this.fees = Object.entries(feesConfig).map((entry) => ({
+            label: this.getLabel([entry[0], entry[1] as number]),
+            maxFee: entry[1] as number,
+        }));
     }
-    return this.$t('fee_speed_' + key).toString() + ': ' + this.getRelative(value) + ' ' + this.networkMosaicName
-  }
 
-  /**
-   * Value set by the parent component's v-model
-   * @type {number}
-   */
-  @Prop({
-    default: feesConfig.median,
-  })
-  value: number
-
-  /// region computed properties getter/setter
-  /**
-   * Value set by the parent component
-   * @type {number}
-   */
-  get chosenMaxFee(): number {
-    return this.value || this.defaultFee
-  }
-
-  /**
-   * Emit value change
-   */
-  set chosenMaxFee(newValue: number) {
-    this.$emit('input', newValue)
-  }
-  /// end-region computed properties getter/setter
-
-  /**
-   * Convert a relative amount to absolute using mosaicInfo
-   * @param {number} price
-   * @return {number}
-   */
-  public getRelative(amount: number): number {
-    if (this.networkCurrency === undefined) {
-      return amount
+    private getLabel([key, value]: [string, number]) {
+        //SPECIAL VALUES!!!
+        if (value == 1 || value == 2) {
+            return this.$t('fee_speed_' + key).toString();
+        }
+        return this.$t('fee_speed_' + key).toString() + ': ' + this.getRelative(value) + ' ' + this.networkMosaicName;
     }
-    return amount / Math.pow(10, this.networkCurrency.divisibility)
-  }
+
+    /**
+     * Value set by the parent component's v-model
+     * @type {number}
+     */
+    @Prop({
+        default: feesConfig.median,
+    })
+    value: number;
+
+    /// region computed properties getter/setter
+    /**
+     * Value set by the parent component
+     * @type {number}
+     */
+    get chosenMaxFee(): number {
+        return this.value || this.defaultFee;
+    }
+
+    /**
+     * Emit value change
+     */
+    set chosenMaxFee(newValue: number) {
+        this.$emit('input', newValue);
+    }
+    /// end-region computed properties getter/setter
+
+    /**
+     * Convert a relative amount to absolute using mosaicInfo
+     * @param {number} price
+     * @return {number}
+     */
+    public getRelative(amount: number): number {
+        if (this.networkCurrency === undefined) {
+            return amount;
+        }
+        return amount / Math.pow(10, this.networkCurrency.divisibility);
+    }
 }

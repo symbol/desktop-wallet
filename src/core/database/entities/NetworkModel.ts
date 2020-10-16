@@ -14,8 +14,8 @@
  *
  */
 
-import { NetworkType, NodeInfo, TransactionFees } from 'symbol-sdk'
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { NetworkType, NodeInfo, TransactionFees } from 'symbol-sdk';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 /**
  * Stored POJO that holds network information.
@@ -26,12 +26,12 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
  *
  */
 export class NetworkModel {
-  constructor(
-    public readonly url: string,
-    public readonly networkType: NetworkType,
-    public readonly generationHash: string,
-    public readonly networkConfiguration: NetworkConfigurationModel,
-    public readonly transactionFees: TransactionFees,
-    public readonly nodeInfo: NodeInfo,
-  ) {}
+    constructor(
+        public readonly url: string,
+        public readonly networkType: NetworkType,
+        public readonly generationHash: string,
+        public readonly networkConfiguration: NetworkConfigurationModel,
+        public readonly transactionFees: TransactionFees,
+        public readonly nodeInfo: NodeInfo,
+    ) {}
 }

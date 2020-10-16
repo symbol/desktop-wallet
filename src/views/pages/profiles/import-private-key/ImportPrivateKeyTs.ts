@@ -13,37 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator';
 
 @Component
 export default class ImportPrivateKeyTs extends Vue {
-  /**
-   * List of steps
-   * @var {string[]}
-   */
-  public StepBarTitleList = ['create_profile', 'import_private_key', 'finished']
+    /**
+     * List of steps
+     * @var {string[]}
+     */
+    public StepBarTitleList = ['create_profile', 'import_private_key', 'finished'];
 
-  /**
-   * Hook called when the page is mounted
-   * @return {void}
-   */
-  async mounted() {
-    await this.$store.dispatch('temporary/initialize')
-  }
-
-  public getCurrentStep(): number {
-    switch (this.$route.name) {
-      default:
-      case 'profiles.importPrivateKey.fillInfo':
-        return 0
-      case 'profiles.importPrivateKey.input':
-        return 1
-      case 'profiles.importPrivateKey.finalize':
-        return 2
+    /**
+     * Hook called when the page is mounted
+     * @return {void}
+     */
+    async mounted() {
+        await this.$store.dispatch('temporary/initialize');
     }
-  }
 
-  public getStepClassName(index: number): string {
-    return this.getCurrentStep() >= index ? 'white' : 'gray'
-  }
+    public getCurrentStep(): number {
+        switch (this.$route.name) {
+            default:
+            case 'profiles.importPrivateKey.fillInfo':
+                return 0;
+            case 'profiles.importPrivateKey.input':
+                return 1;
+            case 'profiles.importPrivateKey.finalize':
+                return 2;
+        }
+    }
+
+    public getStepClassName(index: number): string {
+        return this.getCurrentStep() >= index ? 'white' : 'gray';
+    }
 }

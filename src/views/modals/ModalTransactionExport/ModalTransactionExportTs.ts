@@ -13,97 +13,97 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-import { Transaction } from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
+import { Transaction } from 'symbol-sdk';
 
 // child components
 // @ts-ignore
-import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue'
-import { CSVHelpers } from '@/core/utils/CSVHelpers'
+import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue';
+import { CSVHelpers } from '@/core/utils/CSVHelpers';
 
 @Component({
-  components: { FormProfileUnlock },
-  computed: {
-    ...mapGetters({
-      confirmedTransactions: 'transaction/confirmedTransactions',
-      partialTransactions: 'transaction/partialTransactions',
-      unconfirmedTransactions: 'transaction/unconfirmedTransactions',
-    }),
-  },
+    components: { FormProfileUnlock },
+    computed: {
+        ...mapGetters({
+            confirmedTransactions: 'transaction/confirmedTransactions',
+            partialTransactions: 'transaction/partialTransactions',
+            unconfirmedTransactions: 'transaction/unconfirmedTransactions',
+        }),
+    },
 })
 export class ModalTransactionExportTs extends Vue {
-  @Prop({
-    default: false,
-  })
-  visible: boolean
+    @Prop({
+        default: false,
+    })
+    visible: boolean;
 
-  public hasTransactionExportInfo: boolean = false
+    public hasTransactionExportInfo: boolean = false;
 
-  /**
-   * List of confirmed transactions (per-request)
-   */
-  public confirmedTransactions: Transaction[]
+    /**
+     * List of confirmed transactions (per-request)
+     */
+    public confirmedTransactions: Transaction[];
 
-  /**
-   * List of unconfirmed transactions (per-request)
-   */
-  public unconfirmedTransactions: Transaction[]
+    /**
+     * List of unconfirmed transactions (per-request)
+     */
+    public unconfirmedTransactions: Transaction[];
 
-  /**
-   * List of confirmed transactions (per-request)
-   */
-  public partialTransactions: Transaction[]
+    /**
+     * List of confirmed transactions (per-request)
+     */
+    public partialTransactions: Transaction[];
 
-  /**
-   * Visibility state
-   * @type {boolean}
-   */
-  get show(): boolean {
-    return this.visible
-  }
-
-  /**
-   * Emits close event
-   */
-  set show(val) {
-    if (!val) {
-      this.$emit('close')
+    /**
+     * Visibility state
+     * @type {boolean}
+     */
+    get show(): boolean {
+        return this.visible;
     }
-  }
 
-  /**
-   * Hook called when the account has been unlocked
-   * @return {boolean}
-   */
-  public onAccountUnlocked(): boolean {
-    this.hasTransactionExportInfo = true
-    return true
-  }
+    /**
+     * Emits close event
+     */
+    set show(val) {
+        if (!val) {
+            this.$emit('close');
+        }
+    }
 
-  /**
-   * Hook called when child component FormProfileUnlock or
-   * HardwareConfirmationButton emit the 'error' event.
-   * @param {string} message
-   * @return {void}
-   */
-  public onError(error: string) {
-    this.$emit('error', error)
-  }
+    /**
+     * Hook called when the account has been unlocked
+     * @return {boolean}
+     */
+    public onAccountUnlocked(): boolean {
+        this.hasTransactionExportInfo = true;
+        return true;
+    }
 
-  /**
-   * The download transactions csv
-   * @return {void}
-   */
-  public onDownloadTx() {
-    const transactions = this.getTransactions()
-    CSVHelpers.exportCSV(transactions, 'transactions')
-  }
+    /**
+     * Hook called when child component FormProfileUnlock or
+     * HardwareConfirmationButton emit the 'error' event.
+     * @param {string} message
+     * @return {void}
+     */
+    public onError(error: string) {
+        this.$emit('error', error);
+    }
 
-  /**
-   * Transactions list
-   */
-  private getTransactions() {
-    return [...this.unconfirmedTransactions, ...this.partialTransactions, ...this.confirmedTransactions]
-  }
+    /**
+     * The download transactions csv
+     * @return {void}
+     */
+    public onDownloadTx() {
+        const transactions = this.getTransactions();
+        CSVHelpers.exportCSV(transactions, 'transactions');
+    }
+
+    /**
+     * Transactions list
+     */
+    private getTransactions() {
+        return [...this.unconfirmedTransactions, ...this.partialTransactions, ...this.confirmedTransactions];
+    }
 }

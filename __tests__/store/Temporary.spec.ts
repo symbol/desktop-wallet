@@ -13,44 +13,44 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import TemporaryStore from '@/store/Temporary'
-import { Password } from 'symbol-sdk'
+import TemporaryStore from '@/store/Temporary';
+import { Password } from 'symbol-sdk';
 
 describe('store/Profile', () => {
-  describe('action "RESET_STATE" should', () => {
-    test('mutate password and mnemonic', () => {
-      // prepare
-      const commit = jest.fn()
+    describe('action "RESET_STATE" should', () => {
+        test('mutate password and mnemonic', () => {
+            // prepare
+            const commit = jest.fn();
 
-      // act
-      TemporaryStore.actions.RESET_STATE({ commit })
+            // act
+            TemporaryStore.actions.RESET_STATE({ commit });
 
-      // assert
-      expect(commit).toHaveBeenCalledTimes(2)
-      expect(commit).toHaveBeenNthCalledWith(1, 'setPassword', null)
-      expect(commit).toHaveBeenNthCalledWith(2, 'setMnemonic', null)
-    })
-  })
+            // assert
+            expect(commit).toHaveBeenCalledTimes(2);
+            expect(commit).toHaveBeenNthCalledWith(1, 'setPassword', null);
+            expect(commit).toHaveBeenNthCalledWith(2, 'setMnemonic', null);
+        });
+    });
 
-  describe('action "SET_PASSWORD" should', () => {
-    test('mutate password', () => {
-      // prepare
-      const commit = jest.fn()
+    describe('action "SET_PASSWORD" should', () => {
+        test('mutate password', () => {
+            // prepare
+            const commit = jest.fn();
 
-      // act
-      TemporaryStore.actions.SET_PASSWORD({ commit }, '1234567a')
+            // act
+            TemporaryStore.actions.SET_PASSWORD({ commit }, '1234567a');
 
-      // assert
-      expect(commit).toHaveBeenCalledTimes(1)
-      expect(commit).toHaveBeenNthCalledWith(1, 'setPassword', new Password('1234567a'))
-    })
+            // assert
+            expect(commit).toHaveBeenCalledTimes(1);
+            expect(commit).toHaveBeenNthCalledWith(1, 'setPassword', new Password('1234567a'));
+        });
 
-    test('throw password error if less than 8 characters', () => {
-      // prepare
-      const commit = jest.fn()
+        test('throw password error if less than 8 characters', () => {
+            // prepare
+            const commit = jest.fn();
 
-      // act + assert
-      expect(() => TemporaryStore.actions.SET_PASSWORD({ commit }, '1234567')).toThrowError()
-    })
-  })
-})
+            // act + assert
+            expect(() => TemporaryStore.actions.SET_PASSWORD({ commit }, '1234567')).toThrowError();
+        });
+    });
+});

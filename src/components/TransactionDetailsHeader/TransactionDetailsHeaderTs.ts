@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator';
 // @ts-ignore
-import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import { TransactionView } from '@/core/transactions/TransactionView'
-import { Transaction } from 'symbol-sdk'
+import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue';
+import { TransactionView } from '@/core/transactions/TransactionView';
+import { Transaction } from 'symbol-sdk';
 
 @Component({
-  components: {
-    TransactionDetailRow,
-  },
+    components: {
+        TransactionDetailRow,
+    },
 })
 export class TransactionDetailsHeaderTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  view: TransactionView<Transaction>
+    @Prop({
+        default: null,
+    })
+    view: TransactionView<Transaction>;
 }

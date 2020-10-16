@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import RSSParser from 'rss-parser'
-import axios from 'axios'
+import RSSParser from 'rss-parser';
+import axios from 'axios';
 // configuration
-import { appConfig } from '@/config'
+import { appConfig } from '@/config';
 
 /// region protected helpers
 /**
@@ -25,67 +25,65 @@ import { appConfig } from '@/config'
  * @return {Promise<string>}
  */
 const request = async (): Promise<string> => {
-  let feedUrl = appConfig.articlesFeedUrl
-  if (process.env.NODE_ENV === 'development') {
-    feedUrl = '/nemflash'
-  }
-  // execute request
-  const response = await axios.get(feedUrl, { params: {} })
-  return response.data
-}
+    let feedUrl = appConfig.articlesFeedUrl;
+    if (process.env.NODE_ENV === 'development') {
+        feedUrl = '/nemflash';
+    }
+    // execute request
+    const response = await axios.get(feedUrl, { params: {} });
+    return response.data;
+};
 
 /// end-region protected helpers
 
 export interface ArticleEntry {
-  /**
-   * Publication date
-   */
-  pubDate: string
-  /**
-   * Article creator
-   */
-  creator: string
-  /**
-   * Article title
-   */
-  title: string
-  /**
-   * Article excerpt
-   */
-  contentSnippet: string
-  /**
-   * Article link
-   */
-  link: string
+    /**
+     * Publication date
+     */
+    pubDate: string;
+    /**
+     * Article creator
+     */
+    creator: string;
+    /**
+     * Article title
+     */
+    title: string;
+    /**
+     * Article excerpt
+     */
+    contentSnippet: string;
+    /**
+     * Article link
+     */
+    link: string;
 }
 
 export class CommunityService {
-  /**
-   * Get latest articles from RSS feed
-   * @return {Promise<ArticleEntry[]}
-   */
-  public async getLatestArticles(): Promise<ArticleEntry[]> {
-    const data = await request()
+    /**
+     * Get latest articles from RSS feed
+     * @return {Promise<ArticleEntry[]}
+     */
+    public async getLatestArticles(): Promise<ArticleEntry[]> {
+        const data = await request();
 
-    // *safely* parse stream
-    let parsedStream
-    try {
-      parsedStream = await new RSSParser().parseString(data)
-    } catch (e) {
-      parsedStream = { items: [] }
+        // *safely* parse stream
+        let parsedStream;
+        try {
+            parsedStream = await new RSSParser().parseString(data);
+        } catch (e) {
+            parsedStream = { items: [] };
+        }
+
+        return parsedStream.items.map(({ pubDate, creator, title, contentSnippet, link }) => ({
+            pubDate,
+            creator,
+            title,
+            contentSnippet,
+            link:
+                link && link.length && link.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g)
+                    ? link
+                    : '#',
+        }));
     }
-
-    return parsedStream.items.map(({ pubDate, creator, title, contentSnippet, link }) => ({
-      pubDate,
-      creator,
-      title,
-      contentSnippet,
-      link:
-        link &&
-        link.length &&
-        link.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g)
-          ? link
-          : '#',
-    }))
-  }
 }

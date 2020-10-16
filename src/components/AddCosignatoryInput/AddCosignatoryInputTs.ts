@@ -14,108 +14,106 @@
  *
  */
 // external dependencies
-import { Component, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-import { Address, NetworkType, PublicAccount, RepositoryFactory } from 'symbol-sdk'
-import { finalize, timeout } from 'rxjs/operators'
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
+import { Address, NetworkType, PublicAccount, RepositoryFactory } from 'symbol-sdk';
 // internal dependencies
-import { AddressValidator } from '@/core/validation/validators'
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
-import { NotificationType } from '@/core/utils/NotificationType'
+import { AddressValidator } from '@/core/validation/validators';
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 // child components
-import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue'
+import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
-import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue'
-import { FilterHelpers } from '@/core/utils/FilterHelpers'
+import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue';
+import { FilterHelpers } from '@/core/utils/FilterHelpers';
 
 @Component({
-  components: {
-    ValidationObserver,
-    ValidationProvider,
-    ErrorTooltip,
-    FormRow,
-    ButtonAdd,
-  },
-  computed: {
-    ...mapGetters({
-      repositoryFactory: 'network/repositoryFactory',
-      networkType: 'network/networkType',
-    }),
-  },
+    components: {
+        ValidationObserver,
+        ValidationProvider,
+        ErrorTooltip,
+        FormRow,
+        ButtonAdd,
+    },
+    computed: {
+        ...mapGetters({
+            repositoryFactory: 'network/repositoryFactory',
+            networkType: 'network/networkType',
+        }),
+    },
 })
 export class AddCosignatoryInputTs extends Vue {
-  /**
-   * Validation rules
-   * @var {ValidationRuleset}
-   */
-  public validationRules = ValidationRuleset
+    /**
+     * Validation rules
+     * @var {ValidationRuleset}
+     */
+    public validationRules = ValidationRuleset;
 
-  /**
-   * Current peer
-   * @private
-   * @type {string}
-   */
-  private repositoryFactory: RepositoryFactory
+    /**
+     * Current peer
+     * @private
+     * @type {string}
+     */
+    private repositoryFactory: RepositoryFactory;
 
-  /**
-   * Current network type
-   * @private
-   * @type {NetworkType}
-   */
-  private networkType: NetworkType
+    /**
+     * Current network type
+     * @private
+     * @type {NetworkType}
+     */
+    private networkType: NetworkType;
 
-  /**
-   * Cosignatory input (address or public key)
-   * @protected
-   * @type {string}
-   */
-  public cosignatory: string = ''
+    /**
+     * Cosignatory input (address or public key)
+     * @protected
+     * @type {string}
+     */
+    public cosignatory: string = '';
 
-  /**
-   * Handles the form submission
-   * @protected
-   * @return {void}
-   */
-  protected onAddCosignatory(): void {
-    if (AddressValidator.validate(this.cosignatory)) {
-      this.addCosignerFromAddress()
-      this.cosignatory = ''
-      return
+    /**
+     * Handles the form submission
+     * @protected
+     * @return {void}
+     */
+    protected onAddCosignatory(): void {
+        if (AddressValidator.validate(this.cosignatory)) {
+            this.addCosignerFromAddress();
+            this.cosignatory = '';
+            return;
+        }
+
+        this.addCosignerFromPublicKey();
+        this.cosignatory = '';
     }
 
-    this.addCosignerFromPublicKey()
-    this.cosignatory = ''
-  }
-
-  /**
-   * Emits onAddCosignatory event when cosignatory is input as a public key
-   * @private
-   * @return {void}
-   */
-  private addCosignerFromPublicKey(): void {
-    if (!this.cosignatory) {
-      return
+    /**
+     * Emits onAddCosignatory event when cosignatory is input as a public key
+     * @private
+     * @return {void}
+     */
+    private addCosignerFromPublicKey(): void {
+        if (!this.cosignatory) {
+            return;
+        }
+        const publicAccount = PublicAccount.createFromPublicKey(this.cosignatory, this.networkType);
+        this.$emit('added', publicAccount.address);
     }
-    const publicAccount = PublicAccount.createFromPublicKey(this.cosignatory, this.networkType)
-    this.$emit('added', publicAccount.address)
-  }
 
-  /**
-   * Emits onAddCosignatory event when cosignatory is input as an address
-   * @private
-   * @return {void}
-   */
-  private async addCosignerFromAddress() {
-    this.$emit('added', Address.createFromRawAddress(this.cosignatory))
-  }
-  /**
-   * filter tags
-   */
-  public stripTagsCosignatory() {
-    this.cosignatory = FilterHelpers.stripFilter(this.cosignatory)
-  }
+    /**
+     * Emits onAddCosignatory event when cosignatory is input as an address
+     * @private
+     * @return {void}
+     */
+    private async addCosignerFromAddress() {
+        this.$emit('added', Address.createFromRawAddress(this.cosignatory));
+    }
+    /**
+     * filter tags
+     */
+    public stripTagsCosignatory() {
+        this.cosignatory = FilterHelpers.stripFilter(this.cosignatory);
+    }
 }

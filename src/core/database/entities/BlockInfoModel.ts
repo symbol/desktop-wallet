@@ -14,21 +14,21 @@
  *
  */
 
-import { BlockInfo } from 'symbol-sdk'
+import { BlockInfo } from 'symbol-sdk';
 
 export class BlockInfoModel {
-  public readonly height: string
-  public readonly feeMultiplier: number
-  public readonly blockTransactionsHash: string
-  public readonly blockReceiptsHash: string
-  public readonly stateHash: string
-  public readonly generationHash: string
-  constructor(blockInfo: BlockInfo) {
-    this.height = blockInfo.height.toString()
-    this.feeMultiplier = blockInfo.feeMultiplier
-    this.blockTransactionsHash = blockInfo.blockTransactionsHash
-    this.blockReceiptsHash = blockInfo.blockReceiptsHash
-    this.stateHash = blockInfo.stateHash
-    this.generationHash = blockInfo.generationHash
-  }
+    public readonly height: string;
+    public readonly feeMultiplier: number;
+    public readonly blockTransactionsHash: string;
+    public readonly blockReceiptsHash: string;
+    public readonly stateHash: string;
+    public readonly generationHash: string;
+    constructor(blockInfo: BlockInfo) {
+        this.height = blockInfo.height.toString();
+        this.feeMultiplier = blockInfo.feeMultiplier;
+        this.blockTransactionsHash = blockInfo.blockTransactionsHash;
+        this.blockReceiptsHash = blockInfo.blockReceiptsHash;
+        this.stateHash = blockInfo.stateHash;
+        this.generationHash = blockInfo.generationHash;
+    }
 }

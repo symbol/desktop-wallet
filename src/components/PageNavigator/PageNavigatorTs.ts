@@ -13,42 +13,42 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // internal dependencies
-import { ProfileModel } from '@/core/database/entities/ProfileModel'
-import { Route } from 'vue-router'
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { Route } from 'vue-router';
 
 @Component({
-  computed: {
-    ...mapGetters({
-      currentProfile: 'profile/currentProfile',
-    }),
-  },
+    computed: {
+        ...mapGetters({
+            currentProfile: 'profile/currentProfile',
+        }),
+    },
 })
 export class PageNavigatorTs extends Vue {
-  /**
-   * Currently active profile
-   * @see {Store.Profile}
-   * @var {string}
-   */
-  public currentProfile: ProfileModel
+    /**
+     * Currently active profile
+     * @see {Store.Profile}
+     * @var {string}
+     */
+    public currentProfile: ProfileModel;
 
-  /**
-   * Executes action of logout
-   * @return {void}
-   */
-  public async logout() {
-    await this.$store.dispatch('profile/LOG_OUT')
-    this.$router.push({ name: 'profiles.login' })
-  }
+    /**
+     * Executes action of logout
+     * @return {void}
+     */
+    public async logout() {
+        await this.$store.dispatch('profile/LOG_OUT');
+        this.$router.push({ name: 'profiles.login' });
+    }
 
-  public onPageNavigate(route: Route) {
-    const isDuplicatedRoute = this.$route.matched.map(({ path }) => path).includes(route.path)
-    !isDuplicatedRoute &&
-      this.currentProfile &&
-      this.$router.push({ name: route.name }).catch(() => {
-        /**/
-      })
-  }
+    public onPageNavigate(route: Route) {
+        const isDuplicatedRoute = this.$route.matched.map(({ path }) => path).includes(route.path);
+        !isDuplicatedRoute &&
+            this.currentProfile &&
+            this.$router.push({ name: route.name }).catch(() => {
+                /**/
+            });
+    }
 }

@@ -13,39 +13,39 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel } from '@/core/database/entities/AccountModel';
 // child components
 // @ts-ignore
-import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue'
-import { Address } from 'symbol-sdk'
-import { AddressValidator } from '@/core/validation/validators'
+import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue';
+import { Address } from 'symbol-sdk';
+import { AddressValidator } from '@/core/validation/validators';
 
 @Component({
-  components: {
-    FormTransferTransaction,
-  },
-  computed: {
-    ...mapGetters({
-      currentAccount: 'account/currentAccount',
-    }),
-  },
+    components: {
+        FormTransferTransaction,
+    },
+    computed: {
+        ...mapGetters({
+            currentAccount: 'account/currentAccount',
+        }),
+    },
 })
 export class DashboardTransferPageTs extends Vue {
-  /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountModel}
-   */
-  public currentAccount: AccountModel
+    /**
+     * Currently active account
+     * @see {Store.Account}
+     * @var {AccountModel}
+     */
+    public currentAccount: AccountModel;
 
-  @Prop({ default: '' }) public recipientAddress: string
+    @Prop({ default: '' }) public recipientAddress: string;
 
-  public get recipient(): Address {
-    if (AddressValidator.validate(this.recipientAddress)) {
-      return Address.createFromRawAddress(this.recipientAddress)
+    public get recipient(): Address {
+        if (AddressValidator.validate(this.recipientAddress)) {
+            return Address.createFromRawAddress(this.recipientAddress);
+        }
     }
-  }
 }

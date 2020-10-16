@@ -14,66 +14,66 @@
  *
  */
 // internal dependencies
-import { IStorageBackend } from './IStorageBackend'
+import { IStorageBackend } from './IStorageBackend';
 
 export class ObjectStorageBackend implements IStorageBackend {
-  /**
-   * The storage backend (a simple object)
-   * @var {any}
-   */
-  protected backend: any = {}
+    /**
+     * The storage backend (a simple object)
+     * @var {any}
+     */
+    protected backend: any = {};
 
-  /**
-   * Construct an object storage backend
-   * @param backend
-   */
-  public constructor(backend: any = {}) {
-    this.backend = backend
-  }
-
-  /**
-   * The number of available entries
-   * @var {number}
-   */
-  public get length(): number {
-    return Object.keys(this.backend).length
-  }
-
-  /**
-   * Always returns true for "backend as an object"
-   * @return {boolean}
-   */
-  public isAvailable(): boolean {
-    return true
-  }
-
-  /**
-   * Getter for value with \a key
-   * @param {string} key
-   * @return {any}
-   */
-  public getItem(key: string): any {
-    if (!this.backend || !this.backend[key]) {
-      return null
+    /**
+     * Construct an object storage backend
+     * @param backend
+     */
+    public constructor(backend: any = {}) {
+        this.backend = backend;
     }
 
-    return this.backend[key]
-  }
+    /**
+     * The number of available entries
+     * @var {number}
+     */
+    public get length(): number {
+        return Object.keys(this.backend).length;
+    }
 
-  /**
-   * Setter for \a key with \a value
-   * @param {string} key
-   * @param {any} value
-   */
-  public setItem(key: string, value: any): void {
-    this.backend[key] = value
-  }
+    /**
+     * Always returns true for "backend as an object"
+     * @return {boolean}
+     */
+    public isAvailable(): boolean {
+        return true;
+    }
 
-  /**
-   * Deletes the value for the given key
-   * @param {string} key
-   */
-  public removeItem(key: string): void {
-    delete this.backend[key]
-  }
+    /**
+     * Getter for value with \a key
+     * @param {string} key
+     * @return {any}
+     */
+    public getItem(key: string): any {
+        if (!this.backend || !this.backend[key]) {
+            return null;
+        }
+
+        return this.backend[key];
+    }
+
+    /**
+     * Setter for \a key with \a value
+     * @param {string} key
+     * @param {any} value
+     */
+    public setItem(key: string, value: any): void {
+        this.backend[key] = value;
+    }
+
+    /**
+     * Deletes the value for the given key
+     * @param {string} key
+     */
+    public removeItem(key: string): void {
+        delete this.backend[key];
+    }
 }

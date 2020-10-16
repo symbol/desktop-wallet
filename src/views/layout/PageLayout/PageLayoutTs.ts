@@ -13,175 +13,175 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { NetworkType } from 'symbol-sdk'
-import { Component, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { NetworkType } from 'symbol-sdk';
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // internal dependencies
-import { ProfileModel } from '@/core/database/entities/ProfileModel'
-import { AccountService } from '@/services/AccountService'
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { AccountService } from '@/services/AccountService';
 // child components
 // @ts-ignore
-import AppLogo from '@/components/AppLogo/AppLogo.vue'
+import AppLogo from '@/components/AppLogo/AppLogo.vue';
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
-import PageNavigator from '@/components/PageNavigator/PageNavigator.vue'
+import PageNavigator from '@/components/PageNavigator/PageNavigator.vue';
 // @ts-ignore
-import WindowControls from '@/components/WindowControls/WindowControls.vue'
+import WindowControls from '@/components/WindowControls/WindowControls.vue';
 // @ts-ignore
-import PeerSelector from '@/components/PeerSelector/PeerSelector.vue'
+import PeerSelector from '@/components/PeerSelector/PeerSelector.vue';
 // @ts-ignore
-import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue'
+import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue';
 // @ts-ignore
-import AccountSelectorField from '@/components/AccountSelectorField/AccountSelectorField.vue'
+import AccountSelectorField from '@/components/AccountSelectorField/AccountSelectorField.vue';
 // @ts-ignore
-import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue'
+import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue';
 //@ts-ignore
-import Settings from '@/components/Settings/Settings.vue'
-import { URLInfo } from '@/core/utils/URLInfo'
+import Settings from '@/components/Settings/Settings.vue';
+import { URLInfo } from '@/core/utils/URLInfo';
 
 //@ts-ignore
-import ImportQRButton from '@/components/QRCode/ImportQRButton/ImportQRButton.vue'
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import ImportQRButton from '@/components/QRCode/ImportQRButton/ImportQRButton.vue';
+import { AccountModel } from '@/core/database/entities/AccountModel';
 @Component({
-  components: {
-    AppLogo,
-    ErrorTooltip,
-    PageNavigator,
-    WindowControls,
-    PeerSelector,
-    LanguageSelector,
-    AccountSelectorField,
-    ModalDebugConsole,
-    Settings,
-    ImportQRButton,
-  },
-  computed: {
-    ...mapGetters({
-      currentPeer: 'network/currentPeer',
-      isConnected: 'network/isConnected',
-      networkType: 'network/networkType',
-      generationHash: 'network/generationHash',
-      currentProfile: 'profile/currentProfile',
-      isCosignatoryMode: 'account/isCosignatoryMode',
-      currentAccount: 'account/currentAccount',
-    }),
-  },
+    components: {
+        AppLogo,
+        ErrorTooltip,
+        PageNavigator,
+        WindowControls,
+        PeerSelector,
+        LanguageSelector,
+        AccountSelectorField,
+        ModalDebugConsole,
+        Settings,
+        ImportQRButton,
+    },
+    computed: {
+        ...mapGetters({
+            currentPeer: 'network/currentPeer',
+            isConnected: 'network/isConnected',
+            networkType: 'network/networkType',
+            generationHash: 'network/generationHash',
+            currentProfile: 'profile/currentProfile',
+            isCosignatoryMode: 'account/isCosignatoryMode',
+            currentAccount: 'account/currentAccount',
+        }),
+    },
 })
 export class PageLayoutTs extends Vue {
-  /**
-   * Currently active profile
-   * @see {Store.Profile}
-   * @var {string}
-   */
-  public currentProfile: ProfileModel
+    /**
+     * Currently active profile
+     * @see {Store.Profile}
+     * @var {string}
+     */
+    public currentProfile: ProfileModel;
 
-  /**
-   * Currently active peer
-   * @see {Store.Network}
-   * @var {Object}
-   */
-  public currentPeer: URLInfo
+    /**
+     * Currently active peer
+     * @see {Store.Network}
+     * @var {Object}
+     */
+    public currentPeer: URLInfo;
 
-  /**
-   * Whether the connection is up
-   * @see {Store.Network}
-   * @var {boolean}
-   */
-  public isConnected: boolean
+    /**
+     * Whether the connection is up
+     * @see {Store.Network}
+     * @var {boolean}
+     */
+    public isConnected: boolean;
 
-  /**
-   * Current networkType
-   * @see {Store.Network}
-   * @var {NetworkType}
-   */
-  public networkType: NetworkType
+    /**
+     * Current networkType
+     * @see {Store.Network}
+     * @var {NetworkType}
+     */
+    public networkType: NetworkType;
 
-  /**
-   * Current generationHash
-   * @see {Store.Network}
-   * @var {string}
-   */
-  public generationHash: string
+    /**
+     * Current generationHash
+     * @see {Store.Network}
+     * @var {string}
+     */
+    public generationHash: string;
 
-  /**
-   * Whether cosignatory mode is active
-   * @see {Store.Account}
-   * @var {boolean}
-   */
-  public isCosignatoryMode: boolean
+    /**
+     * Whether cosignatory mode is active
+     * @see {Store.Account}
+     * @var {boolean}
+     */
+    public isCosignatoryMode: boolean;
 
-  /**
-   * Whether currently displaying debug console
-   * @var {boolean}
-   */
-  public isDisplayingDebugConsole: boolean = false
+    /**
+     * Whether currently displaying debug console
+     * @var {boolean}
+     */
+    public isDisplayingDebugConsole: boolean = false;
 
-  /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountModel}
-   */
-  public currentAccount: AccountModel
+    /**
+     * Currently active account
+     * @see {Store.Account}
+     * @var {AccountModel}
+     */
+    public currentAccount: AccountModel;
 
-  /// region computed properties getter/setter
-  /**
-   * Holds alert message
-   * @var {Object}
-   */
-  get alert(): { show: boolean; message: string } {
-    if (!this.currentPeer || !this.isConnected) {
-      return {
-        show: true,
-        message: 'node_not_available_please_check_your_node_or_network_settings',
-      }
+    /// region computed properties getter/setter
+    /**
+     * Holds alert message
+     * @var {Object}
+     */
+    get alert(): { show: boolean; message: string } {
+        if (!this.currentPeer || !this.isConnected) {
+            return {
+                show: true,
+                message: 'node_not_available_please_check_your_node_or_network_settings',
+            };
+        }
+
+        if (this.currentProfile && this.currentProfile.networkType !== this.networkType) {
+            this.$store.dispatch('network/SET_NETWORK_IS_NOT_MATCHING_PROFILE', true);
+            return {
+                show: true,
+                message: 'account_network_type_does_not_match_current_network_type',
+            };
+        }
+
+        if (this.currentProfile && this.currentProfile.generationHash !== this.generationHash) {
+            this.$store.dispatch('network/SET_NETWORK_IS_NOT_MATCHING_PROFILE', true);
+            return {
+                show: true,
+                message: 'account_network_does_not_match_current_network_type',
+            };
+        }
+
+        return { show: false, message: '' };
     }
 
-    if (this.currentProfile && this.currentProfile.networkType !== this.networkType) {
-      this.$store.dispatch('network/SET_NETWORK_IS_NOT_MATCHING_PROFILE', true)
-      return {
-        show: true,
-        message: 'account_network_type_does_not_match_current_network_type',
-      }
+    get info(): { show: boolean; message: string } {
+        if (this.isCosignatoryMode) {
+            return { show: true, message: 'info_active_cosignatory_mode' };
+        }
+
+        return { show: false, message: '' };
     }
 
-    if (this.currentProfile && this.currentProfile.generationHash !== this.generationHash) {
-      this.$store.dispatch('network/SET_NETWORK_IS_NOT_MATCHING_PROFILE', true)
-      return {
-        show: true,
-        message: 'account_network_does_not_match_current_network_type',
-      }
+    get hasDebugConsoleModal(): boolean {
+        return this.isDisplayingDebugConsole;
     }
 
-    return { show: false, message: '' }
-  }
-
-  get info(): { show: boolean; message: string } {
-    if (this.isCosignatoryMode) {
-      return { show: true, message: 'info_active_cosignatory_mode' }
+    set hasDebugConsoleModal(f: boolean) {
+        this.isDisplayingDebugConsole = f;
     }
 
-    return { show: false, message: '' }
-  }
+    /// end-region computed properties getter/setter
 
-  get hasDebugConsoleModal(): boolean {
-    return this.isDisplayingDebugConsole
-  }
+    public async onChangeAccount(accountId: string) {
+        const service = new AccountService();
+        const account = service.getAccount(accountId);
+        if (!account) {
+            console.log('Wallet not found: ', accountId);
+            return;
+        }
 
-  set hasDebugConsoleModal(f: boolean) {
-    this.isDisplayingDebugConsole = f
-  }
-
-  /// end-region computed properties getter/setter
-
-  public async onChangeAccount(accountId: string) {
-    const service = new AccountService()
-    const account = service.getAccount(accountId)
-    if (!account) {
-      console.log('Wallet not found: ', accountId)
-      return
+        await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account);
     }
-
-    await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
-  }
 }

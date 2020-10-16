@@ -15,28 +15,28 @@
  */
 
 export class UIHelpers {
-  /**
-   * Helper method to copy text to clipboard
-   * @param {string} text
-   * @return {boolean}
-   */
-  public static copyToClipboard(text: string): boolean {
-    try {
-      // create ghost element
-      const input = document.createElement('input')
-      input.setAttribute('readonly', 'readonly')
-      input.setAttribute('value', text)
-      document.body.appendChild(input)
+    /**
+     * Helper method to copy text to clipboard
+     * @param {string} text
+     * @return {boolean}
+     */
+    public static copyToClipboard(text: string): boolean {
+        try {
+            // create ghost element
+            const input = document.createElement('input');
+            input.setAttribute('readonly', 'readonly');
+            input.setAttribute('value', text);
+            document.body.appendChild(input);
 
-      // use DOM commands
-      input.select()
-      document.execCommand('copy')
+            // use DOM commands
+            input.select();
+            document.execCommand('copy');
 
-      // flush
-      document.body.removeChild(input)
-      return true
-    } catch (e) {
-      return false
+            // flush
+            document.body.removeChild(input);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
-  }
 }

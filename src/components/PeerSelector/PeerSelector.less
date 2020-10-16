@@ -1,99 +1,99 @@
 @import '../../views/resources/css/variables.less';
 
 .node-selector-container {
-  width: 7.9rem;
-  min-height: 3.5rem;
-  padding-top: 0.2rem;
+    width: 7.9rem;
+    min-height: 3.5rem;
+    padding-top: 0.2rem;
 }
 
 .network-text {
-  color: @white;
-  font-size: @smallerFont;
+    color: @white;
+    font-size: @smallerFont;
 }
 
 .current-node-info {
-  color: @purpleDark;
-  font-size: @smallFont;
-  font-weight: bold;
+    color: @purpleDark;
+    font-size: @smallFont;
+    font-weight: bold;
 
-  .ivu-row {
-    &:nth-child(1) {
-      margin-bottom: 0.1rem;
+    .ivu-row {
+        &:nth-child(1) {
+            margin-bottom: 0.1rem;
+        }
     }
-  }
 }
 
 .node-list-container {
-  margin-top: 0.24rem;
+    margin-top: 0.24rem;
 
-  .node-list-head {
-    font-size: @smallFont;
-    color: @purpleDark;
-    font-weight: 500;
-  }
-
-  .node-list-content {
-    margin-top: 0.1rem;
-    border: 0.02rem solid @line;
-    height: 2.2rem;
-    padding: 0.1rem 0;
-
-    ul {
-      overflow-x: hidden;
-      overflow-y: auto;
-      height: 100%;
-      position: relative;
+    .node-list-head {
+        font-size: @smallFont;
+        color: @purpleDark;
+        font-weight: 500;
     }
 
-    .list-item {
-      font-size: @smallerFont;
-      padding: 0.04rem 0.22rem;
-      width: 100%;
-      overflow: hidden;
+    .node-list-content {
+        margin-top: 0.1rem;
+        border: 0.02rem solid @line;
+        height: 2.2rem;
+        padding: 0.1rem 0;
 
-      &.active {
-        background-color: @listItemBackgroundColor;
-      }
+        ul {
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: 100%;
+            position: relative;
+        }
+
+        .list-item {
+            font-size: @smallerFont;
+            padding: 0.04rem 0.22rem;
+            width: 100%;
+            overflow: hidden;
+
+            &.active {
+                background-color: @listItemBackgroundColor;
+            }
+        }
     }
-  }
 }
 
 .node-list-text {
-  margin: 0.08rem 0 0.25rem 0;
-  color: @tipFontColor;
-  font-size: @minimumFont;
+    margin: 0.08rem 0 0.25rem 0;
+    color: @tipFontColor;
+    font-size: @minimumFont;
 
-  .ivu-icon-ios-help-circle-outline {
-    margin-right: 0.03rem;
-  }
+    .ivu-icon-ios-help-circle-outline {
+        margin-right: 0.03rem;
+    }
 }
 .endpoint-healthy,
 .endpoint-unhealthy {
-  -webkit-app-region: no-drag;
+    -webkit-app-region: no-drag;
 
-  i.point {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    background-color: #18b566;
-    border-radius: 50%;
-  }
+    i.point {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        background-color: #18b566;
+        border-radius: 50%;
+    }
 
-  .point {
-    vertical-align: middle;
-    margin-right: 0.08rem;
-    margin-left: 0;
-  }
+    .point {
+        vertical-align: middle;
+        margin-right: 0.08rem;
+        margin-left: 0;
+    }
 
-  .network_type_text {
-    font-size: @smallerFont;
-    vertical-align: unset;
-    color: #fff;
-  }
+    .network_type_text {
+        font-size: @smallerFont;
+        vertical-align: unset;
+        color: #fff;
+    }
 }
 
 .endpoint-unhealthy {
-  i {
-    background-color: red;
-  }
+    i {
+        background-color: red;
+    }
 }

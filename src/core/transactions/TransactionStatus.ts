@@ -15,7 +15,7 @@
  */
 
 export enum TransactionStatus {
-  confirmed = 'confirmed',
-  unconfirmed = 'unconfirmed',
-  partial = 'partial',
+    confirmed = 'confirmed',
+    unconfirmed = 'unconfirmed',
+    partial = 'partial',
 }

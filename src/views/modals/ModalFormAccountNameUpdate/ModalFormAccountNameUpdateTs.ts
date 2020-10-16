@@ -13,44 +13,44 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator';
 // child components
 // @ts-ignore
-import FormAccountNameUpdate from '@/views/forms/FormAccountNameUpdate/FormAccountNameUpdate.vue'
+import FormAccountNameUpdate from '@/views/forms/FormAccountNameUpdate/FormAccountNameUpdate.vue';
 
 @Component({
-  components: {
-    FormAccountNameUpdate,
-  },
+    components: {
+        FormAccountNameUpdate,
+    },
 })
 export class ModalFormAccountNameUpdateTs extends Vue {
-  @Prop({
-    default: false,
-  })
-  visible: boolean
+    @Prop({
+        default: false,
+    })
+    visible: boolean;
 
-  /**
-   * Visibility state
-   * @type {boolean}
-   */
-  get show(): boolean {
-    return this.visible
-  }
-
-  /**
-   * Emits close event
-   */
-  set show(val) {
-    if (!val) {
-      this.$emit('close')
+    /**
+     * Visibility state
+     * @type {boolean}
+     */
+    get show(): boolean {
+        return this.visible;
     }
-  }
 
-  /**
-   * Hook called when child component FormSubAccountCreation emits
-   * the 'submit' event.
-   */
-  public onSubmit() {
-    this.show = false
-  }
+    /**
+     * Emits close event
+     */
+    set show(val) {
+        if (!val) {
+            this.$emit('close');
+        }
+    }
+
+    /**
+     * Hook called when child component FormSubAccountCreation emits
+     * the 'submit' event.
+     */
+    public onSubmit() {
+        this.show = false;
+    }
 }

@@ -13,63 +13,63 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-import { Transaction, SignedTransaction, CosignatureTransaction, CosignatureSignedTransaction } from 'symbol-sdk'
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
+import { Transaction, SignedTransaction, CosignatureTransaction, CosignatureSignedTransaction } from 'symbol-sdk';
 
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
-import TrezorConnect from '@/core/utils/TrezorConnect'
-import { TransactionSigner } from '@/services/TransactionAnnouncerService'
-import { from, Observable } from 'rxjs'
-import { map } from 'rxjs/operators'
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import TrezorConnect from '@/core/utils/TrezorConnect';
+import { TransactionSigner } from '@/services/TransactionAnnouncerService';
+import { from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
-  computed: {
-    ...mapGetters({
-      currentAccount: 'account/currentAccount',
-    }),
-  },
+    computed: {
+        ...mapGetters({
+            currentAccount: 'account/currentAccount',
+        }),
+    },
 })
 export class HardwareConfirmationButtonTs extends Vue implements TransactionSigner {
-  /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountModel}
-   */
-  public currentAccount: AccountModel
+    /**
+     * Currently active account
+     * @see {Store.Account}
+     * @var {AccountModel}
+     */
+    public currentAccount: AccountModel;
 
-  /**
-   * Process with hardware confirmation (currently trezor only)
-   * @return {void}
-   */
-  public async processHardware() {
-    return this.$emit('success', this)
-  }
+    /**
+     * Process with hardware confirmation (currently trezor only)
+     * @return {void}
+     */
+    public async processHardware() {
+        return this.$emit('success', this);
+    }
 
-  signCosignatureTransaction(t: CosignatureTransaction): Observable<CosignatureSignedTransaction> {
-    throw new Error('Not Implemented!!!')
-  }
+    signCosignatureTransaction(t: CosignatureTransaction): Observable<CosignatureSignedTransaction> {
+        throw new Error('Not Implemented!!!');
+    }
 
-  signTransaction(stagedTx: Transaction): Observable<SignedTransaction> {
-    // - sign each transaction with TrezorConnect
-    const promise: Promise<any> = TrezorConnect.nemSignTransaction({
-      path: this.currentAccount.path,
-      transaction: stagedTx,
-    })
-    return from(promise).pipe(
-      map((result) => {
-        if (!result.success) {
-          throw new Error(result.payload.error)
-        }
-        return new SignedTransaction(
-          result.payload.data,
-          stagedTx.transactionInfo.hash,
-          stagedTx.signer.publicKey,
-          stagedTx.type,
-          stagedTx.networkType,
-        )
-      }),
-    )
-  }
+    signTransaction(stagedTx: Transaction): Observable<SignedTransaction> {
+        // - sign each transaction with TrezorConnect
+        const promise: Promise<any> = TrezorConnect.nemSignTransaction({
+            path: this.currentAccount.path,
+            transaction: stagedTx,
+        });
+        return from(promise).pipe(
+            map((result) => {
+                if (!result.success) {
+                    throw new Error(result.payload.error);
+                }
+                return new SignedTransaction(
+                    result.payload.data,
+                    stagedTx.transactionInfo.hash,
+                    stagedTx.signer.publicKey,
+                    stagedTx.type,
+                    stagedTx.networkType,
+                );
+            }),
+        );
+    }
 }

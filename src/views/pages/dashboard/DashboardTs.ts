@@ -14,31 +14,31 @@
  *
  */
 // external dependencies
-import { Component, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // child components
 // @ts-ignore
-import ProfileBalancesPanel from '@/components/ProfileBalancesPanel/ProfileBalancesPanel.vue'
+import ProfileBalancesPanel from '@/components/ProfileBalancesPanel/ProfileBalancesPanel.vue';
 // @ts-ignore
-import NetworkStatisticsPanel from '@/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue'
+import NetworkStatisticsPanel from '@/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue';
 // @ts-ignore
-import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
+import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue';
 
 @Component({
-  components: {
-    ProfileBalancesPanel,
-    NetworkStatisticsPanel,
-    NavigationTabs,
-  },
-  computed: {
-    ...mapGetters({
-      currentAccount: 'account/currentAccount',
-    }),
-  },
+    components: {
+        ProfileBalancesPanel,
+        NetworkStatisticsPanel,
+        NavigationTabs,
+    },
+    computed: {
+        ...mapGetters({
+            currentAccount: 'account/currentAccount',
+        }),
+    },
 })
 export class DashboardTs extends Vue {
-  /**
-   * Argument passed to the Router Tab List
-   */
-  parentRouteName = 'dashboard'
+    /**
+     * Argument passed to the Router Tab List
+     */
+    parentRouteName = 'dashboard';
 }

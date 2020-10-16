@@ -19,20 +19,20 @@
  * @interface RouteMeta
  */
 export interface RouteMeta {
-  /**
-   * Authentication required
-   * @type {boolean}
-   */
-  protected: boolean
-  /**
-   * Localized route name shown in the view
-   * @type {string}
-   */
-  title?: string
-  // @TODO: REVIEW
-  clickable?: boolean
-  icon?: unknown
-  active?: boolean
-  nextPage?: string
-  hideFromMenu?: boolean
+    /**
+     * Authentication required
+     * @type {boolean}
+     */
+    protected: boolean;
+    /**
+     * Localized route name shown in the view
+     * @type {string}
+     */
+    title?: string;
+    // @TODO: REVIEW
+    clickable?: boolean;
+    icon?: unknown;
+    active?: boolean;
+    nextPage?: string;
+    hideFromMenu?: boolean;
 }

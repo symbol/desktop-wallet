@@ -14,7 +14,7 @@
  *
  */
 
-import { NetworkType } from 'symbol-sdk'
+import { NetworkType } from 'symbol-sdk';
 
 /**
  * Stored POJO that holds profile information.
@@ -25,11 +25,11 @@ import { NetworkType } from 'symbol-sdk'
  *
  */
 export class ProfileModel {
-  public readonly profileName: string
-  public readonly generationHash: string
-  public readonly hint: string
-  public readonly networkType: NetworkType
-  public readonly password: string
-  public readonly seed: string
-  public readonly accounts: string[]
+    public readonly profileName: string;
+    public readonly generationHash: string;
+    public readonly hint: string;
+    public readonly networkType: NetworkType;
+    public readonly password: string;
+    public readonly seed: string;
+    public readonly accounts: string[];
 }

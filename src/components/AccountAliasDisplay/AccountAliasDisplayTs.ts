@@ -14,36 +14,36 @@
  *
  */
 // external dependencies
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
-import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
 
 @Component({
-  computed: mapGetters({
-    namespaces: 'namespace/namespaces',
-  }),
+    computed: mapGetters({
+        namespaces: 'namespace/namespaces',
+    }),
 })
 export class AccountAliasDisplayTs extends Vue {
-  @Prop({ default: null }) account: AccountModel
+    @Prop({ default: null }) account: AccountModel;
 
-  /**
-   * NamespaceModel
-   */
-  protected namespaces: NamespaceModel[]
+    /**
+     * NamespaceModel
+     */
+    protected namespaces: NamespaceModel[];
 
-  get accountAliases(): string[] {
-    if (!this.namespaces || !this.account) {
-      return []
+    get accountAliases(): string[] {
+        if (!this.namespaces || !this.account) {
+            return [];
+        }
+
+        // get the current account address
+        const address = this.account.address;
+
+        // return the current account aliases
+        return this.namespaces
+            .filter(({ aliasTargetAddressRawPlain }) => aliasTargetAddressRawPlain && aliasTargetAddressRawPlain === address)
+            .map(({ name, namespaceIdHex }) => name || namespaceIdHex);
     }
-
-    // get the current account address
-    const address = this.account.address
-
-    // return the current account aliases
-    return this.namespaces
-      .filter(({ aliasTargetAddressRawPlain }) => aliasTargetAddressRawPlain && aliasTargetAddressRawPlain === address)
-      .map(({ name, namespaceIdHex }) => name || namespaceIdHex)
-  }
 }

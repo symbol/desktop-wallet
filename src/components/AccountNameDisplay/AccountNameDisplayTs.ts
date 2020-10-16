@@ -13,59 +13,59 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import { ValidationProvider } from 'vee-validate'
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import { ValidationProvider } from 'vee-validate';
 
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 
 // child components
 // @ts-ignore
-import ModalFormAccountNameUpdate from '@/views/modals/ModalFormAccountNameUpdate/ModalFormAccountNameUpdate.vue'
+import ModalFormAccountNameUpdate from '@/views/modals/ModalFormAccountNameUpdate/ModalFormAccountNameUpdate.vue';
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel.vue'
+import FormLabel from '@/components/FormLabel/FormLabel.vue';
 
 @Component({
-  components: {
-    ModalFormAccountNameUpdate,
-    ValidationProvider,
-    ErrorTooltip,
-    FormLabel,
-  },
+    components: {
+        ModalFormAccountNameUpdate,
+        ValidationProvider,
+        ErrorTooltip,
+        FormLabel,
+    },
 })
 export class AccountNameDisplayTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  account: AccountModel
+    @Prop({
+        default: null,
+    })
+    account: AccountModel;
 
-  @Prop({
-    default: false,
-  })
-  editable: boolean
+    @Prop({
+        default: false,
+    })
+    editable: boolean;
 
-  /**
-   * Whether name is currently being edited
-   * @var {boolean}
-   */
-  public isEditingName: boolean = false
+    /**
+     * Whether name is currently being edited
+     * @var {boolean}
+     */
+    public isEditingName: boolean = false;
 
-  /**
-   * Validation rules
-   * @var {ValidationRuleset}
-   */
-  public validationRules = ValidationRuleset
+    /**
+     * Validation rules
+     * @var {ValidationRuleset}
+     */
+    public validationRules = ValidationRuleset;
 
-  /// region computed properties getter/setter
-  public get hasNameFormModal(): boolean {
-    return this.editable && this.isEditingName
-  }
+    /// region computed properties getter/setter
+    public get hasNameFormModal(): boolean {
+        return this.editable && this.isEditingName;
+    }
 
-  public set hasNameFormModal(f: boolean) {
-    this.isEditingName = f
-  }
-  /// end-region computed properties getter/setter
+    public set hasNameFormModal(f: boolean) {
+        this.isEditingName = f;
+    }
+    /// end-region computed properties getter/setter
 }

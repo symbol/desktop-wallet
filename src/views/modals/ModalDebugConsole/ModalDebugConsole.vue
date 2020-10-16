@@ -1,9 +1,9 @@
 <template>
-  <div class="debug-console-wrapper">
-    <Modal v-model="show" :title="`${$t(title)}`" :transfer="false">
-      <div class="diagnostic-container">
-        <div class="form-container">
-          <pre id="logs-container" class="logger">
+    <div class="debug-console-wrapper">
+        <Modal v-model="show" :title="`${$t(title)}`" :transfer="false">
+            <div class="diagnostic-container">
+                <div class="form-container">
+                    <pre id="logs-container" class="logger">
               <span
 v-for="(entry, index) in logs"
               :key="index"
@@ -14,72 +14,72 @@ v-for="(entry, index) in logs"
               }"
 >{{ '\n' }} ({{ getTime(entry) }}) [{{ getLevel(entry) }}] {{ entry.message }}</span>
           </pre>
-        </div>
-      </div>
-    </Modal>
-  </div>
+                </div>
+            </div>
+        </Modal>
+    </div>
 </template>
 
 <script lang="ts">
 // external dependencies
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 
 @Component({
-  computed: {
-    ...mapGetters({
-      logs: 'diagnostic/logs',
-    }),
-  },
+    computed: {
+        ...mapGetters({
+            logs: 'diagnostic/logs',
+        }),
+    },
 })
 export default class ModalDebugConsole extends Vue {
-  /**
-   * Modal title
-   * @type {string}
-   */
-  @Prop({ default: '' }) title: string
+    /**
+     * Modal title
+     * @type {string}
+     */
+    @Prop({ default: '' }) title: string;
 
-  /**
-   * Modal visibility state from parent
-   * @type {string}
-   */
-  @Prop({ default: false }) visible: boolean
+    /**
+     * Modal visibility state from parent
+     * @type {string}
+     */
+    @Prop({ default: false }) visible: boolean;
 
-  /**
-   * Internal visibility state
-   * @type {boolean}
-   */
-  public get show(): boolean {
-    return this.visible
-  }
-
-  /**
-   * Emits close event
-   */
-  public set show(val) {
-    if (!val) {
-      this.$emit('close')
+    /**
+     * Internal visibility state
+     * @type {boolean}
+     */
+    public get show(): boolean {
+        return this.visible;
     }
-  }
 
-  public getLevel(entry): string {
-    return entry.level === 1 ? 'INFO' : entry.level === 2 ? 'DEBUG' : entry.level === 3 ? 'WARNING' : 'ERROR'
-  }
+    /**
+     * Emits close event
+     */
+    public set show(val) {
+        if (!val) {
+            this.$emit('close');
+        }
+    }
 
-  public getTime(entry): string {
-    return entry.time.toLocaleString()
-  }
+    public getLevel(entry): string {
+        return entry.level === 1 ? 'INFO' : entry.level === 2 ? 'DEBUG' : entry.level === 3 ? 'WARNING' : 'ERROR';
+    }
 
-  /**
-   * Hook called when component is mounted
-   */
-  mounted() {
-    // Scrolls logs div to bottom
-    Vue.nextTick().then(() => {
-      const container = this.$el.querySelector('#logs-container')
-      container.scrollTop = container.scrollHeight
-    })
-  }
+    public getTime(entry): string {
+        return entry.time.toLocaleString();
+    }
+
+    /**
+     * Hook called when component is mounted
+     */
+    mounted() {
+        // Scrolls logs div to bottom
+        Vue.nextTick().then(() => {
+            const container = this.$el.querySelector('#logs-container');
+            container.scrollTop = container.scrollHeight;
+        });
+    }
 }
 </script>
 <style lang="less" scoped>

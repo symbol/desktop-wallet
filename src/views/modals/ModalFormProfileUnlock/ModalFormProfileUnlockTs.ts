@@ -13,71 +13,71 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { Account, Password } from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Account, Password } from 'symbol-sdk';
 // internal dependencies
 // child components
 // @ts-ignore
-import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue'
+import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue';
 
 @Component({
-  components: {
-    FormProfileUnlock,
-  },
+    components: {
+        FormProfileUnlock,
+    },
 })
 export class ModalFormProfileUnlockTs extends Vue {
-  @Prop({
-    default: false,
-  })
-  visible: boolean
+    @Prop({
+        default: false,
+    })
+    visible: boolean;
 
-  @Prop({
-    default: () => true,
-  })
-  onSuccess: (a: Account, p: Password) => boolean
+    @Prop({
+        default: () => true,
+    })
+    onSuccess: (a: Account, p: Password) => boolean;
 
-  /**
-   * Visibility state
-   * @type {boolean}
-   */
-  get show(): boolean {
-    return this.visible
-  }
-
-  /**
-   * Emits close event
-   */
-  set show(val) {
-    if (!val) {
-      this.$emit('close')
+    /**
+     * Visibility state
+     * @type {boolean}
+     */
+    get show(): boolean {
+        return this.visible;
     }
-  }
 
-  /**
-   * Hook called when child component FormProfileUnlock emits
-   * the 'success' event.
-   * @param {Password} password
-   * @return {void}
-   */
-  public onAccountUnlocked(payload: { account: Account; password: Password }) {
-    // - log about unlock success
-    this.$store.dispatch('diagnostic/ADD_INFO', `Account ${payload.account.address.plain()} unlocked successfully.`)
+    /**
+     * Emits close event
+     */
+    set show(val) {
+        if (!val) {
+            this.$emit('close');
+        }
+    }
 
-    // - emit success
-    this.$emit('success', payload.account.publicAccount)
+    /**
+     * Hook called when child component FormProfileUnlock emits
+     * the 'success' event.
+     * @param {Password} password
+     * @return {void}
+     */
+    public onAccountUnlocked(payload: { account: Account; password: Password }) {
+        // - log about unlock success
+        this.$store.dispatch('diagnostic/ADD_INFO', `Account ${payload.account.address.plain()} unlocked successfully.`);
 
-    // - dispatch callback
-    this.show = false
-    return this.onSuccess(payload.account, payload.password)
-  }
+        // - emit success
+        this.$emit('success', payload.account.publicAccount);
 
-  /**
-   * Hook called when child component FormProfileUnlock or
-   * HardwareConfirmationButton emit the 'error' event.
-   * @param {string} message
-   * @return {void}
-   */
-  public onError(error: string) {
-    this.$emit('error', error)
-  }
+        // - dispatch callback
+        this.show = false;
+        return this.onSuccess(payload.account, payload.password);
+    }
+
+    /**
+     * Hook called when child component FormProfileUnlock or
+     * HardwareConfirmationButton emit the 'error' event.
+     * @param {string} message
+     * @return {void}
+     */
+    public onError(error: string) {
+        this.$emit('error', error);
+    }
 }

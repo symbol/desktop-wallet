@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
-  components: {},
+    components: {},
 })
 export class ModalMnemonicBackupWizardTs extends Vue {}

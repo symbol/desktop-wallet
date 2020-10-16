@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Validator, staticImplements } from './Validator'
+import { Validator, staticImplements } from './Validator';
 
 @staticImplements<Validator>()
 export class MaxDecimalsValidator {
-  /**
-   * Validates the max number of decimals in a number
-   * @static
-   * @param {*} value
-   * @param {number} maxDecimalNumber
-   * @returns {boolean}
-   */
-  public static validate(value: any, maxDecimalNumber: number): boolean {
-    if (Math.floor(value) == value) {
-      return true
+    /**
+     * Validates the max number of decimals in a number
+     * @static
+     * @param {*} value
+     * @param {number} maxDecimalNumber
+     * @returns {boolean}
+     */
+    public static validate(value: any, maxDecimalNumber: number): boolean {
+        if (Math.floor(value) == value) {
+            return true;
+        }
+        const decimalNumber = value.toString().split('.')[1].length || 0;
+        return decimalNumber <= maxDecimalNumber;
     }
-    const decimalNumber = value.toString().split('.')[1].length || 0
-    return decimalNumber <= maxDecimalNumber
-  }
 }

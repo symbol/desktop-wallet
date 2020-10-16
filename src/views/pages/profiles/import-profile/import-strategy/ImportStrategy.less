@@ -16,97 +16,97 @@
 @import '../../../../resources/css/variables.less';
 
 .import-way-wrapper {
-  height: 100%;
-  background: #ffffff;
-  overflow: hidden;
+    height: 100%;
+    background: #ffffff;
+    overflow: hidden;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .welcome-head {
-    margin: 0 auto 1.52rem auto;
-    text-align: center;
-
-    .title {
-      font-size: @biggestFont;
-      color: @black;
-      line-height: 0.58rem;
-      font-weight: @bold;
-    }
-
-    .title-tips {
-      margin-top: 0.1rem;
-      font-size: @normalFont;
-      color: @grayDark;
-    }
-
-    .create-profile {
-      color: @purple;
-      cursor: pointer;
-      background-color: transparent;
-    }
-  }
-
-  .profile-type {
-    width: 14.48rem;
-    height: 2.46rem;
-    margin: 0 auto;
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
 
-    .profile-item {
-      text-align: center;
-      width: 3.32rem;
-      height: 2.46rem;
-      background: @white;
-      box-shadow: 0 0 10px @boxShadow;
-      border-radius: 0.05rem;
-      cursor: pointer;
+    .welcome-head {
+        margin: 0 auto 1.52rem auto;
+        text-align: center;
 
-      .img-box {
-        height: 1.44rem;
-        img {
-          margin-top: 0.57rem;
-          width: 0.58rem;
-          height: 0.54rem;
+        .title {
+            font-size: @biggestFont;
+            color: @black;
+            line-height: 0.58rem;
+            font-weight: @bold;
         }
-      }
 
-      .access-name {
-        font-size: @biggerFont;
-        font-weight: 500;
-        color: @blackLight;
-        line-height: 0.33rem;
-      }
+        .title-tips {
+            margin-top: 0.1rem;
+            font-size: @normalFont;
+            color: @grayDark;
+        }
 
-      .access-info {
-        margin: 0.1rem auto 0 auto;
-        width: 2.6rem;
-        font-size: @smallerFont;
-        color: @grayDark;
-        line-height: 0.22rem;
-        opacity: 0.6;
-      }
-
-      &:hover {
-        box-shadow: 0 0 0.05rem @purple;
-      }
+        .create-profile {
+            color: @purple;
+            cursor: pointer;
+            background-color: transparent;
+        }
     }
-  }
 
-  .bottom-text {
-    margin-top: 1.83rem;
-    text-align: center;
-    height: 20px;
-    font-size: @smallerFont;
-    font-weight: 400;
-    color: @grayDark;
-    opacity: 0.6;
-  }
-  .bottom-link {
-    color: @purple;
-    cursor: pointer;
-    background-color: transparent;
-  }
+    .profile-type {
+        width: 14.48rem;
+        height: 2.46rem;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+
+        .profile-item {
+            text-align: center;
+            width: 3.32rem;
+            height: 2.46rem;
+            background: @white;
+            box-shadow: 0 0 10px @boxShadow;
+            border-radius: 0.05rem;
+            cursor: pointer;
+
+            .img-box {
+                height: 1.44rem;
+                img {
+                    margin-top: 0.57rem;
+                    width: 0.58rem;
+                    height: 0.54rem;
+                }
+            }
+
+            .access-name {
+                font-size: @biggerFont;
+                font-weight: 500;
+                color: @blackLight;
+                line-height: 0.33rem;
+            }
+
+            .access-info {
+                margin: 0.1rem auto 0 auto;
+                width: 2.6rem;
+                font-size: @smallerFont;
+                color: @grayDark;
+                line-height: 0.22rem;
+                opacity: 0.6;
+            }
+
+            &:hover {
+                box-shadow: 0 0 0.05rem @purple;
+            }
+        }
+    }
+
+    .bottom-text {
+        margin-top: 1.83rem;
+        text-align: center;
+        height: 20px;
+        font-size: @smallerFont;
+        font-weight: 400;
+        color: @grayDark;
+        opacity: 0.6;
+    }
+    .bottom-link {
+        color: @purple;
+        cursor: pointer;
+        background-color: transparent;
+    }
 }

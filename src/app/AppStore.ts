@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import store from '@/store/index.ts'
+import store from '@/store/index.ts';
 
 /// region app state store initializations
-export const AppStore = store
+export const AppStore = store;
 /// end-region app state store initializations

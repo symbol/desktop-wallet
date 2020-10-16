@@ -14,37 +14,37 @@
  *
  */
 // internal dependencies
-import { UrlValidator } from '../validation/validators'
-import { URLInfo } from '@/core/utils/URLInfo'
+import { UrlValidator } from '../validation/validators';
+import { URLInfo } from '@/core/utils/URLInfo';
 
 export class URLHelpers {
-  public static formatUrl = (rawUrl: string): URLInfo => {
-    if (!UrlValidator.validate(rawUrl)) {
-      throw new Error(`Invalid URL: ${rawUrl}`)
+    public static formatUrl = (rawUrl: string): URLInfo => {
+        if (!UrlValidator.validate(rawUrl)) {
+            throw new Error(`Invalid URL: ${rawUrl}`);
+        }
+        const url = new URL(rawUrl);
+        return new URLInfo(url.protocol, url.hostname, url.port, rawUrl);
+    };
+
+    public static httpToWsUrl = (url: string) => {
+        if (UrlValidator.validate(url)) {
+            return url.replace('http', 'ws');
+        }
+    };
+
+    /**
+     * Get full node url and add missing pieces
+     * @param {string} fromUrl
+     * @return {string}
+     */
+    public static getNodeUrl(fromUrl: string): string {
+        let fixedUrl = -1 === fromUrl.indexOf('://') ? 'http://' + fromUrl : fromUrl;
+
+        fixedUrl = !fixedUrl.match(/https?:\/\/[^:]+:([0-9]+)\/?$/)
+            ? fixedUrl + ':3000' // default adds :3000
+            : fixedUrl;
+
+        const url = URLHelpers.formatUrl(fixedUrl);
+        return url.protocol + '//' + url.hostname + (url.port ? ':' + url.port : ':3000');
     }
-    const url = new URL(rawUrl)
-    return new URLInfo(url.protocol, url.hostname, url.port, rawUrl)
-  }
-
-  public static httpToWsUrl = (url: string) => {
-    if (UrlValidator.validate(url)) {
-      return url.replace('http', 'ws')
-    }
-  }
-
-  /**
-   * Get full node url and add missing pieces
-   * @param {string} fromUrl
-   * @return {string}
-   */
-  public static getNodeUrl(fromUrl: string): string {
-    let fixedUrl = -1 === fromUrl.indexOf('://') ? 'http://' + fromUrl : fromUrl
-
-    fixedUrl = !fixedUrl.match(/https?:\/\/[^:]+:([0-9]+)\/?$/)
-      ? fixedUrl + ':3000' // default adds :3000
-      : fixedUrl
-
-    const url = URLHelpers.formatUrl(fixedUrl)
-    return url.protocol + '//' + url.hostname + (url.port ? ':' + url.port : ':3000')
-  }
 }

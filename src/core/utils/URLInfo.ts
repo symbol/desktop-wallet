@@ -15,10 +15,5 @@
  */
 
 export class URLInfo {
-  constructor(
-    public readonly protocol,
-    public readonly hostname,
-    public readonly port: string,
-    public readonly url: string,
-  ) {}
+    constructor(public readonly protocol, public readonly hostname, public readonly port: string, public readonly url: string) {}
 }

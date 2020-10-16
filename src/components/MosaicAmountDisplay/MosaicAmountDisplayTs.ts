@@ -14,114 +14,114 @@
  *
  */
 // external dependencies
-import { mapGetters } from 'vuex'
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { MosaicId, NamespaceId } from 'symbol-sdk'
+import { mapGetters } from 'vuex';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { MosaicId, NamespaceId } from 'symbol-sdk';
 // internal dependencies
 // configuration
 // child components
 // @ts-ignore
-import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue'
-import { MosaicModel } from '@/core/database/entities/MosaicModel'
-import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
+import { MosaicModel } from '@/core/database/entities/MosaicModel';
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 @Component({
-  components: { AmountDisplay },
-  computed: {
-    ...mapGetters({
-      mosaics: 'mosaic/mosaics',
-      networkCurrency: 'mosaic/networkCurrency',
-      networkConfiguration: 'network/networkConfiguration',
-    }),
-  },
+    components: { AmountDisplay },
+    computed: {
+        ...mapGetters({
+            mosaics: 'mosaic/mosaics',
+            networkCurrency: 'mosaic/networkCurrency',
+            networkConfiguration: 'network/networkConfiguration',
+        }),
+    },
 })
 export class MosaicAmountDisplayTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  id: MosaicId | NamespaceId
+    @Prop({
+        default: null,
+    })
+    id: MosaicId | NamespaceId;
 
-  @Prop({
-    default: null,
-  })
-  relativeAmount: number
+    @Prop({
+        default: null,
+    })
+    relativeAmount: number;
 
-  @Prop({
-    default: null,
-  })
-  absoluteAmount: number
+    @Prop({
+        default: null,
+    })
+    absoluteAmount: number;
 
-  @Prop({
-    default: 'green',
-  })
-  color: 'red' | 'green'
+    @Prop({
+        default: 'green',
+    })
+    color: 'red' | 'green';
 
-  @Prop({
-    default: 'normal',
-  })
-  size: 'normal' | 'smaller' | 'bigger' | 'biggest'
+    @Prop({
+        default: 'normal',
+    })
+    size: 'normal' | 'smaller' | 'bigger' | 'biggest';
 
-  @Prop({
-    default: false,
-  })
-  showTicker: false
+    @Prop({
+        default: false,
+    })
+    showTicker: false;
 
-  private mosaics: MosaicModel[]
+    private mosaics: MosaicModel[];
 
-  private networkCurrency: NetworkCurrencyModel
+    private networkCurrency: NetworkCurrencyModel;
 
-  private networkConfiguration: NetworkConfigurationModel
+    private networkConfiguration: NetworkConfigurationModel;
 
-  /// region computed properties getter/setter
+    /// region computed properties getter/setter
 
-  private useNetwork(): boolean {
-    if (!this.id) {
-      return !!this.networkCurrency
-    }
-    if (this.networkCurrency && this.id.toHex() === this.networkCurrency.mosaicIdHex) {
-      return true
-    }
-    if (this.networkCurrency && this.id.toHex() === this.networkCurrency.namespaceIdHex) {
-      return true
-    }
-    return false
-  }
-
-  /**
-   * Mosaic divisibility from database
-   * @return {number}
-   */
-  protected get divisibility(): number {
-    if (this.useNetwork()) {
-      return this.networkCurrency.divisibility
-    }
-    // TODO improve how to resolve the mosaic id when the known value is a namespace id.
-    // Note that if the transaction is old, the namespace id of the mosaic may have been expired!
-    const mosaic = this.mosaics.find((m) => m.mosaicIdHex === this.id.toHex())
-    return mosaic ? mosaic.divisibility : this.networkConfiguration.maxMosaicDivisibility
-  }
-
-  public get amount(): number {
-    if (this.absoluteAmount) {
-      return this.absoluteAmount / Math.pow(10, this.divisibility)
-    } else {
-      return this.relativeAmount || 0
-    }
-  }
-
-  public get ticker(): string {
-    if (!this.showTicker) {
-      return ''
+    private useNetwork(): boolean {
+        if (!this.id) {
+            return !!this.networkCurrency;
+        }
+        if (this.networkCurrency && this.id.toHex() === this.networkCurrency.mosaicIdHex) {
+            return true;
+        }
+        if (this.networkCurrency && this.id.toHex() === this.networkCurrency.namespaceIdHex) {
+            return true;
+        }
+        return false;
     }
 
-    if (this.useNetwork()) {
-      return this.networkCurrency.ticker || ''
+    /**
+     * Mosaic divisibility from database
+     * @return {number}
+     */
+    protected get divisibility(): number {
+        if (this.useNetwork()) {
+            return this.networkCurrency.divisibility;
+        }
+        // TODO improve how to resolve the mosaic id when the known value is a namespace id.
+        // Note that if the transaction is old, the namespace id of the mosaic may have been expired!
+        const mosaic = this.mosaics.find((m) => m.mosaicIdHex === this.id.toHex());
+        return mosaic ? mosaic.divisibility : this.networkConfiguration.maxMosaicDivisibility;
     }
 
-    const mosaic = this.mosaics.find((m) => m.mosaicIdHex === this.id.toHex())
-    return (mosaic && mosaic.name) || this.id.toHex()
-  }
+    public get amount(): number {
+        if (this.absoluteAmount) {
+            return this.absoluteAmount / Math.pow(10, this.divisibility);
+        } else {
+            return this.relativeAmount || 0;
+        }
+    }
 
-  /// end-region computed properties getter/setter
+    public get ticker(): string {
+        if (!this.showTicker) {
+            return '';
+        }
+
+        if (this.useNetwork()) {
+            return this.networkCurrency.ticker || '';
+        }
+
+        const mosaic = this.mosaics.find((m) => m.mosaicIdHex === this.id.toHex());
+        return (mosaic && mosaic.name) || this.id.toHex();
+    }
+
+    /// end-region computed properties getter/setter
 }

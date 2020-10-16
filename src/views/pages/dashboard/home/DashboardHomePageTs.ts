@@ -13,34 +13,34 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel } from '@/core/database/entities/AccountModel';
 // child components
 // @ts-ignore
-import TransactionList from '@/components/TransactionList/TransactionList.vue'
-import { Address } from 'symbol-sdk'
+import TransactionList from '@/components/TransactionList/TransactionList.vue';
+import { Address } from 'symbol-sdk';
 
 @Component({
-  components: {
-    TransactionList,
-  },
-  computed: {
-    ...mapGetters({
-      currentAccount: 'account/currentAccount',
-    }),
-  },
+    components: {
+        TransactionList,
+    },
+    computed: {
+        ...mapGetters({
+            currentAccount: 'account/currentAccount',
+        }),
+    },
 })
 export class DashboardHomePageTs extends Vue {
-  /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountModel}
-   */
-  public currentAccount: AccountModel
+    /**
+     * Currently active account
+     * @see {Store.Account}
+     * @var {AccountModel}
+     */
+    public currentAccount: AccountModel;
 
-  public get accountAddress(): Address {
-    return this.currentAccount && AccountModel.getObjects(this.currentAccount).address
-  }
+    public get accountAddress(): Address {
+        return this.currentAccount && AccountModel.getObjects(this.currentAccount).address;
+    }
 }

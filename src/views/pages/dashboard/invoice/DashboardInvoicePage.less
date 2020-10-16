@@ -16,93 +16,93 @@
 @import '../../../resources/css/variables.less';
 
 .invoice-container {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-rows: 100%;
-  grid-template-columns: 100%;
-  background-color: white;
-
-  .invoice-inner-container {
     width: 100%;
     height: 100%;
+    display: grid;
+    grid-template-rows: 100%;
+    grid-template-columns: 100%;
     background-color: white;
-    position: relative;
-    padding-left: 0.5rem;
 
-    .invoice-section-container {
-      width: 100%;
-      max-width: 10.4rem;
-      height: auto;
-      display: grid;
-      grid-template-rows: 100%;
-      grid-template-columns: 2.4rem auto;
-      margin: 0.3rem 0;
-      overflow: hidden;
-
-      .image-container {
+    .invoice-inner-container {
         width: 100%;
         height: 100%;
-        text-align: center;
-      }
+        background-color: white;
+        position: relative;
+        padding-left: 0.5rem;
 
-      .description-container {
-        width: 100%;
-        height: 100%;
-        padding-top: 0.08rem;
-        letter-spacing: 0.01rem;
+        .invoice-section-container {
+            width: 100%;
+            max-width: 10.4rem;
+            height: auto;
+            display: grid;
+            grid-template-rows: 100%;
+            grid-template-columns: 2.4rem auto;
+            margin: 0.3rem 0;
+            overflow: hidden;
 
-        .top-qr-text {
-          display: grid;
-          grid-template-columns: 1rem auto;
-          grid-gap: 0.1rem auto;
-          align-items: center;
-          margin-bottom: 0.1rem;
+            .image-container {
+                width: 100%;
+                height: 100%;
+                text-align: center;
+            }
 
-          .top-qr-text-title {
-            font-size: @smallFont;
-            font-weight: @bold;
-            color: @secondary;
-          }
+            .description-container {
+                width: 100%;
+                height: 100%;
+                padding-top: 0.08rem;
+                letter-spacing: 0.01rem;
+
+                .top-qr-text {
+                    display: grid;
+                    grid-template-columns: 1rem auto;
+                    grid-gap: 0.1rem auto;
+                    align-items: center;
+                    margin-bottom: 0.1rem;
+
+                    .top-qr-text-title {
+                        font-size: @smallFont;
+                        font-weight: @bold;
+                        color: @secondary;
+                    }
+                }
+            }
         }
-      }
-    }
 
-    .qr_info {
-      margin-left: 30px;
-      width: 580px;
-      display: flex;
-      padding-top: 10px;
-      flex-direction: column;
-      height: auto;
-    }
+        .qr_info {
+            margin-left: 30px;
+            width: 580px;
+            display: flex;
+            padding-top: 10px;
+            flex-direction: column;
+            height: auto;
+        }
 
-    img {
-      width: 2rem;
-      height: 2rem;
-    }
+        img {
+            width: 2rem;
+            height: 2rem;
+        }
 
-    .qr_button {
-      margin-top: 10px;
-      display: flex;
-      position: relative;
-      width: 120px;
-      align-items: center;
-      justify-content: space-around;
+        .qr_button {
+            margin-top: 10px;
+            display: flex;
+            position: relative;
+            width: 120px;
+            align-items: center;
+            justify-content: space-around;
 
-      span {
-        color: white;
-        line-height: 40px;
-        text-align: center;
-        font-size: 16px;
-        display: inline-block;
-        width: 120px;
-        height: 40px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        background-color: @primary;
-      }
+            span {
+                color: white;
+                line-height: 40px;
+                text-align: center;
+                font-size: 16px;
+                display: inline-block;
+                width: 120px;
+                height: 40px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                background-color: @primary;
+            }
+        }
     }
-  }
 }

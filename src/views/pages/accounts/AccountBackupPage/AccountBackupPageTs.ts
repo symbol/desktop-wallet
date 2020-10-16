@@ -14,32 +14,32 @@
  *
  */
 // external dependencies
-import { Component, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel } from '@/core/database/entities/AccountModel';
 // child components
 // @ts-ignore
-import AccountBackupOptions from '@/components/AccountBackupOptions/AccountBackupOptions.vue'
+import AccountBackupOptions from '@/components/AccountBackupOptions/AccountBackupOptions.vue';
 
 @Component({
-  components: {
-    AccountBackupOptions,
-  },
-  computed: {
-    ...mapGetters({
-      currentAccount: 'account/currentAccount',
-    }),
-  },
+    components: {
+        AccountBackupOptions,
+    },
+    computed: {
+        ...mapGetters({
+            currentAccount: 'account/currentAccount',
+        }),
+    },
 })
 export class AccountBackupPageTs extends Vue {
-  /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountModel}
-   */
-  public currentAccount: AccountModel
+    /**
+     * Currently active account
+     * @see {Store.Account}
+     * @var {AccountModel}
+     */
+    public currentAccount: AccountModel;
 
-  /// region computed properties getter/setter
-  /// end-region computed properties getter/setter
+    /// region computed properties getter/setter
+    /// end-region computed properties getter/setter
 }

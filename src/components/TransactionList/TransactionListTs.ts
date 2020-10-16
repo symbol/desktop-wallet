@@ -13,356 +13,356 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { mapGetters } from 'vuex'
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { AggregateTransaction, Convert, MosaicId, Transaction } from 'symbol-sdk'
+import { mapGetters } from 'vuex';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { AggregateTransaction, Convert, MosaicId, Transaction } from 'symbol-sdk';
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel } from '@/core/database/entities/AccountModel';
 // child components
 // @ts-ignore
-import ModalTransactionCosignature from '@/views/modals/ModalTransactionCosignature/ModalTransactionCosignature.vue'
+import ModalTransactionCosignature from '@/views/modals/ModalTransactionCosignature/ModalTransactionCosignature.vue';
 // @ts-ignore
-import ModalTransactionDetails from '@/views/modals/ModalTransactionDetails/ModalTransactionDetails.vue'
+import ModalTransactionDetails from '@/views/modals/ModalTransactionDetails/ModalTransactionDetails.vue';
 // @ts-ignore
-import PageTitle from '@/components/PageTitle/PageTitle.vue'
+import PageTitle from '@/components/PageTitle/PageTitle.vue';
 // @ts-ignore
-import TransactionListFilters from '@/components/TransactionList/TransactionListFilters/TransactionListFilters.vue'
+import TransactionListFilters from '@/components/TransactionList/TransactionListFilters/TransactionListFilters.vue';
 // @ts-ignore
-import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue'
+import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue';
 // @ts-ignore
-import ModalTransactionExport from '@/views/modals/ModalTransactionExport/ModalTransactionExport.vue'
-import { PageInfo, TransactionGroupState } from '@/store/Transaction'
+import ModalTransactionExport from '@/views/modals/ModalTransactionExport/ModalTransactionExport.vue';
+import { PageInfo, TransactionGroupState } from '@/store/Transaction';
 // @ts-ignore
-import Pagination from '@/components/Pagination/Pagination.vue'
+import Pagination from '@/components/Pagination/Pagination.vue';
 
 @Component({
-  components: {
-    ModalTransactionCosignature,
-    ModalTransactionDetails,
-    PageTitle,
-    TransactionListFilters,
-    TransactionTable,
-    ModalTransactionExport,
-    Pagination,
-  },
-  computed: {
-    ...mapGetters({
-      currentAccount: 'account/currentAccount',
-      networkMosaic: 'mosaic/networkMosaic',
-      // use partial+unconfirmed from store because
-      // of ephemeral nature (websocket only here)
-      confirmedTransactions: 'transaction/confirmedTransactions',
-      partialTransactions: 'transaction/partialTransactions',
-      unconfirmedTransactions: 'transaction/unconfirmedTransactions',
-      displayedTransactionStatus: 'transaction/displayedTransactionStatus',
-      generationHash: 'network/generationHash',
-      currentConfirmedPage: 'transaction/currentConfirmedPage',
-    }),
-  },
+    components: {
+        ModalTransactionCosignature,
+        ModalTransactionDetails,
+        PageTitle,
+        TransactionListFilters,
+        TransactionTable,
+        ModalTransactionExport,
+        Pagination,
+    },
+    computed: {
+        ...mapGetters({
+            currentAccount: 'account/currentAccount',
+            networkMosaic: 'mosaic/networkMosaic',
+            // use partial+unconfirmed from store because
+            // of ephemeral nature (websocket only here)
+            confirmedTransactions: 'transaction/confirmedTransactions',
+            partialTransactions: 'transaction/partialTransactions',
+            unconfirmedTransactions: 'transaction/unconfirmedTransactions',
+            displayedTransactionStatus: 'transaction/displayedTransactionStatus',
+            generationHash: 'network/generationHash',
+            currentConfirmedPage: 'transaction/currentConfirmedPage',
+        }),
+    },
 })
 export class TransactionListTs extends Vue {
-  @Prop({
-    default: '',
-  })
-  address: string
+    @Prop({
+        default: '',
+    })
+    address: string;
 
-  /**
-   * Number of txs visible in each page
-   */
-  @Prop({
-    default: 10,
-  })
-  pageSize: number
+    /**
+     * Number of txs visible in each page
+     */
+    @Prop({
+        default: 10,
+    })
+    pageSize: number;
 
-  @Prop({
-    default: 'pagination',
-  })
-  paginationType: 'pagination' | 'scroll'
+    @Prop({
+        default: 'pagination',
+    })
+    paginationType: 'pagination' | 'scroll';
 
-  /**
-   * Number of txs to be loaded from repository in each request
-   */
-  @Prop({
-    default: 20,
-  })
-  requestPageSize: number
+    /**
+     * Number of txs to be loaded from repository in each request
+     */
+    @Prop({
+        default: 20,
+    })
+    requestPageSize: number;
 
-  /**
-   * Currently active account
-   * @see {Store.Account}
-   * @var {AccountModel}
-   */
-  public currentAccount: AccountModel
+    /**
+     * Currently active account
+     * @see {Store.Account}
+     * @var {AccountModel}
+     */
+    public currentAccount: AccountModel;
 
-  /**
-   * Network mosaic id
-   * @see {Store.Mosaic}
-   * @var {MosaicId}
-   */
-  public networkMosaic: MosaicId
+    /**
+     * Network mosaic id
+     * @see {Store.Mosaic}
+     * @var {MosaicId}
+     */
+    public networkMosaic: MosaicId;
 
-  /**
-   * List of confirmed transactions (per-request)
-   */
-  public confirmedTransactions: Transaction[]
+    /**
+     * List of confirmed transactions (per-request)
+     */
+    public confirmedTransactions: Transaction[];
 
-  /**
-   * List of unconfirmed transactions (per-request)
-   */
-  public unconfirmedTransactions: Transaction[]
+    /**
+     * List of unconfirmed transactions (per-request)
+     */
+    public unconfirmedTransactions: Transaction[];
 
-  /**
-   * List of confirmed transactions (per-request)
-   */
-  public partialTransactions: Transaction[]
+    /**
+     * List of confirmed transactions (per-request)
+     */
+    public partialTransactions: Transaction[];
 
-  /**
-   * set the default to select all
-   */
-  public displayedTransactionStatus: TransactionGroupState
-  /**
-   * The current page number
-   * @var {number}
-   */
-  public currentPage: number = 1
+    /**
+     * set the default to select all
+     */
+    public displayedTransactionStatus: TransactionGroupState;
+    /**
+     * The current page number
+     * @var {number}
+     */
+    public currentPage: number = 1;
 
-  /**
-   * Active transaction (in-modal)
-   * @var {Transaction}
-   */
-  public activeTransaction: Transaction = null
+    /**
+     * Active transaction (in-modal)
+     * @var {Transaction}
+     */
+    public activeTransaction: Transaction = null;
 
-  /**
-   * Active bonded transaction (in-modal)
-   * @var {AggregateTransaction}
-   */
-  public activePartialTransaction: AggregateTransaction = null
+    /**
+     * Active bonded transaction (in-modal)
+     * @var {AggregateTransaction}
+     */
+    public activePartialTransaction: AggregateTransaction = null;
 
-  /**
-   * Whether the detail modal box is open
-   * @var {boolean}
-   */
-  public isDisplayingDetails: boolean = false
+    /**
+     * Whether the detail modal box is open
+     * @var {boolean}
+     */
+    public isDisplayingDetails: boolean = false;
 
-  /**
-   * Whether the cosignature modal box is open
-   * @var {boolean}
-   */
-  public isAwaitingCosignature: boolean = false
+    /**
+     * Whether the cosignature modal box is open
+     * @var {boolean}
+     */
+    public isAwaitingCosignature: boolean = false;
 
-  /**
-   * Current generationHash
-   * @see {Store.Network}
-   * @var {string}
-   */
-  public generationHash: string
+    /**
+     * Current generationHash
+     * @see {Store.Network}
+     * @var {string}
+     */
+    public generationHash: string;
 
-  /**
-   * Whether currently viewing export
-   * @var {boolean}
-   */
-  public isViewingExportModal: boolean = false
+    /**
+     * Whether currently viewing export
+     * @var {boolean}
+     */
+    public isViewingExportModal: boolean = false;
 
-  /**
-   * Current confirmed page info
-   * @see {Transaction.PageInfo}
-   * @var {PageInfo}
-   */
-  public currentConfirmedPage: PageInfo
+    /**
+     * Current confirmed page info
+     * @see {Transaction.PageInfo}
+     * @var {PageInfo}
+     */
+    public currentConfirmedPage: PageInfo;
 
-  public getEmptyMessage() {
-    return this.displayedTransactionStatus === TransactionGroupState.all
-      ? 'no_data_transactions'
-      : `no_${this.displayedTransactionStatus}_transactions`
-  }
-
-  /// region computed properties getter/setter
-  public get countPages(): number {
-    if (!this.confirmedTransactions) {
-      return 0
-    }
-    return Math.ceil([...this.confirmedTransactions].length / this.pageSize)
-  }
-
-  public get totalCountItems(): number {
-    return this.getCurrentTabTransactions(this.displayedTransactionStatus).length
-  }
-
-  /**
-   * Returns the transactions of the current page
-   * from the getter that matches the provided tab name.
-   * Undefined means the list is being loaded.
-   * @param {TabName} tabName
-   * @returns {Transaction[]}
-   */
-  public getCurrentPageTransactions(): Transaction[] {
-    // get current tab transactions
-    const transactions = this.getCurrentTabTransactions(this.displayedTransactionStatus)
-    // get pagination params
-    const start = (this.currentPage - 1) * this.pageSize
-    const end = this.currentPage * this.pageSize
-    // slice and return
-    return [...transactions].slice(start, end)
-  }
-
-  /**
-   * Returns all the transactions,
-   * from the getter that matches the provided tab name
-   * @param {TabName} group
-   * @returns {Transaction[]}
-   */
-  public getCurrentTabTransactions(group: TransactionGroupState): Transaction[] {
-    if (group === TransactionGroupState.confirmed) {
-      return this.confirmedTransactions
-    }
-    if (group === TransactionGroupState.unconfirmed) {
-      return this.unconfirmedTransactions
-    }
-    if (group === TransactionGroupState.partial) {
-      return this.partialTransactions
-    }
-    if (group === TransactionGroupState.all) {
-      return [...this.unconfirmedTransactions, ...this.partialTransactions, ...this.confirmedTransactions]
+    public getEmptyMessage() {
+        return this.displayedTransactionStatus === TransactionGroupState.all
+            ? 'no_data_transactions'
+            : `no_${this.displayedTransactionStatus}_transactions`;
     }
 
-    return []
-  }
-
-  /**
-   * Returns the transctions
-   * If the pagination type is (infinite) scroll then returns all
-   * If the pagination type is pagination(paginated) then returns the current page txs
-   *
-   * @return {Transaction[]}
-   */
-  public getTransactions(): Transaction[] {
-    return this.paginationType === 'pagination'
-      ? this.getCurrentPageTransactions()
-      : this.getCurrentTabTransactions(this.displayedTransactionStatus)
-  }
-
-  public get hasDetailModal(): boolean {
-    return this.isDisplayingDetails
-  }
-
-  public set hasDetailModal(f: boolean) {
-    this.isDisplayingDetails = f
-  }
-
-  public get hasCosignatureModal(): boolean {
-    return this.isAwaitingCosignature
-  }
-
-  public set hasCosignatureModal(f: boolean) {
-    this.isAwaitingCosignature = f
-  }
-
-  public get aggregateTransactionHash() {
-    if (!this.activePartialTransaction.transactionInfo) {
-      return Transaction.createTransactionHash(
-        this.activePartialTransaction.serialize(),
-        Array.from(Convert.hexToUint8(this.generationHash)),
-      )
+    /// region computed properties getter/setter
+    public get countPages(): number {
+        if (!this.confirmedTransactions) {
+            return 0;
+        }
+        return Math.ceil([...this.confirmedTransactions].length / this.pageSize);
     }
-    return this.activePartialTransaction.transactionInfo.hash
-  }
 
-  /// end-region computed properties getter/setter
-
-  created() {
-    if (this.$route.params.transaction) {
-      // @ts-ignore
-      this.activePartialTransaction = this.$route.params.transaction as AggregateTransaction
-      this.hasCosignatureModal = true
+    public get totalCountItems(): number {
+        return this.getCurrentTabTransactions(this.displayedTransactionStatus).length;
     }
-  }
 
-  /**
-   * Refresh transaction list
-   * @return {void}
-   */
-  /* public async getTransactionListByOption(filter: TransactionGroupState) {
+    /**
+     * Returns the transactions of the current page
+     * from the getter that matches the provided tab name.
+     * Undefined means the list is being loaded.
+     * @param {TabName} tabName
+     * @returns {Transaction[]}
+     */
+    public getCurrentPageTransactions(): Transaction[] {
+        // get current tab transactions
+        const transactions = this.getCurrentTabTransactions(this.displayedTransactionStatus);
+        // get pagination params
+        const start = (this.currentPage - 1) * this.pageSize;
+        const end = this.currentPage * this.pageSize;
+        // slice and return
+        return [...transactions].slice(start, end);
+    }
+
+    /**
+     * Returns all the transactions,
+     * from the getter that matches the provided tab name
+     * @param {TabName} group
+     * @returns {Transaction[]}
+     */
+    public getCurrentTabTransactions(group: TransactionGroupState): Transaction[] {
+        if (group === TransactionGroupState.confirmed) {
+            return this.confirmedTransactions;
+        }
+        if (group === TransactionGroupState.unconfirmed) {
+            return this.unconfirmedTransactions;
+        }
+        if (group === TransactionGroupState.partial) {
+            return this.partialTransactions;
+        }
+        if (group === TransactionGroupState.all) {
+            return [...this.unconfirmedTransactions, ...this.partialTransactions, ...this.confirmedTransactions];
+        }
+
+        return [];
+    }
+
+    /**
+     * Returns the transctions
+     * If the pagination type is (infinite) scroll then returns all
+     * If the pagination type is pagination(paginated) then returns the current page txs
+     *
+     * @return {Transaction[]}
+     */
+    public getTransactions(): Transaction[] {
+        return this.paginationType === 'pagination'
+            ? this.getCurrentPageTransactions()
+            : this.getCurrentTabTransactions(this.displayedTransactionStatus);
+    }
+
+    public get hasDetailModal(): boolean {
+        return this.isDisplayingDetails;
+    }
+
+    public set hasDetailModal(f: boolean) {
+        this.isDisplayingDetails = f;
+    }
+
+    public get hasCosignatureModal(): boolean {
+        return this.isAwaitingCosignature;
+    }
+
+    public set hasCosignatureModal(f: boolean) {
+        this.isAwaitingCosignature = f;
+    }
+
+    public get aggregateTransactionHash() {
+        if (!this.activePartialTransaction.transactionInfo) {
+            return Transaction.createTransactionHash(
+                this.activePartialTransaction.serialize(),
+                Array.from(Convert.hexToUint8(this.generationHash)),
+            );
+        }
+        return this.activePartialTransaction.transactionInfo.hash;
+    }
+
+    /// end-region computed properties getter/setter
+
+    created() {
+        if (this.$route.params.transaction) {
+            // @ts-ignore
+            this.activePartialTransaction = this.$route.params.transaction as AggregateTransaction;
+            this.hasCosignatureModal = true;
+        }
+    }
+
+    /**
+     * Refresh transaction list
+     * @return {void}
+     */
+    /* public async getTransactionListByOption(filter: TransactionGroupState) {
     this.selectedOption = filter
   } */
 
-  /**
-   * Hook called when a transaction is clicked
-   * @param {Transaction} transaction
-   */
-  public onClickTransaction(transaction: Transaction | AggregateTransaction) {
-    if (transaction.hasMissingSignatures()) {
-      this.activePartialTransaction = transaction as AggregateTransaction
-      this.hasCosignatureModal = true
-    } else {
-      this.activeTransaction = transaction
-      this.hasDetailModal = true
+    /**
+     * Hook called when a transaction is clicked
+     * @param {Transaction} transaction
+     */
+    public onClickTransaction(transaction: Transaction | AggregateTransaction) {
+        if (transaction.hasMissingSignatures()) {
+            this.activePartialTransaction = transaction as AggregateTransaction;
+            this.hasCosignatureModal = true;
+        } else {
+            this.activeTransaction = transaction;
+            this.hasDetailModal = true;
+        }
     }
-  }
 
-  public onCloseDetailModal() {
-    this.hasDetailModal = false
-    this.activeTransaction = undefined
-  }
-
-  public onCloseCosignatureModal() {
-    this.hasCosignatureModal = false
-    this.activePartialTransaction = undefined
-    this.$router.push({ name: 'dashboard.index' })
-  }
-
-  /**
-   * Hook called at each page change
-   */
-  public onPageChange(page: number): void {
-    if (page === this.countPages) {
-      this.loadMore()
-    } else if (page > this.countPages) {
-      page = this.countPages
-    } else if (page < 1) {
-      page = 1
+    public onCloseDetailModal() {
+        this.hasDetailModal = false;
+        this.activeTransaction = undefined;
     }
-    this.currentPage = page
-  }
 
-  /**
-   * Loads next page of transactions from repository
-   */
-  public loadMore() {
-    if (!this.currentConfirmedPage.isLastPage) {
-      this.$store.dispatch('transaction/LOAD_TRANSACTIONS', {
-        pageNumber: ++this.currentConfirmedPage.pageNumber,
-        pageSize: this.requestPageSize,
-      })
+    public onCloseCosignatureModal() {
+        this.hasCosignatureModal = false;
+        this.activePartialTransaction = undefined;
+        this.$router.push({ name: 'dashboard.index' });
     }
-  }
 
-  /**
-   * Whether currently viewed page is the last page retrieved from repository
-   */
-  public get isLastPage(): boolean {
-    return this.currentConfirmedPage.isLastPage && this.currentPage * this.pageSize >= this.totalCountItems
-  }
-
-  /**
-   * Watching if refreshed triggered
-   * @param newVal
-   */
-  @Watch('currentConfirmedPage')
-  public watchRefresh(newVal: PageInfo) {
-    // if page refresh is triggered then reset page info
-    if (newVal.pageNumber === 1) {
-      this.currentPage = 1
+    /**
+     * Hook called at each page change
+     */
+    public onPageChange(page: number): void {
+        if (page === this.countPages) {
+            this.loadMore();
+        } else if (page > this.countPages) {
+            page = this.countPages;
+        } else if (page < 1) {
+            page = 1;
+        }
+        this.currentPage = page;
     }
-  }
 
-  public get hasTransactionExportModal(): boolean {
-    return this.isViewingExportModal
-  }
+    /**
+     * Loads next page of transactions from repository
+     */
+    public loadMore() {
+        if (!this.currentConfirmedPage.isLastPage) {
+            this.$store.dispatch('transaction/LOAD_TRANSACTIONS', {
+                pageNumber: ++this.currentConfirmedPage.pageNumber,
+                pageSize: this.requestPageSize,
+            });
+        }
+    }
 
-  public set hasTransactionExportModal(f: boolean) {
-    this.isViewingExportModal = f
-  }
-  public downloadTransaction() {
-    this.hasTransactionExportModal = true
-  }
+    /**
+     * Whether currently viewed page is the last page retrieved from repository
+     */
+    public get isLastPage(): boolean {
+        return this.currentConfirmedPage.isLastPage && this.currentPage * this.pageSize >= this.totalCountItems;
+    }
+
+    /**
+     * Watching if refreshed triggered
+     * @param newVal
+     */
+    @Watch('currentConfirmedPage')
+    public watchRefresh(newVal: PageInfo) {
+        // if page refresh is triggered then reset page info
+        if (newVal.pageNumber === 1) {
+            this.currentPage = 1;
+        }
+    }
+
+    public get hasTransactionExportModal(): boolean {
+        return this.isViewingExportModal;
+    }
+
+    public set hasTransactionExportModal(f: boolean) {
+        this.isViewingExportModal = f;
+    }
+    public downloadTransaction() {
+        this.hasTransactionExportModal = true;
+    }
 }

@@ -13,70 +13,70 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // child components
 // @ts-ignore
-import DisabledUiOverlay from '@/components/DisabledUiOverlay/DisabledUiOverlay.vue'
+import DisabledUiOverlay from '@/components/DisabledUiOverlay/DisabledUiOverlay.vue';
 // @ts-ignore
-import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue'
+import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue';
 
 @Component({
-  computed: {
-    ...mapGetters({
-      hasLoadingOverlay: 'app/shouldShowLoadingOverlay',
-      currentProfile: 'profile/currentProfile',
-    }),
-  },
-  components: {
-    DisabledUiOverlay,
-    SpinnerLoading,
-  },
+    computed: {
+        ...mapGetters({
+            hasLoadingOverlay: 'app/shouldShowLoadingOverlay',
+            currentProfile: 'profile/currentProfile',
+        }),
+    },
+    components: {
+        DisabledUiOverlay,
+        SpinnerLoading,
+    },
 })
 export class AppTs extends Vue {
-  /**
-   * Currently active profile
-   * @see {Store.Profile}
-   * @var {string}
-   */
-  public currentProfile: string
+    /**
+     * Currently active profile
+     * @see {Store.Profile}
+     * @var {string}
+     */
+    public currentProfile: string;
 
-  /**
-   * Whether a loading overlay must be displayed
-   * @see {Store.App}
-   * @var {boolean}
-   */
-  public hasLoadingOverlay: boolean
+    /**
+     * Whether a loading overlay must be displayed
+     * @see {Store.App}
+     * @var {boolean}
+     */
+    public hasLoadingOverlay: boolean;
 
-  /**
-   * Hook called when the app is started
-   * @return {void}
-   */
-  public created() {
-    this.initialize()
-  }
+    /**
+     * Hook called when the app is started
+     * @return {void}
+     */
+    public created() {
+        this.initialize();
+    }
 
-  /**
-   * Hook called when the app is closed
-   * @return {void}
-   */
-  public destroyed() {
-    this.uninitialize()
-  }
+    /**
+     * Hook called when the app is closed
+     * @return {void}
+     */
+    public destroyed() {
+        this.uninitialize();
+    }
 
-  /**
-   * Initialize the app store
-   * @see {Store.AppInfo}
-   */
-  protected initialize() {
-    this.$store.dispatch('initialize').catch((error) => console.log(error))
-  }
+    /**
+     * Initialize the app store
+     * @see {Store.AppInfo}
+     */
+    protected initialize() {
+        this.$store.dispatch('initialize').catch((error) => console.log(error));
+    }
 
-  /**
-   * Uninitialize the app store
-   * @see {Store.AppInfo}
-   */
-  protected uninitialize() {
-    this.$store.dispatch('uninitialize')
-  }
+    /**
+     * Uninitialize the app store
+     * @see {Store.AppInfo}
+     */
+    protected uninitialize() {
+        this.$store.dispatch('uninitialize');
+    }
 }
