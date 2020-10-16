@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,6 @@ import ApprovalAndRemovalInput from '@/components/ApprovalAndRemovalInput/Approv
 // @ts-ignore
 import MultisigCosignatoriesDisplay from '@/components/MultisigCosignatoriesDisplay/MultisigCosignatoriesDisplay.vue'
 import { TransactionCommand } from '@/services/TransactionCommand'
-import { Signer } from '@/store/Account'
 
 /// region custom types
 export interface CosignatoryModification {
