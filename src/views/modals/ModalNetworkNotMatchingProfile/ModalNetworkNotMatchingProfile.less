@@ -15,38 +15,32 @@
  */
 @import '../../../views/resources/css/variables.less';
 
-.preview-container {
-  display: grid;
-  grid-template-columns: 20% 80%;
-
-  .qrcode-details {
-    margin-top: 0.3rem;
+.modal-network-not-matching-container {
+  /deep/.ivu-modal {
+    width: 12rem !important;
+    .auto-complete-size {
+      width: 100%;
+    }
+  }
+  /deep/.ivu-modal-mask {
+    z-index: 1061 !important;
+  }
+  /deep/.ivu-modal-wrap {
+    z-index: 1061 !important;
+  }
+  /deep/.centered-content {
+    width: 100%;
+    text-align: center;
+  }
+  /deep/.bottom-space {
+    margin-bottom: 30px;
+  }
+  /deep/.right-space {
+    margin-right: 15px;
   }
 }
-.qrcode-details-row-inner {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-template-columns: 20% 80%;
-  grid-template-rows: 100%;
 
-  .qrcode-details-row-label {
-    text-align: right;
-    font-size: @normalFont;
-    font-weight: 500;
-    color: @grayDark;
-    text-transform: capitalize;
-    overflow: hidden;
-    word-break: break-word;
-  }
-
-  .qrcode-details-row-value {
-    font-size: @normalFont;
-    color: @secondary;
-    padding-left: 0.2rem;
-    overflow: hidden;
-    word-break: break-word;
-    display: grid;
-    align-items: center;
-  }
+.ivu-modal-mask,
+.ivu-modal-wrap {
+  z-index: 1061;
 }

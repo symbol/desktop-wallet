@@ -14,10 +14,10 @@
  *
  */
 // configuration
-import appConfig from '../../../config/app.conf.json'
+import { appConfig } from '@/config'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 
-import networkConfig from '../../../config/network.conf.json'
+import { networkConfig } from '@/config'
 
 const { MIN_PASSWORD_LENGTH } = appConfig.constants
 

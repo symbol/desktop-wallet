@@ -73,6 +73,11 @@
         </div>
       </div>
     </div>
+    <ModalNetworkNotMatchingProfile
+      v-if="networkIsNotMatchingProfile"
+      :visible="networkIsNotMatchingProfile"
+      @close="onCloseNetworkModal()"
+    />
   </div>
 </template>
 

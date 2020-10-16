@@ -19,8 +19,11 @@ import { mapGetters } from 'vuex'
 import { NodeModel } from '@/core/database/entities/NodeModel'
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper'
 import * as _ from 'lodash'
+//@ts-ignore
+import ModalNetworkNotMatchingProfile from '@/views/modals/ModalNetworkNotMatchingProfile/ModalNetworkNotMatchingProfile.vue'
 
 @Component({
+  components: { ModalNetworkNotMatchingProfile },
   computed: {
     ...mapGetters({
       currentPeerInfo: 'network/currentPeerInfo',
@@ -29,6 +32,7 @@ import * as _ from 'lodash'
       repositoryFactory: 'network/repositoryFactory',
       generationHash: 'network/generationHash',
       knowNodes: 'network/knowNodes',
+      networkIsNotMatchingProfile: 'network/networkIsNotMatchingProfile',
     }),
   },
 })
@@ -40,7 +44,7 @@ export class PeerSelectorTs extends Vue {
    * @var {Object}
    */
   public currentPeerInfo: NodeModel
-
+  public networkIsNotMatchingProfile: boolean
   /**
    * Whether the connection is up
    * @see {Store.Network}
@@ -102,5 +106,8 @@ export class PeerSelectorTs extends Vue {
   goSettings() {
     this.poptipVisible = false
     this.$store.commit('profile/toggleSettings')
+  }
+  onCloseNetworkModal() {
+    this.$store.dispatch('network/SET_NETWORK_IS_NOT_MATCHING_PROFILE', false)
   }
 }

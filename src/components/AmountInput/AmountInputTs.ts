@@ -24,7 +24,7 @@ import { ValidationProvider } from 'vee-validate'
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 import { mapGetters } from 'vuex'
 import { MosaicModel } from '@/core/database/entities/MosaicModel'
-import NetworkConfig from '../../../config/network.conf.json'
+import { networkConfig } from '@/config'
 
 @Component({
   components: {
@@ -55,7 +55,7 @@ export class AmountInputTs extends Vue {
   created() {
     // update validation rule to reflect correct mosaic divisibility
     const chosenMosaic = this.mosaics.find((mosaic) => this.mosaicHex === mosaic.mosaicIdHex)
-    const networkConfigurationDefaults = NetworkConfig.networkConfigurationDefaults
+    const networkConfigurationDefaults = networkConfig.networkConfigurationDefaults
     networkConfigurationDefaults.maxMosaicDivisibility = chosenMosaic ? chosenMosaic.divisibility : 6
 
     // set validation rules for this field

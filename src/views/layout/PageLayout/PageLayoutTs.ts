@@ -138,6 +138,7 @@ export class PageLayoutTs extends Vue {
     }
 
     if (this.currentProfile && this.currentProfile.networkType !== this.networkType) {
+      this.$store.dispatch('network/SET_NETWORK_IS_NOT_MATCHING_PROFILE', true)
       return {
         show: true,
         message: 'account_network_type_does_not_match_current_network_type',
@@ -145,6 +146,7 @@ export class PageLayoutTs extends Vue {
     }
 
     if (this.currentProfile && this.currentProfile.generationHash !== this.generationHash) {
+      this.$store.dispatch('network/SET_NETWORK_IS_NOT_MATCHING_PROFILE', true)
       return {
         show: true,
         message: 'account_network_does_not_match_current_network_type',

@@ -19,8 +19,8 @@ import i18n from '@/language'
 import app from '@/main'
 import { AwaitLock } from './AwaitLock'
 // configuration
-import appConfig from '@/../config/app.conf.json'
-import networkConfig from '@/../config/network.conf.json'
+import { appConfig } from '@/config'
+import { networkConfig } from '@/config'
 import { SettingsModel } from '@/core/database/entities/SettingsModel'
 import { SettingService } from '@/services/SettingService'
 

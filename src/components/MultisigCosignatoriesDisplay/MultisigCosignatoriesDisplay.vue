@@ -34,7 +34,7 @@
               <span>{{ address.pretty() }}</span>
             </div>
             <Icon
-              v-if="modifiable"
+              v-if="modifiable && removeModifications && removeModifications.length === 0"
               type="md-trash"
               size="21"
               class="icon-button"
@@ -48,7 +48,10 @@
       <!-- REMOVED COSIGNATORIES -->
       <FormRow v-if="modifiable && removeModifications && removeModifications.length">
         <template v-slot:label>
-          {{ $t('form_label_removed_cosignatories') }}
+          <Tooltip word-wrap placement="top-start" :content="$t('form_label_removed_cosignatory_tooltip')">
+            <Icon type="ios-information-circle-outline" />
+          </Tooltip>
+          {{ $t('form_label_removed_cosignatory') }}:
         </template>
         <template v-slot:inputs>
           <div
@@ -122,5 +125,8 @@ export default class MultisigCosignatoriesDisplay extends MultisigCosignatoriesD
 
 .icon-button:hover {
   color: @red;
+}
+/deep/.ivu-tooltip {
+  text-transform: none;
 }
 </style>

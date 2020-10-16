@@ -5,8 +5,8 @@ import Vuex from 'vuex'
 import i18n from '@/language'
 import VueI18n from 'vue-i18n'
 import { NetworkService } from '@/services/NetworkService'
+import { networkConfig } from '@/config'
 // configuration
-import networkConfig from '../../config/network.conf.json'
 let wrapper
 let vm
 let options: ThisTypedShallowMountOptions<Vue>
