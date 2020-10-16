@@ -135,7 +135,7 @@ export class FormTransactionBase extends Vue {
 
   public command: TransactionCommand
 
-  private transactionFees: TransactionFees
+  protected transactionFees: TransactionFees
 
   /**
    * Type the ValidationObserver refs
@@ -291,6 +291,9 @@ export class FormTransactionBase extends Vue {
       this.networkType,
       this.networkConfiguration,
       this.transactionFees,
+      this.currentSignerMultisigInfo!!
+        ? this.currentSignerMultisigInfo.minApproval
+        : this.selectedSigner.requiredCosignatures,
     )
   }
 
@@ -312,7 +315,7 @@ export class FormTransactionBase extends Vue {
     // if the form was in multisig, set the signer to be the main account
     // this triggers resetForm in the @Watch('currentAccount') hook
     if (this.isMultisigMode()) this.$store.dispatch('account/SET_CURRENT_ACCOUNT', this.currentAccount)
-
+    this.resetForm()
     this.hasConfirmationModal = false
     this.$emit('on-confirmation-success')
     // Reset form validation

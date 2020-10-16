@@ -28,12 +28,14 @@ interface NamespaceState {
   initialized: boolean
   namespaces: NamespaceModel[]
   ownedNamespaces: NamespaceModel[]
+  isFetchingNamespaces: boolean
 }
 
 const namespaceState: NamespaceState = {
   initialized: false,
   namespaces: [],
   ownedNamespaces: [],
+  isFetchingNamespaces: false,
 }
 
 export default {
@@ -43,6 +45,7 @@ export default {
     getInitialized: (state: NamespaceState) => state.initialized,
     namespaces: (state: NamespaceState) => state.namespaces,
     ownedNamespaces: (state: NamespaceState) => state.ownedNamespaces,
+    isFetchingNamespaces: (state: NamespaceState) => state.isFetchingNamespaces,
   },
   mutations: {
     setInitialized: (state: NamespaceState, initialized) => {
@@ -60,6 +63,8 @@ export default {
         uniqueNamespaces.filter((n) => n.ownerAddressRawPlain === currentSignerAddress.plain()),
       )
     },
+    isFetchingNamespaces: (state: NamespaceState, isFetchingNamespaces: boolean) =>
+      Vue.set(state, 'isFetchingNamespaces', isFetchingNamespaces),
   },
   actions: {
     async initialize({ commit, getters }) {
@@ -79,17 +84,20 @@ export default {
     },
 
     LOAD_NAMESPACES({ commit, rootGetters }) {
-      const knownAddresses: Address[] = rootGetters['account/knownAddresses'] || []
       const repositoryFactory = rootGetters['network/repositoryFactory']
       const generationHash = rootGetters['network/generationHash']
       const namespaceService = new NamespaceService()
-      namespaceService.getNamespaces(repositoryFactory, generationHash, knownAddresses).subscribe((namespaces) => {
-        const currentSignerAddress: Address = rootGetters['account/currentSignerAddress']
-        if (!currentSignerAddress) {
-          return
-        }
-        commit('namespaces', { namespaces, currentSignerAddress })
-      })
+      const currentSignerAddress: Address = rootGetters['account/currentSignerAddress']
+      if (!currentSignerAddress) {
+        return
+      }
+      commit('isFetchingNamespaces', true)
+      namespaceService
+        .getNamespaces(repositoryFactory, generationHash, [currentSignerAddress])
+        .subscribe((namespaces) => {
+          commit('namespaces', { namespaces, currentSignerAddress })
+        })
+        .add(() => commit('isFetchingNamespaces', false))
     },
 
     RESET_NAMESPACES({ commit }) {

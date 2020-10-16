@@ -38,6 +38,7 @@ interface MosaicState {
   networkMosaicName: string
   networkMosaicTicker: string
   accountMosaicConfigurations: Record<string, MosaicConfigurationModel>
+  isFetchingMosaics: boolean
 }
 
 // mosaic state initial definition
@@ -52,6 +53,7 @@ const mosaicState: MosaicState = {
   networkMosaicName: '',
   networkMosaicTicker: '',
   accountMosaicConfigurations: {},
+  isFetchingMosaics: false,
 }
 
 export default {
@@ -68,6 +70,7 @@ export default {
     networkMosaicTicker: (state: MosaicState) => state.networkMosaicTicker,
     accountMosaicConfigurations: (state: MosaicState) => state.accountMosaicConfigurations,
     networkMosaicName: (state: MosaicState) => state.networkMosaicName,
+    isFetchingMosaics: (state: MosaicState) => state.isFetchingMosaics,
   },
   mutations: {
     setInitialized: (state: MosaicState, initialized: boolean) => {
@@ -132,6 +135,9 @@ export default {
       state: MosaicState,
       accountMosaicConfigurations: Record<string, MosaicConfigurationModel>,
     ) => Vue.set(state, 'accountMosaicConfigurations', accountMosaicConfigurations),
+
+    isFetchingMosaics: (state: MosaicState, isFetchingMosaics: boolean) =>
+      Vue.set(state, 'isFetchingMosaics', isFetchingMosaics),
   },
   actions: {
     async initialize({ commit, getters }) {
@@ -170,6 +176,8 @@ export default {
       const accountsInfo: AccountInfo[] = rootGetters['account/accountsInfo'] || []
       const generationHash = rootGetters['network/generationHash']
 
+      commit('isFetchingMosaics', true)
+
       new MosaicService()
         .getMosaics(repositoryFactory, generationHash, networkCurrency, accountsInfo)
         .subscribe((mosaics) => {
@@ -181,6 +189,7 @@ export default {
             networkCurrency,
           })
         })
+        .add(() => commit('isFetchingMosaics', false))
     },
 
     RESET_MOSAICS({ commit, rootGetters }) {

@@ -16,7 +16,7 @@
 import { NetworkType, NodeInfo, TransactionFees, RoleType } from 'symbol-sdk'
 import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
 import { NetworkModel } from '@/core/database/entities/NetworkModel'
-import networkConfig from '../../../../config/network.conf.json'
+import { networkConfig } from '@/config'
 
 export class NetworkModelStorage extends VersionedNetworkBasedObjectStorage<NetworkModel> {
   /**

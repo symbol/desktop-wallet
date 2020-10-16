@@ -19,6 +19,7 @@ import {
   AggregateTransaction,
   AggregateTransactionCosignature,
   CosignatureTransaction,
+  MultisigAccountInfo,
   NetworkType,
   TransactionStatus,
 } from 'symbol-sdk'
@@ -53,6 +54,7 @@ import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue'
       currentAccount: 'account/currentAccount',
       networkType: 'network/networkType',
       generationHash: 'network/generationHash',
+      currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
     }),
   },
 })
@@ -79,9 +81,25 @@ export class ModalTransactionCosignatureTs extends Vue {
    */
   public currentAccount: AccountModel
 
+  /**
+   * Network type
+   * @see {Store.Network}
+   * @var {NetworkType}
+   */
   public networkType: NetworkType
 
+  /**
+   * Current generationHash
+   * @see {Store.Network}
+   * @var {string}
+   */
   public generationHash: string
+
+  /**
+   * Current account multisig info
+   * @type {MultisigAccountInfo}
+   */
+  public currentAccountMultisigInfo: MultisigAccountInfo
 
   /**
    * Whether transaction has expired
@@ -116,9 +134,12 @@ export class ModalTransactionCosignatureTs extends Vue {
   }
 
   public get needsCosignature(): boolean {
-    //IS THIS CORRECT? Multisig accounts cannot sign?
+    // Multisig account can not sign
+    if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
+      return false
+    }
     const currentPubAccount = AccountModel.getObjects(this.currentAccount).publicAccount
-    return !this.transaction?.signedByAccount(currentPubAccount)
+    return !this.transaction.signedByAccount(currentPubAccount)
   }
 
   public get cosignatures(): AggregateTransactionCosignature[] {

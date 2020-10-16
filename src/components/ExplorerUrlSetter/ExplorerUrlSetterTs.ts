@@ -27,7 +27,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
 import FormRow from '@/components/FormRow/FormRow.vue'
 
 // configuration
-import networkConfig from '@/../config/network.conf.json'
+import { networkConfig } from '@/config'
 
 @Component({
   components: {

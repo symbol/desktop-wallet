@@ -23,7 +23,7 @@ import * as _ from 'lodash'
 
 import { ObservableHelpers } from '@/core/utils/ObservableHelpers'
 
-import networkConfig from '../../config/network.conf.json'
+import { networkConfig } from '@/config'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 import { NetworkConfigurationHelpers } from '@/core/utils/NetworkConfigurationHelpers'
 import { NetworkModelStorage } from '@/core/database/storage/NetworkModelStorage'

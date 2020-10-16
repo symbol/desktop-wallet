@@ -26,6 +26,7 @@ import {
   TransactionGroup,
   Page,
   TransactionStatus,
+  Order,
 } from 'symbol-sdk'
 import { combineLatest, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
@@ -75,6 +76,10 @@ function conditionalSort<T>(array: T[] | undefined, comparator: (a: T, b: T) => 
   return array.sort(comparator)
 }
 
+export interface PageInfo {
+  pageNumber: number
+  isLastPage: boolean
+}
 interface TransactionState {
   initialized: boolean
   isFetchingTransactions: boolean
@@ -82,6 +87,7 @@ interface TransactionState {
   unconfirmedTransactions: Transaction[]
   partialTransactions: Transaction[]
   displayedTransactionStatus: TransactionGroupState
+  currentConfirmedPage: PageInfo
 }
 
 const transactionState: TransactionState = {
@@ -91,6 +97,7 @@ const transactionState: TransactionState = {
   unconfirmedTransactions: [],
   partialTransactions: [],
   displayedTransactionStatus: TransactionGroupState.all,
+  currentConfirmedPage: { pageNumber: 1, isLastPage: false },
 }
 export default {
   namespaced: true,
@@ -102,6 +109,7 @@ export default {
     unconfirmedTransactions: (state: TransactionState) => state.unconfirmedTransactions,
     partialTransactions: (state: TransactionState) => state.partialTransactions,
     displayedTransactionStatus: (state: TransactionState) => state.displayedTransactionStatus,
+    currentConfirmedPage: (state: TransactionState) => state.currentConfirmedPage,
   },
   mutations: {
     setInitialized: (state: TransactionState, initialized: boolean) => {
@@ -110,14 +118,32 @@ export default {
     isFetchingTransactions: (state: TransactionState, isFetchingTransactions: boolean) => {
       state.isFetchingTransactions = isFetchingTransactions
     },
-    confirmedTransactions: (state: TransactionState, confirmedTransactions: Transaction[] | undefined) => {
-      state.confirmedTransactions = conditionalSort(confirmedTransactions, confirmedTransactionComparator)
+    confirmedTransactions: (
+      state: TransactionState,
+      { transactions, refresh, pageInfo }: { transactions: Transaction[]; refresh: boolean; pageInfo: PageInfo },
+    ) => {
+      // if it's a refresh request then refresh the list, else concat the new items to the list
+      if (refresh) {
+        state.confirmedTransactions = conditionalSort(transactions, confirmedTransactionComparator)
+      } else {
+        state.confirmedTransactions = conditionalSort(
+          state.confirmedTransactions.concat(transactions),
+          confirmedTransactionComparator,
+        )
+      }
+      state.currentConfirmedPage = pageInfo
     },
-    unconfirmedTransactions: (state: TransactionState, unconfirmedTransactions: Transaction[] | undefined) => {
-      state.unconfirmedTransactions = conditionalSort(unconfirmedTransactions, transactionComparator)
+    unconfirmedTransactions: (
+      state: TransactionState,
+      { transactions }: { transactions: Transaction[]; refresh: boolean; pageInfo: PageInfo },
+    ) => {
+      state.unconfirmedTransactions = conditionalSort(transactions, transactionComparator)
     },
-    partialTransactions: (state: TransactionState, partialTransactions: Transaction[] | undefined) => {
-      state.partialTransactions = conditionalSort(partialTransactions, transactionComparator)
+    partialTransactions: (
+      state: TransactionState,
+      { transactions }: { transactions: Transaction[]; refresh: boolean; pageInfo: PageInfo },
+    ) => {
+      state.partialTransactions = conditionalSort(transactions, transactionComparator)
     },
     setDisplayedTransactionStatus: (state: TransactionState, displayedTransactionStatus: TransactionGroupState) => {
       state.displayedTransactionStatus = displayedTransactionStatus
@@ -143,7 +169,11 @@ export default {
 
     LOAD_TRANSACTIONS(
       { commit, rootGetters },
-      { group }: { group: TransactionGroupState } = { group: TransactionGroupState.all },
+      { group, pageSize, pageNumber }: { group: TransactionGroupState; pageSize: number; pageNumber: number } = {
+        group: TransactionGroupState.all,
+        pageSize: 20,
+        pageNumber: 1,
+      },
     ) {
       const currentSignerAddress: Address = rootGetters['account/currentSignerAddress']
       if (!currentSignerAddress) {
@@ -156,10 +186,16 @@ export default {
         transactionCall: Observable<Page<Transaction>>,
       ): Observable<Transaction[]> => {
         const attributeName = transactionGroupToStateVariable(group)
-        commit(attributeName, [])
         return transactionCall.pipe(
           map((transactionsPage) => {
-            commit(attributeName, transactionsPage.data)
+            commit(attributeName, {
+              transactions: transactionsPage.data || [],
+              refresh: transactionsPage.pageNumber === 1,
+              pageInfo: {
+                pageNumber: transactionsPage.pageNumber,
+                isLastPage: transactionsPage.isLastPage,
+              },
+            })
             return transactionsPage.data
           }),
         )
@@ -175,35 +211,45 @@ export default {
             transactionRepository.search({
               group: TransactionGroup.Confirmed,
               address: currentSignerAddress,
-              pageSize: 100,
-            }),
-          ),
-        )
-      }
-      if (group == undefined || group === TransactionGroupState.all || group === TransactionGroupState.unconfirmed) {
-        subscriptions.push(
-          subscribeTransactions(
-            TransactionGroupState.unconfirmed,
-            transactionRepository.search({
-              group: TransactionGroup.Unconfirmed,
-              address: currentSignerAddress,
-              pageSize: 100,
+              pageSize,
+              pageNumber,
+              order: Order.Desc,
             }),
           ),
         )
       }
 
-      if (group == undefined || group === TransactionGroupState.all || group === TransactionGroupState.partial) {
-        subscriptions.push(
-          subscribeTransactions(
-            TransactionGroupState.partial,
-            transactionRepository.search({
-              group: TransactionGroup.Partial,
-              address: currentSignerAddress,
-              pageSize: 100,
-            }),
-          ),
-        )
+      // all of the unconfirmed+partial transactions goes in the first page and they are not subject to pagination
+      if (pageNumber === 1) {
+        if (group == undefined || group === TransactionGroupState.all || group === TransactionGroupState.unconfirmed) {
+          subscriptions.push(
+            subscribeTransactions(
+              TransactionGroupState.unconfirmed,
+              transactionRepository.search({
+                group: TransactionGroup.Unconfirmed,
+                address: currentSignerAddress,
+                pageSize: 100,
+                pageNumber: 1, // not paginating
+                order: Order.Desc,
+              }),
+            ),
+          )
+        }
+
+        if (group == undefined || group === TransactionGroupState.all || group === TransactionGroupState.partial) {
+          subscriptions.push(
+            subscribeTransactions(
+              TransactionGroupState.partial,
+              transactionRepository.search({
+                group: TransactionGroup.Partial,
+                address: currentSignerAddress,
+                pageSize: 100,
+                pageNumber: 1, // not paginating
+                order: Order.Desc,
+              }),
+            ),
+          )
+        }
       }
 
       combineLatest(subscriptions).subscribe({
@@ -259,7 +305,10 @@ export default {
     RESET_TRANSACTIONS({ commit }) {
       Object.keys(TransactionGroupState).forEach((group: TransactionGroupState) => {
         if (group !== TransactionGroupState.all) {
-          commit(transactionGroupToStateVariable(group), [])
+          commit(transactionGroupToStateVariable(group), {
+            transactions: [],
+            pageInfo: { pageNumber: 1, isLastPage: false },
+          })
         }
       })
     },
@@ -282,7 +331,11 @@ export default {
       const transactions = getters[transactionAttribute] || []
       if (!transactions.find((t) => t.transactionInfo.hash === transaction.transactionInfo.hash)) {
         // update state
-        commit(transactionAttribute, [transaction, ...transactions])
+        commit(transactionAttribute, {
+          transactions: [transaction, ...transactions],
+          refresh: true,
+          pageInfo: getters['currentConfirmedPage'],
+        })
       }
     },
 
@@ -302,10 +355,11 @@ export default {
 
       // register transaction
       const transactions = getters[transactionAttribute] || []
-      commit(
-        transactionAttribute,
-        transactions.filter((t) => t.transactionInfo.hash !== transactionHash),
-      )
+      commit(transactionAttribute, {
+        transactions: transactions.filter((t) => t.transactionInfo.hash !== transactionHash),
+        refresh: true,
+        pageInfo: getters['currentConfirmedPage'],
+      })
     },
 
     async ON_NEW_TRANSACTION({ dispatch }, transaction: Transaction) {
