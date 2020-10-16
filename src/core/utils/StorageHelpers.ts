@@ -14,11 +14,11 @@
  *
  */
 export class StorageHelpers {
-  public static sessionSave = (key, value) => {
-    sessionStorage.setItem(key, value)
-  }
+    public static sessionSave = (key, value) => {
+        sessionStorage.setItem(key, value);
+    };
 
-  public static sessionRead = (key) => {
-    return sessionStorage.getItem(key) || ''
-  }
+    public static sessionRead = (key) => {
+        return sessionStorage.getItem(key) || '';
+    };
 }

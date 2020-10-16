@@ -14,62 +14,62 @@
  *
  */
 
-import { EMPTY, merge, MonoTypeOperatorFunction, of, throwError } from 'rxjs'
-import { catchError } from 'rxjs/operators'
+import { EMPTY, merge, MonoTypeOperatorFunction, of, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 /**
  * Custom observable pipe style operations.
  */
 export class ObservableHelpers {
-  /**
-   * This pipe operation concatenates the default values first when provided on top what the
-   * current observable resolves. if the defaultValue is provided and the current observable fails,
-   * the error is logged and ignored. If default is not provided, the error is propagated.
-   *
-   *  The idea is that clients will get a cached version of the data first, then the data will be
-   * upgraded when returned simulating a faster response.
-   *
-   *  This observable may send one extra data to the observable.
-   *
-   * @param defaultValue the default value to be piped first before the observable.
-   */
-  public static defaultFirst<T>(defaultValue: T | undefined): MonoTypeOperatorFunction<T> {
-    return (observable) =>
-      merge(
-        defaultValue ? of(defaultValue) : EMPTY,
-        observable.pipe(
-          catchError((e) => {
-            if (defaultValue) {
-              return EMPTY
-            } else {
-              return throwError(e)
-            }
-          }),
-        ),
-      )
-  }
+    /**
+     * This pipe operation concatenates the default values first when provided on top what the
+     * current observable resolves. if the defaultValue is provided and the current observable fails,
+     * the error is logged and ignored. If default is not provided, the error is propagated.
+     *
+     *  The idea is that clients will get a cached version of the data first, then the data will be
+     * upgraded when returned simulating a faster response.
+     *
+     *  This observable may send one extra data to the observable.
+     *
+     * @param defaultValue the default value to be piped first before the observable.
+     */
+    public static defaultFirst<T>(defaultValue: T | undefined): MonoTypeOperatorFunction<T> {
+        return (observable) =>
+            merge(
+                defaultValue ? of(defaultValue) : EMPTY,
+                observable.pipe(
+                    catchError((e) => {
+                        if (defaultValue) {
+                            return EMPTY;
+                        } else {
+                            return throwError(e);
+                        }
+                    }),
+                ),
+            );
+    }
 
-  /**
-   * This pipe operation appends the default data to the observable if this one fails.
-   *
-   * If the default data is not provided, the observable error is propagated. If the observable
-   * succeeds, the default value is ignored.
-   *
-   * The idea is that if the response cannot be obtained from rest, the cached data will be used.
-   *
-   * @param defaultValue the default value to be provided if the current observable fails.
-   */
+    /**
+     * This pipe operation appends the default data to the observable if this one fails.
+     *
+     * If the default data is not provided, the observable error is propagated. If the observable
+     * succeeds, the default value is ignored.
+     *
+     * The idea is that if the response cannot be obtained from rest, the cached data will be used.
+     *
+     * @param defaultValue the default value to be provided if the current observable fails.
+     */
 
-  public static defaultLast<T>(defaultValue: T | undefined = undefined): MonoTypeOperatorFunction<T> {
-    return (observable) =>
-      observable.pipe(
-        catchError((e) => {
-          if (defaultValue) {
-            return of(defaultValue)
-          } else {
-            return throwError(e)
-          }
-        }),
-      )
-  }
+    public static defaultLast<T>(defaultValue: T | undefined = undefined): MonoTypeOperatorFunction<T> {
+        return (observable) =>
+            observable.pipe(
+                catchError((e) => {
+                    if (defaultValue) {
+                        return of(defaultValue);
+                    } else {
+                        return throwError(e);
+                    }
+                }),
+            );
+    }
 }

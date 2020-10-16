@@ -16,301 +16,301 @@
 @import '../../resources/css/variables.less';
 
 .main-outer-container {
-  display: block;
-  float: left;
-  position: relative;
-  clear: both;
-  width: 100%;
-  height: 100%;
-  padding: 0 0.2rem 0 0;
+    display: block;
+    float: left;
+    position: relative;
+    clear: both;
+    width: 100%;
+    height: 100%;
+    padding: 0 0.2rem 0 0;
 }
 
 .wrap {
-  padding: 0.6rem 0 0 1rem;
-  height: 100vh;
-  max-height: 100vh;
-  width: 100%;
-  position: relative;
-
-  .alert {
-    margin-left: 50%;
-    left: -380px;
-    top: 10px;
-    position: absolute;
-    z-index: 9;
-    min-width: 765px;
-    font-size: 16px;
-    line-height: 40px;
-    color: #eee;
-    text-align: center;
-    height: 55px;
-
-    i {
-      position: relative;
-      bottom: 2px;
-      font-size: 20px;
-    }
-  }
-
-  .alert.success_alert {
-    color: #000;
-  }
-
-  .error_alert {
-    background-color: #cc3835;
-    border: 1px solid #cc3835;
-  }
-
-  .warning_alert {
-    background-color: #fd8c4a;
-    border: 1px solid #fd8c4a;
-  }
-
-  .point {
-    -webkit-app-region: no-drag;
-  }
-  //unused
-  .input_point {
-    padding-top: 20px;
-
-    .connection_letter {
-      font-size: 18px;
-      color: #ddd;
-      letter-spacing: 2px;
-    }
-
-    input {
-      width: 100%;
-      border-bottom: 1px solid @border;
-      padding-left: 10px;
-      margin-right: 20px;
-      padding-bottom: 5px;
-    }
-
-    input::placeholder {
-      font-size: 16px;
-    }
-
-    .reset-icon,
-    .sure_button {
-      display: inline-block;
-      text-align: center;
-      font-size: 35px;
-      line-height: 40px;
-      height: 40px !important;
-      width: 40px !important;
-      background-color: @purpleLight;
-      color: white;
-      justify-self: center;
-    }
-    .reset-icon:hover,
-    .sure_button:hover {
-      box-shadow: 0 0 10px @purpleLight;
-    }
-    .reset-icon {
-      font-size: 25px;
-      i {
-        height: 40px !important;
-        width: 40px !important;
-        background-color: transparent !important;
-      }
-      i:before {
-        right: 8px;
-      }
-    }
-  }
-  //unused
-  .node_list_container {
-    max-height: 160px;
-  }
-  //unused
-  .node_list {
-    max-height: 250px;
-
-    .ivu-input {
-      border: none;
-    }
-  }
-  //unused
-  .point_item {
-    margin: 10px 20px;
-    padding-right: 30px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
+    padding: 0.6rem 0 0 1rem;
+    height: 100vh;
+    max-height: 100vh;
+    width: 100%;
     position: relative;
 
-    img {
-      width: 15px;
-      height: 15px;
-      margin-right: 10px;
+    .alert {
+        margin-left: 50%;
+        left: -380px;
+        top: 10px;
+        position: absolute;
+        z-index: 9;
+        min-width: 765px;
+        font-size: 16px;
+        line-height: 40px;
+        color: #eee;
+        text-align: center;
+        height: 55px;
+
+        i {
+            position: relative;
+            bottom: 2px;
+            font-size: 20px;
+        }
     }
 
-    span {
-      text-align: left;
-      //width: 500px;
-      font-size: 20px;
+    .alert.success_alert {
+        color: #000;
     }
-  }
 
-  .top_window {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-image: linear-gradient(120deg, @primary, @secondary);
-    -webkit-app-region: drag;
-    width: 100%;
-    height: 50px;
+    .error_alert {
+        background-color: #cc3835;
+        border: 1px solid #cc3835;
+    }
 
-    .controller {
-      .app_controller {
-        float: right;
-        font-size: 20px;
-        margin-right: 20px;
+    .warning_alert {
+        background-color: #fd8c4a;
+        border: 1px solid #fd8c4a;
+    }
 
-        .title {
-          font-size: 18px;
-          text-align: center;
-          padding: 10px;
-          min-width: 450px;
+    .point {
+        -webkit-app-region: no-drag;
+    }
+    //unused
+    .input_point {
+        padding-top: 20px;
+
+        .connection_letter {
+            font-size: 18px;
+            color: #ddd;
+            letter-spacing: 2px;
         }
 
-        > div {
-          float: left;
-          margin-left: 25px;
-          position: relative;
-          font-size: @smallerFont;
-          i {
-            font-size: 0.2rem;
-            margin-right: 0.02rem;
-          }
+        input {
+            width: 100%;
+            border-bottom: 1px solid @border;
+            padding-left: 10px;
+            margin-right: 20px;
+            padding-bottom: 5px;
         }
-      }
 
-      .debug-console-trigger {
-        padding-top: 0.01rem;
-        font-size: @smallerFont;
-        color: @white;
-        cursor: pointer;
+        input::placeholder {
+            font-size: 16px;
+        }
+
+        .reset-icon,
+        .sure_button {
+            display: inline-block;
+            text-align: center;
+            font-size: 35px;
+            line-height: 40px;
+            height: 40px !important;
+            width: 40px !important;
+            background-color: @purpleLight;
+            color: white;
+            justify-self: center;
+        }
+        .reset-icon:hover,
+        .sure_button:hover {
+            box-shadow: 0 0 10px @purpleLight;
+        }
+        .reset-icon {
+            font-size: 25px;
+            i {
+                height: 40px !important;
+                width: 40px !important;
+                background-color: transparent !important;
+            }
+            i:before {
+                right: 8px;
+            }
+        }
+    }
+    //unused
+    .node_list_container {
+        max-height: 160px;
+    }
+    //unused
+    .node_list {
+        max-height: 250px;
+
+        .ivu-input {
+            border: none;
+        }
+    }
+    //unused
+    .point_item {
+        margin: 10px 20px;
+        padding-right: 30px;
         display: flex;
+        flex-direction: row;
         align-items: center;
+        text-align: left;
+        position: relative;
 
-        .debug-console-trigger-icon {
-          font-size: 22px;
-          position: relative;
-          display: block;
-          // float: left;
-          // height: .6rem;
-          // padding-top: 0.17rem;
-          padding-right: 0.04rem;
+        img {
+            width: 15px;
+            height: 15px;
+            margin-right: 10px;
         }
-      }
-    }
-  }
 
-  .right_content {
-    width: 100%;
-    height: 100%;
-  }
-
-  .fade-enter-active {
-    transition: all 0.2s ease;
-    -webkit-transition: all 0.2s ease;
-  }
-
-  .fade-leave-active {
-    transition: all 0.3s ease;
-    -webkit-transition: all 0.3s ease;
-  }
-
-  .fade-enter {
-    transform: translateX(50px);
-    -webkit-transform: translateX(50px);
-    opacity: 0;
-  }
-
-  .fade-leave-active {
-    opacity: 0;
-  }
-
-  .remove_icon {
-    position: absolute;
-    right: -15px;
-  }
-
-  .remove_icon:hover {
-    opacity: 0.5;
-  }
-
-  .ivu-poptip-popper {
-    z-index: 9;
-  }
-
-  /deep/.ivu-select-dropdown-list {
-    .ivu-select-item-focus {
-      background-color: transparent;
+        span {
+            text-align: left;
+            //width: 500px;
+            font-size: 20px;
+        }
     }
 
-    .ivu-select-item-focus:hover {
-      background-color: #f3f3f3;
+    .top_window {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-image: linear-gradient(120deg, @primary, @secondary);
+        -webkit-app-region: drag;
+        width: 100%;
+        height: 50px;
+
+        .controller {
+            .app_controller {
+                float: right;
+                font-size: 20px;
+                margin-right: 20px;
+
+                .title {
+                    font-size: 18px;
+                    text-align: center;
+                    padding: 10px;
+                    min-width: 450px;
+                }
+
+                > div {
+                    float: left;
+                    margin-left: 25px;
+                    position: relative;
+                    font-size: @smallerFont;
+                    i {
+                        font-size: 0.2rem;
+                        margin-right: 0.02rem;
+                    }
+                }
+            }
+
+            .debug-console-trigger {
+                padding-top: 0.01rem;
+                font-size: @smallerFont;
+                color: @white;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+
+                .debug-console-trigger-icon {
+                    font-size: 22px;
+                    position: relative;
+                    display: block;
+                    // float: left;
+                    // height: .6rem;
+                    // padding-top: 0.17rem;
+                    padding-right: 0.04rem;
+                }
+            }
+        }
     }
 
-    .ivu-select-item-selected,
-    .ivu-select-item-selected:hover {
-      background-color: #f3f3f3;
+    .right_content {
+        width: 100%;
+        height: 100%;
     }
-  }
-  //unused
-  .node-input-container {
-    width: 100%;
-    margin-right: 20px;
-  }
+
+    .fade-enter-active {
+        transition: all 0.2s ease;
+        -webkit-transition: all 0.2s ease;
+    }
+
+    .fade-leave-active {
+        transition: all 0.3s ease;
+        -webkit-transition: all 0.3s ease;
+    }
+
+    .fade-enter {
+        transform: translateX(50px);
+        -webkit-transform: translateX(50px);
+        opacity: 0;
+    }
+
+    .fade-leave-active {
+        opacity: 0;
+    }
+
+    .remove_icon {
+        position: absolute;
+        right: -15px;
+    }
+
+    .remove_icon:hover {
+        opacity: 0.5;
+    }
+
+    .ivu-poptip-popper {
+        z-index: 9;
+    }
+
+    /deep/.ivu-select-dropdown-list {
+        .ivu-select-item-focus {
+            background-color: transparent;
+        }
+
+        .ivu-select-item-focus:hover {
+            background-color: #f3f3f3;
+        }
+
+        .ivu-select-item-selected,
+        .ivu-select-item-selected:hover {
+            background-color: #f3f3f3;
+        }
+    }
+    //unused
+    .node-input-container {
+        width: 100%;
+        margin-right: 20px;
+    }
 }
 .mac.wrap {
-  .top_window {
-    .controller {
-      .app_controller {
-        margin-right: 40px !important;
-        /deep/.switch_account {
-          -webkit-app-region: no-drag;
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          margin-top: 0.16rem;
-          .select_account_icon {
-            width: 22px;
-            height: 22px;
-            position: relative;
-            top: 0.04rem;
-            filter: brightness(100);
-          }
-          .ivu-select {
-            font-size: 20px;
-          }
+    .top_window {
+        .controller {
+            .app_controller {
+                margin-right: 40px !important;
+                /deep/.switch_account {
+                    -webkit-app-region: no-drag;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    margin-top: 0.16rem;
+                    .select_account_icon {
+                        width: 22px;
+                        height: 22px;
+                        position: relative;
+                        top: 0.04rem;
+                        filter: brightness(100);
+                    }
+                    .ivu-select {
+                        font-size: 20px;
+                    }
+                }
+                /deep/.ivu-select-selection {
+                    background-color: transparent;
+                    border: none;
+                    box-shadow: none;
+                    .ivu-select-placeholder,
+                    .ivu-select-selected-value {
+                        font-size: @smallerFont;
+                        font-weight: 400;
+                        color: white !important;
+                        margin-left: 0;
+                    }
+                    i::before {
+                        display: none;
+                    }
+                }
+            }
         }
-        /deep/.ivu-select-selection {
-          background-color: transparent;
-          border: none;
-          box-shadow: none;
-          .ivu-select-placeholder,
-          .ivu-select-selected-value {
-            font-size: @smallerFont;
-            font-weight: 400;
-            color: white !important;
-            margin-left: 0;
-          }
-          i::before {
-            display: none;
-          }
-        }
-      }
     }
-  }
 }
 
 .max-z-index {
-  .ivu-select-dropdown {
-    z-index: 2147483647 !important;
-  }
+    .ivu-select-dropdown {
+        z-index: 2147483647 !important;
+    }
 }

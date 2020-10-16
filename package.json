@@ -1,170 +1,170 @@
 {
-  "name": "symbol-desktop-wallet",
-  "description": "Symbol Wallet",
-  "homepage": "https://github.com/nemgrouplimited/symbol-desktop-wallet",
-  "version": "0.13.1",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/nemgrouplimited/symbol-desktop-wallet.git"
-  },
-  "license": "Apache-2.0",
-  "scripts": {
-    "start": "electron .",
-    "test": "vue-cli-service test:unit",
-    "dev": "vue-cli-service serve ",
-    "build": "npm run build:web",
-    "build:web": "rimraf dist && mkdir dist && tsc && vue-cli-service build",
-    "release": "npm run build && npm run release:all",
-    "release:all": "npm run release:mac && npm run release:win && npm run release:lin",
-    "release:mac": "electron-builder --mac",
-    "release:win": "electron-builder --win",
-    "release:lin": "electron-builder --linux deb snap tar.xz",
-    "lint": "npm run prettier && npm run eslint",
-    "lint:fix": "npm run prettier:fix && npm run eslint:fix",
-    "eslint": "eslint src/ --ext .ts && eslint src/ --ext .vue && eslint __tests__/ --ext .ts && eslint __mocks__/ --ext .ts",
-    "eslint:fix": "eslint src/ --ext .ts --fix && eslint src/ --ext .vue --fix && eslint __tests__/ --ext .ts --fix && eslint __mocks__/ --ext .ts --fix",
-    "prettier": "prettier --check ./src ./__tests__ ./__mocks__",
-    "prettier:fix": "prettier --write ./src ./__tests__ ./__mocks__",
-    "version": "echo $npm_package_version"
-  },
-  "author": "Greg Saive <greg.saive@nem.software>",
-  "contributors": [
-    {
-      "name": "Greg Saive",
-      "email": "greg.saive@nem.software"
-    }
-  ],
-  "dependencies": {
-    "animate.css": "^3.7.2",
-    "await-lock": "^2.0.1",
-    "axios": "^0.19.0",
-    "file-saver": "^2.0.2",
-    "json2csv": "^5.0.1",
-    "request": "^2.88.0",
-    "rss-parser": "^3.7.3",
-    "rxjs": "^6.5.2",
-    "symbol-uri-scheme": "^0.4.7",
-    "trezor-connect": "^7.0.5",
-    "vee-validate": "^3.2.3",
-    "view-design": "^4.0.0",
-    "vue": "^2.6.10",
-    "vue-class-component": "^7.0.2",
-    "vue-i18n": "^8.11.2",
-    "vue-infinite-scroll": "^2.0.2",
-    "vue-moment": "^4.1.0",
-    "vue-number-animation": "1.0.5",
-    "vue-property-decorator": "^8.1.0",
-    "vue-qrcode-reader": "^2.3.10",
-    "vue-router": "^3.1.3",
-    "vue-rx": "^6.2.0",
-    "vuedraggable": "^2.23.2",
-    "vuex": "^3.0.1"
-  },
-  "devDependencies": {
-    "@babel/compat-data": "^7.9.6",
-    "@babel/core": "^7.7.2",
-    "@types/file-saver": "^2.0.1",
-    "@types/jest": "^23.3.1",
-    "@types/json2csv": "^5.0.1",
-    "@types/lodash": "^4.14.149",
-    "@types/node": "^9.6.50",
-    "@types/request": "^2.47.1",
-    "@types/vue-moment": "^4.0.0",
-    "@typescript-eslint/eslint-plugin": "^2.15.0",
-    "@typescript-eslint/parser": "^2.15.0",
-    "@vue/cli-plugin-babel": "^4.0.5",
-    "@vue/cli-plugin-typescript": "^4.3.0",
-    "@vue/cli-plugin-unit-jest": "^4.0.5",
-    "@vue/cli-service": "^4.0.5",
-    "@vue/eslint-config-typescript": "^5.0.1",
-    "@vue/test-utils": "^1.0.0-beta.29",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "^25.2.6",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "babel-preset-env": "^1.7.0",
-    "bufferutil": "^4.0.1",
-    "cross-env": "^5.1.1",
-    "electron": "^8.2.0",
-    "electron-builder": "^22.4.1",
-    "electron-notarize": "^0.3.0",
-    "electron-packager": "^14.2.1",
-    "electron-updater": "^4.2.5",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.3",
-    "eslint-plugin-vue": "^6.1.2",
-    "flush-promises": "^1.0.2",
-    "google-fonts-webpack-plugin": "^0.4.4",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^25.2.6",
-    "less": "^3.0.4",
-    "less-loader": "^4.1.0",
-    "moment-timezone": "^0.5.26",
-    "node-pre-gyp": "^0.13.0",
-    "postcss-import": "^12.0.1",
-    "postcss-pxtorem": "^4.0.1",
-    "prettier": "2.0.5",
-    "rimraf": "^3.0.2",
-    "symbol-hd-wallets": "^0.13.0",
-    "symbol-qr-library": "^0.13.0",
-    "symbol-sdk": "^0.21.0",
-    "ts-jest": "^25.3.0",
-    "typescript": "^3.7.2",
-    "utf-8-validate": "^5.0.2",
-    "vue-jest": "^3.0.5",
-    "vue-template-compiler": "^2.6.10"
-  },
-  "resolutions": {
-    "@babel/preset-env": "7.5.5"
-  },
-  "main": "./public/build.js",
-  "build": {
-    "appId": "io.nem.symbol.desktop-wallet",
-    "extends": null,
-    "copyright": "Copyright © 2019-2020 NEM",
-    "productName": "Symbol Wallet",
-    "artifactName": "${name}-${os}-${arch}-${version}.${ext}",
-    "icon": "./dist/assets/icons/Icon.icns",
-    "files": [
-      "dist/**/*",
-      "package.json",
-      "./public/build.js"
+    "name": "symbol-desktop-wallet",
+    "description": "Symbol Wallet",
+    "homepage": "https://github.com/nemgrouplimited/symbol-desktop-wallet",
+    "version": "0.13.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nemgrouplimited/symbol-desktop-wallet.git"
+    },
+    "license": "Apache-2.0",
+    "scripts": {
+        "start": "electron .",
+        "test": "vue-cli-service test:unit",
+        "dev": "vue-cli-service serve ",
+        "build": "npm run build:web",
+        "build:web": "rimraf dist && mkdir dist && tsc && vue-cli-service build",
+        "release": "npm run build && npm run release:all",
+        "release:all": "npm run release:mac && npm run release:win && npm run release:lin",
+        "release:mac": "electron-builder --mac",
+        "release:win": "electron-builder --win",
+        "release:lin": "electron-builder --linux deb snap tar.xz",
+        "lint": "npm run prettier && npm run eslint",
+        "lint:fix": "npm run prettier:fix && npm run eslint:fix",
+        "eslint": "eslint src/ --ext .ts && eslint src/ --ext .vue && eslint __tests__/ --ext .ts && eslint __mocks__/ --ext .ts",
+        "eslint:fix": "eslint src/ --ext .ts --fix && eslint src/ --ext .vue --fix && eslint __tests__/ --ext .ts --fix && eslint __mocks__/ --ext .ts --fix",
+        "prettier": "prettier --check ./src ./__tests__ ./__mocks__",
+        "prettier:fix": "prettier --write ./src ./__tests__ ./__mocks__",
+        "version": "echo $npm_package_version"
+    },
+    "author": "Greg Saive <greg.saive@nem.software>",
+    "contributors": [
+        {
+            "name": "Greg Saive",
+            "email": "greg.saive@nem.software"
+        }
     ],
-    "directories": {
-      "buildResources": "assets",
-      "output": "release"
+    "dependencies": {
+        "animate.css": "^3.7.2",
+        "await-lock": "^2.0.1",
+        "axios": "^0.19.0",
+        "file-saver": "^2.0.2",
+        "json2csv": "^5.0.1",
+        "request": "^2.88.0",
+        "rss-parser": "^3.7.3",
+        "rxjs": "^6.5.2",
+        "symbol-uri-scheme": "^0.4.7",
+        "trezor-connect": "^7.0.5",
+        "vee-validate": "^3.2.3",
+        "view-design": "^4.0.0",
+        "vue": "^2.6.10",
+        "vue-class-component": "^7.0.2",
+        "vue-i18n": "^8.11.2",
+        "vue-infinite-scroll": "^2.0.2",
+        "vue-moment": "^4.1.0",
+        "vue-number-animation": "1.0.5",
+        "vue-property-decorator": "^8.1.0",
+        "vue-qrcode-reader": "^2.3.10",
+        "vue-router": "^3.1.3",
+        "vue-rx": "^6.2.0",
+        "vuedraggable": "^2.23.2",
+        "vuex": "^3.0.1"
+    },
+    "devDependencies": {
+        "@babel/compat-data": "^7.9.6",
+        "@babel/core": "^7.7.2",
+        "@types/file-saver": "^2.0.1",
+        "@types/jest": "^23.3.1",
+        "@types/json2csv": "^5.0.1",
+        "@types/lodash": "^4.14.149",
+        "@types/node": "^9.6.50",
+        "@types/request": "^2.47.1",
+        "@types/vue-moment": "^4.0.0",
+        "@typescript-eslint/eslint-plugin": "^2.15.0",
+        "@typescript-eslint/parser": "^2.15.0",
+        "@vue/cli-plugin-babel": "^4.0.5",
+        "@vue/cli-plugin-typescript": "^4.3.0",
+        "@vue/cli-plugin-unit-jest": "^4.0.5",
+        "@vue/cli-service": "^4.0.5",
+        "@vue/eslint-config-typescript": "^5.0.1",
+        "@vue/test-utils": "^1.0.0-beta.29",
+        "babel-core": "7.0.0-bridge.0",
+        "babel-jest": "^25.2.6",
+        "babel-plugin-syntax-dynamic-import": "^6.18.0",
+        "babel-preset-env": "^1.7.0",
+        "bufferutil": "^4.0.1",
+        "cross-env": "^5.1.1",
+        "electron": "^8.2.0",
+        "electron-builder": "^22.4.1",
+        "electron-notarize": "^0.3.0",
+        "electron-packager": "^14.2.1",
+        "electron-updater": "^4.2.5",
+        "eslint": "^6.8.0",
+        "eslint-config-prettier": "^6.11.0",
+        "eslint-plugin-prettier": "^3.1.3",
+        "eslint-plugin-vue": "^6.1.2",
+        "flush-promises": "^1.0.2",
+        "google-fonts-webpack-plugin": "^0.4.4",
+        "identity-obj-proxy": "^3.0.0",
+        "jest": "^25.2.6",
+        "less": "^3.0.4",
+        "less-loader": "^4.1.0",
+        "moment-timezone": "^0.5.26",
+        "node-pre-gyp": "^0.13.0",
+        "postcss-import": "^12.0.1",
+        "postcss-pxtorem": "^4.0.1",
+        "prettier": "2.0.5",
+        "rimraf": "^3.0.2",
+        "symbol-hd-wallets": "^0.13.0",
+        "symbol-qr-library": "^0.13.0",
+        "symbol-sdk": "^0.21.0",
+        "ts-jest": "^25.3.0",
+        "typescript": "^3.7.2",
+        "utf-8-validate": "^5.0.2",
+        "vue-jest": "^3.0.5",
+        "vue-template-compiler": "^2.6.10"
+    },
+    "resolutions": {
+        "@babel/preset-env": "7.5.5"
+    },
+    "main": "./public/build.js",
+    "build": {
+        "appId": "io.nem.symbol.desktop-wallet",
+        "extends": null,
+        "copyright": "Copyright © 2019-2020 NEM",
+        "productName": "Symbol Wallet",
+        "artifactName": "${name}-${os}-${arch}-${version}.${ext}",
+        "icon": "./dist/assets/icons/Icon.icns",
+        "files": [
+            "dist/**/*",
+            "package.json",
+            "./public/build.js"
+        ],
+        "directories": {
+            "buildResources": "assets",
+            "output": "release"
+        }
+    },
+    "mac": {
+        "category": "public.app-category.finance",
+        "target": "tar.gz",
+        "icon": "./assets/icons/Icon.incs",
+        "hardenedRuntime": true,
+        "gatekeeperAssess": false,
+        "asarUnpack": [
+            "**/*.node"
+        ],
+        "entitlements": "electron/entitlements.mac.plist",
+        "extendInfo": {
+            "NSCameraUsageDescription": "This app requires camera access to scan qrcodes."
+        }
+    },
+    "dmg": {
+        "window": {
+            "x": 100,
+            "y": 100,
+            "width": 500,
+            "height": 400
+        }
+    },
+    "nsis": {
+        "oneClick": false,
+        "perMachine": false,
+        "allowToChangeInstallationDirectory": true,
+        "installerIcon": "./assets/icons/Symbol.ico"
+    },
+    "linux": {
+        "category": "Finance",
+        "icon": "./assets/icons/Icon.incs"
     }
-  },
-  "mac": {
-    "category": "public.app-category.finance",
-    "target": "tar.gz",
-    "icon": "./assets/icons/Icon.incs",
-    "hardenedRuntime": true,
-    "gatekeeperAssess": false,
-    "asarUnpack": [
-      "**/*.node"
-    ],
-    "entitlements": "electron/entitlements.mac.plist",
-    "extendInfo": {
-      "NSCameraUsageDescription": "This app requires camera access to scan qrcodes."
-    }
-  },
-  "dmg": {
-    "window": {
-      "x": 100,
-      "y": 100,
-      "width": 500,
-      "height": 400
-    }
-  },
-  "nsis": {
-    "oneClick": false,
-    "perMachine": false,
-    "allowToChangeInstallationDirectory": true,
-    "installerIcon": "./assets/icons/Symbol.ico"
-  },
-  "linux": {
-    "category": "Finance",
-    "icon": "./assets/icons/Icon.incs"
-  }
 }

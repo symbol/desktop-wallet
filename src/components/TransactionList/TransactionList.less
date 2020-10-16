@@ -16,150 +16,150 @@
 @import '../../views/resources/css/variables.less';
 
 .transaction-list-tabs {
-  display: block;
-  position: relative;
-  zoom: 1;
-  width: 100%;
-  height: 100%;
-
-  .ivu-tabs-bar {
-    border: 0;
-    margin-bottom: 0.2rem;
-  }
-
-  .ivu-tabs-content {
+    display: block;
+    position: relative;
+    zoom: 1;
     width: 100%;
     height: 100%;
-  }
 
-  .ivu-tabs-tabpane {
-    display: block !important;
-    height: 100%;
-    padding-left: 0.2rem;
-  }
+    .ivu-tabs-bar {
+        border: 0;
+        margin-bottom: 0.2rem;
+    }
 
-  .ivu-tabs-tab {
-    font-size: @smallFont;
-    font-family: @symbolFont;
-    color: @grayDark;
-    font-weight: @bolder;
-    font-size: 0.24rem;
-    margin-top: 0.15rem;
-    margin-left: 0.31rem;
-  }
+    .ivu-tabs-content {
+        width: 100%;
+        height: 100%;
+    }
 
-  .ivu-tabs-tab:hover {
-    opacity: 0.6;
-  }
+    .ivu-tabs-tabpane {
+        display: block !important;
+        height: 100%;
+        padding-left: 0.2rem;
+    }
 
-  .ivu-tabs-tab:active,
-  .ivu-tabs-tab:hover {
-    color: @secondary;
-  }
+    .ivu-tabs-tab {
+        font-size: @smallFont;
+        font-family: @symbolFont;
+        color: @grayDark;
+        font-weight: @bolder;
+        font-size: 0.24rem;
+        margin-top: 0.15rem;
+        margin-left: 0.31rem;
+    }
 
-  .ivu-tabs-tab-active {
-    color: @secondary;
-  }
+    .ivu-tabs-tab:hover {
+        opacity: 0.6;
+    }
 
-  .ivu-tabs-ink-bar {
-    display: none;
-  }
+    .ivu-tabs-tab:active,
+    .ivu-tabs-tab:hover {
+        color: @secondary;
+    }
+
+    .ivu-tabs-tab-active {
+        color: @secondary;
+    }
+
+    .ivu-tabs-ink-bar {
+        display: none;
+    }
 }
 
 .transaction-list-outer-container {
-  background-color: @white;
-  position: relative;
-  height: 100%;
-
-  .transaction-list-inner-container {
+    background-color: @white;
     position: relative;
-    display: grid;
     height: 100%;
-    width: 100%;
-    grid-template-rows: calc(100% - 0.6rem) 0.6rem;
-    grid-template-columns: 100%;
 
-    .transaction-list-tabs-container {
-      width: 100%;
-      display: block;
+    .transaction-list-inner-container {
+        position: relative;
+        display: grid;
+        height: 100%;
+        width: 100%;
+        grid-template-rows: calc(100% - 0.6rem) 0.6rem;
+        grid-template-columns: 100%;
+
+        .transaction-list-tabs-container {
+            width: 100%;
+            display: block;
+        }
+
+        .transaction-list-pagination-container {
+            font-size: @normalFont;
+            text-align: right;
+            width: 100%;
+            display: block;
+            .download-transaction {
+                margin-top: 0.08rem;
+                margin-left: 0.3rem;
+            }
+            .ivu-page-item {
+                min-width: 0.31rem;
+                height: 0.3rem;
+                border: none;
+                background: @white;
+                box-shadow: 0 0 0.06rem @boxShadow;
+                color: @grayDark;
+                user-select: none;
+                border: 0.01rem solid @border;
+                transition: all 0.2s ease-in-out;
+            }
+
+            .ivu-page-item-active a,
+            .ivu-page-item-active:hover a {
+                color: @primary !important;
+            }
+
+            .ivu-icon {
+                border: none;
+            }
+
+            span {
+                vertical-align: middle;
+            }
+            .page_total {
+                padding-right: 0.1rem;
+            }
+            .page_content {
+                display: inline-block;
+                vertical-align: middle;
+                padding: 0.1rem 0.45rem;
+            }
+        }
     }
-
-    .transaction-list-pagination-container {
-      font-size: @normalFont;
-      text-align: right;
-      width: 100%;
-      display: block;
-      .download-transaction {
-        margin-top: 0.08rem;
-        margin-left: 0.3rem;
-      }
-      .ivu-page-item {
-        min-width: 0.31rem;
-        height: 0.3rem;
-        border: none;
-        background: @white;
-        box-shadow: 0 0 0.06rem @boxShadow;
-        color: @grayDark;
-        user-select: none;
-        border: 0.01rem solid @border;
-        transition: all 0.2s ease-in-out;
-      }
-
-      .ivu-page-item-active a,
-      .ivu-page-item-active:hover a {
-        color: @primary !important;
-      }
-
-      .ivu-icon {
-        border: none;
-      }
-
-      span {
-        vertical-align: middle;
-      }
-      .page_total {
-        padding-right: 0.1rem;
-      }
-      .page_content {
-        display: inline-block;
-        vertical-align: middle;
-        padding: 0.1rem 0.45rem;
-      }
-    }
-  }
 }
 
 .transaction-list-container {
-  float: left;
-  width: 100%;
-  background-color: @white;
-  padding: 0.05rem 0.31rem;
-  height: 100%;
+    float: left;
+    width: 100%;
+    background-color: @white;
+    padding: 0.05rem 0.31rem;
+    height: 100%;
 
-  .click-to-cosign {
-    color: red !important;
-    font-size: 0.16rem !important;
-    font-weight: 600 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
+    .click-to-cosign {
+        color: red !important;
+        font-size: 0.16rem !important;
+        font-weight: 600 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
 
-  .inner_transaction_title {
-    width: 2rem !important;
-  }
+    .inner_transaction_title {
+        width: 2rem !important;
+    }
 
-  .refresh_btn {
-    font-size: 0.16rem;
-    display: block;
-    padding: 0.02rem 0.12rem;
-    line-height: 0.3rem;
-    border-radius: 0.14rem;
-    color: @primary;
-    z-index: 1;
-  }
+    .refresh_btn {
+        font-size: 0.16rem;
+        display: block;
+        padding: 0.02rem 0.12rem;
+        line-height: 0.3rem;
+        border-radius: 0.14rem;
+        color: @primary;
+        z-index: 1;
+    }
 }
 .transaction-list-filters-container {
-  position: absolute;
-  right: 0.2rem;
-  top: -0.7rem;
+    position: absolute;
+    right: 0.2rem;
+    top: -0.7rem;
 }

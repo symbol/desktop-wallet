@@ -14,122 +14,111 @@
  *
  */
 import {
-  Address,
-  RepositoryFactoryHttp,
-  MosaicRepository,
-  Page,
-  TransactionSearchCriteria,
-  MosaicInfo,
-  MosaicId,
-  UInt64,
-  NetworkType,
-  MosaicFlags,
-  AccountRepository,
-  AccountInfo,
-  AccountSearchCriteria,
-} from 'symbol-sdk'
-import { MosaicService } from '@/services/MosaicService'
-import { Observable, of } from 'rxjs'
-import { WalletsModel2 } from '@MOCKS/Accounts'
-import { networkConfig } from '@/config'
+    Address,
+    RepositoryFactoryHttp,
+    MosaicRepository,
+    Page,
+    MosaicInfo,
+    MosaicId,
+    UInt64,
+    NetworkType,
+    MosaicFlags,
+    AccountRepository,
+    AccountInfo,
+} from 'symbol-sdk';
+import { MosaicService } from '@/services/MosaicService';
+import { Observable, of } from 'rxjs';
+import { WalletsModel2 } from '@MOCKS/Accounts';
+import { networkConfig } from '@/config';
 
-const address1 = Address.createFromRawAddress('TAD5BAHLOIXCRRB6GU2H72HPXMBBVAEUQRYPHBY')
-const address2 = Address.createFromRawAddress('TAWJ2M7BGKWGBPOUGD5NDKHYDDQ7OQD26HJMMQQ')
-const address3 = Address.createFromRawAddress('TDARSPFSZVLYGBOHGOVWIKAZ4FGGDPGZ3DSS7CQ')
-const address4 = Address.createFromRawAddress('TCEPWMC37ZGXOGOXQOAGDYPI7YH65HLXIMLKNOQ')
-const address5 = Address.createFromRawAddress('TAUDGSA7IEFH6MRGXO26SUU3W5ICF7OLLI3O7CY')
+const address1 = Address.createFromRawAddress('TAD5BAHLOIXCRRB6GU2H72HPXMBBVAEUQRYPHBY');
+const address2 = Address.createFromRawAddress('TAWJ2M7BGKWGBPOUGD5NDKHYDDQ7OQD26HJMMQQ');
+const address3 = Address.createFromRawAddress('TDARSPFSZVLYGBOHGOVWIKAZ4FGGDPGZ3DSS7CQ');
+const address4 = Address.createFromRawAddress('TCEPWMC37ZGXOGOXQOAGDYPI7YH65HLXIMLKNOQ');
+const address5 = Address.createFromRawAddress('TAUDGSA7IEFH6MRGXO26SUU3W5ICF7OLLI3O7CY');
 
-const mosaicService = new MosaicService()
-const realUrl = 'http://api-01.us-west-1.symboldev.network:3000'
+const mosaicService = new MosaicService();
+const realUrl = 'http://api-01.us-west-1.symboldev.network:3000';
 
 const fakeMosaicInfo = new MosaicInfo(
-  '59FDA0733F17CF0001772CBC',
-  new MosaicId([3646934825, 3576016193]),
-  new UInt64([3403414400, 2095475]),
-  new UInt64([1, 0]),
-  Address.createFromPublicKey(
-    'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-    NetworkType.MIJIN_TEST,
-  ),
-  1,
-  new MosaicFlags(7),
-  3,
-  UInt64.fromNumericString('1000'),
-)
+    '59FDA0733F17CF0001772CBC',
+    new MosaicId([3646934825, 3576016193]),
+    new UInt64([3403414400, 2095475]),
+    new UInt64([1, 0]),
+    Address.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.MIJIN_TEST),
+    1,
+    new MosaicFlags(7),
+    3,
+    UInt64.fromNumericString('1000'),
+);
 const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
-  createMosaicRepository(): MosaicRepository {
-    return new (class MosaicRepositoryForTest implements MosaicRepository {
-      getMosaic(mosaicId: MosaicId): Observable<MosaicInfo> {
-        return of(fakeMosaicInfo)
-      }
-      getMosaics(mosaicIds: MosaicId[]): Observable<MosaicInfo[]> {
-        return of([fakeMosaicInfo])
-      }
-      // XXX MosaicSearchCriteria not exported
-      search(criteria: TransactionSearchCriteria): Observable<Page<MosaicInfo>> {
-        return of(new Page([fakeMosaicInfo], 1, 1))
-      }
-    })()
-  }
-  createAccountRepository(): AccountRepository {
-    return new (class AccountRepositoryForTest implements AccountRepository {
-      getAccountInfo(address: Address): Observable<AccountInfo> {
-        return of({ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo)
-      }
+    createMosaicRepository(): MosaicRepository {
+        return new (class MosaicRepositoryForTest implements MosaicRepository {
+            getMosaic(): Observable<MosaicInfo> {
+                return of(fakeMosaicInfo);
+            }
+            getMosaics(): Observable<MosaicInfo[]> {
+                return of([fakeMosaicInfo]);
+            }
+            // XXX MosaicSearchCriteria not exported
+            search(): Observable<Page<MosaicInfo>> {
+                return of(new Page([fakeMosaicInfo], 1, 1));
+            }
+        })();
+    }
+    createAccountRepository(): AccountRepository {
+        return new (class AccountRepositoryForTest implements AccountRepository {
+            getAccountInfo(): Observable<AccountInfo> {
+                return of({ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo);
+            }
 
-      getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
-        return of([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo])
-      }
+            getAccountsInfo(): Observable<AccountInfo[]> {
+                return of([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo]);
+            }
 
-      search(criteria: AccountSearchCriteria): Observable<Page<AccountInfo>> {
-        return of(new Page([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo], 1, 1))
-      }
-    })()
-  }
+            search(): Observable<Page<AccountInfo>> {
+                return of(new Page([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo], 1, 1));
+            }
+        })();
+    }
 })(realUrl, {
-  networkType: NetworkType.TEST_NET,
-  generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
-})
-repositoryFactory.getNetworkType = jest.fn(() => of(NetworkType.MIJIN_TEST))
-repositoryFactory.getGenerationHash = jest.fn(() => of('Some Gen Hash'))
+    networkType: NetworkType.TEST_NET,
+    generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
+});
+repositoryFactory.getNetworkType = jest.fn(() => of(NetworkType.MIJIN_TEST));
+repositoryFactory.getGenerationHash = jest.fn(() => of('Some Gen Hash'));
 
 describe.skip('services/MosaicService', () => {
-  test('getMosaics all addresses', async () => {
-    const generationHash = await repositoryFactory.getGenerationHash().toPromise()
-    const { networkCurrency } = await mosaicService
-      .getNetworkCurrencies(repositoryFactory, generationHash, networkConfig.networkConfigurationDefaults)
-      .toPromise()
-    const addresses: Address[] = [address1, address2, address3, address4, address5]
-    const accountInfos = await repositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise()
-    const result = await mosaicService
-      .getMosaics(repositoryFactory, generationHash, networkCurrency, accountInfos)
-      .toPromise()
-    console.log(JSON.stringify(result, null, 2))
-  })
+    test('getMosaics all addresses', async () => {
+        const generationHash = await repositoryFactory.getGenerationHash().toPromise();
+        const { networkCurrency } = await mosaicService
+            .getNetworkCurrencies(repositoryFactory, generationHash, networkConfig.networkConfigurationDefaults)
+            .toPromise();
+        const addresses: Address[] = [address1, address2, address3, address4, address5];
+        const accountInfos = await repositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise();
+        const result = await mosaicService.getMosaics(repositoryFactory, generationHash, networkCurrency, accountInfos).toPromise();
+        console.log(JSON.stringify(result, null, 2));
+    });
 
-  test('getMosaics account 1 addresses', async () => {
-    const generationHash = await repositoryFactory.getGenerationHash().toPromise()
-    const { networkCurrency } = await mosaicService
-      .getNetworkCurrencies(repositoryFactory, generationHash, networkConfig.networkConfigurationDefaults)
-      .toPromise()
-    const addresses: Address[] = [address1]
-    const accountInfos = await repositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise()
-    const result = await mosaicService
-      .getMosaics(repositoryFactory, generationHash, networkCurrency, accountInfos)
-      .toPromise()
-    console.log(JSON.stringify(result, null, 2))
-  })
+    test('getMosaics account 1 addresses', async () => {
+        const generationHash = await repositoryFactory.getGenerationHash().toPromise();
+        const { networkCurrency } = await mosaicService
+            .getNetworkCurrencies(repositoryFactory, generationHash, networkConfig.networkConfigurationDefaults)
+            .toPromise();
+        const addresses: Address[] = [address1];
+        const accountInfos = await repositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise();
+        const result = await mosaicService.getMosaics(repositoryFactory, generationHash, networkCurrency, accountInfos).toPromise();
+        console.log(JSON.stringify(result, null, 2));
+    });
 
-  test('getMosaics account 3 addresses', async () => {
-    const generationHash = await repositoryFactory.getGenerationHash().toPromise()
-    const { networkCurrency } = await mosaicService
-      .getNetworkCurrencies(repositoryFactory, generationHash, networkConfig.networkConfigurationDefaults)
-      .toPromise()
-    const addresses: Address[] = [address3]
-    const accountInfos = await repositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise()
-    const result = await mosaicService
-      .getMosaics(repositoryFactory, generationHash, networkCurrency, accountInfos)
-      .toPromise()
-    console.log(JSON.stringify(result, null, 2))
-  })
-})
+    test('getMosaics account 3 addresses', async () => {
+        const generationHash = await repositoryFactory.getGenerationHash().toPromise();
+        const { networkCurrency } = await mosaicService
+            .getNetworkCurrencies(repositoryFactory, generationHash, networkConfig.networkConfigurationDefaults)
+            .toPromise();
+        const addresses: Address[] = [address3];
+        const accountInfos = await repositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise();
+        const result = await mosaicService.getMosaics(repositoryFactory, generationHash, networkCurrency, accountInfos).toPromise();
+        console.log(JSON.stringify(result, null, 2));
+    });
+});

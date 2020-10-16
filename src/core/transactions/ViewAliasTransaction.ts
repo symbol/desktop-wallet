@@ -13,45 +13,38 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {
-  Address,
-  AddressAliasTransaction,
-  AliasAction,
-  MosaicAliasTransaction,
-  MosaicId,
-  NamespaceId,
-} from 'symbol-sdk'
+import { Address, AddressAliasTransaction, AliasAction, MosaicAliasTransaction, MosaicId, NamespaceId } from 'symbol-sdk';
 // internal dependencies
-import { TransactionView } from './TransactionView'
-import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
+import { TransactionView } from './TransactionView';
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
 
 /// end-region custom types
 
 export class ViewAliasTransaction extends TransactionView<MosaicAliasTransaction | AddressAliasTransaction> {
-  /**
-   * Displayed items
-   */
-  protected resolveDetailItems(): TransactionDetailItem[] {
-    const transaction = this.transaction
-    const namespaceId: NamespaceId = transaction.namespaceId
-    let aliasTarget: Address | MosaicId
-    if (transaction instanceof AddressAliasTransaction) {
-      aliasTarget = transaction.address
+    /**
+     * Displayed items
+     */
+    protected resolveDetailItems(): TransactionDetailItem[] {
+        const transaction = this.transaction;
+        const namespaceId: NamespaceId = transaction.namespaceId;
+        let aliasTarget: Address | MosaicId;
+        if (transaction instanceof AddressAliasTransaction) {
+            aliasTarget = transaction.address;
+        }
+        if (transaction instanceof MosaicAliasTransaction) {
+            aliasTarget = transaction.namespaceId;
+        }
+        const displayName = namespaceId.fullName ? `${namespaceId.fullName} (${namespaceId.toHex()})` : namespaceId.toHex();
+        const targetKey = aliasTarget instanceof Address ? 'address' : 'mosaic';
+        const targetValue = aliasTarget instanceof Address ? aliasTarget.pretty() : aliasTarget.toHex();
+        const aliasAction = this.transaction.aliasAction;
+        return [
+            { key: 'namespace', value: displayName },
+            {
+                key: 'action',
+                value: aliasAction === AliasAction.Link ? 'Link' : 'Unlink',
+            },
+            { key: targetKey, value: targetValue },
+        ];
     }
-    if (transaction instanceof MosaicAliasTransaction) {
-      aliasTarget = transaction.namespaceId
-    }
-    const displayName = namespaceId.fullName ? `${namespaceId.fullName} (${namespaceId.toHex()})` : namespaceId.toHex()
-    const targetKey = aliasTarget instanceof Address ? 'address' : 'mosaic'
-    const targetValue = aliasTarget instanceof Address ? aliasTarget.pretty() : aliasTarget.toHex()
-    const aliasAction = this.transaction.aliasAction
-    return [
-      { key: 'namespace', value: displayName },
-      {
-        key: 'action',
-        value: aliasAction === AliasAction.Link ? 'Link' : 'Unlink',
-      },
-      { key: targetKey, value: targetValue },
-    ]
-  }
 }

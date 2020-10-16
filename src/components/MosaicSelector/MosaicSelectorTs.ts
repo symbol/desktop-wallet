@@ -13,110 +13,108 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { MosaicId } from 'symbol-sdk'
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { MosaicId } from 'symbol-sdk';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // internal dependencies
 // child components
-import { ValidationProvider } from 'vee-validate'
+import { ValidationProvider } from 'vee-validate';
 // @ts-ignore
-import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components//ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
-import FormLabel from '@/components//FormLabel/FormLabel.vue'
-import { MosaicModel } from '@/core/database/entities/MosaicModel'
+import FormLabel from '@/components//FormLabel/FormLabel.vue';
+import { MosaicModel } from '@/core/database/entities/MosaicModel';
 
 @Component({
-  components: {
-    ValidationProvider,
-    ErrorTooltip,
-    FormLabel,
-  },
-  computed: {
-    ...mapGetters({
-      networkMosaic: 'mosaic/networkMosaic',
-      networkMosaicName: 'mosaic/networkMosaicName',
-      mosaics: 'mosaic/mosaics',
-    }),
-  },
+    components: {
+        ValidationProvider,
+        ErrorTooltip,
+        FormLabel,
+    },
+    computed: {
+        ...mapGetters({
+            networkMosaic: 'mosaic/networkMosaic',
+            networkMosaicName: 'mosaic/networkMosaicName',
+            mosaics: 'mosaic/mosaics',
+        }),
+    },
 })
 export class MosaicSelectorTs extends Vue {
-  /**
-   * Prop bound to the parent v-model
-   */
-  @Prop({ default: '' }) value: string
+    /**
+     * Prop bound to the parent v-model
+     */
+    @Prop({ default: '' }) value: string;
 
-  /**
-   * Mosaics to display as options
-   */
-  @Prop({ default: [] }) mosaicHexIds: string[]
+    /**
+     * Mosaics to display as options
+     */
+    @Prop({ default: [] }) mosaicHexIds: string[];
 
-  /**
-   * Field label hidden by default
-   */
-  @Prop({ default: null }) label: string
+    /**
+     * Field label hidden by default
+     */
+    @Prop({ default: null }) label: string;
 
-  @Prop({ default: 'networkMosaic' }) defaultMosaic: 'networkMosaic' | 'firstInList'
-  /**
-   * Networks currency mosaic
-   */
-  public networkMosaic: MosaicId
+    @Prop({ default: 'networkMosaic' }) defaultMosaic: 'networkMosaic' | 'firstInList';
+    /**
+     * Networks currency mosaic
+     */
+    public networkMosaic: MosaicId;
 
-  /**
-   * Networks currency mosaic name
-   */
-  public networkMosaicName: string
+    /**
+     * Networks currency mosaic name
+     */
+    public networkMosaicName: string;
 
-  /**
-   * All the known mosaics.
-   */
-  public mosaics: MosaicModel[]
+    /**
+     * All the known mosaics.
+     */
+    public mosaics: MosaicModel[];
 
-  /// region computed properties getter/setter
+    /// region computed properties getter/setter
 
-  /**
-   * Mosaics shown as options in the select
-   * @readonly
-   * @protected
-   */
-  protected get displayedMosaics(): MosaicModel[] {
-    return this.mosaicHexIds
-      .map((mosaicIdHex) => this.mosaics.find((m) => m.mosaicIdHex === mosaicIdHex))
-      .filter((x) => x)
-  }
-
-  /**
-   * Sets the default input value
-   * @type {string}
-   */
-  public get selectedMosaic(): string {
-    return this.value
-  }
-
-  /**
-   * Emits input value change to parent component
-   */
-  public set selectedMosaic(hex: string) {
-    this.$emit('input', hex)
-  }
-
-  /**
-   * Hook called when the layout is mounted
-   * @return {void}
-   */
-  public mounted(): void {
-    // if a value is provided, return
-    if (this.value && this.value.length > 0) {
-      return
+    /**
+     * Mosaics shown as options in the select
+     * @readonly
+     * @protected
+     */
+    protected get displayedMosaics(): MosaicModel[] {
+        return this.mosaicHexIds.map((mosaicIdHex) => this.mosaics.find((m) => m.mosaicIdHex === mosaicIdHex)).filter((x) => x);
     }
 
-    // else... set default value to network mosaic
-    if (this.defaultMosaic === 'networkMosaic' && this.networkMosaic) {
-      this.selectedMosaic = this.networkMosaic.toHex()
+    /**
+     * Sets the default input value
+     * @type {string}
+     */
+    public get selectedMosaic(): string {
+        return this.value;
     }
 
-    // otherwise... set default value to the first mosaic from the props
-    if (this.defaultMosaic === 'firstInList' && this.mosaicHexIds.length) {
-      this.selectedMosaic = this.mosaicHexIds[0]
+    /**
+     * Emits input value change to parent component
+     */
+    public set selectedMosaic(hex: string) {
+        this.$emit('input', hex);
     }
-  }
+
+    /**
+     * Hook called when the layout is mounted
+     * @return {void}
+     */
+    public mounted(): void {
+        // if a value is provided, return
+        if (this.value && this.value.length > 0) {
+            return;
+        }
+
+        // else... set default value to network mosaic
+        if (this.defaultMosaic === 'networkMosaic' && this.networkMosaic) {
+            this.selectedMosaic = this.networkMosaic.toHex();
+        }
+
+        // otherwise... set default value to the first mosaic from the props
+        if (this.defaultMosaic === 'firstInList' && this.mosaicHexIds.length) {
+            this.selectedMosaic = this.mosaicHexIds[0];
+        }
+    }
 }

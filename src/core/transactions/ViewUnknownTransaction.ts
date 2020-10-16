@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Transaction } from 'symbol-sdk'
+import { Transaction } from 'symbol-sdk';
 // internal dependencies
-import { TransactionView } from './TransactionView'
+import { TransactionView } from './TransactionView';
 
 export class ViewUnknownTransaction extends TransactionView<Transaction> {}

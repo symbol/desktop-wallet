@@ -14,41 +14,38 @@
  *
  */
 // external dependencies
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { Transaction } from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Transaction } from 'symbol-sdk';
 // @ts-ignore
-import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue'
-import { BlockInfoModel } from '@/core/database/entities/BlockInfoModel'
+import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue';
+import { BlockInfoModel } from '@/core/database/entities/BlockInfoModel';
 // configuration
 
 @Component({
-  components: { MosaicAmountDisplay },
+    components: { MosaicAmountDisplay },
 })
 export class PaidFeeDisplayTs extends Vue {
-  @Prop() transaction: Transaction
+    @Prop() transaction: Transaction;
 
-  public amount = 0
+    public amount = 0;
 
-  public isMaxFee = false
+    public isMaxFee = false;
 
-  public isLoading = false
+    public isLoading = false;
 
-  public async mounted() {
-    this.amount = this.transaction.maxFee.compact()
-    this.isMaxFee = true
-    this.isLoading = true
-    if (this.transaction.transactionInfo && this.transaction.transactionInfo.height) {
-      try {
-        const blockInfo: BlockInfoModel = await this.$store.dispatch(
-          'block/GET_BLOCK',
-          this.transaction.transactionInfo.height,
-        )
-        this.isLoading = false
-        this.isMaxFee = false
-        this.amount = blockInfo.feeMultiplier * this.transaction.size
-      } catch (e) {
-        this.isLoading = false
-      }
+    public async mounted() {
+        this.amount = this.transaction.maxFee.compact();
+        this.isMaxFee = true;
+        this.isLoading = true;
+        if (this.transaction.transactionInfo && this.transaction.transactionInfo.height) {
+            try {
+                const blockInfo: BlockInfoModel = await this.$store.dispatch('block/GET_BLOCK', this.transaction.transactionInfo.height);
+                this.isLoading = false;
+                this.isMaxFee = false;
+                this.amount = blockInfo.feeMultiplier * this.transaction.size;
+            } catch (e) {
+                this.isLoading = false;
+            }
+        }
     }
-  }
 }

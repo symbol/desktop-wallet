@@ -1,14 +1,14 @@
 <template>
-  <div id="app" class="mac">
-    <router-view />
-    <DisabledUiOverlay />
-    <SpinnerLoading v-if="hasLoadingOverlay" />
-  </div>
+    <div id="app" class="mac">
+        <router-view />
+        <DisabledUiOverlay />
+        <SpinnerLoading v-if="hasLoadingOverlay" />
+    </div>
 </template>
 
 <script lang="ts">
-import 'animate.css'
-import { AppTs } from '@/app/AppTs.ts'
+import 'animate.css';
+import { AppTs } from '@/app/AppTs.ts';
 export default class App extends AppTs {}
 </script>
 

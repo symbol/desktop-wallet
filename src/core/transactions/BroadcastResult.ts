@@ -13,37 +13,37 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { CosignatureSignedTransaction, SignedTransaction, Transaction } from 'symbol-sdk'
+import { CosignatureSignedTransaction, SignedTransaction, Transaction } from 'symbol-sdk';
 
 export class BroadcastResult {
-  /**
-   * Create a transaction broadcast result instance
-   *
-   * @param {SignedTransaction} transaction
-   * @param {boolean} success
-   * @param {string} error
-   */
-  constructor(
     /**
-     * The transaction that was announced
-     * @var {SignedTransaction}
+     * Create a transaction broadcast result instance
+     *
+     * @param {SignedTransaction} transaction
+     * @param {boolean} success
+     * @param {string} error
      */
-    public readonly signedTransaction: SignedTransaction | CosignatureSignedTransaction,
+    constructor(
+        /**
+         * The transaction that was announced
+         * @var {SignedTransaction}
+         */
+        public readonly signedTransaction: SignedTransaction | CosignatureSignedTransaction,
 
-    /**
-     * The transaction that returned.
-     * @var {SignedTransaction}
-     */
-    public readonly transaction: Transaction | undefined,
-    /**
-     * Whether broadcasting was successfull
-     * @var {boolean}
-     **/
-    public readonly success: boolean,
-    /**
-     * Error message (optional)
-     * @var {string}
-     **/
-    public readonly error?: string,
-  ) {}
+        /**
+         * The transaction that returned.
+         * @var {SignedTransaction}
+         */
+        public readonly transaction: Transaction | undefined,
+        /**
+         * Whether broadcasting was successfull
+         * @var {boolean}
+         **/
+        public readonly success: boolean,
+        /**
+         * Error message (optional)
+         * @var {string}
+         **/
+        public readonly error?: string,
+    ) {}
 }

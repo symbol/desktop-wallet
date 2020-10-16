@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { StandardValidationRules } from '@/core/validation/StandardValidationRules'
+import { StandardValidationRules } from '@/core/validation/StandardValidationRules';
 
 export class VeeValidateSetup {
-  /**
-   * Initialize Vee Validate custom settings
-   * @static
-   */
-  public static initialize() {
-    const setup = new VeeValidateSetup()
-    setup.registerValidationRules()
-  }
+    /**
+     * Initialize Vee Validate custom settings
+     * @static
+     */
+    public static initialize() {
+        const setup = new VeeValidateSetup();
+        setup.registerValidationRules();
+    }
 
-  private registerValidationRules() {
-    StandardValidationRules.register()
-  }
+    private registerValidationRules() {
+        StandardValidationRules.register();
+    }
 }

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { createLocalVue } from '@vue/test-utils'
-import Vuex from 'vuex'
+import { createLocalVue } from '@vue/test-utils';
+import Vuex from 'vuex';
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
+const localVue = createLocalVue();
+localVue.use(Vuex);
 
 /**
  * Create a fake store
@@ -25,8 +25,8 @@ localVue.use(Vuex)
  * @param {any} storeOptions
  */
 export const createStore = (storeOptions?: any) => {
-  const store = new Vuex.Store(storeOptions)
-  store.dispatch = jest.fn()
-  store.commit = jest.fn()
-  return store
-}
+    const store = new Vuex.Store(storeOptions);
+    store.dispatch = jest.fn();
+    store.commit = jest.fn();
+    return store;
+};

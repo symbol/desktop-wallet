@@ -13,47 +13,47 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
 // internal dependencies
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 
 // child components
-import { ValidationProvider } from 'vee-validate'
+import { ValidationProvider } from 'vee-validate';
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue'
+import FormRow from '@/components/FormRow/FormRow.vue';
 
 @Component({
-  components: {
-    ValidationProvider,
-    ErrorTooltip,
-    FormRow,
-  },
+    components: {
+        ValidationProvider,
+        ErrorTooltip,
+        FormRow,
+    },
 })
 export class DivisibilityInputTs extends Vue {
-  @Prop({ default: '' }) value: string
+    @Prop({ default: '' }) value: string;
 
-  /**
-   * Validation rules
-   * @var {ValidationRuleset}
-   */
-  public validationRules = ValidationRuleset
+    /**
+     * Validation rules
+     * @var {ValidationRuleset}
+     */
+    public validationRules = ValidationRuleset;
 
-  /// region computed properties getter/setter
-  public get chosenValue(): string {
-    return this.value
-  }
-
-  public set chosenValue(amount: string) {
-    if (parseInt(amount) > 6) {
-      amount = '6'
+    /// region computed properties getter/setter
+    public get chosenValue(): string {
+        return this.value;
     }
-    if (parseInt(amount) < 0) {
-      amount = '0'
+
+    public set chosenValue(amount: string) {
+        if (parseInt(amount) > 6) {
+            amount = '6';
+        }
+        if (parseInt(amount) < 0) {
+            amount = '0';
+        }
+        this.$emit('input', amount);
     }
-    this.$emit('input', amount)
-  }
-  /// end-region computed properties getter/setter
+    /// end-region computed properties getter/setter
 }

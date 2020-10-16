@@ -1,13 +1,13 @@
 <template>
-  <div class="form-title-container">
-    <span class="form-title">
-      <slot />
-    </span>
-  </div>
+    <div class="form-title-container">
+        <span class="form-title">
+            <slot />
+        </span>
+    </div>
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator';
 @Component
 export default class FormTitle extends Vue {}
 </script>

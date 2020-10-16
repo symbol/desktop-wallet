@@ -14,34 +14,34 @@
  *
  */
 // external dependencies
-import { HashLockTransaction } from 'symbol-sdk'
+import { HashLockTransaction } from 'symbol-sdk';
 // internal dependencies
-import { TransactionView } from './TransactionView'
-import { AttachedMosaic } from '@/services/MosaicService'
-import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
+import { TransactionView } from './TransactionView';
+import { AttachedMosaic } from '@/services/MosaicService';
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
 
 // eslint-disable-next-line max-len
 export class ViewHashLockTransaction extends TransactionView<HashLockTransaction> {
-  /**
-   * Displayed items
-   */
-  protected resolveDetailItems(): TransactionDetailItem[] {
-    const attachedMosaic: AttachedMosaic = {
-      id: this.transaction.mosaic.id,
-      mosaicHex: this.transaction.mosaic.id.toHex(),
-      amount: this.transaction.mosaic.amount.compact(),
+    /**
+     * Displayed items
+     */
+    protected resolveDetailItems(): TransactionDetailItem[] {
+        const attachedMosaic: AttachedMosaic = {
+            id: this.transaction.mosaic.id,
+            mosaicHex: this.transaction.mosaic.id.toHex(),
+            amount: this.transaction.mosaic.amount.compact(),
+        };
+        return [
+            {
+                key: `locked_mosaic`,
+                value: attachedMosaic,
+                isMosaic: true,
+            },
+            { key: 'duration', value: this.transaction.duration.compact() },
+            {
+                key: 'inner_transaction_hash',
+                value: this.transaction.signedTransaction.hash,
+            },
+        ];
     }
-    return [
-      {
-        key: `locked_mosaic`,
-        value: attachedMosaic,
-        isMosaic: true,
-      },
-      { key: 'duration', value: this.transaction.duration.compact() },
-      {
-        key: 'inner_transaction_hash',
-        value: this.transaction.signedTransaction.hash,
-      },
-    ]
-  }
 }

@@ -15,9 +15,9 @@
  */
 
 export interface TransactionDetailItem {
-  readonly key: string
-  readonly value: any
-  readonly isMosaic?: boolean
-  readonly isAddress?: boolean
-  readonly isPaidFee?: boolean
+    readonly key: string;
+    readonly value: any;
+    readonly isMosaic?: boolean;
+    readonly isAddress?: boolean;
+    readonly isPaidFee?: boolean;
 }

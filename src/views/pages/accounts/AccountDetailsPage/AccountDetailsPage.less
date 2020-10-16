@@ -16,102 +16,102 @@
 @import '../../../resources/css/variables.less';
 
 .account-detail-outer-container {
-  width: 100%;
-  display: grid;
-  grid-template-rows: 3.6rem 4.2rem;
-  background-color: @white;
-  border-radius: 0.04rem;
-  overflow: hidden;
-
-  .account-detail-inner-container {
     width: 100%;
-    padding: 0.2rem 0.4rem;
-    margin: 0;
     display: grid;
-    grid-template-columns: 10rem auto;
+    grid-template-rows: 3.6rem 4.2rem;
+    background-color: @white;
+    border-radius: 0.04rem;
+    overflow: hidden;
 
-    .left-container {
-      width: 100%;
-
-      .title-row {
-        font-size: @biggerFont;
-      }
-
-      .account-details-container {
-        height: 100%;
+    .account-detail-inner-container {
+        width: 100%;
+        padding: 0.2rem 0.4rem;
+        margin: 0;
         display: grid;
-      }
+        grid-template-columns: 10rem auto;
 
-      .left-container-title {
-        font-size: @normalFont;
-        color: #222;
-        font-weight: 500;
-      }
+        .left-container {
+            width: 100%;
 
-      .account-details-grid {
-        background-color: white;
-        display: inline-grid;
-        font-size: @normalFont;
-        font-weight: 400;
-        color: #222;
-        grid-auto-rows: 0.5rem;
-        padding-left: 10px;
-      }
+            .title-row {
+                font-size: @biggerFont;
+            }
 
-      .detail-row {
-        grid-row: span 1;
-      }
+            .account-details-container {
+                height: 100%;
+                display: grid;
+            }
 
-      .detail-double-row {
-        grid-row: span 2;
-      }
+            .left-container-title {
+                font-size: @normalFont;
+                color: #222;
+                font-weight: 500;
+            }
 
-      .account-detail-row-3cols {
-        display: grid;
-        grid-template-columns: 1.4rem 8.6rem 0.2rem;
-      }
+            .account-details-grid {
+                background-color: white;
+                display: inline-grid;
+                font-size: @normalFont;
+                font-weight: 400;
+                color: #222;
+                grid-auto-rows: 0.5rem;
+                padding-left: 10px;
+            }
 
-      .account-detail-row {
-        display: grid;
-        grid-template-columns: 1.4rem 8.6rem;
-      }
+            .detail-row {
+                grid-row: span 1;
+            }
 
-      .account-detail-row,
-      .account-detail-row-3cols {
-        .label {
-          font-size: @normalFont;
-          font-weight: 400;
-          color: #666;
-          margin-right: 10px;
-          width: 1.4rem;
+            .detail-double-row {
+                grid-row: span 2;
+            }
+
+            .account-detail-row-3cols {
+                display: grid;
+                grid-template-columns: 1.4rem 8.6rem 0.2rem;
+            }
+
+            .account-detail-row {
+                display: grid;
+                grid-template-columns: 1.4rem 8.6rem;
+            }
+
+            .account-detail-row,
+            .account-detail-row-3cols {
+                .label {
+                    font-size: @normalFont;
+                    font-weight: 400;
+                    color: #666;
+                    margin-right: 10px;
+                    width: 1.4rem;
+                }
+
+                /deep/ .value {
+                    font-weight: @bolder;
+                }
+            }
         }
 
-        /deep/ .value {
-          font-weight: @bolder;
+        .right-container {
+            background-color: white;
         }
-      }
     }
 
-    .right-container {
-      background-color: white;
-    }
-  }
+    .account-actions-outer-container {
+        background-color: lightgray;
+        width: 100%;
+        padding: 25px 0 0 0;
+        background-color: #eee;
 
-  .account-actions-outer-container {
-    background-color: lightgray;
-    width: 100%;
-    padding: 25px 0 0 0;
-    background-color: #eee;
-
-    .account-actions-inner-container {
-      background-color: lightseagreen;
-      width: 100%;
-      border-radius: 0.04rem;
+        .account-actions-inner-container {
+            background-color: lightseagreen;
+            width: 100%;
+            border-radius: 0.04rem;
+        }
     }
-  }
 }
 
 .edit-account-name {
-  margin-left: 0.18rem;
-  cursor: pointer;
+    margin-left: 0.18rem;
+    cursor: pointer;
 }

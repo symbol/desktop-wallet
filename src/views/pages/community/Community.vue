@@ -1,24 +1,24 @@
 <template>
-  <div class="main-container">
-    <div class="inner-container xym-outline">
-      <div class="top-container">
-        <h1 class="page-title">
-          {{ $t('latest_news_articles') }}
-        </h1>
-      </div>
-      <div class="bottom-container">
-        <Information />
-      </div>
+    <div class="main-container">
+        <div class="inner-container xym-outline">
+            <div class="top-container">
+                <h1 class="page-title">
+                    {{ $t('latest_news_articles') }}
+                </h1>
+            </div>
+            <div class="bottom-container">
+                <Information />
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
 // external dependencies
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator';
 
 // child components
-import Information from './information/Information.vue'
+import Information from './information/Information.vue';
 
 @Component({ components: { Information } })
 export default class Community extends Vue {}

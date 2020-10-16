@@ -13,62 +13,62 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
 // internal dependencies
-import { createValidationRuleSet } from '@/core/validation/ValidationRuleset'
+import { createValidationRuleSet } from '@/core/validation/ValidationRuleset';
 
 // child components
-import { ValidationProvider } from 'vee-validate'
+import { ValidationProvider } from 'vee-validate';
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
-import { mapGetters } from 'vuex'
-import { MosaicModel } from '@/core/database/entities/MosaicModel'
-import { networkConfig } from '@/config'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
+import { mapGetters } from 'vuex';
+import { MosaicModel } from '@/core/database/entities/MosaicModel';
+import { networkConfig } from '@/config';
 
 @Component({
-  components: {
-    ValidationProvider,
-    ErrorTooltip,
-  },
-  computed: {
-    ...mapGetters({
-      mosaics: 'mosaic/mosaics',
-    }),
-  },
+    components: {
+        ValidationProvider,
+        ErrorTooltip,
+    },
+    computed: {
+        ...mapGetters({
+            mosaics: 'mosaic/mosaics',
+        }),
+    },
 })
 export class AmountInputTs extends Vue {
-  @Prop({ default: '' }) value: string
-  @Prop({ default: '' }) mosaicHex: string
+    @Prop({ default: '' }) value: string;
+    @Prop({ default: '' }) mosaicHex: string;
 
-  /**
-   * Available mosaics models
-   */
-  public mosaics: MosaicModel[]
+    /**
+     * Available mosaics models
+     */
+    public mosaics: MosaicModel[];
 
-  /**
-   * Validation rules
-   * @var {ValidationRuleset}
-   */
-  public validationRules
+    /**
+     * Validation rules
+     * @var {ValidationRuleset}
+     */
+    public validationRules;
 
-  created() {
-    // update validation rule to reflect correct mosaic divisibility
-    const chosenMosaic = this.mosaics.find((mosaic) => this.mosaicHex === mosaic.mosaicIdHex)
-    const networkConfigurationDefaults = networkConfig.networkConfigurationDefaults
-    networkConfigurationDefaults.maxMosaicDivisibility = chosenMosaic ? chosenMosaic.divisibility : 6
+    created() {
+        // update validation rule to reflect correct mosaic divisibility
+        const chosenMosaic = this.mosaics.find((mosaic) => this.mosaicHex === mosaic.mosaicIdHex);
+        const networkConfigurationDefaults = networkConfig.networkConfigurationDefaults;
+        networkConfigurationDefaults.maxMosaicDivisibility = chosenMosaic ? chosenMosaic.divisibility : 6;
 
-    // set validation rules for this field
-    this.validationRules = createValidationRuleSet(networkConfigurationDefaults)
-  }
+        // set validation rules for this field
+        this.validationRules = createValidationRuleSet(networkConfigurationDefaults);
+    }
 
-  /// region computed properties getter/setter
-  public get relativeValue(): string {
-    return this.value
-  }
+    /// region computed properties getter/setter
+    public get relativeValue(): string {
+        return this.value;
+    }
 
-  public set relativeValue(amount: string) {
-    this.$emit('input', amount)
-  }
-  /// end-region computed properties getter/setter
+    public set relativeValue(amount: string) {
+        this.$emit('input', amount);
+    }
+    /// end-region computed properties getter/setter
 }

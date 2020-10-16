@@ -14,7 +14,7 @@
  *
  */
 
-import { MosaicInfo } from 'symbol-sdk'
+import { MosaicInfo } from 'symbol-sdk';
 
 /**
  * Stored POJO that holds mosaic information.
@@ -25,30 +25,30 @@ import { MosaicInfo } from 'symbol-sdk'
  *
  */
 export class MosaicModel {
-  public readonly mosaicIdHex: string
-  public readonly divisibility: number
-  public readonly transferable: boolean
-  public readonly supplyMutable: boolean
-  public readonly restrictable: boolean
-  public readonly duration: number
-  public readonly height: number
-  public readonly supply: number
+    public readonly mosaicIdHex: string;
+    public readonly divisibility: number;
+    public readonly transferable: boolean;
+    public readonly supplyMutable: boolean;
+    public readonly restrictable: boolean;
+    public readonly duration: number;
+    public readonly height: number;
+    public readonly supply: number;
 
-  constructor(
-    public readonly addressRawPlain: string,
-    public readonly ownerRawPlain: string,
-    public readonly name: string | undefined,
-    public readonly isCurrencyMosaic: boolean,
-    public readonly balance: number | undefined,
-    mosaicInfo: MosaicInfo,
-  ) {
-    this.mosaicIdHex = mosaicInfo.id.toHex()
-    this.divisibility = mosaicInfo.divisibility
-    this.transferable = mosaicInfo.isTransferable()
-    this.supplyMutable = mosaicInfo.isSupplyMutable()
-    this.restrictable = mosaicInfo.isRestrictable()
-    this.duration = mosaicInfo.duration.compact()
-    this.height = mosaicInfo.startHeight.compact()
-    this.supply = mosaicInfo.supply.compact()
-  }
+    constructor(
+        public readonly addressRawPlain: string,
+        public readonly ownerRawPlain: string,
+        public readonly name: string | undefined,
+        public readonly isCurrencyMosaic: boolean,
+        public readonly balance: number | undefined,
+        mosaicInfo: MosaicInfo,
+    ) {
+        this.mosaicIdHex = mosaicInfo.id.toHex();
+        this.divisibility = mosaicInfo.divisibility;
+        this.transferable = mosaicInfo.isTransferable();
+        this.supplyMutable = mosaicInfo.isSupplyMutable();
+        this.restrictable = mosaicInfo.isRestrictable();
+        this.duration = mosaicInfo.duration.compact();
+        this.height = mosaicInfo.startHeight.compact();
+        this.supply = mosaicInfo.supply.compact();
+    }
 }

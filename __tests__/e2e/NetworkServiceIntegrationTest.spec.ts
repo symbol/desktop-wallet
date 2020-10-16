@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { NetworkService } from '@/services/NetworkService'
-import { networkConfig } from '@/config'
+import { NetworkService } from '@/services/NetworkService';
+import { networkConfig } from '@/config';
 
-const networkService = new NetworkService()
+const networkService = new NetworkService();
 describe.skip('services/NetworkService', () => {
-  test('getNetworkModel when default', async () => {
-    const data = await networkService.getNetworkModel(undefined).toPromise()
-    expect(data.networkModel.url).toBe(networkConfig.defaultNodeUrl)
-    expect(data.fallback).toBe(false)
-  })
+    test('getNetworkModel when default', async () => {
+        const data = await networkService.getNetworkModel(undefined).toPromise();
+        expect(data.networkModel.url).toBe(networkConfig.defaultNodeUrl);
+        expect(data.fallback).toBe(false);
+    });
 
-  test('getNetworkModel when custom', async () => {
-    const candidate = 'http://api-01.eu-central-1.symboldev.network:3000'
-    const data = await networkService.getNetworkModel(candidate).toPromise()
-    expect(data.networkModel.url).toBe(candidate)
-    expect(data.fallback).toBe(false)
-  })
+    test('getNetworkModel when custom', async () => {
+        const candidate = 'http://api-01.eu-central-1.symboldev.network:3000';
+        const data = await networkService.getNetworkModel(candidate).toPromise();
+        expect(data.networkModel.url).toBe(candidate);
+        expect(data.fallback).toBe(false);
+    });
 
-  test('getNetworkModel when broken', async () => {
-    const candidate = 'http://localhost:3000'
+    test('getNetworkModel when broken', async () => {
+        const candidate = 'http://localhost:3000';
 
-    const data = await networkService.getNetworkModel(candidate).toPromise()
-    expect(data.networkModel.url).toBe(networkConfig.defaultNodeUrl)
-    expect(data.fallback).toBe(true)
-  })
-})
+        const data = await networkService.getNetworkModel(candidate).toPromise();
+        expect(data.networkModel.url).toBe(networkConfig.defaultNodeUrl);
+        expect(data.fallback).toBe(true);
+    });
+});

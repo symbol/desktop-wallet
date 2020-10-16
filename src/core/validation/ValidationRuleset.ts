@@ -14,52 +14,52 @@
  *
  */
 // configuration
-import { appConfig } from '@/config'
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { appConfig } from '@/config';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
-import { networkConfig } from '@/config'
+import { networkConfig } from '@/config';
 
-const { MIN_PASSWORD_LENGTH } = appConfig.constants
+const { MIN_PASSWORD_LENGTH } = appConfig.constants;
 
 export const createValidationRuleSet = ({
-  maxMessageSize,
-  maxMosaicAtomicUnits,
-  maxMosaicDivisibility,
-  maxMosaicDuration,
-  minNamespaceDuration,
+    maxMessageSize,
+    maxMosaicAtomicUnits,
+    maxMosaicDivisibility,
+    maxMosaicDuration,
+    minNamespaceDuration,
 }: NetworkConfigurationModel) => {
-  return {
-    address: 'required|address|addressNetworkType:currentProfile',
-    profilePassword: 'required|profilePassword',
-    addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentProfile',
-    amount: `excluded:""|is_not:0|min_value:0|maxDecimals:${maxMosaicDivisibility}|max_value:${maxMosaicAtomicUnits}`,
-    confirmPassword: 'required|confirmPassword:@newPassword',
-    divisibility: 'required|min_value:0|max_value:6|integer',
-    duration: `required|min_value:0|max_value:${maxMosaicDuration}`,
-    generationHash: 'required|min:64|max:64',
-    mosaicId: 'required|mosaicId',
-    message: `max:${maxMessageSize}`,
-    namespaceDuration: `required|min_value:${minNamespaceDuration}|maxNamespaceDuration`,
-    namespaceName: {
-      required: true,
-      regex: '^[a-z0-9]{1}[a-z0-9-_]{1,63}$',
-    },
-    subNamespaceName: {
-      required: true,
-      regex: '^[a-z0-9]{1}[a-z0-9-_]{1,63}$',
-    },
-    password: `required|min:${MIN_PASSWORD_LENGTH}|passwordRegex`,
-    previousPassword: 'required|confirmLock:cipher',
-    privateKey: 'min:64|max:64|privateKey',
-    recipientPublicKey: 'required|publicKey',
-    supply: `required|integer|min_value: 1|max_value:${maxMosaicAtomicUnits}`,
-    url: 'required|url',
-    newAccountName: 'required|newAccountName',
-    profileAccountName: 'required|profileAccountName',
-    addressOrPublicKey: 'addressOrPublicKey',
-  }
-}
+    return {
+        address: 'required|address|addressNetworkType:currentProfile',
+        profilePassword: 'required|profilePassword',
+        addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentProfile',
+        amount: `excluded:""|is_not:0|min_value:0|maxDecimals:${maxMosaicDivisibility}|max_value:${maxMosaicAtomicUnits}`,
+        confirmPassword: 'required|confirmPassword:@newPassword',
+        divisibility: 'required|min_value:0|max_value:6|integer',
+        duration: `required|min_value:0|max_value:${maxMosaicDuration}`,
+        generationHash: 'required|min:64|max:64',
+        mosaicId: 'required|mosaicId',
+        message: `max:${maxMessageSize}`,
+        namespaceDuration: `required|min_value:${minNamespaceDuration}|maxNamespaceDuration`,
+        namespaceName: {
+            required: true,
+            regex: '^[a-z0-9]{1}[a-z0-9-_]{1,63}$',
+        },
+        subNamespaceName: {
+            required: true,
+            regex: '^[a-z0-9]{1}[a-z0-9-_]{1,63}$',
+        },
+        password: `required|min:${MIN_PASSWORD_LENGTH}|passwordRegex`,
+        previousPassword: 'required|confirmLock:cipher',
+        privateKey: 'min:64|max:64|privateKey',
+        recipientPublicKey: 'required|publicKey',
+        supply: `required|integer|min_value: 1|max_value:${maxMosaicAtomicUnits}`,
+        url: 'required|url',
+        newAccountName: 'required|newAccountName',
+        profileAccountName: 'required|profileAccountName',
+        addressOrPublicKey: 'addressOrPublicKey',
+    };
+};
 
 // TODO ValidationRuleset needs to be created when the network configuration is resolved, UI needs
 // to use the resolved ValidationResulset ATM rules are using the hardocded ones
-export const ValidationRuleset = createValidationRuleSet(networkConfig.networkConfigurationDefaults)
+export const ValidationRuleset = createValidationRuleSet(networkConfig.networkConfigurationDefaults);

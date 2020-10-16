@@ -14,92 +14,92 @@
  *
  */
 .page-wrapper {
-  width: 100%;
-  height: 100%;
-  padding: 20px 20px 35px;
-  overflow-y: auto;
+    width: 100%;
+    height: 100%;
+    padding: 20px 20px 35px;
+    overflow-y: auto;
 
-  /deep/.step-bar-container {
-    padding-bottom: 70px;
-    position: relative;
-    width: 1500px;
+    /deep/.step-bar-container {
+        padding-bottom: 70px;
+        position: relative;
+        width: 1500px;
 
-    img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .step-text-container {
+            width: 1500px;
+            position: absolute;
+
+            span {
+                font-size: 20px;
+                line-height: 55px;
+                display: inline-block;
+                text-align: center;
+            }
+        }
     }
 
-    .step-text-container {
-      width: 1500px;
-      position: absolute;
-
-      span {
+    /deep/.form-input-item {
         font-size: 20px;
-        line-height: 55px;
-        display: inline-block;
-        text-align: center;
-      }
-    }
-  }
 
-  /deep/.form-input-item {
-    font-size: 20px;
+        input {
+            width: 850px;
+            height: 42px;
+            margin-top: 10px;
+        }
 
-    input {
-      width: 850px;
-      height: 42px;
-      margin-top: 10px;
+        margin-top: 20px;
     }
 
-    margin-top: 20px;
-  }
+    /deep/.white {
+        color: white;
+    }
 
-  /deep/.white {
-    color: white;
-  }
+    /deep/.gray {
+        color: #888888;
+    }
 
-  /deep/.gray {
-    color: #888888;
-  }
+    /deep/.text1 {
+        padding-bottom: 15px;
+        font-size: 0.24rem;
+        font-weight: 600;
+        color: rgba(51, 51, 51);
+    }
 
-  /deep/.text1 {
-    padding-bottom: 15px;
-    font-size: 0.24rem;
-    font-weight: 600;
-    color: rgba(51, 51, 51);
-  }
+    /deep/.text {
+        padding-bottom: 15px;
+        font-size: 0.2rem;
+        color: rgba(136, 136, 136);
+    }
 
-  /deep/.text {
-    padding-bottom: 15px;
-    font-size: 0.2rem;
-    color: rgba(136, 136, 136);
-  }
+    /deep/.red {
+        color: rgba(255, 80, 67);
+    }
 
-  /deep/.red {
-    color: rgba(255, 80, 67);
-  }
+    /deep/.inner-container {
+        width: 90%;
+        height: 95%;
+        overflow: hidden;
+        background-color: white;
+        padding: 0 40px 0 0;
+    }
 
-  /deep/.inner-container {
-    width: 90%;
-    height: 95%;
-    overflow: hidden;
-    background-color: white;
-    padding: 0 40px 0 0;
-  }
-
-  /deep/.set-title {
-    margin-top: 30px;
-    height: 30px;
-    font-size: 0.26rem;
-    font-weight: 600;
-    margin-bottom: 19px;
-  }
-  //unused
-  .set-title-tips {
-    width: 850px;
-    font-size: 0.22rem;
-    color: rgba(136, 136, 136);
-  }
+    /deep/.set-title {
+        margin-top: 30px;
+        height: 30px;
+        font-size: 0.26rem;
+        font-weight: 600;
+        margin-bottom: 19px;
+    }
+    //unused
+    .set-title-tips {
+        width: 850px;
+        font-size: 0.22rem;
+        color: rgba(136, 136, 136);
+    }
 }

@@ -14,29 +14,29 @@
  *
  */
 
-import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
-import { NodeModel } from '@/core/database/entities/NodeModel'
+import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage';
+import { NodeModel } from '@/core/database/entities/NodeModel';
 
 export class NodeModelStorage extends VersionedObjectStorage<NodeModel[]> {
-  /**
-   * Singleton instance as we want to run the migration just once
-   */
-  public static INSTANCE = new NodeModelStorage()
+    /**
+     * Singleton instance as we want to run the migration just once
+     */
+    public static INSTANCE = new NodeModelStorage();
 
-  private constructor() {
-    super('node', [
-      {
-        description: 'Update node to 0.9.5.1 network',
-        migrate: () => undefined,
-      },
-      {
-        description: 'Update node for 0.9.6.3 network (known nodes)',
-        migrate: (from: any) => undefined,
-      },
-      {
-        description: 'Update node for 0.10.x network (known nodes)',
-        migrate: (from: any) => undefined,
-      },
-    ])
-  }
+    private constructor() {
+        super('node', [
+            {
+                description: 'Update node to 0.9.5.1 network',
+                migrate: () => undefined,
+            },
+            {
+                description: 'Update node for 0.9.6.3 network (known nodes)',
+                migrate: () => undefined,
+            },
+            {
+                description: 'Update node for 0.10.x network (known nodes)',
+                migrate: () => undefined,
+            },
+        ]);
+    }
 }

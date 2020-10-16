@@ -13,72 +13,72 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { NamespaceRegistrationTransaction, NamespaceRegistrationType } from 'symbol-sdk'
+import { NamespaceRegistrationTransaction, NamespaceRegistrationType } from 'symbol-sdk';
 // internal dependencies
-import { TransactionView } from './TransactionView'
-import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
-import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
-import { TimeHelpers } from '@/core/utils/TimeHelpers'
+import { TransactionView } from './TransactionView';
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
+import { TimeHelpers } from '@/core/utils/TimeHelpers';
 
 export class ViewNamespaceRegistrationTransaction extends TransactionView<NamespaceRegistrationTransaction> {
-  /**
-   * Displayed items
-   */
-  protected resolveDetailItems(): TransactionDetailItem[] {
-    const transaction = this.transaction
-    let rootNamespaceName: string
-    let subNamespaceName: string
-    if (NamespaceRegistrationType.RootNamespace === transaction.registrationType) {
-      rootNamespaceName = transaction.namespaceName
-    } else {
-      subNamespaceName = transaction.namespaceName
-      // - try to identify root namespace by id
-      const parentId = transaction.parentId
-      const namespaces: NamespaceModel[] = this.$store.getters['namespace/namespaces']
-      const parent = namespaces.find((n) => n.namespaceIdHex === parentId.toHex() && n.name)
-      if (parent) {
-        rootNamespaceName = parent.name
-      }
-    }
-    const registrationType = transaction.registrationType
-    const duration = transaction.duration
-    const networkConfiguration: NetworkConfigurationModel = this.$store.getters['network/networkConfiguration']
-    const blockGenerationTargetTime = networkConfiguration.blockGenerationTargetTime
-    if (registrationType === NamespaceRegistrationType.RootNamespace) {
-      return [
-        { key: 'namespace_name', value: rootNamespaceName },
-        {
-          key: 'duration',
-          value: TimeHelpers.durationToRelativeTime(parseInt(duration.toString()), blockGenerationTargetTime),
-        },
-        {
-          key: 'estimated_rental_fee',
-          value: {
-            amount:
-              this.$store.getters['network/rentalFeeEstimation'].effectiveRootNamespaceRentalFeePerBlock.compact() *
-              this.transaction['duration'].compact(),
-            color: 'red',
-          },
-          isMosaic: true,
-        },
-      ]
-    }
+    /**
+     * Displayed items
+     */
+    protected resolveDetailItems(): TransactionDetailItem[] {
+        const transaction = this.transaction;
+        let rootNamespaceName: string;
+        let subNamespaceName: string;
+        if (NamespaceRegistrationType.RootNamespace === transaction.registrationType) {
+            rootNamespaceName = transaction.namespaceName;
+        } else {
+            subNamespaceName = transaction.namespaceName;
+            // - try to identify root namespace by id
+            const parentId = transaction.parentId;
+            const namespaces: NamespaceModel[] = this.$store.getters['namespace/namespaces'];
+            const parent = namespaces.find((n) => n.namespaceIdHex === parentId.toHex() && n.name);
+            if (parent) {
+                rootNamespaceName = parent.name;
+            }
+        }
+        const registrationType = transaction.registrationType;
+        const duration = transaction.duration;
+        const networkConfiguration: NetworkConfigurationModel = this.$store.getters['network/networkConfiguration'];
+        const blockGenerationTargetTime = networkConfiguration.blockGenerationTargetTime;
+        if (registrationType === NamespaceRegistrationType.RootNamespace) {
+            return [
+                { key: 'namespace_name', value: rootNamespaceName },
+                {
+                    key: 'duration',
+                    value: TimeHelpers.durationToRelativeTime(parseInt(duration.toString()), blockGenerationTargetTime),
+                },
+                {
+                    key: 'estimated_rental_fee',
+                    value: {
+                        amount:
+                            this.$store.getters['network/rentalFeeEstimation'].effectiveRootNamespaceRentalFeePerBlock.compact() *
+                            this.transaction['duration'].compact(),
+                        color: 'red',
+                    },
+                    isMosaic: true,
+                },
+            ];
+        }
 
-    return [
-      { key: 'namespace_name', value: subNamespaceName },
-      {
-        key: 'parent_namespace',
-        value: rootNamespaceName,
-      },
-      {
-        key: 'estimated_rental_fee',
-        value: {
-          amount: this.$store.getters['network/rentalFeeEstimation'].effectiveChildNamespaceRentalFee.compact(),
-          color: 'red',
-        },
-        isMosaic: true,
-      },
-    ]
-  }
+        return [
+            { key: 'namespace_name', value: subNamespaceName },
+            {
+                key: 'parent_namespace',
+                value: rootNamespaceName,
+            },
+            {
+                key: 'estimated_rental_fee',
+                value: {
+                    amount: this.$store.getters['network/rentalFeeEstimation'].effectiveChildNamespaceRentalFee.compact(),
+                    color: 'red',
+                },
+                isMosaic: true,
+            },
+        ];
+    }
 }

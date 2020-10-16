@@ -13,43 +13,43 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator';
 // internal dependencies
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 // @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue'
+import FormRow from '@/components/FormRow/FormRow.vue';
 // child components
 // @ts-ignore
-import { ValidationProvider } from 'vee-validate'
+import { ValidationProvider } from 'vee-validate';
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 
 @Component({
-  components: {
-    ValidationProvider,
-    ErrorTooltip,
-    FormRow,
-  },
+    components: {
+        ValidationProvider,
+        ErrorTooltip,
+        FormRow,
+    },
 })
 export class MessageInputTs extends Vue {
-  @Prop({
-    default: '',
-  })
-  value: string
+    @Prop({
+        default: '',
+    })
+    value: string;
 
-  /**
-   * Validation rules
-   * @var {ValidationRuleset}
-   */
-  public validationRules = ValidationRuleset
+    /**
+     * Validation rules
+     * @var {ValidationRuleset}
+     */
+    public validationRules = ValidationRuleset;
 
-  /// region computed properties getter/setter
-  get plain(): string {
-    return this.value
-  }
+    /// region computed properties getter/setter
+    get plain(): string {
+        return this.value;
+    }
 
-  set plain(msg: string) {
-    this.$emit('input', msg)
-  }
-  /// end-region computed properties getter/setter
+    set plain(msg: string) {
+        this.$emit('input', msg);
+    }
+    /// end-region computed properties getter/setter
 }

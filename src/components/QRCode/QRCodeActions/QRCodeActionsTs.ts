@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import { QRCode } from 'symbol-qr-library'
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import { QRCode } from 'symbol-qr-library';
 
 // @ts-ignore
-import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue'
+import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue';
 // @ts-ignore
-import ContactQRAction from '@/components/QRCode/QRCodeActions/ContactQRAction/ContactQRAction.vue'
+import ContactQRAction from '@/components/QRCode/QRCodeActions/ContactQRAction/ContactQRAction.vue';
 // @ts-ignore
-import MnemonicQRAction from '@/components/QRCode/QRCodeActions/MnemonicQRAction/MnemonicQRAction.vue'
+import MnemonicQRAction from '@/components/QRCode/QRCodeActions/MnemonicQRAction/MnemonicQRAction.vue';
 // @ts-ignore
-import TransactionQRAction from '@/components/QRCode/QRCodeActions/TransactionQRAction/TransactionQRAction.vue'
+import TransactionQRAction from '@/components/QRCode/QRCodeActions/TransactionQRAction/TransactionQRAction.vue';
 // @ts-ignore
-import CosignatureQRAction from '@/components/QRCode/QRCodeActions/CosignatureQRAction/CosignatureQRAction.vue'
+import CosignatureQRAction from '@/components/QRCode/QRCodeActions/CosignatureQRAction/CosignatureQRAction.vue';
 
 @Component({
-  components: { QRCodeDisplay, ContactQRAction, MnemonicQRAction, TransactionQRAction, CosignatureQRAction },
+    components: { QRCodeDisplay, ContactQRAction, MnemonicQRAction, TransactionQRAction, CosignatureQRAction },
 })
 export default class QRCodeActionsTs extends Vue {
-  @Prop({ default: null }) readonly qrCode: QRCode
+    @Prop({ default: null }) readonly qrCode: QRCode;
 
-  @Prop({ default: true }) readonly showPreview: boolean
+    @Prop({ default: true }) readonly showPreview: boolean;
 
-  @Prop({ default: null }) readonly onSuccess: () => void
+    @Prop({ default: null }) readonly onSuccess: () => void;
 }

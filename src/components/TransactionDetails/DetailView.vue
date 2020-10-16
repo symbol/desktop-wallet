@@ -15,25 +15,25 @@
   -->
 
 <template>
-  <div class="transaction-details-item-inner-container">
-    <div v-for="(item, index) in view.resolveDetailItems()" :key="index" class="transaction-row-outer-container">
-      <TransactionDetailRow :item="item" />
+    <div class="transaction-details-item-inner-container">
+        <div v-for="(item, index) in view.resolveDetailItems()" :key="index" class="transaction-row-outer-container">
+            <TransactionDetailRow :item="item" />
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator';
 // internal dependencies
 // child components
-import { TransactionView } from '@/core/transactions/TransactionView'
+import { TransactionView } from '@/core/transactions/TransactionView';
 // @ts-ignore
-import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import { Transaction } from 'symbol-sdk'
+import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue';
+import { Transaction } from 'symbol-sdk';
 
 @Component({ components: { TransactionDetailRow } })
 export default class DetailView<T extends Transaction> extends Vue {
-  @Prop({ default: null }) view: TransactionView<T>
+    @Prop({ default: null }) view: TransactionView<T>;
 }
 </script>
 

@@ -13,40 +13,40 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Deadline, NamespaceId, NetworkType, PlainMessage, TransferTransaction } from 'symbol-sdk'
-import { createStore } from '@MOCKS/Store'
-import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction'
+import { Deadline, NamespaceId, NetworkType, PlainMessage, TransferTransaction } from 'symbol-sdk';
+import { createStore } from '@MOCKS/Store';
+import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction';
 
-const store = createStore({})
+const store = createStore({});
 const transfer = TransferTransaction.create(
-  Deadline.create(),
-  new NamespaceId('alias'),
-  [],
-  PlainMessage.create('test-message'),
-  NetworkType.MIJIN_TEST,
-)
+    Deadline.create(),
+    new NamespaceId('alias'),
+    [],
+    PlainMessage.create('test-message'),
+    NetworkType.MIJIN_TEST,
+);
 
 describe('transactions/TransactionView', () => {
-  describe('use() should', () => {
-    test('set transaction property', () => {
-      // prepare
-      const view = new ViewUnknownTransaction(store, transfer)
+    describe('use() should', () => {
+        test('set transaction property', () => {
+            // prepare
+            const view = new ViewUnknownTransaction(store, transfer);
 
-      // assert
-      expect(view).toBeDefined()
-      expect(view.transaction).toBeDefined()
-    })
-  })
+            // assert
+            expect(view).toBeDefined();
+            expect(view.transaction).toBeDefined();
+        });
+    });
 
-  describe('initialize() should', () => {
-    test('set common transaction fields', () => {
-      // prepare + act
-      const view = new ViewUnknownTransaction(store, transfer)
+    describe('initialize() should', () => {
+        test('set common transaction fields', () => {
+            // prepare + act
+            const view = new ViewUnknownTransaction(store, transfer);
 
-      // assert
-      expect(view).toBeDefined()
-      expect(view.detailItems.length).toBe(0)
-      expect(view.headerItems.length).toBe(4)
-    })
-  })
-})
+            // assert
+            expect(view).toBeDefined();
+            expect(view.detailItems.length).toBe(0);
+            expect(view.headerItems.length).toBe(4);
+        });
+    });
+});

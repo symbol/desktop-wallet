@@ -14,57 +14,57 @@
  *
  */
 
-import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
-import { SettingsModel } from '@/core/database/entities/SettingsModel'
-import { networkConfig } from '@/config'
+import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage';
+import { SettingsModel } from '@/core/database/entities/SettingsModel';
+import { networkConfig } from '@/config';
 
 export class SettingsModelStorage extends VersionedObjectStorage<Record<string, SettingsModel>> {
-  /**
-   * Singleton instance as we want to run the migration just once
-   */
-  public static INSTANCE = new SettingsModelStorage()
+    /**
+     * Singleton instance as we want to run the migration just once
+     */
+    public static INSTANCE = new SettingsModelStorage();
 
-  private constructor() {
-    super('settings', [
-      {
-        description: 'Update settings to 0.9.5.1 network',
-        migrate: () => undefined,
-      },
-      {
-        description: 'Update settings for 0.9.6.3 network (address changes)',
-        migrate: (from: any) => {
-          // update all pre-0.9.6.x settings
-          const profiles = Object.keys(from)
+    private constructor() {
+        super('settings', [
+            {
+                description: 'Update settings to 0.9.5.1 network',
+                migrate: () => undefined,
+            },
+            {
+                description: 'Update settings for 0.9.6.3 network (address changes)',
+                migrate: (from: any) => {
+                    // update all pre-0.9.6.x settings
+                    const profiles = Object.keys(from);
 
-          const modified: any = from
-          profiles.map((name: string) => {
-            modified[name] = {
-              ...modified[name],
-              explorerUrl: networkConfig.explorerUrl,
-            }
-          })
+                    const modified: any = from;
+                    profiles.map((name: string) => {
+                        modified[name] = {
+                            ...modified[name],
+                            explorerUrl: networkConfig.explorerUrl,
+                        };
+                    });
 
-          return modified
-        },
-      },
-      {
-        description: 'Update settings for 0.10.x network (address changes)',
-        migrate: (from: any) => {
-          // update all pre-0.10.x settings
-          const settings = Object.keys(from)
+                    return modified;
+                },
+            },
+            {
+                description: 'Update settings for 0.10.x network (address changes)',
+                migrate: (from: any) => {
+                    // update all pre-0.10.x settings
+                    const settings = Object.keys(from);
 
-          const modified: any = from
-          settings.map((name: string) => {
-            modified[name] = {
-              ...modified[name],
-              explorerUrl: networkConfig.explorerUrl,
-              faucetUrl: networkConfig.faucetUrl,
-            }
-          })
+                    const modified: any = from;
+                    settings.map((name: string) => {
+                        modified[name] = {
+                            ...modified[name],
+                            explorerUrl: networkConfig.explorerUrl,
+                            faucetUrl: networkConfig.faucetUrl,
+                        };
+                    });
 
-          return modified
-        },
-      },
-    ])
-  }
+                    return modified;
+                },
+            },
+        ]);
+    }
 }

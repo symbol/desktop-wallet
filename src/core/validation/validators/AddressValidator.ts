@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Address } from 'symbol-sdk'
+import { Address } from 'symbol-sdk';
 
 // internal dependencies
-import { Validator, staticImplements } from './Validator'
+import { Validator, staticImplements } from './Validator';
 
 @staticImplements<Validator>()
 export class AddressValidator {
-  /**
-   * Executes the validator
-   * @static
-   * @param {*} value
-   * @returns {boolean}
-   */
-  public static validate(value: any): boolean {
-    try {
-      Address.createFromRawAddress(value)
-      return true
-    } catch (error) {
-      return false
+    /**
+     * Executes the validator
+     * @static
+     * @param {*} value
+     * @returns {boolean}
+     */
+    public static validate(value: any): boolean {
+        try {
+            Address.createFromRawAddress(value);
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
-  }
 }

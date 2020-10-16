@@ -13,94 +13,94 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Account, NetworkType, Password, Crypto } from 'symbol-sdk'
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Account, NetworkType, Password, Crypto } from 'symbol-sdk';
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 // child components
-import { ValidationProvider } from 'vee-validate'
+import { ValidationProvider } from 'vee-validate';
 // @ts-ignore
-import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
+import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 // @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue'
+import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 
 @Component({
-  components: {
-    ValidationProvider,
-    FormWrapper,
-    FormRow,
-    ErrorTooltip,
-  },
-  computed: {
-    ...mapGetters({
-      networkType: 'network/networkType',
-      currentAccount: 'account/currentAccount',
-    }),
-  },
+    components: {
+        ValidationProvider,
+        FormWrapper,
+        FormRow,
+        ErrorTooltip,
+    },
+    computed: {
+        ...mapGetters({
+            networkType: 'network/networkType',
+            currentAccount: 'account/currentAccount',
+        }),
+    },
 })
 export class FormProfileUnlockTs extends Vue {
-  /**
-   * Current network type
-   * @var {NetworkType}
-   */
-  public networkType: NetworkType
+    /**
+     * Current network type
+     * @var {NetworkType}
+     */
+    public networkType: NetworkType;
 
-  /**
-   * Currently active account
-   * @var {AccountModel}
-   */
-  public currentAccount: AccountModel
+    /**
+     * Currently active account
+     * @var {AccountModel}
+     */
+    public currentAccount: AccountModel;
 
-  /**
-   * Validation rules
-   * @var {ValidationRuleset}
-   */
-  public validationRules = ValidationRuleset
+    /**
+     * Validation rules
+     * @var {ValidationRuleset}
+     */
+    public validationRules = ValidationRuleset;
 
-  /**
-   * Form items
-   * @var {any}
-   */
-  public formItems = {
-    password: '',
-  }
+    /**
+     * Form items
+     * @var {any}
+     */
+    public formItems = {
+        password: '',
+    };
 
-  /**
-   * Text shown in the confirmation button
-   * @type {string}
-   */
-  @Prop({ default: 'confirm' }) buttonText: string
+    /**
+     * Text shown in the confirmation button
+     * @type {string}
+     */
+    @Prop({ default: 'confirm' }) buttonText: string;
 
-  /**
-   * Whether to hide submit button
-   */
-  @Prop({ default: false }) hideSubmit: boolean
+    /**
+     * Whether to hide submit button
+     */
+    @Prop({ default: false }) hideSubmit: boolean;
 
-  /// region computed properties getter/setter
-  /// end-region computed properties getter/setter
+    /// region computed properties getter/setter
+    /// end-region computed properties getter/setter
 
-  /**
-   * Attempt decryption of private key to unlock
-   * .
-   * @return {void}
-   */
-  public processVerification() {
-    try {
-      const password = new Password(this.formItems.password)
-      const privateKey: string = Crypto.decrypt(this.currentAccount.encryptedPrivateKey, password.value)
+    /**
+     * Attempt decryption of private key to unlock
+     * .
+     * @return {void}
+     */
+    public processVerification() {
+        try {
+            const password = new Password(this.formItems.password);
+            const privateKey: string = Crypto.decrypt(this.currentAccount.encryptedPrivateKey, password.value);
 
-      if (privateKey.length === 64) {
-        const unlockedAccount = Account.createFromPrivateKey(privateKey, this.networkType)
-        return this.$emit('success', { account: unlockedAccount, password })
-      }
+            if (privateKey.length === 64) {
+                const unlockedAccount = Account.createFromPrivateKey(privateKey, this.networkType);
+                return this.$emit('success', { account: unlockedAccount, password });
+            }
 
-      return this.$emit('error', this.$t('error_invalid_password'))
-    } catch (e) {
-      this.$emit('error', e)
+            return this.$emit('error', this.$t('error_invalid_password'));
+        } catch (e) {
+            this.$emit('error', e);
+        }
     }
-  }
 }

@@ -15,27 +15,27 @@
  */
 
 export interface FeesConfig {
-  normal: number
-  fast: number
-  median: number
-  slow: number
-  highest: number
-  fastest: number
-  free: number
-  slowest: number
+    normal: number;
+    fast: number;
+    median: number;
+    slow: number;
+    highest: number;
+    fastest: number;
+    free: number;
+    slowest: number;
 }
 
 const defaultFeesConfig: FeesConfig = {
-  median: 1,
-  highest: 2,
-  free: 0,
-  slowest: 5000,
-  slow: 30000,
-  normal: 50000,
-  fast: 100000,
-  fastest: 1000000,
-}
+    median: 1,
+    highest: 2,
+    free: 0,
+    slowest: 5000,
+    slow: 30000,
+    normal: 50000,
+    fast: 100000,
+    fastest: 1000000,
+};
 
-const resolvedFeesConfig: FeesConfig = window['feesConfig'] || defaultFeesConfig
-console.log('feesConfig resolved!', resolvedFeesConfig)
-export const feesConfig = resolvedFeesConfig
+const resolvedFeesConfig: FeesConfig = window['feesConfig'] || defaultFeesConfig;
+console.log('feesConfig resolved!', resolvedFeesConfig);
+export const feesConfig = resolvedFeesConfig;

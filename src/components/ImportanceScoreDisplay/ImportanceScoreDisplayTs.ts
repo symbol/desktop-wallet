@@ -13,38 +13,38 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { AccountInfo } from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { AccountInfo } from 'symbol-sdk';
 // internal dependencies
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 @Component({
-  computed: {
-    ...mapGetters({
-      accountsInfo: 'account/accountsInfo',
-    }),
-  },
+    computed: {
+        ...mapGetters({
+            accountsInfo: 'account/accountsInfo',
+        }),
+    },
 })
 export class ImportanceScoreDisplayTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  address: string
+    @Prop({
+        default: null,
+    })
+    address: string;
 
-  /**
-   *
-   */
-  private accountsInfo: AccountInfo[]
+    /**
+     *
+     */
+    private accountsInfo: AccountInfo[];
 
-  /// region computed properties getter/setter
-  get score(): string {
-    const accountInfo = this.accountsInfo.find((k) => k.address.plain() === this.address)
-    if (!accountInfo) {
-      return '0'
+    /// region computed properties getter/setter
+    get score(): string {
+        const accountInfo = this.accountsInfo.find((k) => k.address.plain() === this.address);
+        if (!accountInfo) {
+            return '0';
+        }
+        const importance = accountInfo.importance.compact();
+        return importance.toString();
     }
-    const importance = accountInfo.importance.compact()
-    return importance.toString()
-  }
 
-  /// end-region computed properties getter/setter
+    /// end-region computed properties getter/setter
 }

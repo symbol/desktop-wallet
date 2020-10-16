@@ -13,59 +13,59 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // internal dependencies
-import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 // child components
 // @ts-ignore
-import FormSubAccountCreation from '@/views/forms/FormSubAccountCreation/FormSubAccountCreation.vue'
+import FormSubAccountCreation from '@/views/forms/FormSubAccountCreation/FormSubAccountCreation.vue';
 
 @Component({
-  components: {
-    FormSubAccountCreation,
-  },
-  computed: {
-    ...mapGetters({
-      currentProfile: 'profile/currentProfile',
-    }),
-  },
+    components: {
+        FormSubAccountCreation,
+    },
+    computed: {
+        ...mapGetters({
+            currentProfile: 'profile/currentProfile',
+        }),
+    },
 })
 export class ModalFormSubAccountCreationTs extends Vue {
-  @Prop({
-    default: false,
-  })
-  visible: boolean
+    @Prop({
+        default: false,
+    })
+    visible: boolean;
 
-  /**
-   * Visibility state
-   * @type {boolean}
-   */
-  get show(): boolean {
-    return this.visible
-  }
-
-  /**
-   * Emits close event
-   */
-  set show(val) {
-    if (!val) {
-      this.$emit('close')
+    /**
+     * Visibility state
+     * @type {boolean}
+     */
+    get show(): boolean {
+        return this.visible;
     }
-  }
 
-  /**
-   * Currently active profile
-   * @see {Store.Profile}
-   * @var {ProfileModel}
-   */
-  public currentProfile: ProfileModel
+    /**
+     * Emits close event
+     */
+    set show(val) {
+        if (!val) {
+            this.$emit('close');
+        }
+    }
 
-  /**
-   * Hook called when child component FormSubAccountCreation emits
-   * the 'submit' event.
-   */
-  public onSubmit() {
-    this.show = false
-  }
+    /**
+     * Currently active profile
+     * @see {Store.Profile}
+     * @var {ProfileModel}
+     */
+    public currentProfile: ProfileModel;
+
+    /**
+     * Hook called when child component FormSubAccountCreation emits
+     * the 'submit' event.
+     */
+    public onSubmit() {
+        this.show = false;
+    }
 }

@@ -14,57 +14,57 @@
  *
  */
 
-import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
-import { AccountModel } from '@/core/database/entities/AccountModel'
-import { Address } from 'symbol-sdk'
+import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage';
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { Address } from 'symbol-sdk';
 
 export class AccountModelStorage extends VersionedObjectStorage<Record<string, AccountModel>> {
-  /**
-   * Singleton instance as we want to run the migration just once
-   */
-  public static INSTANCE = new AccountModelStorage()
+    /**
+     * Singleton instance as we want to run the migration just once
+     */
+    public static INSTANCE = new AccountModelStorage();
 
-  private constructor() {
-    super('accounts', [
-      {
-        description: 'Update accounts to hold encRemoteAccountPrivateKey',
-        migrate: (from: any) => {
-          // update all accounts
-          const accounts = Object.keys(from)
+    private constructor() {
+        super('accounts', [
+            {
+                description: 'Update accounts to hold encRemoteAccountPrivateKey',
+                migrate: (from: any) => {
+                    // update all accounts
+                    const accounts = Object.keys(from);
 
-          const modified: any = from
-          accounts.map((name: string) => {
-            modified[name] = {
-              ...modified[name],
-              encRemoteAccountPrivateKey: '',
-            }
-          })
+                    const modified: any = from;
+                    accounts.map((name: string) => {
+                        modified[name] = {
+                            ...modified[name],
+                            encRemoteAccountPrivateKey: '',
+                        };
+                    });
 
-          return modified
-        },
-      },
-      {
-        description: 'Update accounts for 0.9.6.3 network (address changes)',
-        migrate: (from: any) => {
-          // update all pre-0.9.6.x profiles
-          const profiles = Object.keys(from)
+                    return modified;
+                },
+            },
+            {
+                description: 'Update accounts for 0.9.6.3 network (address changes)',
+                migrate: (from: any) => {
+                    // update all pre-0.9.6.x profiles
+                    const profiles = Object.keys(from);
 
-          const modified: any = from
-          profiles.map((name: string) => {
-            modified[name] = {
-              ...modified[name],
-              // re-generating address from public key (0.9.6.x changes in addresses format)
-              address: Address.createFromPublicKey(modified[name].publicKey, modified[name].networkType).plain(),
-            }
-          })
+                    const modified: any = from;
+                    profiles.map((name: string) => {
+                        modified[name] = {
+                            ...modified[name],
+                            // re-generating address from public key (0.9.6.x changes in addresses format)
+                            address: Address.createFromPublicKey(modified[name].publicKey, modified[name].networkType).plain(),
+                        };
+                    });
 
-          return modified
-        },
-      },
-      {
-        description: 'Reset accounts for 0.9.6.3 network (non backwards compatible)',
-        migrate: () => undefined,
-      },
-    ])
-  }
+                    return modified;
+                },
+            },
+            {
+                description: 'Reset accounts for 0.9.6.3 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
+        ]);
+    }
 }

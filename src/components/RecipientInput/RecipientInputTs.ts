@@ -13,57 +13,57 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-import { NetworkType } from 'symbol-sdk'
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
+import { NetworkType } from 'symbol-sdk';
 
 // internal dependencies
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 
 // child components
-import { ValidationProvider } from 'vee-validate'
+import { ValidationProvider } from 'vee-validate';
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue'
+import FormRow from '@/components/FormRow/FormRow.vue';
 
 @Component({
-  components: {
-    ValidationProvider,
-    ErrorTooltip,
-    FormRow,
-  },
-  computed: {
-    ...mapGetters({
-      networkType: 'network/networkType',
-    }),
-  },
+    components: {
+        ValidationProvider,
+        ErrorTooltip,
+        FormRow,
+    },
+    computed: {
+        ...mapGetters({
+            networkType: 'network/networkType',
+        }),
+    },
 })
 export class RecipientInputTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  value: string
+    @Prop({
+        default: null,
+    })
+    value: string;
 
-  /**
-   * Current network type
-   * @var {NetworkType}
-   */
-  public networkType: NetworkType
+    /**
+     * Current network type
+     * @var {NetworkType}
+     */
+    public networkType: NetworkType;
 
-  /**
-   * Validation rules
-   * @var {ValidationRuleset}
-   */
-  public validationRules = ValidationRuleset
+    /**
+     * Validation rules
+     * @var {ValidationRuleset}
+     */
+    public validationRules = ValidationRuleset;
 
-  /// region computed properties getter/setter
-  public get rawValue(): string {
-    return this.value
-  }
+    /// region computed properties getter/setter
+    public get rawValue(): string {
+        return this.value;
+    }
 
-  public set rawValue(input: string) {
-    this.$emit('input', input)
-  }
-  /// end-region computed properties getter/setter
+    public set rawValue(input: string) {
+        this.$emit('input', input);
+    }
+    /// end-region computed properties getter/setter
 }

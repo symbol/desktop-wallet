@@ -15,72 +15,72 @@
  */
 
 export class RESTDispatcher {
-  /**
-   *
-   */
-  protected dispatch: (action: string, payload?: any, options?: any) => void
+    /**
+     *
+     */
+    protected dispatch: (action: string, payload?: any, options?: any) => void;
 
-  /**
-   *
-   */
-  protected actions: {
-    action: string
-    payload?: any
-    options?: any
-    await: boolean
-  }[] = []
+    /**
+     *
+     */
+    protected actions: {
+        action: string;
+        payload?: any;
+        options?: any;
+        await: boolean;
+    }[] = [];
 
-  /**
-   *
-   * @param dispatchFn
-   */
-  public constructor(dispatchFn: (action: string, payload?: any, options?: any) => void) {
-    this.dispatch = dispatchFn
-  }
+    /**
+     *
+     * @param dispatchFn
+     */
+    public constructor(dispatchFn: (action: string, payload?: any, options?: any) => void) {
+        this.dispatch = dispatchFn;
+    }
 
-  /**
-   *
-   * @param action
-   * @param payload
-   * @param options
-   * @param isBlocking
-   */
-  public add(action: string, payload?: any, options?: any, shouldAwait: boolean = false) {
-    this.actions.push({
-      action,
-      payload: payload,
-      options: options,
-      await: shouldAwait,
-    })
-  }
+    /**
+     *
+     * @param action
+     * @param payload
+     * @param options
+     * @param isBlocking
+     */
+    public add(action: string, payload?: any, options?: any, shouldAwait: boolean = false) {
+        this.actions.push({
+            action,
+            payload: payload,
+            options: options,
+            await: shouldAwait,
+        });
+    }
 
-  /**
-   * Lazy store action dispatcher. This will make sure
-   * that dispatching actions does not flood REST with
-   * too many requests.
-   */
-  public throttle_dispatch() {
-    // - wrap actions execution in delayed promises
-    const promises: Promise<any>[] = []
-    this.actions.map((action, index: number) => {
-      // - every second value, delay 1000ms
-      const delay = index + (1 % 2) === 0 ? 1000 : 0
+    /**
+     * Lazy store action dispatcher. This will make sure
+     * that dispatching actions does not flood REST with
+     * too many requests.
+     */
+    public throttle_dispatch() {
+        // - wrap actions execution in delayed promises
+        const promises: Promise<any>[] = [];
+        this.actions.map((action, index: number) => {
+            // - every second value, delay 1000ms
+            const delay = index + (1 % 2) === 0 ? 1000 : 0;
 
-      // - configure promises to include delay
-      promises.push(
-        new Promise((resolve, reject) => {
-          return setTimeout(() => {
-            try {
-              const obs = this.dispatch(action.action, action.payload, action.options)
-              return resolve(obs)
-            } catch (e) {
-              return reject(e)
-            }
-          }, delay)
-        }),
-      )
-    })
+            // - configure promises to include delay
+            promises.push(
+                new Promise((resolve, reject) => {
+                    return setTimeout(() => {
+                        try {
+                            const obs = this.dispatch(action.action, action.payload, action.options);
+                            return resolve(obs);
+                        } catch (e) {
+                            return reject(e);
+                        }
+                    }, delay);
+                }),
+            );
+        });
 
-    return new Promise((resolve) => resolve(Promise.all(promises)))
-  }
+        return new Promise((resolve) => resolve(Promise.all(promises)));
+    }
 }

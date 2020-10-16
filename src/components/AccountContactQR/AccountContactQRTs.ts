@@ -13,75 +13,75 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { ContactQR } from 'symbol-qr-library'
-import { PublicAccount } from 'symbol-sdk'
-import { Observable, of } from 'rxjs'
-import { concatMap, pluck } from 'rxjs/operators'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { ContactQR } from 'symbol-qr-library';
+import { PublicAccount } from 'symbol-sdk';
+import { Observable, of } from 'rxjs';
+import { concatMap, pluck } from 'rxjs/operators';
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel } from '@/core/database/entities/AccountModel';
 // resources
 // @ts-ignore
-import failureIcon from '@/views/resources/img/monitor/failure.png'
-import { mapGetters } from 'vuex'
+import failureIcon from '@/views/resources/img/monitor/failure.png';
+import { mapGetters } from 'vuex';
 
 @Component({
-  computed: {
-    ...mapGetters({
-      generationHash: 'network/generationHash',
-    }),
-  },
-  subscriptions() {
-    const qrCode$ = this.$watchAsObservable('qrCodeArgs', {
-      immediate: true,
-    }).pipe(
-      pluck('newValue'),
-      concatMap((args) => {
-        if (args instanceof ContactQR) {
-          return args.toBase64()
-        }
-        return of(failureIcon)
-      }),
-    )
-    return { qrCode$ }
-  },
+    computed: {
+        ...mapGetters({
+            generationHash: 'network/generationHash',
+        }),
+    },
+    subscriptions() {
+        const qrCode$ = this.$watchAsObservable('qrCodeArgs', {
+            immediate: true,
+        }).pipe(
+            pluck('newValue'),
+            concatMap((args) => {
+                if (args instanceof ContactQR) {
+                    return args.toBase64();
+                }
+                return of(failureIcon);
+            }),
+        );
+        return { qrCode$ };
+    },
 })
 export class AccountContactQRTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  account: AccountModel
+    @Prop({
+        default: null,
+    })
+    account: AccountModel;
 
-  /**
-   * Current network's generation hash
-   * @var {string}
-   */
-  public generationHash: string
+    /**
+     * Current network's generation hash
+     * @var {string}
+     */
+    public generationHash: string;
 
-  /**
-   * QR Code
-   * @type {Observable<string>}
-   */
-  public qrCode$: Observable<string>
+    /**
+     * QR Code
+     * @type {Observable<string>}
+     */
+    public qrCode$: Observable<string>;
 
-  /// region computed properties getter/setter
-  get qrCodeArgs(): ContactQR {
-    if (!this.account) {
-      return null
+    /// region computed properties getter/setter
+    get qrCodeArgs(): ContactQR {
+        if (!this.account) {
+            return null;
+        }
+
+        try {
+            const publicAccount: PublicAccount = AccountModel.getObjects(this.account).publicAccount;
+            return new ContactQR(
+                this.account.name,
+                // @ts-ignore // @TODO: SDK upgrade
+                publicAccount,
+                publicAccount.address.networkType,
+                this.generationHash,
+            );
+        } catch (error) {
+            return null;
+        }
     }
-
-    try {
-      const publicAccount: PublicAccount = AccountModel.getObjects(this.account).publicAccount
-      return new ContactQR(
-        this.account.name,
-        // @ts-ignore // @TODO: SDK upgrade
-        publicAccount,
-        publicAccount.address.networkType,
-        this.generationHash,
-      )
-    } catch (error) {
-      return null
-    }
-  }
-  /// end-region computed properties getter/setter
+    /// end-region computed properties getter/setter
 }

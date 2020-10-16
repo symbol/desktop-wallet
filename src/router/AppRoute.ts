@@ -14,10 +14,10 @@
  *
  */
 // external dependencies
-import { RouteConfig } from 'vue-router'
+import { RouteConfig } from 'vue-router';
 
 // internal dependencies
-import { RouteMeta } from './RouteMeta'
+import { RouteMeta } from './RouteMeta';
 
 /**
  * Vue Router route extension
@@ -25,7 +25,7 @@ import { RouteMeta } from './RouteMeta'
  * @extends {RouteConfig}
  */
 export interface AppRoute extends RouteConfig {
-  name: string
-  meta: RouteMeta
-  children?: AppRoute[]
+    name: string;
+    meta: RouteMeta;
+    children?: AppRoute[];
 }

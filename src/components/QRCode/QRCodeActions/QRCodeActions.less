@@ -16,37 +16,37 @@
 @import '../../../views/resources/css/variables.less';
 
 .preview-container {
-  display: grid;
-  grid-template-columns: 20% 80%;
+    display: grid;
+    grid-template-columns: 20% 80%;
 
-  .qrcode-details {
-    margin-top: 0.3rem;
-  }
+    .qrcode-details {
+        margin-top: 0.3rem;
+    }
 }
 .qrcode-details-row-inner {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-template-columns: 20% 80%;
-  grid-template-rows: 100%;
-
-  .qrcode-details-row-label {
-    text-align: right;
-    font-size: @normalFont;
-    font-weight: 500;
-    color: @grayDark;
-    text-transform: capitalize;
-    overflow: hidden;
-    word-break: break-word;
-  }
-
-  .qrcode-details-row-value {
-    font-size: @normalFont;
-    color: @secondary;
-    padding-left: 0.2rem;
-    overflow: hidden;
-    word-break: break-word;
     display: grid;
-    align-items: center;
-  }
+    width: 100%;
+    height: 100%;
+    grid-template-columns: 20% 80%;
+    grid-template-rows: 100%;
+
+    .qrcode-details-row-label {
+        text-align: right;
+        font-size: @normalFont;
+        font-weight: 500;
+        color: @grayDark;
+        text-transform: capitalize;
+        overflow: hidden;
+        word-break: break-word;
+    }
+
+    .qrcode-details-row-value {
+        font-size: @normalFont;
+        color: @secondary;
+        padding-left: 0.2rem;
+        overflow: hidden;
+        word-break: break-word;
+        display: grid;
+        align-items: center;
+    }
 }

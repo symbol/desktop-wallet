@@ -16,76 +16,76 @@
 
 @import '../../views/resources/css/variables.less';
 .tabs {
-  border-bottom: 0.02rem solid @line;
+    border-bottom: 0.02rem solid @line;
 }
 .horizontal {
-  display: grid;
-  grid-template-columns: auto;
-  grid-auto-flow: column;
-  justify-items: start;
-  justify-content: start;
-  height: 100%;
-  background-color: transparent;
+    display: grid;
+    grid-template-columns: auto;
+    grid-auto-flow: column;
+    justify-items: start;
+    justify-content: start;
+    height: 100%;
+    background-color: transparent;
 
-  .tab-item {
-    font-size: 0.2rem;
-    position: relative;
-    font-weight: 500;
-    cursor: pointer;
-    height: 0.2rem;
-    width: auto;
-    padding: 0 0.4rem;
-    margin: 0.2rem 0;
-    line-height: 0.2rem;
-    text-align: center;
-    img {
-      height: 0.2rem;
-      width: 0.2rem;
-      margin-top: 0.02rem;
-      display: inline-block;
+    .tab-item {
+        font-size: 0.2rem;
+        position: relative;
+        font-weight: 500;
+        cursor: pointer;
+        height: 0.2rem;
+        width: auto;
+        padding: 0 0.4rem;
+        margin: 0.2rem 0;
+        line-height: 0.2rem;
+        text-align: center;
+        img {
+            height: 0.2rem;
+            width: 0.2rem;
+            margin-top: 0.02rem;
+            display: inline-block;
+        }
     }
-  }
-  .tab-item:not(:first-child) {
-    border-left: 0.01rem solid @boxShadow;
-  }
+    .tab-item:not(:first-child) {
+        border-left: 0.01rem solid @boxShadow;
+    }
 
-  .active {
-    color: @primary;
-    font-weight: 700;
-    cursor: not-allowed !important;
-  }
+    .active {
+        color: @primary;
+        font-weight: 700;
+        cursor: not-allowed !important;
+    }
 
-  .active:after {
-    display: block;
-    position: absolute;
-    width: 0.3rem;
-    height: 0.04rem;
-    background: unset;
-    content: '';
-    left: -0.15rem;
-    margin-left: 50%;
-    bottom: 0;
-  }
+    .active:after {
+        display: block;
+        position: absolute;
+        width: 0.3rem;
+        height: 0.04rem;
+        background: unset;
+        content: '';
+        left: -0.15rem;
+        margin-left: 50%;
+        bottom: 0;
+    }
 }
 
 .vertical {
-  display: grid;
-  grid-template-columns: auto;
-  padding-top: 70px;
+    display: grid;
+    grid-template-columns: auto;
+    padding-top: 70px;
 
-  .tab-item {
-    padding-bottom: 0.35rem;
-    font-size: 18px;
-    font-weight: 400;
-    color: #666;
-    cursor: pointer;
-    padding-left: 80px;
-  }
+    .tab-item {
+        padding-bottom: 0.35rem;
+        font-size: 18px;
+        font-weight: 400;
+        color: #666;
+        cursor: pointer;
+        padding-left: 80px;
+    }
 
-  .active {
-    font-size: 18px;
-    font-weight: 700;
-    color: #222;
-    cursor: not-allowed !important;
-  }
+    .active {
+        font-size: 18px;
+        font-weight: 700;
+        color: #222;
+        cursor: not-allowed !important;
+    }
 }

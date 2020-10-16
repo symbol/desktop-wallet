@@ -13,63 +13,63 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import Vue from 'vue'
+import Vue from 'vue';
 // internal dependencies
-import { AwaitLock } from './AwaitLock'
-import { CommunityService, ArticleEntry } from '@/services/CommunityService'
+import { AwaitLock } from './AwaitLock';
+import { CommunityService, ArticleEntry } from '@/services/CommunityService';
 
-const Lock = AwaitLock.create()
+const Lock = AwaitLock.create();
 
 /**
  * Community Store
  */
 export default {
-  namespaced: true,
-  state: {
-    initialized: false,
-    articles: [],
-  },
-  getters: {
-    getInitialized: (state) => state.initialized,
-    latestArticles: (state) => state.articles,
-  },
-  mutations: {
-    setInitialized: (state, initialized) => {
-      state.initialized = initialized
+    namespaced: true,
+    state: {
+        initialized: false,
+        articles: [],
     },
-    addArticles: (state, articles: ArticleEntry[]): void => {
-      const newArticles = [...articles, ...state.articles]
-      Vue.set(state, 'articles', newArticles)
+    getters: {
+        getInitialized: (state) => state.initialized,
+        latestArticles: (state) => state.articles,
     },
-  },
-  actions: {
-    async initialize({ commit, dispatch, getters }) {
-      const callback = async () => {
-        // fetch news
-        await dispatch('FETCH_ARTICLES')
-        commit('setInitialized', true)
-      }
-      await Lock.initialize(callback, { getters })
+    mutations: {
+        setInitialized: (state, initialized) => {
+            state.initialized = initialized;
+        },
+        addArticles: (state, articles: ArticleEntry[]): void => {
+            const newArticles = [...articles, ...state.articles];
+            Vue.set(state, 'articles', newArticles);
+        },
     },
-    async uninitialize({ commit, getters }) {
-      const callback = async () => {
-        // close websocket connections
-        commit('setInitialized', false)
-      }
-      await Lock.uninitialize(callback, { getters })
+    actions: {
+        async initialize({ commit, dispatch, getters }) {
+            const callback = async () => {
+                // fetch news
+                await dispatch('FETCH_ARTICLES');
+                commit('setInitialized', true);
+            };
+            await Lock.initialize(callback, { getters });
+        },
+        async uninitialize({ commit, getters }) {
+            const callback = async () => {
+                // close websocket connections
+                commit('setInitialized', false);
+            };
+            await Lock.uninitialize(callback, { getters });
+        },
+        /// region scoped actions
+        async FETCH_ARTICLES({ commit }) {
+            // fetch articles from external feed
+            try {
+                const service = new CommunityService();
+                const articles: ArticleEntry[] = await service.getLatestArticles();
+                commit('addArticles', articles);
+            } catch (e) {
+                // forward error
+                throw new Error(e);
+            }
+        },
+        /// end-region scoped actions
     },
-    /// region scoped actions
-    async FETCH_ARTICLES({ commit }) {
-      // fetch articles from external feed
-      try {
-        const service = new CommunityService()
-        const articles: ArticleEntry[] = await service.getLatestArticles()
-        commit('addArticles', articles)
-      } catch (e) {
-        // forward error
-        throw new Error(e)
-      }
-    },
-    /// end-region scoped actions
-  },
-}
+};

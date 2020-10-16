@@ -13,59 +13,59 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import AwaitLockImpl from 'await-lock'
+import AwaitLockImpl from 'await-lock';
 
 export class AwaitLock {
-  /**
-   * Create a lock instance
-   * @access private
-   * @param lock
-   */
-  private constructor(
     /**
-     * The lock specialization
-     * @var {AwaitLockImpl}
+     * Create a lock instance
+     * @access private
+     * @param lock
      */
-    protected readonly lock: AwaitLockImpl,
-  ) {}
+    private constructor(
+        /**
+         * The lock specialization
+         * @var {AwaitLockImpl}
+         */
+        protected readonly lock: AwaitLockImpl,
+    ) {}
 
-  /**
-   * Create a lock
-   * @return {AwaitLock}
-   */
-  static create() {
-    return new AwaitLock(new AwaitLockImpl())
-  }
-
-  /**
-   * Helper method for the initialize callback.
-   * @param callback
-   * @param store
-   */
-  async initialize(callback, { getters }) {
-    await this.lock.acquireAsync()
-    try {
-      if (!getters.getInitialized) {
-        await callback()
-      }
-    } finally {
-      this.lock.release()
+    /**
+     * Create a lock
+     * @return {AwaitLock}
+     */
+    static create() {
+        return new AwaitLock(new AwaitLockImpl());
     }
-  }
 
-  /**
-   * Helper method for the unitialize callback
-   * @param callback
-   * @param store
-   */
-  async uninitialize(callback, { getters }) {
-    await this.lock.acquireAsync()
-    try {
-      if (getters.getInitialized) {
-        await callback()
-      }
-    } finally {
-      this.lock.release()
+    /**
+     * Helper method for the initialize callback.
+     * @param callback
+     * @param store
+     */
+    async initialize(callback, { getters }) {
+        await this.lock.acquireAsync();
+        try {
+            if (!getters.getInitialized) {
+                await callback();
+            }
+        } finally {
+            this.lock.release();
+        }
     }
-  }
+
+    /**
+     * Helper method for the unitialize callback
+     * @param callback
+     * @param store
+     */
+    async uninitialize(callback, { getters }) {
+        await this.lock.acquireAsync();
+        try {
+            if (getters.getInitialized) {
+                await callback();
+            }
+        } finally {
+            this.lock.release();
+        }
+    }
 }

@@ -14,23 +14,23 @@
  *
  */
 // external dependencies
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator';
 
 // child components
 // @ts-ignore
-import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
+import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue';
 // @ts-ignore
-import FormTitle from '@/components/FormTitle/FormTitle.vue'
+import FormTitle from '@/components/FormTitle/FormTitle.vue';
 
 @Component({
-  components: {
-    NavigationTabs,
-    FormTitle,
-  },
+    components: {
+        NavigationTabs,
+        FormTitle,
+    },
 })
 export class SettingsTs extends Vue {
-  /**
-   * Argument passed to the Router Tab List
-   */
-  parentRouteName = 'settings'
+    /**
+     * Argument passed to the Router Tab List
+     */
+    parentRouteName = 'settings';
 }

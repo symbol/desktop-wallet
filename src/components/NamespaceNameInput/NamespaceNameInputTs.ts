@@ -14,68 +14,68 @@
  *
  */
 // external dependencies
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-import { NamespaceRegistrationType, NetworkType } from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
+import { NamespaceRegistrationType, NetworkType } from 'symbol-sdk';
 // internal dependencies
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 // child components
-import { ValidationProvider } from 'vee-validate'
+import { ValidationProvider } from 'vee-validate';
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue'
+import FormRow from '@/components/FormRow/FormRow.vue';
 
 @Component({
-  components: {
-    ValidationProvider,
-    ErrorTooltip,
-    FormRow,
-  },
-  computed: {
-    ...mapGetters({
-      networkType: 'network/networkType',
-    }),
-  },
+    components: {
+        ValidationProvider,
+        ErrorTooltip,
+        FormRow,
+    },
+    computed: {
+        ...mapGetters({
+            networkType: 'network/networkType',
+        }),
+    },
 })
 export class NamespaceNameInputTs extends Vue {
-  @Prop({ default: null }) value: string
+    @Prop({ default: null }) value: string;
 
-  @Prop({ default: NamespaceRegistrationType.RootNamespace })
-  namespaceRegistrationType: NamespaceRegistrationType
+    @Prop({ default: NamespaceRegistrationType.RootNamespace })
+    namespaceRegistrationType: NamespaceRegistrationType;
 
-  @Prop({ default: true }) isNeedAutoFocus: boolean
+    @Prop({ default: true }) isNeedAutoFocus: boolean;
 
-  /**
-   * Current network type
-   * @var {NetworkType}
-   */
-  public networkType: NetworkType
+    /**
+     * Current network type
+     * @var {NetworkType}
+     */
+    public networkType: NetworkType;
 
-  /**
-   * Validation rules
-   * @var {ValidationRuleset}
-   */
-  public validationRules = ValidationRuleset
+    /**
+     * Validation rules
+     * @var {ValidationRuleset}
+     */
+    public validationRules = ValidationRuleset;
 
-  /// region computed properties getter/setter
-  public get chosenValue(): string {
-    return this.value
-  }
+    /// region computed properties getter/setter
+    public get chosenValue(): string {
+        return this.value;
+    }
 
-  public set chosenValue(input: string) {
-    this.$emit('input', input)
-  }
+    public set chosenValue(input: string) {
+        this.$emit('input', input);
+    }
 
-  /**
-   * Validation rule
-   * @readonly
-   * @type {Record<string, any>}
-   */
-  public get validationRule(): Record<string, any> {
-    return this.namespaceRegistrationType === NamespaceRegistrationType.RootNamespace
-      ? this.validationRules.namespaceName
-      : this.validationRules.subNamespaceName
-  }
-  /// end-region computed properties getter/setter
+    /**
+     * Validation rule
+     * @readonly
+     * @type {Record<string, any>}
+     */
+    public get validationRule(): Record<string, any> {
+        return this.namespaceRegistrationType === NamespaceRegistrationType.RootNamespace
+            ? this.validationRules.namespaceName
+            : this.validationRules.subNamespaceName;
+    }
+    /// end-region computed properties getter/setter
 }

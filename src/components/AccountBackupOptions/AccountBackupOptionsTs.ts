@@ -13,44 +13,44 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
+import { AccountModel } from '@/core/database/entities/AccountModel';
 // child components
 // @ts-ignore
-import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue'
+import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 // @ts-ignore
-import ProtectedMnemonicQRButton from '@/components/ProtectedMnemonicQRButton/ProtectedMnemonicQRButton.vue'
+import ProtectedMnemonicQRButton from '@/components/ProtectedMnemonicQRButton/ProtectedMnemonicQRButton.vue';
 // @ts-ignore
-import ProtectedMnemonicDisplayButton from '@/components/ProtectedMnemonicDisplayButton/ProtectedMnemonicDisplayButton.vue'
+import ProtectedMnemonicDisplayButton from '@/components/ProtectedMnemonicDisplayButton/ProtectedMnemonicDisplayButton.vue';
 
 @Component({
-  components: {
-    ModalFormProfileUnlock,
-    ProtectedMnemonicQRButton,
-    ProtectedMnemonicDisplayButton,
-  },
+    components: {
+        ModalFormProfileUnlock,
+        ProtectedMnemonicQRButton,
+        ProtectedMnemonicDisplayButton,
+    },
 })
 export class AccountBackupOptionsTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  account: AccountModel
+    @Prop({
+        default: null,
+    })
+    account: AccountModel;
 
-  /**
-   * Whether account is currently being unlocked
-   * @var {boolean}
-   */
-  public isUnlockingAccount: boolean = false
+    /**
+     * Whether account is currently being unlocked
+     * @var {boolean}
+     */
+    public isUnlockingAccount: boolean = false;
 
-  /// region computed properties getter/setter
-  public get hasAccountUnlockModal(): boolean {
-    return this.isUnlockingAccount
-  }
+    /// region computed properties getter/setter
+    public get hasAccountUnlockModal(): boolean {
+        return this.isUnlockingAccount;
+    }
 
-  public set hasAccountUnlockModal(f: boolean) {
-    this.isUnlockingAccount = f
-  }
-  /// end-region computed properties getter/setter
+    public set hasAccountUnlockModal(f: boolean) {
+        this.isUnlockingAccount = f;
+    }
+    /// end-region computed properties getter/setter
 }

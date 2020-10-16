@@ -16,306 +16,306 @@
 @import '../../views/resources/css/variables.less';
 
 .toggle_all_checked {
-  margin-top: 0.1rem;
-  font-size: 0.16rem;
-  height: 0.2rem;
-  width: 100%;
-  line-height: 0.2rem;
-  display: flex;
-  align-items: center;
-  padding: 0.2rem 0;
-
-  span {
-    min-width: 1.5rem;
+    margin-top: 0.1rem;
+    font-size: 0.16rem;
+    height: 0.2rem;
+    width: 100%;
+    line-height: 0.2rem;
     display: flex;
     align-items: center;
-    margin-right: 0.1rem;
-    cursor: pointer;
-  }
+    padding: 0.2rem 0;
+
+    span {
+        min-width: 1.5rem;
+        display: flex;
+        align-items: center;
+        margin-right: 0.1rem;
+        cursor: pointer;
+    }
 }
 
 .false {
-  width: 0.2rem;
-  height: 0.2rem;
-  background-image: url('../../views/resources/img/monitor/mosaics/unselected.png');
-  background-repeat: no-repeat;
-  background-size: 0.2rem;
-  margin-right: 0.1rem;
-  cursor: pointer;
+    width: 0.2rem;
+    height: 0.2rem;
+    background-image: url('../../views/resources/img/monitor/mosaics/unselected.png');
+    background-repeat: no-repeat;
+    background-size: 0.2rem;
+    margin-right: 0.1rem;
+    cursor: pointer;
 }
 
 .true {
-  width: 0.2rem;
-  height: 0.2rem;
-  background-image: url('../../views/resources/img/monitor/mosaics/selected.png');
-  background-repeat: no-repeat;
-  background-size: 0.2rem;
-  margin-right: 0.1rem;
-  cursor: pointer;
+    width: 0.2rem;
+    height: 0.2rem;
+    background-image: url('../../views/resources/img/monitor/mosaics/selected.png');
+    background-repeat: no-repeat;
+    background-size: 0.2rem;
+    margin-right: 0.1rem;
+    cursor: pointer;
 }
 
 .mosaicList {
-  height: 100%;
-  display: block;
+    height: 100%;
+    display: block;
 
-  .complete_container {
-    width: 100%;
-    height: 0.8rem;
-    background-color: @white;
-    padding-top: 0.2rem;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    z-index: 1;
-  }
+    .complete_container {
+        width: 100%;
+        height: 0.8rem;
+        background-color: @white;
+        padding-top: 0.2rem;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        z-index: 1;
+    }
 
-  .complete {
-    width: 1.5rem;
-    height: 0.44rem;
-    border-radius: 0.22rem;
-    border: 0.01rem solid @border;
-    text-align: center;
-    line-height: 0.44rem;
-    cursor: pointer;
-    font-size: 0.16rem;
-    font-weight: 400;
-    color: @purple;
-    position: absolute;
-    margin-left: 50%;
-    left: -0.75rem;
-  }
+    .complete {
+        width: 1.5rem;
+        height: 0.44rem;
+        border-radius: 0.22rem;
+        border: 0.01rem solid @border;
+        text-align: center;
+        line-height: 0.44rem;
+        cursor: pointer;
+        font-size: 0.16rem;
+        font-weight: 400;
+        color: @purple;
+        position: absolute;
+        margin-left: 50%;
+        left: -0.75rem;
+    }
 }
 
 .mosaicList::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .asset_setting_tit {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-size: 0.16rem;
-  font-weight: 400;
-  color: @blackLight;
-  height: 0.2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 0.16rem;
+    font-weight: 400;
+    color: @blackLight;
+    height: 0.2rem;
 
-  img {
-    margin-right: 0.19rem;
-    width: 0.08rem;
-    height: 0.16rem;
-    position: relative;
-    bottom: 0.02rem;
-  }
+    img {
+        margin-right: 0.19rem;
+        width: 0.08rem;
+        height: 0.16rem;
+        position: relative;
+        bottom: 0.02rem;
+    }
 }
 
 .searchMosaic {
-  height: 100%;
-  .mosaic_data {
-    .mosaic_name {
-      left: 0.7rem;
+    height: 100%;
+    .mosaic_data {
+        .mosaic_name {
+            left: 0.7rem;
+        }
     }
-  }
 }
 
 .search {
-  position: absolute;
-  display: inline-block;
-  width: 0.6rem;
-  font-size: 0.16rem;
-  text-align: center;
-  right: -0.6rem;
-  color: @purple;
+    position: absolute;
+    display: inline-block;
+    width: 0.6rem;
+    font-size: 0.16rem;
+    text-align: center;
+    right: -0.6rem;
+    color: @purple;
 }
 
 .input_outter {
-  width: 2.8rem;
-  height: 0.4rem;
-  display: flex;
-  position: absolute;
-  top: 0.2rem;
-  left: 0.6rem;
-  align-items: center;
-  flex-direction: row;
-
-  img {
-    width: 0.18rem;
-    height: 0.18rem;
-    margin: 0 0.1rem 0 0.1rem;
-  }
-
-  border: 0.01rem solid @border;
-  border-radius: 0.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  input {
-    border: none;
     width: 2.8rem;
-  }
+    height: 0.4rem;
+    display: flex;
+    position: absolute;
+    top: 0.2rem;
+    left: 0.6rem;
+    align-items: center;
+    flex-direction: row;
+
+    img {
+        width: 0.18rem;
+        height: 0.18rem;
+        margin: 0 0.1rem 0 0.1rem;
+    }
+
+    border: 0.01rem solid @border;
+    border-radius: 0.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    input {
+        border: none;
+        width: 2.8rem;
+    }
 }
 
 .mosaic_data {
-  height: 0.65rem;
-  padding: 0.15rem 0.25rem 0.15rem 0;
-  display: flex;
-  flex-direction: row;
-  justify-items: center;
-  justify-content: space-between;
-  align-content: center;
-  align-items: center;
-  border-bottom: 0.01rem solid @line;
-  position: relative;
-
-  .namege_img {
-    position: absolute;
-    display: inline-block;
-    top: 0.2rem;
-
-    .mosaicIcon {
-      display: inline-block;
-      width: 0.28rem;
-      height: 0.28rem;
-      margin-left: 0.1rem;
-    }
-  }
-
-  .img_container {
-    display: inline-block;
-    position: absolute;
-    top: 0.23rem;
-    margin-right: 0.15rem;
-
-    img {
-      display: inline-block;
-      width: 0.22rem;
-      height: 0.2rem;
-    }
-
-    img.grayed-xym-logo {
-      opacity: 0.4;
-      -webkit-filter: grayscale(100%);
-      -moz-filter: grayscale(100%);
-      -o-filter: grayscale(100%);
-      -ms-filter: grayscale(100%);
-      filter: grayscale(100%);
-    }
-  }
-
-  .mosaic_name {
+    height: 0.65rem;
+    padding: 0.15rem 0.25rem 0.15rem 0;
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    border-bottom: 0.01rem solid @line;
     position: relative;
-    top: 0;
-    left: 0.4rem;
-    width: 1.8rem;
-    font-size: @smallFont;
-    font-weight: 400;
-    color: @blackLight;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 
-  .mosaic_value {
-    margin-left: 0.5rem;
-    text-align: right;
+    .namege_img {
+        position: absolute;
+        display: inline-block;
+        top: 0.2rem;
 
-    div:first-of-type {
-      font-size: 0.16rem;
-      font-weight: 400;
-      color: @blackLight;
+        .mosaicIcon {
+            display: inline-block;
+            width: 0.28rem;
+            height: 0.28rem;
+            margin-left: 0.1rem;
+        }
     }
 
-    div:nth-of-type(2) {
-      font-size: 0.16rem;
-      font-weight: 400;
-      color: @grayDark;
-    }
-  }
+    .img_container {
+        display: inline-block;
+        position: absolute;
+        top: 0.23rem;
+        margin-right: 0.15rem;
 
-  .small_icon {
-    width: 0.2rem;
-    height: 0.2rem;
-    margin-bottom: 0.05rem;
-  }
+        img {
+            display: inline-block;
+            width: 0.22rem;
+            height: 0.2rem;
+        }
+
+        img.grayed-xym-logo {
+            opacity: 0.4;
+            -webkit-filter: grayscale(100%);
+            -moz-filter: grayscale(100%);
+            -o-filter: grayscale(100%);
+            -ms-filter: grayscale(100%);
+            filter: grayscale(100%);
+        }
+    }
+
+    .mosaic_name {
+        position: relative;
+        top: 0;
+        left: 0.4rem;
+        width: 1.8rem;
+        font-size: @smallFont;
+        font-weight: 400;
+        color: @blackLight;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .mosaic_value {
+        margin-left: 0.5rem;
+        text-align: right;
+
+        div:first-of-type {
+            font-size: 0.16rem;
+            font-weight: 400;
+            color: @blackLight;
+        }
+
+        div:nth-of-type(2) {
+            font-size: 0.16rem;
+            font-weight: 400;
+            color: @grayDark;
+        }
+    }
+
+    .small_icon {
+        width: 0.2rem;
+        height: 0.2rem;
+        margin-bottom: 0.05rem;
+    }
 }
 
 .mosaic-data-list {
-  .mosaic_data:last-child {
-    margin-bottom: 0.53rem;
-  }
+    .mosaic_data:last-child {
+        margin-bottom: 0.53rem;
+    }
 }
 
 .padding_top_0 {
-  padding-top: 0 !important;
-  height: 0.55rem !important;
+    padding-top: 0 !important;
+    height: 0.55rem !important;
 }
 
 .padding_top_0 .namege_img {
-  top: 0.1rem !important;
+    top: 0.1rem !important;
 }
 
 .padding_top_0 .mosaic_value {
-  padding-top: 0.1rem !important;
-  margin-left: 0.7rem;
+    padding-top: 0.1rem !important;
+    margin-left: 0.7rem;
 }
 
 /deep/.ivu-tabs-tab {
-  font-size: 0.2rem !important;
-  color: @purpleDark !important;
-  padding: 0.08rem 0.1rem !important;
-  font-weight: 400;
+    font-size: 0.2rem !important;
+    color: @purpleDark !important;
+    padding: 0.08rem 0.1rem !important;
+    font-weight: 400;
 }
 
 /deep/.ivu-tabs-ink-bar {
-  background-color: @purpleDark !important;
+    background-color: @purpleDark !important;
 }
 
 /deep/.ivu-tabs-bar {
-  margin-bottom: 0 !important;
-  position: relative;
-  .asset_list {
-    width: 0.24rem;
-    position: absolute;
-    bottom: 0.08rem;
-    right: 0.1rem;
-    z-index: 1;
-  }
+    margin-bottom: 0 !important;
+    position: relative;
+    .asset_list {
+        width: 0.24rem;
+        position: absolute;
+        bottom: 0.08rem;
+        right: 0.1rem;
+        z-index: 1;
+    }
 }
 
 .mosaics-list-container {
-  height: 100%;
-  /deep/.ivu-tabs {
     height: 100%;
-    .ivu-tabs-content {
-      height: calc(100% - 0.45rem);
-      overflow-y: auto;
+    /deep/.ivu-tabs {
+        height: 100%;
+        .ivu-tabs-content {
+            height: calc(100% - 0.45rem);
+            overflow-y: auto;
+        }
     }
-  }
-  .searchMosaic {
-    overflow-y: auto;
-  }
+    .searchMosaic {
+        overflow-y: auto;
+    }
 }
 
 .mosaic-balance-list-tabs-container {
-  height: 100%;
-  position: relative;
+    height: 100%;
+    position: relative;
 }
 
 /deep/.ivu-tabs-content {
-  display: block;
-  overflow: visible;
-  height: 100%;
+    display: block;
+    overflow: visible;
+    height: 100%;
 }
 
 /deep/.ivu-tabs-tabpane {
-  height: 100%;
-  position: relative;
-  overflow-y: overlay;
-  display: block !important;
+    height: 100%;
+    position: relative;
+    overflow-y: overlay;
+    display: block !important;
 }
 
 .toggle-mosaic-display-icon {
-  height: 0.2rem;
-  width: 0.2rem;
-  margin-right: 0.13rem;
+    height: 0.2rem;
+    width: 0.2rem;
+    margin-right: 0.13rem;
 }

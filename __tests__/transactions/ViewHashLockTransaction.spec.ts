@@ -13,41 +13,34 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {
-  AggregateTransaction,
-  Deadline,
-  LockFundsTransaction,
-  NetworkCurrencyLocal,
-  NetworkType,
-  UInt64,
-} from 'symbol-sdk'
-import { createStore } from '@MOCKS/Store'
-import { getTestAccount } from '@MOCKS/Accounts'
-import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction'
+import { AggregateTransaction, Deadline, LockFundsTransaction, NetworkCurrencyLocal, NetworkType, UInt64 } from 'symbol-sdk';
+import { createStore } from '@MOCKS/Store';
+import { getTestAccount } from '@MOCKS/Accounts';
+import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction';
 
-const store = createStore({})
+const store = createStore({});
 
 describe('transactions/ViewHashLockTransaction', () => {
-  describe('use() should', () => {
-    test('populate hash lock transaction fields', () => {
-      const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6'
-      const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, [])
-      const signedTransaction = getTestAccount('cosigner1').sign(aggregateTransaction, generationHash)
-      const hashLock = LockFundsTransaction.create(
-        Deadline.create(),
-        NetworkCurrencyLocal.createRelative(10),
-        UInt64.fromUint(10),
-        signedTransaction,
-        NetworkType.MIJIN_TEST,
-      )
+    describe('use() should', () => {
+        test('populate hash lock transaction fields', () => {
+            const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+            const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+            const signedTransaction = getTestAccount('cosigner1').sign(aggregateTransaction, generationHash);
+            const hashLock = LockFundsTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyLocal.createRelative(10),
+                UInt64.fromUint(10),
+                signedTransaction,
+                NetworkType.MIJIN_TEST,
+            );
 
-      // act
-      const view = new ViewHashLockTransaction(store, hashLock)
+            // act
+            const view = new ViewHashLockTransaction(store, hashLock);
 
-      // assert
-      expect(view).toBeDefined()
-      expect(view.transaction).toBeDefined()
-      expect(view.detailItems.length).toBe(3)
-    })
-  })
-})
+            // assert
+            expect(view).toBeDefined();
+            expect(view.transaction).toBeDefined();
+            expect(view.detailItems.length).toBe(3);
+        });
+    });
+});

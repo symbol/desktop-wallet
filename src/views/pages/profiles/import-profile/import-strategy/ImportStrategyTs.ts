@@ -13,58 +13,58 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import Vue from 'vue';
+import Component from 'vue-class-component';
 // resources
-import { walletTypeImages } from '@/views/resources/Images'
+import { walletTypeImages } from '@/views/resources/Images';
 
 @Component
 export default class ImportStrategyTs extends Vue {
-  /**
-   * List of available follow-up pages
-   * @var {any[]}
-   */
-  public importInfoList = [
-    {
-      image: walletTypeImages.createImg,
-      title: 'create_mnemonic',
-      description: 'create_a_new_profile',
-      route: 'profiles.createProfile.info',
-    },
-    {
-      image: walletTypeImages.seedImg,
-      title: 'import_mnemonic',
-      description: 'import_mnemonic_passphrase_create_profile',
-      route: 'profiles.importProfile.info',
-    },
-    {
-      image: walletTypeImages.trezorImg,
-      title: 'access_trezor',
-      description: 'access_trezor_account',
-      route: null,
-    },
-    {
-      image: walletTypeImages.ledgerImg,
-      title: 'access_ledger',
-      description: 'access_your_ledger_account',
-      route: null,
-    },
-  ]
+    /**
+     * List of available follow-up pages
+     * @var {any[]}
+     */
+    public importInfoList = [
+        {
+            image: walletTypeImages.createImg,
+            title: 'create_mnemonic',
+            description: 'create_a_new_profile',
+            route: 'profiles.createProfile.info',
+        },
+        {
+            image: walletTypeImages.seedImg,
+            title: 'import_mnemonic',
+            description: 'import_mnemonic_passphrase_create_profile',
+            route: 'profiles.importProfile.info',
+        },
+        {
+            image: walletTypeImages.trezorImg,
+            title: 'access_trezor',
+            description: 'access_trezor_account',
+            route: null,
+        },
+        {
+            image: walletTypeImages.ledgerImg,
+            title: 'access_ledger',
+            description: 'access_your_ledger_account',
+            route: null,
+        },
+    ];
 
-  /**
-   * Redirect user to clicked route
-   * @param link
-   */
-  public redirect(routeName: string) {
-    if (!routeName || !routeName.length) {
-      return this.$store.dispatch('notification/ADD_WARNING', this.$t('not_yet_open'))
+    /**
+     * Redirect user to clicked route
+     * @param link
+     */
+    public redirect(routeName: string) {
+        if (!routeName || !routeName.length) {
+            return this.$store.dispatch('notification/ADD_WARNING', this.$t('not_yet_open'));
+        }
+
+        return this.$router.push({
+            name: routeName,
+            params: {
+                nextPage: 'profiles.importProfile.importMnemonic',
+            },
+        });
     }
-
-    return this.$router.push({
-      name: routeName,
-      params: {
-        nextPage: 'profiles.importProfile.importMnemonic',
-      },
-    })
-  }
 }

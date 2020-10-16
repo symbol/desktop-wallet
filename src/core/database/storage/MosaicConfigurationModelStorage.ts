@@ -14,17 +14,15 @@
  *
  */
 
-import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
-import { AccountMosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel'
-export class MosaicConfigurationModelStorage extends VersionedObjectStorage<
-  Record<string, AccountMosaicConfigurationModel>
-> {
-  /**
-   * Singleton instance as we want to run the migration just once
-   */
-  public static INSTANCE = new MosaicConfigurationModelStorage()
+import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage';
+import { AccountMosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel';
+export class MosaicConfigurationModelStorage extends VersionedObjectStorage<Record<string, AccountMosaicConfigurationModel>> {
+    /**
+     * Singleton instance as we want to run the migration just once
+     */
+    public static INSTANCE = new MosaicConfigurationModelStorage();
 
-  private constructor() {
-    super('mosaicConfiguration')
-  }
+    private constructor() {
+        super('mosaicConfiguration');
+    }
 }

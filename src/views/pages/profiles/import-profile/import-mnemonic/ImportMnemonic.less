@@ -1,35 +1,35 @@
 @import '../../../../resources/css/variables.less';
 .create-mnemonic-sec {
-  position: relative;
+    position: relative;
 
-  .button-container {
-    display: inline;
-  }
-
-  .create-mnemonic-col {
-    display: grid;
-    grid-template-columns: 9.5rem 4.66rem;
-    column-gap: 0.8rem;
-    .create-mnemonic-left {
-      width: 100%;
+    .button-container {
+        display: inline;
     }
 
-    .create-mnemonic-right {
-      width: 100%;
-    }
-  }
+    .create-mnemonic-col {
+        display: grid;
+        grid-template-columns: 9.5rem 4.66rem;
+        column-gap: 0.8rem;
+        .create-mnemonic-left {
+            width: 100%;
+        }
 
-  .button-container {
-    width: 400px;
+        .create-mnemonic-right {
+            width: 100%;
+        }
+    }
 
-    button {
-      margin-top: 20px;
-      width: 347px;
-      height: 50px;
-      margin-right: 16px;
+    .button-container {
+        width: 400px;
+
+        button {
+            margin-top: 20px;
+            width: 347px;
+            height: 50px;
+            margin-right: 16px;
+        }
+        .validation-button:disabled {
+            cursor: not-allowed;
+        }
     }
-    .validation-button:disabled {
-      cursor: not-allowed;
-    }
-  }
 }

@@ -24,607 +24,607 @@
  * Components
  *************************************************************/
 .form-wrapper {
-  display: block;
-  position: relative;
-  max-width: @formLabelWidth + @formInputsWidth;
+    display: block;
+    position: relative;
+    max-width: @formLabelWidth + @formInputsWidth;
 }
 
 .select-container {
-  display: grid;
-  position: relative;
-  height: @formFieldHeight;
+    display: grid;
+    position: relative;
+    height: @formFieldHeight;
 }
 
 .input-container {
-  display: grid;
-  position: relative;
-  height: @formFieldHeight;
+    display: grid;
+    position: relative;
+    height: @formFieldHeight;
 }
 
 .rows-scroll-container {
-  max-height: @formFieldHeight * 10;
-  overflow-y: auto;
-  overflow-x: hidden;
+    max-height: @formFieldHeight * 10;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .rows-scroll-container.mt-0 {
-  .form-row {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
+    .form-row {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
 }
 
 .form-row {
-  min-height: @formFieldHeight;
-  display: block;
-  width: @formLabelWidth + @formInputsWidth;
-  clear: both;
-  margin-top: 0.18rem;
-  margin-bottom: 0.18rem;
-
-  .input-size {
-    // width: @formInputsWidth;
-    width: 100%;
-    height: 100%;
-  }
-  .select-size {
-    width: 100%;
-    height: @formFieldHeight;
-  }
-  .auto-complete-size {
-    width: @formInputsWidth;
-    height: 100%;
-  }
-  .textarea-size {
-    width: @formInputsWidth;
-    height: 100%;
-  }
-
-  .form-row-inner-container {
-    display: grid;
-    width: 100%;
-    height: 100%;
     min-height: @formFieldHeight;
-    grid-template-columns: @formLabelWidth @formInputsWidth;
-  }
+    display: block;
+    width: @formLabelWidth + @formInputsWidth;
+    clear: both;
+    margin-top: 0.18rem;
+    margin-bottom: 0.18rem;
 
-  .form-row-inner-container-value-only {
-    display: grid;
-    width: 100%;
-    height: 100%;
-    min-height: @formFieldHeight;
-    grid-template-columns: @formInputsWidth;
-  }
+    .input-size {
+        // width: @formInputsWidth;
+        width: 100%;
+        height: 100%;
+    }
+    .select-size {
+        width: 100%;
+        height: @formFieldHeight;
+    }
+    .auto-complete-size {
+        width: @formInputsWidth;
+        height: 100%;
+    }
+    .textarea-size {
+        width: @formInputsWidth;
+        height: 100%;
+    }
+
+    .form-row-inner-container {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        min-height: @formFieldHeight;
+        grid-template-columns: @formLabelWidth @formInputsWidth;
+    }
+
+    .form-row-inner-container-value-only {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        min-height: @formFieldHeight;
+        grid-template-columns: @formInputsWidth;
+    }
 }
 
 .form-label-container {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  text-align: right;
-  overflow: hidden;
-  padding: 0.08rem 0.1rem;
-  align-items: center;
-  text-transform: capitalize;
-  word-spacing: 0px;
+    display: grid;
+    width: 100%;
+    height: 100%;
+    text-align: right;
+    overflow: hidden;
+    padding: 0.08rem 0.1rem;
+    align-items: center;
+    text-transform: capitalize;
+    word-spacing: 0px;
 
-  .form-label {
-    font-size: @smallFont;
-    font-weight: @bold;
-    color: @secondary;
-  }
-
-  .form-label-description {
-    .label-description {
-      font-size: @smallFont;
-      color: @grayLight;
+    .form-label {
+        font-size: @smallFont;
+        font-weight: @bold;
+        color: @secondary;
     }
-  }
+
+    .form-label-description {
+        .label-description {
+            font-size: @smallFont;
+            color: @grayLight;
+        }
+    }
 }
 
 .gray-background {
-  background-color: @grayLight;
+    background-color: @grayLight;
 }
 
 .accent-pink-background {
-  background-color: @accentPinkLight;
+    background-color: @accentPinkLight;
 }
 
 .green-background {
-  background-color: @accentGreenLight;
+    background-color: @accentGreenLight;
 }
 
 .red-background {
-  background-color: @redLight;
+    background-color: @redLight;
 }
 
 // FormRow modifiers classes
 .emphasis {
-  .form-label-container {
-    font-weight: @boldest;
-    color: @purpleDark;
-    border-radius: 4px 0 0 4px;
-  }
+    .form-label-container {
+        font-weight: @boldest;
+        color: @purpleDark;
+        border-radius: 4px 0 0 4px;
+    }
 }
 
 // FormRow inputs containers
 .row-centered-message {
-  display: grid;
-  align-items: center;
-  text-align: center;
-  font-size: @smallFont;
-  font-weight: @bolder;
-  color: @secondary;
+    display: grid;
+    align-items: center;
+    text-align: center;
+    font-size: @smallFont;
+    font-weight: @bolder;
+    color: @secondary;
 }
 
 .action-link {
-  a {
-    font-size: @normalFont;
-    color: @purpleDark;
-  }
+    a {
+        font-size: @normalFont;
+        color: @purpleDark;
+    }
 }
 
 .row-left-message {
-  display: grid;
-  align-items: center;
-  text-align: left;
-  font-size: @smallFont;
-  font-weight: @bolder;
-  color: #44004e;
-  height: 100%;
+    display: grid;
+    align-items: center;
+    text-align: left;
+    font-size: @smallFont;
+    font-weight: @bolder;
+    color: #44004e;
+    height: 100%;
 }
 
 .inline-field-description {
-  display: grid;
-  align-items: center;
-  text-align: left;
-  font-size: @smallFont;
-  color: @grayDark;
-  height: 100%;
+    display: grid;
+    align-items: center;
+    text-align: left;
+    font-size: @smallFont;
+    color: @grayDark;
+    height: 100%;
 }
 
 .row-75-25 {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-template-columns: 75% 25%;
-  grid-template-rows: 100%;
+    display: grid;
+    width: 100%;
+    height: 100%;
+    grid-template-columns: 75% 25%;
+    grid-template-rows: 100%;
 }
 
 .signer-selector-single-signer-container {
-  height: @formFieldHeight;
-  line-height: @formFieldHeight;
-  width: 100%;
-  display: block;
-  font-size: @smallerFont;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding-left: 0.2rem;
-  padding-right: 0.24rem;
-  border: 0.01rem solid @border;
-  border-radius: 0.04rem;
+    height: @formFieldHeight;
+    line-height: @formFieldHeight;
+    width: 100%;
+    display: block;
+    font-size: @smallerFont;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 0.2rem;
+    padding-right: 0.24rem;
+    border: 0.01rem solid @border;
+    border-radius: 0.04rem;
 }
 
 .row-mosaic-attachment-input {
-  display: grid;
-  width: 100%;
-  height: @formFieldHeight !important;
-  grid-template-columns: 55% auto;
-  grid-template-rows: 100%;
-  position: relative;
+    display: grid;
+    width: 100%;
+    height: @formFieldHeight !important;
+    grid-template-columns: 55% auto;
+    grid-template-rows: 100%;
+    position: relative;
 }
 
 .row-mosaic-attachment-display {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-template-columns: 55% auto 0.4rem;
-  grid-template-rows: 100%;
+    display: grid;
+    width: 100%;
+    height: 100%;
+    grid-template-columns: 55% auto 0.4rem;
+    grid-template-rows: 100%;
 }
 
 .row-cosignatory-modification-display {
-  display: grid;
-  width: 100%;
-  height: @formFieldHeight !important;
-  grid-template-columns: auto 0.4rem;
-  grid-template-rows: 100%;
-  font-size: @normalFont;
-  padding-left: 0.05rem;
+    display: grid;
+    width: 100%;
+    height: @formFieldHeight !important;
+    grid-template-columns: auto 0.4rem;
+    grid-template-rows: 100%;
+    font-size: @normalFont;
+    padding-left: 0.05rem;
 
-  .cosignatory-removed {
-    text-decoration: line-through;
-  }
+    .cosignatory-removed {
+        text-decoration: line-through;
+    }
 }
 
 .row-cosignatory-modification-display.link {
-  display: flex;
-  justify-content: flex-end;
-  width: 97%;
+    display: flex;
+    justify-content: flex-end;
+    width: 97%;
 }
 
 .row-cosignatory-modification-display.empty-message {
-  display: flex;
-  justify-content: center;
-  width: 97%;
+    display: flex;
+    justify-content: center;
+    width: 97%;
 }
 
 .row-cosignatory-modification-display-cosignature {
-  display: grid;
-  width: 100%;
-  height: @formFieldHeight !important;
-  grid-template-columns: 0.2 auto;
-  grid-template-rows: 100%;
-  font-size: @normalFont;
-  margin-left: 0.2rem;
-  padding-left: 0.05rem;
+    display: grid;
+    width: 100%;
+    height: @formFieldHeight !important;
+    grid-template-columns: 0.2 auto;
+    grid-template-rows: 100%;
+    font-size: @normalFont;
+    margin-left: 0.2rem;
+    padding-left: 0.05rem;
 }
 
 .row-approval-and-removal-input {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-template-columns: 55% auto;
-  grid-template-rows: 100%;
+    display: grid;
+    width: 100%;
+    height: 100%;
+    grid-template-columns: 55% auto;
+    grid-template-rows: 100%;
 }
 
 .row-cosignatory-action {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-template-columns: auto 0.8rem;
-  grid-template-rows: 100%;
+    display: grid;
+    width: 100%;
+    height: 100%;
+    grid-template-columns: auto 0.8rem;
+    grid-template-rows: 100%;
 }
 
 .submit-button {
-  width: 100% !important;
+    width: 100% !important;
 }
 
 .align-right {
-  text-align: right;
-  text-align-last: right;
+    text-align: right;
+    text-align-last: right;
 }
 
 .inputs-container {
-  align-items: center;
-  width: 100%;
-  height: 100%;
-
-  .ivu-tooltip {
+    align-items: center;
     width: 100%;
     height: 100%;
-    .ivu-tooltip-rel {
-      width: 100%;
-      height: 100%;
+
+    .ivu-tooltip {
+        width: 100%;
+        height: 100%;
+        .ivu-tooltip-rel {
+            width: 100%;
+            height: 100%;
+        }
     }
-  }
 }
 
 .input-style {
-  height: @formFieldHeight;
-  border: none;
-  outline: none;
-  padding-left: 0.2rem;
-  padding-right: 0.15rem;
-  font-size: @smallerFont;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  border: 0.01rem solid @border;
-  border-radius: 0.04rem;
+    height: @formFieldHeight;
+    border: none;
+    outline: none;
+    padding-left: 0.2rem;
+    padding-right: 0.15rem;
+    font-size: @smallerFont;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border: 0.01rem solid @border;
+    border-radius: 0.04rem;
 }
 
 .textarea-style {
-  height: 0.8rem;
-  outline: none;
-  padding: 0.1rem 0.2rem;
-  font-size: @smallerFont;
-  border: 0.01rem solid @border;
-  border-radius: 0.04rem;
+    height: 0.8rem;
+    outline: none;
+    padding: 0.1rem 0.2rem;
+    font-size: @smallerFont;
+    border: 0.01rem solid @border;
+    border-radius: 0.04rem;
 }
 
 .select-style {
-  height: @formFieldHeight;
-  line-height: @formFieldHeight;
-  display: block;
-  font-size: @smallerFont !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding-left: 0.08rem;
-  padding-right: 0.24rem;
-  border: 0.01rem solid @border;
-  border-radius: 0.04rem;
-
-  .ivu-select-selection {
-    box-shadow: unset;
-    padding-top: 0.07rem;
-    border: unset;
-  }
-
-  .ivu-select-selected-value {
+    height: @formFieldHeight;
+    line-height: @formFieldHeight;
+    display: block;
     font-size: @smallerFont !important;
-    padding-left: 0;
-    height: @formFieldHeight;
-    line-height: @formFieldHeight;
-  }
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 0.08rem;
+    padding-right: 0.24rem;
+    border: 0.01rem solid @border;
+    border-radius: 0.04rem;
 
-  .ivu-select-dropdown {
-    min-width: unset !important;
-    margin: 0.12rem 0;
-    left: 0px !important;
-    width: 100%;
-  }
+    .ivu-select-selection {
+        box-shadow: unset;
+        padding-top: 0.07rem;
+        border: unset;
+    }
 
-  .ivu-select-arrow {
-    top: 66%;
-  }
+    .ivu-select-selected-value {
+        font-size: @smallerFont !important;
+        padding-left: 0;
+        height: @formFieldHeight;
+        line-height: @formFieldHeight;
+    }
 
-  .ivu-select-placeholder {
-    font-size: @smallerFont;
-    padding-left: 0;
-    height: @formFieldHeight;
-    line-height: @formFieldHeight;
-    color: #c1b4b4 !important;
-  }
+    .ivu-select-dropdown {
+        min-width: unset !important;
+        margin: 0.12rem 0;
+        left: 0px !important;
+        width: 100%;
+    }
+
+    .ivu-select-arrow {
+        top: 66%;
+    }
+
+    .ivu-select-placeholder {
+        font-size: @smallerFont;
+        padding-left: 0;
+        height: @formFieldHeight;
+        line-height: @formFieldHeight;
+        color: #c1b4b4 !important;
+    }
 }
 
 .auto-complete-style {
-  height: @formFieldHeight;
-  border-radius: 0.04rem;
-  padding: 0 0.2rem;
-  border: 0.01rem solid @border;
-  line-height: 1.5;
-  color: @selectedValue;
-  background-color: @white;
-  background-image: none;
-  cursor: text;
-  transition: border 0.2s ease-in-out, background 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    height: @formFieldHeight;
+    border-radius: 0.04rem;
+    padding: 0 0.2rem;
+    border: 0.01rem solid @border;
+    line-height: 1.5;
+    color: @selectedValue;
+    background-color: @white;
+    background-image: none;
+    cursor: text;
+    transition: border 0.2s ease-in-out, background 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
-  .ivu-input {
-    height: 0.4rem;
-    font-size: @smallerFont;
-    border-bottom: unset;
-    padding: 0;
-    background: none;
-  }
+    .ivu-input {
+        height: 0.4rem;
+        font-size: @smallerFont;
+        border-bottom: unset;
+        padding: 0;
+        background: none;
+    }
 
-  .ivu-select-dropdown {
-    left: 1px !important;
-  }
+    .ivu-select-dropdown {
+        left: 1px !important;
+    }
 }
 
 // Styles common to all buttons
 .button-style {
-  text-align: center;
-  height: @formFieldHeight !important;
-  display: inline-block;
-  // width: auto !important;
-  padding: 0.08rem 0.3rem;
-  border: none;
-  outline: none;
-  font-size: @normalFont;
-  font-weight: 500;
-  border-radius: 0.04rem;
-  cursor: pointer;
+    text-align: center;
+    height: @formFieldHeight !important;
+    display: inline-block;
+    // width: auto !important;
+    padding: 0.08rem 0.3rem;
+    border: none;
+    outline: none;
+    font-size: @normalFont;
+    font-weight: 500;
+    border-radius: 0.04rem;
+    cursor: pointer;
 }
 
 .round-button {
-  color: @primary;
-  background-color: @white;
-  font-size: 0.45rem;
-  border: none;
-  outline: none;
-  cursor: pointer;
+    color: @primary;
+    background-color: @white;
+    font-size: 0.45rem;
+    border: none;
+    outline: none;
+    cursor: pointer;
 }
 
 .validation-button {
-  background-color: @purple;
-  color: @white;
+    background-color: @purple;
+    color: @white;
 }
 
 .remove-button {
-  color: @red;
+    color: @red;
 }
 
 .button-add {
-  display: grid;
+    display: grid;
 }
 
 .validation-button:hover:enabled {
-  box-shadow: 0 0 0.1rem @purple;
-  background-color: @purple !important;
-  color: @white !important;
-  opacity: 0.8 !important;
+    box-shadow: 0 0 0.1rem @purple;
+    background-color: @purple !important;
+    color: @white !important;
+    opacity: 0.8 !important;
 }
 
 .validation-button:disabled {
-  background: @grayLight;
-  color: @grayDark;
+    background: @grayLight;
+    color: @grayDark;
 }
 
 .back-button {
-  background: @grayLight;
-  color: @purpleDark;
+    background: @grayLight;
+    color: @purpleDark;
 }
 
 .back-button:hover {
-  box-shadow: 0 0 0.1rem @grayLight;
-  background-color: @grayLight !important;
-  color: #333 !important;
-  opacity: 0.8 !important;
+    box-shadow: 0 0 0.1rem @grayLight;
+    background-color: @grayLight !important;
+    color: #333 !important;
+    opacity: 0.8 !important;
 }
 
 .right-side-button {
-  display: inline;
-  margin-left: 10px;
+    display: inline;
+    margin-left: 10px;
 }
 
 .left-side-button {
-  display: inline;
+    display: inline;
 }
 
 .right-side-round-button {
-  display: flex;
-  margin-left: 10px;
+    display: flex;
+    margin-left: 10px;
 }
 
 .form-headline {
-  margin-top: 0.1rem;
-  height: 0.5rem;
-  font-size: @biggestFont;
-  font-weight: 600;
-  margin-bottom: 0.1rem;
+    margin-top: 0.1rem;
+    height: 0.5rem;
+    font-size: @biggestFont;
+    font-weight: 600;
+    margin-bottom: 0.1rem;
 }
 
 .form-text {
-  color: @grayDark;
+    color: @grayDark;
 }
 
 /*************************************************************
  * Containers
  *************************************************************/
 .clearfix {
-  display: block;
-  width: 100%;
-  float: left;
-  clear: both;
+    display: block;
+    width: 100%;
+    float: left;
+    clear: both;
 }
 
 .form-container {
-  display: block;
-  width: 100%;
-  margin-bottom: 0.14rem;
+    display: block;
+    width: 100%;
+    margin-bottom: 0.14rem;
 }
 
 .form-line-container {
-  display: block;
-  float: left;
-  clear: both;
-  width: 100%;
-  margin: 0.1rem 0;
+    display: block;
+    float: left;
+    clear: both;
+    width: 100%;
+    margin: 0.1rem 0;
 
-  .inline-container {
-    display: inline-flex;
-  }
+    .inline-container {
+        display: inline-flex;
+    }
 }
 
 .half-split-container {
-  display: grid;
-  width: 100%;
-  height: auto;
-  grid-template-columns: 50% 50%;
-  grid-column-gap: 0.1rem;
+    display: grid;
+    width: 100%;
+    height: auto;
+    grid-template-columns: 50% 50%;
+    grid-column-gap: 0.1rem;
 }
 
 .half-width-item-container {
-  .right-item {
-    margin-left: 0.2rem;
-  }
-  .input-size {
-    width: 2.9rem;
-  }
-  .select-size {
-    width: 2.9rem;
-
-    .ivu-select-dropdown {
-      width: 2.9rem;
-      left: 1px !important;
+    .right-item {
+        margin-left: 0.2rem;
     }
-  }
-  .auto-complete-size {
-    width: 2.9rem;
-  }
+    .input-size {
+        width: 2.9rem;
+    }
+    .select-size {
+        width: 2.9rem;
+
+        .ivu-select-dropdown {
+            width: 2.9rem;
+            left: 1px !important;
+        }
+    }
+    .auto-complete-size {
+        width: 2.9rem;
+    }
 }
 
 .flex-container {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 
 // icons
 .delete-icon {
-  background-image: url('../img/account/account-detail/accountDetailsDelete.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-  width: 20px;
-  height: 20px;
-  margin-right: 0.5rem;
-  margin-top: 0.05rem;
-  float: right;
-  cursor: pointer;
+    background-image: url('../img/account/account-detail/accountDetailsDelete.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
+    margin-top: 0.05rem;
+    float: right;
+    cursor: pointer;
 }
 
 .delete-mosaic-container {
-  position: absolute;
-  right: -0.3rem;
-  top: 0;
-  height: 100%;
-  display: grid;
-  align-items: center;
-  text-align-last: right;
-  justify-items: right;
+    position: absolute;
+    right: -0.3rem;
+    top: 0;
+    height: 100%;
+    display: grid;
+    align-items: center;
+    text-align-last: right;
+    justify-items: right;
 }
 
 .delete-mosaic-icon {
-  background-image: url('../img/account/account-detail/accountDetailsDelete.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  display: block;
+    background-image: url('../img/account/account-detail/accountDetailsDelete.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    display: block;
 }
 
 .delete-icon:hover {
-  background-image: url('../img/account/account-detail/accountDetailsDeleteHover.png');
+    background-image: url('../img/account/account-detail/accountDetailsDeleteHover.png');
 }
 
 .modification-type-icon {
-  color: @primary;
-  font-size: 0.45rem;
+    color: @primary;
+    font-size: 0.45rem;
 }
 
 // margin
 .mx-1 {
-  margin-top: 0.1rem;
-  margin-bottom: 0.1rem;
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
 }
 
 .mt-3 {
-  margin-top: 0.15rem;
+    margin-top: 0.15rem;
 }
 
 .ml-2 {
-  margin-left: 0.2rem;
+    margin-left: 0.2rem;
 }
 
 // padding
 .pl-2 {
-  padding-left: 0.2rem;
+    padding-left: 0.2rem;
 }
 
 .pl-4 {
-  padding-left: 0.4rem;
+    padding-left: 0.4rem;
 }
 
 .pr-2 {
-  padding-right: 0.2rem;
+    padding-right: 0.2rem;
 }
 .ivu-modal {
-  .form-wrapper {
-    max-width: 100%;
-  }
-  .form-row {
-    width: 100%;
-  }
-  .form-row-inner-container {
-    grid-template-columns: 20% 80%;
-    .form-label-container {
-      padding: 0;
+    .form-wrapper {
+        max-width: 100%;
     }
-    .inputs-container {
-      padding-left: 0.1rem;
+    .form-row {
+        width: 100%;
     }
-  }
+    .form-row-inner-container {
+        grid-template-columns: 20% 80%;
+        .form-label-container {
+            padding: 0;
+        }
+        .inputs-container {
+            padding-left: 0.1rem;
+        }
+    }
 }

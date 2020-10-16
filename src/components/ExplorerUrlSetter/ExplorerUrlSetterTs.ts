@@ -13,83 +13,83 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 
 // internal dependencies
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 
 // child components
-import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
 // @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue'
+import FormRow from '@/components/FormRow/FormRow.vue';
 
 // configuration
-import { networkConfig } from '@/config'
+import { networkConfig } from '@/config';
 
 @Component({
-  components: {
-    ValidationProvider,
-    ValidationObserver,
-    ErrorTooltip,
-    FormRow,
-  },
-  computed: {
-    ...mapGetters({
-      explorerUrl: 'app/explorerUrl',
-    }),
-  },
+    components: {
+        ValidationProvider,
+        ValidationObserver,
+        ErrorTooltip,
+        FormRow,
+    },
+    computed: {
+        ...mapGetters({
+            explorerUrl: 'app/explorerUrl',
+        }),
+    },
 })
 export class ExplorerUrlSetterTs extends Vue {
-  @Prop({
-    default: '',
-  })
-  value: string
+    @Prop({
+        default: '',
+    })
+    value: string;
 
-  @Prop({
-    default: true,
-  })
-  autoSubmit: boolean
+    @Prop({
+        default: true,
+    })
+    autoSubmit: boolean;
 
-  /**
-   * Validation rules
-   * @var {ValidationRuleset}
-   */
-  public validationRules = ValidationRuleset
+    /**
+     * Validation rules
+     * @var {ValidationRuleset}
+     */
+    public validationRules = ValidationRuleset;
 
-  /**
-   * Explorer URL
-   * @var {string}
-   */
-  public explorerUrl: string
+    /**
+     * Explorer URL
+     * @var {string}
+     */
+    public explorerUrl: string;
 
-  /**
-   * Default explorer link list
-   * @readonly
-   * @type {string[]}
-   */
-  get defaultExplorerLinkList(): string[] {
-    // @TODO
-    return [networkConfig.explorerUrl]
-  }
-
-  /**
-   * Currently explorer url
-   */
-  get chosenExplorerUrl() {
-    return this.value && this.value.length ? this.value : this.explorerUrl
-  }
-
-  /**
-   * Sets the new language
-   */
-  set chosenExplorerUrl(url: string) {
-    if (this.autoSubmit) {
-      this.$store.dispatch('app/SET_EXPLORER_URL', url)
+    /**
+     * Default explorer link list
+     * @readonly
+     * @type {string[]}
+     */
+    get defaultExplorerLinkList(): string[] {
+        // @TODO
+        return [networkConfig.explorerUrl];
     }
 
-    this.$emit('input', url)
-  }
+    /**
+     * Currently explorer url
+     */
+    get chosenExplorerUrl() {
+        return this.value && this.value.length ? this.value : this.explorerUrl;
+    }
+
+    /**
+     * Sets the new language
+     */
+    set chosenExplorerUrl(url: string) {
+        if (this.autoSubmit) {
+            this.$store.dispatch('app/SET_EXPLORER_URL', url);
+        }
+
+        this.$emit('input', url);
+    }
 }

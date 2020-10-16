@@ -13,47 +13,41 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class CreateProfileTs extends Vue {
-  /**
-   * List of steps
-   * @var {string[]}
-   */
-  public StepBarTitleList = [
-    'create_profile',
-    'generate_mnemonic',
-    'backup_mnemonic_phrase',
-    'verify_Mnemonic_phrase',
-    'finish',
-  ]
+    /**
+     * List of steps
+     * @var {string[]}
+     */
+    public StepBarTitleList = ['create_profile', 'generate_mnemonic', 'backup_mnemonic_phrase', 'verify_Mnemonic_phrase', 'finish'];
 
-  /**
-   * Hook called when the page is mounted
-   * @return {void}
-   */
-  async mounted() {
-    await this.$store.dispatch('temporary/initialize')
-  }
-
-  public getCurrentStep(): number {
-    switch (this.$route.name) {
-      default:
-      case 'profiles.createProfile.info':
-        return 0
-      case 'profiles.createProfile.generateMnemonic':
-        return 1
-      case 'profiles.createProfile.showMnemonic':
-        return 2
-      case 'profiles.createProfile.verifyMnemonic':
-        return 3
-      case 'profiles.createProfile.finalize':
-        return 4
+    /**
+     * Hook called when the page is mounted
+     * @return {void}
+     */
+    async mounted() {
+        await this.$store.dispatch('temporary/initialize');
     }
-  }
 
-  public getStepClassName(index: number): string {
-    return this.getCurrentStep() >= index ? 'white' : 'gray'
-  }
+    public getCurrentStep(): number {
+        switch (this.$route.name) {
+            default:
+            case 'profiles.createProfile.info':
+                return 0;
+            case 'profiles.createProfile.generateMnemonic':
+                return 1;
+            case 'profiles.createProfile.showMnemonic':
+                return 2;
+            case 'profiles.createProfile.verifyMnemonic':
+                return 3;
+            case 'profiles.createProfile.finalize':
+                return 4;
+        }
+    }
+
+    public getStepClassName(index: number): string {
+        return this.getCurrentStep() >= index ? 'white' : 'gray';
+    }
 }

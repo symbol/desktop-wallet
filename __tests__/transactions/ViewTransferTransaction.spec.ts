@@ -13,36 +13,36 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Account, Deadline, NamespaceId, NetworkType, PlainMessage, TransferTransaction } from 'symbol-sdk'
-import { createStore } from '@MOCKS/Store'
-import { ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction'
+import { Account, Deadline, NamespaceId, NetworkType, PlainMessage, TransferTransaction } from 'symbol-sdk';
+import { createStore } from '@MOCKS/Store';
+import { ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction';
 
-const store = createStore({})
+const store = createStore({});
 
 describe('transactions/ViewTransferTransaction', () => {
-  describe('use() should', () => {
-    test('populate transfer transaction fields', () => {
-      // prepare
-      const alias = new NamespaceId('test')
+    describe('use() should', () => {
+        test('populate transfer transaction fields', () => {
+            // prepare
+            const alias = new NamespaceId('test');
 
-      const transferTransaction = TransferTransaction.create(
-        Deadline.create(),
-        alias,
-        [],
-        PlainMessage.create('test-message'),
-        NetworkType.MIJIN_TEST,
-      )
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                alias,
+                [],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
 
-      store.getters['account/currentSignerAddress'] = Account.generateNewAccount(NetworkType.MAIN_NET).address
+            store.getters['account/currentSignerAddress'] = Account.generateNewAccount(NetworkType.MAIN_NET).address;
 
-      // act
-      const view = new ViewTransferTransaction(store, transferTransaction)
+            // act
+            const view = new ViewTransferTransaction(store, transferTransaction);
 
-      // assert
-      expect(view).toBeDefined()
-      expect(view.transaction).toBeDefined()
+            // assert
+            expect(view).toBeDefined();
+            expect(view.transaction).toBeDefined();
 
-      expect(view.detailItems.length).toBe(3)
-    })
-  })
-})
+            expect(view.detailItems.length).toBe(3);
+        });
+    });
+});

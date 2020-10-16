@@ -14,29 +14,29 @@
  *
  */
 // external dependencies
-import { Component, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 
 // internal dependencies
 // child components
 // @ts-ignore
-import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
+import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue';
 // @ts-ignore
-import AccountSelectorPanel from '@/components/AccountSelectorPanel/AccountSelectorPanel.vue'
+import AccountSelectorPanel from '@/components/AccountSelectorPanel/AccountSelectorPanel.vue';
 
 @Component({
-  components: {
-    NavigationTabs,
-    AccountSelectorPanel,
-  },
-  computed: {
-    ...mapGetters({}),
-  },
+    components: {
+        NavigationTabs,
+        AccountSelectorPanel,
+    },
+    computed: {
+        ...mapGetters({}),
+    },
 })
 export class AccountsTs extends Vue {
-  /**
-   * Argument passed to the navigation component
-   * @var {string}
-   */
-  public parentRouteName: string = 'accounts'
+    /**
+     * Argument passed to the navigation component
+     * @var {string}
+     */
+    public parentRouteName: string = 'accounts';
 }

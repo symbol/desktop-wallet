@@ -14,13 +14,13 @@
  *
  */
 // external dependencies
-import { Convert, Crypto, SHA3Hasher } from 'symbol-sdk'
+import { Convert, Crypto, SHA3Hasher } from 'symbol-sdk';
 
 // internal dependencies
-import { IStorageBackend } from '@/core/database/backends/IStorageBackend'
-import { LocalStorageBackend } from '@/core/database/backends/LocalStorageBackend'
-import { ObjectStorageBackend } from '@/core/database/backends/ObjectStorageBackend'
-import { IStorage } from '@/core/database/backends/IStorage'
+import { IStorageBackend } from '@/core/database/backends/IStorageBackend';
+import { LocalStorageBackend } from '@/core/database/backends/LocalStorageBackend';
+import { ObjectStorageBackend } from '@/core/database/backends/ObjectStorageBackend';
+import { IStorage } from '@/core/database/backends/IStorage';
 
 /**
  * A super simple object storage that keeps one object in a local storage table.
@@ -30,59 +30,59 @@ import { IStorage } from '@/core/database/backends/IStorage'
  *
  */
 export class SimpleObjectStorage<E> implements IStorage<E> {
-  /**
-   * The Storage backend, if localStorage is not available the storage will be in memory.
-   */
-  private readonly storageBackend: IStorageBackend
+    /**
+     * The Storage backend, if localStorage is not available the storage will be in memory.
+     */
+    private readonly storageBackend: IStorageBackend;
 
-  public constructor(private readonly storageKey) {
-    this.storageBackend = !!localStorage ? new LocalStorageBackend() : new ObjectStorageBackend()
-  }
-
-  /**
-   * @return the stored value or undefined
-   */
-  public get(): E | undefined {
-    const item = this.storageBackend.getItem(this.storageKey)
-    return item ? JSON.parse(item) : undefined
-  }
-
-  /**
-   * Stores the provided value.
-   * @param value to be stored
-   */
-  public set(value: E): void {
-    this.storageBackend.setItem(this.storageKey, JSON.stringify(value))
-  }
-
-  /**
-   * Deletes the stored value.
-   */
-  public remove(): void {
-    this.storageBackend.removeItem(this.storageKey)
-  }
-
-  /**
-   * Helper that generates an identifier base on the object value
-   *
-   * @param object the object used feed the generator.
-   */
-  public static generateIdentifier(object: object | undefined = undefined): string {
-    const raw = {
-      ...{
-        time: new Date().valueOf(),
-        seed: Crypto.randomBytes(8),
-      },
-      ...(object || {}),
+    public constructor(private readonly storageKey) {
+        this.storageBackend = !!localStorage ? new LocalStorageBackend() : new ObjectStorageBackend();
     }
-    // to-json
-    const json = JSON.stringify(raw)
-    const hasher = SHA3Hasher.createHasher(64)
-    hasher.reset()
-    hasher.update(Convert.utf8ToHex(json))
 
-    const hash = new Uint8Array(64)
-    hasher.finalize(hash)
-    return Convert.uint8ToHex(hash).substr(0, 16)
-  }
+    /**
+     * @return the stored value or undefined
+     */
+    public get(): E | undefined {
+        const item = this.storageBackend.getItem(this.storageKey);
+        return item ? JSON.parse(item) : undefined;
+    }
+
+    /**
+     * Stores the provided value.
+     * @param value to be stored
+     */
+    public set(value: E): void {
+        this.storageBackend.setItem(this.storageKey, JSON.stringify(value));
+    }
+
+    /**
+     * Deletes the stored value.
+     */
+    public remove(): void {
+        this.storageBackend.removeItem(this.storageKey);
+    }
+
+    /**
+     * Helper that generates an identifier base on the object value
+     *
+     * @param object the object used feed the generator.
+     */
+    public static generateIdentifier(object: object | undefined = undefined): string {
+        const raw = {
+            ...{
+                time: new Date().valueOf(),
+                seed: Crypto.randomBytes(8),
+            },
+            ...(object || {}),
+        };
+        // to-json
+        const json = JSON.stringify(raw);
+        const hasher = SHA3Hasher.createHasher(64);
+        hasher.reset();
+        hasher.update(Convert.utf8ToHex(json));
+
+        const hash = new Uint8Array(64);
+        hasher.finalize(hash);
+        return Convert.uint8ToHex(hash).substr(0, 16);
+    }
 }

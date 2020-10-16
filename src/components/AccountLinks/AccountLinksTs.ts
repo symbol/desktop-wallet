@@ -13,36 +13,36 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator';
 // internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel'
-import { mapGetters } from 'vuex'
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { mapGetters } from 'vuex';
 
 @Component({
-  computed: {
-    ...mapGetters({
-      explorerBaseUrl: 'app/explorerUrl',
-      faucetBaseUrl: 'app/faucetUrl',
-    }),
-  },
+    computed: {
+        ...mapGetters({
+            explorerBaseUrl: 'app/explorerUrl',
+            faucetBaseUrl: 'app/faucetUrl',
+        }),
+    },
 })
 export class AccountLinksTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  account: AccountModel
+    @Prop({
+        default: null,
+    })
+    account: AccountModel;
 
-  public explorerBaseUrl: string
-  public faucetBaseUrl: string
+    public explorerBaseUrl: string;
+    public faucetBaseUrl: string;
 
-  /// region computed properties getter/setter
-  /// end-region computed properties getter/setter
+    /// region computed properties getter/setter
+    /// end-region computed properties getter/setter
 
-  public get explorerUrl() {
-    return this.explorerBaseUrl.replace(/\/+$/, '') + '/accounts/' + this.account.address
-  }
+    public get explorerUrl() {
+        return this.explorerBaseUrl.replace(/\/+$/, '') + '/accounts/' + this.account.address;
+    }
 
-  public get faucetUrl() {
-    return this.faucetBaseUrl + '?recipient=' + this.account.address
-  }
+    public get faucetUrl() {
+        return this.faucetBaseUrl + '?recipient=' + this.account.address;
+    }
 }

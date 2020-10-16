@@ -15,20 +15,20 @@
  */
 
 export class NetworkConfigurationModel {
-  public readonly maxMosaicDivisibility: number
-  public readonly namespaceGracePeriodDuration: number
-  public readonly lockedFundsPerAggregate: string
-  public readonly maxCosignatoriesPerAccount: number
-  public readonly blockGenerationTargetTime: number
-  public readonly maxNamespaceDepth: number
-  public readonly maxMosaicDuration: number
-  public readonly minNamespaceDuration: number
-  public readonly maxNamespaceDuration: number
-  public readonly maxTransactionsPerAggregate: number
-  public readonly maxCosignedAccountsPerAccount: number
-  public readonly maxMessageSize: number
-  public readonly maxMosaicAtomicUnits: number
-  public readonly currencyMosaicId: string
-  public readonly harvestingMosaicId: string
-  public readonly defaultDynamicFeeMultiplier: number
+    public readonly maxMosaicDivisibility: number;
+    public readonly namespaceGracePeriodDuration: number;
+    public readonly lockedFundsPerAggregate: string;
+    public readonly maxCosignatoriesPerAccount: number;
+    public readonly blockGenerationTargetTime: number;
+    public readonly maxNamespaceDepth: number;
+    public readonly maxMosaicDuration: number;
+    public readonly minNamespaceDuration: number;
+    public readonly maxNamespaceDuration: number;
+    public readonly maxTransactionsPerAggregate: number;
+    public readonly maxCosignedAccountsPerAccount: number;
+    public readonly maxMessageSize: number;
+    public readonly maxMosaicAtomicUnits: number;
+    public readonly currencyMosaicId: string;
+    public readonly harvestingMosaicId: string;
+    public readonly defaultDynamicFeeMultiplier: number;
 }

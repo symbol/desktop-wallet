@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { FilterHelpers } from '@/core/utils/FilterHelpers'
+import { FilterHelpers } from '@/core/utils/FilterHelpers';
 
 describe('stripFilter', () => {
-  // should return a string without tags
-  test.each([
-    ['no tags', 'no tags'],
-    ['no tags;\'"#!?%&/8{}', 'no tags;\'"#!?%&/8{}'],
-    ['<script>/>good', '/>good'],
-    ['<>>', '<>>'],
-    ['<a>>', '>'],
-    ['test <img src="" /> another', 'test  another'],
-    ['<img src="" />', ''],
-    ['<parent <child <sub />></child>></parent>', '>>'],
-    ['<script>alert("abc");</script>', 'alert("abc");'],
-    ['/><script>alert("abc");</script>', '/>alert("abc");'],
-    ['This is a normal text <img src="nothing" onerror="alert("abc");" />', 'This is a normal text '],
-  ])('FilterHelpers.stripFilter(%s)', (a, expected) => {
-    expect(FilterHelpers.stripFilter(a)).toBe(expected)
-  })
-})
+    // should return a string without tags
+    test.each([
+        ['no tags', 'no tags'],
+        ['no tags;\'"#!?%&/8{}', 'no tags;\'"#!?%&/8{}'],
+        ['<script>/>good', '/>good'],
+        ['<>>', '<>>'],
+        ['<a>>', '>'],
+        ['test <img src="" /> another', 'test  another'],
+        ['<img src="" />', ''],
+        ['<parent <child <sub />></child>></parent>', '>>'],
+        ['<script>alert("abc");</script>', 'alert("abc");'],
+        ['/><script>alert("abc");</script>', '/>alert("abc");'],
+        ['This is a normal text <img src="nothing" onerror="alert("abc");" />', 'This is a normal text '],
+    ])('FilterHelpers.stripFilter(%s)', (a, expected) => {
+        expect(FilterHelpers.stripFilter(a)).toBe(expected);
+    });
+});
