@@ -116,8 +116,8 @@ export default {
       })
     },
     SET_LOADING_OVERLAY({ commit }, loadingOverlay) {
-      // @ts-ignore
       if (!loadingOverlay.show) {
+        // @ts-ignore
         app.$Spin.hide()
       }
       commit('toggleLoadingOverlay', loadingOverlay.show)
