@@ -42,7 +42,9 @@ export class TransactionDetailsTs extends Vue {
   aggregateTransaction: AggregateTransaction = null
 
   public get views(): TransactionView<Transaction>[] {
-    if (!this.transaction) return []
+    if (!this.transaction) {
+      return []
+    }
 
     if (this.aggregateTransaction) {
       return [

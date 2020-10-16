@@ -69,7 +69,9 @@ export class NamespaceTableService extends AssetTableService {
    * @returns {('N/A' | 'address' | 'mosaic')}
    */
   private getAliasType(namespaceModel: NamespaceModel): 'N/A' | 'address' | 'mosaic' {
-    if (!namespaceModel.aliasTargetAddressRawPlain && !namespaceModel.aliasTargetMosaicIdHex) return 'N/A'
+    if (!namespaceModel.aliasTargetAddressRawPlain && !namespaceModel.aliasTargetMosaicIdHex) {
+      return 'N/A'
+    }
     return namespaceModel.aliasType === AliasType.Address ? 'address' : 'mosaic'
   }
 

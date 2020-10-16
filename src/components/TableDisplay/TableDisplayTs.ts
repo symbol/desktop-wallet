@@ -388,7 +388,9 @@ export class TableDisplayTs extends Vue {
      * @returns {(MosaicId | Address)}
      */
     const getInstantiatedAlias = (aliasType: string, aliasTarget: string): MosaicId | Address => {
-      if (aliasType === 'mosaic') return new MosaicId(aliasTarget)
+      if (aliasType === 'mosaic') {
+        return new MosaicId(aliasTarget)
+      }
       return Address.createFromRawAddress(aliasTarget)
     }
 

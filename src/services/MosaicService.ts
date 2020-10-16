@@ -345,12 +345,16 @@ export class MosaicService {
     const startHeight = mosaicInfo.height
 
     // unlimited duration mosaics are flagged as duration == 0
-    if (duration === 0) return 'unlimited'
+    if (duration === 0) {
+      return 'unlimited'
+    }
 
     // get current height
     // calculate expiration
     const expiresIn = startHeight + duration - (currentHeight || 0)
-    if (expiresIn <= 0) return 'expired'
+    if (expiresIn <= 0) {
+      return 'expired'
+    }
     // number of blocks remaining
     return TimeHelpers.durationToRelativeTime(expiresIn, blockGenerationTargetTime)
   }

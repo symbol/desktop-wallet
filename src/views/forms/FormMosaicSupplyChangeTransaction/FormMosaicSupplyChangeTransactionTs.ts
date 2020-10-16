@@ -119,7 +119,9 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
    */
   protected get currentMosaicRelativeSupply(): string | null {
     const currentMosaicInfo = this.currentMosaicInfo
-    if (!currentMosaicInfo) return null
+    if (!currentMosaicInfo) {
+      return null
+    }
     const relative = currentMosaicInfo.supply / Math.pow(10, currentMosaicInfo.divisibility)
     return isNaN(relative) ? null : relative.toLocaleString()
   }
@@ -132,7 +134,9 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
    */
   protected get newMosaicAbsoluteSupply(): number | null {
     const currentMosaicInfo = this.currentMosaicInfo
-    if (currentMosaicInfo === undefined) return null
+    if (currentMosaicInfo === undefined) {
+      return null
+    }
     const newSupply =
       this.formItems.action === MosaicSupplyChangeAction.Increase
         ? currentMosaicInfo.supply + Number(this.formItems.delta)
@@ -148,7 +152,9 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
    * @type {(number | null)}
    */
   protected get newMosaicRelativeSupply(): string | null {
-    if (!this.newMosaicAbsoluteSupply) return null
+    if (!this.newMosaicAbsoluteSupply) {
+      return null
+    }
     const relative = this.newMosaicAbsoluteSupply / Math.pow(10, this.currentMosaicInfo.divisibility)
     return isNaN(relative) ? null : relative.toLocaleString()
   }

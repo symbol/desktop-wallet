@@ -136,11 +136,15 @@ export class ModalMnemonicExportTs extends Vue {
    * @return {void}
    */
   public onDownloadQR() {
-    if (!this.exportMnemonicQR) return
+    if (!this.exportMnemonicQR) {
+      return
+    }
 
     // - read QR code base64
     const QRCode: any = document.querySelector('#qrImg')
-    if (!QRCode) return
+    if (!QRCode) {
+      return
+    }
     const url = QRCode.src
 
     // - create link (<a>)

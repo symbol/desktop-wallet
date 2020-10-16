@@ -20,8 +20,12 @@ import { networkConfig } from '@/config'
 
 export class Formatters {
   public static formatNumber = (number: number): string => {
-    if (number <= 1) return `${number}`
-    if (number === Number(number.toFixed(0))) return number.toLocaleString('en-US', { minimumFractionDigits: 0 })
+    if (number <= 1) {
+      return `${number}`
+    }
+    if (number === Number(number.toFixed(0))) {
+      return number.toLocaleString('en-US', { minimumFractionDigits: 0 })
+    }
 
     const stringOfNumber = `${number}`
     const minimumFractionDigits = stringOfNumber.length - stringOfNumber.indexOf('.') - 1
@@ -29,7 +33,9 @@ export class Formatters {
   }
 
   public static formatAddress = function (address: string): string {
-    if (!address) return
+    if (!address) {
+      return
+    }
     return Address.createFromRawAddress(address).pretty()
   }
   public static formatExplorerUrl = (transactionHash) => {

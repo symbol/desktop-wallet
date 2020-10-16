@@ -182,7 +182,9 @@ export default {
         .getMosaics(repositoryFactory, generationHash, networkCurrency, accountsInfo)
         .subscribe((mosaics) => {
           const currentSignerAddress: Address = rootGetters['account/currentSignerAddress']
-          if (!currentSignerAddress) return
+          if (!currentSignerAddress) {
+            return
+          }
           commit('mosaics', {
             mosaics: mosaics,
             currentSignerAddress,

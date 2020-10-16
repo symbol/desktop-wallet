@@ -192,7 +192,9 @@ export class FormSubAccountCreationTs extends Vue {
       }
 
       // - return if subAccount is undefined
-      if (!subAccount) return
+      if (!subAccount) {
+        return
+      }
 
       // Verify that the import is repeated
       const hasAddressInfo = this.knownAccounts.find((w) => w.address === subAccount.address)

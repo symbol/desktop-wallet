@@ -63,8 +63,12 @@ export default class DisabledFormOverlay extends Vue {
    * @returns {string}
    */
   get alert(): string {
-    if (this.whitelisted) return ''
-    if (!this.networkMosaic) return NotificationType.NO_NETWORK_CURRENCY
+    if (this.whitelisted) {
+      return ''
+    }
+    if (!this.networkMosaic) {
+      return NotificationType.NO_NETWORK_CURRENCY
+    }
     if (this.disableToMultisig) {
       return NotificationType.MULTISIG_ACCOUNTS_NO_TX
     }

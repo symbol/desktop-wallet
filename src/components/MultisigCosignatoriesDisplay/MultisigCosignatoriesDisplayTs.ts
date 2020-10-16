@@ -83,7 +83,9 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
    * @type {{ publicKey: string; address: string }[]}
    */
   protected get cosignatories(): { address: Address }[] {
-    if (!this.multisig) return []
+    if (!this.multisig) {
+      return []
+    }
 
     return this.multisig.cosignatoryAddresses
       .filter((address) => !this.cosignatoryModifications[address.plain()])

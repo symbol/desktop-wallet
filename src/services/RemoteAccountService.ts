@@ -107,7 +107,9 @@ export class RemoteAccountService extends AccountService {
    * @returns {Account}
    */
   private getFirstFreeRemoteAccount(remoteAccounts: Account[], accountsInfo: AccountInfo[]): Account {
-    if (!accountsInfo.length) return remoteAccounts[0]
+    if (!accountsInfo.length) {
+      return remoteAccounts[0]
+    }
 
     const linkableRemoteAccounts = remoteAccounts.filter(({ address }) => {
       const matchedAccountInfo = accountsInfo.find((ai) => ai.address.plain() === address.plain())

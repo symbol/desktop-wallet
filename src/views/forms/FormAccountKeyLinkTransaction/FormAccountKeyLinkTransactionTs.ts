@@ -98,7 +98,9 @@ export class FormAccountKeyLinkTransactionTs extends FormTransactionBase {
   protected setTransactions(transactions: AccountKeyLinkTransaction[]) {
     // - this form creates only 1 transaction
     const transaction = transactions.shift()
-    if (!transaction) return
+    if (!transaction) {
+      return
+    }
 
     // - populate for items if transaction is an address alias
     if (transaction instanceof AccountKeyLinkTransaction) {

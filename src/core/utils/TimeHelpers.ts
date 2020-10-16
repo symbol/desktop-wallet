@@ -31,7 +31,9 @@ export class TimeHelpers {
   }
 
   public static formatSeconds = function (second: number): string {
-    if (!second && second !== 0) return ''
+    if (!second && second !== 0) {
+      return ''
+    }
     let d = 0,
       h = 0,
       m = 0

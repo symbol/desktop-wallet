@@ -33,7 +33,9 @@ export class NetworkBasedObjectStorage<E> {
    * @return the stored value for the provided network hash or undefined
    */
   public get(generationHash: string): E | undefined {
-    if (!generationHash) return undefined
+    if (!generationHash) {
+      return undefined
+    }
     const map = this.delegate.get() || {}
     return (map[generationHash] && map[generationHash].data) || undefined
   }
@@ -58,7 +60,9 @@ export class NetworkBasedObjectStorage<E> {
    * @param value to be stored
    */
   public set(generationHash: string, value: E): void {
-    if (!generationHash) throw Error('Generation hash must be provided!')
+    if (!generationHash) {
+      throw Error('Generation hash must be provided!')
+    }
     const map = this.delegate.get() || {}
     map[generationHash] = new NetworkBasedEntryModel(generationHash, value)
     this.delegate.set(map)

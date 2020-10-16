@@ -123,10 +123,14 @@ export class Electron {
       resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
       recalc = function () {
         const clientWidth = docEl.clientWidth
-        if (!clientWidth) return
+        if (!clientWidth) {
+          return
+        }
         docEl.style.fontSize = `${10 * (clientWidth / 192)}px`
       }
-    if (!document.addEventListener) return
+    if (!document.addEventListener) {
+      return
+    }
     window.addEventListener(resizeEvt, recalc, false)
     document.addEventListener('DOMContentLoaded', recalc, false)
   }

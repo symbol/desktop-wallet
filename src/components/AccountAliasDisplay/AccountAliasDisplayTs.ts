@@ -34,7 +34,9 @@ export class AccountAliasDisplayTs extends Vue {
   protected namespaces: NamespaceModel[]
 
   get accountAliases(): string[] {
-    if (!this.namespaces || !this.account) return []
+    if (!this.namespaces || !this.account) {
+      return []
+    }
 
     // get the current account address
     const address = this.account.address

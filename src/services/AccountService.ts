@@ -110,7 +110,9 @@ export class AccountService {
 
     // increment derivation path \a count times
     const paths = [...Array(count).keys()].map((index) => {
-      if (index == 0) return AccountService.DEFAULT_ACCOUNT_PATH
+      if (index == 0) {
+        return AccountService.DEFAULT_ACCOUNT_PATH
+      }
 
       return derivationService.incrementPathLevel(
         AccountService.DEFAULT_ACCOUNT_PATH,

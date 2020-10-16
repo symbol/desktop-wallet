@@ -156,10 +156,14 @@ export class FormAliasTransactionTs extends FormTransactionBase {
       .filter((mosaicInfo) => {
         // no mosaics with names
         const mosaicName = mosaicInfo.name
-        if (mosaicName && mosaicName.length) return false
+        if (mosaicName && mosaicName.length) {
+          return false
+        }
 
         // mosaics must not be expired
-        if (mosaicInfo.duration == 0) return true
+        if (mosaicInfo.duration == 0) {
+          return true
+        }
         return mosaicInfo.height + mosaicInfo.duration > this.currentHeight
       })
       .map(({ mosaicIdHex }) => mosaicIdHex)
@@ -187,8 +191,12 @@ export class FormAliasTransactionTs extends FormTransactionBase {
      * @returns {string}
      */
     const getAliasTarget = (aliasTarget: MosaicId | Address): string => {
-      if (!aliasTarget) return null
-      if (aliasTarget instanceof Address) return aliasTarget.plain()
+      if (!aliasTarget) {
+        return null
+      }
+      if (aliasTarget instanceof Address) {
+        return aliasTarget.plain()
+      }
       return aliasTarget.id.toHex()
     }
 
@@ -209,7 +217,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   protected getTransactions(): AliasTransaction[] {
     const namespaceId = new NamespaceId(this.formItems.namespaceFullName)
     const maxFee = UInt64.fromUint(this.formItems.maxFee)
-    if (this.aliasTargetType === 'address')
+    if (this.aliasTargetType === 'address') {
       return [
         AddressAliasTransaction.create(
           Deadline.create(),
@@ -220,7 +228,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
           maxFee,
         ),
       ]
-    else {
+    } else {
       return [
         MosaicAliasTransaction.create(
           Deadline.create(),
@@ -243,7 +251,9 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   protected setTransactions(transactions: AliasTransaction[]) {
     // - this form creates only 1 transaction
     const transaction = transactions.shift()
-    if (!transaction) return
+    if (!transaction) {
+      return
+    }
 
     // - populate for items if transaction is an address alias
     if (transaction instanceof AddressAliasTransaction) {

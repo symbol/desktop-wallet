@@ -37,7 +37,9 @@ export class ViewTransferTransaction extends TransactionView<TransferTransaction
    * @var {string}
    */
   private get sender(): string {
-    if (this.transaction.signer) return this.transaction.signer.address.pretty()
+    if (this.transaction.signer) {
+      return this.transaction.signer.address.pretty()
+    }
     const currentSignerAddress = this.$store.getters['account/currentSignerAddress']
     return currentSignerAddress ? currentSignerAddress.pretty() : ''
   }

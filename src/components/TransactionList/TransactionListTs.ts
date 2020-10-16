@@ -178,7 +178,9 @@ export class TransactionListTs extends Vue {
 
   /// region computed properties getter/setter
   public get countPages(): number {
-    if (!this.confirmedTransactions) return 0
+    if (!this.confirmedTransactions) {
+      return 0
+    }
     return Math.ceil([...this.confirmedTransactions].length / this.pageSize)
   }
 
@@ -210,9 +212,15 @@ export class TransactionListTs extends Vue {
    * @returns {Transaction[]}
    */
   public getCurrentTabTransactions(group: TransactionGroupState): Transaction[] {
-    if (group === TransactionGroupState.confirmed) return this.confirmedTransactions
-    if (group === TransactionGroupState.unconfirmed) return this.unconfirmedTransactions
-    if (group === TransactionGroupState.partial) return this.partialTransactions
+    if (group === TransactionGroupState.confirmed) {
+      return this.confirmedTransactions
+    }
+    if (group === TransactionGroupState.unconfirmed) {
+      return this.unconfirmedTransactions
+    }
+    if (group === TransactionGroupState.partial) {
+      return this.partialTransactions
+    }
     if (group === TransactionGroupState.all) {
       return [...this.unconfirmedTransactions, ...this.partialTransactions, ...this.confirmedTransactions]
     }

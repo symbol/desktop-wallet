@@ -70,7 +70,9 @@ export class ModalMnemonicDisplayTs extends Vue {
   }
 
   get words(): string[] {
-    if (!this.mnemonic) return []
+    if (!this.mnemonic) {
+      return []
+    }
     return this.mnemonic.plain.split(' ')
   }
 

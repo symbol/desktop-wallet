@@ -339,7 +339,9 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
 
   protected showErrorNotification(): void {
     // no message if inputs are OK
-    if (this.areInputsValid === 'OK') return
+    if (this.areInputsValid === 'OK') {
+      return
+    }
 
     this.$store.dispatch('notification/ADD_ERROR', this.errorMessage)
   }
@@ -355,7 +357,9 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     const maxCosignatoriesPerAccount = this.networkConfiguration.maxCosignatoriesPerAccount
 
     // no message if inputs are OK
-    if (this.areInputsValid === 'OK') return
+    if (this.areInputsValid === 'OK') {
+      return
+    }
 
     if (cosignatoryNumber < minApproval) {
       return `${this.$t('approval_greater_than_cosignatories', {

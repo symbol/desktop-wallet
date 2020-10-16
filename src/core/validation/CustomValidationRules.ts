@@ -47,7 +47,9 @@ export class CustomValidationRules {
       validate: (value) => {
         const isValidAddress = AddressValidator.validate(value)
         const isValidAlias = AliasValidator.validate(value)
-        if (isValidAddress || isValidAlias) return true
+        if (isValidAddress || isValidAlias) {
+          return true
+        }
         return false
       },
       message: (fieldName: string, values: Values) => `${i18n.t('error_incorrect_field', values)}`,
@@ -56,7 +58,9 @@ export class CustomValidationRules {
     extend('addressOrAliasNetworkType', {
       validate: (value, args: any) => {
         const { networkType } = args
-        if (!AddressValidator.validate(value)) return true
+        if (!AddressValidator.validate(value)) {
+          return true
+        }
         return Address.createFromRawAddress(value).networkType == networkType
       },
       message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.NETWORK_TYPE_INVALID, values)}`,
@@ -130,7 +134,9 @@ export class CustomValidationRules {
       validate: (value) => {
         const isValidAddress = AddressValidator.validate(value)
         const isValidPublicKey = PublicKeyValidator.validate(value)
-        if (isValidAddress || isValidPublicKey) return true
+        if (isValidAddress || isValidPublicKey) {
+          return true
+        }
         return false
       },
       message: (fieldName: string, values: Values) => `${i18n.t('error_incorrect_field', values)}`,
@@ -153,7 +159,9 @@ export class CustomValidationRules {
     }),
       extend('in', {
         validate: (value, array: string[]) => {
-          if (!array) return false
+          if (!array) {
+            return false
+          }
           return array.includes(value)
         },
         message: (fieldName: string, values: Values) => `${i18n.t('error_not_exist', values)}`,

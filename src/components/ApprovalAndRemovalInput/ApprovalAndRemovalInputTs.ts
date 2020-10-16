@@ -118,8 +118,12 @@ export class ApprovalAndRemovalInputTs extends Vue {
    * @type {number}
    */
   protected get currentValue(): number {
-    if (!this.multisig) return 0
-    if (this.type === 'approval') return this.multisig.minApproval
+    if (!this.multisig) {
+      return 0
+    }
+    if (this.type === 'approval') {
+      return this.multisig.minApproval
+    }
     return this.multisig.minRemoval
   }
 

@@ -131,7 +131,9 @@ export abstract class AssetTableService {
       })
     } else if ('number' === typeof sampleValue) {
       return values[sortingMethod]((a, b) => {
-        if (!b[options.fieldName] || !a[options.fieldName]) return 1
+        if (!b[options.fieldName] || !a[options.fieldName]) {
+          return 1
+        }
         return b[options.fieldName] - a[options.fieldName]
       })
     }

@@ -97,7 +97,9 @@ export class AddCosignatoryInputTs extends Vue {
    * @return {void}
    */
   private addCosignerFromPublicKey(): void {
-    if (!this.cosignatory) return
+    if (!this.cosignatory) {
+      return
+    }
     const publicAccount = PublicAccount.createFromPublicKey(this.cosignatory, this.networkType)
     this.$emit('added', publicAccount.address)
   }

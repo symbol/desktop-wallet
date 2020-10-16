@@ -47,7 +47,9 @@ export class AmountDisplayTs extends Vue {
 
   get fractionalPart(): string {
     const rest = this.value - Math.floor(this.value)
-    if (rest === 0) return ''
+    if (rest === 0) {
+      return ''
+    }
     const decimals = this.decimals === undefined ? this.networkConfiguration.maxMosaicDivisibility || 6 : this.decimals
     // remove leftmost-0 and rightmost-0
     return Number(rest.toFixed(decimals)).toPrecision().toString().replace(/^0/, '')

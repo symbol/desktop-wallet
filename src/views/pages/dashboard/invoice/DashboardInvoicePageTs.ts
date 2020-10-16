@@ -72,7 +72,9 @@ export class DashboardInvoicePageTs extends Vue {
   public get recipient(): string {
     // if (!this.transactions.length) return ''
 
-    if (!this.currentTransaction || !this.currentTransaction.recipientAddress) return ''
+    if (!this.currentTransaction || !this.currentTransaction.recipientAddress) {
+      return ''
+    }
 
     // - read TransferTransaction instance
     // const transfer = this.transactions.shift() as TransferTransaction
@@ -88,7 +90,9 @@ export class DashboardInvoicePageTs extends Vue {
    */
   public get transactionQR(): TransactionQR {
     // if (!this.transactions.length) return null
-    if (!this.currentTransaction) return null
+    if (!this.currentTransaction) {
+      return null
+    }
 
     // this.currentTransaction = this.transactions.shift() as TransferTransaction
     // - read TransferTransaction instance
@@ -131,7 +135,9 @@ export class DashboardInvoicePageTs extends Vue {
    * @type {MosaicAttachment[]}
    */
   get balanceEntries(): MosaicAttachment[] {
-    if (!this.transactionEntry) return []
+    if (!this.transactionEntry) {
+      return []
+    }
     return this.transactionEntry.attachments
   }
 

@@ -314,7 +314,9 @@ export class FormTransactionBase extends Vue {
   public onConfirmationSuccess() {
     // if the form was in multisig, set the signer to be the main account
     // this triggers resetForm in the @Watch('currentAccount') hook
-    if (this.isMultisigMode()) this.$store.dispatch('account/SET_CURRENT_ACCOUNT', this.currentAccount)
+    if (this.isMultisigMode()) {
+      this.$store.dispatch('account/SET_CURRENT_ACCOUNT', this.currentAccount)
+    }
     this.resetForm()
     this.hasConfirmationModal = false
     this.$emit('on-confirmation-success')

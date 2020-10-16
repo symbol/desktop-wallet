@@ -133,7 +133,9 @@ export class MnemonicInputTs extends Vue {
    */
   @Watch('seed', { immediate: true })
   private handleSeed(seed: string) {
-    if (!seed) return
+    if (!seed) {
+      return
+    }
     const pasteDataArr: Array<string> = seed.trim().split(/\s+/g)
     pasteDataArr.forEach((pasteData) => {
       if (!!pasteData && this.wordsArray.length < 24) {

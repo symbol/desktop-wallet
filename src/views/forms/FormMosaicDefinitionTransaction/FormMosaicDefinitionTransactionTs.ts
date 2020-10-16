@@ -125,7 +125,9 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     // - read form for definition
     const mosaicId = MosaicId.createFromNonce(randomNonce, this.selectedSigner.address)
     // the duration must be 0 when the permanent value of true
-    if (this.formItems.permanent) this.formItems.duration = 0
+    if (this.formItems.permanent) {
+      this.formItems.duration = 0
+    }
     const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
       Deadline.create(),
       randomNonce,

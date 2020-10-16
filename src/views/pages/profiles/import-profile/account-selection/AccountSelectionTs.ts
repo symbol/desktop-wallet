@@ -159,7 +159,9 @@ export default class AccountSelectionTs extends Vue {
         // Store accounts using repository
         this.accountService.saveAccount(account)
         // set current account
-        if (index === 0) this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
+        if (index === 0) {
+          this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account)
+        }
         // add accounts to profile
         this.$store.dispatch('profile/ADD_ACCOUNT', account)
       })
@@ -198,7 +200,9 @@ export default class AccountSelectionTs extends Vue {
       .createAccountRepository()
       .getAccountsInfo(this.addressesList)
       .toPromise()
-    if (!accountsInfo) return
+    if (!accountsInfo) {
+      return
+    }
     // map balances
     this.addressMosaicMap = this.mapBalanceByAddress(accountsInfo, this.networkMosaic)
   }
@@ -229,7 +233,9 @@ export default class AccountSelectionTs extends Vue {
    */
   private createAccountsFromPathIndexes(indexes: number[]): AccountModel[] {
     const paths = indexes.map((index) => {
-      if (index == 0) return AccountService.DEFAULT_ACCOUNT_PATH
+      if (index == 0) {
+        return AccountService.DEFAULT_ACCOUNT_PATH
+      }
 
       return this.derivation.incrementPathLevel(
         AccountService.DEFAULT_ACCOUNT_PATH,

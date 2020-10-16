@@ -25,7 +25,9 @@ export class MaxDecimalsValidator {
    * @returns {boolean}
    */
   public static validate(value: any, maxDecimalNumber: number): boolean {
-    if (Math.floor(value) == value) return true
+    if (Math.floor(value) == value) {
+      return true
+    }
     const decimalNumber = value.toString().split('.')[1].length || 0
     return decimalNumber <= maxDecimalNumber
   }

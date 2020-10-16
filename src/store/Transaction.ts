@@ -363,7 +363,9 @@ export default {
     },
 
     async ON_NEW_TRANSACTION({ dispatch }, transaction: Transaction) {
-      if (!transaction) return
+      if (!transaction) {
+        return
+      }
 
       // extract transaction types from the transaction
       const transactionTypes: TransactionType[] = _.uniq(
@@ -396,12 +398,16 @@ export default {
       const transactions: AggregateTransaction[] = getters[transactionAttribute] || []
 
       // return if no transactions
-      if (!transactions.length) return
+      if (!transactions.length) {
+        return
+      }
 
       const index = transactions.findIndex((t) => t.transactionInfo.hash === transaction.parentHash)
 
       // partial tx unknown, @TODO: handle this case (fetch partials)
-      if (index === -1) return
+      if (index === -1) {
+        return
+      }
 
       // convert CosignatureSignedTransaction to AggregateTransactionCosignature
       const generationHash = rootGetters['network/generationHash']

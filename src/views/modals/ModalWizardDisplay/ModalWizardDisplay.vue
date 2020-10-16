@@ -29,7 +29,9 @@ export default class ModalWizardDisplay extends Vue {
   }
 
   protected getIcon(item: string) {
-    if (!this.icons.length) return undefined
+    if (!this.icons.length) {
+      return undefined
+    }
 
     const idx = this.items.findIndex((i) => i === item)
     return this.icons[idx]

@@ -175,8 +175,9 @@ export class ModalHarvestingWizardTs extends Vue {
   }
 
   private get linkedAccount(): PublicAccount {
-    if (!this.currentAccountAccountInfo || !this.currentAccountAccountInfo.supplementalPublicKeys.linked)
+    if (!this.currentAccountAccountInfo || !this.currentAccountAccountInfo.supplementalPublicKeys.linked) {
       return undefined
+    }
 
     return PublicAccount.createFromPublicKey(
       this.currentAccountAccountInfo.supplementalPublicKeys.linked.publicKey,

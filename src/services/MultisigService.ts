@@ -43,7 +43,9 @@ export class MultisigService {
     currentAccountMultisigInfo: MultisigAccountInfo | undefined,
     multisigAccountsInfo: MultisigAccountInfo[] | undefined,
   ): Signer[] {
-    if (!currentAccount) return []
+    if (!currentAccount) {
+      return []
+    }
     const self: Signer[] = [
       {
         address: Address.createFromRawAddress(currentAccount.address),

@@ -37,7 +37,9 @@ import { mapGetters } from 'vuex'
     }).pipe(
       pluck('newValue'),
       concatMap((args) => {
-        if (args instanceof ContactQR) return args.toBase64()
+        if (args instanceof ContactQR) {
+          return args.toBase64()
+        }
         return of(failureIcon)
       }),
     )

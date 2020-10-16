@@ -83,10 +83,18 @@ export class NamespaceSelectorTs extends Vue {
    * Filter Namespaces
    */
   get filteredNamespaces() {
-    if (this.disableLinked) return this.linkableNamespaces
-    if (this.disableUnlinked) return this.unlinkableNamespaces
-    if (this.parentNamespace) return this.parentNamespaces
-    if (this.nonParentNamespace) return this.nonParentNamespaces
+    if (this.disableLinked) {
+      return this.linkableNamespaces
+    }
+    if (this.disableUnlinked) {
+      return this.unlinkableNamespaces
+    }
+    if (this.parentNamespace) {
+      return this.parentNamespaces
+    }
+    if (this.nonParentNamespace) {
+      return this.nonParentNamespaces
+    }
     return this.allNamespaces
   }
 

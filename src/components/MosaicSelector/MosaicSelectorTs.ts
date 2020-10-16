@@ -105,7 +105,9 @@ export class MosaicSelectorTs extends Vue {
    */
   public mounted(): void {
     // if a value is provided, return
-    if (this.value && this.value.length > 0) return
+    if (this.value && this.value.length > 0) {
+      return
+    }
 
     // else... set default value to network mosaic
     if (this.defaultMosaic === 'networkMosaic' && this.networkMosaic) {
