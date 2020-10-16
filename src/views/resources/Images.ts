@@ -218,6 +218,9 @@ import importPrivateKeyStepImage1 from '@/views/resources/img/login/1-3.png'
 import importPrivateKeyStepImage2 from '@/views/resources/img/login/2-3.png'
 // @ts-ignore
 import importPrivateKeyStepImage3 from '@/views/resources/img/login/3-3.png'
+// @ts-ignore
+import voting from '@/views/resources/img/icons/voting.png'
+
 /// region exported image objects
 export const walletTypeImages = {
   createImg,
@@ -338,6 +341,7 @@ export const officialIcons = {
   unlock,
   wallet,
   xymCoin,
+  voting,
 }
 
 export const transactionTypeToIcon = {
@@ -361,6 +365,8 @@ export const transactionTypeToIcon = {
   [TransactionType.ACCOUNT_METADATA]: officialIcons.metadata,
   [TransactionType.MOSAIC_METADATA]: officialIcons.metadata,
   [TransactionType.NAMESPACE_METADATA]: officialIcons.metadata,
+  [TransactionType.VOTING_KEY_LINK]: officialIcons.voting,
+  [TransactionType.VRF_KEY_LINK]: officialIcons.privateKey,
 }
 
 /// end-region exported image objects

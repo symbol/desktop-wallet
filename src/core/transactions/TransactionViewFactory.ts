@@ -25,6 +25,8 @@ import {
   TransactionType,
   TransferTransaction,
   AccountKeyLinkTransaction,
+  VotingKeyLinkTransaction,
+  VrfKeyLinkTransaction,
 } from 'symbol-sdk'
 import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction'
 import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction'
@@ -37,6 +39,8 @@ import { ViewAliasTransaction } from '@/core/transactions/ViewAliasTransaction'
 import { ViewAccountKeyLinkTransaction } from '@/core/transactions/ViewAccountKeyLinkTransaction'
 import { Store } from 'vuex'
 import { TransactionView } from '@/core/transactions/TransactionView'
+import { ViewVotingKeyLinkTransaction } from '@/core/transactions/ViewVotingKeyLinkTransaction'
+import { ViewVrfKeyLinkTransaction } from '@/core/transactions/ViewVrfKeyLinkTransaction'
 
 /**
  * Transaction view factory.
@@ -52,8 +56,6 @@ export class TransactionViewFactory {
     switch (transaction.type) {
       /// region XXX views for transaction types not yet implemented
       case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
-      case TransactionType.VOTING_KEY_LINK:
-      case TransactionType.VRF_KEY_LINK:
       case TransactionType.NODE_KEY_LINK:
       case TransactionType.ACCOUNT_METADATA:
       case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
@@ -75,6 +77,10 @@ export class TransactionViewFactory {
           $store,
           transaction as MultisigAccountModificationTransaction,
         )
+      case TransactionType.VRF_KEY_LINK:
+        return new ViewVrfKeyLinkTransaction($store, transaction as VrfKeyLinkTransaction)
+      case TransactionType.VOTING_KEY_LINK:
+        return new ViewVotingKeyLinkTransaction($store, transaction as VotingKeyLinkTransaction)
       case TransactionType.MOSAIC_DEFINITION:
         return new ViewMosaicDefinitionTransaction($store, transaction as MosaicDefinitionTransaction)
       case TransactionType.MOSAIC_SUPPLY_CHANGE:
