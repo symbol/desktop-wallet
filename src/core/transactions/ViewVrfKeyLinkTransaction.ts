@@ -14,7 +14,6 @@
  *
  */
 import { VrfKeyLinkTransaction, Address } from 'symbol-sdk'
-// internal dependencies
 import { TransactionView } from './TransactionView'
 import i18n from '@/language'
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
