@@ -4,7 +4,7 @@
         <template v-slot:inputs>
             <div class="row-75-25 inputs-container">
                 <MaxFeeSelector v-model="maxFee" />
-                <div v-if="!hideSubmit" class="pl-2">
+                <div v-if="!hideSubmit" class="ml-2">
                     <button
                         type="submit"
                         class="centered-button button-style validation-button submit-button"
