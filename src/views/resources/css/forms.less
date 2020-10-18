@@ -109,9 +109,13 @@
     word-spacing: 0px;
 
     .form-label {
-        font-size: @smallFont;
-        font-weight: @bold;
-        color: @primary;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 25px;
+        align-items: center;
+        text-align: right;
+        color: #5200C6;
     }
 
     .form-label-description {
@@ -287,23 +291,19 @@
 
 .inputs-container {
     align-items: center;
+    width: 100%;
     height: 100%;
-
     .ivu-tooltip {
         width: 100%;
         height: 100%;
+            border-radius: 0.04rem;
+        background: #F2F2F2;
         .ivu-tooltip-rel {
             width: 100%;
             height: 100%;
+            border: none;
+            outline: none;
         }
-    }
-
-    /deep/input {
-        background-color: @grayLight;
-    }
-
-    .signer-selector-single-signer-container {
-        background-color: @grayLight;
     }
 }
 
@@ -317,7 +317,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    border: 0.01rem solid @border;
     border-radius: 0.04rem;
 }
 
@@ -340,13 +339,16 @@
     white-space: nowrap;
     padding-left: 0.08rem;
     padding-right: 0.24rem;
-    border: 0.01rem solid @border;
     border-radius: 0.04rem;
+    background: #F2F2F2;
+    border-radius: 3.42857px;
 
     .ivu-select-selection {
         box-shadow: unset;
         padding-top: 0.07rem;
         border: unset;
+        background: #F2F2F2;
+        border-radius: 3.42857px;
     }
 
     .ivu-select-selected-value {
@@ -380,20 +382,21 @@
     height: @formFieldHeight;
     border-radius: 0.04rem;
     padding: 0 0.2rem;
-    border: 0.01rem solid @border;
     line-height: 1.5;
     color: @selectedValue;
-    background-color: @white;
     background-image: none;
     cursor: text;
     transition: border 0.2s ease-in-out, background 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background: #F2F2F2;
+    border-radius: 3.42857px;
 
     .ivu-input {
         height: 0.4rem;
         font-size: @smallerFont;
         border-bottom: unset;
         padding: 0;
-        background: none;
+        background: #F2F2F2;
+        border-radius: 3.42857px;
     }
 
     .ivu-select-dropdown {
@@ -426,14 +429,14 @@
 }
 
 .validation-button {
-    background-color: @purple;
+    background: @primary;
     color: @white;
 }
 
 .text-button {
-    background-color: @white;
+    background: transparent;
     color: @primary;
-
+    padding: 0.0rem 0.0rem;
 }
 
 .remove-button {
@@ -457,8 +460,8 @@
 }
 
 .back-button {
-    background: @grayLight;
-    color: @purpleDark;
+    background: #C4C4C4;
+    color: #FFFFFF;
 }
 
 .back-button:hover {
@@ -632,7 +635,7 @@
         width: 100%;
     }
     .form-row-inner-container {
-        grid-template-columns: 20% 80%;
+        grid-template-columns: 28% 55%;
         .form-label-container {
             padding: 0;
         }

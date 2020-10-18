@@ -15,7 +15,7 @@
                         {{ currentSignerAddress.plain() }}
                     </span>
                     <ButtonCopyToClipboard :value="currentSignerAddress.plain()">
-                        <img class="pointer" src="@/views/resources/img/monitor/monitorCopyAddress.png" />
+                        <img class="pointer" src="@/views/resources/img/monitor/monitorCopyDocument.svg" />
                     </ButtonCopyToClipboard>
                 </div>
                 <div v-if="networkCurrency" class="XEM_amount overflow_ellipsis">

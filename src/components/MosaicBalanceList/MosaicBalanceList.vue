@@ -18,7 +18,7 @@
             <img
                 slot="extra"
                 class="asset_list pointer"
-                src="@/views/resources/img/monitor/monitorAssetList.png"
+                src="@/views/resources/img/monitor/monitorAssetListPurple.svg"
                 @click="isEditionMode = true"
             />
         </Tabs>
