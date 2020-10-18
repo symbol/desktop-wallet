@@ -15,7 +15,7 @@
 
                 &:hover {
                     color: @black;
-                    background-color: @grayLight;
+                    background-color: @white;
 
                     .ivu-icon-ios-arrow-down::before {
                         color: @black !important;
@@ -26,7 +26,7 @@
                 }
 
                 & {
-                    background-color: @grayLight;
+                    background-color: @grayLightest;
                     color: @black;
                 }
 
@@ -62,11 +62,11 @@
 
                     .ivu-select-item-selected {
                         color: @primary;
-                        background-color: @grayLight;
+                        background-color: @grayLightest;
                     }
                 }
 
-                background-color: @grayLight;
+                background-color: @grayLightest;
 
             }
 
@@ -78,6 +78,10 @@
             .ivu-select-item {
                 font-size: @smallFont !important;
                 color: @grayDark;
+            }
+
+            .ivu-select-item:hover {
+                background-color: @white;
             }
         }
     }
