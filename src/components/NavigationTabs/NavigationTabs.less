@@ -16,7 +16,7 @@
 
 @import '../../views/resources/css/variables.less';
 .tabs {
-    border-bottom: 0.02rem solid @line;
+    border-bottom: none;
 }
 .horizontal {
     display: grid;
@@ -38,6 +38,7 @@
         margin: 0.2rem 0;
         line-height: 0.2rem;
         text-align: center;
+        color: #d3d3d3;
         img {
             height: 0.2rem;
             width: 0.2rem;
@@ -46,12 +47,12 @@
         }
     }
     .tab-item:not(:first-child) {
-        border-left: 0.01rem solid @boxShadow;
+        border-left: 2px solid @primary;
     }
 
     .active {
         color: @primary;
-        font-weight: 700;
+        font-weight: 500;
         cursor: not-allowed !important;
     }
 
@@ -77,7 +78,7 @@
         padding-bottom: 0.35rem;
         font-size: 18px;
         font-weight: 400;
-        color: #666;
+        color: @grayLight;
         cursor: pointer;
         padding-left: 80px;
     }
@@ -85,7 +86,7 @@
     .active {
         font-size: 18px;
         font-weight: 700;
-        color: #222;
+        color: @primary;
         cursor: not-allowed !important;
     }
 }

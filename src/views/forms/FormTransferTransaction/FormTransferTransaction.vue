@@ -5,7 +5,7 @@
                 <form onsubmit="event.preventDefault()">
                     <div v-if="showTransactionActions" class="transfer-actions">
                         <a @click="isImportTransactionUriModalVisible = true">
-                            <Icon type="md-arrow-round-down" />{{ $t('import_transaction_uri') }}
+                            <!--<Icon type="md-arrow-round-down" />-->{{ $t('import_transaction_uri') }}
                         </a>
                     </div>
 

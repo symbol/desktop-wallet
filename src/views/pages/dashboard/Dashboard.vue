@@ -4,7 +4,7 @@
         <div class="dashboard-right-outer-container">
             <div class="dashboard-right-container">
                 <NetworkStatisticsPanel />
-                <div class="right-bottom-container xym-outline">
+                <div class="right-bottom-container">
                     <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
                     <div class="radius bottom_router_view">
                         <router-view :key="$route.fullPath" />
