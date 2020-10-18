@@ -14,15 +14,20 @@
                 font-size: @normalFont;
 
                 &:hover {
-                    color: @white;
-                    background-color: @purpleDark;
+                    color: @black;
+                    background-color: @grayLight;
 
                     .ivu-icon-ios-arrow-down::before {
-                        color: @white !important;
+                        color: @black !important;
                     }
                     .ivu-select-prefix {
                         color: @white;
                     }
+                }
+
+                & {
+                    background-color: @grayLight;
+                    color: @black;
                 }
 
                 .ivu-select-prefix {
@@ -45,12 +50,34 @@
                     color: @white;
                 }
             }
+
+
+            .ivu-select-dropdown {
+                padding: 0 !important;
+                .ivu-select-dropdown-list {
+
+                    .ivu-select-large {
+                        
+                    }
+
+                    .ivu-select-item-selected {
+                        color: @primary;
+                        background-color: @grayLight;
+                    }
+                }
+
+                background-color: @grayLight;
+
+            }
+
             .ivu-select-group-title {
                 font-size: @smallerFont !important;
+                color: @grayDark;
             }
 
             .ivu-select-item {
                 font-size: @smallFont !important;
+                color: @grayDark;
             }
         }
     }

@@ -1,11 +1,10 @@
 <template>
     <div>
         <Select v-model="selectedStatus" size="large">
-            <Icon slot="prefix" type="md-apps" />
             <Option class="select-all" :value="'all'">
                 Recent
             </Option>
-            <OptionGroup label="status">
+            <OptionGroup label="Status">
                 <Option :value="'confirmed'">
                     Confirmed
                 </Option>
