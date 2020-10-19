@@ -1,6 +1,6 @@
 <template>
     <div class="dashboard-outer-container">
-        <div class="dashboard-inner-container xym-outline">
+        <div class="dashboard-inner-container">
             <div class="header-container">
                 <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
             </div>
