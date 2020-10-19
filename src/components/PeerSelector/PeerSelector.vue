@@ -12,7 +12,10 @@
                     <Row>
                         <i-col span="6">{{ $t('current_endpoint') }}:</i-col>
                         <i-col span="18" class="overflow_ellipsis" :title="currentPeerInfo.url + currentPeerInfo.friendlyName">
-                            {{ currentPeerInfo.url }} - {{ currentPeerInfo.friendlyName }}
+                            <div>
+                                <div class="node-list-head">{{ currentPeerInfo.friendlyName }}</div>
+                                <div class="node-url overflow_ellipsis" :title="friendlyName">{{ currentPeerInfo.url }}</div>
+                            </div>
                         </i-col>
                     </Row>
                 </div>
@@ -31,7 +34,7 @@
                                 @click="currentPeerInfo.url !== url ? switchPeer(url) : ''"
                             >
                                 <div>
-                                    <div class="node-list-head small">{{ friendlyName }}</div>
+                                    <div class="node-list-head">{{ friendlyName }}</div>
                                     <div class="node-url overflow_ellipsis" :title="url + friendlyName">{{ url }}</div>
                                 </div>
                             </li>
@@ -62,8 +65,9 @@
                             class="list-item pointer"
                             :class="[{ active: currentPeerInfo.url == url }]"
                         >
-                            <div class="node-url overflow_ellipsis" :title="url + friendlyName">
-                                {{ url }}{{ friendlyName ? '-' + friendlyName : '' }}
+                            <div class="node-url overflow_ellipsis" :title="friendlyName">
+                                <div class="node-list-head">{{ friendlyName }}</div>
+                                <div>{{ url }}</div>
                             </div>
                         </li>
                     </ul>
