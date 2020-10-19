@@ -1,5 +1,5 @@
 <template>
-    <div class="left-navigator xym-outline">
+    <div class="left-navigator">
         <div class="navigator-items-container">
             <div
                 v-for="(route, index) in $router.getRoutes()"

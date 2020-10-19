@@ -1,9 +1,9 @@
 <template>
     <div class="accounts-main-container">
-        <div class="left-container xym-outline">
+        <div class="left-container">
             <AccountSelectorPanel />
         </div>
-        <div class="right-container xym-outline">
+        <div class="right-container">
             <div class="header-container">
                 <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
             </div>
