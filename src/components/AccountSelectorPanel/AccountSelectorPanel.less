@@ -34,7 +34,8 @@
             padding: 0.17rem 0 0.4rem 0.2rem;
 
             .section-title {
-                font-size: @normalFont;
+                font-weight: 500;
+                color: @black
             }
         }
 
@@ -57,7 +58,7 @@
         grid-row-gap: 0.1rem;
         position: relative;
         .active-background {
-            background: linear-gradient(178deg, rgba(82, 0, 198, 1) 0%, rgba(57, 0, 139, 1) 69%, rgba(41, 0, 99, 1) 100%);
+            background: @grayLight;
             color: white;
         }
 
@@ -67,7 +68,7 @@
             width: 0;
             height: 0;
             border: 0.1rem solid transparent;
-            border-left-color: @purple;
+            border-left-color: @grayLight;
             right: -0.19rem;
             bottom: 0.3rem;
             content: '';
@@ -98,6 +99,7 @@
 
                 .account-tile-upper-container {
                     .account-name {
+                        color: @white;
                     }
                 }
 
@@ -127,10 +129,9 @@
         grid-template-columns: 50% 50%;
         grid-template-rows: 100%;
         text-align: center;
-        font-size: @smallerFont;
         font-weight: 400;
         line-height: 22px;
-        color: rgba(68, 0, 78, 1);
+        color: @black;
 
         .add-account {
             .ivu-icon {
