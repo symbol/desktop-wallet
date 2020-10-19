@@ -30,7 +30,10 @@
                                 :class="[{ active: currentPeerInfo.url == url }]"
                                 @click="currentPeerInfo.url !== url ? switchPeer(url) : ''"
                             >
-                                <div class="node-url overflow_ellipsis" :title="url + friendlyName">{{ url }}-{{ friendlyName }}</div>
+                                <div>
+                                    <div class="node-list-head small">{{ friendlyName }}</div>
+                                    <div class="node-url overflow_ellipsis" :title="url + friendlyName">{{ url }}</div>
+                                </div>
                             </li>
                         </ul>
                     </div>
