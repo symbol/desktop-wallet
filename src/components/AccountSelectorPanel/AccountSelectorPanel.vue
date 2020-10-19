@@ -31,13 +31,10 @@
         </div>
 
         <div class="account-switch-footer-container">
-            <span v-if="!isPrivateKeyProfile" class="add-account pointer" @click="hasAddAccountModal = true">
-                <Icon type="md-add-circle" />{{ $t('button_add_account') }}
+            <span v-if="!isPrivateKeyProfile" class="add-account pointer button" @click="hasAddAccountModal = true">
+                {{ $t('button_add_account') }}
             </span>
             <div v-if="!isPrivateKeyProfile" class="account-switch-header-right-container" @click="hasMnemonicExportModal = true">
-                <span>
-                    <img src="@/views/resources/img/back-up.png" alt="" />
-                </span>
                 <span class="back-up pointer">{{ $t('backup_mnemonic') }}</span>
             </div>
             <ModalFormSubAccountCreation v-if="hasAddAccountModal" :visible="hasAddAccountModal" @close="hasAddAccountModal = false" />

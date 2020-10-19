@@ -2,7 +2,7 @@
     <div>
         <div class="backup-item" @click="onClickDisplay">
             <div class="img-box radius">
-                <img src="@/views/resources/img/symbol/QRcode.png" />
+                <img src="@/views/resources/img/icons/qr.svg" />
             </div>
             <p class="access-name">
                 {{ $t('accounts_backup_tile_title') }}
