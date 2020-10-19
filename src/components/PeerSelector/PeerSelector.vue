@@ -14,7 +14,9 @@
                         <i-col span="18" class="overflow_ellipsis" :title="currentPeerInfo.url + currentPeerInfo.friendlyName">
                             <div>
                                 <div class="node-list-head">{{ currentPeerInfo.friendlyName }}</div>
-                                <div class="node-url overflow_ellipsis" :title="friendlyName">{{ currentPeerInfo.url }}</div>
+                                <div class="node-url overflow_ellipsis" :title="currentPeerInfo.friendlyName">
+                                    {{ currentPeerInfo.url }}
+                                </div>
                             </div>
                         </i-col>
                     </Row>
