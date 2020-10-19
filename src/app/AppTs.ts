@@ -34,12 +34,23 @@ import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue';
     },
 })
 export class AppTs extends Vue {
+
+    /**
+     * Display the application version. This is injected in the app when built.
+     */
+    public packageVersion = process.env.PACKAGE_VERSION || '0';
+
+    /**
+     * Display the web wallet warning. This is injected in the app when built/
+     */
+    public web = process.env.WEB || false;
     /**
      * Currently active profile
      * @see {Store.Profile}
      * @var {string}
      */
     public currentProfile: string;
+
 
     /**
      * Whether a loading overlay must be displayed

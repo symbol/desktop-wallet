@@ -1,5 +1,7 @@
 <template>
     <div id="app" class="mac">
+        <span class="web-warning-panel" v-if="web">{{ $t('web_wallet_warning') }}</span>
+        <div class="version-panel">{{ $t('version') }}: {{ packageVersion }}</div>
         <router-view />
         <DisabledUiOverlay />
         <SpinnerLoading v-if="hasLoadingOverlay" />

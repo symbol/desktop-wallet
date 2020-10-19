@@ -1,5 +1,12 @@
 const path = require('path')
 
+// WAS THIS FILE WITH CAPITAL V USED????? NOTHING BELOW IS CONSOLED OUT!!
+
+const packageVersion = JSON.stringify(require('./package.json').version);
+const web = process.env.WEB || false;
+
+console.log(`Building package ${packageVersion} for Web: ${web}`);
+
 module.exports = {
   // base url
   publicPath: process.env.NODE_ENV === 'production'
