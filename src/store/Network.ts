@@ -359,5 +359,11 @@ export default {
         SET_CURRENT_HEIGHT({ commit }, height) {
             commit('currentHeight', height);
         },
+
+        LOAD_TRANSACTION_FEES({ commit, rootGetters }) {
+            const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
+            const networkRepository = repositoryFactory.createNetworkRepository();
+            networkRepository.getTransactionFees().subscribe((fees: TransactionFees) => commit('transactionFees', fees));
+        },
     },
 };

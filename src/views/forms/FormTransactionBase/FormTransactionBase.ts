@@ -161,6 +161,7 @@ export class FormTransactionBase extends Vue {
      * @return {void}
      */
     public async created() {
+        this.$store.dispatch('network/LOAD_TRANSACTION_FEES');
         this.resetForm();
     }
 
