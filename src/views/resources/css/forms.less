@@ -172,9 +172,9 @@
     display: grid;
     align-items: center;
     text-align: left;
-    font-size: @smallFont;
-    font-weight: @bolder;
-    color: #44004e;
+    font-size: 1em;
+    font-weight: 400;
+    color: @black;
     height: 100%;
 }
 
@@ -182,8 +182,9 @@
     display: grid;
     align-items: center;
     text-align: left;
-    font-size: @smallFont;
-    color: @grayDark;
+    font-weight: 400;
+    font-size: 1em;
+    color: @black;
     height: 100%;
 }
 
@@ -233,13 +234,16 @@
     height: @formFieldHeight !important;
     grid-template-columns: auto 0.4rem;
     grid-template-rows: 100%;
-    font-size: @normalFont;
+    font-size: 0.9em;
     padding-left: 0.05rem;
+    font-weight: 400;
+    font-color: @blackLight;
 
     .cosignatory-removed {
         text-decoration: line-through;
     }
 }
+
 
 .row-cosignatory-modification-display.link {
     display: flex;
@@ -251,6 +255,9 @@
     display: flex;
     justify-content: center;
     width: 97%;
+    color: @blackLight;
+    font-size:0.9em;
+    font-weight: 400;
 }
 
 .row-cosignatory-modification-display-cosignature {
