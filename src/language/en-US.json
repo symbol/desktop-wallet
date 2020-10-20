@@ -663,6 +663,8 @@
     "verify_mnemonics": "Verify mnemonic words backup",
     "warning_already_a_cosignatory": "This account is already a cosignatory!",
     "welcome": "Welcome",
+    "version": "Version",
+    "web_wallet_warning": "This WEB wallet is for demonstration use only!",
     "word": "Word",
     "x_seconds": "{seconds}s."
 }
