@@ -347,15 +347,15 @@
     padding-left: 0.08rem;
     padding-right: 0.24rem;
     border-radius: 0.04rem;
-    background: #F2F2F2;
+    background: @grayLightest;
     border-radius: 3.42857px;
 
     .ivu-select-selection {
         box-shadow: unset;
         padding-top: 0.07rem;
         border: unset;
-        background: #F2F2F2;
-        border-radius: 3.42857px;
+        background: @grayLightest;
+        border-radius: 3.4px;
     }
 
     .ivu-select-selected-value {
@@ -363,6 +363,12 @@
         padding-left: 0;
         height: @formFieldHeight;
         line-height: @formFieldHeight;
+
+    }
+
+    .ivu-select-item-selected {
+        color: @primary;
+        
     }
 
     .ivu-select-dropdown {
@@ -370,6 +376,7 @@
         margin: 0.12rem 0;
         left: 0px !important;
         width: 100%;
+        background-color: @grayLightest;
     }
 
     .ivu-select-arrow {
