@@ -3,12 +3,14 @@
     position: relative;
     width: 100%;
     height: 100%;
-    padding: 0.2rem 0 0 0.2rem;
+    padding-left: 6%;
+    padding-right: 8%;
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 100%;
     overflow: hidden;
 }
+
 
 .articles-container {
     position: relative;
@@ -17,7 +19,7 @@
     padding: 0 0.2rem;
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 2.5rem;
+    grid-template-rows: 2rem;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -28,47 +30,57 @@
     height: 100%;
     padding: 0.2rem;
     display: grid;
-    grid-template-columns: 4rem auto;
-    grid-template-rows: 100%;
+    grid-template-columns: 20% 80%;
+    grid-template-rows: 2rem;
     overflow: hidden;
-    border-bottom: 2px dashed @grayLight;
+    border-bottom: 2px solid rgba(68, 0, 78, 0.5);
+    margin-top: 2%; //TODO
 }
 
 .article-left-section {
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 0.4rem 0.6rem 1rem auto;
-    padding-top: 0.2rem;
 }
 
 .article-right-section {
     display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 20% 80%;
+
 }
 
 .article-from {
-    font-size: @normalFont;
+    color: @blackLight;
+    font-weight: 300;
+    font-size: 0.9em;
 }
 
 .article-date {
-    color: @secondary;
-    font-size: @biggerFont;
+    color: @blackLight;
+    font-weight: 400;
+    font-size: 1.125em;
 }
 
 .link-icon {
-    color: @secondary;
-    vertical-align: top;
+    color: @blackLight;
+    vertical-align: center;
 }
 
 .article-link a {
-    color: @secondary;
-    font-size: @biggerFont;
+    color: @blackLight;
+    font-weight: 400;
+    font-size: 0.9em;
 }
 
 .article-title {
     color: @secondary;
-    font-size: @biggestFont;
+    font-size: 1.125em;
+    font-weight: 600;
 }
 
 .article-content {
-    font-size: @normalFont;
+    color: @blackLight;
+    font-size: 0.9em;
+    font-weight: 400;
 }
