@@ -207,15 +207,15 @@
     white-space: nowrap;
     padding-left: 0.2rem;
     padding-right: 0.24rem;
-    border: 0.01rem solid @border;
     border-radius: 0.04rem;
+    background-color:@grayLightest;
 }
 
 .row-mosaic-attachment-input {
     display: grid;
     width: 100%;
     height: @formFieldHeight !important;
-    grid-template-columns: 55% auto;
+    grid-template-columns: 55% 42.5%;
     grid-template-rows: 100%;
     position: relative;
 }
@@ -303,7 +303,7 @@
     .ivu-tooltip {
         width: 100%;
         height: 100%;
-            border-radius: 0.04rem;
+        border-radius: 0.04rem;
         background: #F2F2F2;
         .ivu-tooltip-rel {
             width: 100%;
@@ -328,12 +328,11 @@
 }
 
 .textarea-style {
-    height: 0.8rem;
     outline: none;
     padding: 0.1rem 0.2rem;
     font-size: @smallerFont;
-    border: 0.01rem solid @border;
     border-radius: 0.04rem;
+    background-color:@grayLightest;
 }
 
 .select-style {
@@ -389,6 +388,26 @@
         height: @formFieldHeight;
         line-height: @formFieldHeight;
         color: #c1b4b4 !important;
+    }
+}
+
+.ivu-checkbox-inner {
+    background: @grayLightest;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+    border:none;
+}
+
+
+.ivu-checkbox-checked{
+    
+    background-color: white !important;
+    
+    .ivu-checkbox-inner {
+        background: @primary;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+        border-radius: 2px;
+        border:none;
     }
 }
 

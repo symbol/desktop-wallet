@@ -63,12 +63,6 @@
                         </span>
                     </div>
                 </div>
-
-                <div class="complete_container">
-                    <div class="complete" @click="isEditionMode = false">
-                        {{ $t('close') }}
-                    </div>
-                </div>
             </div>
         </div>
     </div>
