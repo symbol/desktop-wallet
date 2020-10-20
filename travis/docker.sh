@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 if [ "${DOCKER_IMAGE_NAME}" = "" ]
 then
