@@ -32,4 +32,5 @@ export class ProfileModel {
   public readonly password: string
   public readonly seed: string
   public readonly accounts: string[]
+  public readonly termsAndConditionsApproved: boolean
 }

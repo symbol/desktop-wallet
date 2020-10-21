@@ -23,20 +23,30 @@ import ProfileBalancesPanel from '@/components/ProfileBalancesPanel/ProfileBalan
 import NetworkStatisticsPanel from '@/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue'
 // @ts-ignore
 import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
-
+// @ts-ignore
+import ModalTermsAndConditions from '@/views/modals/ModalTermsAndConditions/ModalTermsAndConditions.vue'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
 @Component({
   components: {
     ProfileBalancesPanel,
     NetworkStatisticsPanel,
     NavigationTabs,
+    ModalTermsAndConditions,
   },
   computed: {
     ...mapGetters({
       currentAccount: 'account/currentAccount',
+      currentProfile: 'profile/currentProfile',
     }),
   },
 })
 export class DashboardTs extends Vue {
+  /**
+   * Terms and Conditions status
+   * @see {currentProfile}
+   * @var {PorfileModel}
+   */
+  public currentProfile: ProfileModel
   /**
    * Argument passed to the Router Tab List
    */
