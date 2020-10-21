@@ -42,7 +42,7 @@ fi
 
 if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]
 then
-    echo "Building for ${$RELEASE_BRANCH} branch..."
+    echo "Building for ${RELEASE_BRANCH} branch..."
     echo "Docker tagging release version"
     docker tag "${DOCKER_IMAGE_NAME}:${CURRENT_VERSION}" "${DOCKER_IMAGE_NAME}:release"
 
