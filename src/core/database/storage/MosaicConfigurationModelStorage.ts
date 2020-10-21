@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,15 @@
  *
  */
 
-import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage'
-import { AccountMosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel'
-export class MosaicConfigurationModelStorage extends VersionedObjectStorage<
-  Record<string, AccountMosaicConfigurationModel>
-> {
-  /**
-   * Singleton instance as we want to run the migration just once
-   */
-  public static INSTANCE = new MosaicConfigurationModelStorage()
+import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage';
+import { AccountMosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel';
+export class MosaicConfigurationModelStorage extends VersionedObjectStorage<Record<string, AccountMosaicConfigurationModel>> {
+    /**
+     * Singleton instance as we want to run the migration just once
+     */
+    public static INSTANCE = new MosaicConfigurationModelStorage();
 
-  private constructor() {
-    super('mosaicConfiguration')
-  }
+    private constructor() {
+        super('mosaicConfiguration');
+    }
 }

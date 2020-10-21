@@ -1,14 +1,16 @@
 <template>
-  <div id="app" class="mac">
-    <router-view />
-    <DisabledUiOverlay />
-    <SpinnerLoading v-if="hasLoadingOverlay" />
-  </div>
+    <div id="app" class="mac">
+        <span v-if="web" class="web-warning-panel">{{ $t('web_wallet_warning') }}</span>
+        <div class="version-panel">{{ $t('version') }}: {{ packageVersion }}</div>
+        <router-view />
+        <DisabledUiOverlay />
+        <SpinnerLoading v-if="hasLoadingOverlay" />
+    </div>
 </template>
 
 <script lang="ts">
-import 'animate.css'
-import { AppTs } from '@/app/AppTs.ts'
+import 'animate.css';
+import { AppTs } from '@/app/AppTs.ts';
 export default class App extends AppTs {}
 </script>
 

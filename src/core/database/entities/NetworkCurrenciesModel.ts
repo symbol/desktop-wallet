@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  *
  */
 
-import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 
 export class NetworkCurrenciesModel {
-  constructor(public networkCurrency: NetworkCurrencyModel, public harvestCurrency: NetworkCurrencyModel) {}
+    constructor(public networkCurrency: NetworkCurrencyModel, public harvestCurrency: NetworkCurrencyModel) {}
 }

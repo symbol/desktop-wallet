@@ -1,7 +1,11 @@
 language: node_js
+services:
+  - docker
 node_js:
-  - "12"
-os: osx
+  - 12
+os:
+  - linux
+  - osx
 osx_image: xcode11.3
 env:
   global:
@@ -14,26 +18,37 @@ cache:
     - $HOME/.cache/electron-builder
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
-before_script:
-  - npm run build:web
 script:
-  - npm run lint
-  - npm run test
-deploy:
-  # automation build docker images for release branch
-  - provider: script
-    skip_cleanup: true
-    script: /bin/sh travis/docker.sh
-    on:
-      branch: $RELEASE_BRANCH
-  - provider: script
-    skip_cleanup: true
-    script: /bin/sh travis/release.sh
-    on:
-      branch: $RELEASE_BRANCH
-  # automation build docker images for main branch
-  - provider: script
-    skip_cleanup: true
-    script: /bin/sh travis/docker.sh
-    on:
-      branch: $MAIN_BRANCH
+  - npm run build:web
+jobs:
+  include:
+    - stage: test
+      name: lint tests
+      script: npm run lint
+      os: linux
+
+    - name: unit tests
+      script: npm run test
+      os: osx
+
+    - stage: alpha
+      name: publish alpha docker
+      script: /bin/sh travis/docker.sh
+      if: branch = env(DEV_BRANCH) AND type != pull_request AND (commit_message != release OR env(RELEASE_BRANCH) != env(DEV_BRANCH))
+      os: linux
+
+    - script: npm run release:all
+      name: build desktop artifacts
+      if:  branch = env(DEV_BRANCH) AND type != pull_request AND (commit_message != release OR env(RELEASE_BRANCH) != env(DEV_BRANCH))
+      os: osx
+
+    - stage: release
+      name: release docker
+      script: /bin/sh travis/docker.sh
+      if: branch = env(RELEASE_BRANCH) AND type != pull_request AND (commit_message = release OR env(RELEASE_BRANCH) != env(DEV_BRANCH))
+      os: linux
+
+    - name: release desktop artifacts, tag and update version
+      script: /bin/sh travis/release.sh
+      if: branch = env(RELEASE_BRANCH) AND type != pull_request AND (commit_message = release OR env(RELEASE_BRANCH) != env(DEV_BRANCH))
+      os: osx

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,29 @@
  *
  */
 export interface IStorageBackend {
-  /**
-   * The number of available entries
-   * @var {number}
-   */
-  length: number
+    /**
+     * The number of available entries
+     * @var {number}
+     */
+    length: number;
 
-  /**
-   * Getter for value with \a key
-   * @param {string} key
-   * @return {string|null}
-   */
-  getItem(key: string): any
+    /**
+     * Getter for value with \a key
+     * @param {string} key
+     * @return {string|null}
+     */
+    getItem(key: string): any;
 
-  /**
-   * Setter for \a key with \a value
-   * @param {string} key
-   * @param {any} value
-   */
-  setItem(key: string, value: any): void
+    /**
+     * Setter for \a key with \a value
+     * @param {string} key
+     * @param {any} value
+     */
+    setItem(key: string, value: any): void;
 
-  /**
-   * Deletes the value for the given key
-   * @param {string} key
-   */
-  removeItem(key: string): void
+    /**
+     * Deletes the value for the given key
+     * @param {string} key
+     */
+    removeItem(key: string): void;
 }

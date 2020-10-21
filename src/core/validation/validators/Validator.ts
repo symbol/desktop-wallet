@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,21 +19,21 @@
  * @interface Validator
  */
 export interface Validator {
-  new (): void
-  /**
-   * Validates a value
-   * @param {*} value
-   * @param {*} [args]
-   * @returns {boolean}
-   */
-  validate(value: any, args?: any): boolean
+    new (): void;
+    /**
+     * Validates a value
+     * @param {*} value
+     * @param {*} [args]
+     * @returns {boolean}
+     */
+    validate(value: any, args?: any): boolean;
 }
 
 /**
  * Decorator that enables typing classes with static methods
  */
 export function staticImplements<T>() {
-  return <U extends T>(constructor: U) => {
-    constructor
-  }
+    return <U extends T>(constructor: U) => {
+        constructor;
+    };
 }

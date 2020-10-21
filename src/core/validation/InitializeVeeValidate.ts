@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { StandardValidationRules } from '@/core/validation/StandardValidationRules'
+import { StandardValidationRules } from '@/core/validation/StandardValidationRules';
 
 export class VeeValidateSetup {
-  /**
-   * Initialize Vee Validate custom settings
-   * @static
-   */
-  public static initialize() {
-    const setup = new VeeValidateSetup()
-    setup.registerValidationRules()
-  }
+    /**
+     * Initialize Vee Validate custom settings
+     * @static
+     */
+    public static initialize() {
+        const setup = new VeeValidateSetup();
+        setup.registerValidationRules();
+    }
 
-  private registerValidationRules() {
-    StandardValidationRules.register()
-  }
+    private registerValidationRules() {
+        StandardValidationRules.register();
+    }
 }

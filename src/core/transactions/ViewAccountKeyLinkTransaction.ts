@@ -15,21 +15,21 @@
  * limitations under the License.
  */
 // external dependencies
-import { AccountKeyLinkTransaction } from 'symbol-sdk'
+import { AccountKeyLinkTransaction } from 'symbol-sdk';
 
 // internal dependencies
-import { TransactionView } from './TransactionView'
-import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
+import { TransactionView } from './TransactionView';
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
 
 // eslint-disable-next-line max-len
 export class ViewAccountKeyLinkTransaction extends TransactionView<AccountKeyLinkTransaction> {
-  /**
-   * Displayed items
-   */
-  protected resolveDetailItems(): TransactionDetailItem[] {
-    return [
-      { key: 'remotePublicKey', value: this.transaction.linkedPublicKey },
-      { key: 'linkAction', value: this.transaction.linkAction },
-    ]
-  }
+    /**
+     * Displayed items
+     */
+    protected resolveDetailItems(): TransactionDetailItem[] {
+        return [
+            { key: 'remotePublicKey', value: this.transaction.linkedPublicKey },
+            { key: 'linkAction', value: this.transaction.linkAction },
+        ];
+    }
 }

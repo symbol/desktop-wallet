@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 // @ts-ignore
-import FormLabel from '@/components/FormLabel/FormLabel'
+import FormLabel from '@/components/FormLabel/FormLabel';
 
 describe('FormLabel', () => {
-  test('default slot should be load', () => {
-    const defaultSlot = '<div>this is a test slot</div>'
-    const wrapper = shallowMount(FormLabel, {
-      slots: {
-        default: defaultSlot,
-      },
-    })
-    expect(wrapper.vm.$el.textContent).toMatch('this is a test slot')
-    wrapper.destroy()
-  })
-})
+    test('default slot should be load', () => {
+        const defaultSlot = '<div>this is a test slot</div>';
+        const wrapper = shallowMount(FormLabel, {
+            slots: {
+                default: defaultSlot,
+            },
+        });
+        expect(wrapper.vm.$el.textContent).toMatch('this is a test slot');
+        wrapper.destroy();
+    });
+});

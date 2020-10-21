@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator';
 
 // configuration
-import { appConfig } from '@/config'
+import { appConfig } from '@/config';
 
 // import logo as an image
 // @ts-ignore
-import logo from '@/views/resources/symbol_from_nem.png'
+import logo from '@/views/resources/symbol_from_nem.png';
 
 @Component
 export class AppLogoTs extends Vue {
-  /**
-   * Logo image
-   * @var {any}
-   */
-  public readonly logo = logo
+    /**
+     * Logo image
+     * @var {any}
+     */
+    public readonly logo = logo;
 
-  /**
-   * Title of the app
-   * @var {string}
-   */
-  public readonly appTitle = appConfig.title
+    /**
+     * Title of the app
+     * @var {string}
+     */
+    public readonly appTitle = appConfig.title;
 }

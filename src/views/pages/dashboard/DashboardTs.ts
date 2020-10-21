@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,41 +14,41 @@
  *
  */
 // external dependencies
-import { Component, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // child components
 // @ts-ignore
-import ProfileBalancesPanel from '@/components/ProfileBalancesPanel/ProfileBalancesPanel.vue'
+import ProfileBalancesPanel from '@/components/ProfileBalancesPanel/ProfileBalancesPanel.vue';
 // @ts-ignore
-import NetworkStatisticsPanel from '@/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue'
+import NetworkStatisticsPanel from '@/components/NetworkStatisticsPanel/NetworkStatisticsPanel.vue';
 // @ts-ignore
-import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue'
+import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue';
 // @ts-ignore
-import ModalTermsAndConditions from '@/views/modals/ModalTermsAndConditions/ModalTermsAndConditions.vue'
-import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import ModalTermsAndConditions from '@/views/modals/ModalTermsAndConditions/ModalTermsAndConditions.vue';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 @Component({
-  components: {
-    ProfileBalancesPanel,
-    NetworkStatisticsPanel,
-    NavigationTabs,
-    ModalTermsAndConditions,
-  },
-  computed: {
-    ...mapGetters({
-      currentAccount: 'account/currentAccount',
-      currentProfile: 'profile/currentProfile',
-    }),
-  },
+    components: {
+        ProfileBalancesPanel,
+        NetworkStatisticsPanel,
+        NavigationTabs,
+        ModalTermsAndConditions,
+    },
+    computed: {
+        ...mapGetters({
+            currentAccount: 'account/currentAccount',
+            currentProfile: 'profile/currentProfile',
+        }),
+    },
 })
 export class DashboardTs extends Vue {
-  /**
-   * Terms and Conditions status
-   * @see {currentProfile}
-   * @var {PorfileModel}
-   */
-  public currentProfile: ProfileModel
-  /**
-   * Argument passed to the Router Tab List
-   */
-  parentRouteName = 'dashboard'
+    /**
+     * Terms and Conditions status
+     * @see {currentProfile}
+     * @var {PorfileModel}
+     */
+    public currentProfile: ProfileModel;
+    /**
+     * Argument passed to the Router Tab List
+     */
+    parentRouteName = 'dashboard';
 }

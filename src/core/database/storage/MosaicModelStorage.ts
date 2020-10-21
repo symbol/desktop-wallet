@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
  *
  */
 
-import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
-import { MosaicModel } from '@/core/database/entities/MosaicModel'
+import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage';
+import { MosaicModel } from '@/core/database/entities/MosaicModel';
 
 export class MosaicModelStorage extends VersionedNetworkBasedObjectStorage<MosaicModel[]> {
-  /**
-   * Singleton instance as we want to run the migration just once
-   */
-  public static INSTANCE = new MosaicModelStorage()
+    /**
+     * Singleton instance as we want to run the migration just once
+     */
+    public static INSTANCE = new MosaicModelStorage();
 
-  private constructor() {
-    super('mosaicCache')
-  }
+    private constructor() {
+        super('mosaicCache');
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,21 @@
  *
  */
 // internal dependencies
-import { Validator, staticImplements } from './Validator'
+import { Validator, staticImplements } from './Validator';
 
 @staticImplements<Validator>()
 export class DerivationPathValidator {
-  /**
-   * Executes the validator
-   * @static
-   * @param {string} value
-   * @returns {({valid: boolean|string})}
-   */
-  public static validate(value: any): boolean {
-    if (value.match(/^m\/44'\/4343'\/[0-9]+'\/[0-9]+'\/[0-9]+'/)) {
-      return value
-    }
+    /**
+     * Executes the validator
+     * @static
+     * @param {string} value
+     * @returns {({valid: boolean|string})}
+     */
+    public static validate(value: any): boolean {
+        if (value.match(/^m\/44'\/4343'\/[0-9]+'\/[0-9]+'\/[0-9]+'/)) {
+            return value;
+        }
 
-    return false
-  }
+        return false;
+    }
 }

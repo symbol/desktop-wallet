@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  *
  */
 
-import { NamespaceInfo } from 'symbol-sdk'
+import { NamespaceInfo } from 'symbol-sdk';
 
 /**
  * Stored POJO that holds namespace information.
@@ -26,31 +26,31 @@ import { NamespaceInfo } from 'symbol-sdk'
  *
  */
 export class NamespaceModel {
-  public readonly namespaceIdHex: string
-  public readonly name: string
-  public readonly isRoot: boolean
-  public readonly ownerAddressRawPlain: string | undefined
-  public readonly aliasType: number
-  public readonly aliasTargetAddressRawPlain: string | undefined
-  public readonly aliasTargetMosaicIdHex: string | undefined
-  public readonly parentNamespaceIdHex: string | undefined
-  public readonly startHeight: number
-  public readonly endHeight: number
-  public readonly depth: number
+    public readonly namespaceIdHex: string;
+    public readonly name: string;
+    public readonly isRoot: boolean;
+    public readonly ownerAddressRawPlain: string | undefined;
+    public readonly aliasType: number;
+    public readonly aliasTargetAddressRawPlain: string | undefined;
+    public readonly aliasTargetMosaicIdHex: string | undefined;
+    public readonly parentNamespaceIdHex: string | undefined;
+    public readonly startHeight: number;
+    public readonly endHeight: number;
+    public readonly depth: number;
 
-  constructor(namespaceInfo: NamespaceInfo, name: string) {
-    this.namespaceIdHex = namespaceInfo.id.toHex()
-    this.name = name
-    this.isRoot = namespaceInfo.isRoot()
-    this.aliasType = namespaceInfo.alias.type
-    this.ownerAddressRawPlain = namespaceInfo.ownerAddress.plain()
-    this.aliasTargetAddressRawPlain =
-      (namespaceInfo.alias && namespaceInfo.alias.address && namespaceInfo.alias.address.plain()) || undefined
-    this.aliasTargetMosaicIdHex =
-      (namespaceInfo.alias && namespaceInfo.alias.mosaicId && namespaceInfo.alias.mosaicId.toHex()) || undefined
-    this.parentNamespaceIdHex = this.isRoot ? undefined : namespaceInfo.parentNamespaceId().toHex()
-    this.startHeight = namespaceInfo.startHeight.compact()
-    this.endHeight = namespaceInfo.endHeight.compact()
-    this.depth = namespaceInfo.depth
-  }
+    constructor(namespaceInfo: NamespaceInfo, name: string) {
+        this.namespaceIdHex = namespaceInfo.id.toHex();
+        this.name = name;
+        this.isRoot = namespaceInfo.isRoot();
+        this.aliasType = namespaceInfo.alias.type;
+        this.ownerAddressRawPlain = namespaceInfo.ownerAddress.plain();
+        this.aliasTargetAddressRawPlain =
+            (namespaceInfo.alias && namespaceInfo.alias.address && namespaceInfo.alias.address.plain()) || undefined;
+        this.aliasTargetMosaicIdHex =
+            (namespaceInfo.alias && namespaceInfo.alias.mosaicId && namespaceInfo.alias.mosaicId.toHex()) || undefined;
+        this.parentNamespaceIdHex = this.isRoot ? undefined : namespaceInfo.parentNamespaceId().toHex();
+        this.startHeight = namespaceInfo.startHeight.compact();
+        this.endHeight = namespaceInfo.endHeight.compact();
+        this.depth = namespaceInfo.depth;
+    }
 }

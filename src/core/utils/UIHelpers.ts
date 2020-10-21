@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,28 @@
  */
 
 export class UIHelpers {
-  /**
-   * Helper method to copy text to clipboard
-   * @param {string} text
-   * @return {boolean}
-   */
-  public static copyToClipboard(text: string): boolean {
-    try {
-      // create ghost element
-      const input = document.createElement('input')
-      input.setAttribute('readonly', 'readonly')
-      input.setAttribute('value', text)
-      document.body.appendChild(input)
+    /**
+     * Helper method to copy text to clipboard
+     * @param {string} text
+     * @return {boolean}
+     */
+    public static copyToClipboard(text: string): boolean {
+        try {
+            // create ghost element
+            const input = document.createElement('input');
+            input.setAttribute('readonly', 'readonly');
+            input.setAttribute('value', text);
+            document.body.appendChild(input);
 
-      // use DOM commands
-      input.select()
-      document.execCommand('copy')
+            // use DOM commands
+            input.select();
+            document.execCommand('copy');
 
-      // flush
-      document.body.removeChild(input)
-      return true
-    } catch (e) {
-      return false
+            // flush
+            document.body.removeChild(input);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
-  }
 }

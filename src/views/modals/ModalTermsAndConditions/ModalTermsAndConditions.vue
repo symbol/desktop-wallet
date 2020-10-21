@@ -14,7 +14,7 @@
           <h3>{{ $t('terms_and_conditions') }}</h3>
         </div>
         <div class="centered-content link bottom-space" @click="$router.push({ name: 'privacy' })">
-          <h3 target="_blank">{{ $t('privacy_policy') }}</h3>
+          <h3>{{ $t('privacy_policy') }}</h3>
         </div>
         <div class="centered-content bottom-space">
           <Checkbox v-model="marked">

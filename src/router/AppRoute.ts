@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  *
  */
 // external dependencies
-import { RouteConfig } from 'vue-router'
+import { RouteConfig } from 'vue-router';
 
 // internal dependencies
-import { RouteMeta } from './RouteMeta'
+import { RouteMeta } from './RouteMeta';
 
 /**
  * Vue Router route extension
@@ -25,7 +25,7 @@ import { RouteMeta } from './RouteMeta'
  * @extends {RouteConfig}
  */
 export interface AppRoute extends RouteConfig {
-  name: string
-  meta: RouteMeta
-  children?: AppRoute[]
+    name: string;
+    meta: RouteMeta;
+    children?: AppRoute[];
 }

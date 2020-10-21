@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,23 @@
  */
 
 // external dependencies
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
 // internal dependencies
-import { TabEntry } from '@/router/TabEntry'
+import { TabEntry } from '@/router/TabEntry';
 
 @Component
 export class NavigationTabsTs extends Vue {
-  /**
-   * Parent route name
-   * @var {string}
-   */
-  @Prop({ default: '' }) parentRouteName: string
+    /**
+     * Parent route name
+     * @var {string}
+     */
+    @Prop({ default: '' }) parentRouteName: string;
 
-  public get tabEntries(): TabEntry[] {
-    // @ts-ignore
-    return this.$router.getTabEntries(this.parentRouteName)
-  }
+    public get tabEntries(): TabEntry[] {
+        // @ts-ignore
+        return this.$router.getTabEntries(this.parentRouteName);
+    }
 
-  @Prop({ default: 'horizontal' }) direction: 'horizontal' | 'vertical'
+    @Prop({ default: 'horizontal' }) direction: 'horizontal' | 'vertical';
 }

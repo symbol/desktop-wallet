@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { VotingKeyLinkTransaction, Address, LinkAction } from 'symbol-sdk'
-import { TransactionView } from './TransactionView'
-import i18n from '@/language'
-import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
+import { VotingKeyLinkTransaction, Address, LinkAction } from 'symbol-sdk';
+import { TransactionView } from './TransactionView';
+import i18n from '@/language';
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
 
 export class ViewVotingKeyLinkTransaction extends TransactionView<VotingKeyLinkTransaction> {
-  /**
-   * Displayed items
-   */
-  protected resolveDetailItems(): TransactionDetailItem[] {
-    return [
-      {
-        key: 'linked_account_address',
-        value: Address.createFromPublicKey(this.transaction.linkedPublicKey, this.transaction.networkType).plain(),
-      },
-      { key: 'link_action', value: this.transaction.linkAction == LinkAction.Link ? i18n.t('link') : i18n.t('unlink') },
-      { key: 'linked_public_key', value: this.transaction.linkedPublicKey },
-      { key: 'start_finalization_epoch', value: this.transaction.startEpoch },
-      { key: 'end_finalization_epoch', value: this.transaction.endEpoch },
-    ]
-  }
+    /**
+     * Displayed items
+     */
+    protected resolveDetailItems(): TransactionDetailItem[] {
+        return [
+            {
+                key: 'linked_account_address',
+                value: Address.createFromPublicKey(this.transaction.linkedPublicKey, this.transaction.networkType).plain(),
+            },
+            { key: 'link_action', value: this.transaction.linkAction == LinkAction.Link ? i18n.t('link') : i18n.t('unlink') },
+            { key: 'linked_public_key', value: this.transaction.linkedPublicKey },
+            { key: 'start_finalization_epoch', value: this.transaction.startEpoch },
+            { key: 'end_finalization_epoch', value: this.transaction.endEpoch },
+        ];
+    }
 }

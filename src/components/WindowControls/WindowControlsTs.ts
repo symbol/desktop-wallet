@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator';
 
 // internal dependencies
-import { Electron } from '@/core/utils/Electron'
+import { Electron } from '@/core/utils/Electron';
 
 @Component
 export class WindowControlsTs extends Vue {
-  /**
-   * Electron helpers
-   * @var {Electron}
-   */
-  public electronHelpers = Electron
+    /**
+     * Electron helpers
+     * @var {Electron}
+     */
+    public electronHelpers = Electron;
 }
