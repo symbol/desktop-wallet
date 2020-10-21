@@ -8,7 +8,8 @@
                         <span class="article-date">{{ a.pubDate | moment('ddd, MMMM Do YYYY') }}</span>
                         <span class="article-from">{{ $t('article_by', { creator: getPublisher(a) }) }}</span>
                         <span class="article-link">
-                            <a :href="a.link" target="_blank">{{ $t('news_read_more') }}</a>&nbsp;
+                            <a :href="a.link" target="_blank">{{ $t('news_read_more') }}</a
+                            >&nbsp;
                             <Icon type="md-open" size="15" class="link-icon" />
                         </span>
                     </div>
