@@ -13,52 +13,52 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { ProfileModel } from '@/core/database/entities/ProfileModel'
-import { ProfileService } from '@/services/ProfileService'
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { ProfileService } from '@/services/ProfileService';
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 
 @Component({
-  computed: {
-    ...mapGetters({
-      currentProfile: 'profile/currentProfile',
-    }),
-  },
+    computed: {
+        ...mapGetters({
+            currentProfile: 'profile/currentProfile',
+        }),
+    },
 })
 export class ModalTermsAndConditionsTs extends Vue {
-  @Prop({ default: false }) visible: boolean
+    @Prop({ default: false }) visible: boolean;
 
-  /**
-   * Controls submit button for terms and conditions
-   * @type {boolean}
-   */
-  private marked: boolean = false
-  /**
-   * Current Profile
-   * @type {ProfileModel}
-   */
-  private currentProfile: ProfileModel
-  /**
-   * Internal visibility state
-   * @type {boolean}
-   */
-  protected get show(): boolean {
-    return this.visible
-  }
-
-  /**
-   * Emits close event
-   */
-  protected set show(val) {
-    if (!val) {
-      this.$emit('close')
+    /**
+     * Controls submit button for terms and conditions
+     * @type {boolean}
+     */
+    private marked: boolean = false;
+    /**
+     * Current Profile
+     * @type {ProfileModel}
+     */
+    private currentProfile: ProfileModel;
+    /**
+     * Internal visibility state
+     * @type {boolean}
+     */
+    protected get show(): boolean {
+        return this.visible;
     }
-  }
 
-  /**
-   * Logout user and redirect to create profile page
-   */
-  private async approveTermsAndConditions() {
-    new ProfileService().updateProfileTermsAndConditionsStatus(this.currentProfile, true)
-  }
+    /**
+     * Emits close event
+     */
+    protected set show(val) {
+        if (!val) {
+            this.$emit('close');
+        }
+    }
+
+    /**
+     * Logout user and redirect to create profile page
+     */
+    private async approveTermsAndConditions() {
+        new ProfileService().updateProfileTermsAndConditionsStatus(this.currentProfile, true);
+    }
 }
