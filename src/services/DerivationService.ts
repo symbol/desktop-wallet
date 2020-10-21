@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,165 +14,167 @@
  *
  */
 // internal dependencies
-import { DerivationPathValidator } from '@/core/validation/validators'
-import { AccountService } from '@/services/AccountService'
+import { DerivationPathValidator } from '@/core/validation/validators';
+import { AccountService } from '@/services/AccountService';
 
 export enum DerivationPathLevels {
-  Purpose = 1,
-  CoinType = 2,
-  Profile = 3,
-  Remote = 4, // BIP44=change
-  Address = 5,
+    Purpose = 1,
+    CoinType = 2,
+    Profile = 3,
+    Remote = 4, // BIP44=change
+    Address = 5,
 }
 
 export class DerivationService {
-  /**
-   * Validate derivation path
-   * @param {string} path
-   * @return {boolean}
-   */
-  public isValidPath(path: string): boolean {
-    return DerivationPathValidator.validate(path)
-  }
-
-  /**
-   * Increment a derivation path level
-   * @param {string} path
-   * @param {DerivationPathLevel} which
-   * @return {string}
-   */
-  public incrementPathLevel(
-    path: string,
-    which: DerivationPathLevels = DerivationPathLevels.Profile,
-    step: number = 1,
-  ): string {
-    // make sure derivation path is valid
-    this.assertValidPath(path)
-
-    // purpose and coin type cannot be changed
-    this.assertCanModifyLevel(which)
-
-    // read levels and increment
-    const index = which as number
-    const parts = path.split('/')
-
-    // calculate next index (increment)
-    const next = (step <= 1 ? 1 : step) + parseInt(parts[index].replace(/'/, ''))
-
-    // modify affected level only
-    return parts
-      .map((level, idx) => {
-        if (idx !== index) {
-          return level
-        }
-        return `${next}'`
-      })
-      .join('/')
-  }
-
-  /**
-   * Returns the first missing consecutive account path in a path array
-   * @param {string[]} paths
-   * @returns {string}
-   */
-  public getNextAccountPath(paths: string[]): string {
-    const defaultPath = AccountService.DEFAULT_ACCOUNT_PATH
-
-    // return the default path if no path in the array
-    if (!paths.length) return defaultPath
-
-    // return the default path if it is not in the array
-    if (paths.indexOf(defaultPath) === -1) return defaultPath
-
-    // get the sorted path indexes for the given derivation path level
-    const pathsSortedByIndexes = paths
-      .map((path) => ({
-        path,
-        pathIndex: parseInt(path.split('/')[DerivationPathLevels.Profile], 10),
-      }))
-      .sort((a, b) => a.pathIndex - b.pathIndex)
-
-    // get the first non consecutive path index
-    const firstCandidate = pathsSortedByIndexes
-      // fill an array with indexes with no consecutive next index, and the last index
-      .filter(({ pathIndex }, i, self) => {
-        // the last path is always a candidate
-        if (i === self.length - 1) return true
-
-        // next path is not consecutive, add it to candidates
-        if (self[i + 1].pathIndex !== pathIndex + 1) return true
-
-        // next path is consecutive, skip
-        return false
-      })
-      .find((path) => path) // find the first candidate
-
-    // return path incremented from the first candidate
-    return this.incrementPathLevel(firstCandidate.path, DerivationPathLevels.Profile)
-  }
-
-  /**
-   * Decrement a derivation path level
-   * @param {string} path
-   * @param {DerivationPathLevel} which
-   * @return {string}
-   */
-  public decrementPathLevel(
-    path: string,
-    which: DerivationPathLevels = DerivationPathLevels.Profile,
-    step: number = 1,
-  ): string {
-    // make sure derivation path is valid
-    this.assertValidPath(path)
-
-    // purpose and coin type cannot be changed
-    this.assertCanModifyLevel(which)
-
-    // read levels and increment
-    const index = which as number
-    const parts = path.split('/')
-
-    // calculate next index (decrement)
-    let next = parseInt(parts[index].replace(/'/, '')) - (step <= 1 ? 1 : step)
-    if (next < 0) next = 0
-
-    // modify affected level only
-    return parts
-      .map((level, idx) => {
-        if (idx !== index) {
-          return level
-        }
-        return `${next}'`
-      })
-      .join('/')
-  }
-
-  /**
-   * Assert whether \a path is a valid derivation path
-   * @param {string} path
-   * @return {void}
-   * @throws {Error} On \a path with invalid derivation path
-   */
-  public assertValidPath(path: string): void {
-    if (!this.isValidPath(path)) {
-      const errorMessage = 'Invalid derivation path: ' + path
-      console.error(errorMessage)
-      throw new Error(errorMessage)
+    /**
+     * Validate derivation path
+     * @param {string} path
+     * @return {boolean}
+     */
+    public isValidPath(path: string): boolean {
+        return DerivationPathValidator.validate(path);
     }
-  }
 
-  /**
-   * Assert whether derivation path level can be modified
-   * @param {DerivationPathLevels} which
-   * @return {void}
-   * @throws {Error} On \a which with protected path level value
-   */
-  public assertCanModifyLevel(which: DerivationPathLevels): void {
-    const protect = [DerivationPathLevels.Purpose, DerivationPathLevels.CoinType]
-    if (undefined !== protect.find((type) => which === type)) {
-      const errorMessage = "Cannot modify a derivation path's purpose and coin type levels."
-      console.error(errorMessage)
-      throw new Error(errorMessage)
+    /**
+     * Increment a derivation path level
+     * @param {string} path
+     * @param {DerivationPathLevel} which
+     * @return {string}
+     */
+    public incrementPathLevel(path: string, which: DerivationPathLevels = DerivationPathLevels.Profile, step: number = 1): string {
+        // make sure derivation path is valid
+        this.assertValidPath(path);
+
+        // purpose and coin type cannot be changed
+        this.assertCanModifyLevel(which);
+
+        // read levels and increment
+        const index = which as number;
+        const parts = path.split('/');
+
+        // calculate next index (increment)
+        const next = (step <= 1 ? 1 : step) + parseInt(parts[index].replace(/'/, ''));
+
+        // modify affected level only
+        return parts
+            .map((level, idx) => {
+                if (idx !== index) {
+                    return level;
+                }
+                return `${next}'`;
+            })
+            .join('/');
     }
-  }
+
+    /**
+     * Returns the first missing consecutive account path in a path array
+     * @param {string[]} paths
+     * @returns {string}
+     */
+    public getNextAccountPath(paths: string[]): string {
+        const defaultPath = AccountService.DEFAULT_ACCOUNT_PATH;
+
+        // return the default path if no path in the array
+        if (!paths.length) {
+            return defaultPath;
+        }
+
+        // return the default path if it is not in the array
+        if (paths.indexOf(defaultPath) === -1) {
+            return defaultPath;
+        }
+
+        // get the sorted path indexes for the given derivation path level
+        const pathsSortedByIndexes = paths
+            .map((path) => ({
+                path,
+                pathIndex: parseInt(path.split('/')[DerivationPathLevels.Profile], 10),
+            }))
+            .sort((a, b) => a.pathIndex - b.pathIndex);
+
+        // get the first non consecutive path index
+        const firstCandidate = pathsSortedByIndexes
+            // fill an array with indexes with no consecutive next index, and the last index
+            .filter(({ pathIndex }, i, self) => {
+                // the last path is always a candidate
+                if (i === self.length - 1) {
+                    return true;
+                }
+
+                // next path is not consecutive, add it to candidates
+                if (self[i + 1].pathIndex !== pathIndex + 1) {
+                    return true;
+                }
+
+                // next path is consecutive, skip
+                return false;
+            })
+            .find((path) => path); // find the first candidate
+
+        // return path incremented from the first candidate
+        return this.incrementPathLevel(firstCandidate.path, DerivationPathLevels.Profile);
+    }
+
+    /**
+     * Decrement a derivation path level
+     * @param {string} path
+     * @param {DerivationPathLevel} which
+     * @return {string}
+     */
+    public decrementPathLevel(path: string, which: DerivationPathLevels = DerivationPathLevels.Profile, step: number = 1): string {
+        // make sure derivation path is valid
+        this.assertValidPath(path);
+
+        // purpose and coin type cannot be changed
+        this.assertCanModifyLevel(which);
+
+        // read levels and increment
+        const index = which as number;
+        const parts = path.split('/');
+
+        // calculate next index (decrement)
+        let next = parseInt(parts[index].replace(/'/, '')) - (step <= 1 ? 1 : step);
+        if (next < 0) {
+            next = 0;
+        }
+
+        // modify affected level only
+        return parts
+            .map((level, idx) => {
+                if (idx !== index) {
+                    return level;
+                }
+                return `${next}'`;
+            })
+            .join('/');
+    }
+
+    /**
+     * Assert whether \a path is a valid derivation path
+     * @param {string} path
+     * @return {void}
+     * @throws {Error} On \a path with invalid derivation path
+     */
+    public assertValidPath(path: string): void {
+        if (!this.isValidPath(path)) {
+            const errorMessage = 'Invalid derivation path: ' + path;
+            console.error(errorMessage);
+            throw new Error(errorMessage);
+        }
+    }
+
+    /**
+     * Assert whether derivation path level can be modified
+     * @param {DerivationPathLevels} which
+     * @return {void}
+     * @throws {Error} On \a which with protected path level value
+     */
+    public assertCanModifyLevel(which: DerivationPathLevels): void {
+        const protect = [DerivationPathLevels.Purpose, DerivationPathLevels.CoinType];
+        if (undefined !== protect.find((type) => which === type)) {
+            const errorMessage = "Cannot modify a derivation path's purpose and coin type levels.";
+            console.error(errorMessage);
+            throw new Error(errorMessage);
+        }
+    }
 }

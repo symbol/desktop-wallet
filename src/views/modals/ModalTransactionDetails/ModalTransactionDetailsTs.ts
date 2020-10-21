@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,46 +13,46 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import { Transaction } from 'symbol-sdk'
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Transaction } from 'symbol-sdk';
 
 // child components
 // @ts-ignore
-import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue'
+import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
 
 @Component({
-  components: {
-    TransactionDetails,
-  },
+    components: {
+        TransactionDetails,
+    },
 })
 export class ModalTransactionDetailsTs extends Vue {
-  @Prop({
-    default: false,
-  })
-  visible: boolean
+    @Prop({
+        default: false,
+    })
+    visible: boolean;
 
-  @Prop({
-    default: null,
-  })
-  transaction: Transaction
+    @Prop({
+        default: null,
+    })
+    transaction: Transaction;
 
-  /// region computed properties
+    /// region computed properties
 
-  /**
-   * Visibility state
-   * @type {boolean}
-   */
-  public get show(): boolean {
-    return this.visible
-  }
-
-  /**
-   * Emits close event
-   */
-  public set show(val) {
-    if (!val) {
-      this.$emit('close')
+    /**
+     * Visibility state
+     * @type {boolean}
+     */
+    public get show(): boolean {
+        return this.visible;
     }
-  }
-  /// end-region computed properties
+
+    /**
+     * Emits close event
+     */
+    public set show(val) {
+        if (!val) {
+            this.$emit('close');
+        }
+    }
+    /// end-region computed properties
 }

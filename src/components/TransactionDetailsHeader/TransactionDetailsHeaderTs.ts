@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator';
 // @ts-ignore
-import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue'
-import { TransactionView } from '@/core/transactions/TransactionView'
-import { Transaction } from 'symbol-sdk'
+import TransactionDetailRow from '@/components/TransactionDetails/TransactionDetailRow/TransactionDetailRow.vue';
+import { TransactionView } from '@/core/transactions/TransactionView';
+import { Transaction } from 'symbol-sdk';
 
 @Component({
-  components: {
-    TransactionDetailRow,
-  },
+    components: {
+        TransactionDetailRow,
+    },
 })
 export class TransactionDetailsHeaderTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  view: TransactionView<Transaction>
+    @Prop({
+        default: null,
+    })
+    view: TransactionView<Transaction>;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,31 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { MosaicSupplyChangeAction, MosaicSupplyChangeTransaction } from 'symbol-sdk'
+import { MosaicSupplyChangeAction, MosaicSupplyChangeTransaction } from 'symbol-sdk';
 // internal dependencies
-import { TransactionView } from './TransactionView'
-import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
-import i18n from '@/language'
+import { TransactionView } from './TransactionView';
+import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
+import i18n from '@/language';
 
 export class ViewMosaicSupplyChangeTransaction extends TransactionView<MosaicSupplyChangeTransaction> {
-  /**
-   * Displayed items
-   */
-  protected resolveDetailItems(): TransactionDetailItem[] {
-    const mosaicId = this.transaction.mosaicId
-    const action = this.transaction.action
-    const delta = this.transaction.delta
+    /**
+     * Displayed items
+     */
+    protected resolveDetailItems(): TransactionDetailItem[] {
+        const mosaicId = this.transaction.mosaicId;
+        const action = this.transaction.action;
+        const delta = this.transaction.delta;
 
-    return [
-      { key: 'mosaic_id', value: mosaicId.toHex() },
-      {
-        key: 'direction',
-        value: `${i18n.t(action === MosaicSupplyChangeAction.Increase ? 'Increase' : 'Decrease')}`,
-      },
-      {
-        key: 'delta',
-        value: delta.compact().toLocaleString(),
-      },
-    ]
-  }
+        return [
+            { key: 'mosaic_id', value: mosaicId.toHex() },
+            {
+                key: 'direction',
+                value: `${i18n.t(action === MosaicSupplyChangeAction.Increase ? 'Increase' : 'Decrease')}`,
+            },
+            {
+                key: 'delta',
+                value: delta.compact().toLocaleString(),
+            },
+        ];
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import TrezorConnect from 'trezor-connect'
+import TrezorConnect from 'trezor-connect';
 
 // TODO: figure out who wants to be the first point of contact for trezor
 // https://github.com/trezor/connect/blob/develop/docs/index.md#trezor-connect-manifest
 TrezorConnect.manifest({
-  email: 'chris@crunchycloud.io',
-  appUrl: 'http://localhost:8080',
-})
+    email: 'chris@crunchycloud.io',
+    appUrl: 'http://localhost:8080',
+});
 
-export default TrezorConnect
+export default TrezorConnect;

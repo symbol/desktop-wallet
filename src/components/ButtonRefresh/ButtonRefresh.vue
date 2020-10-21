@@ -1,10 +1,10 @@
 <template>
-  <span>
-    <Icon type="ios-sync" class="button-refresh" @click="$emit('click')" />
-  </span>
+    <span>
+        <Icon type="ios-sync" class="button-refresh" @click="$emit('click')" />
+    </span>
 </template>
 <script lang="ts">
-import { ButtonRefreshTs } from './ButtonRefreshTs'
+import { ButtonRefreshTs } from './ButtonRefreshTs';
 export default class ButtonRefresh extends ButtonRefreshTs {}
 </script>
 <style lang="less" scoped>

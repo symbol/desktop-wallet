@@ -1,37 +1,37 @@
 <template>
-  <AssetListPageWrap>
-    <template v-slot:table-section>
-      <TableDisplay asset-type="namespace" class="table-section">
-        <template v-slot:table-title>
-          <h1 class="section-title">
-            {{ $t('namespace_and_sub_namespace') }}
-          </h1>
+    <AssetListPageWrap>
+        <template v-slot:table-section>
+            <TableDisplay asset-type="namespace" class="table-section">
+                <template v-slot:table-title>
+                    <h1 class="section-title">
+                        {{ $t('namespace_and_sub_namespace') }}
+                    </h1>
+                </template>
+            </TableDisplay>
         </template>
-      </TableDisplay>
-    </template>
-  </AssetListPageWrap>
+    </AssetListPageWrap>
 </template>
 
 <script lang="ts">
 // external dependencies
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator';
 
 // child components
-import AssetListPageWrap from '@/views/pages/assets/AssetListPageWrap/AssetListPageWrap.vue'
-import TableDisplay from '@/components/TableDisplay/TableDisplay.vue'
+import AssetListPageWrap from '@/views/pages/assets/AssetListPageWrap/AssetListPageWrap.vue';
+import TableDisplay from '@/components/TableDisplay/TableDisplay.vue';
 
 @Component({
-  components: {
-    AssetListPageWrap,
-    TableDisplay,
-  },
+    components: {
+        AssetListPageWrap,
+        TableDisplay,
+    },
 })
 export default class NamespaceListPage extends Vue {}
 </script>
 
 <style scoped lang="less">
 .table-section {
-  padding: 0.2rem 0 0 0.2rem;
-  height: 100%;
+    padding: 0.2rem 0 0 0.2rem;
+    height: 100%;
 }
 </style>

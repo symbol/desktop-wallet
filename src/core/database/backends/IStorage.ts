@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,19 @@
  * Generic interface for simple stored objects.
  */
 export interface IStorage<E> {
-  /**
-   * @return the stored value or undefined
-   */
-  get(): E | undefined
+    /**
+     * @return the stored value or undefined
+     */
+    get(): E | undefined;
 
-  /**
-   * Stores the provided value.
-   * @param value to be stored
-   */
-  set(value: E): void
+    /**
+     * Stores the provided value.
+     * @param value to be stored
+     */
+    set(value: E): void;
 
-  /**
-   * Deletes the stored value.
-   */
-  remove(): void
+    /**
+     * Deletes the stored value.
+     */
+    remove(): void;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import draggable from 'vuedraggable'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import draggable from 'vuedraggable';
 
 // @ts-ignore
-import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
-import { Formatters } from '@/core/utils/Formatters'
+import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue';
+import { Formatters } from '@/core/utils/Formatters';
 
 @Component({
-  components: { draggable, ButtonCopyToClipboard },
+    components: { draggable, ButtonCopyToClipboard },
 })
 export class MnemonicDisplayTs extends Vue {
-  @Prop({
-    default: [],
-  })
-  words: string[]
-  public get waitingCopyString(): string {
-    return Formatters.splitArrayByDelimiter(this.words)
-  }
+    @Prop({
+        default: [],
+    })
+    words: string[];
+    public get waitingCopyString(): string {
+        return Formatters.splitArrayByDelimiter(this.words);
+    }
 }
