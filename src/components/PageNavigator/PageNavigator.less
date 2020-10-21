@@ -25,12 +25,12 @@
         left: 0;
         bottom: 0;
         height: 100%;
-        width: 100px;
+        width: 8%;
         background-color: @white;
         display: grid;
         grid-template-columns: 100%;
         grid-template-rows: auto @iconHeight;
-        color: @secondary;
+        color: @black;
 
         .navigator-items-container {
             display: grid;
@@ -76,16 +76,11 @@
         }
 
         .active {
-            background: linear-gradient(120deg, @primary, @secondary);
-            color: @white;
+            background: rgba(77, 0, 186, 0.08);
             opacity: 1;
             cursor: not-allowed;
-            .ivu-icon {
-                color: @white !important;
-            }
-            .navigator-icon {
-                filter: brightness(0) invert(1);
-            }
+            border-left: 0.5em @primary solid;
+            padding-right: 0.5em;
         }
     }
 }

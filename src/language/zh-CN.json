@@ -251,7 +251,7 @@
     "form_label_supply_delta": "改变供应数量",
     "form_label_supply_direction": "改变供应量管理",
     "from_qr_code": "从二维码",
-    "from_to_action": "发起/接受（行为）",
+    "from_to_action": "发起/接受",
     "generate_a_new_profile": "生成一个新账户",
     "generate_entropy_increase_success": "生成熵增成功，页面即将跳转。",
     "generate_mnemonic": "生成助记词",

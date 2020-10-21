@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div class="account-detail-inner-container">
+        <!--<div class="account-detail-inner-container">
             <div class="left-container">
                 <div class="title-row">
                     <span>{{ $t('accounts_subtitle_account_links') }}</span>
@@ -61,7 +61,7 @@
 
                 <AccountLinks :account="currentAccount" />
             </div>
-        </div>
+        </div>-->
     </div>
 </template>
 

@@ -41,6 +41,7 @@ export class MultisigService {
         knownAccounts: AccountModel[],
         currentAccount: AccountModel,
         currentAccountMultisigInfo: MultisigAccountInfo | undefined,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         multisigAccountsInfo: MultisigAccountInfo[] | undefined,
     ): Signer[] {
         if (!currentAccount) {

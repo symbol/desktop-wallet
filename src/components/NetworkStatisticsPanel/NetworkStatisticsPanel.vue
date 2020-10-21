@@ -1,8 +1,8 @@
 <template>
-    <div class="top_network_info radius">
+    <div class="top_network_info">
         <div class="top_account_info">
             <!-- harvesting is conditional -->
-            <div v-if="isHarvestingEnabled" class="xym-outline account-info-tile">
+            <!--<div v-if="isHarvestingEnabled" class="xym-outline account-info-tile">
                 <div class="title">
                     <span class="title_txt">{{ $t('harvesting') }}</span>
                 </div>
@@ -25,32 +25,29 @@
                 <span class="txt_info">
                     {{ countAccounts }}
                 </span>
-            </div>
+            </div>-->
             <!-- end conditional -->
 
-            <div class="xym-outline account-info-tile">
+            <div class="account-info-tile">
                 <div class="title">
                     <span class="title_txt">{{ $t('chain_height') }}</span>
                 </div>
-                <img src="@/views/resources/img/monitor/height.png" />
                 <span class="txt_info">
                     {{ currentHeight }}
                 </span>
             </div>
 
-            <div class="xym-outline account-info-tile">
+            <div class="account-info-tile">
                 <div class="title">
                     <span class="title_txt">{{ $t('transactions') }}</span>
                 </div>
-                <img src="@/views/resources/img/monitor/speed.png" />
                 <span class="txt_info speed"> {{ countTransactions }} </span>
             </div>
 
-            <div class="xym-outline account-info-tile">
+            <div class="account-info-tile">
                 <div class="title">
                     <span class="title_txt">{{ $t('peers_number') }}</span>
                 </div>
-                <img src="@/views/resources/img/monitor/peer.png" />
                 <span class="txt_info">
                     {{ countNodes }}
                 </span>

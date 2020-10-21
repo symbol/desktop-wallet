@@ -251,7 +251,7 @@
     "form_label_supply_delta": "供給変更量",
     "form_label_supply_direction": "供給変更方向",
     "from_qr_code": "QRコードから",
-    "from_to_action": "From/To (アクション)",
+    "from_to_action": "From/To",
     "generate_a_new_profile": "新しいプロファイルを生成する",
     "generate_entropy_increase_success": "ニーモニックパス語群の生成に成功しました。",
     "generate_mnemonic": "ニーモニックの生成",

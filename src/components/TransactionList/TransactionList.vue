@@ -12,7 +12,7 @@
                 />
             </div>
             <div class="transaction-list-pagination-container">
-                <button class="centered-button button-style validation-button left download-transaction" @click="downloadTransaction">
+                <button class="button-style text-button left download-transaction" @click="downloadTransaction">
                     {{ $t('button_download_qr') }}
                 </button>
                 <Pagination

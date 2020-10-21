@@ -109,9 +109,13 @@
     word-spacing: 0px;
 
     .form-label {
-        font-size: @smallFont;
-        font-weight: @bold;
-        color: @secondary;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 25px;
+        align-items: center;
+        text-align: right;
+        color: #5200c6;
     }
 
     .form-label-description {
@@ -168,9 +172,9 @@
     display: grid;
     align-items: center;
     text-align: left;
-    font-size: @smallFont;
-    font-weight: @bolder;
-    color: #44004e;
+    font-size: 1em;
+    font-weight: 400;
+    color: @black;
     height: 100%;
 }
 
@@ -178,8 +182,9 @@
     display: grid;
     align-items: center;
     text-align: left;
-    font-size: @smallFont;
-    color: @grayDark;
+    font-weight: 400;
+    font-size: 1em;
+    color: @black;
     height: 100%;
 }
 
@@ -202,15 +207,15 @@
     white-space: nowrap;
     padding-left: 0.2rem;
     padding-right: 0.24rem;
-    border: 0.01rem solid @border;
     border-radius: 0.04rem;
+    background-color: @grayLightest;
 }
 
 .row-mosaic-attachment-input {
     display: grid;
     width: 100%;
     height: @formFieldHeight !important;
-    grid-template-columns: 55% auto;
+    grid-template-columns: 55% 42.5%;
     grid-template-rows: 100%;
     position: relative;
 }
@@ -229,8 +234,10 @@
     height: @formFieldHeight !important;
     grid-template-columns: auto 0.4rem;
     grid-template-rows: 100%;
-    font-size: @normalFont;
+    font-size: 0.9em;
     padding-left: 0.05rem;
+    font-weight: 400;
+    font-color: @blackLight;
 
     .cosignatory-removed {
         text-decoration: line-through;
@@ -247,6 +254,9 @@
     display: flex;
     justify-content: center;
     width: 97%;
+    color: @blackLight;
+    font-size: 0.9em;
+    font-weight: 400;
 }
 
 .row-cosignatory-modification-display-cosignature {
@@ -289,13 +299,16 @@
     align-items: center;
     width: 100%;
     height: 100%;
-
     .ivu-tooltip {
         width: 100%;
         height: 100%;
+        border-radius: 0.04rem;
+        background: #f2f2f2;
         .ivu-tooltip-rel {
             width: 100%;
             height: 100%;
+            border: none;
+            outline: none;
         }
     }
 }
@@ -310,17 +323,15 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    border: 0.01rem solid @border;
     border-radius: 0.04rem;
 }
 
 .textarea-style {
-    height: 0.8rem;
     outline: none;
     padding: 0.1rem 0.2rem;
     font-size: @smallerFont;
-    border: 0.01rem solid @border;
     border-radius: 0.04rem;
+    background-color: @grayLightest;
 }
 
 .select-style {
@@ -333,13 +344,16 @@
     white-space: nowrap;
     padding-left: 0.08rem;
     padding-right: 0.24rem;
-    border: 0.01rem solid @border;
     border-radius: 0.04rem;
+    background: @grayLightest;
+    border-radius: 3.42857px;
 
     .ivu-select-selection {
         box-shadow: unset;
         padding-top: 0.07rem;
         border: unset;
+        background: @grayLightest;
+        border-radius: 3.4px;
     }
 
     .ivu-select-selected-value {
@@ -349,11 +363,16 @@
         line-height: @formFieldHeight;
     }
 
+    .ivu-select-item-selected {
+        color: @primary;
+    }
+
     .ivu-select-dropdown {
         min-width: unset !important;
         margin: 0.12rem 0;
         left: 0px !important;
         width: 100%;
+        background-color: @grayLightest;
     }
 
     .ivu-select-arrow {
@@ -369,24 +388,43 @@
     }
 }
 
+.ivu-checkbox-inner {
+    background: @grayLightest;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+    border: none;
+}
+
+.ivu-checkbox-checked {
+    background-color: white !important;
+
+    .ivu-checkbox-inner {
+        background: @primary;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+        border-radius: 2px;
+        border: none;
+    }
+}
+
 .auto-complete-style {
     height: @formFieldHeight;
     border-radius: 0.04rem;
     padding: 0 0.2rem;
-    border: 0.01rem solid @border;
     line-height: 1.5;
     color: @selectedValue;
-    background-color: @white;
     background-image: none;
     cursor: text;
     transition: border 0.2s ease-in-out, background 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background: #f2f2f2;
+    border-radius: 3.42857px;
 
     .ivu-input {
         height: 0.4rem;
         font-size: @smallerFont;
         border-bottom: unset;
         padding: 0;
-        background: none;
+        background: #f2f2f2;
+        border-radius: 3.42857px;
     }
 
     .ivu-select-dropdown {
@@ -419,8 +457,14 @@
 }
 
 .validation-button {
-    background-color: @purple;
+    background: @primary;
     color: @white;
+}
+
+.text-button {
+    background: transparent;
+    color: @primary;
+    padding: 0rem 0rem;
 }
 
 .remove-button {
@@ -444,8 +488,8 @@
 }
 
 .back-button {
-    background: @grayLight;
-    color: @purpleDark;
+    background: #c4c4c4;
+    color: #ffffff;
 }
 
 .back-button:hover {
@@ -619,7 +663,7 @@
         width: 100%;
     }
     .form-row-inner-container {
-        grid-template-columns: 20% 80%;
+        grid-template-columns: 28% 55%;
         .form-label-container {
             padding: 0;
         }

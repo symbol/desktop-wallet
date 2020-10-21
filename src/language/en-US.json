@@ -251,7 +251,7 @@
     "form_label_supply_delta": "Supply change amount",
     "form_label_supply_direction": "Supply change direction",
     "from_qr_code": "From QR Code",
-    "from_to_action": "From/To (action)",
+    "from_to_action": "From/To",
     "generate_a_new_profile": "Generate a new profile",
     "generate_entropy_increase_success": "Successfully generated a random mnemonic pass phrase.",
     "generate_mnemonic": "Generate Mnemonic",
