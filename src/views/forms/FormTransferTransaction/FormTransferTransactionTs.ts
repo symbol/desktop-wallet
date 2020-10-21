@@ -64,6 +64,8 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 import { MosaicService } from '@/services/MosaicService';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
+import { TransactionCommand } from '@/services/TransactionCommand';
+import { feesConfig } from '@/config';
 
 export interface MosaicAttachment {
     mosaicHex: string;
@@ -165,6 +167,16 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * Holds the just in time transactions
      */
     public transactions: TransferTransaction[] = [];
+
+    /**
+     * Calculated recommended fee based on the txs size
+     */
+    private calculatedRecommendedFee: number = 0;
+
+    /**
+     * Calculated highest fee based on the txs size
+     */
+    private calculatedHighestFee: number = 0;
 
     /**
      * Reset the form with properties
@@ -456,9 +468,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                 });
 
                 this.$emit('onTransactionsChange', data);
+                this.calculateDynamicFees();
             }
         } else {
             this.transactions = null;
+            this.resetDynamicFees();
         }
     }
 
@@ -487,5 +501,53 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     onImportTransaction(transaction: Transaction) {
         this.importedTransaction = transaction;
         this.resetForm();
+    }
+
+    /**
+     * Calculates the dynamic fees based on the txs size
+     * */
+    private calculateDynamicFees() {
+        this.createTransactionCommandForFee(feesConfig.median)
+            .getTotalMaxFee()
+            .subscribe((val) => (this.calculatedRecommendedFee = val.compact()));
+
+        this.createTransactionCommandForFee(feesConfig.highest)
+            .getTotalMaxFee()
+            .subscribe((val) => (this.calculatedHighestFee = val.compact()));
+    }
+
+    /**
+     * Creates a TransactionCommand object to calculate total fee
+     * for the given dynamic fee (Recommended/Highest)
+     * @param {number} maxFee
+     */
+    private createTransactionCommandForFee(maxFee: number): TransactionCommand {
+        const transactions = this.getTransactions().map((t) => {
+            //@ts-ignore
+            t.maxFee = UInt64.fromUint(maxFee);
+            return t;
+        });
+
+        const mode = this.getTransactionCommandMode(transactions);
+        return new TransactionCommand(
+            mode,
+            this.selectedSigner,
+            this.currentSignerPublicKey,
+            transactions,
+            this.networkMosaic,
+            this.generationHash,
+            this.networkType,
+            this.networkConfiguration,
+            this.transactionFees,
+            this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures,
+        );
+    }
+
+    /**
+     * Resets calculated dynamic fees
+     */
+    private resetDynamicFees() {
+        this.calculatedRecommendedFee = 0;
+        this.calculatedHighestFee = 0;
     }
 }

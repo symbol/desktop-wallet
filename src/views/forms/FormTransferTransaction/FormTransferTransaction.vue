@@ -42,6 +42,8 @@
                     <MaxFeeAndSubmit
                         v-model="formItems.maxFee"
                         :hide-submit="hideSubmit"
+                        :calculated-recommended-fee="calculatedRecommendedFee"
+                        :calculated-highest-fee="calculatedHighestFee"
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
                     />
