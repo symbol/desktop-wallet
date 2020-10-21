@@ -33,10 +33,10 @@
                     </FormRow>
 
                     <div class="form-row form-submit">
-                        <button class="button-style validation-button right-side-button" type="submit" @click="handleSubmit(onSubmit)">
+                        <button class="button-style validation-button right-side-button pl-2 pr-2" type="submit" @click="handleSubmit(onSubmit)">
                             {{ $t('confirm') }}
                         </button>
-                        <button class="button-style validation-button back-button" type="reset" @click.prevent="resetForm">
+                        <button class="button-style validation-button back-button pl-2 pr-2" type="reset" @click.prevent="resetForm">
                             {{ $t('reset') }}
                         </button>
                     </div>
@@ -68,7 +68,8 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
 
 .form-submit {
     display: flex;
-    margin-top: 25px;
+    padding-top: 5%;
+    padding-right: 16%;
     flex-flow: row-reverse;
 
     button[type='reset'] {

@@ -438,13 +438,11 @@
     height: @formFieldHeight !important;
     display: inline-block;
     // width: auto !important;
-    padding: 0.08rem 0.3rem;
-    border: none;
-    outline: none;
     font-size: @normalFont;
-    font-weight: 500;
-    border-radius: 0.04rem;
+    font-weight: bold;
+    border-radius: 0.06rem;
     cursor: pointer;
+    text-transform: uppercase;
 }
 
 .round-button {
@@ -457,14 +455,59 @@
 }
 
 .validation-button {
+    border: 2px solid @primary;
     background: @primary;
     color: @white;
 }
 
+.validation-button:disabled {
+    border: 2px solid @grayLight;
+    background: @grayLight;
+    color: @grayDark;
+}
+
+/*
+.validation-button:hover:enabled {
+    background-color: @purple !important;
+    color: @white !important;
+    opacity: 0.8 !important;
+}
+*/
+
+
+.inverted-button {
+    border: 3px solid @primary;
+    background: @white;
+    color: @primary; 
+}
+
+
+.inverted-button:disabled{
+    border: 2px solid @grayLight;
+    background: @grayLight;
+    color: @grayDark; 
+}
+
+.back-button {
+    background: @grayDark;
+    color: @white;
+    border: 2px solid @grayDark;
+}
+
+/*
+.back-button:hover {
+    box-shadow: 0 0 0.1rem @grayLight;
+    background-color: @grayLight !important;
+    color: #333 !important;
+    opacity: 0.8 !important;
+}
+*/
+
+
 .text-button {
+    border-color: transparent;
     background: transparent;
     color: @primary;
-    padding: 0rem 0rem;
 }
 
 .remove-button {
@@ -473,30 +516,6 @@
 
 .button-add {
     display: grid;
-}
-
-.validation-button:hover:enabled {
-    box-shadow: 0 0 0.1rem @purple;
-    background-color: @purple !important;
-    color: @white !important;
-    opacity: 0.8 !important;
-}
-
-.validation-button:disabled {
-    background: @grayLight;
-    color: @grayDark;
-}
-
-.back-button {
-    background: #c4c4c4;
-    color: #ffffff;
-}
-
-.back-button:hover {
-    box-shadow: 0 0 0.1rem @grayLight;
-    background-color: @grayLight !important;
-    color: #333 !important;
-    opacity: 0.8 !important;
 }
 
 .right-side-button {

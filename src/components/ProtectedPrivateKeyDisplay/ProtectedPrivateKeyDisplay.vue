@@ -10,9 +10,8 @@
         </div>
         <div v-else>
             <div class="value">
-                ********
-                <button type="button" class="button-style validation-button right-side-button eye-button" @click="onClickDisplay">
-                    <Icon type="md-eye" />
+                <button type="button" class="button-style inverted-button pl-2 pr-2" @click="onClickDisplay">
+                    SHOW
                 </button>
             </div>
         </div>
