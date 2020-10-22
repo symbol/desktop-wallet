@@ -74,6 +74,7 @@ import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { TransactionCommand } from '@/services/TransactionCommand';
 import { feesConfig } from '@/config';
 import { AccountModel } from '@/core/database/entities/AccountModel';
+import { NotificationType } from '@/core/utils/NotificationType';
 
 export interface MosaicAttachment {
     mosaicHex: string;
@@ -479,12 +480,16 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     onChangeRecipient() {
         // filter tags
         this.formItems.recipientRaw = FilterHelpers.stripFilter(this.formItems.recipientRaw);
-        this.$store.dispatch('account/GET_RECIPIENT', Address.createFromRawAddress(this.formItems.recipientRaw)).then(() => {
-            if (!this.currentRecipient?.publicKey) {
-                this.formItems.encryptMessage = false;
-            }
-        });
-
+        if (Address.isValidRawAddress(this.formItems.recipientRaw)) {
+            this.$store.dispatch('account/GET_RECIPIENT', Address.createFromRawAddress(this.formItems.recipientRaw)).then(() => {
+                if (!this.currentRecipient?.publicKey || /^0*$/.test(this.currentRecipient.publicKey)) {
+                    this.resetEncryptedMessage();
+                }
+            });
+        } else {
+            this.$store.dispatch('account/GET_RECIPIENT', null);
+            this.resetEncryptedMessage();
+        }
         this.triggerChange();
     }
 
@@ -498,7 +503,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
 
     triggerChange() {
-        if (this.formItems.recipientRaw && this.formItems.recipientRaw !== '') {
+        if (Address.isValidRawAddress(this.formItems.recipientRaw)) {
             this.transactions = this.getTransactions();
             // avoid error
             if (this.transactions) {
@@ -516,6 +521,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         } else {
             this.transactions = null;
             this.resetDynamicFees();
+            this.$store.dispatch('account/GET_RECIPIENT', null);
+            this.resetEncryptedMessage();
         }
     }
 
@@ -546,17 +553,25 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.resetForm();
     }
 
+    /**
+     * Encrypt message checkbox click
+     */
     onEncryptionChange() {
         if (this.formItems.encryptMessage) {
-            if (this.currentRecipient?.publicKey) {
-                this.hasAccountUnlockModal = true;
-            } else {
+            if (!this.currentRecipient?.publicKey) {
                 this.$store
-                    .dispatch('notification/ADD_ERROR', 'PublicKey not available')
+                    .dispatch('notification/ADD_ERROR', this.$t(NotificationType.RECIPIENT_PUBLIC_KEY_INVALID_ERROR))
                     .then(() => (this.formItems.encryptMessage = false));
+            } else if (!this.formItems.messagePlain) {
+                this.$store
+                    .dispatch('notification/ADD_ERROR', this.$t(NotificationType.ENCRYPTED_MESSAGE_EMPTY_ERROR))
+                    .then(() => (this.formItems.encryptMessage = false));
+            } else {
+                this.hasAccountUnlockModal = true;
             }
         } else {
             this.encyptedMessage = null;
+            this.hasAccountUnlockModal = false;
         }
     }
 
@@ -619,5 +634,14 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     private resetDynamicFees() {
         this.calculatedRecommendedFee = 0;
         this.calculatedHighestFee = 0;
+    }
+
+    /**
+     * Rest encrypted message
+     */
+    private resetEncryptedMessage() {
+        this.encyptedMessage = null;
+        this.formItems.encryptMessage = false;
+        this.hasAccountUnlockModal = false;
     }
 }

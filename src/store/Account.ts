@@ -303,12 +303,20 @@ export default {
             dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
         },
 
-        async GET_RECIPIENT({ commit, rootGetters }, recipientAddress: Address) {
-            const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-            const getAccountsInfoPromise = repositoryFactory.createAccountRepository().getAccountInfo(recipientAddress).toPromise();
-            const accountsInfo = await getAccountsInfoPromise;
+        async GET_RECIPIENT({ commit, rootGetters }, recipientAddress?: Address) {
+            if (recipientAddress) {
+                const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+                const getAccountsInfoPromise = repositoryFactory
+                    .createAccountRepository()
+                    .getAccountInfo(recipientAddress)
+                    .toPromise()
+                    .catch(() => commit('currentRecipient', null));
+                const accountsInfo = await getAccountsInfoPromise;
 
-            commit('currentRecipient', accountsInfo);
+                commit('currentRecipient', accountsInfo);
+            } else {
+                commit('currentRecipient', null);
+            }
         },
 
         async LOAD_ACCOUNT_INFO({ commit, getters, rootGetters }) {

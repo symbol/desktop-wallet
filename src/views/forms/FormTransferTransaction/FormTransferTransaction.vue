@@ -86,7 +86,7 @@
                 v-if="hasAccountUnlockModal"
                 :visible="hasAccountUnlockModal"
                 :on-success="onAccountUnlocked"
-                @close="hasAccountUnlockModal = false"
+                @close="resetEncryptedMessage"
             />
         </FormWrapper>
 
