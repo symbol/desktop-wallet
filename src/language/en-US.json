@@ -169,6 +169,7 @@
     "duration_can_not_more_than_10_years": "Duration cannot be greater than 10 years",
     "duration_permanent": "Unlimited duration",
     "end_finalization_epoch": "End Finalization Epoch",
+    "encrypt_message": "Encrypt message",
     "endpoint": "Node",
     "enter_your_private_key": "Enter your private key",
     "error_account_name_already_exists": "This account name already exists. Please, enter a unique account name.",

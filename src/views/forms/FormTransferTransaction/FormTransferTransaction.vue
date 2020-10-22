@@ -37,6 +37,15 @@
 
                     <!-- Transfer message input field -->
                     <MessageInput v-model="formItems.messagePlain" @input="onChangeMessage" />
+                    <FormRow>
+                        <template v-slot:inputs>
+                            <div class="inputs-container checkboxes">
+                                <Checkbox v-model="formItems.encryptMessage" @input="onEncryptionChange">
+                                    {{ $t('encrypt_message') }}
+                                </Checkbox>
+                            </div>
+                        </template>
+                    </FormRow>
 
                     <!-- Transaction fee selector and submit button -->
                     <MaxFeeAndSubmit
@@ -71,6 +80,13 @@
                 :visible="isImportTransactionUriModalVisible"
                 @close="onImportTransactionURIModalClose"
                 @importTransaction="onImportTransaction"
+            />
+
+            <ModalFormProfileUnlock
+                v-if="hasAccountUnlockModal"
+                :visible="hasAccountUnlockModal"
+                :on-success="onAccountUnlocked"
+                @close="hasAccountUnlockModal = false"
             />
         </FormWrapper>
 

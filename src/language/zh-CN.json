@@ -169,6 +169,7 @@
     "duration_can_not_more_than_10_years": "持续时间不可大于10年",
     "duration_permanent": "是否永久存在",
     "end_finalization_epoch": "结束敲定时代",
+    "encrypt_message": "加密消息",
     "endpoint": "节点",
     "enter_your_private_key": "输入您的私钥",
     "error_account_name_already_exists": "该帐户名已经存在。请重新输入唯一的帐户名。",
