@@ -31,7 +31,7 @@
         </div>
 
         <div class="account-switch-footer-container">
-            <span v-if="!isPrivateKeyProfile" class="add-account pointer button" @click="hasAddAccountModal = true">
+            <span class="add-account pointer button" @click="hasAddAccountModal = true">
                 {{ $t('button_add_account') }}
             </span>
             <div v-if="!isPrivateKeyProfile" class="account-switch-header-right-container" @click="hasMnemonicExportModal = true">
