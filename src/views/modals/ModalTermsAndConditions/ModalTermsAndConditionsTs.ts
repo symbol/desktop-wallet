@@ -58,7 +58,7 @@ export class ModalTermsAndConditionsTs extends Vue {
     /**
      * Logout user and redirect to create profile page
      */
-    private async approveTermsAndConditions() {
-        new ProfileService().updateProfileTermsAndConditionsStatus(this.currentProfile, true);
+    private approveTermsAndConditions() {
+        return new ProfileService().updateProfileTermsAndConditionsStatus(this.currentProfile, true);
     }
 }
