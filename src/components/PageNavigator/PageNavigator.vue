@@ -19,20 +19,20 @@
                 </div>
             </div>
         </div>
-
-        <div v-if="!!currentProfile" class="logout-item-container" @click="logout">
-            <div class="navigator-item-container">
-                <div class="navigator-icon-container">
-                    <Icon :type="'md-log-out'" class="navigator-icon" />
-                </div>
-            </div>
+        <div class="network-container">
+            <PeerSelector />
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import { PageNavigatorTs } from './PageNavigatorTs';
-
+import { Component } from 'vue-property-decorator';
+import PeerSelector from '@/components/PeerSelector/PeerSelector.vue';
+// @ts-ignore
+@Component({
+    components: { PeerSelector },
+})
 export default class PageNavigator extends PageNavigatorTs {}
 </script>
 <style lang="less" scoped>
