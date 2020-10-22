@@ -487,7 +487,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                 }
             });
         } else {
-            this.$store.dispatch('account/GET_RECIPIENT', null);
             this.resetEncryptedMessage();
         }
         this.triggerChange();
@@ -521,7 +520,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         } else {
             this.transactions = null;
             this.resetDynamicFees();
-            this.$store.dispatch('account/GET_RECIPIENT', null);
             this.resetEncryptedMessage();
         }
     }
@@ -643,5 +641,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.encyptedMessage = null;
         this.formItems.encryptMessage = false;
         this.hasAccountUnlockModal = false;
+        this.$store.dispatch('account/GET_RECIPIENT', null);
     }
 }
