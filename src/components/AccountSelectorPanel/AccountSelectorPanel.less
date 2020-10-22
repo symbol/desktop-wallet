@@ -55,37 +55,19 @@
         display: grid;
         grid-template-columns: 100%;
         grid-auto-rows: 0.9rem;
-        grid-row-gap: 0.1rem;
         position: relative;
         .active-background {
-            background: @grayLight;
-            color: white;
-        }
-
-        .active-background:after {
-            display: block;
-            position: absolute;
-            width: 0;
-            height: 0;
-            border: 0.1rem solid transparent;
-            border-left-color: @grayLight;
-            right: -0.19rem;
-            bottom: 0.3rem;
-            content: '';
+            color: @black;
         }
 
         .inactive-background {
-            background: rgba(237, 233, 245, 1);
-            color: rgba(51, 51, 51, 1);
+            color: @grayLight;
         }
 
         .account-tile {
             margin: 0 0.24rem;
             position: relative;
             padding: 0.14rem 0.25rem;
-            border-radius: 10px;
-            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
-            border-radius: 5px;
 
             .account-tile-inner-container {
                 display: grid;
@@ -150,5 +132,90 @@
                 vertical-align: center;
             }
         }
+    }
+}
+
+
+.mosaic_data {
+    height: 0.65rem;
+    padding: 0.15rem 0.25rem 0.15rem 0;
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    border-bottom: 0.01rem solid @line;
+    position: relative;
+
+    .namege_img {
+        position: absolute;
+        display: inline-block;
+        top: 0.2rem;
+
+        .mosaicIcon {
+            display: inline-block;
+            width: 0.28rem;
+            height: 0.28rem;
+            margin-left: 0.1rem;
+        }
+    }
+
+    .img_container {
+        display: inline-block;
+        position: absolute;
+        top: 0.23rem;
+        margin-right: 0.15rem;
+
+        img {
+            display: inline-block;
+            width: 0.22rem;
+            height: 0.2rem;
+        }
+
+        img.grayed-xym-logo {
+            opacity: 0.4;
+            -webkit-filter: grayscale(100%);
+            -moz-filter: grayscale(100%);
+            -o-filter: grayscale(100%);
+            -ms-filter: grayscale(100%);
+            filter: grayscale(100%);
+        }
+    }
+
+    .mosaic_name {
+        position: relative;
+        top: 0;
+        left: 0.4rem;
+        width: 1.8rem;
+        font-size: @smallFont;
+        font-weight: 400;
+        color: @blackLight;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .mosaic_value {
+        margin-left: 0.5rem;
+        text-align: right;
+
+        div:first-of-type {
+            font-size: 0.16rem;
+            font-weight: 400;
+            color: @blackLight;
+        }
+
+        div:nth-of-type(2) {
+            font-size: 0.16rem;
+            font-weight: 400;
+            color: @grayDark;
+        }
+    }
+
+    .small_icon {
+        width: 0.2rem;
+        height: 0.2rem;
+        margin-bottom: 0.05rem;
     }
 }

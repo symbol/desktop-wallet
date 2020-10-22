@@ -432,24 +432,30 @@ export const routes: AppRoute[] = [
                 ],
             },
             {
-                path: '/communityPanel', //TODO: Harvesting
-                name: 'community',
-                redirect: '/information',
+                path: '/harvesting', //TODO: Harvesting
+                name: 'harvesting',
+                redirect: '/harvestingNormal',
                 meta: {
                     protected: true,
                     clickable: true,
-                    title: 'sidebar_item_community',
-                    icon: officialIcons.news,
+                    title: 'sidebar_item_harvesting',
+                    icon: officialIcons.harvest,
                 },
                 // @ts-ignore
-                component: () => import('@/views/pages/community/Community.vue'),
+                component: () => import('@/views/pages/harvesting/HarvestingDashboardPage/HarvestingDashboardPage.vue'),
                 children: [
                     {
-                        path: '/information',
-                        name: 'community.index',
-                        meta: { protected: true },
+                        path: '/harvestingNormal',
+                        name: 'harvesting.normal',
+                        meta: { protected: true, title: 'page_title_harvesting' },
                         // @ts-ignore
-                        component: () => import('@/views/pages/community/information/Information.vue'),
+                        component: () => import('@/views/pages/harvesting/HarvestingPage/HarvestingPage.vue'),
+                    },{
+                        path: '/delegatedHarvesting',
+                        name: 'harvesting.delegated',
+                        meta: { protected: true, title: 'page_title_delegated_harvesting' },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/harvesting/DelegatedHarvestingPage/DelegatedHarvestingPage.vue'),
                     },
                 ],
             },
