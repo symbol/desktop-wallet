@@ -665,7 +665,9 @@
     "verify_backup_mnemonics": "次へ",
     "verify_Mnemonic_phrase": "ニーモニック語群の確認",
     "verify_mnemonics": "ニーモニック単語バックアップの確認",
+    "version": "バージョン",
     "warning_already_a_cosignatory": "このアカウントは既に連署者です",
+    "web_wallet_warning": "このウェブウォレットはデモンストレーション専用です",
     "welcome": "ようこそ",
     "word": "文字",
     "x_seconds": "{seconds}秒"

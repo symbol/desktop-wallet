@@ -665,7 +665,9 @@
     "verify_backup_mnemonics": "Next",
     "verify_Mnemonic_phrase": "Verify Mnemonic Phrase",
     "verify_mnemonics": "Verify mnemonic words backup",
+    "version": "Version",
     "warning_already_a_cosignatory": "This account is already a cosignatory!",
+    "web_wallet_warning": "This WEB wallet is for demonstration use only!",
     "welcome": "Welcome",
     "word": "Word",
     "x_seconds": "{seconds}s."
