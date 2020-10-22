@@ -4,7 +4,7 @@
         <div class="value accountAddress">
             {{ getPrettyAddress() }}
             <ButtonCopyToClipboard v-model="address">
-                <img src="@/views/resources/img/account/copyIcon.png" class="copy-icon" />
+                <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
             </ButtonCopyToClipboard>
         </div>
     </div>
@@ -16,6 +16,8 @@ export default class AccountAddressDisplay extends AccountAddressDisplayTs {}
 </script>
 
 <style lang="less" scoped>
+@import '../../views/resources/css/variables.less';
+
 .copy-icon {
     width: 0.24rem;
     height: 0.24rem;

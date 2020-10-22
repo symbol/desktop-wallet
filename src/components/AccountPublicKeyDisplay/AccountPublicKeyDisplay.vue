@@ -4,7 +4,7 @@
         <div class="value accountPublicKey">
             {{ account.publicKey }}
             <ButtonCopyToClipboard v-model="account.publicKey">
-                <img src="@/views/resources/img/account/copyIcon.png" class="copy-icon" />
+                <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
             </ButtonCopyToClipboard>
         </div>
     </div>

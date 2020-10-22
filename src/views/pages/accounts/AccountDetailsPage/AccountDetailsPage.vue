@@ -2,6 +2,9 @@
     <div v-show="currentAccount" class="account-detail-outer-container">
         <div class="account-detail-inner-container">
             <div class="left-container">
+                <AccountContactQR :account="currentAccount" />
+            </div>
+            <div class="right-container">
                 <div class="account-details-grid">
                     <div class="detail-row">
                         <AccountNameDisplay :account="currentAccount" :editable="true" />
@@ -47,9 +50,6 @@
                         <AccountAliasDisplay :account="currentAccount" />
                     </div>
                 </div>
-            </div>
-            <div class="right-container">
-                <AccountContactQR :account="currentAccount" />
             </div>
         </div>
 
