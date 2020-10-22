@@ -326,6 +326,7 @@
     "loading": "読込中…",
     "locked_mosaic": "ロック済みモザイク",
     "login": "ログイン",
+    "low_fee_warning_message": "推奨料金未満の取引は受け入れられず、最終的には受け入れられない可能性があります",
     "max_approval_amount_more_than_10": "承認に必要な連署者の最大数は10を超えることはできません。",
     "max_decimal_number_error": "{_field_} には {maxDecimalNumber} 小数点以下の桁数を指定してください。",
     "max_fee": "最大手数料",

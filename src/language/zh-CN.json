@@ -326,6 +326,7 @@
     "loading": "加载中...",
     "locked_mosaic": "锁定马赛克",
     "login": "登 录",
+    "low_fee_warning_message": "费用少于建议的交易可能不会被接受，最终",
     "max_approval_amount_more_than_10": "Min approval 不可大于10",
     "max_decimal_number_error": "{_field_} 字段最多 {maxDecimalNumber} 位小数或更少。",
     "max_fee": "最大费用",
