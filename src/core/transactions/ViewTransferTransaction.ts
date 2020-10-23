@@ -89,7 +89,15 @@ export class ViewTransferTransaction extends TransactionView<TransferTransaction
             { key: 'sender', value: this.sender },
             { key: 'transfer_target', value: this.transaction.recipientAddress, isAddress: true },
             ...mosaicItems,
-            { key: 'message', value: message.payload || '-' },
+            {
+                key: 'message',
+                value: {
+                    message: message,
+                    incoming: this.isIncoming,
+                    recipient: this.transaction.recipientAddress,
+                },
+                isMessage: true,
+            },
         ];
     }
 }
