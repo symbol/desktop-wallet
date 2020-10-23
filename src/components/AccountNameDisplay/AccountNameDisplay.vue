@@ -1,7 +1,7 @@
 <template>
     <div class="account-detail-row">
         <div class="label">
-            {{ $t('account_name') }}
+            {{ $t('account_name') }}:
         </div>
         <div class="value field-name">
             <span v-if="account" class="accountName">{{ account.name }}</span>
@@ -36,12 +36,14 @@ export default class AccountNameDisplay extends AccountNameDisplayTs {}
     margin-right:2%;
     text-align: center;
     cursor: pointer;
+    font-size:0.9em;
 }
 
 .field-name {
     background: @grayLightest;
+
     padding-left: 6px;
     border-radius:3px;
-    width:65%;
+    width:82%;
 }
 </style>

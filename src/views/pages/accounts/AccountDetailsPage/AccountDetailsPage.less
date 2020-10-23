@@ -22,13 +22,14 @@
     background-color: @white;
     border-radius: 0.04rem;
     overflow: hidden;
+    padding-top:2%;
 
     .account-detail-inner-container {
         width: 100%;
         padding: 0.2rem 0.4rem;
         margin: 0;
         display: grid;
-        grid-template-columns: 25%70%;
+        grid-template-columns: 20%80%;
 
         .right-container {
             width: 100%;
@@ -51,7 +52,7 @@
 
             .account-details-grid {
                 background-color: white;
-                font-size: 15px;
+                font-size: 18px;
                 display: inline-grid;
                 font-weight: 400;
                 color: @primary;
@@ -92,6 +93,10 @@
         }
 
         .left-container {
+            /deep/ .qr-code-image {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
         }
     }
 

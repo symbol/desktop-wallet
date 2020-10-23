@@ -1,6 +1,6 @@
 <template>
     <div class="account-detail-row-3cols">
-        <span class="label">{{ $t('account_address') }}</span>
+        <span class="label">{{ $t('account_address') }}:</span>
         <div class="value accountAddress">
             {{ getPrettyAddress() }}
             <ButtonCopyToClipboard v-model="address">

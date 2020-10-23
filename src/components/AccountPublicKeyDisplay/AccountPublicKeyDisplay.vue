@@ -1,6 +1,6 @@
 <template>
     <div class="account-detail-row-3cols">
-        <span class="label">{{ $t('account_public_key') }}</span>
+        <span class="label">{{ $t('account_public_key') }}:</span>
         <div class="value accountPublicKey">
             {{ account.publicKey }}
             <ButtonCopyToClipboard v-model="account.publicKey">
