@@ -65,6 +65,7 @@ interface AccountState {
     accountsInfo: AccountInfo[];
     multisigAccountsInfo: MultisigAccountInfo[];
     subscriptions: Record<string, SubscriptionType[]>;
+    currentRecipient: AccountInfo;
 }
 
 // account state initial definition
@@ -84,6 +85,7 @@ const accountState: AccountState = {
     accountsInfo: [],
     multisigAccountsInfo: [],
     subscriptions: {},
+    currentRecipient: null,
 };
 
 /**
@@ -113,6 +115,7 @@ export default {
         },
         multisigAccountsInfo: (state: AccountState) => state.multisigAccountsInfo,
         getSubscriptions: (state: AccountState) => state.subscriptions,
+        currentRecipient: (state: AccountState) => state.currentRecipient,
     },
     mutations: {
         setInitialized: (state: AccountState, initialized: boolean) => {
@@ -156,6 +159,9 @@ export default {
         },
         currentSignerMultisigInfo: (state: AccountState, currentSignerMultisigInfo) => {
             state.currentSignerMultisigInfo = currentSignerMultisigInfo;
+        },
+        currentRecipient: (state: AccountState, currentRecipient) => {
+            state.currentRecipient = currentRecipient;
         },
 
         setSubscriptions: (state: AccountState, subscriptions: Record<string, SubscriptionType[]>) => {
@@ -295,6 +301,22 @@ export default {
             await dispatch('LOAD_ACCOUNT_INFO');
             dispatch('namespace/LOAD_NAMESPACES', {}, { root: true });
             dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
+        },
+
+        async GET_RECIPIENT({ commit, rootGetters }, recipientAddress?: Address) {
+            if (recipientAddress) {
+                const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+                const getAccountsInfoPromise = repositoryFactory
+                    .createAccountRepository()
+                    .getAccountInfo(recipientAddress)
+                    .toPromise()
+                    .catch(() => commit('currentRecipient', null));
+                const accountsInfo = await getAccountsInfoPromise;
+
+                commit('currentRecipient', accountsInfo);
+            } else {
+                commit('currentRecipient', null);
+            }
         },
 
         async LOAD_ACCOUNT_INFO({ commit, getters, rootGetters }) {
