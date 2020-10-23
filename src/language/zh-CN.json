@@ -421,6 +421,7 @@
     "offline_storage": "离线保管",
     "operation_failed": "操作失败",
     "option_child_account": "创建一个子钱包",
+    "option_hd_account": "我想创建一个超确定性帐户",
     "option_link_address": "关联钱包地址",
     "option_link_mosaic": "关联马赛克",
     "option_privatekey_account": "导入已存在的私钥",
