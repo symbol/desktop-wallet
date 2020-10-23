@@ -14,8 +14,10 @@
  *
  */
 import {
+    AccountInfo,
     Address,
     Deadline,
+    EncryptedMessage,
     Message,
     Mosaic,
     MosaicId,
@@ -25,6 +27,7 @@ import {
     Transaction,
     TransferTransaction,
     UInt64,
+    Account,
 } from 'symbol-sdk';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
@@ -58,6 +61,10 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
 import ModalTransactionUriImport from '@/views/modals/ModalTransactionUriImport/ModalTransactionUriImport.vue';
 // @ts-ignore
 import TransactionUriDisplay from '@/components/TransactionUri/TransactionUriDisplay/TransactionUriDisplay.vue';
+// @ts-ignore
+import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/ProtectedPrivateKeyDisplay.vue';
+// @ts-ignore
+import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
@@ -66,6 +73,7 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { TransactionCommand } from '@/services/TransactionCommand';
 import { feesConfig } from '@/config';
+import { NotificationType } from '@/core/utils/NotificationType';
 
 export interface MosaicAttachment {
     mosaicHex: string;
@@ -90,11 +98,14 @@ export interface MosaicAttachment {
         FormRow,
         ModalTransactionUriImport,
         TransactionUriDisplay,
+        ProtectedPrivateKeyDisplay,
+        ModalFormProfileUnlock,
     },
     computed: {
         ...mapGetters({
             currentHeight: 'network/currentHeight',
             balanceMosaics: 'mosaic/balanceMosaics',
+            currentRecipient: 'account/currentRecipient',
         }),
     },
 })
@@ -144,6 +155,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         selectedMosaicHex: '',
         relativeAmount: 0,
         messagePlain: '',
+        encryptMessage: false,
         maxFee: 0,
     };
 
@@ -179,6 +191,15 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     private calculatedHighestFee: number = 0;
 
     /**
+     * Current recipient account info
+     */
+    private currentRecipient: AccountInfo;
+
+    private encyptedMessage: Message;
+
+    private showUnlockAccountModal = false;
+
+    /**
      * Reset the form with properties
      * @return {void}
      */
@@ -210,6 +231,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         ];
 
         this.formItems.messagePlain = this.message ? Formatters.hexToUtf8(this.message.payload) : '';
+        this.formItems.encryptMessage = false;
+        this.encyptedMessage = null;
+        this.showUnlockAccountModal = false;
         // - maxFee must be absolute
         this.formItems.maxFee = this.defaultFee;
         // - initialize mosaics input manager
@@ -278,7 +302,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                 Deadline.create(),
                 this.instantiatedRecipient,
                 mosaics.length ? mosaics : [],
-                PlainMessage.create(this.formItems.messagePlain || ''),
+                this.formItems.encryptMessage ? this.encyptedMessage : PlainMessage.create(this.formItems.messagePlain || ''),
                 this.networkType,
                 UInt64.fromUint(this.formItems.maxFee),
             ),
@@ -327,6 +351,14 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         } else {
             return null;
         }
+    }
+
+    protected get hasAccountUnlockModal(): boolean {
+        return this.showUnlockAccountModal;
+    }
+
+    protected set hasAccountUnlockModal(f: boolean) {
+        this.showUnlockAccountModal = f;
     }
 
     /// end-region computed properties getter/setter
@@ -442,6 +474,15 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     onChangeRecipient() {
         // filter tags
         this.formItems.recipientRaw = FilterHelpers.stripFilter(this.formItems.recipientRaw);
+        if (Address.isValidRawAddress(this.formItems.recipientRaw)) {
+            this.$store.dispatch('account/GET_RECIPIENT', Address.createFromRawAddress(this.formItems.recipientRaw)).then(() => {
+                if (!this.currentRecipient?.publicKey || /^0*$/.test(this.currentRecipient.publicKey)) {
+                    this.resetEncryptedMessage();
+                }
+            });
+        } else {
+            this.resetEncryptedMessage();
+        }
         this.triggerChange();
     }
 
@@ -455,7 +496,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
 
     triggerChange() {
-        if (this.formItems.recipientRaw && this.formItems.recipientRaw !== '') {
+        if (Address.isValidRawAddress(this.formItems.recipientRaw)) {
             this.transactions = this.getTransactions();
             // avoid error
             if (this.transactions) {
@@ -473,6 +514,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         } else {
             this.transactions = null;
             this.resetDynamicFees();
+            this.resetEncryptedMessage();
         }
     }
 
@@ -501,6 +543,47 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     onImportTransaction(transaction: Transaction) {
         this.importedTransaction = transaction;
         this.resetForm();
+    }
+
+    /**
+     * Encrypt message checkbox click
+     */
+    onEncryptionChange() {
+        if (this.formItems.encryptMessage) {
+            if (!this.currentRecipient?.publicKey) {
+                this.$store
+                    .dispatch('notification/ADD_ERROR', this.$t(NotificationType.RECIPIENT_PUBLIC_KEY_INVALID_ERROR))
+                    .then(() => (this.formItems.encryptMessage = false));
+            } else if (!this.formItems.messagePlain) {
+                this.$store
+                    .dispatch('notification/ADD_ERROR', this.$t(NotificationType.ENCRYPTED_MESSAGE_EMPTY_ERROR))
+                    .then(() => (this.formItems.encryptMessage = false));
+            } else {
+                this.hasAccountUnlockModal = true;
+            }
+        } else {
+            this.encyptedMessage = null;
+            this.hasAccountUnlockModal = false;
+        }
+    }
+
+    /**
+     * Hook called when the account has been unlocked
+     * @param {Account} account
+     * @return {boolean}
+     */
+    onAccountUnlocked(account: Account): boolean {
+        this.hasAccountUnlockModal = false;
+        this.encyptedMessage = this.formItems.messagePlain
+            ? EncryptedMessage.create(this.formItems.messagePlain, this.currentRecipient.publicAccount, account.privateKey)
+            : PlainMessage.create('');
+        this.formItems.encryptMessage = true;
+        return true;
+    }
+
+    closeAccountUnlockModal() {
+        this.formItems.encryptMessage = false;
+        this.hasAccountUnlockModal = false;
     }
 
     /**
@@ -549,5 +632,15 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     private resetDynamicFees() {
         this.calculatedRecommendedFee = 0;
         this.calculatedHighestFee = 0;
+    }
+
+    /**
+     * Reset encrypted message
+     */
+    private resetEncryptedMessage() {
+        this.encyptedMessage = null;
+        this.formItems.encryptMessage = false;
+        this.hasAccountUnlockModal = false;
+        this.$store.dispatch('account/GET_RECIPIENT', null);
     }
 }
