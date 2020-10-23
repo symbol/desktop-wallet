@@ -68,7 +68,6 @@
             margin: 0 0.24rem;
             position: relative;
             padding: 0.14rem 0.25rem;
-
             .account-tile-inner-container {
                 display: grid;
                 width: 100%;
@@ -190,10 +189,13 @@
         width: 1.8rem;
         font-size: @smallFont;
         font-weight: 400;
-        color: @blackLight;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        
+        .active-background{
+            color: @black;
+        }
     }
 
     .mosaic_value {

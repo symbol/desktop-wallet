@@ -137,7 +137,7 @@ import explorer from '@/views/resources/img/icons/explorer.png';
 // @ts-ignore
 import fingerprint from '@/views/resources/img/icons/fingerprint.png';
 // @ts-ignore
-import harvest from '@/views/resources/img/icons/harvest.png';
+import harvest from '@/views/resources/img/icons/harvest.svg';
 // @ts-ignore
 import incoming from '@/views/resources/img/icons/incoming.png';
 // @ts-ignore
