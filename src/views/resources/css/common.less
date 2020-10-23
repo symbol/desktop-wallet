@@ -116,8 +116,8 @@ button:focus {
 #app {
     background-color: #e5e5e5;
     height: auto;
-    min-height: 100vh;
-    max-height: 100vh;
+    min-height: 100%;
+    max-height: 100%;
     overflow-x: hidden;
     overflow-y: hidden;
 }
@@ -450,4 +450,42 @@ button:disabled {
     font-weight: bold;
     left: 120px;
     bottom: 7px;
+}
+
+.level {
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+    
+    img {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .level-left,.level-right {
+        flex-basis: auto;
+        flex-grow: 0;
+        flex-shrink: 0;
+
+        .level-item {
+            align-items: center;
+            display: flex;
+            flex-basis: auto;
+            flex-grow: 0;
+            flex-shrink: 0;
+            justify-content: center;
+        }
+    }
+
+    .level-left {
+        align-items: center;
+        justify-content: flex-start;
+        display: flex;
+    }
+
+    .level-right {
+        align-items: center;
+        justify-content: flex-end;
+        display: flex;
+    }
 }

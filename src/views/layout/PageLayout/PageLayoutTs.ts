@@ -35,6 +35,7 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 // @ts-ignore
 import AccountSelectorField from '@/components/AccountSelectorField/AccountSelectorField.vue';
 // @ts-ignore
+//import DebugConsoleButton from '@/components/DebugConsoleButton/DebugConsoleButton.vue';
 import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue';
 //@ts-ignore
 import Settings from '@/components/Settings/Settings.vue';

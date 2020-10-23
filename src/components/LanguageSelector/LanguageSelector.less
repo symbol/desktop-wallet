@@ -19,19 +19,14 @@
     .top_window {
         .controller {
             .app_controller {
-                margin-right: 60px;
-                .switch_language {
-                    padding-top: 0.01rem;
-                    font-size: @smallerFont;
+                /deep/.switch_language {
+                    font-size: @biggerFont;
                     font-weight: 400;
-                    width: 100px;
+                }
+
+                .switch_language {
                     -webkit-app-region: no-drag;
                     position: relative;
-                    height: 0.6rem;
-
-                    .ivu-select-placeholder {
-                        position: relative;
-                    }
                 }
             }
         }

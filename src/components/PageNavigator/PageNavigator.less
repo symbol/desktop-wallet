@@ -21,7 +21,7 @@
 .wrap {
     .left-navigator {
         position: absolute;
-        padding-top: 115px;
+        padding-top: 0.25rem;
         left: 0;
         bottom: 0;
         height: 100%;
@@ -35,7 +35,7 @@
         .navigator-items-container {
             display: grid;
             grid-template-columns: 100%;
-            grid-auto-rows: @iconHeight;
+            grid-auto-rows: calc(@iconHeight + 0.1rem);
         }
 
         .navigator-item-container {
@@ -46,6 +46,7 @@
             display: grid;
             grid-template-columns: 100%;
             grid-template-rows: 0.7rem 0.3rem;
+            padding-top: 0.05rem;
             background-color: @white;
             cursor: pointer;
 

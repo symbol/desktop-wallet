@@ -1,5 +1,5 @@
 <template>
-    <div class="mac wrap">
+    <div class="wrap">
         <div v-if="alert.show">
             <Alert class="alert warning_alert" type="error">
                 <Icon type="ios-warning-outline" />
@@ -15,23 +15,25 @@
 
         <PageNavigator v-if="!$route.matched.map(({ name }) => name).includes('profiles')" />
 
-        <div class="top_window">
-            <AppLogo />
+        <div class="top_window level">
+            <div class="level-left">
+                <AppLogo class="level-item" />
+            </div>
 
-            <div class="controller">
-                <WindowControls />
+            <!--OCA99: These are window controls for electron. Disabling them for now. Not sure if they should be here.-->
+            <!--<WindowControls />-->
 
-                <div class="app_controller clear">
-                    <ImportQRButton v-if="!!currentAccount" valid-qr-types="[1, 3, 4]" />
-                    <div class="debug-console-trigger" @click="hasDebugConsoleModal = true">
-                        <Icon :type="'ios-code-working'" size="20" class="debug-console-trigger-icon" />
-                        <span>&nbsp;{{ $t('top_window_console') }}</span>
-                    </div>
-                    <PeerSelector />
-                    <LanguageSelector />
-                    <Settings />
-                    <AccountSelectorField @input="onChangeAccount" />
+            <div class="level-right">
+                <ImportQRButton class="level-item navbar-item" v-if="!!currentAccount" valid-qr-types="[1, 3, 4]" />
+                <div class="level-item navbar-item debug-console-trigger" @click="hasDebugConsoleModal = true">
+                    <Icon :type="'ios-code-working'" size="20" class="debug-console-trigger-icon" />
+                    <span>&nbsp;{{ $t('top_window_console') }}</span>
                 </div>
+                <DebugConsoleButton class="level-item navbar-item" />
+                <!--<PeerSelector class="level-item navbar-item" />-->
+                <LanguageSelector class="level-item navbar-item" />
+                <Settings class="level-item navbar-item" />
+                <AccountSelectorField class="level-item navbar-item" @input="onChangeAccount" />
             </div>
         </div>
         <transition name="fade" mode="out-in">
@@ -54,6 +56,5 @@ import { PageLayoutTs } from './PageLayoutTs';
 export default class PageLayout extends PageLayoutTs {}
 </script>
 <style lang="less" scoped>
-@import './PageLayout.common.less';
-@import './PageLayout.mac.less';
+@import './PageLayout.less';
 </style>
