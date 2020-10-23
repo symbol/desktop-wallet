@@ -1,7 +1,7 @@
 // external dependencies
 import { extend } from 'vee-validate';
 import i18n from '@/language';
-import { Account, Address, NetworkType, Password } from 'symbol-sdk';
+import { Account, Address, NetworkType, Password, NamespaceId } from 'symbol-sdk';
 // internal dependencies
 import { ProfileService } from '@/services/ProfileService';
 import { NotificationType } from '@/core/utils/NotificationType';
@@ -47,8 +47,21 @@ export class CustomValidationRules {
             validate: (value) => {
                 const isValidAddress = AddressValidator.validate(value);
                 const isValidAlias = AliasValidator.validate(value);
-                if (isValidAddress || isValidAlias) {
+                if (isValidAddress) {
                     return true;
+                }
+                if (isValidAlias) {
+                    const nameSpaceRepository = AppStore.getters['network/repositoryFactory'].createNamespaceRepository();
+                    let result = false;
+                    nameSpaceRepository.getLinkedAddress(new NamespaceId(value)).subscribe(
+                        (data) => {
+                            result = true;
+                        },
+                        (err) => {
+                            result = false;
+                        },
+                    );
+                    return result;
                 }
                 return false;
             },

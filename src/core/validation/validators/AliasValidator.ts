@@ -14,8 +14,6 @@
  *
  */
 import { NamespaceId } from 'symbol-sdk';
-import { AppStore } from '@/app/AppStore';
-
 // internal dependencies
 import { Validator, staticImplements } from './Validator';
 
@@ -28,10 +26,8 @@ export class AliasValidator {
      * @returns {boolean}
      */
     public static validate(value: any): boolean {
-        const repositoryFactory = AppStore.getters['network/repositoryFactory'];
-        const networkRepository = repositoryFactory.createNetworkRepository();
         try {
-            networkRepository.getLinkedAddress(new NamespaceId(value));
+            new NamespaceId(value);
             return value;
         } catch (error) {
             return false;
