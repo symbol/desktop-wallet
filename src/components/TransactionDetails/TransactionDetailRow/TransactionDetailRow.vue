@@ -22,7 +22,12 @@
                 <AddressDisplay :address="item.value" />
             </span>
             <span v-else-if="item.isMessage">
-                <MessageDisplay :message="item.value.message" :incoming="item.value.incoming" :recipient="item.value.recipient" />
+                <MessageDisplay
+                    :message="item.value.message"
+                    :incoming="item.value.incoming"
+                    :recipient="item.value.recipient"
+                    :unannounced="item.value.unannounced"
+                />
             </span>
             <span v-else>
                 {{ item.value }}

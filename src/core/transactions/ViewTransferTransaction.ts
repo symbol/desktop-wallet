@@ -95,6 +95,7 @@ export class ViewTransferTransaction extends TransactionView<TransferTransaction
                     message: message,
                     incoming: this.isIncoming,
                     recipient: this.transaction.recipientAddress,
+                    unannounced: this.transaction.isUnannounced(),
                 },
                 isMessage: true,
             },

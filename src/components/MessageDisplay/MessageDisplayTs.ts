@@ -50,6 +50,10 @@ export class MessageDisplayTs extends Vue {
         default: null,
     })
     recipient: UnresolvedAddress;
+    @Prop({
+        default: true,
+    })
+    unannounced: boolean;
 
     private isEncrypted = false;
     private messageDisplay = '';
@@ -74,7 +78,11 @@ export class MessageDisplayTs extends Vue {
      */
     protected async loadDetails(): Promise<void> {
         this.isEncrypted = this.message.type === MessageType.EncryptedMessage;
-        this.messageDisplay = this.isEncrypted ? '******' : this.message.payload;
+        if (this.isEncrypted) {
+            this.messageDisplay = this.unannounced ? `${this.message.payload} (${this.$t('encrypt_message')})` : '******';
+        } else {
+            this.messageDisplay = this.message.payload;
+        }
     }
 
     /**

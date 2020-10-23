@@ -2,7 +2,7 @@
     <FormWrapper>
         <div>
             <span>{{ messageDisplay }}</span>
-            <span v-if="isEncrypted">
+            <span v-if="isEncrypted && !unannounced">
                 <button class="centered-button button-style back-button float-right" @click="hasAccountUnlockModal = true">
                     {{ $t('decrypt_message') }}
                 </button>
