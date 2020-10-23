@@ -583,7 +583,13 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.encyptedMessage = this.formItems.messagePlain
             ? EncryptedMessage.create(this.formItems.messagePlain, this.currentRecipient.publicAccount, account.privateKey)
             : PlainMessage.create('');
+        this.formItems.encryptMessage = true;
         return true;
+    }
+
+    closeAccountUnlockModal() {
+        this.formItems.encryptMessage = false;
+        this.hasAccountUnlockModal = false;
     }
 
     /**
