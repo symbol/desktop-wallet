@@ -73,7 +73,6 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { TransactionCommand } from '@/services/TransactionCommand';
 import { feesConfig } from '@/config';
-import { AccountModel } from '@/core/database/entities/AccountModel';
 import { NotificationType } from '@/core/utils/NotificationType';
 
 export interface MosaicAttachment {
@@ -111,11 +110,6 @@ export interface MosaicAttachment {
     },
 })
 export class FormTransferTransactionTs extends FormTransactionBase {
-    @Prop({
-        default: null,
-    })
-    account: AccountModel | Account;
-
     @Prop({
         default: null,
     })
@@ -641,7 +635,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
 
     /**
-     * Rest encrypted message
+     * Reset encrypted message
      */
     private resetEncryptedMessage() {
         this.encyptedMessage = null;
