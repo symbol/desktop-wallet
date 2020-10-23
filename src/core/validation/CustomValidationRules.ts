@@ -51,17 +51,11 @@ export class CustomValidationRules {
                     return true;
                 }
                 if (isValidAlias) {
-                    const nameSpaceRepository = AppStore.getters['network/repositoryFactory'].createNamespaceRepository();
-                    let result = false;
-                    nameSpaceRepository.getLinkedAddress(new NamespaceId(value)).subscribe(
-                        (data) => {
-                            result = true;
-                        },
-                        (err) => {
-                            result = false;
-                        },
-                    );
-                    return result;
+                    AppStore.dispatch('namespace/CHECK_ALIAS_LINKED_TO_ADDRESS', isValidAddress)
+                        .then((value) => (!!value ? true : false))
+                        .catch(() => {
+                            return false;
+                        });
                 }
                 return false;
             },
