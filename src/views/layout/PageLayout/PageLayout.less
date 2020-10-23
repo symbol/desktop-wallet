@@ -157,8 +157,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        //background-color: rgb(229, 229, 229);
-        background-color: red;
+        background-color: #e5e5e5;
         -webkit-app-region: drag;
         width: 92%;
         left: 8%;
@@ -167,12 +166,16 @@
         padding-right: 0.55rem;
 
         .navbar-item {
-            margin-left: 0.1rem;
+            margin-left: 0.6rem;
+        }
+
+        /deep/.navbar-item {
+            line-height: 1.5 !important;
         }
 
         /deep/.debug-console-trigger {
-            color: @black;
-            font-size: @biggerFont;
+            color: @blackLight;
+            font-size: @smallFont !important;
             cursor: pointer;
         }
 
@@ -184,18 +187,22 @@
             background-color: transparent;
             border: none;
             box-shadow: none;
+            height: auto !important;
             .ivu-select-placeholder,
             .ivu-select-selected-value {
-                font-size: @smallerFont;
-                font-weight: 400;
-                color: white !important;
-                margin-left: 0;
+                font-size: @smallFont !important;
+                color: @blackLight;
+                padding: 0 !important;
             }
             i::before {
                 display: none;
             }
         }
-                    
+
+        /deep/.ivu-select-selection {
+            line-height: 1.5 !important;
+            height: 1.5 !important;
+        }                 
     }
 
     .right_content {

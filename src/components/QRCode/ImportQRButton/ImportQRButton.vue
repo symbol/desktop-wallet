@@ -2,7 +2,6 @@
     <div>
         <slot name="trigger" :trigger="onClick">
             <div class="trigger-importqr pointer" @click="onClick">
-                <Icon type="md-arrow-down" />
                 <span>{{ $t('import_qr_code') }}</span>
             </div>
         </slot>
