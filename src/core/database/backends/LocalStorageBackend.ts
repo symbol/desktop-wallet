@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,48 +14,48 @@
  *
  */
 // internal dependencies
-import { IStorageBackend } from './IStorageBackend'
+import { IStorageBackend } from './IStorageBackend';
 
 export class LocalStorageBackend implements IStorageBackend {
-  /**
-   * The number of available entries
-   * @var {number}
-   */
-  public get length(): number {
-    return !!localStorage ? localStorage.length : 0
-  }
+    /**
+     * The number of available entries
+     * @var {number}
+     */
+    public get length(): number {
+        return !!localStorage ? localStorage.length : 0;
+    }
 
-  /**
-   * Returns true if localStorage backend is available
-   * @return {boolean}
-   */
-  public isAvailable(): boolean {
-    return !!localStorage
-  }
+    /**
+     * Returns true if localStorage backend is available
+     * @return {boolean}
+     */
+    public isAvailable(): boolean {
+        return !!localStorage;
+    }
 
-  /**
-   * Getter for value with \a key
-   * @param {string} key
-   * @return {any}
-   */
-  public getItem(key: string): any {
-    return localStorage.getItem(key)
-  }
+    /**
+     * Getter for value with \a key
+     * @param {string} key
+     * @return {any}
+     */
+    public getItem(key: string): any {
+        return localStorage.getItem(key);
+    }
 
-  /**
-   * Setter for \a key with \a value
-   * @param {string} key
-   * @param {any} value
-   */
-  public setItem(key: string, value: any): void {
-    localStorage.setItem(key, value)
-  }
+    /**
+     * Setter for \a key with \a value
+     * @param {string} key
+     * @param {any} value
+     */
+    public setItem(key: string, value: any): void {
+        localStorage.setItem(key, value);
+    }
 
-  /**
-   * Deletes the value for the given key
-   * @param {string} key
-   */
-  public removeItem(key: string): void {
-    localStorage.removeItem(key)
-  }
+    /**
+     * Deletes the value for the given key
+     * @param {string} key
+     */
+    public removeItem(key: string): void {
+        localStorage.removeItem(key);
+    }
 }

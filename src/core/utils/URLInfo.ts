@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,5 @@
  */
 
 export class URLInfo {
-  constructor(
-    public readonly protocol,
-    public readonly hostname,
-    public readonly port: string,
-    public readonly url: string,
-  ) {}
+    constructor(public readonly protocol, public readonly hostname, public readonly port: string, public readonly url: string) {}
 }

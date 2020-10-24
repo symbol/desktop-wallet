@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,449 +14,449 @@
  *
  */
 // external dependencies
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-import { Address, AliasAction, MosaicId, NamespaceId } from 'symbol-sdk'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
+import { Address, AliasAction, MosaicId, NamespaceId } from 'symbol-sdk';
 // internal dependencies
 import {
-  AssetTableService,
-  FilteringTypes,
-  SortingDirections,
-  TableField,
-  TableFilteringOptions,
-  TableSortingOptions,
-} from '@/services/AssetTableService/AssetTableService'
-import { MosaicTableService } from '@/services/AssetTableService/MosaicTableService'
-import { NamespaceTableService } from '@/services/AssetTableService/NamespaceTableService'
+    AssetTableService,
+    FilteringTypes,
+    SortingDirections,
+    TableField,
+    TableFilteringOptions,
+    TableSortingOptions,
+} from '@/services/AssetTableService/AssetTableService';
+import { MosaicTableService } from '@/services/AssetTableService/MosaicTableService';
+import { NamespaceTableService } from '@/services/AssetTableService/NamespaceTableService';
 // child components
 // @ts-ignore
-import TableRow from '@/components/TableRow/TableRow.vue'
+import TableRow from '@/components/TableRow/TableRow.vue';
 // @ts-ignore
-import ModalFormWrap from '@/views/modals/ModalFormWrap/ModalFormWrap.vue'
+import ModalFormWrap from '@/views/modals/ModalFormWrap/ModalFormWrap.vue';
 // @ts-ignore
-import FormAliasTransaction from '@/views/forms/FormAliasTransaction/FormAliasTransaction.vue'
+import FormAliasTransaction from '@/views/forms/FormAliasTransaction/FormAliasTransaction.vue';
 // @ts-ignore
-import FormExtendNamespaceDurationTransaction from '@/views/forms/FormExtendNamespaceDurationTransaction/FormExtendNamespaceDurationTransaction.vue'
+import FormExtendNamespaceDurationTransaction from '@/views/forms/FormExtendNamespaceDurationTransaction/FormExtendNamespaceDurationTransaction.vue';
 // @ts-ignore
-import FormMosaicSupplyChangeTransaction from '@/views/forms/FormMosaicSupplyChangeTransaction/FormMosaicSupplyChangeTransaction.vue'
-import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
-import { MosaicModel } from '@/core/database/entities/MosaicModel'
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
-import { AccountModel } from '@/core/database/entities/AccountModel'
-import { Signer } from '@/store/Account'
+import FormMosaicSupplyChangeTransaction from '@/views/forms/FormMosaicSupplyChangeTransaction/FormMosaicSupplyChangeTransaction.vue';
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
+import { MosaicModel } from '@/core/database/entities/MosaicModel';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { Signer } from '@/store/Account';
 // @ts-ignore
-import SignerFilter from '@/components/SignerFilter/SignerFilter.vue'
+import SignerFilter from '@/components/SignerFilter/SignerFilter.vue';
 
 @Component({
-  components: {
-    TableRow,
-    ModalFormWrap,
-    FormAliasTransaction,
-    FormExtendNamespaceDurationTransaction,
-    FormMosaicSupplyChangeTransaction,
-    SignerFilter,
-  },
-  computed: {
-    ...mapGetters({
-      currentHeight: 'network/currentHeight',
-      currentAccount: 'account/currentAccount',
-      holdMosaics: 'mosaic/holdMosaics',
-      ownedNamespaces: 'namespace/ownedNamespaces',
-      networkConfiguration: 'network/networkConfiguration',
-      signers: 'account/signers',
-      isFetchingNamespaces: 'namespace/isFetchingNamespaces',
-      isFetchingMosaics: 'mosaic/isFetchingMosaics',
-    }),
-  },
+    components: {
+        TableRow,
+        ModalFormWrap,
+        FormAliasTransaction,
+        FormExtendNamespaceDurationTransaction,
+        FormMosaicSupplyChangeTransaction,
+        SignerFilter,
+    },
+    computed: {
+        ...mapGetters({
+            currentHeight: 'network/currentHeight',
+            currentAccount: 'account/currentAccount',
+            holdMosaics: 'mosaic/holdMosaics',
+            ownedNamespaces: 'namespace/ownedNamespaces',
+            networkConfiguration: 'network/networkConfiguration',
+            signers: 'account/signers',
+            isFetchingNamespaces: 'namespace/isFetchingNamespaces',
+            isFetchingMosaics: 'mosaic/isFetchingMosaics',
+        }),
+    },
 })
 export class TableDisplayTs extends Vue {
-  /**
-   * Type of assets shown in the table
-   * @type {string}
-   */
-  @Prop({
-    default: 'mosaic',
-  })
-  assetType: string
-
-  /**
-   * Current account owned mosaics
-   * @protected
-   * @type {MosaicModel[]}
-   */
-  private holdMosaics: MosaicModel[]
-
-  /**
-   * Current account owned namespaces
-   * @protected
-   * @type {NamespaceModel[]}
-   */
-  private ownedNamespaces: NamespaceModel[]
-
-  private currentAccount: AccountModel
-
-  private currentHeight: number
-
-  private networkConfiguration: NetworkConfigurationModel
-
-  /**
-   * current signers
-   */
-  public signers: Signer[]
-
-  public isFetchingNamespaces: boolean
-
-  public isFetchingMosaics: boolean
-
-  /**
-   * Loading state of the data to be shown in the table
-   * @type {boolean}
-   */
-  public get isLoading() {
-    return this.assetType === 'namespace' ? this.isFetchingNamespaces : this.isFetchingMosaics
-  }
-
-  /**
-   * Hook called when the signer selector has changed
-   * @protected
-   */
-  protected onSignerSelectorChange(address: string): void {
-    // clear previous account transactions
-    if (address) {
-      this.$store.dispatch('account/SET_CURRENT_SIGNER', { address: Address.createFromRawAddress(address) })
-    }
-  }
-
-  /**
-   * Current table sorting state
-   * @var {TableSortingOptions}
-   */
-  public sortedBy: TableSortingOptions = {
-    fieldName: undefined,
-    direction: undefined,
-  }
-
-  /**
-   * Current table filtering state
-   * @var {TableFilteringOptions}
-   */
-  public filteredBy: TableFilteringOptions = {
-    fieldName: undefined,
-    filteringType: undefined,
-  }
-
-  /**
-   * Pagination page size
-   * @type {number}
-   */
-  public pageSize: number = 10
-
-  /**
-   * Pagination page number
-   * @type {number}
-   */
-  public currentPage: number = 1
-
-  public nodata = [...new Array(this.pageSize).keys()]
-
-  protected get ownedAssetHexIds(): string[] {
-    return this.assetType === 'namespace'
-      ? this.ownedNamespaces.map(({ namespaceIdHex }) => namespaceIdHex)
-      : this.holdMosaics
-          .filter(({ ownerRawPlain }) => ownerRawPlain === this.currentAccount.address)
-          .map(({ mosaicIdHex }) => mosaicIdHex)
-  }
-
-  /**
-   * Modal forms visibility states
-   * @protected
-   * @type {{
-   *     aliasTransaction: boolean
-   *     extendNamespaceDuration: boolean
-   *     mosaicSupplyChangeTransaction: boolean
-   *   }}
-   */
-  protected modalFormsVisibility: {
-    aliasTransaction: boolean
-    extendNamespaceDurationTransaction: boolean
-    mosaicSupplyChangeTransaction: boolean
-  } = {
-    aliasTransaction: false,
-    extendNamespaceDurationTransaction: false,
-    mosaicSupplyChangeTransaction: false,
-  }
-
-  /**
-   * Action forms props
-   * @protected
-   * @type {({
-   *     namespaceId: NamespaceId
-   *     aliasTarget: MosaicId | Address
-   *     aliasAction: AliasAction
-   *     mosaicId: MosaicId
-   *   })}
-   */
-  protected modalFormsProps: {
-    namespaceId: NamespaceId
-    aliasTarget: MosaicId | Address
-    aliasAction: AliasAction
-    mosaicId: MosaicId
-  } = {
-    namespaceId: null,
-    aliasTarget: null,
-    aliasAction: null,
-    mosaicId: null,
-  }
-
-  // Alias forms props
-
-  /**
-   * Instantiate the table service around {assetType}
-   * @return {AssetTableService}
-   */
-  protected getService(): AssetTableService {
-    if ('mosaic' === this.assetType) {
-      return new MosaicTableService(this.currentHeight, this.holdMosaics, this.networkConfiguration)
-    } else if ('namespace' === this.assetType) {
-      return new NamespaceTableService(this.currentHeight, this.ownedNamespaces, this.networkConfiguration)
-    }
-    throw new Error(`Asset type '${this.assetType}' does not exist in TableDisplay.`)
-  }
-
-  /// region getters and setters
-  /**
-   * Non-filtered table data
-   * @var {TableRowValues[]}
-   */
-  private get tableRows(): any[] {
-    return this.getService().getTableRows()
-  }
-
-  /**
-   * Values displayed in the table
-   * @readonly
-   * @return {TableRowValues[]}
-   */
-  get displayedValues(): any[] {
-    return this.getService().sort(this.getService().filter(this.tableRows, this.filteredBy), this.sortedBy)
-  }
-
-  /**
-   * Header fields displayed in the table
-   * @readonly
-   * @return {TableField[]}
-   */
-  get tableFields(): TableField[] {
-    return this.getService().getTableFields()
-  }
-
-  /**
-   * Get current page rows
-   * @readonly
-   * @return {TableRowValues[]}
-   */
-  get currentPageRows(): any[] {
-    return this.displayedValues.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
-  }
-
-  /**
-   * getter and setter for the showExpired button
-   *
-   */
-  get showExpired(): boolean {
-    return this.filteredBy.fieldName === 'expiration' && this.filteredBy.filteringType === 'show'
-  }
-
-  set showExpired(newVal: boolean) {
-    this.setFilteredBy('expiration')
-  }
-
-  /**
-   * Alias form modal title
-   * @type {string}
-   * @protected
-   */
-  protected get aliasModalTitle(): string {
-    return this.modalFormsProps.aliasAction === AliasAction.Link ? 'modal_title_link_alias' : 'modal_title_unlink_alias'
-  }
-
-  /// end-region getters and setters
-
-  /**
-   * Hook called when the component is created
-   * @return {void}
-   */
-  public async created(): Promise<void> {
-    // refresh owned assets
-    this.refresh()
-    // initialize sorting and filtering
-    this.setDefaultFiltering()
-    // await this.refresh()
-    this.setDefaultSorting()
-  }
-
-  /**
-   * Refreshes the owned assets
-   * @returns {void}
-   */
-  private async refresh(): Promise<void> {
-    if ('mosaic' === this.assetType) {
-      await this.$store.dispatch('mosaic/LOAD_MOSAICS')
-    } else if ('namespace' === this.assetType) {
-      await this.$store.dispatch('namespace/LOAD_NAMESPACES')
-    }
-  }
-
-  /**
-   * Sets the default filtering state
-   */
-  public setDefaultFiltering(): void {
-    const defaultFilteringType: FilteringTypes = 'hide'
-    const defaultFilteringFieldName: string = 'expiration'
-
-    Vue.set(this, 'filteredBy', {
-      fieldName: defaultFilteringFieldName,
-      filteringType: defaultFilteringType,
+    /**
+     * Type of assets shown in the table
+     * @type {string}
+     */
+    @Prop({
+        default: 'mosaic',
     })
-  }
+    assetType: string;
 
-  /**
-   * Sets the default sorting state and trigger it
-   */
-  public setDefaultSorting(): void {
-    const defaultSort = 'asc'
-    const defaultField = 'namespace' === this.assetType ? 'name' : 'hexId'
+    /**
+     * Current account owned mosaics
+     * @protected
+     * @type {MosaicModel[]}
+     */
+    private holdMosaics: MosaicModel[];
 
-    Vue.set(this, 'sortedBy', {
-      fieldName: defaultField,
-      direction: defaultSort,
-    })
+    /**
+     * Current account owned namespaces
+     * @protected
+     * @type {NamespaceModel[]}
+     */
+    private ownedNamespaces: NamespaceModel[];
 
-    this.setSortedBy(defaultField)
-  }
+    private currentAccount: AccountModel;
 
-  /**
-   * Triggers table filtering by setting its filtering options
-   * @param {TableFieldNames} fieldName
-   */
-  public setFilteredBy(fieldName: string): void {
-    const filteredBy = { ...this.filteredBy }
-    const filteringType: FilteringTypes =
-      filteredBy.fieldName === fieldName && filteredBy.filteringType === 'show' ? 'hide' : 'show'
+    private currentHeight: number;
 
-    this.filteredBy = { fieldName, filteringType }
-  }
+    private networkConfiguration: NetworkConfigurationModel;
 
-  /**
-   * Sorts the table data
-   * @param {TableFieldNames} fieldName
-   */
-  public setSortedBy(fieldName: string): void {
-    const sortedBy = { ...this.sortedBy }
-    const direction: SortingDirections =
-      sortedBy.fieldName === fieldName && sortedBy.direction === 'asc' ? 'desc' : 'asc'
+    /**
+     * current signers
+     */
+    public signers: Signer[];
 
-    Vue.set(this, 'sortedBy', { fieldName, direction })
-  }
+    public isFetchingNamespaces: boolean;
 
-  /**
-   * Handle pagination page change
-   * @param {number} page
-   */
-  public handlePageChange(page: number): void {
-    this.currentPage = page
-  }
+    public isFetchingMosaics: boolean;
 
-  /**
-   * Triggers the alias form modal
-   * @protected
-   * @param {Record<string, string>} rowValues
-   * @return {void}
-   */
-  protected showAliasForm(rowValues: Record<string, string>): void {
-    // populate asset form modal props if asset is a mosaic
-    if (this.assetType === 'mosaic') {
-      this.modalFormsProps.namespaceId = rowValues.name !== 'N/A' ? new NamespaceId(rowValues.name) : null
-      this.modalFormsProps.aliasTarget = new MosaicId(rowValues.hexId)
-      this.modalFormsProps.aliasAction = rowValues.name !== 'N/A' ? AliasAction.Unlink : AliasAction.Link
+    /**
+     * Loading state of the data to be shown in the table
+     * @type {boolean}
+     */
+    public get isLoading() {
+        return this.assetType === 'namespace' ? this.isFetchingNamespaces : this.isFetchingMosaics;
     }
 
     /**
-     * Helper function to instantiate the alias target if any
-     * @param {string} aliasTarget
-     * @param {('address' | 'mosaic')} aliasType
-     * @returns {(MosaicId | Address)}
+     * Hook called when the signer selector has changed
+     * @protected
      */
-    const getInstantiatedAlias = (aliasType: string, aliasTarget: string): MosaicId | Address => {
-      if (aliasType === 'mosaic') return new MosaicId(aliasTarget)
-      return Address.createFromRawAddress(aliasTarget)
+    protected onSignerSelectorChange(address: string): void {
+        // clear previous account transactions
+        if (address) {
+            this.$store.dispatch('account/SET_CURRENT_SIGNER', { address: Address.createFromRawAddress(address) });
+        }
     }
 
-    // populate asset form modal props if asset is a namespace
-    if (this.assetType === 'namespace') {
-      ;(this.modalFormsProps.namespaceId = new NamespaceId(rowValues.name)),
-        (this.modalFormsProps.aliasTarget =
-          rowValues.aliasIdentifier === 'N/A'
-            ? null
-            : rowValues.aliasIdentifier
-            ? getInstantiatedAlias(rowValues.aliasType, rowValues.aliasIdentifier)
-            : null)
-      this.modalFormsProps.aliasAction = rowValues.aliasIdentifier === 'N/A' ? AliasAction.Link : AliasAction.Unlink
+    /**
+     * Current table sorting state
+     * @var {TableSortingOptions}
+     */
+    public sortedBy: TableSortingOptions = {
+        fieldName: undefined,
+        direction: undefined,
+    };
+
+    /**
+     * Current table filtering state
+     * @var {TableFilteringOptions}
+     */
+    public filteredBy: TableFilteringOptions = {
+        fieldName: undefined,
+        filteringType: undefined,
+    };
+
+    /**
+     * Pagination page size
+     * @type {number}
+     */
+    public pageSize: number = 10;
+
+    /**
+     * Pagination page number
+     * @type {number}
+     */
+    public currentPage: number = 1;
+
+    public nodata = [...new Array(this.pageSize).keys()];
+
+    protected get ownedAssetHexIds(): string[] {
+        return this.assetType === 'namespace'
+            ? this.ownedNamespaces.map(({ namespaceIdHex }) => namespaceIdHex)
+            : this.holdMosaics
+                  .filter(({ ownerRawPlain }) => ownerRawPlain === this.currentAccount.address)
+                  .map(({ mosaicIdHex }) => mosaicIdHex);
     }
 
-    // show the alias form modal
-    Vue.set(this.modalFormsVisibility, 'aliasTransaction', true)
-  }
+    /**
+     * Modal forms visibility states
+     * @protected
+     * @type {{
+     *     aliasTransaction: boolean
+     *     extendNamespaceDuration: boolean
+     *     mosaicSupplyChangeTransaction: boolean
+     *   }}
+     */
+    protected modalFormsVisibility: {
+        aliasTransaction: boolean;
+        extendNamespaceDurationTransaction: boolean;
+        mosaicSupplyChangeTransaction: boolean;
+    } = {
+        aliasTransaction: false,
+        extendNamespaceDurationTransaction: false,
+        mosaicSupplyChangeTransaction: false,
+    };
 
-  /**
-   * Triggers the extend namespace duration form modal
-   * @protected
-   * @param {Record<string, string>} rowValues
-   * @return {void}
-   */
-  protected showExtendNamespaceDurationForm(rowValues: Record<string, string>): void {
-    this.modalFormsProps.namespaceId = new NamespaceId(rowValues.name)
-    Vue.set(this.modalFormsVisibility, 'extendNamespaceDurationTransaction', true)
-  }
+    /**
+     * Action forms props
+     * @protected
+     * @type {({
+     *     namespaceId: NamespaceId
+     *     aliasTarget: MosaicId | Address
+     *     aliasAction: AliasAction
+     *     mosaicId: MosaicId
+     *   })}
+     */
+    protected modalFormsProps: {
+        namespaceId: NamespaceId;
+        aliasTarget: MosaicId | Address;
+        aliasAction: AliasAction;
+        mosaicId: MosaicId;
+    } = {
+        namespaceId: null,
+        aliasTarget: null,
+        aliasAction: null,
+        mosaicId: null,
+    };
 
-  /**
-   * Triggers the modify mosaic supply form modal
-   * @protected
-   * @param {Record<string, string>} rowValues
-   * @return {void}
-   */
-  protected showModifyMosaicSupplyForm(rowValues: Record<string, string>): void {
-    this.modalFormsProps.mosaicId = new MosaicId(rowValues.hexId)
-    Vue.set(this.modalFormsVisibility, 'mosaicSupplyChangeTransaction', true)
-  }
+    // Alias forms props
 
-  /**
-   * Closes a modal
-   * @protected
-   * @param {string} modalIdentifier
-   * @return {void}
-   */
-  protected closeModal(modalIdentifier: string): void {
-    Vue.set(this.modalFormsVisibility, modalIdentifier, false)
-  }
-
-  /**
-   * avoid multiple clicks
-   * @protected
-   * @param {string}
-   * @return {void}
-   */
-  public isRefreshing: boolean = false
-
-  protected async onRefresh() {
-    if (!this.isRefreshing) {
-      this.isRefreshing = true
-      try {
-        await this.refresh()
-      } catch (e) {
-        console.log('Cannot refresh', e)
-      }
-      this.isRefreshing = false
+    /**
+     * Instantiate the table service around {assetType}
+     * @return {AssetTableService}
+     */
+    protected getService(): AssetTableService {
+        if ('mosaic' === this.assetType) {
+            return new MosaicTableService(this.currentHeight, this.holdMosaics, this.networkConfiguration);
+        } else if ('namespace' === this.assetType) {
+            return new NamespaceTableService(this.currentHeight, this.ownedNamespaces, this.networkConfiguration);
+        }
+        throw new Error(`Asset type '${this.assetType}' does not exist in TableDisplay.`);
     }
-  }
+
+    /// region getters and setters
+    /**
+     * Non-filtered table data
+     * @var {TableRowValues[]}
+     */
+    private get tableRows(): any[] {
+        return this.getService().getTableRows();
+    }
+
+    /**
+     * Values displayed in the table
+     * @readonly
+     * @return {TableRowValues[]}
+     */
+    get displayedValues(): any[] {
+        return this.getService().sort(this.getService().filter(this.tableRows, this.filteredBy), this.sortedBy);
+    }
+
+    /**
+     * Header fields displayed in the table
+     * @readonly
+     * @return {TableField[]}
+     */
+    get tableFields(): TableField[] {
+        return this.getService().getTableFields();
+    }
+
+    /**
+     * Get current page rows
+     * @readonly
+     * @return {TableRowValues[]}
+     */
+    get currentPageRows(): any[] {
+        return this.displayedValues.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
+    }
+
+    /**
+     * getter and setter for the showExpired button
+     *
+     */
+    get showExpired(): boolean {
+        return this.filteredBy.fieldName === 'expiration' && this.filteredBy.filteringType === 'show';
+    }
+
+    set showExpired(newVal: boolean) {
+        this.setFilteredBy('expiration');
+    }
+
+    /**
+     * Alias form modal title
+     * @type {string}
+     * @protected
+     */
+    protected get aliasModalTitle(): string {
+        return this.modalFormsProps.aliasAction === AliasAction.Link ? 'modal_title_link_alias' : 'modal_title_unlink_alias';
+    }
+
+    /// end-region getters and setters
+
+    /**
+     * Hook called when the component is created
+     * @return {void}
+     */
+    public async created(): Promise<void> {
+        // refresh owned assets
+        this.refresh();
+        // initialize sorting and filtering
+        this.setDefaultFiltering();
+        // await this.refresh()
+        this.setDefaultSorting();
+    }
+
+    /**
+     * Refreshes the owned assets
+     * @returns {void}
+     */
+    private async refresh(): Promise<void> {
+        if ('mosaic' === this.assetType) {
+            await this.$store.dispatch('mosaic/LOAD_MOSAICS');
+        } else if ('namespace' === this.assetType) {
+            await this.$store.dispatch('namespace/LOAD_NAMESPACES');
+        }
+    }
+
+    /**
+     * Sets the default filtering state
+     */
+    public setDefaultFiltering(): void {
+        const defaultFilteringType: FilteringTypes = 'hide';
+        const defaultFilteringFieldName: string = 'expiration';
+
+        Vue.set(this, 'filteredBy', {
+            fieldName: defaultFilteringFieldName,
+            filteringType: defaultFilteringType,
+        });
+    }
+
+    /**
+     * Sets the default sorting state and trigger it
+     */
+    public setDefaultSorting(): void {
+        const defaultSort = 'asc';
+        const defaultField = 'namespace' === this.assetType ? 'name' : 'hexId';
+
+        Vue.set(this, 'sortedBy', {
+            fieldName: defaultField,
+            direction: defaultSort,
+        });
+
+        this.setSortedBy(defaultField);
+    }
+
+    /**
+     * Triggers table filtering by setting its filtering options
+     * @param {TableFieldNames} fieldName
+     */
+    public setFilteredBy(fieldName: string): void {
+        const filteredBy = { ...this.filteredBy };
+        const filteringType: FilteringTypes = filteredBy.fieldName === fieldName && filteredBy.filteringType === 'show' ? 'hide' : 'show';
+
+        this.filteredBy = { fieldName, filteringType };
+    }
+
+    /**
+     * Sorts the table data
+     * @param {TableFieldNames} fieldName
+     */
+    public setSortedBy(fieldName: string): void {
+        const sortedBy = { ...this.sortedBy };
+        const direction: SortingDirections = sortedBy.fieldName === fieldName && sortedBy.direction === 'asc' ? 'desc' : 'asc';
+
+        Vue.set(this, 'sortedBy', { fieldName, direction });
+    }
+
+    /**
+     * Handle pagination page change
+     * @param {number} page
+     */
+    public handlePageChange(page: number): void {
+        this.currentPage = page;
+    }
+
+    /**
+     * Triggers the alias form modal
+     * @protected
+     * @param {Record<string, string>} rowValues
+     * @return {void}
+     */
+    protected showAliasForm(rowValues: Record<string, string>): void {
+        // populate asset form modal props if asset is a mosaic
+        if (this.assetType === 'mosaic') {
+            this.modalFormsProps.namespaceId = rowValues.name !== 'N/A' ? new NamespaceId(rowValues.name) : null;
+            this.modalFormsProps.aliasTarget = new MosaicId(rowValues.hexId);
+            this.modalFormsProps.aliasAction = rowValues.name !== 'N/A' ? AliasAction.Unlink : AliasAction.Link;
+        }
+
+        /**
+         * Helper function to instantiate the alias target if any
+         * @param {string} aliasTarget
+         * @param {('address' | 'mosaic')} aliasType
+         * @returns {(MosaicId | Address)}
+         */
+        const getInstantiatedAlias = (aliasType: string, aliasTarget: string): MosaicId | Address => {
+            if (aliasType === 'mosaic') {
+                return new MosaicId(aliasTarget);
+            }
+            return Address.createFromRawAddress(aliasTarget);
+        };
+
+        // populate asset form modal props if asset is a namespace
+        if (this.assetType === 'namespace') {
+            (this.modalFormsProps.namespaceId = new NamespaceId(rowValues.name)),
+                (this.modalFormsProps.aliasTarget =
+                    rowValues.aliasIdentifier === 'N/A'
+                        ? null
+                        : rowValues.aliasIdentifier
+                        ? getInstantiatedAlias(rowValues.aliasType, rowValues.aliasIdentifier)
+                        : null);
+            this.modalFormsProps.aliasAction = rowValues.aliasIdentifier === 'N/A' ? AliasAction.Link : AliasAction.Unlink;
+        }
+
+        // show the alias form modal
+        Vue.set(this.modalFormsVisibility, 'aliasTransaction', true);
+    }
+
+    /**
+     * Triggers the extend namespace duration form modal
+     * @protected
+     * @param {Record<string, string>} rowValues
+     * @return {void}
+     */
+    protected showExtendNamespaceDurationForm(rowValues: Record<string, string>): void {
+        this.modalFormsProps.namespaceId = new NamespaceId(rowValues.name);
+        Vue.set(this.modalFormsVisibility, 'extendNamespaceDurationTransaction', true);
+    }
+
+    /**
+     * Triggers the modify mosaic supply form modal
+     * @protected
+     * @param {Record<string, string>} rowValues
+     * @return {void}
+     */
+    protected showModifyMosaicSupplyForm(rowValues: Record<string, string>): void {
+        this.modalFormsProps.mosaicId = new MosaicId(rowValues.hexId);
+        Vue.set(this.modalFormsVisibility, 'mosaicSupplyChangeTransaction', true);
+    }
+
+    /**
+     * Closes a modal
+     * @protected
+     * @param {string} modalIdentifier
+     * @return {void}
+     */
+    protected closeModal(modalIdentifier: string): void {
+        Vue.set(this.modalFormsVisibility, modalIdentifier, false);
+    }
+
+    /**
+     * avoid multiple clicks
+     * @protected
+     * @param {string}
+     * @return {void}
+     */
+    public isRefreshing: boolean = false;
+
+    protected async onRefresh() {
+        if (!this.isRefreshing) {
+            this.isRefreshing = true;
+            try {
+                await this.refresh();
+            } catch (e) {
+                console.log('Cannot refresh', e);
+            }
+            this.isRefreshing = false;
+        }
+    }
 }

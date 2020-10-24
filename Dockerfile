@@ -11,7 +11,7 @@ FROM node:lts-alpine AS builder
 
 WORKDIR /app
 COPY . .
-RUN npm install && npm run build
+RUN export WEB=true && npm install && npm run build
 
 FROM nginx:1.17-alpine AS runner
 COPY --from=builder /app/dist /usr/share/nginx/html

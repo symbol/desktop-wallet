@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 
 export interface TransactionDetailItem {
-  readonly key: string
-  readonly value: any
-  readonly isMosaic?: boolean
-  readonly isAddress?: boolean
-  readonly isPaidFee?: boolean
+    readonly key: string;
+    readonly value: any;
+    readonly isMosaic?: boolean;
+    readonly isAddress?: boolean;
+    readonly isPaidFee?: boolean;
 }

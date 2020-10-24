@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  *
  */
 export const onPeerConnection = (store) => {
-  store.subscribe((mutation) => {
-    if (mutation.type === 'network/currentPeerInfo') {
-      // - Done connection to new node
-      // const nodeUrl = store.getters['network/currentPeer'].url
-      // store.dispatch('statistics/initialize', nodeUrl)
-    }
-  })
-}
+    store.subscribe((mutation) => {
+        if (mutation.type === 'network/currentPeerInfo') {
+            // - Done connection to new node
+            // const nodeUrl = store.getters['network/currentPeer'].url
+            // store.dispatch('statistics/initialize', nodeUrl)
+        }
+    });
+};

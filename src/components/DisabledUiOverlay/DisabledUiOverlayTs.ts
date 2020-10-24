@@ -1,23 +1,23 @@
-import { mapState } from 'vuex'
-import { Component, Vue } from 'vue-property-decorator'
+import { mapState } from 'vuex';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
-  computed: { ...mapState({ app: 'app' }) },
+    computed: { ...mapState({ app: 'app' }) },
 })
 export class DisabledUiOverlayTs extends Vue {
-  app: any
+    app: any;
 
-  get show() {
-    return this.app.isUiDisabled
-  }
-
-  set show(val) {
-    if (!val) {
-      this.$emit('close')
+    get show() {
+        return this.app.isUiDisabled;
     }
-  }
 
-  get message() {
-    return this.app.uiDisabledMessage
-  }
+    set show(val) {
+        if (!val) {
+            this.$emit('close');
+        }
+    }
+
+    get message() {
+        return this.app.uiDisabledMessage;
+    }
 }

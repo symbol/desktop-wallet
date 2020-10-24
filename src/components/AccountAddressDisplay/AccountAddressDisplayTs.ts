@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Address } from 'symbol-sdk'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Address } from 'symbol-sdk';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 // internal dependencies
 //@ts-ignore
-import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
+import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue';
 
 @Component({
-  components: {
-    ButtonCopyToClipboard,
-  },
+    components: {
+        ButtonCopyToClipboard,
+    },
 })
 export class AccountAddressDisplayTs extends Vue {
-  @Prop({
-    default: null,
-  })
-  address: string
+    @Prop({
+        default: null,
+    })
+    address: string;
 
-  public getPrettyAddress(): string {
-    return this.address ? Address.createFromRawAddress(this.address).pretty() : ''
-  }
+    public getPrettyAddress(): string {
+        return this.address ? Address.createFromRawAddress(this.address).pretty() : '';
+    }
 
-  /// region computed properties getter/setter
-  /// end-region computed properties getter/setter
+    /// region computed properties getter/setter
+    /// end-region computed properties getter/setter
 }

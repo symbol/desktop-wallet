@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage'
+import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
 
-const getStorage = () => new SimpleObjectStorage<number>('SomeStorageKey')
+const getStorage = () => new SimpleObjectStorage<number>('SomeStorageKey');
 
 describe('database/SimpleObjectStorage.spec ==>', () => {
-  describe('constructor() should', () => {
-    test('create instance given no data', () => {
-      const storage = getStorage()
-      expect(storage).toBeDefined()
-    })
+    describe('constructor() should', () => {
+        test('create instance given no data', () => {
+            const storage = getStorage();
+            expect(storage).toBeDefined();
+        });
 
-    test('Get/Set/Delete', () => {
-      const storage = getStorage()
-      expect(storage.get()).toBeUndefined()
-      storage.set(123)
-      expect(storage.get()).toBe(123)
-      storage.set(456)
-      expect(storage.get()).toBe(456)
-      storage.remove()
-      expect(storage.get()).toBeUndefined()
-    })
-  })
-})
+        test('Get/Set/Delete', () => {
+            const storage = getStorage();
+            expect(storage.get()).toBeUndefined();
+            storage.set(123);
+            expect(storage.get()).toBe(123);
+            storage.set(456);
+            expect(storage.get()).toBe(456);
+            storage.remove();
+            expect(storage.get()).toBeUndefined();
+        });
+    });
+});

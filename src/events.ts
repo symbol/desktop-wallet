@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import Vue from 'vue'
+import Vue from 'vue';
 
 /// region event bus (events propagated on parallel thread)
 /**
@@ -23,5 +23,5 @@ import Vue from 'vue'
  * - onProfileChange with \a profileName
  * - onAccountChange with \a accountAddress
  */
-export const $eventBus = new Vue()
+export const $eventBus = new Vue();
 /// end-region event bus

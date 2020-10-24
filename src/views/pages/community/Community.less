@@ -1,103 +1,103 @@
 .main-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 0.2rem 0 0.35rem 0.2rem;
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 100%;
-
-  .inner-container {
     position: relative;
     width: 100%;
     height: 100%;
     padding: 0.2rem 0 0.35rem 0.2rem;
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 0.6rem auto;
-    overflow: hidden;
-    background-color: white;
-  }
+    grid-template-rows: 100%;
 
-  .top-container {
-    padding-left: 0.4rem;
-  }
+    .inner-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 0.2rem 0 0.35rem 0.2rem;
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: 0.6rem auto;
+        overflow: hidden;
+        background-color: white;
+    }
 
-  .bottom-container {
-    overflow: hidden;
-  }
+    .top-container {
+        padding-left: 0.4rem;
+    }
+
+    .bottom-container {
+        overflow: hidden;
+    }
 }
 
 .communityPanelWrap {
-  box-sizing: border-box;
-  width: 100%;
-  height: calc(100% - 25px);
-
-  .communityPanel {
     box-sizing: border-box;
     width: 100%;
-    height: calc(100% - 30px);
-    margin: 20px;
-    position: relative;
+    height: calc(100% - 25px);
 
-    .communityPanelNav {
-      z-index: 999;
-      position: absolute;
-      top: 30px;
-      left: 30px;
-      height: 70px;
-      width: 250px;
-      background-color: #fff;
-      border-radius: 4px;
+    .communityPanel {
+        box-sizing: border-box;
+        width: 100%;
+        height: calc(100% - 30px);
+        margin: 20px;
+        position: relative;
 
-      .navList {
-        width: 250px;
-        height: 100%;
+        .communityPanelNav {
+            z-index: 999;
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            height: 70px;
+            width: 250px;
+            background-color: #fff;
+            border-radius: 4px;
 
-        li {
-          width: 120px;
-          height: 100%;
-          line-height: 60px;
-          font-size: 30px;
-          text-align: center;
-          font-weight: 400;
-          color: #666666;
-          position: relative;
-          cursor: pointer;
+            .navList {
+                width: 250px;
+                height: 100%;
+
+                li {
+                    width: 120px;
+                    height: 100%;
+                    line-height: 60px;
+                    font-size: 30px;
+                    text-align: center;
+                    font-weight: 400;
+                    color: #666666;
+                    position: relative;
+                    cursor: pointer;
+                }
+
+                li:first-of-type:before {
+                    display: none;
+                }
+
+                .active {
+                    font-weight: bold;
+                    color: #20b5ac;
+                }
+
+                .active:after {
+                    display: block;
+                    content: '';
+                    width: 30px;
+                    height: 5px;
+                    background: #4dc2bf;
+                    position: absolute;
+                    bottom: 0;
+                    left: -15px;
+                    margin-left: 50%;
+                }
+            }
         }
 
-        li:first-of-type:before {
-          display: none;
+        .contentPanel {
+            height: 100%;
+            background-color: white;
+            width: 1765px;
         }
-
-        .active {
-          font-weight: bold;
-          color: #20b5ac;
-        }
-
-        .active:after {
-          display: block;
-          content: '';
-          width: 30px;
-          height: 5px;
-          background: #4dc2bf;
-          position: absolute;
-          bottom: 0;
-          left: -15px;
-          margin-left: 50%;
-        }
-      }
     }
-
-    .contentPanel {
-      height: 100%;
-      background-color: white;
-      width: 1765px;
-    }
-  }
 }
 
 .disabled {
-  color: #ccc !important;
-  cursor: not-allowed !important;
+    color: #ccc !important;
+    cursor: not-allowed !important;
 }

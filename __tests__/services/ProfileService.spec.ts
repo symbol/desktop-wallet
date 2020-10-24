@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { ProfileService } from '@/services/ProfileService'
-import { Password } from 'symbol-sdk'
+import { ProfileService } from '@/services/ProfileService';
+import { Password } from 'symbol-sdk';
 
 // prepare all
 
 describe('services/ProfileService', () => {
-  describe('getPasswordHash() should', () => {
-    test('create 64 bytes hash of password', () => {
-      // act
-      const hash = ProfileService.getPasswordHash(new Password('1234567a'))
+    describe('getPasswordHash() should', () => {
+        test('create 64 bytes hash of password', () => {
+            // act
+            const hash = ProfileService.getPasswordHash(new Password('1234567a'));
 
-      // assert
-      expect(hash).toBeDefined()
-      expect(hash.length).toBe(128)
-    })
-  })
-})
+            // assert
+            expect(hash).toBeDefined();
+            expect(hash.length).toBe(128);
+        });
+    });
+});

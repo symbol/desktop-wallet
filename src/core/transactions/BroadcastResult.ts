@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,37 +13,37 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { CosignatureSignedTransaction, SignedTransaction, Transaction } from 'symbol-sdk'
+import { CosignatureSignedTransaction, SignedTransaction, Transaction } from 'symbol-sdk';
 
 export class BroadcastResult {
-  /**
-   * Create a transaction broadcast result instance
-   *
-   * @param {SignedTransaction} transaction
-   * @param {boolean} success
-   * @param {string} error
-   */
-  constructor(
     /**
-     * The transaction that was announced
-     * @var {SignedTransaction}
+     * Create a transaction broadcast result instance
+     *
+     * @param {SignedTransaction} transaction
+     * @param {boolean} success
+     * @param {string} error
      */
-    public readonly signedTransaction: SignedTransaction | CosignatureSignedTransaction,
+    constructor(
+        /**
+         * The transaction that was announced
+         * @var {SignedTransaction}
+         */
+        public readonly signedTransaction: SignedTransaction | CosignatureSignedTransaction,
 
-    /**
-     * The transaction that returned.
-     * @var {SignedTransaction}
-     */
-    public readonly transaction: Transaction | undefined,
-    /**
-     * Whether broadcasting was successfull
-     * @var {boolean}
-     **/
-    public readonly success: boolean,
-    /**
-     * Error message (optional)
-     * @var {string}
-     **/
-    public readonly error?: string,
-  ) {}
+        /**
+         * The transaction that returned.
+         * @var {SignedTransaction}
+         */
+        public readonly transaction: Transaction | undefined,
+        /**
+         * Whether broadcasting was successfull
+         * @var {boolean}
+         **/
+        public readonly success: boolean,
+        /**
+         * Error message (optional)
+         * @var {string}
+         **/
+        public readonly error?: string,
+    ) {}
 }

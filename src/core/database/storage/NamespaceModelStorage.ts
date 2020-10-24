@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
  *
  */
 
-import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
-import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
+import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage';
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
 
 export class NamespaceModelStorage extends VersionedNetworkBasedObjectStorage<NamespaceModel[]> {
-  /**
-   * Singleton instance as we want to run the migration just once
-   */
-  public static INSTANCE = new NamespaceModelStorage()
+    /**
+     * Singleton instance as we want to run the migration just once
+     */
+    public static INSTANCE = new NamespaceModelStorage();
 
-  private constructor() {
-    super('namespaceCache')
-  }
+    private constructor() {
+        super('namespaceCache');
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,6 @@
  * The object is serialized and deserialized to/from JSON. no method or complex attributes can be fined.
  */
 export class MosaicConfigurationModel {
-  constructor(public readonly hidden: boolean = false) {}
+    constructor(public readonly hidden: boolean = false) {}
 }
-export type AccountMosaicConfigurationModel = Record<string, MosaicConfigurationModel>
+export type AccountMosaicConfigurationModel = Record<string, MosaicConfigurationModel>;

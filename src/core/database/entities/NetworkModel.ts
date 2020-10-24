@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  *
  */
 
-import { NetworkType, NodeInfo, TransactionFees } from 'symbol-sdk'
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { NetworkType, NodeInfo, TransactionFees } from 'symbol-sdk';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 /**
  * Stored POJO that holds network information.
@@ -26,12 +26,12 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
  *
  */
 export class NetworkModel {
-  constructor(
-    public readonly url: string,
-    public readonly networkType: NetworkType,
-    public readonly generationHash: string,
-    public readonly networkConfiguration: NetworkConfigurationModel,
-    public readonly transactionFees: TransactionFees,
-    public readonly nodeInfo: NodeInfo,
-  ) {}
+    constructor(
+        public readonly url: string,
+        public readonly networkType: NetworkType,
+        public readonly generationHash: string,
+        public readonly networkConfiguration: NetworkConfigurationModel,
+        public readonly transactionFees: TransactionFees,
+        public readonly nodeInfo: NodeInfo,
+    ) {}
 }

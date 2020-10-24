@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,20 @@
  * @interface RouteMeta
  */
 export interface RouteMeta {
-  /**
-   * Authentication required
-   * @type {boolean}
-   */
-  protected: boolean
-  /**
-   * Localized route name shown in the view
-   * @type {string}
-   */
-  title?: string
-  // @TODO: REVIEW
-  clickable?: boolean
-  icon?: unknown
-  active?: boolean
-  nextPage?: string
-  hideFromMenu?: boolean
+    /**
+     * Authentication required
+     * @type {boolean}
+     */
+    protected: boolean;
+    /**
+     * Localized route name shown in the view
+     * @type {string}
+     */
+    title?: string;
+    // @TODO: REVIEW
+    clickable?: boolean;
+    icon?: unknown;
+    active?: boolean;
+    nextPage?: string;
+    hideFromMenu?: boolean;
 }

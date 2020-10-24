@@ -1,50 +1,50 @@
 <template>
-  <div class="transaction-row-container transaction-table-columns" @click="$emit('click', transaction)">
-    <!-- FIRST COLUMN -->
-    <div class="icon-cell">
-      <img :src="getIcon()" class="icon-cell-image" />
-    </div>
+    <div class="transaction-row-container transaction-table-columns" @click="$emit('click', transaction)">
+        <!-- FIRST COLUMN -->
+        <div class="icon-cell">
+            <img :src="getIcon()" class="icon-cell-image" />
+        </div>
 
-    <!-- SECOND COLUMN -->
-    <div class="address-cell">
-      <ActionDisplay :transaction="transaction" />
-    </div>
+        <!-- SECOND COLUMN -->
+        <div class="address-cell">
+            <ActionDisplay :transaction="transaction" />
+        </div>
 
-    <!-- THIRD COLUMN -->
-    <div class="amount-cell">
-      <MosaicAmountDisplay
-        v-if="getAmount() !== undefined"
-        :id="getAmountMosaicId()"
-        :absolute-amount="getAmount()"
-        :color="getAmountColor()"
-        :show-ticker="isAmountShowTicker()"
-      />
-      <span v-else>N/A</span>
-    </div>
+        <!-- THIRD COLUMN -->
+        <div class="amount-cell">
+            <MosaicAmountDisplay
+                v-if="getAmount() !== undefined"
+                :id="getAmountMosaicId()"
+                :absolute-amount="getAmount()"
+                :color="getAmountColor()"
+                :show-ticker="isAmountShowTicker()"
+            />
+            <span v-else>N/A</span>
+        </div>
 
-    <!-- FOURTH COLUMN -->
-    <div class="confirmation-cell">
-      {{ getHeight() }}
-    </div>
+        <!-- FOURTH COLUMN -->
+        <div class="confirmation-cell">
+            {{ getHeight() }}
+        </div>
 
-    <!-- FIFTH COLUMN -->
-    <div class="hash-cell">
-      <span class="hash-cell-transaction-hash">
-        <a class="url_text" target="_blank" :href="explorerUrl">
-          {{ formatters.miniHash(transaction.transactionInfo.hash) }}
-        </a>
-      </span>
-      <span class="hash-cell-time">
-        <!-- @TODO: Should be transaction time instead of deadline -->
-        {{ timeHelpers.formatTimestamp(transaction.deadline.value) }}
-      </span>
+        <!-- FIFTH COLUMN -->
+        <div class="hash-cell">
+            <span class="hash-cell-transaction-hash">
+                <a class="url_text" target="_blank" :href="explorerUrl">
+                    {{ formatters.miniHash(transaction.transactionInfo.hash) }}
+                </a>
+            </span>
+            <span class="hash-cell-time">
+                <!-- @TODO: Should be transaction time instead of deadline -->
+                {{ timeHelpers.formatTimestamp(transaction.deadline.value) }}
+            </span>
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
 // @ts-ignore
-import { TransactionRowTs } from './TransactionRowTs'
+import { TransactionRowTs } from './TransactionRowTs';
 
 export default class TransactionRow extends TransactionRowTs {}
 </script>

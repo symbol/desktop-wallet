@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,53 +14,55 @@
  *
  */
 // external dependencies
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
-import { mapGetters } from 'vuex'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
+import { mapGetters } from 'vuex';
 
 // configuration
 
 @Component({
-  computed: {
-    ...mapGetters({
-      networkConfiguration: 'network/networkConfiguration',
-    }),
-  },
+    computed: {
+        ...mapGetters({
+            networkConfiguration: 'network/networkConfiguration',
+        }),
+    },
 })
 export class AmountDisplayTs extends Vue {
-  @Prop({ default: 0 }) value: number
+    @Prop({ default: 0 }) value: number;
 
-  @Prop({ default: undefined }) decimals: number | undefined
+    @Prop({ default: undefined }) decimals: number | undefined;
 
-  @Prop({ default: false }) showTicker: false
+    @Prop({ default: false }) showTicker: false;
 
-  @Prop({ default: '' }) ticker: string
+    @Prop({ default: '' }) ticker: string;
 
-  @Prop({ default: 'normal' }) size: 'normal' | 'smaller' | 'bigger' | 'biggest'
+    @Prop({ default: 'normal' }) size: 'normal' | 'smaller' | 'bigger' | 'biggest';
 
-  public networkConfiguration: NetworkConfigurationModel
+    public networkConfiguration: NetworkConfigurationModel;
 
-  /// region computed properties getter/setter
-  get integerPart(): string {
-    return Math.floor(this.value).toLocaleString()
-  }
+    /// region computed properties getter/setter
+    get integerPart(): string {
+        return Math.floor(this.value).toLocaleString();
+    }
 
-  get fractionalPart(): string {
-    const rest = this.value - Math.floor(this.value)
-    if (rest === 0) return ''
-    const decimals = this.decimals === undefined ? this.networkConfiguration.maxMosaicDivisibility || 6 : this.decimals
-    // remove leftmost-0 and rightmost-0
-    return Number(rest.toFixed(decimals)).toPrecision().toString().replace(/^0/, '')
-  }
+    get fractionalPart(): string {
+        const rest = this.value - Math.floor(this.value);
+        if (rest === 0) {
+            return '';
+        }
+        const decimals = this.decimals === undefined ? this.networkConfiguration.maxMosaicDivisibility || 6 : this.decimals;
+        // remove leftmost-0 and rightmost-0
+        return Number(rest.toFixed(decimals)).toPrecision().toString().replace(/^0/, '');
+    }
 
-  /**
-   * Ticker displayed in the view
-   * @readonly
-   * @type {string}
-   */
-  get displayedTicker(): string {
-    return (this.showTicker && this.ticker) || ''
-  }
+    /**
+     * Ticker displayed in the view
+     * @readonly
+     * @type {string}
+     */
+    get displayedTicker(): string {
+        return (this.showTicker && this.ticker) || '';
+    }
 
-  /// end-region computed properties getter/setter
+    /// end-region computed properties getter/setter
 }

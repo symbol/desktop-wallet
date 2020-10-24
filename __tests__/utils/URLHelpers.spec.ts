@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,63 +13,63 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { URLHelpers } from '@/core/utils/URLHelpers'
+import { URLHelpers } from '@/core/utils/URLHelpers';
 
 describe('utils/URLHelpers', () => {
-  describe('formatUrl() should', () => {
-    test('return correctly shaped object', () => {
-      // act
-      const payload = URLHelpers.formatUrl('http://localhost:3000')
+    describe('formatUrl() should', () => {
+        test('return correctly shaped object', () => {
+            // act
+            const payload = URLHelpers.formatUrl('http://localhost:3000');
 
-      // assert
-      expect(payload).toBeDefined()
-      expect(payload.protocol).toBeDefined()
-      expect(payload.hostname).toBeDefined()
-      expect(payload.port).toBeDefined()
-      expect(payload.url).toBeDefined()
-    })
-  })
+            // assert
+            expect(payload).toBeDefined();
+            expect(payload.protocol).toBeDefined();
+            expect(payload.hostname).toBeDefined();
+            expect(payload.port).toBeDefined();
+            expect(payload.url).toBeDefined();
+        });
+    });
 
-  describe('httpToWsUrl() should', () => {
-    test('should replace http by ws protocol', () => {
-      // act
-      const wsEndpoint = URLHelpers.httpToWsUrl('http://localhost:3000')
-      const wssEndpoint = URLHelpers.httpToWsUrl('https://localhost:3000')
+    describe('httpToWsUrl() should', () => {
+        test('should replace http by ws protocol', () => {
+            // act
+            const wsEndpoint = URLHelpers.httpToWsUrl('http://localhost:3000');
+            const wssEndpoint = URLHelpers.httpToWsUrl('https://localhost:3000');
 
-      // assert
-      expect(wsEndpoint).toBeDefined()
-      expect(wssEndpoint).toBeDefined()
-      expect(wsEndpoint).toBe('ws://localhost:3000')
-      expect(wssEndpoint).toBe('wss://localhost:3000')
-    })
-  })
+            // assert
+            expect(wsEndpoint).toBeDefined();
+            expect(wssEndpoint).toBeDefined();
+            expect(wsEndpoint).toBe('ws://localhost:3000');
+            expect(wssEndpoint).toBe('wss://localhost:3000');
+        });
+    });
 
-  describe('completeUrlWithHostAndProtocol() should', () => {
-    test('add protocol and port given hostname only', () => {
-      // act
-      const url = URLHelpers.getNodeUrl('localhost')
+    describe('completeUrlWithHostAndProtocol() should', () => {
+        test('add protocol and port given hostname only', () => {
+            // act
+            const url = URLHelpers.getNodeUrl('localhost');
 
-      // assert
-      expect(url).toBeDefined()
-      expect(url).toBe('http://localhost:3000')
-    })
+            // assert
+            expect(url).toBeDefined();
+            expect(url).toBe('http://localhost:3000');
+        });
 
-    test('add port given protocol and hostname', () => {
-      // act
-      const url = URLHelpers.getNodeUrl('http://localhost')
+        test('add port given protocol and hostname', () => {
+            // act
+            const url = URLHelpers.getNodeUrl('http://localhost');
 
-      // assert
-      expect(url).toBeDefined()
-      expect(url).toBe('http://localhost:3000')
-    })
+            // assert
+            expect(url).toBeDefined();
+            expect(url).toBe('http://localhost:3000');
+        });
 
-    test('add protocol given hostname and port', () => {
-      // act
-      const url = URLHelpers.getNodeUrl('localhost:3000')
+        test('add protocol given hostname and port', () => {
+            // act
+            const url = URLHelpers.getNodeUrl('localhost:3000');
 
-      // assert
-      expect(url).toBeDefined()
-      expect(url).toBe('http://localhost:3000')
-    })
-  })
-})
+            // assert
+            expect(url).toBeDefined();
+            expect(url).toBe('http://localhost:3000');
+        });
+    });
+});

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
  *
  */
 
-import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage'
-import { BlockInfoModel } from '@/core/database/entities/BlockInfoModel'
+import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage';
+import { BlockInfoModel } from '@/core/database/entities/BlockInfoModel';
 
 /**
  * Stored cache for the known block infos.
  */
 export class BlockInfoModelStorage extends VersionedNetworkBasedObjectStorage<BlockInfoModel[]> {
-  /**
-   * Singleton instance as we want to run the migration just once
-   */
-  public static INSTANCE = new BlockInfoModelStorage()
+    /**
+     * Singleton instance as we want to run the migration just once
+     */
+    public static INSTANCE = new BlockInfoModelStorage();
 
-  private constructor() {
-    super('blockCache')
-  }
+    private constructor() {
+        super('blockCache');
+    }
 }

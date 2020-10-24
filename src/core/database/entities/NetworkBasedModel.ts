@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * Copyright 2020 NEM (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 /**
  * A model that store some generic value based on the generation hash.
  */
-export type NetworkBasedModel<E> = Record<string, NetworkBasedEntryModel<E>>
+export type NetworkBasedModel<E> = Record<string, NetworkBasedEntryModel<E>>;
 
 export class NetworkBasedEntryModel<E> {
-  public readonly timestamp = Date.now()
+    public readonly timestamp = Date.now();
 
-  constructor(public readonly generationHash: string, public readonly data: E) {}
+    constructor(public readonly generationHash: string, public readonly data: E) {}
 }
