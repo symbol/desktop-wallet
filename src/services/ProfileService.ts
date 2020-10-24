@@ -64,7 +64,9 @@ export class ProfileService {
     public updateAccounts(profile: ProfileModel, accounts: string[]): ProfileModel {
         return this.saveProfile(Object.assign(profile, { accounts }));
     }
-
+    public updateProfileTermsAndConditionsStatus(profile: ProfileModel, termsAndConditionsApproved: boolean): ProfileModel {
+        return this.saveProfile(Object.assign(profile, { termsAndConditionsApproved }));
+    }
     /**
      * Return password hash that can be compared
      * @param password to be hashed

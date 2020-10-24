@@ -32,11 +32,11 @@
 }
 
 .top_account_address.grayed {
-    background-image: linear-gradient(120deg, @primary, @grayDark);
+    background-color: @grayDark;
 }
 
 .top_account_address.purpled {
-    background-image: linear-gradient(120deg, @primary, @secondary);
+    background-color: @primary;
 }
 
 .top_account_address {
@@ -45,8 +45,8 @@
     padding: 0.22rem 0.2rem 0 0.21rem;
     position: relative;
     background-size: cover;
-    background: linear-gradient(161deg, rgba(82, 0, 198, 1) 0%, rgba(68, 0, 78, 1) 100%);
-    border-radius: 0.1rem;
+    background-color: @primary;
+    border-radius: 12px;
 
     .account_address {
         padding-bottom: 0.15rem;
@@ -56,7 +56,7 @@
         .address {
             color: @white;
             font-size: @normalFont;
-            font-weight: 400;
+            font-weight: 150;
             display: inline-block;
             width: 3.6rem;
             word-break: break-all;
@@ -72,7 +72,7 @@
     .XEM_amount {
         margin: 0.3rem 0 0 0.05rem;
         font-size: @biggerFont;
-        font-weight: 400;
+        font-weight: 500;
         color: @white;
     }
 
@@ -93,6 +93,8 @@
     grid-template-rows: 100%;
     grid-template-columns: 100%;
     overflow-y: hidden;
+    background-color: white;
+    border-radius: 12px;
 
     .ivu-tabs-tab-active {
         color: @purple;

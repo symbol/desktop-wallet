@@ -3,8 +3,12 @@
         <template v-slot:label> {{ $t('fee') }}: </template>
         <template v-slot:inputs>
             <div class="row-75-25 inputs-container">
-                <MaxFeeSelector v-model="maxFee" />
-                <div v-if="!hideSubmit" class="pl-2">
+                <MaxFeeSelector
+                    v-model="maxFee"
+                    :calculated-recommended-fee="calculatedRecommendedFee"
+                    :calculated-highest-fee="calculatedHighestFee"
+                />
+                <div v-if="!hideSubmit" class="ml-2">
                     <button
                         type="submit"
                         class="centered-button button-style validation-button submit-button"
@@ -13,6 +17,13 @@
                     >
                         {{ $t('send') }}
                     </button>
+                </div>
+            </div>
+            <div v-if="showWarnings && anyWarnings">
+                <div v-if="isFeeLowerThanRecommendedFee" type="warning" class="warning-fee-low">
+                    <Icon type="ios-warning-outline" />
+                    {{ $t('low_fee_warning_message') }}
+                    expire.
                 </div>
             </div>
         </template>
@@ -48,6 +59,21 @@ export default class MaxFeeAndSubmit extends Vue {
     @Prop({ default: false }) disableSubmit: boolean;
 
     /**
+     * Dynamically calculated recommended fee
+     */
+    @Prop({ default: 0 }) calculatedRecommendedFee: number;
+
+    /**
+     * Dynamically calculated highest fee
+     */
+    @Prop({ default: 0 }) calculatedHighestFee: number;
+
+    /**
+     * Whether warnings are visible
+     */
+    @Prop({ default: true }) showWarnings: boolean;
+
+    /**
      * Get max fee value from the value prop
      * @readonly
      * @protected
@@ -63,6 +89,23 @@ export default class MaxFeeAndSubmit extends Vue {
      */
     protected set maxFee(chosenMaxFee) {
         this.$emit('input', chosenMaxFee);
+    }
+
+    /**
+     * Whether there are any warnings
+     */
+    protected get anyWarnings(): boolean {
+        return this.isFeeLowerThanRecommendedFee;
+    }
+
+    /**
+     * Whether selected fee is lower than recommended fee
+     */
+    protected get isFeeLowerThanRecommendedFee() {
+        if (this.calculatedRecommendedFee > 0 && this.maxFee !== 1 && this.maxFee !== 2) {
+            return this.maxFee < this.calculatedRecommendedFee;
+        }
+        return false;
     }
 }
 </script>

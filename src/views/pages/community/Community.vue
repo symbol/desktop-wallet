@@ -1,10 +1,10 @@
 <template>
     <div class="main-container">
-        <div class="inner-container xym-outline">
+        <div class="inner-container">
             <div class="top-container">
-                <h1 class="page-title">
+                <span class="page-title">
                     {{ $t('latest_news_articles') }}
-                </h1>
+                </span>
             </div>
             <div class="bottom-container">
                 <Information />

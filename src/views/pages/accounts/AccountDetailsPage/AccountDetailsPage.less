@@ -28,10 +28,11 @@
         padding: 0.2rem 0.4rem;
         margin: 0;
         display: grid;
-        grid-template-columns: 10rem auto;
+        grid-template-columns: 70%30%;
 
         .left-container {
             width: 100%;
+            overflow: hidden;
 
             .title-row {
                 font-size: @biggerFont;
@@ -50,10 +51,10 @@
 
             .account-details-grid {
                 background-color: white;
+                font-size: 15px;
                 display: inline-grid;
-                font-size: @normalFont;
                 font-weight: 400;
-                color: #222;
+                color: @primary;
                 grid-auto-rows: 0.5rem;
                 padding-left: 10px;
             }
@@ -79,21 +80,18 @@
             .account-detail-row,
             .account-detail-row-3cols {
                 .label {
-                    font-size: @normalFont;
                     font-weight: 400;
-                    color: #666;
                     margin-right: 10px;
                     width: 1.4rem;
                 }
 
                 /deep/ .value {
-                    font-weight: @bolder;
+                    color: @black;
                 }
             }
         }
 
         .right-container {
-            background-color: white;
         }
     }
 
@@ -101,7 +99,6 @@
         background-color: lightgray;
         width: 100%;
         padding: 25px 0 0 0;
-        background-color: #eee;
 
         .account-actions-inner-container {
             background-color: lightseagreen;

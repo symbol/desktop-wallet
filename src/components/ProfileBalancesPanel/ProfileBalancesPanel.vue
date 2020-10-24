@@ -15,19 +15,18 @@
                         {{ currentSignerAddress.plain() }}
                     </span>
                     <ButtonCopyToClipboard :value="currentSignerAddress.plain()">
-                        <img class="pointer" src="@/views/resources/img/monitor/monitorCopyAddress.png" />
+                        <img class="pointer" src="@/views/resources/img/monitor/monitorCopyDocument.svg" />
                     </ButtonCopyToClipboard>
                 </div>
                 <div v-if="networkCurrency" class="XEM_amount overflow_ellipsis">
-                    <div>{{ networkCurrency.ticker }}</div>
+                    <div>{{ networkCurrency.ticker }} WALLET</div>
                     <div class="amount">
                         <MosaicAmountDisplay :absolute-amount="absoluteBalance" :size="'biggest'" />
                     </div>
                 </div>
-                <img class="balance-background" src="@/views/resources/img/monitor/dash-board/dashboardWalletBalanceBackground.png" />
             </div>
 
-            <div class="bottom_account_info radius xym-outline">
+            <div class="bottom_account_info">
                 <Spin v-if="!balanceMosaics.length" size="large" fix class="absolute" />
                 <MosaicBalanceList />
             </div>

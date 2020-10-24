@@ -36,7 +36,7 @@
             height: auto;
             display: grid;
             grid-template-rows: 100%;
-            grid-template-columns: 2.4rem auto;
+            grid-template-columns: 1.8rem auto;
             margin: 0.3rem 0;
             overflow: hidden;
 
@@ -58,11 +58,13 @@
                     grid-gap: 0.1rem auto;
                     align-items: center;
                     margin-bottom: 0.1rem;
+                    font-size: 16px;
 
                     .top-qr-text-title {
-                        font-size: @smallFont;
-                        font-weight: @bold;
-                        color: @secondary;
+                        font-size: 16px;
+                        font-weight: 400;
+                        color: @primary;
+                        text-align: right;
                     }
                 }
             }
@@ -103,6 +105,10 @@
                 white-space: nowrap;
                 background-color: @primary;
             }
+        }
+
+        /deep/.transaction-uri-display-row {
+            margin-top: 0.5rem;
         }
     }
 }

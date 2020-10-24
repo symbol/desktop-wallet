@@ -49,11 +49,11 @@
                 />
             </div>
             <div v-else-if="!isLoading && (!displayedValues || displayedValues.length === 0)" class="no-data-outer-container">
-                <div class="no-data-message-container">
+                <!--<div class="no-data-message-container">
                     <div>
                         {{ assetType === 'mosaic' ? $t('no_data_mosaics') : $t('no_data_namespaces') }}
                     </div>
-                </div>
+                </div>-->
                 <div class="no-data-inner-container">
                     <div v-for="item in nodata" :key="item">
                         &nbsp;

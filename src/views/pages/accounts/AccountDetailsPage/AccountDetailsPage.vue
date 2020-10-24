@@ -4,15 +4,15 @@
             <div class="left-container">
                 <div class="account-details-grid">
                     <div class="detail-row">
-                        <AccountNameDisplay :account="currentAccount" :editable="true" />
+                        <AccountNameDisplay v-if="currentAccount" :account="currentAccount" :editable="true" />
                     </div>
 
                     <div class="detail-row">
-                        <ImportanceScoreDisplay :address="currentAccount.address" />
+                        <ImportanceScoreDisplay v-if="currentAccount" :address="currentAccount.address" />
                     </div>
 
                     <div class="detail-row">
-                        <AccountAddressDisplay :address="currentAccount.address" />
+                        <AccountAddressDisplay v-if="currentAccount" :address="currentAccount.address" />
                     </div>
 
                     <div class="detail-row">
@@ -24,7 +24,7 @@
                     </div>
 
                     <!-- default account flag -->
-                    <div v-if="defaultAccount === currentAccount.id" class="detail-row">
+                    <div v-if="currentAccount && defaultAccount === currentAccount.id" class="detail-row">
                         <div class="account-detail-row">
                             <span class="label">{{ $t('accounts_flags_default_account') }}</span>
                             <div class="value">
@@ -34,7 +34,7 @@
                     </div>
 
                     <!-- simple/multisig flag -->
-                    <div v-if="currentAccount.isMultisig" class="detail-row">
+                    <div v-if="currentAccount && currentAccount.isMultisig" class="detail-row">
                         <div class="account-detail-row">
                             <span class="label">{{ $t('accounts_flags_default_account') }}</span>
                             <div class="value">
@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div class="account-detail-inner-container">
+        <!--<div class="account-detail-inner-container">
             <div class="left-container">
                 <div class="title-row">
                     <span>{{ $t('accounts_subtitle_account_links') }}</span>
@@ -61,7 +61,7 @@
 
                 <AccountLinks :account="currentAccount" />
             </div>
-        </div>
+        </div>-->
     </div>
 </template>
 

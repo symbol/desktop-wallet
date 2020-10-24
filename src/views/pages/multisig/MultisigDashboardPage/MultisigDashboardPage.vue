@@ -1,6 +1,6 @@
 <template>
     <div class="multisig-outer-container">
-        <div class="multisig-inner-container xym-outline">
+        <div class="multisig-inner-container">
             <div class="bottom-container">
                 <NavigationTabs direction="horizontal" :parent-route-name="'multisig'" />
                 <router-view />
@@ -32,9 +32,10 @@ export default class MultisigDashboardPage extends Vue {}
     .multisig-inner-container {
         width: 100%;
         height: 100%;
-        background: transparent;
+        background: white;
         overflow-x: hidden;
         overflow-y: auto;
+        border-radius: 12px;
         .header-container {
             width: 100%;
             height: 100%;

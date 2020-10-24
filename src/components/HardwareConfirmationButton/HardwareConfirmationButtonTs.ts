@@ -46,7 +46,7 @@ export class HardwareConfirmationButtonTs extends Vue implements TransactionSign
     public async processHardware() {
         return this.$emit('success', this);
     }
-
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     signCosignatureTransaction(t: CosignatureTransaction): Observable<CosignatureSignedTransaction> {
         throw new Error('Not Implemented!!!');
     }

@@ -61,9 +61,19 @@ export class MaxFeeSelectorTs extends Vue {
     private defaultFee: number;
 
     /**
+     * Dynamically calculated recommended fee
+     */
+    @Prop({ default: 0 }) calculatedRecommendedFee: number;
+
+    /**
+     * Dynamically calculated highest fee
+     */
+    @Prop({ default: 0 }) calculatedHighestFee: number;
+
+    /**
      * The fees to be displayed in the dropw down.
      */
-    private fees: { label: string; maxFee: number }[];
+    private fees: { label: string; maxFee: number; calculatedFee: number }[];
 
     @Prop({
         default: 1,
@@ -74,15 +84,42 @@ export class MaxFeeSelectorTs extends Vue {
         this.fees = Object.entries(feesConfig).map((entry) => ({
             label: this.getLabel([entry[0], entry[1] as number]),
             maxFee: entry[1] as number,
+            calculatedFee: entry[1] as number,
         }));
     }
 
+    /**
+     * Returns the label based on the feesConfig property
+     * @param {[string, number]} key, value pair
+     */
     private getLabel([key, value]: [string, number]) {
         //SPECIAL VALUES!!!
-        if (value == 1 || value == 2) {
-            return this.$t('fee_speed_' + key).toString();
+        if (value === feesConfig.median) {
+            return this.formatLabel(
+                'fee_speed_' + key,
+                this.calculatedRecommendedFee,
+                this.networkMosaicName,
+                this.calculatedRecommendedFee > 0,
+            );
+        } else if (value === feesConfig.highest) {
+            return this.formatLabel('fee_speed_' + key, this.calculatedHighestFee, this.networkMosaicName, this.calculatedHighestFee > 0);
         }
-        return this.$t('fee_speed_' + key).toString() + ': ' + this.getRelative(value) + ' ' + this.networkMosaicName;
+        return this.formatLabel('fee_speed_' + key, value, this.networkMosaicName);
+    }
+
+    /**
+     * Returns the formatted label
+     * @param labelKey
+     * @param fee
+     * @param mosaic
+     * @param showAmount
+     */
+    private formatLabel(labelKey: string, fee: number, mosaic: string, showAmount: boolean = true): string {
+        let label = this.$t(labelKey).toString();
+        if (showAmount) {
+            label += ': ' + this.getRelative(fee) + ' ' + mosaic;
+        }
+        return label;
     }
 
     /**
@@ -121,5 +158,30 @@ export class MaxFeeSelectorTs extends Vue {
             return amount;
         }
         return amount / Math.pow(10, this.networkCurrency.divisibility);
+    }
+
+    /**
+     * Returns the sorted fees (including the calculated fees)
+     */
+    public get feesCalculated(): { label: string; maxFee: number }[] {
+        return this.fees
+            .map((i) => {
+                if (i.maxFee === 1) {
+                    return {
+                        label: this.getLabel(['median', feesConfig.median]),
+                        maxFee: i.maxFee,
+                        calculatedFee: this.calculatedRecommendedFee,
+                    };
+                } else if (i.maxFee === 2) {
+                    return {
+                        label: this.getLabel(['highest', feesConfig.highest]),
+                        maxFee: i.maxFee,
+                        calculatedFee: this.calculatedHighestFee,
+                    };
+                } else {
+                    return i;
+                }
+            })
+            .sort((a, b) => a.calculatedFee - b.calculatedFee);
     }
 }

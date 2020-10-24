@@ -147,21 +147,21 @@ import message from '@/views/resources/img/icons/message.png';
 // @ts-ignore
 import metadata from '@/views/resources/img/icons/metadata.png';
 // @ts-ignore
-import mosaic from '@/views/resources/img/icons/mosaic.png';
+import mosaic from '@/views/resources/img/icons/mosaic.svg';
 // @ts-ignore
 import mosaicRestriction from '@/views/resources/img/icons/mosaic-restriction.png';
 // @ts-ignore
 import multipleParties from '@/views/resources/img/icons/multiple-parties.png';
 // @ts-ignore
-import multisig from '@/views/resources/img/icons/multisig.png';
+import multisig from '@/views/resources/img/icons/multisig.svg';
 // @ts-ignore
-import namespace from '@/views/resources/img/icons/namespace.png';
+import namespace from '@/views/resources/img/icons/namespace.svg';
 // @ts-ignore
 import nem2Cli from '@/views/resources/img/icons/nem2-cli.png';
 // @ts-ignore
 import nem2Sdk from '@/views/resources/img/icons/nem2-sdk.png';
 // @ts-ignore
-import news from '@/views/resources/img/icons/news.png';
+import news from '@/views/resources/img/icons/news.svg';
 // @ts-ignore
 import nodeReputation from '@/views/resources/img/icons/node-reputation.png';
 // @ts-ignore
@@ -209,7 +209,7 @@ import transferTransactions from '@/views/resources/img/icons/transfer-transacti
 // @ts-ignore
 import unlock from '@/views/resources/img/icons/unlock.png';
 // @ts-ignore
-import wallet from '@/views/resources/img/icons/wallet.png';
+import wallet from '@/views/resources/img/icons/wallet.svg';
 // @ts-ignore
 import xymCoin from '@/views/resources/img/icons/xym-coin.png';
 // @ts-ignore

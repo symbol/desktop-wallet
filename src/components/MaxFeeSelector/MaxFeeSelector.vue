@@ -1,7 +1,7 @@
 <template>
     <div class="select-container">
         <Select v-if="!displayOnly" v-model="chosenMaxFee" :placeholder="$t('fee')" class="select-size select-style">
-            <Option v-for="{ maxFee, label } in fees" :key="maxFee" :value="maxFee">
+            <Option v-for="{ maxFee, label } in feesCalculated" :key="maxFee" :value="maxFee">
                 {{ label }}
             </Option>
         </Select>
