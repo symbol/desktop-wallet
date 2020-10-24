@@ -127,7 +127,7 @@ export abstract class TransactionView<T extends Transaction> {
             },
             {
                 key: 'deadline',
-                value: `${this.transaction.deadline.value.toLocalDate()} ${this.transaction.deadline.value.toLocalTime()}`,
+                value: `${this.transaction.deadline.adjustedValue.value.toLocalDate()} ${this.transaction.deadline.value.toLocalTime()}`,
             },
             {
                 key: 'signature',
