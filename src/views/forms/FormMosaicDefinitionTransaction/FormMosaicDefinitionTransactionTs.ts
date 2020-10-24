@@ -15,7 +15,6 @@
  */
 // external dependencies
 import {
-    Deadline,
     MosaicDefinitionTransaction,
     MosaicFlags,
     MosaicId,

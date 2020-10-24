@@ -23,7 +23,6 @@ import { Signer } from '@/store/Account';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 import { TransactionCommand, TransactionCommandMode } from '@/services/TransactionCommand';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
-import { Duration } from 'js-joda';
 
 @Component({
     computed: {
@@ -298,7 +297,7 @@ export class FormTransactionBase extends Vue {
             this.epochAdjustment,
             this.networkConfiguration,
             this.transactionFees,
-            this.currentSignerMultisigInfo!! ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures,
+            this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures,
         );
     }
 

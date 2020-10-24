@@ -19,7 +19,6 @@ import {
     AliasAction,
     AliasTransaction,
     AliasType,
-    Deadline,
     MosaicAliasTransaction,
     MosaicId,
     NamespaceId,

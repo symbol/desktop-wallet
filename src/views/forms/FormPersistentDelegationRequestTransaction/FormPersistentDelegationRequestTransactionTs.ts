@@ -15,7 +15,6 @@
  */
 import {
     Address,
-    Deadline,
     TransferTransaction,
     UInt64,
     PersistentHarvestingDelegationMessage,

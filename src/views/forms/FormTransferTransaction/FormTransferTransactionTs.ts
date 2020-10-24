@@ -15,7 +15,6 @@
  */
 import {
     Address,
-    Deadline,
     Message,
     Mosaic,
     MosaicId,
@@ -208,7 +207,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             // @ts-ignore
             this.setTransactions([!!this.importedTransaction ? this.importedTransaction : this.$route.params.transaction]);
             Vue.nextTick(() => {
-                this.formItems.attachedMosaics.forEach((attachedMosaic, index) => {
+                this.formItems.attachedMosaics.forEach((attachedMosaic) => {
                     this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
                 });
             });

@@ -14,7 +14,7 @@
  *
  */
 // external dependencies
-import { Deadline, NamespaceId, NamespaceRegistrationTransaction, NamespaceRegistrationType, Transaction, UInt64 } from 'symbol-sdk';
+import { NamespaceId, NamespaceRegistrationTransaction, NamespaceRegistrationType, Transaction, UInt64 } from 'symbol-sdk';
 import { Component, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
