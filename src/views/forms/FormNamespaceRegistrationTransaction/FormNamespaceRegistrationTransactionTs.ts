@@ -14,204 +14,195 @@
  *
  */
 // external dependencies
-import {
-  Deadline,
-  NamespaceId,
-  NamespaceRegistrationTransaction,
-  NamespaceRegistrationType,
-  Transaction,
-  UInt64,
-} from 'symbol-sdk'
-import { Component, Prop } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
+import { Deadline, NamespaceId, NamespaceRegistrationTransaction, NamespaceRegistrationType, Transaction, UInt64 } from 'symbol-sdk';
+import { Component, Prop } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // internal dependencies
-import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
+import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
 // child components
-import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
 // @ts-ignore
-import FormWrapper from '@/components/FormWrapper/FormWrapper.vue'
+import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 // @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue'
+import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
-import SignerSelector from '@/components/SignerSelector/SignerSelector.vue'
+import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
 // @ts-ignore
-import NamespaceSelector from '@/components/NamespaceSelector/NamespaceSelector.vue'
+import NamespaceSelector from '@/components/NamespaceSelector/NamespaceSelector.vue';
 // @ts-ignore
-import NamespaceNameInput from '@/components/NamespaceNameInput/NamespaceNameInput.vue'
+import NamespaceNameInput from '@/components/NamespaceNameInput/NamespaceNameInput.vue';
 // @ts-ignore
-import DurationInput from '@/components/DurationInput/DurationInput.vue'
+import DurationInput from '@/components/DurationInput/DurationInput.vue';
 // @ts-ignore
-import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
+import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
 // @ts-ignore
-import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
+import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
 //@ts-ignore
-import RentalFee from '@/components/RentalFees/RentalFee.vue'
+import RentalFee from '@/components/RentalFees/RentalFee.vue';
 // configuration
-import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
-import { NamespaceService } from '@/services/NamespaceService'
-import { FilterHelpers } from '@/core/utils/FilterHelpers'
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
+import { NamespaceService } from '@/services/NamespaceService';
+import { FilterHelpers } from '@/core/utils/FilterHelpers';
 
 @Component({
-  components: {
-    ValidationObserver,
-    ValidationProvider,
-    FormRow,
-    FormWrapper,
-    SignerSelector,
-    NamespaceNameInput,
-    NamespaceSelector,
-    DurationInput,
-    ModalTransactionConfirmation,
-    MaxFeeAndSubmit,
-    RentalFee,
-  },
-  computed: {
-    ...mapGetters({
-      ownedNamespaces: 'namespace/ownedNamespaces',
-      currentHeight: 'network/currentHeight',
-    }),
-  },
+    components: {
+        ValidationObserver,
+        ValidationProvider,
+        FormRow,
+        FormWrapper,
+        SignerSelector,
+        NamespaceNameInput,
+        NamespaceSelector,
+        DurationInput,
+        ModalTransactionConfirmation,
+        MaxFeeAndSubmit,
+        RentalFee,
+    },
+    computed: {
+        ...mapGetters({
+            ownedNamespaces: 'namespace/ownedNamespaces',
+            currentHeight: 'network/currentHeight',
+        }),
+    },
 })
 export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase {
-  @Prop({ default: null }) signer: string
-  @Prop({ default: null }) registrationType: NamespaceRegistrationType
-  @Prop({ default: null }) namespaceId: NamespaceId
-  @Prop({ default: null }) parentNamespaceId: NamespaceId
-  @Prop({ default: null }) duration: number
+    @Prop({ default: null }) signer: string;
+    @Prop({ default: null }) registrationType: NamespaceRegistrationType;
+    @Prop({ default: null }) namespaceId: NamespaceId;
+    @Prop({ default: null }) parentNamespaceId: NamespaceId;
+    @Prop({ default: null }) duration: number;
 
-  /**
-   * Current account's owned namespaces
-   */
-  public ownedNamespaces: NamespaceModel[]
+    /**
+     * Current account's owned namespaces
+     */
+    public ownedNamespaces: NamespaceModel[];
 
-  /**
-   * Root namespace type exposed to view
-   * @var {NamespaceRegistrationType}
-   */
-  public typeRootNamespace = NamespaceRegistrationType.RootNamespace
-  /**
-   * Sub-namespace type exposed to view
-   * @var {NamespaceRegistrationType}
-   */
-  public typeSubNamespace = NamespaceRegistrationType.SubNamespace
+    /**
+     * Root namespace type exposed to view
+     * @var {NamespaceRegistrationType}
+     */
+    public typeRootNamespace = NamespaceRegistrationType.RootNamespace;
+    /**
+     * Sub-namespace type exposed to view
+     * @var {NamespaceRegistrationType}
+     */
+    public typeSubNamespace = NamespaceRegistrationType.SubNamespace;
 
-  /**
-   * Current network block height
-   */
-  public currentHeight: number
+    /**
+     * Current network block height
+     */
+    public currentHeight: number;
 
-  /**
-   * Form items
-   * @var {Record<string, any>}
-   */
-  public formItems = {
-    signerAddress: '',
-    registrationType: NamespaceRegistrationType.RootNamespace,
-    newNamespaceName: '',
-    parentNamespaceName: '',
-    duration: 172800,
-    maxFee: 0,
-  }
+    /**
+     * Form items
+     * @var {Record<string, any>}
+     */
+    public formItems = {
+        signerAddress: '',
+        registrationType: NamespaceRegistrationType.RootNamespace,
+        newNamespaceName: '',
+        parentNamespaceName: '',
+        duration: 172800,
+        maxFee: 0,
+    };
 
-  /**
-   * Namespaces that can have children
-   * @readonly
-   * @protected
-   */
-  protected get fertileNamespaces(): NamespaceModel[] {
-    const maxNamespaceDepth = this.networkConfiguration.maxNamespaceDepth
-    return this.ownedNamespaces.filter(({ depth }) => depth < maxNamespaceDepth)
-  }
-  /**
-   * Reset the form with properties
-   * @return {void}
-   */
-  protected resetForm() {
-    // - set default form values
-    this.formItems.signerAddress = this.selectedSigner
-      ? this.selectedSigner.address.plain()
-      : this.currentAccount.address
-    this.formItems.registrationType = this.registrationType || NamespaceRegistrationType.RootNamespace
-    this.formItems.newNamespaceName = this.namespaceId ? this.namespaceId.fullName : ''
-    this.formItems.parentNamespaceName = this.parentNamespaceId ? this.parentNamespaceId.fullName : ''
-    this.formItems.duration = this.duration || 172800
-    // - maxFee must be absolute
-    this.formItems.maxFee = this.defaultFee
-  }
-
-  /**
-   * Getter for NAMESPACE REGISTRATION transactions that will be staged
-   * @see {FormTransactionBase}
-   * @return {Transaction[]}
-   */
-  protected getTransactions(): Transaction[] {
-    const maxFee = UInt64.fromUint(this.formItems.maxFee)
-    const deadline = this.createDeadline()
-    if (NamespaceRegistrationType.RootNamespace === this.formItems.registrationType)
-      return [
-        NamespaceRegistrationTransaction.createRootNamespace(
-          deadline,
-          this.formItems.newNamespaceName,
-          UInt64.fromUint(this.formItems.duration),
-          this.networkType,
-          maxFee,
-        ),
-      ]
-    else {
-      return [
-        NamespaceRegistrationTransaction.createSubNamespace(
-          deadline,
-          this.formItems.newNamespaceName,
-          this.formItems.parentNamespaceName,
-          this.networkType,
-          maxFee,
-        ),
-      ]
+    /**
+     * Namespaces that can have children
+     * @readonly
+     * @protected
+     */
+    protected get fertileNamespaces(): NamespaceModel[] {
+        const maxNamespaceDepth = this.networkConfiguration.maxNamespaceDepth;
+        return this.ownedNamespaces.filter(({ depth }) => depth < maxNamespaceDepth);
     }
-  }
-
-  /**
-   * Setter for TRANSFER transactions that will be staged
-   * @see {FormTransactionBase}
-   * @param {TransferTransaction[]} transactions
-   * @throws {Error} If not overloaded in derivate component
-   */
-  protected setTransactions(transactions: Transaction[]) {
-    // - this form creates 2 transaction
-    const transaction = transactions.shift() as NamespaceRegistrationTransaction
-
-    // - populate from transaction
-    this.formItems.registrationType = transaction.registrationType
-    this.formItems.newNamespaceName = transaction.namespaceName
-    this.formItems.parentNamespaceName = transaction.parentId ? transaction.parentId.toHex() : ''
-    this.formItems.duration = transaction.duration ? transaction.duration.compact() : 0
-
-    // - populate maxFee
-    this.formItems.maxFee = transaction.maxFee.compact()
-  }
-
-  public relativeTimetoParent = ''
-
-  public getTimeByparentNamespaceName() {
-    const selectedNamespace = this.ownedNamespaces.find((item) => item.name === this.formItems.parentNamespaceName)
-
-    if (selectedNamespace) {
-      this.relativeTimetoParent = NamespaceService.getExpiration(
-        this.networkConfiguration,
-        this.currentHeight,
-        selectedNamespace.endHeight,
-      ).expiration
+    /**
+     * Reset the form with properties
+     * @return {void}
+     */
+    protected resetForm() {
+        // - set default form values
+        this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
+        this.formItems.registrationType = this.registrationType || NamespaceRegistrationType.RootNamespace;
+        this.formItems.newNamespaceName = this.namespaceId ? this.namespaceId.fullName : '';
+        this.formItems.parentNamespaceName = this.parentNamespaceId ? this.parentNamespaceId.fullName : '';
+        this.formItems.duration = this.duration || 172800;
+        // - maxFee must be absolute
+        this.formItems.maxFee = this.defaultFee;
     }
-  }
 
-  setParentNamespaceName(val) {
-    this.formItems.parentNamespaceName = val
-    this.getTimeByparentNamespaceName()
-  }
-  /**
-   * filter tags
-   */
-  public stripTagsNamesapceName() {
-    this.formItems.newNamespaceName = FilterHelpers.stripFilter(this.formItems.newNamespaceName)
-  }
+    /**
+     * Getter for NAMESPACE REGISTRATION transactions that will be staged
+     * @see {FormTransactionBase}
+     * @return {Transaction[]}
+     */
+    protected getTransactions(): Transaction[] {
+        const maxFee = UInt64.fromUint(this.formItems.maxFee);
+        const deadline = this.createDeadline();
+        if (NamespaceRegistrationType.RootNamespace === this.formItems.registrationType) {
+            return [
+                NamespaceRegistrationTransaction.createRootNamespace(
+                    deadline,
+                    this.formItems.newNamespaceName,
+                    UInt64.fromUint(this.formItems.duration),
+                    this.networkType,
+                    maxFee,
+                ),
+            ];
+        } else {
+            return [
+                NamespaceRegistrationTransaction.createSubNamespace(
+                    deadline,
+                    this.formItems.newNamespaceName,
+                    this.formItems.parentNamespaceName,
+                    this.networkType,
+                    maxFee,
+                ),
+            ];
+        }
+    }
+
+    /**
+     * Setter for TRANSFER transactions that will be staged
+     * @see {FormTransactionBase}
+     * @param {TransferTransaction[]} transactions
+     * @throws {Error} If not overloaded in derivate component
+     */
+    protected setTransactions(transactions: Transaction[]) {
+        // - this form creates 2 transaction
+        const transaction = transactions.shift() as NamespaceRegistrationTransaction;
+
+        // - populate from transaction
+        this.formItems.registrationType = transaction.registrationType;
+        this.formItems.newNamespaceName = transaction.namespaceName;
+        this.formItems.parentNamespaceName = transaction.parentId ? transaction.parentId.toHex() : '';
+        this.formItems.duration = transaction.duration ? transaction.duration.compact() : 0;
+
+        // - populate maxFee
+        this.formItems.maxFee = transaction.maxFee.compact();
+    }
+
+    public relativeTimetoParent = '';
+
+    public getTimeByparentNamespaceName() {
+        const selectedNamespace = this.ownedNamespaces.find((item) => item.name === this.formItems.parentNamespaceName);
+
+        if (selectedNamespace) {
+            this.relativeTimetoParent = NamespaceService.getExpiration(
+                this.networkConfiguration,
+                this.currentHeight,
+                selectedNamespace.endHeight,
+            ).expiration;
+        }
+    }
+
+    setParentNamespaceName(val) {
+        this.formItems.parentNamespaceName = val;
+        this.getTimeByparentNamespaceName();
+    }
+    /**
+     * filter tags
+     */
+    public stripTagsNamesapceName() {
+        this.formItems.newNamespaceName = FilterHelpers.stripFilter(this.formItems.newNamespaceName);
+    }
 }
