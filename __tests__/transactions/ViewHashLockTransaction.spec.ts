@@ -17,6 +17,7 @@ import { AggregateTransaction, Deadline, LockFundsTransaction, NetworkCurrencyLo
 import { createStore } from '@MOCKS/Store';
 import { getTestAccount } from '@MOCKS/Accounts';
 import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 const store = createStore({});
 const epochAdjustment = 1573430400;
@@ -38,7 +39,9 @@ describe('transactions/ViewHashLockTransaction', () => {
                 signedTransaction,
                 NetworkType.MIJIN_TEST,
             );
-
+            const networkConfig = new NetworkConfigurationModel();
+            Object.assign(networkConfig, { epochAdjustment: 1573430400 });
+            store.getters['network/networkConfiguration'] = networkConfig;
             // act
             const view = new ViewHashLockTransaction(store, hashLock);
 
