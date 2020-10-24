@@ -20,10 +20,10 @@
     float: left;
     position: absolute;
     clear: both;
-    width: 92%;
-    height: calc(100% - 1.68rem);
-    left: 8%;
-    top: 1.68rem;
+    width: 80%;
+    left: 16%;
+    height: calc(100% - 2.25rem);
+    top: 1.45rem;
 }
 
 .wrap {
@@ -159,8 +159,8 @@
         left: 0;
         background-color: #e5e5e5;
         -webkit-app-region: drag;
-        width: 92%;
-        left: 8%;
+        width: 84%;
+        left: 15%;
         height: 1.68rem;
         padding-left: 0.3rem;
         padding-right: 0.55rem;
@@ -174,13 +174,20 @@
         }
 
         /deep/.debug-console-trigger {
-            color: @blackLight;
+            color: @purpleDark;
             font-size: @smallFont !important;
             cursor: pointer;
         }
 
-        .debug-console-trigger-icon {
+        /deep/.trigger-importqr {
+            color: @purpleDark;
+        }
 
+        .debug-console-trigger-icon {
+        }
+
+        /deep/.ivu-icon {
+            color: @purpleDark;
         }
 
         /deep/.ivu-select-selection {
@@ -191,7 +198,7 @@
             .ivu-select-placeholder,
             .ivu-select-selected-value {
                 font-size: @smallFont !important;
-                color: @blackLight;
+                color: @purpleDark;
                 padding: 0 !important;
             }
             i::before {
@@ -202,6 +209,7 @@
         /deep/.ivu-select-selection {
             line-height: 1.5 !important;
             height: 1.5 !important;
+            color: @purpleDark;
         }                 
     }
 
@@ -268,3 +276,17 @@
         margin-right: 20px;
     }
 }
+
+.footer-phrase {
+    position:absolute;
+    bottom:3%;
+    left: 18%;
+    color: @purpleDark;
+    font-size: @normalFont;
+}
+
+
+
+
+
+

@@ -17,7 +17,7 @@
 
         <div class="top_window level">
             <div class="level-left">
-                <AppLogo class="level-item" />
+                <!--<AppLogo class="level-item" />-->
             </div>
 
             <!--OCA99: These are window controls for electron. Disabling them for now. Not sure if they should be here.-->
@@ -25,14 +25,15 @@
 
             <div class="level-right">
                 <ImportQRButton class="level-item navbar-item" v-if="!!currentAccount" valid-qr-types="[1, 3, 4]" />
-                <div class="level-item navbar-item debug-console-trigger" @click="hasDebugConsoleModal = true">
+
+                <!--<div class="level-item navbar-item debug-console-trigger" @click="hasDebugConsoleModal = true">
                     <span>&nbsp;{{ $t('top_window_console') }}</span>
-                </div>
+                </div>-->
                 <!--<DebugConsoleButton class="level-item navbar-item" />-->
                 <!--<PeerSelector class="level-item navbar-item" />-->
-                <LanguageSelector class="level-item navbar-item" />
-                <!--<Settings class="level-item navbar-item" />-->
+                <!--<LanguageSelector class="level-item navbar-item" />-->
                 <AccountSelectorField class="level-item navbar-item" @input="onChangeAccount" />
+                <Settings class="level-item navbar-item" />
             </div>
         </div>
         <transition name="fade" mode="out-in">
@@ -47,6 +48,9 @@
             :title="$t('modal_title_debug_console')"
             @close="hasDebugConsoleModal = false"
         />
+    <div>
+        <span class="footer-phrase">Powered by <b>NEM Technology.</b></span>
+    </div>    
     </div>
 </template>
 

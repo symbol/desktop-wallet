@@ -410,28 +410,6 @@ export const routes: AppRoute[] = [
                 ],
             },
             {
-                path: '/communityPanel',
-                name: 'community',
-                redirect: '/information',
-                meta: {
-                    protected: true,
-                    clickable: true,
-                    title: 'sidebar_item_community',
-                    icon: officialIcons.news,
-                },
-                // @ts-ignore
-                component: () => import('@/views/pages/community/Community.vue'),
-                children: [
-                    {
-                        path: '/information',
-                        name: 'community.index',
-                        meta: { protected: true },
-                        // @ts-ignore
-                        component: () => import('@/views/pages/community/information/Information.vue'),
-                    },
-                ],
-            },
-            {
                 path: '/harvesting', //TODO: Harvesting
                 name: 'harvesting',
                 redirect: '/harvestingNormal',
@@ -459,6 +437,28 @@ export const routes: AppRoute[] = [
                     },
                 ],
             },
+            {
+                path: '/communityPanel',
+                name: 'community',
+                redirect: '/information',
+                meta: {
+                    protected: true,
+                    clickable: true,
+                    title: 'sidebar_item_community',
+                    icon: officialIcons.news,
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/community/Community.vue'),
+                children: [
+                    {
+                        path: '/information',
+                        name: 'community.index',
+                        meta: { protected: true },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/community/information/Information.vue'),
+                    },
+                ],
+            }
         ],
         /// end-region PageLayout children
     },
