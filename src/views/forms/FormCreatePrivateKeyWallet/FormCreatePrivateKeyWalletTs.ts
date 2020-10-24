@@ -142,6 +142,7 @@ export class FormCreatePrivateKeyWalletTs extends Vue {
             hint: this.formItems.hint,
             networkType: this.formItems.networkType,
             generationHash: this.generationHash,
+            termsAndConditionsApproved: false,
         };
         // use repository for storage
         this.accountService.saveProfile(account);
