@@ -103,7 +103,7 @@ export class ModalMnemonicExportTs extends Vue {
 
         try {
             this.exportMnemonicQR = QRCodeGenerator.createExportMnemonic(
-                new MnemonicPassPhrase(plnSeed),
+                plnSeed,
                 payload.password.value,
                 this.networkType,
                 this.generationHash,
