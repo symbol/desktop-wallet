@@ -618,6 +618,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             transactions,
             this.networkMosaic,
             this.generationHash,
+            this.epochAdjustment,
             this.networkType,
             this.networkConfiguration,
             this.transactionFees,
