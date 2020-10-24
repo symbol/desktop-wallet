@@ -18,6 +18,7 @@ import { AggregateTransactionInfo, Transaction, TransactionInfo } from 'symbol-s
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
 import i18n from '@/language';
 import { TransactionStatus } from '@/core/transactions/TransactionStatus';
+import { NetworkConfigurationModel } from '../database/entities/NetworkConfigurationModel';
 
 export abstract class TransactionView<T extends Transaction> {
     /**
@@ -49,6 +50,11 @@ export abstract class TransactionView<T extends Transaction> {
     public readonly detailItems: TransactionDetailItem[];
 
     /**
+     * Catapult-server nemesis block generation epoch adjustment
+     */
+    public readonly epochAdjustment: number;
+
+    /**
      * Construct a transaction view around \a store
      * @param {Store<any>} store
      */
@@ -58,6 +64,7 @@ export abstract class TransactionView<T extends Transaction> {
         this.info = transaction.transactionInfo || undefined;
         this.headerItems = this.resolveHeaderItems();
         this.detailItems = this.resolveDetailItems();
+        this.epochAdjustment = (this.$store.getters['network/networkConfiguration'] as NetworkConfigurationModel).epochAdjustment;
     }
 
     /**
@@ -127,7 +134,9 @@ export abstract class TransactionView<T extends Transaction> {
             },
             {
                 key: 'deadline',
-                value: `${this.transaction.deadline.adjustedValue.value.toLocalDate()} ${this.transaction.deadline.value.toLocalTime()}`,
+                value: `${this.transaction.deadline
+                    .toLocalDateTime(this.epochAdjustment)
+                    .toLocalDate()} ${this.transaction.deadline.toLocalDateTime(this.epochAdjustment).toLocalTime()}`,
             },
             {
                 key: 'signature',
