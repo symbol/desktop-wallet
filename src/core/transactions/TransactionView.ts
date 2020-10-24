@@ -60,11 +60,11 @@ export abstract class TransactionView<T extends Transaction> {
      */
     public constructor(store: Store<any>, transaction: T) {
         this.$store = store;
+        this.epochAdjustment = (this.$store.getters['network/networkConfiguration'] as NetworkConfigurationModel).epochAdjustment;
         this.transaction = transaction;
         this.info = transaction.transactionInfo || undefined;
         this.headerItems = this.resolveHeaderItems();
         this.detailItems = this.resolveDetailItems();
-        this.epochAdjustment = (this.$store.getters['network/networkConfiguration'] as NetworkConfigurationModel).epochAdjustment;
     }
 
     /**
