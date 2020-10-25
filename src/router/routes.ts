@@ -438,6 +438,28 @@ export const routes: AppRoute[] = [
                 ],
             },
             {
+                path: '/aggregate', //TODO: Aggregate
+                name: 'aggregate',
+                redirect: '/aggregateTransaction',
+                meta: {
+                    protected: true,
+                    clickable: true,
+                    title: 'sidebar_item_aggregate',
+                    icon: officialIcons.aggregate,
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/aggregate/Aggregate.vue'),
+                children: [
+                    {
+                        path: '/aggregateTransaction',
+                        name: 'aggregate.index',
+                        meta: { protected: true },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/aggregate/aggregateTransaction/AggregateTransaction.vue'),
+                    }
+                ],
+            },
+            {
                 path: '/communityPanel',
                 name: 'community',
                 redirect: '/information',

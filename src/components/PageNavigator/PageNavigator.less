@@ -33,6 +33,7 @@
         color: @purpleDark;
 
         .navigator-items-container {
+            overflow: scroll;
             display: grid;
             grid-template-columns: 100%;
             grid-auto-rows: calc(@iconHeight + 0.1rem);
@@ -93,9 +94,11 @@
 .logo-container {
     position:absolute;
     padding-top:0.5rem;
+    padding-bottom:0.5rem;
     text-align: center;
     width: 100%;
     margin: auto;
+    background-color: white;
     img {
         height: 0.55rem;
         width: 1.8rem;
