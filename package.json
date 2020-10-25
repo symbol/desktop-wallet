@@ -39,7 +39,6 @@
         "await-lock": "^2.0.1",
         "axios": "^0.19.0",
         "file-saver": "^2.0.2",
-        "js-joda": "^1.11.0",
         "json2csv": "^5.0.1",
         "request": "^2.88.0",
         "rss-parser": "^3.7.3",

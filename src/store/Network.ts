@@ -18,7 +18,7 @@ import { BlockInfo, IListener, Listener, NetworkType, RepositoryFactory, Transac
 import { Subscription } from 'rxjs';
 // internal dependencies
 import { $eventBus } from '../events';
-import { Duration } from 'js-joda';
+import { Duration } from '@js-joda/core';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import app from '@/main';
 import { AwaitLock } from './AwaitLock';
@@ -220,7 +220,7 @@ export default {
             commit('networkConfiguration', networkModel.networkConfiguration);
             commit('transactionFees', networkModel.transactionFees);
             commit('networkType', networkModel.networkType);
-            commit('epochAdjustment', Duration.ofSeconds(networkModel.networkConfiguration.epochAdjustment));
+            commit('epochAdjustment', networkModel.networkConfiguration.epochAdjustment);
             commit('generationHash', networkModel.generationHash);
             commit('repositoryFactory', repositoryFactory);
             commit('knowNodes', nodes);
