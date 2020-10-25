@@ -60,7 +60,48 @@ export class MultisigService {
             return self;
         }
 
-        return self.concat(
+        // check if other child multisig accounts are already cosigners of other accounts and add their children multisig as signers if any to the main cosignatory account
+        let addedSignerFromMutlisigAccounts: Signer[] = [];
+        multisigAccountsInfo.map((entry) => {
+            if (
+                (entry.minApproval > 0 || entry.minRemoval > 0) &&
+                entry.multisigAddresses.length > 0 &&
+                entry.cosignatoryAddresses.some((value) => value.equals(Address.createFromRawAddress(currentAccount.address)))
+            ) {
+                entry.multisigAddresses.map((address) => {
+                    return (addedSignerFromMutlisigAccounts = self.concat([
+                        {
+                            address,
+                            multisig: true,
+                            label: this.getAccountLabel(address, knownAccounts),
+                            requiredCosignatures: (currentAccountMultisigInfo && currentAccountMultisigInfo.minApproval) || 0,
+                        },
+                    ]));
+                });
+            }
+        });
+
+        // check for next level signers and add them to the main cosignatory as signers if any
+        let addressesFromNextLevel: Signer[] = [];
+        addedSignerFromMutlisigAccounts.map((addressEntry) => {
+            multisigAccountsInfo.map((term) => {
+                if (
+                    term.cosignatoryAddresses.some((value) => value.equals(addressEntry.address)) &&
+                    !addressEntry.address.equals(Address.createFromRawAddress(currentAccount.address))
+                ) {
+                    return (addressesFromNextLevel = addedSignerFromMutlisigAccounts.concat([
+                        {
+                            address: term.accountAddress,
+                            multisig: true,
+                            label: this.getAccountLabel(term.accountAddress, knownAccounts),
+                            requiredCosignatures: (currentAccountMultisigInfo && currentAccountMultisigInfo.minApproval) || 0,
+                        },
+                    ]));
+                }
+            });
+        });
+
+        return addressesFromNextLevel.concat(
             ...currentAccountMultisigInfo.multisigAddresses.map((address) => {
                 return {
                     address,
