@@ -1,22 +1,8 @@
 <template>
-    <div class="account-details-grid mt-3">
-        <div class="detail-row">
-            <div class="account-detail-row">
-                <span class="label">{{ $t('accounts_links_explorer') }}</span>
-                <div class="value">
-                    <a :href="explorerUrl" target="_blank">{{ $t('accounts_view_explorer_description') }}</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="detail-row">
-            <div class="account-detail-row">
-                <span class="label">{{ $t('accounts_links_faucet') }}</span>
-                <div class="value">
-                    <a :href="faucetUrl" target="_blank">{{ $t('accounts_view_open_faucet') }}</a>
-                </div>
-            </div>
-        </div>
+    <div>
+        <slot name="trigger">
+            <a class="trigger-accountlink pointer" :href="link" target="_blank">{{ title }}</a>
+        </slot>
     </div>
 </template>
 

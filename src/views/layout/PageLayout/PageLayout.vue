@@ -24,8 +24,9 @@
             <!--<WindowControls />-->
 
             <div class="level-right">
-                <ImportQRButton class="level-item navbar-item" v-if="!!currentAccount" valid-qr-types="[1, 3, 4]" />
-
+                <ImportQRButton v-if="!!currentAccount" class="level-item navbar-item" valid-qr-types="[1, 3, 4]" />
+                <AccountLinks :account="currentAccount" :link="explorerUrl" :title="$t('accounts_links_explorer')" />
+                <AccountLinks v-if="isTestnet" :account="currentAccount" :link="faucetUrl" :title="$t('accounts_links_faucet')" />
                 <!--<div class="level-item navbar-item debug-console-trigger" @click="hasDebugConsoleModal = true">
                     <span>&nbsp;{{ $t('top_window_console') }}</span>
                 </div>-->
@@ -48,9 +49,9 @@
             :title="$t('modal_title_debug_console')"
             @close="hasDebugConsoleModal = false"
         />
-    <div>
-        <span class="footer-phrase">Powered by <b>NEM Technology.</b></span>
-    </div>    
+        <div>
+            <span class="footer-phrase">Powered by <b>NEM Technology.</b></span>
+        </div>
     </div>
 </template>
 
