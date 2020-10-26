@@ -78,7 +78,7 @@ export class AccountService {
 
         // create account
         const account = new Wallet(extendedKey);
-        return (account.getChildAccount(path, networkType) as unknown) as Account;
+        return Account.createFromPrivateKey(account.getChildAccountPrivateKey(path), networkType);
     }
 
     /**
@@ -114,7 +114,7 @@ export class AccountService {
         });
 
         const wallets = paths.map((path) => new Wallet(xkey.derivePath(path)));
-        return wallets.map((wallet) => (wallet.getAccount(networkType) as unknown) as Account);
+        return wallets.map((wallet) => Account.createFromPrivateKey(wallet.getAccountPrivateKey(), networkType));
     }
 
     /**
@@ -129,7 +129,7 @@ export class AccountService {
         const xkey = this.getExtendedKeyFromMnemonic(mnemonic);
         const wallets = paths.map((path) => new Wallet(xkey.derivePath(path)));
 
-        return wallets.map((wallet) => (wallet.getAccount(networkType) as unknown) as Account);
+        return wallets.map((wallet) => Account.createFromPrivateKey(wallet.getAccountPrivateKey(), networkType));
     }
 
     /**

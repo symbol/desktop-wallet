@@ -89,9 +89,9 @@ import addAccount from '@/views/resources/img/icons/add-profile.png';
 // @ts-ignore
 import addAggregate from '@/views/resources/img/icons/add-aggregate.png';
 // @ts-ignore
-import aggregate from '@/views/resources/img/icons/aggregate.png';
+import aggregate from '@/views/resources/img/icons/aggregate.svg';
 // @ts-ignore
-import aggregateTransaction from '@/views/resources/img/icons/aggregate-transaction.png';
+import aggregateTransaction from '@/views/resources/img/icons/aggregate.svg';
 // @ts-ignore
 import alias from '@/views/resources/img/icons/alias.png';
 // @ts-ignore
@@ -137,7 +137,7 @@ import explorer from '@/views/resources/img/icons/explorer.png';
 // @ts-ignore
 import fingerprint from '@/views/resources/img/icons/fingerprint.png';
 // @ts-ignore
-import harvest from '@/views/resources/img/icons/harvest.png';
+import harvest from '@/views/resources/img/icons/harvest.svg';
 // @ts-ignore
 import incoming from '@/views/resources/img/icons/incoming.png';
 // @ts-ignore

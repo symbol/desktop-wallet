@@ -11,7 +11,7 @@
                         <button type="button" class="button-style back-button" @click="deleteProfileAndBack">
                             {{ $t('back') }}
                         </button>
-                        <ImportQRButton valid-qr-types="[6]">
+                        <ImportQRButton valid-qr-types="[5]">
                             <template v-slot:trigger="importQRButton">
                                 <button type="button" class="button-style back-button" @click="importQRButton.trigger">
                                     {{ $t('from_qr_code') }}

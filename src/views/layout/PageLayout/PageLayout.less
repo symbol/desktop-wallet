@@ -18,22 +18,22 @@
 .main-outer-container {
     display: block;
     float: left;
-    position: relative;
+    position: absolute;
     clear: both;
-    width: 100%;
-    height: 100%;
     padding-top: 5%;
     padding-left: 4%;
     padding-right: 3%;
     overflow-y: auto;
+    width: 80%;
+    left: 16%;
+    height: calc(100% - 2.25rem);
+    top: 1.45rem;
 }
 
 .wrap {
-    padding: 0.6rem 0 0 1rem;
-    height: 100vh;
-    max-height: 100vh;
+    height: 100%;
     width: 100%;
-    position: relative;
+    position: absolute;
 
     .alert {
         margin-left: 50%;
@@ -161,54 +161,59 @@
         position: absolute;
         top: 0;
         left: 0;
-        background-image: linear-gradient(120deg, @primary, @secondary);
+        background-color: transparent;
         -webkit-app-region: drag;
-        width: 100%;
-        height: 50px;
+        width: 84%;
+        left: 15%;
+        height: 1.68rem;
+        padding-left: 0.3rem;
+        padding-right: 0.55rem;
 
-        .controller {
-            .app_controller {
-                float: right;
-                font-size: 20px;
-                margin-right: 20px;
+        .navbar-item {
+            margin-left: 0.6rem;
+        }
 
-                .title {
-                    font-size: 18px;
-                    text-align: center;
-                    padding: 10px;
-                    min-width: 450px;
-                }
+        /deep/.navbar-item {
+            line-height: 1.5 !important;
+        }
 
-                > div {
-                    float: left;
-                    margin-left: 25px;
-                    position: relative;
-                    font-size: @smallerFont;
-                    i {
-                        font-size: 0.2rem;
-                        margin-right: 0.02rem;
-                    }
-                }
+        /deep/.debug-console-trigger  {
+            color: @purpleDark;
+            font-size: @smallFont !important;
+            cursor: pointer;
+        }
+
+        /deep/.trigger-importqr {
+            color: @purpleDark;
+        }
+
+        .debug-console-trigger-icon {
+        }
+
+        /deep/.ivu-icon {
+            color: @purpleDark;
+        }
+
+        /deep/.ivu-select-selection {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+            height: auto !important;
+            .ivu-select-placeholder,
+            .ivu-select-selected-value {
+                font-size: @smallFont !important;
+                color: @purpleDark;
+                padding: 0 !important;
             }
-
-            .debug-console-trigger {
-                padding-top: 0.01rem;
-                font-size: @smallerFont;
-                color: @white;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-
-                .debug-console-trigger-icon {
-                    font-size: 22px;
-                    position: relative;
-                    display: block;
-                    // float: left;
-                    // height: .6rem;
-                    // padding-top: 0.17rem;
-                    padding-right: 0.04rem;
-                }
+            i::before {
+                display: none;
             }
+        }
+
+        /deep/.ivu-select-selection {
+            line-height: 1.5 !important;
+            height: 1.5 !important;
+            color: @purpleDark;
         }
     }
 
@@ -264,56 +269,22 @@
             background-color: #f3f3f3;
         }
     }
+
+    .ivu-select-dropdown {
+        z-index: 2147483647 !important;
+    }
+
     //unused
     .node-input-container {
         width: 100%;
         margin-right: 20px;
     }
 }
-.mac.wrap {
-    .top_window {
-        .controller {
-            .app_controller {
-                margin-right: 40px !important;
-                /deep/.switch_account {
-                    -webkit-app-region: no-drag;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                    margin-top: 0.16rem;
-                    .select_account_icon {
-                        width: 22px;
-                        height: 22px;
-                        position: relative;
-                        top: 0.04rem;
-                        filter: brightness(100);
-                    }
-                    .ivu-select {
-                        font-size: 20px;
-                    }
-                }
-                /deep/.ivu-select-selection {
-                    background-color: transparent;
-                    border: none;
-                    box-shadow: none;
-                    .ivu-select-placeholder,
-                    .ivu-select-selected-value {
-                        font-size: @smallerFont;
-                        font-weight: 400;
-                        color: white !important;
-                        margin-left: 0;
-                    }
-                    i::before {
-                        display: none;
-                    }
-                }
-            }
-        }
-    }
-}
 
-.max-z-index {
-    .ivu-select-dropdown {
-        z-index: 2147483647 !important;
-    }
+.footer-phrase {
+    position: absolute;
+    bottom: 3%;
+    left: 18%;
+    color: @purpleDark;
+    font-size: @normalFont;
 }

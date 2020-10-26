@@ -19,7 +19,6 @@ import {
     AliasAction,
     AliasTransaction,
     AliasType,
-    Deadline,
     MosaicAliasTransaction,
     MosaicId,
     NamespaceId,
@@ -218,7 +217,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
         if (this.aliasTargetType === 'address') {
             return [
                 AddressAliasTransaction.create(
-                    Deadline.create(),
+                    this.createDeadline(),
                     this.formItems.aliasAction,
                     namespaceId,
                     Address.createFromRawAddress(this.formItems.aliasTarget),
@@ -229,7 +228,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
         } else {
             return [
                 MosaicAliasTransaction.create(
-                    Deadline.create(),
+                    this.createDeadline(),
                     this.formItems.aliasAction,
                     namespaceId,
                     new MosaicId(this.formItems.aliasTarget),

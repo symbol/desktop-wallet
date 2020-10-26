@@ -16,7 +16,6 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { Account, NetworkType, Password, Crypto } from 'symbol-sdk';
-import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 import { MnemonicQR, QRCodeGenerator } from 'symbol-qr-library';
 // internal dependencies
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
@@ -103,10 +102,10 @@ export class ModalMnemonicExportTs extends Vue {
 
         try {
             this.exportMnemonicQR = QRCodeGenerator.createExportMnemonic(
-                new MnemonicPassPhrase(plnSeed),
-                payload.password.value,
+                plnSeed,
                 this.networkType,
                 this.generationHash,
+                payload.password.value,
             );
 
             this.$emit('onAccountUnlocked', this.exportMnemonicQR);

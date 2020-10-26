@@ -22,15 +22,16 @@
     background-color: @white;
     border-radius: 0.04rem;
     overflow: hidden;
+    padding-top: 2%;
 
     .account-detail-inner-container {
         width: 100%;
         padding: 0.2rem 0.4rem;
         margin: 0;
         display: grid;
-        grid-template-columns: 70%30%;
+        grid-template-columns: 20%80%;
 
-        .left-container {
+        .right-container {
             width: 100%;
             overflow: hidden;
 
@@ -43,7 +44,7 @@
                 display: grid;
             }
 
-            .left-container-title {
+            .right-container-title {
                 font-size: @normalFont;
                 color: #222;
                 font-weight: 500;
@@ -51,7 +52,7 @@
 
             .account-details-grid {
                 background-color: white;
-                font-size: 15px;
+                font-size: 18px;
                 display: inline-grid;
                 font-weight: 400;
                 color: @primary;
@@ -91,7 +92,11 @@
             }
         }
 
-        .right-container {
+        .left-container {
+            /deep/ .qr-code-image {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
         }
     }
 

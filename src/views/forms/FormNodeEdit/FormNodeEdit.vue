@@ -58,7 +58,7 @@
             </div>
             <div class="form-row button-container">
                 <button
-                    class="button-style validation-button right-side-button"
+                    class="button-style validation-button right-side-button pl-2 pr-2"
                     type="submit"
                     :disabled="!formItems.networkHash"
                     @click="handleSubmit(onSubmit)"
@@ -75,4 +75,8 @@ export default class FormNodeEdit extends FormNodeEditTs {}
 </script>
 <style lang="less" scoped>
 @import './FormNodeEdit.less';
+.button-container {
+    padding-top: 5%;
+    padding-right: 16%;
+}
 </style>

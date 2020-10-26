@@ -20,4 +20,5 @@ export interface TransactionDetailItem {
     readonly isMosaic?: boolean;
     readonly isAddress?: boolean;
     readonly isPaidFee?: boolean;
+    readonly isMessage?: boolean;
 }

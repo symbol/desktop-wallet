@@ -16,27 +16,9 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
-// internal dependencies
-import { AccountModel } from '@/core/database/entities/AccountModel';
-// child components
-// @ts-ignore
-import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue';
-
 @Component({
-    components: {
-        FormTransferTransaction,
-    },
-    computed: {
-        ...mapGetters({
-            currentAccount: 'account/currentAccount',
-        }),
-    },
+    computed: mapGetters({
+        latestArticles: 'community/latestArticles',
+    }),
 })
-export class DashboardHarvestingPageTs extends Vue {
-    /**
-     * Currently active account
-     * @see {Store.Account}
-     * @var {AccountModel}
-     */
-    public currentAccount: AccountModel;
-}
+export class AggregateTransactionTs extends Vue {}

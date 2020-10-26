@@ -82,10 +82,10 @@ export default class ShowMnemonicTs extends Vue {
      */
     public created() {
         this.exportMnemonicQR = QRCodeGenerator.createExportMnemonic(
-            this.currentMnemonic,
-            this.currentPassword.value,
+            this.currentMnemonic.plain,
             this.currentProfile.networkType,
             this.currentProfile.generationHash,
+            this.currentPassword.value,
         );
         this.exportMnemonicQR.toBase64().subscribe((base64) => (this.qrBase64 = base64));
     }
