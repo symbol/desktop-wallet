@@ -460,7 +460,21 @@ export const routes: AppRoute[] = [
                 ],
             },
             {
-                path: '/communityPanel',
+                path: '/privacy',
+                name: 'privacy',
+                meta: { protected: false, hideFromMenu: true },
+                // @ts-ignore
+                component: () => import('@/views/pages/privacy/PrivacyPolicy.vue'),
+            },
+            {
+                path: '/terms',
+                name: 'terms',
+                meta: { protected: false, hideFromMenu: true },
+                // @ts-ignore
+                component: () => import('@/views/pages/terms/TermsAndConditions.vue'),
+            },
+            {
+                path: '/communityPanel', //TODO: Harvesting
                 name: 'community',
                 redirect: '/information',
                 meta: {
@@ -480,7 +494,7 @@ export const routes: AppRoute[] = [
                         component: () => import('@/views/pages/community/information/Information.vue'),
                     },
                 ],
-            }
+            },
         ],
         /// end-region PageLayout children
     },
