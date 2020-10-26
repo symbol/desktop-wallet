@@ -35,14 +35,17 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue
 // @ts-ignore
 import AccountSelectorField from '@/components/AccountSelectorField/AccountSelectorField.vue';
 // @ts-ignore
+//import DebugConsoleButton from '@/components/DebugConsoleButton/DebugConsoleButton.vue';
 import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue';
 //@ts-ignore
 import Settings from '@/components/Settings/Settings.vue';
 import { URLInfo } from '@/core/utils/URLInfo';
-
 //@ts-ignore
 import ImportQRButton from '@/components/QRCode/ImportQRButton/ImportQRButton.vue';
 import { AccountModel } from '@/core/database/entities/AccountModel';
+//@ts-ignore
+import AccountLinks from '@/components/AccountLinks/AccountLinks.vue';
+
 @Component({
     components: {
         AppLogo,
@@ -55,6 +58,7 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
         ModalDebugConsole,
         Settings,
         ImportQRButton,
+        AccountLinks,
     },
     computed: {
         ...mapGetters({
@@ -65,6 +69,8 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
             currentProfile: 'profile/currentProfile',
             isCosignatoryMode: 'account/isCosignatoryMode',
             currentAccount: 'account/currentAccount',
+            explorerBaseUrl: 'app/explorerUrl',
+            faucetBaseUrl: 'app/faucetUrl',
         }),
     },
 })
@@ -123,6 +129,16 @@ export class PageLayoutTs extends Vue {
      * @var {AccountModel}
      */
     public currentAccount: AccountModel;
+    /**
+     * Explorer base url
+     * @var {string}
+     */
+    public explorerBaseUrl: string;
+    /**
+     * Faucet base url
+     * @var {string}
+     */
+    public faucetBaseUrl: string;
 
     /// region computed properties getter/setter
     /**
@@ -170,6 +186,20 @@ export class PageLayoutTs extends Vue {
 
     set hasDebugConsoleModal(f: boolean) {
         this.isDisplayingDebugConsole = f;
+    }
+
+    public get explorerUrl() {
+        return this.currentAccount
+            ? this.explorerBaseUrl.replace(/\/+$/, '') + '/accounts/' + this.currentAccount.address
+            : this.explorerBaseUrl;
+    }
+
+    public get faucetUrl() {
+        return this.currentAccount ? this.faucetBaseUrl + '?recipient=' + this.currentAccount.address : this.faucetBaseUrl;
+    }
+
+    public get isTestnet() {
+        return this.networkType === NetworkType.TEST_NET;
     }
 
     /// end-region computed properties getter/setter

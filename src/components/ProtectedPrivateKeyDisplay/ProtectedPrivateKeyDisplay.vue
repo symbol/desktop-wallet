@@ -1,6 +1,6 @@
 <template>
     <div class="account-detail-row-3cols">
-        <span class="label">{{ $t('private_key') }}</span>
+        <span class="label">{{ $t('private_key') }}:</span>
         <div v-if="hasPlainPrivateKey" class="value">
             {{ plainInformation }}
             <ButtonCopyToClipboard v-model="plainInformation">
@@ -10,9 +10,8 @@
         </div>
         <div v-else>
             <div class="value">
-                ********
-                <button type="button" class="button-style validation-button right-side-button eye-button" @click="onClickDisplay">
-                    <Icon type="md-eye" />
+                <button type="button" class="show-button inverted-button" @click="onClickDisplay">
+                    SHOW
                 </button>
             </div>
         </div>
@@ -32,6 +31,14 @@ export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDispl
 </script>
 
 <style lang="less" scoped>
+.show-button {
+    height: 0.3rem !important;
+    width: 0.8rem !important;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
 .copy-icon {
     width: 0.24rem;
     height: 0.24rem;
