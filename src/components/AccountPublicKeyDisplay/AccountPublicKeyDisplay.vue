@@ -1,10 +1,10 @@
 <template>
     <div class="account-detail-row-3cols">
-        <span class="label">{{ $t('account_public_key') }}</span>
-        <div class="value accountPublicKey">
+        <span class="label">{{ $t('account_public_key') }}:</span>
+        <div v-if="account" class="value accountPublicKey">
             {{ account.publicKey }}
-            <ButtonCopyToClipboard v-model="account.publicKey">
-                <img src="@/views/resources/img/account/copyIcon.png" class="copy-icon" />
+            <ButtonCopyToClipboard v-if="account" v-model="account.publicKey">
+                <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
             </ButtonCopyToClipboard>
         </div>
     </div>

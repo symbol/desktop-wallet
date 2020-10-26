@@ -1,0 +1,111 @@
+/*
+ * Copyright 2020 NEM (https://nem.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ */
+
+@import '../../views/resources/css/variables.less';
+@import '../../views/resources/css/common.less';
+
+.top_harvesting_info {
+    background-color: transparent;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .number-grow-warp {
+        display: inline-block;
+    }
+
+    .top_account_info {
+        width: 100%;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+        display: grid;
+        grid-template-columns: repeat(4, 25%);
+        grid-template-rows: 100%;
+
+        padding-top: 8px;
+        padding-bottom: 8px;
+
+        border-radius: 12px;
+        background-color: white;
+
+        > div {
+            padding: 18px 0 18px 30px;
+            position: relative;
+
+            .title {
+                margin-bottom: 18px;
+
+                .title_txt {
+                    font-size: 24px;
+                    line-height: 33px;
+                    color: @blackLight;
+                }
+            }
+        }
+
+        .txt_info {
+            font-size: 40px;
+            font-weight: 400;
+            width: 180px;
+            display: inline-block;
+            color: #5200c6;
+            line-height: 40px;
+
+            button.button-style {
+                padding: 0;
+            }
+        }
+
+        .txt-small {
+            font-size: 18px;
+            color: @blackLight;
+            line-height: 40px;
+        }
+
+        .status-indicator {
+            width: 15px;
+            height: 15px;
+            border-radius: 10px;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .level-item {
+            margin-left: 15px;
+        }
+
+        .speed {
+            width: 65px;
+        }
+
+        .speed-blocks {
+            font-size: 16px;
+            line-height: 22px;
+            color: rgba(82, 0, 198, 1);
+            opacity: 0.75;
+            text-transform: lowercase;
+        }
+    }
+}

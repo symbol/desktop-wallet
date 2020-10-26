@@ -16,7 +16,6 @@
 import {
     AccountInfo,
     Address,
-    Deadline,
     EncryptedMessage,
     Message,
     Mosaic,
@@ -299,7 +298,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             );
         return [
             TransferTransaction.create(
-                Deadline.create(),
+                this.createDeadline(),
                 this.instantiatedRecipient,
                 mosaics.length ? mosaics : [],
                 this.formItems.encryptMessage ? this.encyptedMessage : PlainMessage.create(this.formItems.messagePlain || ''),
@@ -619,6 +618,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             transactions,
             this.networkMosaic,
             this.generationHash,
+            this.epochAdjustment,
             this.networkType,
             this.networkConfiguration,
             this.transactionFees,

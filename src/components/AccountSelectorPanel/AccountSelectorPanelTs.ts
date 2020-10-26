@@ -33,6 +33,8 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue';
 import ModalFormSubAccountCreation from '@/views/modals/ModalFormSubAccountCreation/ModalFormSubAccountCreation.vue';
 // @ts-ignore
 import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemonicExport.vue';
+//@ts-ignore
+import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 
@@ -44,6 +46,7 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
         FormLabel,
         ValidationProvider,
         ModalMnemonicExport,
+        AmountDisplay,
     },
     computed: {
         ...mapGetters({

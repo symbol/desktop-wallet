@@ -14,7 +14,7 @@
  *
  */
 // external dependencies
-import { Deadline, MultisigAccountInfo, MultisigAccountModificationTransaction, UInt64, Address } from 'symbol-sdk';
+import { MultisigAccountInfo, MultisigAccountModificationTransaction, UInt64, Address } from 'symbol-sdk';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 // internal dependencies
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
@@ -153,7 +153,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     protected getTransactions(): MultisigAccountModificationTransaction[] {
         return [
             MultisigAccountModificationTransaction.create(
-                Deadline.create(),
+                this.createDeadline(),
                 this.formItems.minApprovalDelta,
                 this.formItems.minRemovalDelta,
                 this.addressAdditions,
@@ -403,6 +403,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
             this.networkMosaic,
             this.generationHash,
             this.networkType,
+            this.epochAdjustment,
             this.networkConfiguration,
             this.transactionFees,
             this.requiredCosignatures,

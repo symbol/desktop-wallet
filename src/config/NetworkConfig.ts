@@ -37,6 +37,7 @@ export interface NetworkConfigurationDefaults {
     defaultDynamicFeeMultiplier: number;
     maxMosaicDivisibility: number;
     maxMessageSize: number;
+    epochAdjustment: number;
 }
 
 export interface NetworkConfig {
@@ -70,6 +71,7 @@ const defaultNetworkConfig: NetworkConfig = {
         currencyMosaicId: '5F160D7851F3CB30',
         harvestingMosaicId: '5F160D7851F3CB30',
         defaultDynamicFeeMultiplier: 1000,
+        epochAdjustment: 1573430400,
     },
     nodes: [
         { friendlyName: 'API EU Central 1', roles: 2, url: 'http://api-01.eu-central-1.0.10.0.x.symboldev.network:3000' },

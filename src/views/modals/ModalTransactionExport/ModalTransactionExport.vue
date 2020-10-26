@@ -14,7 +14,6 @@
                     <span>&nbsp;{{ $t('button_download_qr') }}</span>
                 </button>
             </div>
-
             <div slot="footer" class="modal-footer">
                 <button type="submit" class="centered-button button-style back-button float-right" @click="show = false">
                     {{ $t('close') }}

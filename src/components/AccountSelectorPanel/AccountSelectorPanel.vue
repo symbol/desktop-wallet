@@ -14,7 +14,26 @@
                 :class="['account-tile', isActiveAccount(item) ? 'active-background' : 'inactive-background', 'pointer']"
                 @click="currentAccountIdentifier = item.id"
             >
-                <div class="account-tile-inner-container">
+                <div class="mosaic_data">
+                    <span class="img_container">
+                        <img v-if="isActiveAccount(item)" src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                        <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="grayed-xym-logo" />
+                    </span>
+                    <span class="mosaic_name">{{ item.name }}</span>
+                    <span class="mosaic_value">
+                        <span :class="['amount', 'overflow_ellipsis', 'green']">
+                            <AmountDisplay
+                                :value="balances[item.address] ? balances[item.address] : 0"
+                                :decimals="6"
+                                :size="'normal'"
+                                :show-ticker="false"
+                                :ticker="false"
+                            />
+                        </span>
+                    </span>
+                </div>
+
+                <!--div class="account-tile-inner-container">
                     <div class="account-tile-upper-container">
                         <div class="account-name">
                             <span>{{ item.name }}</span>
@@ -26,7 +45,7 @@
                             <MosaicAmountDisplay :absolute-amount="balances[item.address]" :size="'bigger'" />
                         </div>
                     </div>
-                </div>
+                </div-->
             </div>
         </div>
 

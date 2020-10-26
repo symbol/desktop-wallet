@@ -66,8 +66,10 @@ const repositoryFactory = new (class RepositoryFactoryHttpForTest extends Reposi
 })('http://localhost:3000', {
     networkType: NetworkType.TEST_NET,
     generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
+    epochAdjustment: 1573430400,
 });
 repositoryFactory.getNetworkType = jest.fn(() => of(NetworkType.MIJIN_TEST));
+repositoryFactory.getEpochAdjustment = jest.fn(() => of(1573430400));
 
 describe.skip('services/NodeService', () => {
     test('getNodes', async () => {
