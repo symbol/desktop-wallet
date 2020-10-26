@@ -422,6 +422,7 @@
     "offline_storage": "オフラインストレージ",
     "operation_failed": "リクエスト失敗",
     "option_child_account": "マイプロファイルに子アカウントを作成する",
+    "option_hd_account": "超決定論的なアカウントを作成したい",
     "option_link_address": "アドレスにリンク",
     "option_link_mosaic": "モザイクにリンク",
     "option_privatekey_account": "既存アカウントに秘密鍵をインポートしたい",
