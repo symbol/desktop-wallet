@@ -89,9 +89,9 @@ import addAccount from '@/views/resources/img/icons/add-profile.png';
 // @ts-ignore
 import addAggregate from '@/views/resources/img/icons/add-aggregate.png';
 // @ts-ignore
-import aggregate from '@/views/resources/img/icons/aggregate.png';
+import aggregate from '@/views/resources/img/icons/aggregate.svg';
 // @ts-ignore
-import aggregateTransaction from '@/views/resources/img/icons/aggregate-transaction.png';
+import aggregateTransaction from '@/views/resources/img/icons/aggregate.svg';
 // @ts-ignore
 import alias from '@/views/resources/img/icons/alias.png';
 // @ts-ignore
