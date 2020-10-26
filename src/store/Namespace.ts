@@ -130,20 +130,6 @@ export default {
             commit('namespaces', { namespaces, currentSignerAddress });
         },
 
-        CHECK_ALIAS_LINKED_TO_ADDRESS({ rootGetters }, alias): boolean {
-            const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-            const namespaceRepository = repositoryFactory.createNamespaceRepository();
-            namespaceRepository.getLinkedAddress(new NamespaceId(alias)).subscribe(
-                () => {
-                    return true;
-                },
-                () => {
-                    return false;
-                },
-            );
-            return false;
-        },
-
         async RESOLVE_NAME({ commit, getters, rootGetters }, namespaceId: NamespaceId): Promise<string> {
             if (!namespaceId) {
                 return '';

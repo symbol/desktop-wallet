@@ -51,8 +51,10 @@ export class CustomValidationRules {
                     return true;
                 }
                 if (isValidAlias) {
-                    AppStore.dispatch('namespace/CHECK_ALIAS_LINKED_TO_ADDRESS', isValidAddress)
-                        .then((value) => (!!value ? true : false))
+                    AppStore.dispatch('namespace/GET_LINKED_ADDRESS', new NamespaceId(value))
+                        .then((val) => {
+                            val ? true : false;
+                        })
                         .catch(() => {
                             return false;
                         });
