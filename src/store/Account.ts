@@ -14,7 +14,7 @@
  *
  */
 import Vue from 'vue';
-import { AccountInfo, Address, IListener, MultisigAccountInfo, NetworkType, RepositoryFactory } from 'symbol-sdk';
+import { AccountInfo, AccountNames, Address, IListener, MultisigAccountInfo, NetworkType, RepositoryFactory } from 'symbol-sdk';
 import { of, Subscription } from 'rxjs';
 // internal dependencies
 import { $eventBus } from '../events';
@@ -66,6 +66,7 @@ interface AccountState {
     multisigAccountsInfo: MultisigAccountInfo[];
     subscriptions: Record<string, SubscriptionType[]>;
     currentRecipient: AccountInfo;
+    currentAccountAliases: AccountNames[];
 }
 
 // account state initial definition
@@ -74,6 +75,7 @@ const accountState: AccountState = {
     currentAccount: null,
     currentAccountAddress: null,
     currentAccountMultisigInfo: null,
+    currentAccountAliases: [],
     isCosignatoryMode: false,
     signers: [],
     currentSigner: null,
@@ -116,6 +118,7 @@ export default {
         multisigAccountsInfo: (state: AccountState) => state.multisigAccountsInfo,
         getSubscriptions: (state: AccountState) => state.subscriptions,
         currentRecipient: (state: AccountState) => state.currentRecipient,
+        currentAccountAliases: (state: AccountState) => state.currentAccountAliases,
     },
     mutations: {
         setInitialized: (state: AccountState, initialized: boolean) => {
@@ -126,6 +129,9 @@ export default {
         },
         currentAccountAddress: (state: AccountState, accountAddress: Address) => {
             state.currentAccountAddress = accountAddress;
+        },
+        currentAccountAliases: (state: AccountState, currentAccountAliases: AccountNames[]) => {
+            state.currentAccountAliases = currentAccountAliases;
         },
         currentSigner: (state: AccountState, currentSigner: Signer) => {
             state.currentSigner = currentSigner;
@@ -234,6 +240,9 @@ export default {
             dispatch('SET_CURRENT_SIGNER', {
                 address: currentAccountAddress,
             });
+            //reset current account alias
+            dispatch('LOAD_CURRENT_ACCOUNT_ALIASES', currentAccountAddress);
+
             $eventBus.$emit('onAccountChange', currentAccountAddress.plain());
         },
 
@@ -243,6 +252,7 @@ export default {
             commit('currentAccountAddress', null);
             commit('currentSignerAddress', null);
             commit('currentSignerPublicKey', null);
+            commit('currentAccountAliases', []);
         },
 
         async SET_CURRENT_SIGNER({ commit, dispatch, getters, rootGetters }, { address }: { address: Address }) {
@@ -319,6 +329,17 @@ export default {
             }
         },
 
+        async LOAD_CURRENT_ACCOUNT_ALIASES({ commit, rootGetters }, currentAccountAddress: Address) {
+            const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+            const aliasPromise = repositoryFactory
+                .createNamespaceRepository()
+                .getAccountsNames([currentAccountAddress])
+                .toPromise()
+                .catch(() => commit('currentAccountAliases', []));
+            const aliases = await aliasPromise;
+            commit('currentAccountAliases', aliases);
+        },
+
         async LOAD_ACCOUNT_INFO({ commit, getters, rootGetters }) {
             const networkType: NetworkType = rootGetters['network/networkType'];
             const currentAccount: AccountModel = getters.currentAccount;
@@ -352,6 +373,14 @@ export default {
                 .toPromise();
 
             // REMOTE CALL
+            const aliasPromise = repositoryFactory
+                .createNamespaceRepository()
+                .getAccountsNames([currentAccountAddress])
+                .toPromise()
+                .catch(() => commit('currentAccountAliases', []));
+            const aliases = await aliasPromise;
+            commit('currentAccountAliases', aliases);
+
             const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise;
 
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
