@@ -15,7 +15,6 @@
  */
 import {
     Address,
-    Deadline,
     TransferTransaction,
     UInt64,
     PersistentHarvestingDelegationMessage,
@@ -111,13 +110,20 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         );
 
         const linkTx = AccountKeyLinkTransaction.create(
-            Deadline.create(),
+            this.createDeadline(),
             this.remoteAccount.publicKey,
             LinkAction.Link,
             this.networkType,
             maxFee,
         );
-        const transferTx = TransferTransaction.create(Deadline.create(), this.instantiatedRecipient, [], message, this.networkType, maxFee);
+        const transferTx = TransferTransaction.create(
+            this.createDeadline(),
+            this.instantiatedRecipient,
+            [],
+            message,
+            this.networkType,
+            maxFee,
+        );
 
         if (this.withLink === true) {
             return [linkTx, transferTx];

@@ -84,9 +84,11 @@ const repositoryFactory = new (class RepositoryFactoryHttpForTest extends Reposi
 })(realUrl, {
     networkType: NetworkType.TEST_NET,
     generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
+    epochAdjustment: 1573430400,
 });
 repositoryFactory.getNetworkType = jest.fn(() => of(NetworkType.MIJIN_TEST));
 repositoryFactory.getGenerationHash = jest.fn(() => of('Some Gen Hash'));
+repositoryFactory.getEpochAdjustment = jest.fn(() => of(1573430400));
 
 describe.skip('services/MosaicService', () => {
     test('getMosaics all addresses', async () => {

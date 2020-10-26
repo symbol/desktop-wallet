@@ -46,7 +46,7 @@ export default class MnemonicQRActionTs extends Vue {
         items.push(
             new QRCodeDetailItem(
                 this.$t('qrcode_detail_item_mnemonic_passphrase').toString(),
-                this.qrCode.mnemonic.plain.split(' ').splice(3).join(' ') + ' ********', // masked for security purposes
+                this.qrCode.mnemonicPlainText.split(' ').splice(3).join(' ') + ' ********', // masked for security purposes
                 true,
             ),
         );
@@ -54,7 +54,7 @@ export default class MnemonicQRActionTs extends Vue {
     }
 
     public async onSubmit() {
-        this.$store.dispatch('temporary/SET_MNEMONIC', this.qrCode.mnemonic.plain);
+        this.$store.dispatch('temporary/SET_MNEMONIC', this.qrCode.mnemonicPlainText);
         this.onSuccess();
     }
 }

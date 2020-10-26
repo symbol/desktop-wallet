@@ -15,6 +15,7 @@
  */
 
 export class NetworkConfigurationModel {
+    public readonly epochAdjustment: number;
     public readonly maxMosaicDivisibility: number;
     public readonly namespaceGracePeriodDuration: number;
     public readonly lockedFundsPerAggregate: string;

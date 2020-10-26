@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { MosaicId, MultisigAccountInfo, NetworkType, PublicAccount, Transaction, TransactionFees, Address } from 'symbol-sdk';
+import { MosaicId, MultisigAccountInfo, NetworkType, PublicAccount, Transaction, TransactionFees, Address, Deadline } from 'symbol-sdk';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
@@ -29,6 +29,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
         ...mapGetters({
             generationHash: 'network/generationHash',
             networkType: 'network/networkType',
+            epochAdjustment: 'network/epochAdjustment',
             defaultFee: 'app/defaultFee',
             currentAccount: 'account/currentAccount',
             selectedSigner: 'account/currentSigner',
@@ -57,6 +58,11 @@ export class FormTransactionBase extends Vue {
      * @var {NetworkType}
      */
     public networkType: NetworkType;
+
+    /**
+     * The network configuration epochAdjustment.
+     */
+    public epochAdjustment: number;
 
     /**
      * Default fee setting
@@ -163,6 +169,13 @@ export class FormTransactionBase extends Vue {
     public async created() {
         this.$store.dispatch('network/LOAD_TRANSACTION_FEES');
         this.resetForm();
+    }
+
+    /**
+     * it creates the deadlines for the transactions.
+     */
+    protected createDeadline(): Deadline {
+        return Deadline.create(this.epochAdjustment);
     }
 
     /**
@@ -282,6 +295,7 @@ export class FormTransactionBase extends Vue {
             this.networkMosaic,
             this.generationHash,
             this.networkType,
+            this.epochAdjustment,
             this.networkConfiguration,
             this.transactionFees,
             this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures,
