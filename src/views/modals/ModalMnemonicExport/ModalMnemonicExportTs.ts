@@ -103,9 +103,9 @@ export class ModalMnemonicExportTs extends Vue {
         try {
             this.exportMnemonicQR = QRCodeGenerator.createExportMnemonic(
                 plnSeed,
-                payload.password.value,
                 this.networkType,
                 this.generationHash,
+                payload.password.value,
             );
 
             this.$emit('onAccountUnlocked', this.exportMnemonicQR);
