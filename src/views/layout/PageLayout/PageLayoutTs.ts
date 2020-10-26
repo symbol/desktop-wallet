@@ -189,11 +189,11 @@ export class PageLayoutTs extends Vue {
     }
 
     public get explorerUrl() {
-        return this.explorerBaseUrl.replace(/\/+$/, '') + '/accounts/' + this.currentAccount.address;
+        return this.currentAccount ? this.explorerBaseUrl.replace(/\/+$/, '') + '/accounts/' + this.currentAccount.address : this.explorerBaseUrl;
     }
 
     public get faucetUrl() {
-        return this.faucetBaseUrl + '?recipient=' + this.currentAccount.address;
+        return this.currentAccount ? this.faucetBaseUrl + '?recipient=' + this.currentAccount.address : this.faucetBaseUrl;
     }
 
     public get isTestnet() {
