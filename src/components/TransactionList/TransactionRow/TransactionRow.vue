@@ -36,7 +36,7 @@
             </span>
             <span class="hash-cell-time">
                 <!-- @TODO: Should be transaction time instead of deadline -->
-                {{ timeHelpers.formatTimestamp(transaction.deadline.value) }}
+                {{ deadline }}
             </span>
         </div>
     </div>

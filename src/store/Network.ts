@@ -18,7 +18,6 @@ import { BlockInfo, IListener, Listener, NetworkType, RepositoryFactory, Transac
 import { Subscription } from 'rxjs';
 // internal dependencies
 import { $eventBus } from '../events';
-import { Duration } from '@js-joda/core';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import app from '@/main';
 import { AwaitLock } from './AwaitLock';
