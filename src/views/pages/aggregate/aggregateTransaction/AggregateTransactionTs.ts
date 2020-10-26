@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-@import '../../views/resources/css/variables.less';
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 
-.trigger-accountlink {
-    font-size: @smallFont !important;
-    color: @purpleDark;
-    padding: 0 0.2rem !important;
+@Component({
+    computed: mapGetters({
+        latestArticles: 'community/latestArticles',
+    }),
+})
+export class AggregateTransactionTs extends Vue {
+
 }
-
