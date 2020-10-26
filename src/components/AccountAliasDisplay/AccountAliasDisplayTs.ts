@@ -18,11 +18,11 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel';
-import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
+import { AccountNames } from 'symbol-sdk';
 
 @Component({
     computed: mapGetters({
-        namespaces: 'namespace/namespaces',
+        currentAccountAliases: 'account/currentAccountAliases',
     }),
 })
 export class AccountAliasDisplayTs extends Vue {
@@ -31,19 +31,14 @@ export class AccountAliasDisplayTs extends Vue {
     /**
      * NamespaceModel
      */
-    protected namespaces: NamespaceModel[];
+    protected currentAccountAliases: AccountNames[];
 
-    get accountAliases(): string[] {
-        if (!this.namespaces || !this.account) {
+    get accountAliasNames(): string[] {
+        const names = this.currentAccountAliases.find((alias) => alias.address.plain() === this.account.address)?.names;
+        if (!this.currentAccountAliases || !this.account || !names) {
             return [];
+        } else {
+            return names.map((aliasName) => aliasName.name);
         }
-
-        // get the current account address
-        const address = this.account.address;
-
-        // return the current account aliases
-        return this.namespaces
-            .filter(({ aliasTargetAddressRawPlain }) => aliasTargetAddressRawPlain && aliasTargetAddressRawPlain === address)
-            .map(({ name, namespaceIdHex }) => name || namespaceIdHex);
     }
 }

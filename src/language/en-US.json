@@ -422,6 +422,7 @@
     "offline_storage": "Offline storage",
     "operation_failed": "Request Failed",
     "option_child_account": "I want to create a child account for my profile",
+    "option_hd_account": "I want to create HD account",
     "option_link_address": "Link an address",
     "option_link_mosaic": "Link a mosaic",
     "option_privatekey_account": "I want to import an existing account private key",
