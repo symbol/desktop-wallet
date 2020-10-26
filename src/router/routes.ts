@@ -428,7 +428,8 @@ export const routes: AppRoute[] = [
                         meta: { protected: true, title: 'page_title_harvesting' },
                         // @ts-ignore
                         component: () => import('@/views/pages/harvesting/HarvestingPage/HarvestingPage.vue'),
-                    },{
+                    },
+                    {
                         path: '/delegatedHarvesting',
                         name: 'harvesting.delegated',
                         meta: { protected: true, title: 'page_title_delegated_harvesting' },
@@ -456,7 +457,7 @@ export const routes: AppRoute[] = [
                         meta: { protected: true },
                         // @ts-ignore
                         component: () => import('@/views/pages/aggregate/aggregateTransaction/AggregateTransaction.vue'),
-                    }
+                    },
                 ],
             },
             {

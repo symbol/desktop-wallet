@@ -22,7 +22,13 @@
                     <span class="mosaic_name">{{ item.name }}</span>
                     <span class="mosaic_value">
                         <span :class="['amount', 'overflow_ellipsis', 'green']">
-                            <AmountDisplay :value="balances[item.address] ? balances[item.address] : 0" :decimals="6" :size="'normal'" :show-ticker="false" :ticker="false" />
+                            <AmountDisplay
+                                :value="balances[item.address] ? balances[item.address] : 0"
+                                :decimals="6"
+                                :size="'normal'"
+                                :show-ticker="false"
+                                :ticker="false"
+                            />
                         </span>
                     </span>
                 </div>

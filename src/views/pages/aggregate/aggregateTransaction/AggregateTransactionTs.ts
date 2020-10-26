@@ -21,6 +21,4 @@ import { mapGetters } from 'vuex';
         latestArticles: 'community/latestArticles',
     }),
 })
-export class AggregateTransactionTs extends Vue {
-
-}
+export class AggregateTransactionTs extends Vue {}

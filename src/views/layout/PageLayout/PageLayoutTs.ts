@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {NetworkType} from 'symbol-sdk';
-import {Component, Vue} from 'vue-property-decorator';
-import {mapGetters} from 'vuex';
+import { NetworkType } from 'symbol-sdk';
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // internal dependencies
-import {ProfileModel} from '@/core/database/entities/ProfileModel';
-import {AccountService} from '@/services/AccountService';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { AccountService } from '@/services/AccountService';
 // child components
 // @ts-ignore
 import AppLogo from '@/components/AppLogo/AppLogo.vue';
@@ -39,12 +39,12 @@ import AccountSelectorField from '@/components/AccountSelectorField/AccountSelec
 import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue';
 //@ts-ignore
 import Settings from '@/components/Settings/Settings.vue';
-import {URLInfo} from '@/core/utils/URLInfo';
+import { URLInfo } from '@/core/utils/URLInfo';
 //@ts-ignore
 import ImportQRButton from '@/components/QRCode/ImportQRButton/ImportQRButton.vue';
-import {AccountModel} from '@/core/database/entities/AccountModel';
+import { AccountModel } from '@/core/database/entities/AccountModel';
 //@ts-ignore
-import AccountLinks from "@/components/AccountLinks/AccountLinks.vue";
+import AccountLinks from '@/components/AccountLinks/AccountLinks.vue';
 
 @Component({
     components: {
@@ -58,7 +58,7 @@ import AccountLinks from "@/components/AccountLinks/AccountLinks.vue";
         ModalDebugConsole,
         Settings,
         ImportQRButton,
-        AccountLinks
+        AccountLinks,
     },
     computed: {
         ...mapGetters({
@@ -189,7 +189,9 @@ export class PageLayoutTs extends Vue {
     }
 
     public get explorerUrl() {
-        return this.currentAccount ? this.explorerBaseUrl.replace(/\/+$/, '') + '/accounts/' + this.currentAccount.address : this.explorerBaseUrl;
+        return this.currentAccount
+            ? this.explorerBaseUrl.replace(/\/+$/, '') + '/accounts/' + this.currentAccount.address
+            : this.explorerBaseUrl;
     }
 
     public get faucetUrl() {

@@ -75,7 +75,11 @@
                 </FormRow>
 
                 <div class="form-row text-right">
-                    <button class="button-style validation-button right-side-button pl-2 pr-2" type="submit" @click="handleSubmit(onSubmit)">
+                    <button
+                        class="button-style validation-button right-side-button pl-2 pr-2"
+                        type="submit"
+                        @click="handleSubmit(onSubmit)"
+                    >
                         {{ $t('confirm') }}
                     </button>
                 </div>

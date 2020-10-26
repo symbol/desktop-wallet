@@ -35,11 +35,9 @@ export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDispl
     height: 0.3rem !important;
     width: 0.8rem !important;
     border-radius: 3px;
-    font-size:14px;
+    font-size: 14px;
     font-weight: bold;
     cursor: pointer;
-
-
 }
 .copy-icon {
     width: 0.24rem;

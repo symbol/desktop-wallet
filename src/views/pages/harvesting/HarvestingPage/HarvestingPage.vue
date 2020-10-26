@@ -1,6 +1,6 @@
 <template>
     <div>
-    	Harvesting page
+        Harvesting page
     </div>
 </template>
 
@@ -10,9 +10,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 // @ts-ignore
 @Component({
-    components: {
-        
-    },
+    components: {},
 })
 export default class HarvestingPage extends Vue {}
 </script>

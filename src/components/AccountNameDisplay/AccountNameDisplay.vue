@@ -1,15 +1,9 @@
 <template>
     <div class="account-detail-row">
-        <div class="label">
-            {{ $t('account_name') }}:
-        </div>
+        <div class="label">{{ $t('account_name') }}:</div>
         <div class="value field-name">
             <span v-if="account" class="accountName">{{ account.name }}</span>
-            <button
-                type="button"
-                class="edit-button"
-                @click.stop="hasNameFormModal = true"
-            >
+            <button type="button" class="edit-button" @click.stop="hasNameFormModal = true">
                 <Icon type="md-create" />
             </button>
         </div>
@@ -30,20 +24,20 @@ export default class AccountNameDisplay extends AccountNameDisplayTs {}
     height: 0.1rem !important;
     width: 0.1rem !important;
     background: @grayLightest;
-    border:none;
+    border: none;
     color: @blackLight;
-    float:right;
-    margin-right:2%;
+    float: right;
+    margin-right: 2%;
     text-align: center;
     cursor: pointer;
-    font-size:0.9em;
+    font-size: 0.9em;
 }
 
 .field-name {
     background: @grayLightest;
 
     padding-left: 6px;
-    border-radius:3px;
-    width:82%;
+    border-radius: 3px;
+    width: 82%;
 }
 </style>

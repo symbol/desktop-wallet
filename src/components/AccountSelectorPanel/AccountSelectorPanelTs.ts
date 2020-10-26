@@ -46,7 +46,7 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
         FormLabel,
         ValidationProvider,
         ModalMnemonicExport,
-        AmountDisplay
+        AmountDisplay,
     },
     computed: {
         ...mapGetters({

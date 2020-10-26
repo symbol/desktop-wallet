@@ -1,7 +1,7 @@
 <template>
     <div class="left-navigator">
         <div class="logo-container">
-            <img class="logo-img" src="@/views/resources/symbol_logo.png"">
+            <img class="logo-img" src="@/views/resources/symbol_logo.png" />
         </div>
         <div class="navigator-items-container">
             <div
