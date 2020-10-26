@@ -676,5 +676,7 @@
     "web_wallet_warning": "このウェブウォレットはデモンストレーション専用です",
     "welcome": "ようこそ",
     "word": "文字",
-    "x_seconds": "{seconds}秒"
+    "x_seconds": "{seconds}秒",
+    "button_download_paper_wallet": "紙の財布をダウンロード",
+    "button_download": "ダウンロード"
 }

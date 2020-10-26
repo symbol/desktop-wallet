@@ -679,5 +679,11 @@
     "web_wallet_warning": "This WEB wallet is for demonstration use only!",
     "welcome": "Welcome",
     "word": "Word",
-    "x_seconds": "{seconds}s."
+    "x_seconds": "{seconds}s.",
+    "backup_profile": "Profile Backup",
+    "modal_title_backup_profile": "Profile Backup",
+    "button_download_paper_wallet": "Download Paper Wallet",
+    "backup_profile_explanation_title": "Back up Your Profile as Paper Wallet",
+    "button_download": "Download",
+    "backup_profile_explanation_desc": "Download a paper(pdf) copy of your profile. All of your accounts inside this profile will be listed in the downloaded file. This backup file will enable you when you want to restore all of your accounts in other devices or in the same device when you need to. Please keep them in a safe place and do not share with third parties since it stores highly sensbile information."
 }

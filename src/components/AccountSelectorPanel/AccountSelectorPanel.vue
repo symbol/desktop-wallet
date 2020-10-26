@@ -53,12 +53,12 @@
             <span class="add-account pointer button" @click="hasAddAccountModal = true">
                 {{ $t('button_add_account') }}
             </span>
-            <div v-if="!isPrivateKeyProfile" class="account-switch-header-right-container" @click="hasMnemonicExportModal = true">
-                <span class="back-up pointer">{{ $t('backup_mnemonic') }}</span>
+            <div v-if="!isPrivateKeyProfile" class="account-switch-header-right-container" @click="hasBackupProfileModal = true">
+                <span class="back-up pointer">{{ $t('backup_profile') }}</span>
             </div>
             <ModalFormSubAccountCreation v-if="hasAddAccountModal" :visible="hasAddAccountModal" @close="hasAddAccountModal = false" />
 
-            <ModalMnemonicExport v-if="hasMnemonicExportModal" :visible="hasMnemonicExportModal" @close="hasMnemonicExportModal = false" />
+            <ModalBackupProfile v-if="hasBackupProfileModal" :visible="hasBackupProfileModal" @close="hasBackupProfileModal = false" />
         </div>
     </div>
 </template>
