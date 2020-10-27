@@ -13,20 +13,11 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {
-    RepositoryFactoryHttp,
-    NodeRepository,
-    NetworkType,
-    NodeInfo,
-    RoleType,
-    NodeTime,
-    NodeHealth,
-    StorageInfo,
-    ServerInfo,
-} from 'symbol-sdk';
+import { NetworkType, NodeInfo, NodeRepository, RepositoryFactory, RoleType } from 'symbol-sdk';
 import { NodeService } from '@/services/NodeService';
 import { toArray } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
+import { instance, mock, when } from 'ts-mockito';
 
 const nodeService = new NodeService();
 const realUrl = 'http://api-01.us-west-1.symboldev.network:3000';
@@ -40,38 +31,21 @@ const fakeNodeInfo = new NodeInfo(
     'Some Host',
     'Some Friendly Name',
 );
-const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
-    createNodeRepository(): NodeRepository {
-        return new (class NodeRepositoryForTest implements NodeRepository {
-            getNodeInfo(): Observable<NodeInfo> {
-                return of(fakeNodeInfo);
-            }
-            getNodePeers(): Observable<NodeInfo[]> {
-                return of([fakeNodeInfo]);
-            }
-            getNodeTime(): Observable<NodeTime> {
-                return of(new NodeTime());
-            }
-            getNodeHealth(): Observable<NodeHealth> {
-                return of(new NodeHealth(undefined, undefined));
-            }
-            getStorageInfo(): Observable<StorageInfo> {
-                return of(new StorageInfo(0, 0, 0));
-            }
-            getServerInfo(): Observable<ServerInfo> {
-                return of(new ServerInfo('1.0.0', '1.0.0'));
-            }
-        })();
-    }
-})('http://localhost:3000', {
-    networkType: NetworkType.TEST_NET,
-    generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
-    epochAdjustment: 1573430400,
-});
-repositoryFactory.getNetworkType = jest.fn(() => of(NetworkType.MIJIN_TEST));
-repositoryFactory.getEpochAdjustment = jest.fn(() => of(1573430400));
 
-describe.skip('services/NodeService', () => {
+const mockRepoFactory = mock<RepositoryFactory>();
+
+const mockNodeRepository = mock<NodeRepository>();
+when(mockNodeRepository.getNodePeers()).thenReturn(of([fakeNodeInfo]));
+when(mockNodeRepository.getNodeInfo()).thenReturn(of(fakeNodeInfo));
+
+const nodeRepository = instance(mockNodeRepository);
+
+when(mockRepoFactory.createNodeRepository()).thenReturn(nodeRepository);
+when(mockRepoFactory.getEpochAdjustment()).thenReturn(of(1573430400));
+when(mockRepoFactory.getNetworkType()).thenReturn(of(NetworkType.MIJIN_TEST));
+const repositoryFactory = instance(mockRepoFactory);
+
+describe('services/NodeService', () => {
     test('getNodes', async () => {
         const peers = await nodeService.getNodes(repositoryFactory, realUrl).pipe(toArray()).toPromise();
         console.log(JSON.stringify(peers, null, 2));
