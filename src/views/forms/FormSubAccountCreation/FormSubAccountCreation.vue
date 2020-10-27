@@ -9,7 +9,7 @@
                             <div class="inputs-container">
                                 <div class="select-container">
                                     <Select v-model="formItems.type" class="select-size select-style">
-                                        <Option v-if="!isPrivateKeyProfile" value="child_account">
+                                        <Option v-if="isPrivateKeyProfile" value="child_account">
                                             {{ $t('option_hd_account') }}
                                         </Option>
                                         <Option v-else value="child_account">
