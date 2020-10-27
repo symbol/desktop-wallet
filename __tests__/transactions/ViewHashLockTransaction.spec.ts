@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { AggregateTransaction, Deadline, LockFundsTransaction, NetworkCurrencyLocal, NetworkType, UInt64 } from 'symbol-sdk';
+import { AggregateTransaction, Deadline, LockFundsTransaction, NetworkCurrencies, NetworkType, UInt64 } from 'symbol-sdk';
 import { createStore } from '@MOCKS/Store';
 import { getTestAccount } from '@MOCKS/Accounts';
 import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction';
@@ -34,7 +34,7 @@ describe('transactions/ViewHashLockTransaction', () => {
             const signedTransaction = getTestAccount('cosigner1').sign(aggregateTransaction, generationHash);
             const hashLock = LockFundsTransaction.create(
                 Deadline.create(epochAdjustment),
-                NetworkCurrencyLocal.createRelative(10),
+                NetworkCurrencies.PUBLIC.currency.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
                 NetworkType.MIJIN_TEST,
