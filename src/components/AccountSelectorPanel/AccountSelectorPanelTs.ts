@@ -33,6 +33,7 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue';
 import ModalFormSubAccountCreation from '@/views/modals/ModalFormSubAccountCreation/ModalFormSubAccountCreation.vue';
 // @ts-ignore
 import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
+// @ts-ignore
 import ModalBackupProfile from '@/views/modals/ModalBackupProfile/ModalBackupProfile.vue';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';

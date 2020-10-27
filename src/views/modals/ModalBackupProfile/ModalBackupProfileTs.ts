@@ -16,8 +16,6 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { Account, NetworkType, Password, Crypto } from 'symbol-sdk';
-import { MnemonicPassPhrase } from 'symbol-hd-wallets';
-import { MnemonicQR, QRCodeGenerator } from 'symbol-qr-library';
 // internal dependencies
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 // child components
@@ -26,6 +24,10 @@ import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock
 // resources
 // @ts-ignore
 import { AccountModel } from '@/core/database/entities/AccountModel';
+import { MnemonicPassPhrase } from 'symbol-hd-wallets';
+import { SymbolPaperWallet, IAccountInfo, IHDAccountInfo } from 'symbol-paper-wallets';
+import { AccountService } from '@/services/AccountService';
+import { UIHelpers } from '@/core/utils/UIHelpers';
 
 @Component({
     components: { FormProfileUnlock },
@@ -65,16 +67,34 @@ export class ModalBackupProfileTs extends Vue {
      */
     public generationHash: string;
 
+    /**
+     * Known accounts to the profile
+     */
     public knownAccounts: AccountModel[];
 
-    public accountUnlocked: boolean = false;
-    public exportMnemonicQR: MnemonicQR;
+    /**
+     * Known accounts as paper-wallet IAccountInfo (array) type
+     * @var {IAccountInfo[]}
+     */
+    public knownAccountInfos: IAccountInfo[];
 
-    public created() {
-        this.$eventToObservable('onAccountUnlocked').subscribe(async () => {
-            this.qrBase64 = await this.exportMnemonicQR.toBase64().toPromise();
-        });
-    }
+    /**
+     * Whether account is unlocked
+     */
+    public accountUnlocked: boolean = false;
+
+    /**
+     * Mnemonic words (space delimited)
+     */
+    private plainMnemonic: string = null;
+
+    /**
+     * Account Service
+     * @var {AccountService}
+     */
+    public accountService: AccountService;
+
+    public downloadInProgress: boolean = false;
 
     /**
      * Visibility state
@@ -101,24 +121,18 @@ export class ModalBackupProfileTs extends Vue {
     public onAccountUnlocked(payload: { account: Account; password: Password }): boolean {
         // decrypt seed + create QR
         const encSeed = this.currentProfile.seed;
-        const plnSeed = Crypto.decrypt(encSeed, payload.password.value);
+        this.plainMnemonic = Crypto.decrypt(encSeed, payload.password.value);
+        this.accountUnlocked = true;
 
-        try {
-            this.exportMnemonicQR = QRCodeGenerator.createExportMnemonic(
-                new MnemonicPassPhrase(plnSeed),
-                payload.password.value,
-                this.networkType,
-                this.generationHash,
-            );
-
-            this.$emit('onAccountUnlocked', this.exportMnemonicQR);
-
-            // display download profile button
-            this.accountUnlocked = true;
-            return true;
-        } catch (e) {
-            console.error('error mnemonic: ', e);
-        }
+        this.knownAccountInfos = this.knownAccounts.map(
+            (account) =>
+                ({
+                    name: account.name,
+                    address: account.address,
+                    publicKey: account.publicKey,
+                    privateKey: Crypto.decrypt(account.encryptedPrivateKey, payload.password.value),
+                } as IAccountInfo),
+        );
 
         return false;
     }
@@ -134,28 +148,41 @@ export class ModalBackupProfileTs extends Vue {
     }
 
     /**
+     * Life cycle hook
+     */
+    public created() {
+        this.accountService = new AccountService();
+    }
+
+    /**
      * Hook called when the download button is clicked
      * @return {void}
      */
-    public onDownload() {
-        if (!this.exportMnemonicQR) {
+    public async onDownload() {
+        if (!this.plainMnemonic) {
+            this.$store.dispatch('notification/ADD_ERROR', this.$t('mnemonic_not_found'));
             return;
         }
+        Vue.set(this, 'downloadInProgress', true);
+        setTimeout(async () => {
+            await this.generateAndDownloadPaperWallet();
+            Vue.set(this, 'downloadInProgress', false);
+        }, 800); // labor illusion
+    }
 
-        // - read QR code base64
-        const QRCode: any = document.querySelector('#qrImg');
-        if (!QRCode) {
-            return;
-        }
-        const url = QRCode.src;
+    /**
+     * Generates and downloads paper-wallet for the root account and the profile(known) accounts
+     */
+    protected async generateAndDownloadPaperWallet(): Promise<boolean> {
+        const rootAccount: Account = this.accountService.getAccountByPath(new MnemonicPassPhrase(this.plainMnemonic), this.networkType);
+        const rootAccountInfo: IHDAccountInfo = {
+            mnemonic: this.plainMnemonic,
+            rootAccountPublicKey: rootAccount.publicKey,
+            rootAccountAddress: rootAccount.address.pretty(),
+        };
 
-        // - create link (<a>)
-        const a = document.createElement('a');
-        const event = new MouseEvent('click');
-        const profileName = this.currentProfile.profileName;
-        a.download = `qr_account_mnemonic_${profileName}`;
-        a.href = url;
-        // - start download
-        a.dispatchEvent(event);
+        const paperWallet = new SymbolPaperWallet(rootAccountInfo, this.knownAccountInfos, this.networkType, this.generationHash);
+        const pdfArray: Uint8Array = await paperWallet.toPdf();
+        return UIHelpers.downloadBytesAsFile(pdfArray, `paper-wallet-${this.currentProfile.profileName}`, 'application/pdf');
     }
 }

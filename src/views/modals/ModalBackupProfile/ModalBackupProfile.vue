@@ -10,10 +10,9 @@
                     <p>{{ $t('backup_profile_explanation_desc') }}</p>
                 </div>
 
-                <button class="button-style validation-button download-button" type="button" @click="onDownload">
-                    <Icon :type="'md-download'" size="20" />
-                    <span>&nbsp;{{ $t('button_download') }}</span>
-                </button>
+                <Button class="button-style validation-button download-button" :loading="downloadInProgress" @click="onDownload">
+                    <span v-if="!downloadInProgress"> <Icon :type="'md-download'" size="20" /> {{ $t('button_download') }}</span>
+                </Button>
             </div>
 
             <div slot="footer" class="modal-footer">

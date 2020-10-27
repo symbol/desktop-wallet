@@ -14,6 +14,8 @@
  *
  */
 
+import { from as observableFrom, Observable } from 'rxjs';
+
 export class UIHelpers {
     /**
      * Helper method to copy text to clipboard
@@ -38,5 +40,31 @@ export class UIHelpers {
         } catch (e) {
             return false;
         }
+    }
+
+    /**
+     * Helper method to download byte array as a file
+     *
+     * @param {Uint8Array} bytes Byte array to be downloaded as a file
+     * @param {string} fileName
+     * @param {string} fileMimeType
+     * @return {Observable<boolean>}
+     */
+    public static downloadBytesAsFile(bytes: Uint8Array, fileName: string, fileMimeType: string): Promise<boolean> {
+        return new Promise((resolve) => {
+            const blob = new Blob([bytes], {
+                type: fileMimeType,
+            });
+            const url = window.URL.createObjectURL(blob);
+
+            // - create link (<a>)
+            const a = document.createElement('a');
+            const event = new MouseEvent('click');
+            a.download = fileName;
+            a.href = url;
+            // - start download
+            a.dispatchEvent(event);
+            resolve(true);
+        });
     }
 }
