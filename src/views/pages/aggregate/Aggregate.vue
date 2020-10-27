@@ -2,53 +2,73 @@
     <div class="main-container">
             <div class="lef-container">
                 <div class="left-top-container">
-                    <span class="title-container">
-                        left-top
-                    </span>     
-                    <div class="mosaic_data">
-                        <span class="img_container">
-                            <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
-                        </span>
-                        <span class="mosaic_name">Simple transfer</span>
-                        <span class="add_button">
-                            <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
-                        </span>
+                    <div class="title-container">
+                        <span class="title-style">
+                            left-top
+                        </span>   
+                    </div> 
+                    <div class="transaction-type-container"> 
+                        <div class="mosaic_data">
+                            <span class="img_container">
+                                <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                            </span>
+                            <span class="mosaic_name">Simple transfer</span>
+                            <span class="add_button">
+                                <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                            </span>
+                        </div>
+                         <div class="mosaic_data">
+                            <span class="img_container">
+                                <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                            </span>
+                            <span class="mosaic_name">Mosaic transaction</span>
+                            <span class="add_button">
+                                <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                            </span>                    </div>
+                         <div class="mosaic_data">
+                            <span class="img_container">
+                                <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                            </span>
+                            <span class="mosaic_name">Namespace transaction</span>
+                            <span class="add_button">
+                                <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                            </span>                    </div>
+                         <div class="mosaic_data">
+                            <span class="img_container">
+                                <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                            </span>
+                            <span class="mosaic_name">Multisignature transaction</span>
+                            <span class="add_button">
+                                <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                            </span>                    
+                        </div>
                     </div>
-                     <div class="mosaic_data">
-                        <span class="img_container">
-                            <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
-                        </span>
-                        <span class="mosaic_name">Mosaic transaction</span>
-                        <span class="add_button">
-                            <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
-                        </span>                    </div>
-                     <div class="mosaic_data">
-                        <span class="img_container">
-                            <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
-                        </span>
-                        <span class="mosaic_name">Namespace transaction</span>
-                        <span class="add_button">
-                            <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
-                        </span>                    </div>
-                     <div class="mosaic_data">
-                        <span class="img_container">
-                            <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
-                        </span>
-                        <span class="mosaic_name">Multisignature transaction</span>
-                        <span class="add_button">
-                            <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
-                        </span>                    </div>
                 </div>
                 <div class="left-bottom-container">
-                    <span class="title-container">
-                        left-bottom
-                    </span>  
+                    <div class="title-container">
+                        <span class="title-style">
+                            left-bottom
+                        </span>   
+                    </div>   
+                    <div class="transaction-type-container">
+                        <div class="transfer_data">
+                            <span class="img_container">
+                                <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                            </span>
+                            <span class="transfer_name">asdfdsagfdga</span>
+                            <span class="remove_button">
+                                <img src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                            </span> 
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="right-container">
-                <span class="title-container">
-                    right
-                </span>
+                <div class="title-container">
+                        <span class="title-style">
+                            right
+                        </span>   
+                </div>  
             </div>
     </div>
 </template>

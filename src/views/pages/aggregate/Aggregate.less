@@ -16,6 +16,7 @@
 .left-top-container {
     display: grid;
     height: calc(50% - 0.15rem);
+    grid-template-rows: 0.8rem auto;
     background-color: white;
     overflow: hidden;
     border-radius: 12px;   
@@ -24,6 +25,7 @@
 .left-bottom-container {
     display: grid;
     height: calc(50% - 0.15rem);
+    grid-template-rows: 0.8rem auto;
     background-color: white;
     overflow: hidden;
     border-radius: 12px;
@@ -40,9 +42,12 @@
 }
 
 .title-container {
-    font-size: 0.25rem;
-    color: @black;
     padding: 0.25rem;
+    height: 0.65rem;
+    .title-style {
+        font-size: 0.25rem;
+        color: @black;
+    }
 }
 
 
@@ -88,6 +93,59 @@
     }
 
     .add_button {
+        margin-left: 0.5rem;
+        text-align: right;
+
+        img {
+            display: inline-block;
+            width: 0.22rem;
+            height: 0.2rem;
+        }
+
+    }
+
+}
+
+.transfer_data {
+    height: 0.65rem;
+    padding: 0.15rem 0.25rem 0.15rem 0;
+    left: 0.25rem;
+    width: 4rem;
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    position: relative;
+
+    .img_container {
+        display: inline-block;
+        position: absolute;
+        top: 0.23rem;
+        margin-right: 0.15rem;
+
+        img {
+            display: inline-block;
+            width: 0.22rem;
+            height: 0.2rem;
+        }
+    }
+
+    .transfer_name {
+        position: relative;
+        top: 0;
+        left: 0.4rem;
+        width: 3rem;
+        font-size: @smallFont;
+        font-weight: 400;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: @black;
+    }
+
+    .remove_button {
         margin-left: 0.5rem;
         text-align: right;
 
