@@ -116,10 +116,9 @@ export class ModalBackupProfileTs extends Vue {
     /**
      * Hook called when the account has been unlocked
      * @param {Account} account
-     * @return {boolean}
      */
-    public onAccountUnlocked(payload: { account: Account; password: Password }): boolean {
-        // decrypt seed + create QR
+    public onAccountUnlocked(payload: { account: Account; password: Password }) {
+        // decrypt seed
         const encSeed = this.currentProfile.seed;
         this.plainMnemonic = Crypto.decrypt(encSeed, payload.password.value);
         this.accountUnlocked = true;
@@ -133,8 +132,6 @@ export class ModalBackupProfileTs extends Vue {
                     privateKey: Crypto.decrypt(account.encryptedPrivateKey, payload.password.value),
                 } as IAccountInfo),
         );
-
-        return false;
     }
 
     /**
