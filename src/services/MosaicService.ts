@@ -15,16 +15,15 @@
  */
 // external dependencies
 import _ from 'lodash';
-import { AccountInfo, Address, MosaicId, MosaicInfo, MosaicNames, NamespaceId, RepositoryFactory, UInt64 } from 'symbol-sdk';
-import { combineLatest, forkJoin, from, Observable, of } from 'rxjs';
-import { flatMap, map, tap, toArray } from 'rxjs/operators';
+import { AccountInfo, Address, Currency, MosaicId, MosaicInfo, MosaicNames, NamespaceId, RepositoryFactory, UInt64 } from 'symbol-sdk';
+import { combineLatest, from, Observable, of } from 'rxjs';
+import { map, mergeMap, tap, toArray } from 'rxjs/operators';
 // internal dependencies
 import { MosaicConfigurationModel, AccountMosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { TimeHelpers } from '@/core/utils/TimeHelpers';
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { NetworkCurrenciesModel } from '@/core/database/entities/NetworkCurrenciesModel';
 import { MosaicModelStorage } from '@/core/database/storage/MosaicModelStorage';
 import { NetworkCurrenciesModelStorage } from '@/core/database/storage/NetworkCurrenciesModelStorage';
@@ -101,7 +100,7 @@ export class MosaicService {
 
         return combineLatest([resolvedBalancesObservable, mosaicsFromAccountsObservable])
             .pipe(
-                flatMap(([balances, owedMosaics]) => {
+                mergeMap(([balances, owedMosaics]) => {
                     const mosaicIds: MosaicId[] = _.uniqBy(
                         [...balances.map((m) => m.mosaicId), ...owedMosaics.data.map((o) => o.id)],
                         (m) => m.toHex(),
@@ -199,7 +198,7 @@ export class MosaicService {
         const namespaceRepository = repositoryFactory.createNamespaceRepository();
         return from(ids)
             .pipe(
-                flatMap((id) => {
+                mergeMap((id) => {
                     if (id instanceof MosaicId) {
                         return of({ from: id, to: id as MosaicId });
                     } else {
@@ -223,42 +222,16 @@ export class MosaicService {
      *
      * @param {RepositoryFactory} repositoryFactory
      * @param {generationHash} the generation hash.
-     * @param {NetworkConfigurationModel} networkConfig
      * @returns {Observable<NetworkCurrencyModel[]>}
      */
-    public getNetworkCurrencies(
-        repositoryFactory: RepositoryFactory,
-        generationHash: string,
-        networkConfig: NetworkConfigurationModel,
-    ): Observable<NetworkCurrenciesModel> {
+    public getNetworkCurrencies(repositoryFactory: RepositoryFactory, generationHash: string): Observable<NetworkCurrenciesModel> {
         const storedNetworkCurrencies = this.networkCurrencyStorage.get(generationHash);
-        const mosaicHttp = repositoryFactory.createMosaicRepository();
-        const namespaceHttp = repositoryFactory.createNamespaceRepository();
-
-        // get network currencies ids from stored network configuration
-        const { currencyMosaicId, harvestingMosaicId } = networkConfig;
-        const currencyMosaic = new MosaicId(currencyMosaicId);
-        const harvestingMosaic = new MosaicId(harvestingMosaicId);
-
-        // filter out harvesting currency if it is the same as the network currency
-        const mosaicIds = currencyMosaic.equals(harvestingMosaic) ? [currencyMosaic] : [currencyMosaic, harvestingMosaic];
-
-        // get mosaicInfo and mosaic names from the network,
-        // build network currency models
-        return forkJoin({
-            mosaicsInfo: mosaicHttp.getMosaics(mosaicIds).toPromise(),
-            mosaicNames: namespaceHttp.getMosaicsNames(mosaicIds).toPromise(),
-        }).pipe(
-            map(({ mosaicsInfo, mosaicNames }) =>
-                mosaicsInfo.map((mosaicInfo) => {
-                    const thisMosaicNames = mosaicNames.find((mn) => mn.mosaicId.equals(mosaicInfo.id));
-                    if (!thisMosaicNames) {
-                        throw new Error('thisMosaicNames not found at getNetworkCurrencies');
-                    }
-                    return this.getNetworkCurrency(mosaicInfo, thisMosaicNames);
-                }),
-            ),
-            map((networkMosaics) => new NetworkCurrenciesModel(networkMosaics[0], networkMosaics[1] || networkMosaics[0])),
+        return repositoryFactory.getCurrencies().pipe(
+            map((networkMosaics) => {
+                const currency = this.getNetworkCurrency(networkMosaics.currency);
+                const harvest = this.getNetworkCurrency(networkMosaics.harvest);
+                return new NetworkCurrenciesModel(currency, harvest);
+            }),
             tap((d) => this.networkCurrencyStorage.set(generationHash, d)),
             ObservableHelpers.defaultFirst(storedNetworkCurrencies),
         );
@@ -283,26 +256,18 @@ export class MosaicService {
      * @param {MosaicNames} mosaicName
      * @returns {(NetworkCurrencyModel | undefined)}
      */
-    private getNetworkCurrency(mosaicInfo: MosaicInfo, mosaicName: MosaicNames): NetworkCurrencyModel | undefined {
-        const mosaicId = mosaicInfo.id;
-
-        const namespaceName = this.getName([mosaicName], mosaicId);
-        if (!namespaceName) {
-            throw new Error('could not get namespaceName at getNetworkCurrency');
-        }
-
-        const namespaceId = new NamespaceId(namespaceName);
-
+    private getNetworkCurrency(currency: Currency): NetworkCurrencyModel {
+        const mosaicId = currency.mosaicId;
+        const namespaceId = currency.namespaceId;
         const ticker = (namespaceId && namespaceId.fullName && namespaceId.fullName.split('.').pop().toUpperCase()) || undefined;
-
         return new NetworkCurrencyModel(
-            mosaicId.toHex(),
-            namespaceId.toHex(),
+            mosaicId?.toHex(),
+            namespaceId?.toHex(),
             namespaceId.fullName,
-            mosaicInfo.divisibility,
-            mosaicInfo.flags.transferable,
-            mosaicInfo.flags.supplyMutable,
-            mosaicInfo.flags.restrictable,
+            currency.divisibility,
+            currency.transferable,
+            currency.supplyMutable,
+            currency.restrictable,
             ticker,
         );
     }

@@ -107,7 +107,7 @@
         "rimraf": "^3.0.2",
         "symbol-hd-wallets": "^0.14.0-alpha-202010231206",
         "symbol-qr-library": "^0.13.1-alpha-202010241730",
-        "symbol-sdk": "^0.21.1-alpha-202010242036",
+        "symbol-sdk": "^0.21.1-alpha-202010271115",
         "ts-jest": "^25.3.0",
         "typescript": "^3.7.2",
         "utf-8-validate": "^5.0.2",

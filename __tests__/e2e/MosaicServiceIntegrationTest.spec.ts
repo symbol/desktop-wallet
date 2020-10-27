@@ -29,7 +29,6 @@ import {
 import { MosaicService } from '@/services/MosaicService';
 import { Observable, of } from 'rxjs';
 import { WalletsModel2 } from '@MOCKS/Accounts';
-import { networkConfig } from '@/config';
 
 const address1 = Address.createFromRawAddress('TAD5BAHLOIXCRRB6GU2H72HPXMBBVAEUQRYPHBY');
 const address2 = Address.createFromRawAddress('TAWJ2M7BGKWGBPOUGD5NDKHYDDQ7OQD26HJMMQQ');
@@ -93,9 +92,7 @@ repositoryFactory.getEpochAdjustment = jest.fn(() => of(1573430400));
 describe.skip('services/MosaicService', () => {
     test('getMosaics all addresses', async () => {
         const generationHash = await repositoryFactory.getGenerationHash().toPromise();
-        const { networkCurrency } = await mosaicService
-            .getNetworkCurrencies(repositoryFactory, generationHash, networkConfig.networkConfigurationDefaults)
-            .toPromise();
+        const { networkCurrency } = await mosaicService.getNetworkCurrencies(repositoryFactory, generationHash).toPromise();
         const addresses: Address[] = [address1, address2, address3, address4, address5];
         const accountInfos = await repositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise();
         const result = await mosaicService.getMosaics(repositoryFactory, generationHash, networkCurrency, accountInfos).toPromise();
@@ -104,9 +101,7 @@ describe.skip('services/MosaicService', () => {
 
     test('getMosaics account 1 addresses', async () => {
         const generationHash = await repositoryFactory.getGenerationHash().toPromise();
-        const { networkCurrency } = await mosaicService
-            .getNetworkCurrencies(repositoryFactory, generationHash, networkConfig.networkConfigurationDefaults)
-            .toPromise();
+        const { networkCurrency } = await mosaicService.getNetworkCurrencies(repositoryFactory, generationHash).toPromise();
         const addresses: Address[] = [address1];
         const accountInfos = await repositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise();
         const result = await mosaicService.getMosaics(repositoryFactory, generationHash, networkCurrency, accountInfos).toPromise();
@@ -115,9 +110,7 @@ describe.skip('services/MosaicService', () => {
 
     test('getMosaics account 3 addresses', async () => {
         const generationHash = await repositoryFactory.getGenerationHash().toPromise();
-        const { networkCurrency } = await mosaicService
-            .getNetworkCurrencies(repositoryFactory, generationHash, networkConfig.networkConfigurationDefaults)
-            .toPromise();
+        const { networkCurrency } = await mosaicService.getNetworkCurrencies(repositoryFactory, generationHash).toPromise();
         const addresses: Address[] = [address3];
         const accountInfos = await repositoryFactory.createAccountRepository().getAccountsInfo(addresses).toPromise();
         const result = await mosaicService.getMosaics(repositoryFactory, generationHash, networkCurrency, accountInfos).toPromise();
