@@ -19,17 +19,31 @@
     grid-template-rows: 0.8rem auto;
     background-color: white;
     overflow: hidden;
-    border-radius: 12px;   
+    border-radius: 12px; 
+
+    .transaction-type-container {
+        overflow: auto;
+    }
+
 }
 
 .left-bottom-container {
     display: grid;
     height: calc(50% - 0.15rem);
-    grid-template-rows: 0.8rem auto;
+    grid-template-rows: 0.8rem auto 0.5rem;
     background-color: white;
     overflow: hidden;
     border-radius: 12px;
     margin-top: 0.3rem;
+
+    .transaction-list-container {
+        overflow-y:auto;
+    }
+
+    .bottom-container {
+        text-align: right;
+        margin-right: 0.4rem;
+    }
 }
 
 .right-container {
@@ -95,9 +109,12 @@
     .add_button {
         margin-left: 0.5rem;
         text-align: right;
-
+        background-color:transparent;
+        border:none;
+        cursor: pointer;
         img {
             display: inline-block;
+            margin-top: 0.05rem;
             width: 0.22rem;
             height: 0.2rem;
         }
@@ -105,6 +122,7 @@
     }
 
 }
+
 
 .transfer_data {
     height: 0.65rem;
@@ -124,7 +142,6 @@
         position: absolute;
         top: 0.23rem;
         margin-right: 0.15rem;
-
         img {
             display: inline-block;
             width: 0.22rem;
@@ -148,9 +165,12 @@
     .remove_button {
         margin-left: 0.5rem;
         text-align: right;
-
+        background-color:transparent;
+        border:none;
+        cursor: pointer;
         img {
             display: inline-block;
+            margin-top: 0.05rem;
             width: 0.22rem;
             height: 0.2rem;
         }
@@ -158,3 +178,6 @@
     }
 
 }
+
+
+
