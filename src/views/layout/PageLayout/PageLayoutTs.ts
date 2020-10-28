@@ -202,6 +202,14 @@ export class PageLayoutTs extends Vue {
         return this.networkType === NetworkType.TEST_NET;
     }
 
+    public get faucetIcon() {
+        return '@/views/resources/img/monitor/monitorAssetListPurple.svg';
+    }
+
+    public get explorerIcon() {
+        return '@/views/resources/img/monitor/monitorAssetListPurple.svg';
+    }
+
     /// end-region computed properties getter/setter
 
     public async onChangeAccount(accountId: string) {
