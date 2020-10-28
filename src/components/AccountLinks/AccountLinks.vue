@@ -1,7 +1,10 @@
 <template>
     <div>
         <slot name="trigger">
-            <a class="trigger-accountlink pointer" :href="link" target="_blank">{{ title }}</a>
+            <a class="trigger-accountlink pointer" :href="link" target="_blank">
+            	<img class="navbar-icon" :src="icon">
+            	{{ title }}
+        	</a>
         </slot>
     </div>
 </template>

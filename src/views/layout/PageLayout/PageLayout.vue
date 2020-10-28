@@ -29,6 +29,7 @@
                         <AccountLinks
                             :account="currentAccount"
                             :link="explorerUrl"
+                            :icon="explorerIcon"
                             :title="$t('accounts_links_explorer')"
                             class="level-item navbar-item"
                         />
@@ -36,6 +37,7 @@
                             v-if="isTestnet"
                             :account="currentAccount"
                             :link="faucetUrl"
+                            :icon="faucetIcon"
                             :title="$t('accounts_links_faucet')"
                             class="level-item navbar-item"
                         />
