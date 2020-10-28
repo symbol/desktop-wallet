@@ -1,6 +1,6 @@
 <template>
     <div v-if="currentAccounts.length" class="switch_account">
-        <img class="navbar-icon" src="@/views/resources/img/navbar/account.svg">
+        <img class="navbar-icon" src="@/views/resources/img/navbar/account.svg" />
         <i-select
             v-model="currentAccountIdentifier"
             :class="{

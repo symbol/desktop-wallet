@@ -45,6 +45,7 @@ import ImportQRButton from '@/components/QRCode/ImportQRButton/ImportQRButton.vu
 import { AccountModel } from '@/core/database/entities/AccountModel';
 //@ts-ignore
 import AccountLinks from '@/components/AccountLinks/AccountLinks.vue';
+import { officialIcons } from '@/views/resources/Images';
 
 @Component({
     components: {
@@ -203,11 +204,11 @@ export class PageLayoutTs extends Vue {
     }
 
     public get faucetIcon() {
-        return '@/views/resources/img/monitor/monitorAssetListPurple.svg';
+        return officialIcons.faucet;
     }
 
     public get explorerIcon() {
-        return '@/views/resources/img/monitor/monitorAssetListPurple.svg';
+        return officialIcons.explorer;
     }
 
     /// end-region computed properties getter/setter

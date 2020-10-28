@@ -48,7 +48,7 @@
                         <!--<PeerSelector class="level-item navbar-item" />-->
                         <!--<LanguageSelector class="level-item navbar-item" />-->
                         <AccountSelectorField class="level-item navbar-item" @input="onChangeAccount" />
-                        <Settings class="level-item navbar-item" style="font-size: 24px;" />
+                        <Settings class="level-item navbar-item" />
                     </div>
                 </div>
                 <transition name="fade" mode="out-in">
