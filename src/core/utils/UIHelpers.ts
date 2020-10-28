@@ -14,8 +14,6 @@
  *
  */
 
-import { from as observableFrom, Observable } from 'rxjs';
-
 export class UIHelpers {
     /**
      * Helper method to copy text to clipboard
