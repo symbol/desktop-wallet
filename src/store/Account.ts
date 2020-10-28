@@ -14,7 +14,16 @@
  *
  */
 import Vue from 'vue';
-import { AccountInfo, AccountNames, Address, IListener, MultisigAccountInfo, NetworkType, RepositoryFactory } from 'symbol-sdk';
+import {
+    AccountInfo,
+    AccountNames,
+    Address,
+    IListener,
+    MultisigAccountInfo,
+    NetworkType,
+    PublicAccount,
+    RepositoryFactory,
+} from 'symbol-sdk';
 import { of, Subscription } from 'rxjs';
 // internal dependencies
 import { $eventBus } from '../events';
@@ -65,7 +74,7 @@ interface AccountState {
     accountsInfo: AccountInfo[];
     multisigAccountsInfo: MultisigAccountInfo[];
     subscriptions: Record<string, SubscriptionType[]>;
-    currentRecipient: AccountInfo;
+    currentRecipient: PublicAccount;
     currentAccountAliases: AccountNames[];
 }
 
@@ -315,15 +324,23 @@ export default {
 
         async GET_RECIPIENT({ commit, rootGetters }, recipientAddress?: Address) {
             if (recipientAddress) {
-                const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-                const getAccountsInfoPromise = repositoryFactory
-                    .createAccountRepository()
-                    .getAccountInfo(recipientAddress)
-                    .toPromise()
-                    .catch(() => commit('currentRecipient', null));
-                const accountsInfo = await getAccountsInfoPromise;
+                //First check known accounts
+                const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
+                const knownAccounts = new AccountService().getKnownAccounts(currentProfile.accounts);
+                const knownRecipient = knownAccounts.find((ka) => ka.address === recipientAddress.plain());
+                if (knownRecipient) {
+                    commit('currentRecipient', AccountModel.getObjects(knownRecipient).publicAccount);
+                } else {
+                    const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+                    const getAccountsInfoPromise = repositoryFactory
+                        .createAccountRepository()
+                        .getAccountInfo(recipientAddress)
+                        .toPromise()
+                        .catch(() => commit('currentRecipient', null));
+                    const accountsInfo = await getAccountsInfoPromise;
 
-                commit('currentRecipient', accountsInfo);
+                    commit('currentRecipient', (accountsInfo as AccountInfo).publicAccount);
+                }
             } else {
                 commit('currentRecipient', null);
             }
