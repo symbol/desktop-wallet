@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { AccountInfo, Address, EncryptedMessage, MessageType, Account, UnresolvedAddress, Message } from 'symbol-sdk';
+import { Address, EncryptedMessage, MessageType, Account, UnresolvedAddress, Message } from 'symbol-sdk';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
@@ -57,10 +57,9 @@ export class MessageDisplayTs extends Vue {
 
     private isEncrypted = false;
     private messageDisplay = '';
-    private recipientPublicAccount: PublicAccount;
     private showUnlockAccountModal = false;
     private decryptedMessage: PlainMessage;
-    private currentRecipient: AccountInfo;
+    private currentRecipient: PublicAccount;
     private linkedAddress: Address | null;
 
     /**
@@ -125,7 +124,7 @@ export class MessageDisplayTs extends Vue {
      */
     private decryptMessage(privateKey: string) {
         this.$store.dispatch('account/GET_RECIPIENT', this.recipient as Address).then(() => {
-            this.decryptedMessage = EncryptedMessage.decrypt(this.message, privateKey, this.currentRecipient.publicAccount);
+            this.decryptedMessage = EncryptedMessage.decrypt(this.message, privateKey, this.currentRecipient);
             this.isEncrypted = false;
             this.messageDisplay = this.decryptedMessage.payload;
         });
