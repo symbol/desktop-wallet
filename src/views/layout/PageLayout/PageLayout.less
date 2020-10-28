@@ -16,22 +16,12 @@
 @import '../../resources/css/variables.less';
 
 .main-outer-container {
-    display: block;
-    float: left;
-    position: absolute;
-    clear: both;
-    overflow-y: auto;
-    width: 81%;
-    left: 16%;
-    height: calc(100% - 2.1rem);
-    top: 1.4rem;
+    margin: 0 50px;
+    height: calc(100% - 200px);
 }
 
 .wrap {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-
+    height: 100vh;
     .alert {
         margin-left: 50%;
         left: -380px;
@@ -155,19 +145,14 @@
     }
 
     .top_window {
-        position: absolute;
-        top: 0;
-        left: 0;
+        flex: 1;
         background-color: transparent;
-        -webkit-app-region: drag;
-        width: 84%;
-        left: 15%;
-        height: 1.2rem;
-        padding-left: 0.3rem;
-        padding-right: 0.55rem;
+        margin: 0 50px;
+        height: 100px;
+        font-size: @minimumFont;
 
         .navbar-item {
-            margin-left: 0.6rem;
+            margin: 0 15px;
         }
 
         /deep/.navbar-item {
@@ -198,7 +183,7 @@
             height: auto !important;
             .ivu-select-placeholder,
             .ivu-select-selected-value {
-                font-size: @smallFont !important;
+                font-size: 14px !important;
                 color: @purpleDark;
                 padding: 0 !important;
             }
@@ -276,12 +261,20 @@
         width: 100%;
         margin-right: 20px;
     }
+    .general_view {
+        .footer {
+            height: 100px;
+            margin: 0 50px;
+            display: flex;
+            align-items: center;
+
+            .footer-phrase {
+                color: @purpleDark;
+                font-size: 14px;
+                margin-left: 10px;
+            }
+        }
+    }
 }
 
-.footer-phrase {
-    position: absolute;
-    bottom: 3%;
-    left: 18%;
-    color: @purpleDark;
-    font-size: @normalFont;
-}
+

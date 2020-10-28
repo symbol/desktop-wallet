@@ -20,47 +20,37 @@
 
 .wrap {
     .left-navigator {
-        position: absolute;
-        left: 0;
-        bottom: 0;
+        position: relative;
         height: 100%;
-        width: 14%;
+        width: 250px;
         background-color: @white;
-        display: grid;
-        grid-template-columns: 100%;
-        grid-template-rows: auto @iconHeight;
         color: @purpleDark;
+        font-size: @minimumFont;
 
         .navigator-items-container {
             overflow-y: auto;
-            display: grid;
-            grid-template-columns: 100%;
-            grid-auto-rows: calc(@numberOfIcons/7);
-            padding-top: 1.25rem;
+            height: 100%;
+            margin-top: 100px;
         }
 
         .navigator-item-container {
-            display: block;
             width: 100%;
-            height: 100%;
+            height: 70px;
             text-align: center;
-            display: grid;
-            grid-template-columns: 1rem auto;
-            grid-template-rows: 100%;
-            padding-top: 0.05rem;
+            justify-content: center;
+            align-items: center;
+            display: flex;
             background-color: @white;
             cursor: pointer;
 
             .navigator-icon-container {
-                display: block;
-                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 height: 100%;
-                padding-left: 0.25rem;
-                padding-top: 0.25rem;
+                width: 85px;
                 .navigator-icon {
-                    font-size: 0.55rem;
-                    width: 0.45rem;
-                    height: 0.45rem;
+                    width: 35px;
                 }
                 .ivu-icon {
                     color: @purpleDark;
@@ -68,9 +58,8 @@
             }
 
             .navigator-text-container {
-                padding-top: 0.35rem;
-                padding-left: 0.15rem;
-                font-size: 20px;
+                flex: 1;
+                padding-left: 10px;
                 text-align: left;
             }
         }
@@ -87,20 +76,28 @@
 
 .logo-container {
     position: absolute;
-    padding-top: 0.35rem;
-    padding-bottom: 0.4rem;
     text-align: center;
     width: 100%;
     margin: auto;
     background-color: white;
+    overflow: hidden;
+    height: 100px;
     img {
-        height: 0.55rem;
-        width: 1.8rem;
+        width: auto;
+        max-height: 100px;
+        padding: 25px;
     }
 }
 
 .network-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
     width: 100%;
+    height: 100px;
+    position: absolute;
+    bottom: 0;
     text-align: center;
-    margin: auto;
+    background-color: @white;
 }
