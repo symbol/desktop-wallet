@@ -14,7 +14,6 @@
  *
  */
 import { NamespaceId } from 'symbol-sdk';
-
 // internal dependencies
 import { Validator, staticImplements } from './Validator';
 

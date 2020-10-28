@@ -16,9 +16,10 @@
 import { Account, Deadline, NamespaceId, NetworkType, PlainMessage, TransferTransaction } from 'symbol-sdk';
 import { createStore } from '@MOCKS/Store';
 import { ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 const store = createStore({});
-
+const epochAdjustment = 1573430400;
 describe('transactions/ViewTransferTransaction', () => {
     describe('use() should', () => {
         test('populate transfer transaction fields', () => {
@@ -26,7 +27,7 @@ describe('transactions/ViewTransferTransaction', () => {
             const alias = new NamespaceId('test');
 
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 alias,
                 [],
                 PlainMessage.create('test-message'),
@@ -34,6 +35,9 @@ describe('transactions/ViewTransferTransaction', () => {
             );
 
             store.getters['account/currentSignerAddress'] = Account.generateNewAccount(NetworkType.MAIN_NET).address;
+            const networkConfig = new NetworkConfigurationModel();
+            Object.assign(networkConfig, { epochAdjustment: 1573430400 });
+            store.getters['network/networkConfiguration'] = networkConfig;
 
             // act
             const view = new ViewTransferTransaction(store, transferTransaction);

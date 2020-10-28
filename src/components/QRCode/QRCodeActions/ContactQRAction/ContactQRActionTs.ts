@@ -15,7 +15,7 @@
  */
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { ContactQR } from 'symbol-qr-library';
-import { NetworkType } from 'symbol-sdk';
+import { Address, NetworkType } from 'symbol-sdk';
 import { QRCodeDetailItem } from '@/components/QRCode/QRCodeActions/TemplateQRAction/TemplateQRActionTs';
 // @ts-ignore
 import TemplateQRAction from '@/components/QRCode/QRCodeActions/TemplateQRAction/TemplateQRAction.vue';
@@ -45,7 +45,13 @@ export default class ContactQRActionTs extends Vue {
         items.push(new QRCodeDetailItem(this.$t('qrcode_detail_item_network_type').toString(), NetworkType[this.qrCode.networkType], true));
 
         items.push(new QRCodeDetailItem(this.$t('qrcode_detail_item_contact_name').toString(), this.qrCode.name, true));
-        items.push(new QRCodeDetailItem(this.$t('qrcode_detail_item_address').toString(), this.qrCode.account.address.plain(), true));
+        items.push(
+            new QRCodeDetailItem(
+                this.$t('qrcode_detail_item_address').toString(),
+                Address.createFromPublicKey(this.qrCode.accountPublicKey, this.qrCode.networkType).plain(),
+                true,
+            ),
+        );
 
         return items;
     }
@@ -54,7 +60,7 @@ export default class ContactQRActionTs extends Vue {
         this.onSuccess();
         this.$router.push({
             name: 'dashboard.transfer',
-            params: { recipientAddress: this.qrCode.account.address.plain() },
+            params: { recipientAddress: Address.createFromPublicKey(this.qrCode.accountPublicKey, this.qrCode.networkType).plain() },
         });
     }
 }

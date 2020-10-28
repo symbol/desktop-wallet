@@ -2,8 +2,8 @@
     <div class="account-detail-row-3cols">
         <span class="label">{{ $t('aliases') }}:</span>
         <div class="value account-aliases">
-            <span v-for="(alias, index) in accountAliases" :key="index">
-                {{ index === accountAliases.length - 1 ? `${alias}` : `${alias},` }}
+            <span v-for="(alias, index) in accountAliasNames" :key="index">
+                {{ index === accountAliasNames.length - 1 ? `${alias}` : `${alias},` }}
             </span>
         </div>
     </div>

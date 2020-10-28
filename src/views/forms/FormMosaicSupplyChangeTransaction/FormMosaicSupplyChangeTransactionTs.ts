@@ -14,7 +14,7 @@
  *
  */
 // external dependencies
-import { Deadline, MosaicId, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, Transaction, UInt64 } from 'symbol-sdk';
+import { MosaicId, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, Transaction, UInt64 } from 'symbol-sdk';
 import { Component, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
@@ -181,7 +181,7 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
     protected getTransactions(): Transaction[] {
         return [
             MosaicSupplyChangeTransaction.create(
-                Deadline.create(),
+                this.createDeadline(),
                 new MosaicId(this.formItems.mosaicHexId),
                 this.formItems.action,
                 UInt64.fromUint(this.formItems.delta),

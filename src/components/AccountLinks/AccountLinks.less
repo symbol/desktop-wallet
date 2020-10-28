@@ -14,8 +14,17 @@
  *
  */
 @import '../../views/resources/css/variables.less';
+.account-detail-row {
+    display: grid;
+    grid-template-columns: 1.4rem auto;
+}
+.edit-button {
+    height: 0.35rem !important;
+    padding: 0 0.3rem;
+}
 
 .trigger-accountlink {
-    font-size: 14px;
+    font-size: @minimumFont !important;
     color: @purpleDark;
+    padding: 0 0.2rem !important;
 }

@@ -16,52 +16,51 @@
 import {
     NetworkType,
     Password,
-    RepositoryFactoryHttp,
     Address,
     AccountInfo,
     AccountRepository,
     PublicAccount,
     Page,
     AccountType as sdkAccountType,
+    RepositoryFactory,
+    NetworkCurrencies,
 } from 'symbol-sdk';
 import { RemoteAccountService } from '@/services/RemoteAccountService';
 import { WalletsModel2 } from '@MOCKS/Accounts';
 import { getTestProfile } from '@MOCKS/profiles';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
+import { anything, instance, mock, when } from 'ts-mockito';
 
-const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
-    createAccountRepository(): AccountRepository {
-        return new (class AccountRepositoryForTest implements AccountRepository {
-            getAccountInfo(): Observable<AccountInfo> {
-                return of({ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo);
-            }
+const accountInfo = { address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo;
 
-            getAccountsInfo(): Observable<AccountInfo[]> {
-                return of([
-                    {
-                        address: Address.createFromRawAddress(WalletsModel2.address),
-                        accountType: sdkAccountType.Main,
-                    } as AccountInfo,
-                    {
-                        address: PublicAccount.createFromPublicKey(
-                            'FA0939C5F11FC89A8EB997329C64AC785CDD23AE9D73C3E060D3B5FF0BABC2A4',
-                            NetworkType.TEST_NET,
-                        ).address,
-                        accountType: sdkAccountType.Remote_Unlinked,
-                    } as AccountInfo,
-                ]);
-            }
+const accountInfos = [
+    {
+        address: Address.createFromRawAddress(WalletsModel2.address),
+        accountType: sdkAccountType.Main,
+    } as AccountInfo,
+    {
+        address: PublicAccount.createFromPublicKey('FA0939C5F11FC89A8EB997329C64AC785CDD23AE9D73C3E060D3B5FF0BABC2A4', NetworkType.TEST_NET)
+            .address,
+        accountType: sdkAccountType.Remote_Unlinked,
+    } as AccountInfo,
+];
 
-            search(): Observable<Page<AccountInfo>> {
-                return of(new Page([{ address: Address.createFromRawAddress(WalletsModel2.address) } as AccountInfo], 1, 1));
-            }
-        })();
-    }
-})('http://localhost:3000', {
-    networkType: NetworkType.TEST_NET,
-    generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
-});
-repositoryFactory.getNetworkType = jest.fn(() => of(NetworkType.MIJIN_TEST));
+const mockRepoFactory = mock<RepositoryFactory>();
+
+const mockAccountRepository = mock<AccountRepository>();
+
+when(mockAccountRepository.getAccountInfo(anything())).thenReturn(of(accountInfo));
+when(mockAccountRepository.getAccountsInfo(anything())).thenReturn(of(accountInfos));
+when(mockAccountRepository.search(anything())).thenReturn(of(new Page(accountInfos, 1, 2)));
+
+const accountRepository = instance(mockAccountRepository);
+when(mockRepoFactory.createAccountRepository()).thenReturn(accountRepository);
+
+when(mockRepoFactory.getEpochAdjustment()).thenReturn(of(1573430400));
+when(mockRepoFactory.getGenerationHash()).thenReturn(of('Some Gen Hash'));
+when(mockRepoFactory.getNetworkType()).thenReturn(of(NetworkType.MIJIN_TEST));
+when(mockRepoFactory.getCurrencies()).thenReturn(of(NetworkCurrencies.PUBLIC));
+const repositoryFactory = instance(mockRepoFactory);
 
 describe('services/RemoteAccountService', () => {
     describe('getAvailableRemotePublicKey()', () => {

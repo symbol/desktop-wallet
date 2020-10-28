@@ -13,12 +13,31 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+@import '../../resources/css/variables.less';
 
-export interface TransactionDetailItem {
-    readonly key: string;
-    readonly value: any;
-    readonly isMosaic?: boolean;
-    readonly isAddress?: boolean;
-    readonly isPaidFee?: boolean;
-    readonly isMessage?: boolean;
+.body {
+    width: 100%;
+
+    .explain {
+        padding: 0.2rem;
+        padding-left: 0.4rem;
+        font-size: @normalFont;
+
+        .subtitle {
+            color: @primary;
+            font-weight: @boldest;
+        }
+
+        p {
+            padding-top: 0.05rem;
+            text-align: justify;
+        }
+    }
+
+    .download-button {
+        height: 0.35rem !important;
+        padding: 0 0.3rem;
+        width: 2rem;
+        margin: auto;
+    }
 }

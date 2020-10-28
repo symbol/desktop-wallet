@@ -14,9 +14,7 @@
  *
  */
 import {
-    AccountInfo,
     Address,
-    Deadline,
     EncryptedMessage,
     Message,
     Mosaic,
@@ -28,6 +26,7 @@ import {
     TransferTransaction,
     UInt64,
     Account,
+    PublicAccount,
 } from 'symbol-sdk';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
@@ -193,7 +192,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     /**
      * Current recipient account info
      */
-    private currentRecipient: AccountInfo;
+    private currentRecipient: PublicAccount;
 
     private encyptedMessage: Message;
 
@@ -299,7 +298,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             );
         return [
             TransferTransaction.create(
-                Deadline.create(),
+                this.createDeadline(),
                 this.instantiatedRecipient,
                 mosaics.length ? mosaics : [],
                 this.formItems.encryptMessage ? this.encyptedMessage : PlainMessage.create(this.formItems.messagePlain || ''),
@@ -575,7 +574,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     onAccountUnlocked(account: Account): boolean {
         this.hasAccountUnlockModal = false;
         this.encyptedMessage = this.formItems.messagePlain
-            ? EncryptedMessage.create(this.formItems.messagePlain, this.currentRecipient.publicAccount, account.privateKey)
+            ? EncryptedMessage.create(this.formItems.messagePlain, this.currentRecipient, account.privateKey)
             : PlainMessage.create('');
         this.formItems.encryptMessage = true;
         return true;
@@ -619,6 +618,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             transactions,
             this.networkMosaic,
             this.generationHash,
+            this.epochAdjustment,
             this.networkType,
             this.networkConfiguration,
             this.transactionFees,

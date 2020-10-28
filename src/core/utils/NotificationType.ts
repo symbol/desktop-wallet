@@ -96,6 +96,7 @@ export enum NotificationType {
     REFRESH_TOO_FAST_WARNING = 'refresh_too_fast_warning',
     REMOTE_ACCOUNT_NOT_FOUND = 'Cannot find your remote account, please try to unlink it and create a new one',
     REMOTE_PUBLIC_KEY_MISSING = 'remote_public_key_missing_error',
+    RECIPIENT_LINKED_ADDRESS_INVALID = 'recipient_linked_address_invalid',
     RECIPIENT_PUBLIC_KEY_INVALID_ERROR = 'recipient_public_key_invalid_error',
     ROOT_NAMESPACE_TOO_LONG_ERROR = 'the_root_namespace_cannot_be_longer_than_16',
     SEED_ACCOUNT_OVERFLOW_ERROR = 'seed_account_can_not_be_more_than_10',

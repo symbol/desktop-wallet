@@ -62,6 +62,7 @@ interface NetworkState {
     listener: Listener;
     generationHash: string;
     networkType: NetworkType;
+    epochAdjustment: number;
     isConnected: boolean;
     knowNodes: NodeModel[];
     currentHeight: number;
@@ -89,8 +90,10 @@ const networkState: NetworkState = {
     currentHeight: 0,
     subscriptions: [],
     rentalFeeEstimation: undefined,
+    epochAdjustment: networkConfig.networkConfigurationDefaults.epochAdjustment,
     networkIsNotMatchingProfile: false,
 };
+
 export default {
     namespaced: true,
     state: networkState,
@@ -98,6 +101,7 @@ export default {
         getInitialized: (state: NetworkState) => state.initialized,
         subscriptions: (state: NetworkState) => state.subscriptions,
         networkType: (state: NetworkState) => state.networkType,
+        epochAdjustment: (state: NetworkState) => state.epochAdjustment,
         generationHash: (state: NetworkState) => state.generationHash,
         repositoryFactory: (state: NetworkState) => state.repositoryFactory,
         listener: (state: NetworkState) => state.listener,
@@ -130,6 +134,7 @@ export default {
         knowNodes: (state: NetworkState, knowNodes: NodeModel[]) => Vue.set(state, 'knowNodes', knowNodes),
         generationHash: (state: NetworkState, generationHash: string) => Vue.set(state, 'generationHash', generationHash),
         networkType: (state: NetworkState, networkType: NetworkType) => Vue.set(state, 'networkType', networkType),
+        epochAdjustment: (state: NetworkState, epochAdjustment: number) => Vue.set(state, 'epochAdjustment', epochAdjustment),
         currentPeer: (state: NetworkState, currentPeer: URLInfo) => Vue.set(state, 'currentPeer', currentPeer),
         transactionFees: (state: NetworkState, transactionFees: TransactionFees) => {
             state.transactionFees = transactionFees;
@@ -214,6 +219,7 @@ export default {
             commit('networkConfiguration', networkModel.networkConfiguration);
             commit('transactionFees', networkModel.transactionFees);
             commit('networkType', networkModel.networkType);
+            commit('epochAdjustment', networkModel.networkConfiguration.epochAdjustment);
             commit('generationHash', networkModel.generationHash);
             commit('repositoryFactory', repositoryFactory);
             commit('knowNodes', nodes);
