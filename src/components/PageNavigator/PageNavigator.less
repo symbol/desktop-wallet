@@ -20,7 +20,6 @@
 
 .wrap {
     .left-navigator {
-        position: relative;
         height: 100%;
         width: 250px;
         background-color: @white;
@@ -28,9 +27,9 @@
         font-size: @minimumFont;
 
         .navigator-items-container {
-            overflow-y: auto;
-            height: 100%;
-            margin-top: 100px;
+            // overflow-y: scroll;
+            overflow: hidden;
+            height: calc(100% - 200px);
         }
 
         .navigator-item-container {
@@ -75,12 +74,8 @@
 }
 
 .logo-container {
-    position: absolute;
     text-align: center;
     width: 100%;
-    margin: auto;
-    background-color: white;
-    overflow: hidden;
     height: 100px;
     img {
         width: auto;
@@ -94,10 +89,9 @@
     align-items: center;
     justify-content: center;
     font-size: 14px;
-    width: 100%;
+    width: 250px;
     height: 100px;
-    position: absolute;
-    bottom: 0;
     text-align: center;
+    border-top: 1px solid @grayLight;
     background-color: @white;
 }
