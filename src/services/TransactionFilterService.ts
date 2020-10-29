@@ -64,7 +64,6 @@ export class TransactionFilter {
         filterOptions: TransactionFilterOptionsState,
         currentSignerAddress: string,
     ): Transaction[] {
-        console.log('transactions', transactions);
         const recepientFilterOptions = [filterOptions.isSentSelected, filterOptions.isReceivedSelected];
         const areAllShouldBeShown: boolean = recepientFilterOptions.every((option) => !option);
         if (areAllShouldBeShown) {
