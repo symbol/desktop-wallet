@@ -34,6 +34,7 @@ import * as _ from 'lodash';
 
 // internal dependencies
 import { AwaitLock } from './AwaitLock';
+import { TransactionFilter } from '@/services/TransactionFilterService';
 
 const Lock = AwaitLock.create();
 
@@ -42,6 +43,54 @@ export enum TransactionGroupState {
     unconfirmed = 'unconfirmed',
     partial = 'partial',
     all = 'all',
+}
+
+export enum TransactionFilterOptions {
+    confirmed = 'isConfirmedSelected',
+    unconfirmed = 'isUnconfirmedSelected',
+    partial = 'isPartialSelected',
+    sent = 'isSentSelected',
+    received = 'isReceivedSelected',
+}
+
+export class FilterOption {
+    constructor(public option: TransactionFilterOptions = TransactionFilterOptions.confirmed, public value: boolean = false) {}
+}
+
+export class TransactionFilterOptionsState {
+    public isConfirmedSelected: boolean = false;
+    public isUnconfirmedSelected: boolean = false;
+    public isPartialSelected: boolean = false;
+    public isSentSelected: boolean = false;
+    public isReceivedSelected: boolean = false;
+
+    /**
+     * Returns false when all from any group or nothing selected.
+     */
+    public get isFilterShouldBeApplied(): boolean {
+        if (this.checkAllUnselected()) {
+            return false;
+        }
+
+        const isAllByConfirmedStatusSelected = this.isConfirmedSelected && this.isUnconfirmedSelected && this.isPartialSelected;
+
+        return !isAllByConfirmedStatusSelected;
+    }
+
+    /**
+     * Sets selected key-value pair.
+     * @param filterOption one of existing filter options and value
+     */
+    public setFilterOption(filterOption: FilterOption): void {
+        this[filterOption.option] = filterOption.value;
+    }
+
+    /**
+     * Checks if all property falsy.
+     */
+    private checkAllUnselected(): boolean {
+        return Object.keys(this).every((key) => !this[key]);
+    }
 }
 
 /**
@@ -80,23 +129,27 @@ export interface PageInfo {
     pageNumber: number;
     isLastPage: boolean;
 }
-interface TransactionState {
+export interface TransactionState {
     initialized: boolean;
     isFetchingTransactions: boolean;
+    transactions: Transaction[];
+    filteredTransactions: Transaction[];
     confirmedTransactions: Transaction[];
     unconfirmedTransactions: Transaction[];
     partialTransactions: Transaction[];
-    displayedTransactionStatus: TransactionGroupState;
+    filterOptions: TransactionFilterOptionsState;
     currentConfirmedPage: PageInfo;
 }
 
 const transactionState: TransactionState = {
     initialized: false,
     isFetchingTransactions: false,
+    transactions: [],
+    filteredTransactions: [],
     confirmedTransactions: [],
     unconfirmedTransactions: [],
     partialTransactions: [],
-    displayedTransactionStatus: TransactionGroupState.all,
+    filterOptions: new TransactionFilterOptionsState(),
     currentConfirmedPage: { pageNumber: 1, isLastPage: false },
 };
 export default {
@@ -105,10 +158,11 @@ export default {
     getters: {
         getInitialized: (state: TransactionState) => state.initialized,
         isFetchingTransactions: (state: TransactionState) => state.isFetchingTransactions,
-        confirmedTransactions: (state: TransactionState) => state.confirmedTransactions,
-        unconfirmedTransactions: (state: TransactionState) => state.unconfirmedTransactions,
-        partialTransactions: (state: TransactionState) => state.partialTransactions,
-        displayedTransactionStatus: (state: TransactionState) => state.displayedTransactionStatus,
+        transactions: (state: TransactionState) => state.transactions,
+        filteredTransactions: (state: TransactionState) => {
+            return state.filteredTransactions;
+        },
+        filterOptions: (state: TransactionState) => state.filterOptions,
         currentConfirmedPage: (state: TransactionState) => state.currentConfirmedPage,
     },
     mutations: {
@@ -145,8 +199,21 @@ export default {
         ) => {
             state.partialTransactions = conditionalSort(transactions, transactionComparator);
         },
-        setDisplayedTransactionStatus: (state: TransactionState, displayedTransactionStatus: TransactionGroupState) => {
-            state.displayedTransactionStatus = displayedTransactionStatus;
+        setAllTransactions: (state: TransactionState) => {
+            state.transactions = [...state.confirmedTransactions, ...state.unconfirmedTransactions, ...state.partialTransactions];
+        },
+        filterTransactions: (
+            state: TransactionState,
+            { filterOption, currentSignerAddress }: { filterOption?: FilterOption; currentSignerAddress: string },
+        ) => {
+            console.log('currentSignerAddress', currentSignerAddress);
+            if (filterOption) {
+                state.filterOptions.setFilterOption(filterOption);
+            } else {
+                state.filterOptions = new TransactionFilterOptionsState();
+            }
+
+            state.filteredTransactions = TransactionFilter.filter(state, currentSignerAddress);
         },
     },
     actions: {
@@ -169,8 +236,7 @@ export default {
 
         LOAD_TRANSACTIONS(
             { commit, rootGetters },
-            { group, pageSize, pageNumber }: { group: TransactionGroupState; pageSize: number; pageNumber: number } = {
-                group: TransactionGroupState.all,
+            { pageSize, pageNumber }: { pageSize: number; pageNumber: number } = {
                 pageSize: 20,
                 pageNumber: 1,
             },
@@ -204,56 +270,51 @@ export default {
             const subscriptions: Observable<Transaction[]>[] = [];
             commit('isFetchingTransactions', true);
 
-            if (group == undefined || group === TransactionGroupState.all || group === TransactionGroupState.confirmed) {
-                subscriptions.push(
-                    subscribeTransactions(
-                        TransactionGroupState.confirmed,
-                        transactionRepository.search({
-                            group: TransactionGroup.Confirmed,
-                            address: currentSignerAddress,
-                            pageSize,
-                            pageNumber,
-                            order: Order.Desc,
-                        }),
-                    ),
-                );
-            }
+            subscriptions.push(
+                subscribeTransactions(
+                    TransactionGroupState.confirmed,
+                    transactionRepository.search({
+                        group: TransactionGroup.Confirmed,
+                        address: currentSignerAddress,
+                        pageSize,
+                        pageNumber,
+                        order: Order.Desc,
+                    }),
+                ),
+            );
 
-            // all of the unconfirmed+partial transactions goes in the first page and they are not subject to pagination
-            if (pageNumber === 1) {
-                if (group == undefined || group === TransactionGroupState.all || group === TransactionGroupState.unconfirmed) {
-                    subscriptions.push(
-                        subscribeTransactions(
-                            TransactionGroupState.unconfirmed,
-                            transactionRepository.search({
-                                group: TransactionGroup.Unconfirmed,
-                                address: currentSignerAddress,
-                                pageSize: 100,
-                                pageNumber: 1, // not paginating
-                                order: Order.Desc,
-                            }),
-                        ),
-                    );
-                }
+            subscriptions.push(
+                subscribeTransactions(
+                    TransactionGroupState.unconfirmed,
+                    transactionRepository.search({
+                        group: TransactionGroup.Unconfirmed,
+                        address: currentSignerAddress,
+                        pageSize: 100,
+                        pageNumber: 1, // not paginating
+                        order: Order.Desc,
+                    }),
+                ),
+            );
 
-                if (group == undefined || group === TransactionGroupState.all || group === TransactionGroupState.partial) {
-                    subscriptions.push(
-                        subscribeTransactions(
-                            TransactionGroupState.partial,
-                            transactionRepository.search({
-                                group: TransactionGroup.Partial,
-                                address: currentSignerAddress,
-                                pageSize: 100,
-                                pageNumber: 1, // not paginating
-                                order: Order.Desc,
-                            }),
-                        ),
-                    );
-                }
-            }
+            subscriptions.push(
+                subscribeTransactions(
+                    TransactionGroupState.partial,
+                    transactionRepository.search({
+                        group: TransactionGroup.Partial,
+                        address: currentSignerAddress,
+                        pageSize: 100,
+                        pageNumber: 1, // not paginating
+                        order: Order.Desc,
+                    }),
+                ),
+            );
 
             combineLatest(subscriptions).subscribe({
-                complete: () => commit('isFetchingTransactions', false),
+                complete: () => {
+                    commit('setAllTransactions');
+                    commit('filterTransactions', { filterOption: null, currentSignerAddress: currentSignerAddress.plain() });
+                    commit('isFetchingTransactions', false);
+                },
             });
         },
 

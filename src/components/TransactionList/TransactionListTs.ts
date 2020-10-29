@@ -31,7 +31,7 @@ import TransactionListFilters from '@/components/TransactionList/TransactionList
 import TransactionTable from '@/components/TransactionList/TransactionTable/TransactionTable.vue';
 // @ts-ignore
 import ModalTransactionExport from '@/views/modals/ModalTransactionExport/ModalTransactionExport.vue';
-import { PageInfo, TransactionGroupState } from '@/store/Transaction';
+import { PageInfo } from '@/store/Transaction';
 // @ts-ignore
 import Pagination from '@/components/Pagination/Pagination.vue';
 
@@ -49,12 +49,7 @@ import Pagination from '@/components/Pagination/Pagination.vue';
         ...mapGetters({
             currentAccount: 'account/currentAccount',
             networkMosaic: 'mosaic/networkMosaic',
-            // use partial+unconfirmed from store because
-            // of ephemeral nature (websocket only here)
-            confirmedTransactions: 'transaction/confirmedTransactions',
-            partialTransactions: 'transaction/partialTransactions',
-            unconfirmedTransactions: 'transaction/unconfirmedTransactions',
-            displayedTransactionStatus: 'transaction/displayedTransactionStatus',
+            filteredTransactions: 'transaction/filteredTransactions',
             generationHash: 'network/generationHash',
             currentConfirmedPage: 'transaction/currentConfirmedPage',
         }),
@@ -102,24 +97,10 @@ export class TransactionListTs extends Vue {
     public networkMosaic: MosaicId;
 
     /**
-     * List of confirmed transactions (per-request)
+     * List of filtered transactions (per-request)
      */
-    public confirmedTransactions: Transaction[];
+    public filteredTransactions: Transaction[];
 
-    /**
-     * List of unconfirmed transactions (per-request)
-     */
-    public unconfirmedTransactions: Transaction[];
-
-    /**
-     * List of confirmed transactions (per-request)
-     */
-    public partialTransactions: Transaction[];
-
-    /**
-     * set the default to select all
-     */
-    public displayedTransactionStatus: TransactionGroupState;
     /**
      * The current page number
      * @var {number}
@@ -171,61 +152,35 @@ export class TransactionListTs extends Vue {
     public currentConfirmedPage: PageInfo;
 
     public getEmptyMessage() {
-        return this.displayedTransactionStatus === TransactionGroupState.all
-            ? 'no_data_transactions'
-            : `no_${this.displayedTransactionStatus}_transactions`;
+        return 'no_data_transactions';
     }
 
     /// region computed properties getter/setter
     public get countPages(): number {
-        if (!this.confirmedTransactions) {
+        if (!this.filteredTransactions) {
             return 0;
         }
-        return Math.ceil([...this.confirmedTransactions].length / this.pageSize);
+        return Math.ceil([...this.filteredTransactions].length / this.pageSize);
     }
 
     public get totalCountItems(): number {
-        return this.getCurrentTabTransactions(this.displayedTransactionStatus).length;
+        return this.filteredTransactions.length;
     }
 
     /**
      * Returns the transactions of the current page
      * from the getter that matches the provided tab name.
      * Undefined means the list is being loaded.
-     * @param {TabName} tabName
      * @returns {Transaction[]}
      */
     public getCurrentPageTransactions(): Transaction[] {
         // get current tab transactions
-        const transactions = this.getCurrentTabTransactions(this.displayedTransactionStatus);
+        const transactions = this.filteredTransactions;
         // get pagination params
         const start = (this.currentPage - 1) * this.pageSize;
         const end = this.currentPage * this.pageSize;
         // slice and return
         return [...transactions].slice(start, end);
-    }
-
-    /**
-     * Returns all the transactions,
-     * from the getter that matches the provided tab name
-     * @param {TabName} group
-     * @returns {Transaction[]}
-     */
-    public getCurrentTabTransactions(group: TransactionGroupState): Transaction[] {
-        if (group === TransactionGroupState.confirmed) {
-            return this.confirmedTransactions;
-        }
-        if (group === TransactionGroupState.unconfirmed) {
-            return this.unconfirmedTransactions;
-        }
-        if (group === TransactionGroupState.partial) {
-            return this.partialTransactions;
-        }
-        if (group === TransactionGroupState.all) {
-            return [...this.unconfirmedTransactions, ...this.partialTransactions, ...this.confirmedTransactions];
-        }
-
-        return [];
     }
 
     /**
@@ -236,9 +191,7 @@ export class TransactionListTs extends Vue {
      * @return {Transaction[]}
      */
     public getTransactions(): Transaction[] {
-        return this.paginationType === 'pagination'
-            ? this.getCurrentPageTransactions()
-            : this.getCurrentTabTransactions(this.displayedTransactionStatus);
+        return this.paginationType === 'pagination' ? this.getCurrentPageTransactions() : this.filteredTransactions;
     }
 
     public get hasDetailModal(): boolean {
