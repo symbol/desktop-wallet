@@ -15,6 +15,7 @@
         <div class="hash-header">
             <span>{{ $t('hash_date') }}</span>
         </div>
+        <div></div>
     </div>
 </template>
 

@@ -219,7 +219,9 @@ import importPrivateKeyStepImage2 from '@/views/resources/img/login/2-3.png';
 // @ts-ignore
 import importPrivateKeyStepImage3 from '@/views/resources/img/login/3-3.png';
 // @ts-ignore
-import voting from '@/views/resources/img/icons/voting.png';
+import voting from '@/views/resources/img/navbar/explorer.svg';
+// @ts-ignore
+import faucet from '@/views/resources/img/navbar/faucet.svg';
 
 /// region exported image objects
 export const walletTypeImages = {
@@ -342,6 +344,7 @@ export const officialIcons = {
     wallet,
     xymCoin,
     voting,
+    faucet,
 };
 
 export const transactionTypeToIcon = {
