@@ -12,6 +12,7 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
+import { TransactionMapping } from 'symbol-sdk';
 
 @Component({
     components: {
@@ -36,7 +37,10 @@ export default class ModalTransactionUriImportTs extends Vue {
 
     onSubmit() {
         try {
-            this.$emit('importTransaction', TransactionURI.fromURI(this.sanitizeInput(this.transactionURIModel)).toTransaction());
+            this.$emit(
+                'importTransaction',
+                TransactionURI.fromURI(this.sanitizeInput(this.transactionURIModel), TransactionMapping.createFromPayload).toTransaction(),
+            );
             this.$emit('close');
         } catch (error) {
             this.showError(error);
