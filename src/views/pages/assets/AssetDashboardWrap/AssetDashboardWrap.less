@@ -1,3 +1,5 @@
+@import '../../../resources/css/variables.less';
+
 .dashboard-outer-container {
     position: relative;
     width: 100%;
@@ -11,7 +13,7 @@
         display: grid;
         grid-template-columns: 100%;
         grid-template-rows: 0.6rem auto;
-        border-radius: 12px;
+        border-radius: @borderRadius;
 
         .header-container {
             width: 100%;
@@ -22,7 +24,7 @@
             width: 100%;
             height: auto;
             overflow-y: auto;
-            border-radius: 12px;
+            border-radius: @borderRadius;
         }
     }
 }

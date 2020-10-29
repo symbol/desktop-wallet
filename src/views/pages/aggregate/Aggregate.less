@@ -18,7 +18,7 @@
     grid-template-rows: 0.8rem auto;
     background-color: white;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: @borderRadius;
 
     .transaction-type-container {
         overflow: auto;
@@ -31,7 +31,7 @@
     grid-template-rows: 0.8rem auto 0.5rem;
     background-color: white;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: @borderRadius;
     margin-top: 0.3rem;
 
     .transaction-list-container {
@@ -50,7 +50,7 @@
     grid-template-rows: 0.6rem auto;
     background-color: white;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: @borderRadius;
 }
 
 .title-container {
@@ -94,7 +94,7 @@
         top: 0;
         left: 0.4rem;
         width: 3rem;
-        font-size: @smallFont;
+        font-size: @smallerFont;
         font-weight: 400;
         overflow: hidden;
         text-overflow: ellipsis;
