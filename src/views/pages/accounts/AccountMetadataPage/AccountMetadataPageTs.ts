@@ -21,10 +21,16 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
 // child components
 // @ts-ignore
 import AccountActions from '@/components/AccountActions/AccountActions.vue';
+// @ts-ignore
+import TableDisplay from '@/components/TableDisplay/TableDisplay.vue';
+// @ts-ignore
+import AssetListPageWrap from '@/views/pages/assets/AssetListPageWrap/AssetListPageWrap.vue';
 
 @Component({
     components: {
         AccountActions,
+        AssetListPageWrap,
+        TableDisplay
     },
     computed: {
         ...mapGetters({
