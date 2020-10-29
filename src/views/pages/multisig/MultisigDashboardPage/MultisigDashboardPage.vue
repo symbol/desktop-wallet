@@ -24,6 +24,7 @@ export default class MultisigDashboardPage extends Vue {}
 </script>
 
 <style lang="less" scoped>
+@import '../../../resources/css/variables.less';
 .multisig-outer-container {
     position: relative;
     width: 100%;
@@ -35,7 +36,7 @@ export default class MultisigDashboardPage extends Vue {}
         background: white;
         overflow-x: hidden;
         overflow-y: auto;
-        border-radius: 12px;
+        border-radius: @borderRadius;
         .header-container {
             width: 100%;
             height: 100%;

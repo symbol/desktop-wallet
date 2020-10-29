@@ -35,6 +35,7 @@
         }
     ],
     "dependencies": {
+        "@js-joda/core": "^3.2.0",
         "animate.css": "^3.7.2",
         "await-lock": "^2.0.1",
         "axios": "^0.19.0",
@@ -43,8 +44,8 @@
         "request": "^2.88.0",
         "rss-parser": "^3.7.3",
         "rxjs": "^6.5.2",
-        "symbol-paper-wallets": "^1.0.2",
         "symbol-hd-wallets": "0.14.0-alpha-202010231206",
+        "symbol-paper-wallets": "^1.0.2",
         "symbol-qr-library": "0.13.1-alpha-202010241730",
         "symbol-sdk": "0.21.1-alpha-202010272018",
         "symbol-uri-scheme": "^0.4.7",
