@@ -4,8 +4,11 @@
             <div class="table-title-container section-title">
                 <slot name="table-title" />
                 <div class="user-operation">
-                    <span v-show="assetType === 'metadata'" class="add-metadata-button">
-                        <Icon class="add-icon" type="md-add-circle" @click="showAddMetadataModal" />
+                    <span 
+                        v-show="assetType === 'metadata'"
+                        class="add-metadata-button"
+                        @click="$emit('add-metadata')">
+                        <Icon class="add-icon" type="md-add-circle"  />
                         {{$t('add_metadata')}}
                     </span>
                     <Checkbox v-if="assetType !== 'metadata'" v-model="showExpired" class="table-filter-item-container">

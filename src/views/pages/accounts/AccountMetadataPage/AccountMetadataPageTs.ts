@@ -43,4 +43,13 @@ export class AccountMetadataPageTs extends Vue {
      * Currently active account
      */
     public currentAccount: AccountModel;
+
+    /**
+     * Triggers the add metadata form modal
+     * @protected
+     * @return {void}
+     */
+    protected showAddMetadataModel(): void {
+        console.log('show modal');
+    }
 }

@@ -1,18 +1,19 @@
 <template>
-    <div class="account-detail-outer-container">
-        <div class="account-detail-inner-container">
-            <AssetListPageWrap>
-                <template v-slot:table-section>
-                    <TableDisplay asset-type="metadata" class="table-section">
-                        <template v-slot:table-title>
-                            <h1 class="section-title">
-                                {{ $t('metadata') }}
-                            </h1>
-                        </template>
-                    </TableDisplay>
-                </template>
-            </AssetListPageWrap>
-        </div>
+    <div class="account-metadata-container">
+        <AssetListPageWrap>
+            <template v-slot:table-section>
+                <TableDisplay
+                    class="table-section"
+                    asset-type="metadata"
+                    @add-metadata="showAddMetadataModel" >
+                    <template v-slot:table-title>
+                        <h1 class="section-title">
+                            {{ $t('metadata_attached_to_account') }}
+                        </h1>
+                    </template>
+                </TableDisplay>
+            </template>
+        </AssetListPageWrap>
     </div>
 </template>
 
