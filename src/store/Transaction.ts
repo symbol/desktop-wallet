@@ -206,7 +206,6 @@ export default {
             state: TransactionState,
             { filterOption, currentSignerAddress }: { filterOption?: FilterOption; currentSignerAddress: string },
         ) => {
-            console.log('currentSignerAddress', currentSignerAddress);
             if (filterOption) {
                 state.filterOptions.setFilterOption(filterOption);
             } else {
