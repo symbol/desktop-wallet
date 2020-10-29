@@ -28,6 +28,34 @@
     }
 }
 
+.metadata-columns {
+    grid-template-columns: 20% 15% 15% 25% 10% 15%;
+    .targetAddress-header,
+    .targetAddress-cell {
+        text-align: left;
+    }
+    .targetID-header,
+    .targetID-cell {
+        text-align: left;
+    }
+    .targetType-header,
+    .targetType-cell {
+        text-align: left;
+    }
+    .scopedMetadataKey-header,
+    .scopedMetadataKey-cell {
+        text-align: left;
+    }
+    .status-header,
+    .status-cell {
+        text-align: left;
+    }
+    .changeTimes-header,
+    .changeTimes-cell {
+        text-align: left;
+    }
+}
+
 .hexId-header {
     text-align: left;
 }
@@ -264,6 +292,16 @@
         /deep/.ivu-page-next {
             border: none !important;
         }
+    }
+}
+.add-metadata-button {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+
+    .add-icon {
+        padding: 3px 5px 0px 4px;
     }
 }
 .animation-rotate {

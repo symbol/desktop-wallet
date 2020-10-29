@@ -28,6 +28,9 @@ import {
 } from '@/services/AssetTableService/AssetTableService';
 import { MosaicTableService } from '@/services/AssetTableService/MosaicTableService';
 import { NamespaceTableService } from '@/services/AssetTableService/NamespaceTableService';
+import { MetadataTableService } from '@/services/AssetTableService/MetadataTableService';
+// table asset types
+import { TableAssetType } from './TableAssetType';
 // child components
 // @ts-ignore
 import TableRow from '@/components/TableRow/TableRow.vue';
@@ -46,6 +49,7 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
 import { Signer } from '@/store/Account';
 // @ts-ignore
 import SignerFilter from '@/components/SignerFilter/SignerFilter.vue';
+import { MetadataModel } from '@/core/database/entities/MetadataModel';
 
 @Component({
     components: {
@@ -62,10 +66,12 @@ import SignerFilter from '@/components/SignerFilter/SignerFilter.vue';
             currentAccount: 'account/currentAccount',
             holdMosaics: 'mosaic/holdMosaics',
             ownedNamespaces: 'namespace/ownedNamespaces',
+            attachedMetadatas: 'metadata/metadatas',
             networkConfiguration: 'network/networkConfiguration',
             signers: 'account/signers',
             isFetchingNamespaces: 'namespace/isFetchingNamespaces',
             isFetchingMosaics: 'mosaic/isFetchingMosaics',
+            isFetchingMetadatas: "metadata/isFetchingMetadatas"
         }),
     },
 })
@@ -75,9 +81,9 @@ export class TableDisplayTs extends Vue {
      * @type {string}
      */
     @Prop({
-        default: 'mosaic',
+        default: TableAssetType.Mosaic,
     })
-    assetType: string;
+    assetType: TableAssetType;
 
     /**
      * Current account owned mosaics
@@ -92,6 +98,13 @@ export class TableDisplayTs extends Vue {
      * @type {NamespaceModel[]}
      */
     private ownedNamespaces: NamespaceModel[];
+
+    /**
+     * Current account attached metadatas
+     * @protected
+     * @type {MetadataModel[]}
+     */
+    private attachedMetadatas: MetadataModel[];
 
     private currentAccount: AccountModel;
 
@@ -108,12 +121,21 @@ export class TableDisplayTs extends Vue {
 
     public isFetchingMosaics: boolean;
 
+    public isFetchingMetadatas: boolean;
+
     /**
      * Loading state of the data to be shown in the table
      * @type {boolean}
      */
     public get isLoading() {
-        return this.assetType === 'namespace' ? this.isFetchingNamespaces : this.isFetchingMosaics;
+        switch (this.assetType) {
+            case TableAssetType.Namespace:
+                return this.isFetchingNamespaces;
+            case TableAssetType.Metadata:
+                return this.isFetchingMetadatas;
+            default:
+                return this.isFetchingMosaics;
+        }
     }
 
     /**
@@ -215,12 +237,19 @@ export class TableDisplayTs extends Vue {
      * @return {AssetTableService}
      */
     protected getService(): AssetTableService {
-        if ('mosaic' === this.assetType) {
-            return new MosaicTableService(this.currentHeight, this.holdMosaics, this.networkConfiguration);
-        } else if ('namespace' === this.assetType) {
-            return new NamespaceTableService(this.currentHeight, this.ownedNamespaces, this.networkConfiguration);
+        switch(this.assetType) {
+            case TableAssetType.Mosaic:
+                return new MosaicTableService(this.currentHeight, this.holdMosaics, this.networkConfiguration);
+
+            case TableAssetType.Namespace:
+                return new NamespaceTableService(this.currentHeight, this.ownedNamespaces, this.networkConfiguration);
+
+            case TableAssetType.Metadata:
+                return new MetadataTableService(this.currentHeight, this.attachedMetadatas, this.networkConfiguration);
+            
+            default:
+                throw new Error(`Asset type '${this.assetType}' does not exist in TableDisplay.`);
         }
-        throw new Error(`Asset type '${this.assetType}' does not exist in TableDisplay.`);
     }
 
     /// region getters and setters
@@ -300,10 +329,18 @@ export class TableDisplayTs extends Vue {
      * @returns {void}
      */
     private async refresh(): Promise<void> {
-        if ('mosaic' === this.assetType) {
-            await this.$store.dispatch('mosaic/LOAD_MOSAICS');
-        } else if ('namespace' === this.assetType) {
-            await this.$store.dispatch('namespace/LOAD_NAMESPACES');
+        switch(this.assetType) {
+            case TableAssetType.Mosaic:
+                await this.$store.dispatch('mosaic/LOAD_MOSAICS');
+                break;
+
+            case TableAssetType.Namespace:
+                await this.$store.dispatch('namespace/LOAD_NAMESPACES');
+                break;
+
+            case TableAssetType.Metadata:
+                await this.$store.dispatch('metadata/LOAD_METADATAS');
+                break;
         }
     }
 
