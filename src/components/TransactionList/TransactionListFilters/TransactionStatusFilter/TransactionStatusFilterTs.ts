@@ -1,29 +1,39 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { TransactionGroupState } from '@/store/Transaction';
 import { Signer } from '@/store/Account';
+import { FilterOption, TransactionFilterOptions } from '@/store/Transaction';
 
 @Component({
     computed: {
         ...mapGetters({
             currentSigner: 'account/currentSigner',
-            displayedTransactionStatus: 'transaction/displayedTransactionStatus',
         }),
     },
 })
 export class TransactionStatusFilterTs extends Vue {
     public currentSigner: Signer;
-    public displayedTransactionStatus: TransactionGroupState;
+    public isSelectionShown: boolean = false;
+    public transactionFilterOptions = TransactionFilterOptions;
 
-    public get selectedStatus(): TransactionGroupState {
-        return this.displayedTransactionStatus;
+    public onChange(key, value): void {
+        this.$store.commit('transaction/filterTransactions', {
+            filterOption: new FilterOption(key, value),
+            currentSignerAddress: this.currentSigner.address.plain(),
+        });
     }
-    public set selectedStatus(status: TransactionGroupState) {
-        this.$emit('status-change', status);
+
+    /**
+     * Opens selection options block.
+     */
+    public toggleSelection(): void {
+        this.isSelectionShown = !this.isSelectionShown;
     }
 
     @Watch('currentSigner')
     onCurrentSignerChange() {
-        this.$store.commit('transaction/setDisplayedTransactionStatus', TransactionGroupState.all);
+        this.$store.commit('transaction/filterTransactions', {
+            filterOption: null,
+            currentSignerAddress: this.currentSigner.address.plain(),
+        });
     }
 }
