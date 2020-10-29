@@ -1,11 +1,12 @@
 <template>
     <div class="account-detail-row-3cols">
         <span class="label">{{ $t('account_public_key') }}:</span>
-        <div v-if="account" class="value accountPublicKey">
-            {{ account.publicKey }}
+        <div v-if="account" class="value accountPublicKey " style="width:1em !important;">
             <ButtonCopyToClipboard v-if="account" v-model="account.publicKey">
                 <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
             </ButtonCopyToClipboard>
+            {{ account.publicKey }}
+            
         </div>
     </div>
 </template>
@@ -19,7 +20,7 @@ export default class AccountPublicKeyDisplay extends AccountPublicKeyDisplayTs {
 .copy-icon {
     width: 0.24rem;
     height: 0.24rem;
-    margin-left: 0.18rem;
+    margin-right: 0.18rem;
     cursor: pointer;
 }
 
@@ -27,5 +28,10 @@ export default class AccountPublicKeyDisplay extends AccountPublicKeyDisplayTs {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: max-content;
+}
+
+
+.value {
+    text-overflow: ellipsis;
 }
 </style>

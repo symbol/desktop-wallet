@@ -2,10 +2,10 @@
     <div class="account-detail-row-3cols">
         <span class="label">{{ $t('account_address') }}:</span>
         <div class="value accountAddress">
-            {{ getPrettyAddress() }}
             <ButtonCopyToClipboard v-model="address">
                 <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
             </ButtonCopyToClipboard>
+            {{ getPrettyAddress() }}
         </div>
     </div>
 </template>
@@ -21,7 +21,7 @@ export default class AccountAddressDisplay extends AccountAddressDisplayTs {}
 .copy-icon {
     width: 0.24rem;
     height: 0.24rem;
-    margin-left: 0.18rem;
+    margin-right: 0.18rem;
     cursor: pointer;
 }
 
