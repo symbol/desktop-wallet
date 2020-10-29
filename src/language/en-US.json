@@ -372,6 +372,7 @@
     "modal_title_unlink_alias": "Unlink alias from namespace",
     "more_access_tool_is_working": "More authentication tools are being worked on...",
     "metadata": "Metadata",
+    "metadata_attached_to_account": "Metadata attached to your account",
     "mosaic": "Mosaic",
     "mosaic_alias_not_exist": "Mosaic alias does not exist",
     "mosaic_describe_text": "A mosaic could be a token, but it could also be a collection of more specialized assets such as reward points, company shares, signatures, status flags, votes or even currencies.",
