@@ -14,7 +14,7 @@
  *
  */
 // external dependencies
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel';
@@ -25,12 +25,15 @@ import AccountActions from '@/components/AccountActions/AccountActions.vue';
 import TableDisplay from '@/components/TableDisplay/TableDisplay.vue';
 // @ts-ignore
 import AssetListPageWrap from '@/views/pages/assets/AssetListPageWrap/AssetListPageWrap.vue';
+// @ts-ignore
+import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadataUpdate.vue';
 
 @Component({
     components: {
         AccountActions,
         AssetListPageWrap,
-        TableDisplay
+        TableDisplay,
+        ModalMetadataUpdate
     },
     computed: {
         ...mapGetters({
@@ -45,11 +48,19 @@ export class AccountMetadataPageTs extends Vue {
     public currentAccount: AccountModel;
 
     /**
+     * Update metadata modal visible
+     */
+    @Prop({
+        default: false,
+    })
+    public showUpdateModal: boolean;
+
+    /**
      * Triggers the add metadata form modal
      * @protected
      * @return {void}
      */
     protected showAddMetadataModel(): void {
-        console.log('show modal');
+        this.showUpdateModal = !this.showUpdateModal;
     }
 }

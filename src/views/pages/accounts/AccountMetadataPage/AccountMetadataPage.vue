@@ -14,6 +14,10 @@
                 </TableDisplay>
             </template>
         </AssetListPageWrap>
+        <ModalMetadataUpdate
+            v-if="showUpdateModal"
+            :visible="true"
+            @close="$emit('close')" />
     </div>
 </template>
 
