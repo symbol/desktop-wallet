@@ -1,13 +1,14 @@
 <template>
-    <div class="account-detail-row">
+    <div class="account-detail-row-3cols">
         <div class="label">{{ $t('account_name') }}:</div>
        
         <div class="value field-name">
-            <button type="button" class="edit-button" @click.stop="hasNameFormModal = true">
-                <Icon type="md-create" />
-            </button>
             <span v-if="account" class="accountName">{{ account.name }}</span>
         </div>
+
+        <button type="button" class="edit-button" @click.stop="hasNameFormModal = true">
+                <Icon type="md-create" />
+        </button>
 
         <ModalFormAccountNameUpdate v-if="hasNameFormModal" :visible="hasNameFormModal" @close="hasNameFormModal = false" />
     </div>
@@ -32,6 +33,13 @@ export default class AccountNameDisplay extends AccountNameDisplayTs {}
     cursor: pointer;
     font-size: 1em;
     margin-right: 30px;
+}
+
+.value {
+    display: inline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 </style>

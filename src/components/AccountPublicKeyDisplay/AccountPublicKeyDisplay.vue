@@ -1,13 +1,12 @@
 <template>
     <div class="account-detail-row-3cols">
         <span class="label">{{ $t('account_public_key') }}:</span>
-        <div v-if="account" class="value accountPublicKey " style="width:1em !important;">
-            <ButtonCopyToClipboard v-if="account" v-model="account.publicKey">
-                <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
-            </ButtonCopyToClipboard>
+        <div v-if="account" class="value accountPublicKey ">
             {{ account.publicKey }}
-            
         </div>
+        <ButtonCopyToClipboard v-if="account" v-model="account.publicKey">
+                <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
+        </ButtonCopyToClipboard>
     </div>
 </template>
 
@@ -32,6 +31,9 @@ export default class AccountPublicKeyDisplay extends AccountPublicKeyDisplayTs {
 
 
 .value {
+    display: inline;
+    overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>

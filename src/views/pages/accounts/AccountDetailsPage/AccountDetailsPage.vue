@@ -48,48 +48,34 @@
 
                     <div class="detail-row">
                         <AccountAliasDisplay :account="currentAccount" />
-                    </div>
-                </div>
-
-
-                
-                <!-- TODO : Make a "CosignatoryDisplay" component -->
-                <div class="detail-row" style="margin-top:1; max-height:25vh; overflow-y: auto; overflow-x: hidden;">
-                    <div class="account-detail-row">
-                            <div class="account-detail-row-3cols">
+                    </div>                
+                    <!-- TODO : Make a "CosignatoryDisplay" component -->
+                    <div class="detail-row">
+                        <div class="account-detail-row">
+                            <div>
                                 <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
                             </div>
+                            <div class="account-detail-cosignatory" style="overflow-x: hidden; max-height: 1rem;">
+                                <!-- TODO : Dynamic content -->
+                                <div class="overflow-elipsis">
+                                    <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
+                                </div>
+                                <div class="overflow-elipsis">
+                                    <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
+                                </div>
+                                <div class="overflow-elipsis">
+                                    <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <br>
-                <br>
-                <div class="bottom-buttons-container">
-                    <button type="button" class="centered-button button-style inverted-button danger-button">Delete Account</button>
-                    <button type="button" class="centered-button button-style inverted-button ">Hide Account</button>
-                </div>
-            
+                    <div class="detail-row" style="margin-top: 1rem">
+                        <div class="bottom-buttons-container">
+                            <button type="button" class="centered-button button-style inverted-button danger-button">Delete Account</button>
+                            <button type="button" class="centered-button button-style inverted-button ">Hide Account</button>
+                        </div>
+                    </div>
+            </div>            
             </div>
         </div>
 
@@ -118,7 +104,6 @@ export default class AccountDetailsPage extends AccountDetailsPageTs {}
 
 .title {
     color:@primary;
-    margin-left:0.1em;
     font-size: 18px;
 }
 
@@ -133,5 +118,11 @@ export default class AccountDetailsPage extends AccountDetailsPageTs {}
     margin: 0 0.5em;
 }
 
+.overflow-elipsis {
+    display: inline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 </style>
