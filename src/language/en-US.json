@@ -421,6 +421,7 @@
     "node_list": "List of nodes",
     "node_not_available_please_check_your_node_or_network_settings": "Node is not available. Please check your node or network settings.",
     "node_url": "Node url",
+    "node": "Node",
     "not_yet_open": "Not yet open",
     "notes_should_not_exceed_25_character": "Notes should not exceed 25 characters",
     "notification_new_aggregate_bonded": "A new aggregate partial transaction has been announced",
@@ -561,9 +562,9 @@
     "show_expired_namespaces": "Show expired namespaces",
     "show_wizard": "Show wizard",
     "sidebar_item_accounts": "Accounts",
+    "sidebar_item_harvesting": "Harvest",
     "sidebar_item_aggregate": "Aggregate",
     "sidebar_item_community": "News",
-    "sidebar_item_harvesting": "Harvest",
     "sidebar_item_home": "Home",
     "sidebar_item_mosaics": "Mosaics",
     "sidebar_item_multisig": "Multisig",
@@ -687,5 +688,6 @@
     "web_wallet_warning": "This WEB wallet is for demonstration use only!",
     "welcome": "Welcome",
     "word": "Word",
-    "x_seconds": "{seconds}s."
+    "x_seconds": "{seconds}s.",
+    "aggregate_send": "Send aggregate"
 }

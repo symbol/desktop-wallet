@@ -687,5 +687,6 @@
     "web_wallet_warning": "このウェブウォレットはデモンストレーション専用です",
     "welcome": "ようこそ",
     "word": "文字",
-    "x_seconds": "{seconds}秒"
+    "x_seconds": "{seconds}秒",
+    "aggregate_send": "集計を送信する"
 }

@@ -13,35 +13,48 @@
             </Alert>
         </div>
 
-        <PageNavigator v-if="!$route.matched.map(({ name }) => name).includes('profiles')" />
+        <div style="display: flex; width: 100%; height: 100%;">
+            <PageNavigator v-if="!$route.matched.map(({ name }) => name).includes('profiles')" />
+            <div class="general_view" style="width: 100%;">
+                <div class="top_window level">
+                    <div class="level-left">
+                        <!--<AppLogo class="level-item" />-->
+                    </div>
 
-        <div class="top_window level">
-            <div class="level-left">
-                <!--<AppLogo class="level-item" />-->
-            </div>
+                    <!--OCA99: These are window controls for electron. Disabling them for now. Not sure if they should be here.-->
+                    <!--<WindowControls />-->
 
-            <!--OCA99: These are window controls for electron. Disabling them for now. Not sure if they should be here.-->
-            <!--<WindowControls />-->
-
-            <div class="level-right">
-                <ImportQRButton v-if="!!currentAccount" class="level-item navbar-item" valid-qr-types="[1, 3, 4]" />
-                <AccountLinks :account="currentAccount" :link="explorerUrl" :title="$t('accounts_links_explorer')" />
-                <AccountLinks v-if="isTestnet" :account="currentAccount" :link="faucetUrl" :title="$t('accounts_links_faucet')" />
-                <!--<div class="level-item navbar-item debug-console-trigger" @click="hasDebugConsoleModal = true">
-                    <span>&nbsp;{{ $t('top_window_console') }}</span>
-                </div>-->
-                <!--<DebugConsoleButton class="level-item navbar-item" />-->
-                <!--<PeerSelector class="level-item navbar-item" />-->
-                <!--<LanguageSelector class="level-item navbar-item" />-->
-                <AccountSelectorField class="level-item navbar-item" @input="onChangeAccount" />
-                <Settings class="level-item navbar-item" />
+                    <div class="level-right">
+                        <ImportQRButton v-if="!!currentAccount" class="level-item navbar-item" valid-qr-types="[1, 3, 4]" />
+                        <AccountLinks
+                            :account="currentAccount"
+                            :link="explorerUrl"
+                            :icon="explorerIcon"
+                            :title="$t('accounts_links_explorer')"
+                            class="level-item navbar-item"
+                        />
+                        <AccountLinks
+                            v-if="isTestnet"
+                            :account="currentAccount"
+                            :link="faucetUrl"
+                            :icon="faucetIcon"
+                            :title="$t('accounts_links_faucet')"
+                            class="level-item navbar-item"
+                        />
+                        <AccountSelectorField class="level-item navbar-item" @input="onChangeAccount" />
+                        <Settings class="level-item navbar-item" />
+                    </div>
+                </div>
+                <transition name="fade" mode="out-in">
+                    <div class="main-outer-container">
+                        <router-view />
+                    </div>
+                </transition>
+                <div class="footer">
+                    <span class="footer-phrase">Powered by <b>NEM Technology.</b></span>
+                </div>
             </div>
         </div>
-        <transition name="fade" mode="out-in">
-            <div class="main-outer-container">
-                <router-view />
-            </div>
-        </transition>
 
         <ModalDebugConsole
             v-if="hasDebugConsoleModal"
@@ -49,9 +62,6 @@
             :title="$t('modal_title_debug_console')"
             @close="hasDebugConsoleModal = false"
         />
-        <div>
-            <span class="footer-phrase">Powered by <b>NEM Technology.</b></span>
-        </div>
     </div>
 </template>
 
