@@ -45,10 +45,14 @@ export class AccountMultisigGraphTs extends Vue {
             const tree = [];
             this.multisigAccountGraphInfo.map((level: []) => {
                 level.map((entry) => {
+                    // @ts-ignore
                     const selected = this.account.address === entry.accountAddress.address ? true : false;
+                    // @ts-ignore
                     if (!entry.cosignatoryAddresses.length) {
                         tree.push({
+                            // @ts-ignore
                             address: entry.accountAddress.address,
+                            // @ts-ignore
                             title: this.getAccountLabel(entry.accountAddress, this.knownAccounts),
                             children: [],
                             selected,
@@ -62,10 +66,13 @@ export class AccountMultisigGraphTs extends Vue {
                                 obj.children.forEach(updateRecursively(address, object));
                             }
                         };
+                        // @ts-ignore
                         entry.cosignatoryAddresses.forEach((addressVal) => {
                             tree.forEach(
                                 updateRecursively(addressVal.address, {
+                                    // @ts-ignore
                                     address: entry.accountAddress.address,
+                                    // @ts-ignore
                                     title: this.getAccountLabel(entry.accountAddress, this.knownAccounts),
                                     children: [],
                                     selected,

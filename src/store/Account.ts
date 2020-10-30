@@ -388,21 +388,9 @@ export default {
                 .getMultisigAccountGraphInfo(currentAccountAddress)
                 .pipe(
                     map((g) => {
+                        // sorted array to be represented in multisig tree
+                        commit('multisigAccountGraph', MultisigService.getMultisigGraphArraySorted(g.multisigEntries));
                         return MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
-                    }),
-                    catchError(() => {
-                        return of([]);
-                    }),
-                )
-                .toPromise();
-
-            // sorted array to be represented in multisig tree
-            const getMultisigAccountGraphArraySortedPromise = repositoryFactory
-                .createMultisigRepository()
-                .getMultisigAccountGraphInfo(currentAccountAddress)
-                .pipe(
-                    map((g) => {
-                        return MultisigService.getMultisigGraphArraySorted(g.multisigEntries);
                     }),
                     catchError(() => {
                         return of([]);
@@ -419,7 +407,6 @@ export default {
             const aliases = await aliasPromise;
             commit('currentAccountAliases', aliases);
 
-            const multisigAccountGraph: MultisigAccountInfo[][] = await getMultisigAccountGraphArraySortedPromise;
             const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise;
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
             const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
@@ -446,7 +433,7 @@ export default {
             commit('multisigAccountsInfo', multisigAccountsInfo);
             commit('currentAccountMultisigInfo', currentAccountMultisigInfo);
             commit('currentSignerMultisigInfo', currentSignerMultisigInfo);
-            commit('multisigAccountGraph', multisigAccountGraph);
+            // commit('multisigAccountGraph', multisigAccountGraph);
 
             // REMOTE CALL
             const getAccountsInfoPromise = repositoryFactory.createAccountRepository().getAccountsInfo(knownAddresses).toPromise();
