@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-@import '../../views/resources/css/variables.less';
 
-.switch_language {
-    -webkit-app-region: no-drag;
-    position: relative;
-    display: flex;
-    align-items: center;
+import { VersionedNetworkBasedObjectStorage } from '@/core/database/backends/VersionedNetworkBasedObjectStorage';
+import { MetadataModel } from '@/core/database/entities/MetadataModel';
 
-    > img {
-        width: 24px;
-        height: 24px;
+export class MetadataModelStorage extends VersionedNetworkBasedObjectStorage<MetadataModel[]> {
+    /**
+     * Singleton instance as we want to run the migration just once
+     */
+    public static INSTANCE = new MetadataModelStorage();
+
+    private constructor() {
+        super('metadataCache');
     }
 }
