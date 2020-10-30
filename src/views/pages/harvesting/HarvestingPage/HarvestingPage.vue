@@ -8,12 +8,12 @@
             </span>
         </div>
         <div>
-            <!-- TODO: FORM HARVESTING-->
+            <!-- TODO: Add HARVESTING form followin standard style.-->
         </div>
-        <div>
-            <button class="info-text inverted-button pl-2 pr-2" style="cursor: pointer;">
-                <!-- TODO: DELEGATED -->
-                STOP HARVESTING
+        <div class="bottom-container">
+            <button class="inverted-button pl-2 pr-2" style="cursor: pointer;">
+                <!-- TODO: Add onClick action. -->
+                {{$t('stop_harvesting')}}
             </button>
         </div>
     </div>

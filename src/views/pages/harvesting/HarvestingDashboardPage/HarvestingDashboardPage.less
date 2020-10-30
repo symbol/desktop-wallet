@@ -5,37 +5,32 @@
     position: relative;
     width: 100%;
     height: 100%;
-    padding: 1%;
-    padding-top: 0 !important;
-    padding-bottom: 2% !important;
+    padding: 0.1rem 0.1rem 0.35rem 0.2rem;
+    display: grid;
+    grid-template-columns: 11rem auto;
+    grid-column-gap: 0.3rem;
 
-    .dashboard-status-container {
+    .dashboard-right-container {
+        height: 100%;
         background-color: @white;
         border-radius: @borderRadius;
-        height: calc(20% - 0.15rem);
-        margin-bottom: 0.3rem;
-        width: 100%;
     }
 
-    .dashboard-bottom-container {
-        height: calc(80% - 0.15rem);
-        width: 100%;
-        display: flex;
-        flex-direction: row;
+    .dashboard-left-container {
+        display: grid;
+        grid-template-rows: 2rem auto;
+        grid-row-gap: 0.3rem;
 
-        .dashboard-bottom-left-container {
+        .dashboard-top-left-container {
+            height: 100%;
             background-color: @white;
             border-radius: @borderRadius;
-            height: 100%;
-            width: calc(60% - 0.15rem);
         }
 
-        .dashboard-bottom-right-container {
+        .dashboard-bottom-left-container {
+            height: 100%;
             background-color: @white;
             border-radius: @borderRadius;
-            height: 100%;
-            width: calc(40% - 0.15rem);
-            margin-left: 0.3rem;
         }
     }
 }
