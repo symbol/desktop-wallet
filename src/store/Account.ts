@@ -411,7 +411,7 @@ export default {
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
             const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
 
-            // update multisig flag in currentAccount if
+            // update multisig flag in currentAccount
             if (currentAccountMultisigInfo && currentAccountMultisigInfo.isMultisig() && currentAccount.isMultisig) {
                 const accountService = new AccountService();
                 accountService.updateIsMultisig(currentAccount, true);
