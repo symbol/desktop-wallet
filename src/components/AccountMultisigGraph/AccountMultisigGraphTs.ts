@@ -17,7 +17,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { mapGetters } from 'vuex';
-import { Address } from 'symbol-sdk';
+import { Address, MultisigAccountInfo } from 'symbol-sdk';
 
 @Component({
     computed: {
@@ -37,22 +37,18 @@ export class AccountMultisigGraphTs extends Vue {
         default: null,
     })
     visible: boolean;
-    public multisigAccountGraphInfo: [];
+    public multisigAccountGraphInfo: MultisigAccountInfo[][];
     public knownAccounts: AccountModel[];
 
     get multisigGraphTree(): any[] {
         if (this.multisigAccountGraphInfo) {
             const tree = [];
-            this.multisigAccountGraphInfo.map((level: []) => {
-                level.map((entry) => {
-                    // @ts-ignore
-                    const selected = this.account.address === entry.accountAddress.address ? true : false;
-                    // @ts-ignore
+            this.multisigAccountGraphInfo.map((level: MultisigAccountInfo[]) => {
+                level.map((entry: MultisigAccountInfo) => {
+                    const selected = this.account.address === entry.accountAddress.plain();
                     if (!entry.cosignatoryAddresses.length) {
                         tree.push({
-                            // @ts-ignore
-                            address: entry.accountAddress.address,
-                            // @ts-ignore
+                            address: entry.accountAddress.plain(),
                             title: this.getAccountLabel(entry.accountAddress, this.knownAccounts),
                             children: [],
                             selected,
@@ -69,9 +65,9 @@ export class AccountMultisigGraphTs extends Vue {
                         // @ts-ignore
                         entry.cosignatoryAddresses.forEach((addressVal) => {
                             tree.forEach(
-                                updateRecursively(addressVal.address, {
+                                updateRecursively(addressVal['address'], {
                                     // @ts-ignore
-                                    address: entry.accountAddress.address,
+                                    address: entry.accountAddress.plain(),
                                     // @ts-ignore
                                     title: this.getAccountLabel(entry.accountAddress, this.knownAccounts),
                                     children: [],
