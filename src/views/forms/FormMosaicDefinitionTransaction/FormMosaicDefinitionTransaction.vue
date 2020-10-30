@@ -56,11 +56,13 @@ export default class FormMosaicDefinitionTransaction extends FormMosaicDefinitio
 </script>
 
 <style lang="less" scoped>
+
 .checkboxes {
     margin: 0.25rem 0 0.3rem 0;
     display: grid;
     grid-auto-flow: column;
     align-items: baseline;
+    color: #44004e;
 }
 /deep/.form-wrapper {
     .form-row-inner-container {
