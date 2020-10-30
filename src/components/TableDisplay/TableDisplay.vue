@@ -4,12 +4,9 @@
             <div class="table-title-container section-title">
                 <slot name="table-title" />
                 <div class="user-operation">
-                    <span 
-                        v-show="assetType === 'metadata'"
-                        class="add-metadata-button"
-                        @click="$emit('add-metadata')">
-                        <Icon class="add-icon" type="md-add-circle"  />
-                        {{$t('add_metadata')}}
+                    <span v-show="assetType === 'metadata'" class="add-metadata-button" @click="$emit('add-metadata')">
+                        <Icon class="add-icon" type="md-add-circle" />
+                        {{ $t('add_metadata') }}
                     </span>
                     <Checkbox v-if="assetType !== 'metadata'" v-model="showExpired" class="table-filter-item-container">
                         <span v-show="assetType === 'mosaic'">{{ $t('show_expired_mosaics') }}</span>
@@ -24,7 +21,12 @@
                 </div>
             </div>
         </div>
-        <div :class="['table-header-container', assetType !== 'metadata' ? (assetType === 'mosaic' ? 'mosaic-columns' : 'namespace-columns') : 'metadata-columns']">
+        <div
+            :class="[
+                'table-header-container',
+                assetType !== 'metadata' ? (assetType === 'mosaic' ? 'mosaic-columns' : 'namespace-columns') : 'metadata-columns',
+            ]"
+        >
             <div
                 v-for="({ name, label }, index) in tableFields"
                 :key="index"

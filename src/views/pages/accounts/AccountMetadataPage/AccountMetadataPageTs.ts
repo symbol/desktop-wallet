@@ -33,7 +33,7 @@ import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadat
         AccountActions,
         AssetListPageWrap,
         TableDisplay,
-        ModalMetadataUpdate
+        ModalMetadataUpdate,
     },
     computed: {
         ...mapGetters({

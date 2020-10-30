@@ -40,5 +40,4 @@ export class ModalMetadataUpdateTs extends Vue {
             this.$emit('close');
         }
     }
-
 }
