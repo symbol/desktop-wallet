@@ -7,7 +7,7 @@
             <div class="right-container">
                 <div class="account-details-grid">
                     <div class="detail-row">
-                        <AccountNameDisplay v-if="currentAccount" :account="currentAccount" :editable="true" />
+                        <AccountNameDisplay v-if="currentAccount" :account="currentAccount" :editable="true"/>
                     </div>
 
                     <div class="detail-row">
@@ -57,14 +57,23 @@
                             </div>
                             <div class="account-detail-cosignatory" style="overflow-x: hidden; max-height: 1rem;">
                                 <!-- TODO : Dynamic content -->
-                                <div class="overflow-elipsis">
-                                    <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
+                                <div class="consignatory_row">
+                                    <img src="@/views/resources/img/icons/multisig.svg" class="icon-left-button" />
+                                    <div class="overflow-elipsis">
+                                        <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
+                                    </div>
                                 </div>
-                                <div class="overflow-elipsis">
-                                    <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
+                                <div class="consignatory_row">
+                                    <img src="@/views/resources/img/icons/multisig.svg" class="icon-left-button" />
+                                    <div class="overflow-elipsis">
+                                        <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
+                                    </div>
                                 </div>
-                                <div class="overflow-elipsis">
-                                    <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
+                                <div class="consignatory_row">
+                                    <img src="@/views/resources/img/icons/multisig.svg" class="icon-left-button" />
+                                    <div class="overflow-elipsis">
+                                        <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +84,7 @@
                             <button type="button" class="centered-button button-style inverted-button ">Hide Account</button>
                         </div>
                     </div>
-            </div>            
+                </div>            
             </div>
         </div>
 
@@ -88,8 +97,6 @@
                 <AccountLinks :account="currentAccount" />
             </div>
         </div>-->
-
-
     </div>
 </template>
 

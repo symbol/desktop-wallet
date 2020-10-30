@@ -34,8 +34,9 @@
             padding: 0.17rem 0 0.4rem 0.2rem;
 
             .section-title {
-                font-weight: 500;
-                color: @black;
+                font-weight: 600;
+                color: @purpleDark;
+                font-family: @symbolFont;
             }
         }
 
@@ -110,9 +111,10 @@
         grid-template-columns: 50% 50%;
         grid-template-rows: 100%;
         text-align: center;
-        font-weight: 400;
+        font-size: @normalFont;
+        font-family: @symbolFont;
         line-height: 22px;
-        color: @black;
+        color: @purpleLightest;
 
         .add-account {
             .ivu-icon {
@@ -145,6 +147,8 @@
     align-items: center;
     border-bottom: 0.01rem solid @line;
     position: relative;
+    color: @purpleDark;
+    font-family: @symbolFontLight;
 
     .namege_img {
         position: absolute;
@@ -186,7 +190,7 @@
         top: 0;
         left: 0.4rem;
         width: 1.8rem;
-        font-size: @normalFont;
+        font-size: @bigFont;
         font-weight: 400;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -219,4 +223,10 @@
         height: 0.2rem;
         margin-bottom: 0.05rem;
     }
+}
+
+.icon-left-button{
+    width: 0.15rem;
+    height: 0.15rem;
+    color: @purpleDark;
 }
