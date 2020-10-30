@@ -62,4 +62,9 @@ export default class FormMosaicDefinitionTransaction extends FormMosaicDefinitio
     grid-auto-flow: column;
     align-items: baseline;
 }
+/deep/.form-wrapper {
+    .form-row-inner-container {
+            grid-template-columns: 2.5rem 8rem !important;
+    }
+}
 </style>
