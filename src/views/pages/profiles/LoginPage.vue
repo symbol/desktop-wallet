@@ -8,8 +8,7 @@
                     </div>
                     <div class="welcome-box">
                         <div class="banner-image">
-                            <span class="top-welcome-text">{{ $t('welcome') }}</span>
-                            <span class="top-to-symbol-text">{{ $t('to_symbol') }}</span>
+                            <span class="top-welcome-text">{{ $t('welcome_to_symbol') }}</span>
                             <div class="bottom-welcome-text">
                                 {{ $t('program_description') }}
                             </div>
