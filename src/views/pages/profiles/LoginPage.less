@@ -19,7 +19,7 @@
 .login-profile-wrapper {
     width: 100%;
     height: 100%;
-    background: linear-gradient(121deg, rgba(82, 0, 198, 1) 0%, rgba(78, 0, 167, 1) 100%);
+    background: linear-gradient(315.55deg, #44004e -1.68%, #5200c6 110.7%);
     opacity: 1;
     overflow: hidden;
     position: absolute;
@@ -30,13 +30,12 @@
     .login-profile-background-img {
         width: 100%;
         height: 100%;
-        background-image: url('../../resources/banner.png');
         background-size: 100% 100%;
         z-index: -999;
     }
 
     .welcome-box {
-        width: 12rem;
+        width: 16rem;
         height: 5.39rem;
         position: absolute;
         top: 0;
@@ -44,22 +43,20 @@
         right: 0;
         bottom: 0;
         margin: auto;
-        display: flex;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
         align-items: center;
 
         .banner-image {
             height: 6.2rem;
-            width: 8rem;
-            background: linear-gradient(121deg, rgba(82, 0, 198, 1) 0%, rgba(78, 0, 167, 1) 100%);
             color: @white;
             padding: 0.3rem 0.4rem;
+            padding-right: 2rem;
 
             .top-welcome-text {
                 display: block;
-                font-size: 0.7rem;
+                font-size: 0.5rem;
                 font-weight: bolder;
-                margin-top: 1.08rem;
-                padding-left: 0.37rem;
                 height: 0.85rem;
                 line-height: 0.85rem;
             }
@@ -68,17 +65,14 @@
                 display: block;
                 font-size: 0.7rem;
                 font-weight: bolder;
-                padding-left: 0.37rem;
                 height: 0.85rem;
                 line-height: 0.85rem;
             }
 
             .bottom-welcome-text {
-                padding-top: 0.28rem;
-                padding-left: 0.37rem;
+                padding-top: 0.6rem;
                 font-size: @biggerFont;
                 line-height: 0.5rem;
-                width: 7.3rem;
             }
         }
     }
