@@ -7,7 +7,7 @@
             <div class="right-container">
                 <div class="account-details-grid">
                     <div class="detail-row">
-                        <AccountNameDisplay v-if="currentAccount" :account="currentAccount" :editable="true" />
+                        <AccountNameDisplay v-if="currentAccount" :account="currentAccount" :editable="true"/>
                     </div>
 
                     <div class="detail-row">
@@ -48,8 +48,43 @@
 
                     <div class="detail-row">
                         <AccountAliasDisplay :account="currentAccount" />
+                    </div>                
+                    <!-- TODO : Make a "CosignatoryDisplay" component -->
+                    <div class="detail-row">
+                        <div class="account-detail-row">
+                            <div>
+                                <span class="title">Cosignatory of:</span>
+                            </div>
+                            <div class="account-detail-cosignatory" style="overflow-x: hidden; max-height: 1rem;">
+                                <!-- TODO : Dynamic content -->
+                                <div class="consignatory_row">
+                                    <img src="@/views/resources/img/icons/multisig.svg" class="icon-left-button" />
+                                    <div class="overflow-elipsis">
+                                        <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
+                                    </div>
+                                </div>
+                                <div class="consignatory_row">
+                                    <img src="@/views/resources/img/icons/multisig.svg" class="icon-left-button" />
+                                    <div class="overflow-elipsis">
+                                        <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
+                                    </div>
+                                </div>
+                                <div class="consignatory_row">
+                                    <img src="@/views/resources/img/icons/multisig.svg" class="icon-left-button" />
+                                    <div class="overflow-elipsis">
+                                        <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    <div class="detail-row" style="margin-top: 1rem">
+                        <div class="bottom-buttons-container">
+                            <button type="button" class="centered-button button-style inverted-button danger-button">Delete Account</button>
+                            <button type="button" class="centered-button button-style inverted-button ">Hide Account</button>
+                        </div>
+                    </div>
+                </div>            
             </div>
         </div>
 
@@ -71,5 +106,30 @@ export default class AccountDetailsPage extends AccountDetailsPageTs {}
 </script>
 
 <style lang="less" scoped>
+
 @import './AccountDetailsPage.less';
+
+.title {
+    color:@primary;
+    font-size: 18px;
+}
+
+.bottom-buttons-container {
+    margin-left: auto;
+    margin-right: 1em;
+    width: 50%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+.bottom-buttons-container button {
+    margin: 0 0.5em;
+}
+
+.overflow-elipsis {
+    display: inline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 </style>
