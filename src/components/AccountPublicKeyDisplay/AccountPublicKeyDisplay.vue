@@ -1,7 +1,7 @@
 <template>
     <div class="account-detail-row-3cols">
         <span class="label">{{ $t('account_public_key') }}:</span>
-        <div v-if="account" class="value accountPublicKey " style="width:1em !important;">
+        <div v-if="account" class="value accountPublicKey">
             {{ account.publicKey }}
         </div>
         <ButtonCopyToClipboard v-if="account" v-model="account.publicKey">
