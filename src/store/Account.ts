@@ -433,7 +433,6 @@ export default {
             commit('multisigAccountsInfo', multisigAccountsInfo);
             commit('currentAccountMultisigInfo', currentAccountMultisigInfo);
             commit('currentSignerMultisigInfo', currentSignerMultisigInfo);
-            // commit('multisigAccountGraph', multisigAccountGraph);
 
             // REMOTE CALL
             const getAccountsInfoPromise = repositoryFactory.createAccountRepository().getAccountsInfo(knownAddresses).toPromise();
