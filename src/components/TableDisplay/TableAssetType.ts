@@ -15,7 +15,7 @@
  */
 
 export enum TableAssetType {
-  Mosaic = 'mosaic',
-  Namespace = 'namespace',
-  Metadata = 'metadata',
+    Mosaic = 'mosaic',
+    Namespace = 'namespace',
+    Metadata = 'metadata',
 }

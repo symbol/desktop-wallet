@@ -71,7 +71,7 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
             signers: 'account/signers',
             isFetchingNamespaces: 'namespace/isFetchingNamespaces',
             isFetchingMosaics: 'mosaic/isFetchingMosaics',
-            isFetchingMetadatas: "metadata/isFetchingMetadatas"
+            isFetchingMetadatas: 'metadata/isFetchingMetadatas',
         }),
     },
 })
@@ -237,7 +237,7 @@ export class TableDisplayTs extends Vue {
      * @return {AssetTableService}
      */
     protected getService(): AssetTableService {
-        switch(this.assetType) {
+        switch (this.assetType) {
             case TableAssetType.Mosaic:
                 return new MosaicTableService(this.currentHeight, this.holdMosaics, this.networkConfiguration);
 
@@ -246,7 +246,7 @@ export class TableDisplayTs extends Vue {
 
             case TableAssetType.Metadata:
                 return new MetadataTableService(this.currentHeight, this.attachedMetadatas, this.networkConfiguration);
-            
+
             default:
                 throw new Error(`Asset type '${this.assetType}' does not exist in TableDisplay.`);
         }
@@ -329,7 +329,7 @@ export class TableDisplayTs extends Vue {
      * @returns {void}
      */
     private async refresh(): Promise<void> {
-        switch(this.assetType) {
+        switch (this.assetType) {
             case TableAssetType.Mosaic:
                 await this.$store.dispatch('mosaic/LOAD_MOSAICS');
                 break;

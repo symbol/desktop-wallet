@@ -1,9 +1,6 @@
 <template>
     <div class="login-profile-wrapper">
-        <VideoBackground
-            class="video-background-section"
-            :src="require('@/views/resources/videos/symbol_3d_rotate.mp4')"
-        >
+        <VideoBackground class="video-background-section" :src="require('@/views/resources/videos/symbol_3d_rotate.mp4')">
             <ValidationObserver v-slot="{ handleSubmit }" slim>
                 <form onsubmit="event.preventDefault()">
                     <div class="switch-language-container">
@@ -108,7 +105,7 @@
                                 {{ $t('register') }}
                             </div>
                         </div>
-                    </div>                   
+                    </div>
                 </form>
             </ValidationObserver>
             <span class="version-panel">{{ $t('version') }}: {{ packageVersion }}</span>

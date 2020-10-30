@@ -33,15 +33,13 @@ export class MetadataModel {
     public readonly value: string;
     public readonly targetId?: MosaicId | NamespaceId | undefined;
 
-    constructor(
-      metadata: Metadata,
-    ) {
-      this.metadataId = metadata.id;
-      this.sourceAddress = metadata.metadataEntry.sourceAddress;
-      this.metadataType = metadata.metadataEntry.metadataType;
-      this.scopedMetadataKey = metadata.metadataEntry.scopedMetadataKey;
-      this.targetAddress = metadata.metadataEntry.targetAddress;
-      this.targetId = metadata.metadataEntry.targetId;
-      this.value = metadata.metadataEntry.value;
+    constructor(metadata: Metadata) {
+        this.metadataId = metadata.id;
+        this.sourceAddress = metadata.metadataEntry.sourceAddress;
+        this.metadataType = metadata.metadataEntry.metadataType;
+        this.scopedMetadataKey = metadata.metadataEntry.scopedMetadataKey;
+        this.targetAddress = metadata.metadataEntry.targetAddress;
+        this.targetId = metadata.metadataEntry.targetId;
+        this.value = metadata.metadataEntry.value;
     }
 }

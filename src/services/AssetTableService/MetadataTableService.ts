@@ -43,18 +43,17 @@ export class MetadataTableService extends AssetTableService {
         ];
     }
 
-  public getTableRows(): any[] {
-    const metadatas: MetadataModel[] = this.metadatas;
+    public getTableRows(): any[] {
+        const metadatas: MetadataModel[] = this.metadatas;
 
-    return metadatas.map((metadataModel) => {
-
-      return {
-        hexId: metadataModel.metadataId,
-        scopedMetadataKey: metadataModel.scopedMetadataKey,
-        targetAddress: metadataModel.targetAddress,
-        targetId: metadataModel.targetId,
-        value: metadataModel.value
-      };
-    });
-  }
+        return metadatas.map((metadataModel) => {
+            return {
+                hexId: metadataModel.metadataId,
+                scopedMetadataKey: metadataModel.scopedMetadataKey,
+                targetAddress: metadataModel.targetAddress,
+                targetId: metadataModel.targetId,
+                value: metadataModel.value,
+            };
+        });
+    }
 }

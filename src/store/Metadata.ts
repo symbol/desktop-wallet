@@ -85,7 +85,7 @@ export default {
             await Lock.uninitialize(callback, { getters });
         },
 
-        async LOAD_METADATAS({ commit, rootGetters}) {
+        async LOAD_METADATAS({ commit, rootGetters }) {
             const repositoryFactory = rootGetters['network/repositoryFactory'];
             const generationHash = rootGetters['network/generationHash'];
             const metadataType = rootGetters['metadata/type'];
@@ -101,6 +101,6 @@ export default {
                     commit('metadatas', { metadatas, currentSignerAddress });
                 })
                 .add(() => commit('isFetchingMetadatas', false));
-        }
-    }
-}
+        },
+    },
+};
