@@ -133,7 +133,7 @@ import encryptedMessage from '@/views/resources/img/icons/encrypted-message.png'
 // @ts-ignore
 import enterprise from '@/views/resources/img/icons/enterprise.png';
 // @ts-ignore
-import explorer from '@/views/resources/img/icons/explorer.png';
+import explorer from '@/views/resources/img/newicons/NavExplorer.svg';
 // @ts-ignore
 import fingerprint from '@/views/resources/img/icons/fingerprint.png';
 // @ts-ignore
@@ -191,7 +191,7 @@ import send from '@/views/resources/img/icons/send.png';
 // @ts-ignore
 import sent from '@/views/resources/img/icons/sent.png';
 // @ts-ignore
-import settings from '@/views/resources/img/icons/settings.png';
+import settings from '@/views/resources/img/newicons/NavSettings.svg';
 // @ts-ignore
 import signatureRequired from '@/views/resources/img/icons/signature-required.png';
 // @ts-ignore

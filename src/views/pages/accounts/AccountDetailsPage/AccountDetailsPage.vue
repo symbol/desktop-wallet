@@ -7,7 +7,7 @@
             <div class="right-container">
                 <div class="account-details-grid">
                     <div class="detail-row">
-                        <AccountNameDisplay v-if="currentAccount" :account="currentAccount" :editable="true" />
+                        <AccountNameDisplay v-if="currentAccount" :account="currentAccount" :editable="true"/>
                     </div>
 
                     <div class="detail-row">
@@ -49,39 +49,22 @@
                     <div class="detail-row">
                         <AccountAliasDisplay :account="currentAccount" />
                     </div>
-                </div>
 
+                    <!-- TODO : Make a "CosignatoryDisplay" component -->
+                    <div class="detail-row" style="margin-top:1; max-height:25vh; overflow-y: auto; overflow-x: hidden;">
+                        <div class="account-detail-row">
+                            <div class="account-detail-row-3cols detail-row">
+                                <span class="label">Cosignatory of:</span>
+                                <span class="value consignatory_row">
+                                    <img src="@/views/resources/img/icons/multisig.svg" class="icon-left-button" />
+                                    YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu
+                                </span>
 
-                
-                <!-- TODO : Make a "CosignatoryDisplay" component -->
-                <div class="detail-row" style="margin-top:1; max-height:25vh; overflow-y: auto; overflow-x: hidden;">
-                    <div class="account-detail-row">
-                            <div class="account-detail-row-3cols">
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                <span class="title">Cosignatory of:</span>
-                                <span class="title">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
                             </div>
+                        </div>
                     </div>
                 </div>
+
 
                 <br>
                 <br>
