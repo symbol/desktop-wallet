@@ -8,17 +8,20 @@
     .transaction-list-filter-container {
         margin-right: 0.2rem;
         min-width: 2rem;
+        color: @white !important;
 
         /deep/.ivu-select {
             .ivu-select-selection {
                 font-size: @normalFont;
-
+                border:none !important;
                 &:hover {
-                    color: @black;
-                    background-color: @white;
+                    color: @primary;
 
+                    .ivu-icon-ios-arrow-down {
+                        color: @primary !important;
+                    }
                     .ivu-icon-ios-arrow-down::before {
-                        color: @black !important;
+                        color: @primary !important;
                     }
                     .ivu-select-prefix {
                         color: @white;
@@ -27,7 +30,11 @@
 
                 & {
                     background-color: @grayLightest;
-                    color: @black;
+                    color: @primary;
+                }
+
+                .ivu-icon-ios-arrow-down {
+                        color: @primary !important;
                 }
 
                 .ivu-select-prefix {
@@ -87,4 +94,19 @@
         align-items: center;
         cursor: pointer;
     }
+}
+
+.transaction-list-search-container {
+    margin-right: 0.2rem;
+    background-color: @grayLightest;
+    border: none;
+    border-radius: @buttonBorderRadius;
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-size: @normalFont;
+    color: @primary;
+    opacity: 10;
 }
