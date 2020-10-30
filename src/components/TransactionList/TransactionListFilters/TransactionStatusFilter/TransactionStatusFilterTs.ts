@@ -2,12 +2,16 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { Signer } from '@/store/Account';
 import { FilterOption, TransactionFilterOptions } from '@/store/Transaction';
+import { Checkbox } from 'view-design';
 
 @Component({
     computed: {
         ...mapGetters({
             currentSigner: 'account/currentSigner',
         }),
+    },
+    components: {
+        Checkbox,
     },
 })
 export class TransactionStatusFilterTs extends Vue {

@@ -60,9 +60,6 @@ export class TransactionListFiltersTs extends Vue {
         }
     }
 
-    protected onStatusSelectorChange(filter: TransactionGroupState) {
-        this.$store.commit('transaction/setDisplayedTransactionStatus', filter);
-    }
     public refresh() {
         this.$store.dispatch('transaction/LOAD_TRANSACTIONS');
     }
