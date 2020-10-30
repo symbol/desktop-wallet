@@ -411,6 +411,12 @@ export default {
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
             const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
 
+            // update multisig flag in currentAccount if
+            if (currentAccountMultisigInfo && currentAccountMultisigInfo.isMultisig() && currentAccount.isMultisig) {
+                const accountService = new AccountService();
+                accountService.updateIsMultisig(currentAccount, true);
+            }
+
             const signers = new MultisigService().getSigners(
                 networkType,
                 knownAccounts,
