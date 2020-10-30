@@ -440,9 +440,8 @@
     // width: auto !important;
     font-size: @normalFont;
     font-weight: bold;
-    border-radius: 0.06rem;
+    border-radius: @buttonBorderRadius;
     cursor: pointer;
-    text-transform: uppercase;
 }
 
 .round-button {
@@ -475,9 +474,10 @@
 */
 
 .inverted-button {
-    border: 3px solid @primary;
-    background: @white;
-    color: @primary;
+    border: none !important;
+    background: @primary;
+    color: white;
+    letter-spacing: 0.1em;
 }
 
 .inverted-button:disabled {
@@ -490,6 +490,11 @@
     background: @grayDark;
     color: @white;
     border: 2px solid @grayDark;
+}
+
+.danger-button {
+    background-color: @pink;
+
 }
 
 /*
