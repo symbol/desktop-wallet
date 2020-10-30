@@ -14,9 +14,23 @@
  *
  */
 @import '../../views/resources/css/variables.less';
+.account-detail-row {
+    display: grid;
+    grid-template-columns: 1.4rem auto;
+}
+.edit-button {
+    height: 0.35rem !important;
+    padding: 0 0.3rem;
+}
 
 .trigger-accountlink {
-    font-size: @smallFont !important;
+    font-size: @minimumFont !important;
     color: @purpleDark;
-    padding: 0 0.2rem !important;
+}
+
+.navbar-icon {
+    display: inline;
+    margin-right: 10px;
+    width: 0.15rem;
+    height: 0.15rem;
 }
