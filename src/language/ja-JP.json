@@ -380,6 +380,7 @@
     "mosaic_not_set": "モザイクを選択してください",
     "mosaics_list": "モザイクリスト",
     "move_your_mouse": "複雑さの高いランダムなニーモニックパス語群を生成するためにマウスを動かしてください。",
+    "multisig_account_graph": "マルチシグニチャツリー",
     "multisig_accounts_can_not_send_a_transaction_by_themselves": "マルチシグアカウントはトランザクションを開始できません。連署者のアカウントを使用してください。",
     "namespace": "ネームスペース",
     "namespace_and_sub_namespace": "名前空間とサブ名前空間",
