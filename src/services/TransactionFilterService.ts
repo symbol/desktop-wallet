@@ -20,7 +20,7 @@ import { TransactionFilterOptionsState, TransactionState } from '@/store/Transac
 /**
  * TransactionFilter used for filtering transactions by group and sent status.
  */
-export class TransactionFilter {
+export class TransactionFilterService {
     /**
      * Filters transactions depends of selected filter options.
      * @param state for extracting transactions filter options and list filtered by group.
@@ -80,7 +80,9 @@ export class TransactionFilter {
         return transactions.filter((transaction) => {
             if ((transaction as any).recipientAddress && (transaction as any).recipientAddress.address) {
                 if (filterOptions.isSentSelected) {
-                    return (transaction as any).recipientAddress.address !== currentSignerAddress;
+                    if ((transaction as any).signer) {
+                        return (transaction as any).signer.address.plain() === currentSignerAddress;
+                    }
                 }
 
                 if (filterOptions.isReceivedSelected) {

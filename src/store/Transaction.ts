@@ -34,7 +34,7 @@ import * as _ from 'lodash';
 
 // internal dependencies
 import { AwaitLock } from './AwaitLock';
-import { TransactionFilter } from '@/services/TransactionFilterService';
+import { TransactionFilterService } from '@/services/TransactionFilterService';
 
 const Lock = AwaitLock.create();
 
@@ -212,7 +212,7 @@ export default {
                 state.filterOptions = new TransactionFilterOptionsState();
             }
 
-            state.filteredTransactions = TransactionFilter.filter(state, currentSignerAddress);
+            state.filteredTransactions = TransactionFilterService.filter(state, currentSignerAddress);
         },
     },
     actions: {

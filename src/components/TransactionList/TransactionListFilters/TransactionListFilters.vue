@@ -1,7 +1,7 @@
 <template>
     <div class="transaction-list-filters-container">
         <div class="transaction-list-filter-container">
-            <TransactionStatusFilter @status-change="onStatusSelectorChange" />
+            <TransactionStatusFilter />
         </div>
         <div v-if="signers.length > 1" class="transaction-list-filter-container">
             <SignerFilter :signers="signers" @signer-change="onSignerSelectorChange" />
