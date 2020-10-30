@@ -2,7 +2,6 @@
     <div class="table-container">
         <div class="upper-section-container">
             <div class="table-title-container section-title">
-                <slot name="table-title" />
                 <div class="user-operation">
                     <Checkbox v-model="showExpired" class="table-filter-item-container">
                         <span v-show="assetType === 'mosaic'">{{ $t('show_expired_mosaics') }}</span>
