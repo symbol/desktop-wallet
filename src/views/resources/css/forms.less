@@ -16,8 +16,8 @@
 
 @import 'variables';
 
-@formFieldHeight: 0.45rem;
-@formLabelWidth: 2.4rem;
+@formFieldHeight: 0.3rem;
+@formLabelWidth: 1.7rem;
 @formInputsWidth: 8rem;
 
 /*************************************************************
@@ -298,15 +298,15 @@
 .inputs-container {
     align-items: center;
     width: 100%;
-    height: 100%;
+    height: @formFieldHeight;
     .ivu-tooltip {
         width: 100%;
-        height: 100%;
+        height: @formFieldHeight;
         border-radius: 0.04rem;
         background: #f2f2f2;
         .ivu-tooltip-rel {
             width: 100%;
-            height: 100%;
+            height: @formFieldHeight;
             border: none;
             outline: none;
         }
@@ -328,7 +328,7 @@
 
 .textarea-style {
     outline: none;
-    padding: 0.1rem 0.2rem;
+    padding: 0.06rem 0.2rem;
     font-size: @smallerFont;
     border-radius: 0.04rem;
     background-color: @grayLightest;
@@ -350,7 +350,6 @@
 
     .ivu-select-selection {
         box-shadow: unset;
-        padding-top: 0.07rem;
         border: unset;
         background: @grayLightest;
         border-radius: 3.4px;
@@ -369,14 +368,13 @@
 
     .ivu-select-dropdown {
         min-width: unset !important;
-        margin: 0.12rem 0;
         left: 0px !important;
         width: 100%;
         background-color: @grayLightest;
+        margin: 0 !important;
     }
 
     .ivu-select-arrow {
-        top: 66%;
     }
 
     .ivu-select-placeholder {
