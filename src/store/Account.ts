@@ -62,6 +62,7 @@ interface AccountState {
     currentAccount: AccountModel;
     currentAccountAddress: Address;
     currentAccountMultisigInfo: MultisigAccountInfo;
+    multisigAccountGraph: MultisigAccountInfo[][];
     isCosignatoryMode: boolean;
     signers: Signer[];
     currentSigner: Signer;
@@ -97,6 +98,7 @@ const accountState: AccountState = {
     multisigAccountsInfo: [],
     subscriptions: {},
     currentRecipient: null,
+    multisigAccountGraph: null,
 };
 
 /**
@@ -128,6 +130,7 @@ export default {
         getSubscriptions: (state: AccountState) => state.subscriptions,
         currentRecipient: (state: AccountState) => state.currentRecipient,
         currentAccountAliases: (state: AccountState) => state.currentAccountAliases,
+        multisigAccountGraph: (state: AccountState) => state.multisigAccountGraph,
     },
     mutations: {
         setInitialized: (state: AccountState, initialized: boolean) => {
@@ -181,6 +184,10 @@ export default {
 
         setSubscriptions: (state: AccountState, subscriptions: Record<string, SubscriptionType[]>) => {
             state.subscriptions = subscriptions;
+        },
+
+        multisigAccountGraph: (state: AccountState, multisigAccountGraph) => {
+            state.multisigAccountGraph = multisigAccountGraph;
         },
         updateSubscriptions: (state: AccountState, payload: { address: string; subscriptions: SubscriptionType }) => {
             const { address, subscriptions } = payload;
@@ -389,6 +396,20 @@ export default {
                 )
                 .toPromise();
 
+            // sorted array to be represented in multisig tree
+            const getMultisigAccountGraphArraySortedPromise = repositoryFactory
+                .createMultisigRepository()
+                .getMultisigAccountGraphInfo(currentAccountAddress)
+                .pipe(
+                    map((g) => {
+                        return MultisigService.getMultisigGraphArraySorted(g.multisigEntries);
+                    }),
+                    catchError(() => {
+                        return of([]);
+                    }),
+                )
+                .toPromise();
+
             // REMOTE CALL
             const aliasPromise = repositoryFactory
                 .createNamespaceRepository()
@@ -398,8 +419,8 @@ export default {
             const aliases = await aliasPromise;
             commit('currentAccountAliases', aliases);
 
+            const multisigAccountGraph: MultisigAccountInfo[][] = await getMultisigAccountGraphArraySortedPromise;
             const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise;
-
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
             const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
 
@@ -425,6 +446,7 @@ export default {
             commit('multisigAccountsInfo', multisigAccountsInfo);
             commit('currentAccountMultisigInfo', currentAccountMultisigInfo);
             commit('currentSignerMultisigInfo', currentSignerMultisigInfo);
+            commit('multisigAccountGraph', multisigAccountGraph);
 
             // REMOTE CALL
             const getAccountsInfoPromise = repositoryFactory.createAccountRepository().getAccountsInfo(knownAddresses).toPromise();
