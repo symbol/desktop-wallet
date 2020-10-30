@@ -53,7 +53,7 @@
                     <div class="detail-row">
                         <div class="account-detail-row">
                             <div>
-                                <span class="title">Cosignatory of:</span>
+                                <span class="title">{{ $t('cosignatory_of') }}</span>
                             </div>
                             <div class="account-detail-cosignatory" style="overflow-x: hidden; max-height: 1rem;">
                                 <!-- TODO : Dynamic content -->
@@ -80,8 +80,8 @@
                     </div>
                     <div class="detail-row" style="margin-top: 1rem">
                         <div class="bottom-buttons-container">
-                            <button type="button" class="centered-button button-style inverted-button danger-button">Delete Account</button>
-                            <button type="button" class="centered-button button-style inverted-button ">Hide Account</button>
+                            <button type="button" class="centered-button button-style inverted-button danger-button">{{ $t('delete_account') }}</button>
+                            <button type="button" class="centered-button button-style inverted-button ">{{ $t('hide_account') }}</button>
                         </div>
                     </div>
                 </div>            

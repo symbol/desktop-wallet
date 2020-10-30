@@ -11,7 +11,7 @@
         <div v-else>
             <div class="value">
                 <button type="button" class="show-button" @click="onClickDisplay">
-                    Show
+                    {{$t('show_button')}}
                 </button>
             </div>
         </div>

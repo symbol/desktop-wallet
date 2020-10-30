@@ -15,6 +15,23 @@
     border-radius: @borderRadius;
 }
 
+.left-top-container {
+        height: calc(65% - 0.15rem);
+        background-color: white;
+        overflow: hidden;
+        border-radius: @borderRadius;
+}
+
+.left-bottom-container {
+    display: grid;
+    height: calc(35% - 0.15rem);
+    grid-template-rows: 0.8rem auto 0.5rem;
+    background-color: white;
+    overflow: hidden;
+    border-radius: @borderRadius;
+    margin-top: 0.3rem;
+}
+
 .right-container {
     display: grid;
     grid-template-columns: 100%;
