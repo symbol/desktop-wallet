@@ -3,10 +3,10 @@
         <div class="label">{{ $t('account_name') }}:</div>
        
         <div class="value field-name">
+            <span v-if="account" class="accountName">{{ account.name }}</span>
             <button type="button" class="edit-button" @click.stop="hasNameFormModal = true">
                 <Icon type="md-create" />
             </button>
-            <span v-if="account" class="accountName">{{ account.name }}</span>
         </div>
 
         <ModalFormAccountNameUpdate v-if="hasNameFormModal" :visible="hasNameFormModal" @close="hasNameFormModal = false" />
