@@ -8,7 +8,7 @@
             </span>
         </div>
         <div class="bottom-container">
-            <button class="inverted-button pl-2 pr-2" style="cursor: pointer;">
+            <button class="inverted-button padding-1" style="cursor: pointer;">
                 <!-- TODO: Add onClick action. -->
                 {{$t('stop_harvesting')}}
             </button>
