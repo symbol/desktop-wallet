@@ -41,12 +41,6 @@
                             :title="$t('accounts_links_faucet')"
                             class="level-item navbar-item"
                         />
-                        <!--<div class="level-item navbar-item debug-console-trigger" @click="hasDebugConsoleModal = true">
-                    <span>&nbsp;{{ $t('top_window_console') }}</span>
-                </div>-->
-                        <!--<DebugConsoleButton class="level-item navbar-item" />-->
-                        <!--<PeerSelector class="level-item navbar-item" />-->
-                        <!--<LanguageSelector class="level-item navbar-item" />-->
                         <AccountSelectorField class="level-item navbar-item" @input="onChangeAccount" />
                         <Settings class="level-item navbar-item" />
                     </div>

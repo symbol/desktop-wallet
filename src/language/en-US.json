@@ -701,5 +701,6 @@
     "web_wallet_warning": "This WEB wallet is for demonstration use only!",
     "welcome": "Welcome",
     "word": "Word",
-    "x_seconds": "{seconds}s."
+    "x_seconds": "{seconds}s.",
+    "aggregate_send": "Send aggregate"
 }
