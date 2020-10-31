@@ -556,6 +556,7 @@
     "select_accounts": "Select Accounts",
     "select_all": "Check all",
     "send": "Send",
+    "send_aggregate":"Send Aggregate",
     "sender": "From",
     "set_account_name": "Enter a profile name",
     "set_default_explorer": "The url entered is not valid, a default url has been set for you.",

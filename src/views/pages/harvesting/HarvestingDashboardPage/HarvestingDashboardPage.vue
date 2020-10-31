@@ -44,7 +44,8 @@ export default class HarvestingDashboardPage extends Vue {}
 @import './HarvestingDashboardPage.less';
 
 .header-container-placeholder {
-    padding: 0.17rem 0 0.4rem 0.2rem;
+    padding: 0 0.4rem;
+    margin: 0.2rem 0;
     .section-title {
         font-weight: 600;
         color: @purpleDark;

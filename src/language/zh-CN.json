@@ -556,6 +556,7 @@
     "select_all": "全选",
     "send": "发送",
     "sender": "发送者",
+    "send_aggregate":"发送汇总",
     "set_account_name": "设置账户名",
     "set_default_explorer": "输入的url不合法，已为您设置默认url",
     "set_explorer_link": "默认区块浏览器",

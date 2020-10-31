@@ -556,6 +556,7 @@
     "select_all": "すべて選択",
     "send": "送信",
     "sender": "送信者",
+    "send_aggregate":"集計を送信",
     "set_account_name": "プロファイル名の入力",
     "set_default_explorer": "入力されたURLは無効です。既定のURLが設定されています。",
     "set_explorer_link": "エクスプローラリンクの設定",

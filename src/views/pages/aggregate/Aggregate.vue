@@ -3,9 +3,9 @@
         <div class="lef-container">
             <div class="left-top-container">
                 <div class="title-container">
-                    <span class="title-style">
+                    <h1 class="title-style">
                         {{$t('transaction_type_title')}}
-                    </span>
+                    </h1>
                 </div>
                 <!--- TODO: ADD onClick Action to all add_button-->
                 <div class="transaction-type-container">
@@ -49,9 +49,9 @@
             </div>
             <div class="left-bottom-container">
                 <div class="title-container">
-                    <span class="title-style">
+                    <h1 class="title-style">
                         {{$t('my_transaction_title')}}
-                    </span>
+                    </h1>
                 </div>
                 <!-- TODO: DYNAMIC TRANSACTION LIST & REMOVE onClick Action to all remove_button -->
                 <div class="transaction-list-container">
@@ -59,7 +59,16 @@
                         <span class="img_container">
                             <img src="@/views/resources/img/icons/transactions.svg" alt />
                         </span>
-                        <span class="transfer_name">asdfdsagfdga</span>
+                        <span class="transfer_name">Simple transaction 1</span>
+                        <button class="remove_button">
+                            <img src="@/views/resources/img/icons/bin.svg" alt />
+                        </button>
+                    </div>
+                    <div class="transfer_data">
+                        <span class="img_container">
+                            <img src="@/views/resources/img/icons/transactions.svg" alt />
+                        </span>
+                        <span class="transfer_name">Simple transaction 2</span>
                         <button class="remove_button">
                             <img src="@/views/resources/img/icons/bin.svg" alt />
                         </button>
@@ -67,20 +76,21 @@
                 </div>
                 <div class="bottom-container">
                     <button class="inverted-button pl-2 pr-2" style="cursor: pointer;">
-                        SEND AGGREGATE
+                        {{$t('send_aggregate')}}
                     </button>
                 </div>
             </div>
         </div>
         <div class="right-container">
+        <!-- TODO: TRANSFER FORM GOES HERE Same as Dashboard Transfer
+        <AggregateTransaction />-->
             <div class="title-container">
-                <span class="title-style">
-                    {{$t('simple_transfer_type')}}
-                </span>
+                <h1 class="title-style">
+                    <!---->
+                    Simple transaction 1
+                </h1>
                 <div class="transaction-form">
                     <div>
-                        <!-- TODO: TRANSFER FORM GOES HERE Same as Dashboard Transfer
-                        <AggregateTransaction />-->
                     </div>
                 </div>
             </div>
