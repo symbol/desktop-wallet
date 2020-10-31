@@ -1,7 +1,6 @@
 <template>
     <div class="finish-sec scroll" @keyup.enter="submit">
         <img src="@/views/resources/img/success.png" />
-        <span class="set-title"> {{ $t('creation_successful') }}</span>
         <div class="finish-col">
             <div class="finish-left">
                 <p class="text1">
@@ -15,7 +14,7 @@
                     {{ $t('if_you_need_to_back_up_your_mnemonics_again_you_can') }}
                 </p>
                 <div class="jump-btn">
-                    <div class="flex-container" style="width: 100%;">
+                    <div style="width: 100%;">
                         <button type="button" class="button-style back-button" @click="$router.back()">
                             {{ $t('back') }}
                         </button>

@@ -48,7 +48,11 @@
 
                     <div class="detail-row">
                         <AccountAliasDisplay :account="currentAccount" />
-                    </div>                
+                    </div>
+
+                    <div class="graph-row">
+                        <AccountMultisigGraph v-if="currentAccount" :account="currentAccount" :visible="true" />
+                    </div>
                     <!-- TODO : Make a "CosignatoryDisplay" component -->
                     <div class="detail-row">
                         <div class="account-detail-row">
@@ -84,7 +88,7 @@
                             <button type="button" class="centered-button button-style inverted-button ">{{ $t('hide_account') }}</button>
                         </div>
                     </div>
-                </div>            
+                </div>
             </div>
         </div>
 

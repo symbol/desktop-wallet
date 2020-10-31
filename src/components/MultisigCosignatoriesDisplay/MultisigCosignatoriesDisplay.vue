@@ -74,12 +74,12 @@
                     <div
                         v-for="({ address }, index) in addModifications"
                         :key="index"
-                        :class="['row-cosignatory-modification-display', 'inputs-container', 'mx-1', 'pl-2', 'pr-2', 'green-background']"
+                        :class="['row-cosignatory-modification-display', 'inputs-container', 'mx-1', 'pl-2', 'pr-2', 'accent-pink-background']"
                     >
                         <div class="cosignatory-address-container">
                             <span>{{ address.pretty() }}</span>
                         </div>
-                        <Icon type="md-trash" size="21" class="icon-button" @click="onUndoModification(address)" />
+                        <img src="@/views/resources/img/icons/bin.svg" size="21" class="icon-button" style="font-size: 0.3rem;" @click="onUndoModification(address)">
                     </div>
                 </template>
             </FormRow>

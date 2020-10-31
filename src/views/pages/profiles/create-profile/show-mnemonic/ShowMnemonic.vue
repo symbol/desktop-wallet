@@ -16,19 +16,19 @@
                         <div v-else>
                             <div class="mnemonic-list">
                                 <span v-for="(m, index) in mnemonicWordsList" :key="index">{{ m }}</span>
-                                <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" />
                             </div>
-                            <div class="mnemonic-qrcode">
-                                <img id="qrImg" :src="qrBase64" alt="Mnemonic QR code" />
-                                <span>
-                                    <a :href="qrBase64" :download="'qr_account_mnemonic_' + currentProfile.profileName">
-                                        {{ $t('button_download_qr') }}
-                                    </a>
-                                </span>
-                            </div>
+                            <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" />
                         </div>
                     </div>
                 </MnemonicDisplay>
+                <div v-if="showMnemonic" class="mnemonic-qrcode">
+                    <img id="qrImg" :src="qrBase64" alt="Mnemonic QR code" />
+                    <span>
+                        <a :href="qrBase64" :download="'qr_account_mnemonic_' + currentProfile.profileName">
+                            {{ $t('button_download_qr') }}
+                        </a>
+                    </span>
+                </div>
                 <div class="form-line-container button-container">
                     <div class="flex-container mt-3">
                         <button
@@ -47,35 +47,6 @@
                         </button>
                     </div>
                 </div>
-            </div>
-            <div class="create-mnemonic-right">
-                <Alert type="warning" show-icon>
-                    {{ $t('do_not_disclose_title') }}
-                    <template slot="desc">
-                        {{ $t('do_not_disclose') }}
-                    </template>
-                </Alert>
-                <Alert type="success" show-icon>
-                    {{ $t('please_backup_mnemonic_passphrase_title') }}
-                    <template slot="desc">
-                        {{ $t('please_backup_mnemonic_passphrase') }}
-
-                        <div class="mnemonic-backup-options-desc">
-                            <span>
-                                <p>
-                                    <Icon type="md-download" />
-                                    {{ $t('mnemonic_backup_options_download_desc') }}
-                                </p>
-                            </span>
-                            <span>
-                                <p>
-                                    <Icon type="md-copy" />
-                                    {{ $t('mnemonic_backup_options_copy_desc') }}
-                                </p>
-                            </span>
-                        </div>
-                    </template>
-                </Alert>
             </div>
         </div>
     </div>

@@ -83,6 +83,7 @@
     .form-row-inner-container {
         display: grid;
         width: 100%;
+        align-items: center;
         height: 100%;
         min-height: @formFieldHeight;
         grid-template-columns: @formLabelWidth @formInputsWidth;
@@ -235,7 +236,7 @@
     display: grid;
     width: 100%;
     height: @formFieldHeight !important;
-    grid-template-columns: auto 0.4rem;
+    grid-template-columns: auto 0.2rem;
     grid-template-rows: 100%;
     font-size: 0.9em;
     padding-left: 0.05rem;
@@ -287,6 +288,10 @@
     height: 100%;
     grid-template-columns: auto 0.8rem;
     grid-template-rows: 100%;
+}
+
+.cosignatory-address-container {
+    color: @purpleDark;
 }
 
 .submit-button {

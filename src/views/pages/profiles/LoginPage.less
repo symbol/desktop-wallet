@@ -19,7 +19,7 @@
 .login-profile-wrapper {
     width: 100%;
     height: 100%;
-    background: linear-gradient(121deg, rgba(82, 0, 198, 1) 0%, rgba(78, 0, 167, 1) 100%);
+    background: linear-gradient(315.55deg, #44004e -1.68%, #5200c6 110.7%);
     opacity: 1;
     overflow: hidden;
     position: absolute;
@@ -27,183 +27,184 @@
     top: 0;
     z-index: 999;
 
-    .login-profile-background-img {
+    .video-background-section {
         width: 100%;
         height: 100%;
-        background-image: url('../../resources/banner.png');
         background-size: 100% 100%;
-        z-index: -999;
     }
 
     .welcome-box {
-        width: 12rem;
-        height: 5.39rem;
+        width: 17.2rem;
+        height: fit-content;
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
         margin: auto;
-        display: flex;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
         align-items: center;
 
         .banner-image {
-            height: 6.2rem;
-            width: 8rem;
-            background: linear-gradient(121deg, rgba(82, 0, 198, 1) 0%, rgba(78, 0, 167, 1) 100%);
+            width: 100%;
             color: @white;
-            padding: 0.3rem 0.4rem;
+            padding: 0.3rem 0.4rem 0.4rem 0.4rem;
+            padding-right: 2rem;
 
             .top-welcome-text {
                 display: block;
-                font-size: 0.7rem;
-                font-weight: bolder;
-                margin-top: 1.08rem;
-                padding-left: 0.37rem;
-                height: 0.85rem;
-                line-height: 0.85rem;
-            }
-
-            .top-to-symbol-text {
-                display: block;
-                font-size: 0.7rem;
-                font-weight: bolder;
-                padding-left: 0.37rem;
-                height: 0.85rem;
-                line-height: 0.85rem;
+                font-size: 0.6rem;
+                font-weight: 500;
+                height: 0.84rem;
+                line-height: 0.7rem;
+                letter-spacing: 1.5;
+                margin-bottom: 0.54rem;
+                cursor: context-menu;
+                user-select: none;
             }
 
             .bottom-welcome-text {
-                padding-top: 0.28rem;
-                padding-left: 0.37rem;
                 font-size: @biggerFont;
-                line-height: 0.5rem;
-                width: 7.3rem;
-            }
-        }
-    }
-
-    .login-card {
-        float: right;
-        width: 4.2rem;
-        height: 6.2rem;
-        padding: 0.4rem 0.21rem 0 0.21rem;
-        background-color: @white;
-        margin-right: 0.05rem;
-        position: relative;
-
-        /deep/.ivu-select {
-            border-bottom: 1px solid @border;
-
-            .ivu-select-dropdown {
-                top: unset !important;
-                left: unset !important;
-                width: 3.4rem !important;
-            }
-            .ivu-select-selection .ivu-select-placeholder,
-            .ivu-select-selection .ivu-select-selected-value {
-                color: @black !important;
-            }
-
-            .login-profile-network-type {
-                float: right;
-                color: @grayDark;
+                line-height: 0.38rem;
+                font-weight: 400;
+                cursor: context-menu;
+                user-select: none;
             }
         }
 
-        .img-box {
-            height: 2.65rem;
-            height: 0.72rem;
-            margin-bottom: 0.5rem;
-            background-repeat: no-repeat;
-            background-size: 2.65rem 0.72rem;
-            color: red;
-            background-position: 0 center;
-            background-image: url('../../resources/symbol_logo.png');
-        }
+        .login-card {
+            float: right;
+            width: 4.2rem;
+            height: 6.2rem;
+            padding: 0.4rem 0.31rem 0 0.31rem;
+            background-color: @white;
+            position: relative;
+            margin-right: 0.8rem;
+            border-radius: 10px;
 
-        .login-title {
-            font-size: 0.4rem;
-            font-weight: 400;
-            @black: rgba(51, 51, 51, 1);
-            margin-bottom: 0.3rem;
-        }
+            /deep/.ivu-select {
+                color: @purpleDark;
 
-        /deep/.ivu-tooltip {
-            width: 100%;
-        }
+                .ivu-select-dropdown {
+                    top: unset !important;
+                    left: unset !important;
+                    width: 3.4rem !important;
+                }
+                .ivu-select-selection .ivu-select-placeholder,
+                .ivu-select-selection .ivu-select-selected-value {
+                    color: @black !important;
+                }
 
-        /deep/input {
-            width: 100%;
-            height: 0.37rem;
-            background: @white;
-            border: none;
-            border-bottom: 1px solid @border;
-            padding-left: 0.11rem;
-            font-size: @normalFont;
-            border-radius: 0;
-            margin-top: 0.1rem;
-            padding-bottom: 0.05rem;
-        }
+                .login-profile-network-type {
+                    float: right;
+                    color: @grayDark;
+                }
+            }
 
-        .profile-name,
-        .input-password {
-            font-size: 0.22rem;
-            font-weight: 400;
-            color: @grayDark;
-        }
+            .img-box {
+                width: 2.3rem;
+                height: 0.72rem;
+                margin: 0 auto;
+                margin-bottom: 0.5rem;
+                background-repeat: no-repeat;
+                background-size: 2.3rem 0.72rem;
+                background-size: contain;
+                color: red;
+                background-position: 0 center;
+                background-image: url('../../resources/symbol_logo.png');
+            }
 
-        /deep/.ivu-input:focus {
-            box-shadow: none;
-        }
+            .login-title {
+                font-size: 0.23rem;
+                font-weight: bold;
+                text-align: center;
+                color: @purpleDark;
+                @black: rgba(51, 51, 51, 1);
+                margin-bottom: 0.3rem;
+            }
 
-        .profile-name {
-            margin-bottom: 0;
-        }
-
-        .input-password {
-            margin-top: 0.22rem;
-        }
-
-        input::-webkit-input-placeholder {
-            color: @grayLight;
-        }
-
-        .password-tip {
-            padding-top: 0.2rem;
-            font-size: @smallerFont;
-            font-weight: 400;
-            color: @purple;
-            line-height: 0.17rem;
-            display: flex;
-            min-height: 0.56rem;
-            .prompt {
+            /deep/.ivu-tooltip {
                 width: 100%;
-                background-color: transparent;
-                text-align: left;
             }
 
-            .create-profile {
+            /deep/input {
                 width: 100%;
-                background-color: transparent;
-                text-align: right;
+                height: 0.37rem;
+                background: @white;
+                border: none;
+                padding-left: 0.11rem;
+                font-size: @normalFont;
+                color: @purpleDark;
+                border-radius: 0;
+                margin-top: 0.1rem;
             }
-        }
 
-        .button {
-            width: 100%;
-            height: 0.58rem;
-            font-size: 0.28rem;
-            margin-top: 0.5rem;
-            line-height: 0.4rem;
-            border-radius: 0.05rem;
+            .profile-name,
+            .input-password {
+                font-size: 0.22rem;
+                color: @purpleDark;
+                font-weight: 400;
+            }
+
+            /deep/.ivu-input:focus {
+                box-shadow: none;
+            }
+
+            .profile-name {
+                margin-bottom: 0;
+            }
+
+            .input-password {
+                margin-top: 0.22rem;
+            }
+
+            input::-webkit-input-placeholder {
+                color: @grayLight;
+            }
+
+            .password-tip {
+                padding-top: 0.2rem;
+                font-size: @smallerFont;
+                font-weight: 400;
+                color: @purple;
+                line-height: 0.17rem;
+                display: flex;
+                min-height: 0.56rem;
+                .prompt {
+                    width: 100%;
+                    background-color: transparent;
+                    text-align: left;
+                }
+
+                .create-profile {
+                    width: 100%;
+                    background-color: transparent;
+                    text-align: right;
+                }
+            }
+
+            .button {
+                width: 1.8rem;
+                height: 0.4rem;
+                font-size: 0.18rem;
+                margin: 0 auto;
+                margin-top: 0.5rem;
+                line-height: 0.4rem;
+                border-radius: 0.05rem;
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(315.55deg, #44004e -1.68%, #5200c6 110.7%);
+            }
         }
     }
 
     .switch-language-container {
         width: 1rem;
         float: right;
-        margin: 0.35rem 0;
+        margin: 0.2rem;
     }
 
     /deep/.ivu-select-selection {
@@ -319,10 +320,29 @@
         color: @border;
         padding: 0.1rem 0;
     }
+
+    .version-panel {
+        position: absolute;
+        bottom: 0.2rem;
+        right: 0.2rem;
+        color: white;
+        font-size: @smallFont;
+        z-index: 3;
+    }
+
+    .powered_by_label {
+        position: absolute;
+        color: white;
+        font-size: @smallFont;
+        left: 0.2rem;
+        bottom: 0.2rem;
+        z-index: 3;
+    }
 }
 
 .profile-name-input {
     .ivu-input {
         background-color: transparent !important;
+        font-size: @smallerFont;
     }
 }

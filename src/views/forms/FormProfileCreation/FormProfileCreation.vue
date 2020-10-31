@@ -143,21 +143,6 @@
                 </form>
             </ValidationObserver>
         </FormWrapper>
-
-        <div class="right-hints-section">
-            <p class="text1">
-                {{ $t('profile_description') }}
-            </p>
-            <p class="text">
-                {{ $t('profile_description_tips1') }}
-            </p>
-            <p class="text">
-                {{ $t('profile_description_tips2') }}
-            </p>
-            <p class="text red">
-                {{ $t('profile_description_tips3') }}
-            </p>
-        </div>
     </div>
 </template>
 
@@ -176,8 +161,5 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
 .form-account-creation-container {
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-rows: 100%;
-    grid-template-columns: 10.4rem 20%;
 }
 </style>

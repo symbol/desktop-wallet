@@ -75,8 +75,8 @@
                     </div>
                 </div>
                 <div class="bottom-container">
-                    <button class="inverted-button pl-2 pr-2" style="cursor: pointer;">
-                        {{$t('send_aggregate')}}
+                    <button class="inverted-button padding-1" style="cursor: pointer;">
+                        {{ $t('aggregate_send') }}
                     </button>
                 </div>
             </div>
