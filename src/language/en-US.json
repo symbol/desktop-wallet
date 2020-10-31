@@ -688,5 +688,17 @@
     "welcome": "Welcome",
     "word": "Word",
     "x_seconds": "{seconds}s.",
-    "aggregate_send": "Send aggregate"
+    "aggregate_send": "Send aggregate",
+    "contact_name": "Name",
+    "contact_address": "Address",
+    "contact_phone": "Phone",
+    "contact_email": "Email",
+    "contact_notes": "Notes",
+    "add_contact": "Add contact",
+    "backup_address_book": "Back up address book",
+    "form_label_new_contact_name": "New contact name",
+    "form_label_new_contact_address": "New contact address",
+    "delete_confirmation_message": "Are you sure do you want to delete?",
+    "tab_accounts_accounts": "My accounts",
+    "tab_accounts_addressbook": "My contacts"
 }

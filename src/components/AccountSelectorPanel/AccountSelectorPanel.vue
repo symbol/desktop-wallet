@@ -1,12 +1,5 @@
 <template>
     <div class="account-switch-container">
-        <div class="account-switch-header-container">
-            <div class="account-switch-header-left-container">
-                <h1 class="section-title">
-                    {{ $t('account_management') }}
-                </h1>
-            </div>
-        </div>
         <div v-auto-scroll="'active-background'" class="account-switch-body-container scroll">
             <div
                 v-for="(item, index) in currentAccounts"

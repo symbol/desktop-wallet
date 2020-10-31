@@ -1,12 +1,13 @@
 <template>
     <div :class="['symbol-tab-container', direction === 'horizontal' ? 'horizontal' : 'vertical']">
-        <div v-for="(item, index) in items" :key="index" @click="$emit('selected', index)">
-            <div class="symbol-tab-nav">
-                <span :class="['nav-item', index === currentItemIndex ? 'active-item' : 'inactive-item']">{{
-                    $t('settings_tab_' + item.toLowerCase())
-                }}</span>
-            </div>
-        </div>
+        <span
+            v-for="(item, index) in items"
+            :key="index"
+            @click="$emit('selected', index)"
+            :class="['nav-item', index === currentItemIndex ? 'active-item' : 'inactive-item']"
+        >
+            {{ $t(translationPrefix + item.toLowerCase()) }}
+        </span>
     </div>
 </template>
 <script lang="ts">

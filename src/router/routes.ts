@@ -281,27 +281,7 @@ export const routes: AppRoute[] = [
                         },
                         // @ts-ignore
                         component: () => import('@/views/pages/accounts/AccountDetailsPage/AccountDetailsPage.vue'),
-                    },
-                    {
-                        path: '/backup',
-                        name: 'accounts.backup',
-                        meta: {
-                            protected: true,
-                            title: 'page_title_account_backup',
-                        },
-                        // @ts-ignore
-                        component: () => import('@/views/pages/accounts/AccountBackupPage/AccountBackupPage.vue'),
-                    },
-                    // {
-                    //   path: 'harvesting',
-                    //   name: 'wallet.harvesting',
-                    //   meta: {
-                    //     protected: true,
-                    //     title: 'page_title_account_harvesting',
-                    //   },
-                    //   // @ts-ignore
-                    //   component: () => import('@/views/pages/accounts/AccountHarvestingPage/AccountHarvestingPage.vue'),
-                    // },
+                    }
                 ],
             },
             {

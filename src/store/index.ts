@@ -32,6 +32,7 @@ import CommunityStore from '@/store/Community';
 import { onPeerConnection } from '@/store/plugins/onPeerConnection';
 // use AwaitLock for initialization routines
 import { AwaitLock } from '@/store/AwaitLock';
+import AddressBook from "@/store/AddressBook";
 
 const Lock = AwaitLock.create();
 
@@ -59,6 +60,7 @@ const AppStore = new Vuex.Store({
         statistics: StatisticsStore,
         community: CommunityStore,
         block: BlockStore,
+        addressBook: AddressBook,
     },
     plugins: [onPeerConnection],
     actions: {
@@ -74,6 +76,7 @@ const AppStore = new Vuex.Store({
                 await dispatch('mosaic/initialize');
                 await dispatch('namespace/initialize');
                 await dispatch('transaction/initialize');
+                await dispatch('addressBook/initialize');
             };
 
             // aquire async lock until initialized
