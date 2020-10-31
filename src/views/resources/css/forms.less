@@ -17,7 +17,7 @@
 @import 'variables';
 
 @formFieldHeight: 0.3rem;
-@formLabelWidth: 1.7rem;
+@formLabelWidth: 1.9rem;
 @formInputsWidth: 8rem;
 
 /*************************************************************
@@ -109,13 +109,15 @@
     word-spacing: 0px;
 
     .form-label {
+        padding-left: 0.7rem;
         font-style: normal;
         font-weight: 500;
-        font-size: 18px;
+        font-size: @bigFont;
+        font-family: @symbolFont;
         line-height: 25px;
         align-items: center;
-        text-align: right;
-        color: #5200c6;
+        text-align: left;
+        color: @purpleDark;
     }
 
     .form-label-description {
@@ -172,19 +174,18 @@
     display: grid;
     align-items: center;
     text-align: left;
-    font-size: 1em;
-    font-weight: 400;
-    color: @black;
-    height: 100%;
+    font-size: @bigFont;
+    color: @purpleDark;
+    font-family: @symbolFontLight;
 }
 
 .inline-field-description {
     display: grid;
     align-items: center;
     text-align: left;
-    font-weight: 400;
-    font-size: 1em;
-    color: @black;
+    font-size: @smallFont;
+    color: @purpleDark;
+    font-style: italic;
     height: 100%;
 }
 
@@ -201,7 +202,8 @@
     line-height: @formFieldHeight;
     width: 100%;
     display: block;
-    font-size: @smallerFont;
+    font-size: @smallFont;
+    color: @purpleDark;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -237,7 +239,7 @@
     font-size: 0.9em;
     padding-left: 0.05rem;
     font-weight: 400;
-    font-color: @blackLight;
+    font-color: @purpleDark;
 
     .cosignatory-removed {
         text-decoration: line-through;
@@ -254,7 +256,7 @@
     display: flex;
     justify-content: center;
     width: 97%;
-    color: @blackLight;
+    color: @purpleDark;
     font-size: 0.9em;
     font-weight: 400;
 }
@@ -319,7 +321,7 @@
     outline: none;
     padding-left: 0.2rem;
     padding-right: 0.15rem;
-    font-size: @smallerFont;
+    font-size: @smallFont;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -329,7 +331,7 @@
 .textarea-style {
     outline: none;
     padding: 0.06rem 0.2rem;
-    font-size: @smallerFont;
+    font-size: @smallFont;
     border-radius: 0.04rem;
     background-color: @grayLightest;
 }
@@ -338,7 +340,7 @@
     height: @formFieldHeight;
     line-height: @formFieldHeight;
     display: block;
-    font-size: @smallerFont !important;
+    font-size: @smallFont !important;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -356,10 +358,11 @@
     }
 
     .ivu-select-selected-value {
-        font-size: @smallerFont !important;
+        font-size: @smallFont !important;
         padding-left: 0;
         height: @formFieldHeight;
         line-height: @formFieldHeight;
+        color: @purpleDark;
     }
 
     .ivu-select-item-selected {
@@ -378,7 +381,7 @@
     }
 
     .ivu-select-placeholder {
-        font-size: @smallerFont;
+        font-size: @smallFont;
         padding-left: 0;
         height: @formFieldHeight;
         line-height: @formFieldHeight;
@@ -418,7 +421,7 @@
 
     .ivu-input {
         height: 0.4rem;
-        font-size: @smallerFont;
+        font-size: @smallFont;
         border-bottom: unset;
         padding: 0;
         background: #f2f2f2;
@@ -445,7 +448,7 @@
 .round-button {
     color: @primary;
     background-color: @white;
-    font-size: 0.45rem;
+    font-size: 0.3rem;
     border: none;
     outline: none;
     cursor: pointer;
@@ -692,4 +695,10 @@
             padding-left: 0.1rem;
         }
     }
+}
+.icon-left-button{
+    width: 0.15rem;
+    height: 0.15rem;
+    color: @purpleDark;
+    margin-right: 10px ;
 }
