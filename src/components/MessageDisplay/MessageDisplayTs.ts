@@ -24,6 +24,7 @@ import { mapGetters } from 'vuex';
 import { PlainMessage } from 'symbol-sdk';
 import { NamespaceId } from 'symbol-sdk';
 import { NotificationType } from '@/core/utils/NotificationType';
+import { AccountModel } from '@/core/database/entities/AccountModel';
 
 @Component({
     components: {
@@ -32,6 +33,7 @@ import { NotificationType } from '@/core/utils/NotificationType';
     },
     computed: {
         ...mapGetters({
+            currentAccount: 'account/currentAccount',
             currentRecipient: 'account/currentRecipient',
             linkedAddress: 'namespace/linkedAddress',
         }),
@@ -54,6 +56,10 @@ export class MessageDisplayTs extends Vue {
         default: true,
     })
     unannounced: boolean;
+    @Prop({
+        default: null,
+    })
+    signer: PublicAccount;
 
     private isEncrypted = false;
     private messageDisplay = '';
@@ -61,6 +67,8 @@ export class MessageDisplayTs extends Vue {
     private decryptedMessage: PlainMessage;
     private currentRecipient: PublicAccount;
     private linkedAddress: Address | null;
+    private signerRecipient?: string;
+    private currentAccount: AccountModel;
 
     /**
      * Hook called when the component is mounted
@@ -94,13 +102,13 @@ export class MessageDisplayTs extends Vue {
         if (this.recipient instanceof NamespaceId) {
             this.$store.dispatch('namespace/GET_LINKED_ADDRESS', this.recipient).then(() => {
                 if (this.linkedAddress) {
-                    this.decryptMessage(account.privateKey);
+                    this.decryptMessage(account.privateKey, this.linkedAddress);
                 } else {
                     this.$store.dispatch('notification/ADD_ERROR', this.$t(NotificationType.RECIPIENT_LINKED_ADDRESS_INVALID));
                 }
             });
         } else {
-            this.decryptMessage(account.privateKey);
+            this.decryptMessage(account.privateKey, this.recipient);
         }
     }
 
@@ -121,12 +129,19 @@ export class MessageDisplayTs extends Vue {
     /**
      * Get decrypted message
      * @param privateKey Current account private key
+     * @param recipient: recipient address.
      */
-    private decryptMessage(privateKey: string) {
-        this.$store.dispatch('account/GET_RECIPIENT', this.recipient as Address).then(() => {
-            this.decryptedMessage = EncryptedMessage.decrypt(this.message, privateKey, this.currentRecipient);
+    private decryptMessage(privateKey: string, recipient: Address) {
+        if (recipient.plain() === this.currentAccount.address) {
+            this.decryptedMessage = EncryptedMessage.decrypt(this.message, privateKey, this.signer);
             this.isEncrypted = false;
             this.messageDisplay = this.decryptedMessage.payload;
-        });
+        } else {
+            this.$store.dispatch('account/GET_RECIPIENT', this.recipient as Address).then(() => {
+                this.decryptedMessage = EncryptedMessage.decrypt(this.message, privateKey, this.currentRecipient);
+                this.isEncrypted = false;
+                this.messageDisplay = this.decryptedMessage.payload;
+            });
+        }
     }
 }

@@ -27,6 +27,7 @@
                     :incoming="item.value.incoming"
                     :recipient="item.value.recipient"
                     :unannounced="item.value.unannounced"
+                    :signer="item.value.signer"
                 />
             </span>
             <span v-else>
