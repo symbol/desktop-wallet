@@ -67,7 +67,6 @@ export class MessageDisplayTs extends Vue {
     private decryptedMessage: PlainMessage;
     private currentRecipient: PublicAccount;
     private linkedAddress: Address | null;
-    private signerRecipient?: string;
     private currentAccount: AccountModel;
 
     /**
@@ -132,6 +131,11 @@ export class MessageDisplayTs extends Vue {
      * @param recipient: recipient address.
      */
     private decryptMessage(privateKey: string, recipient: Address) {
+        /**
+         * If transaction recipient === current account use signer to decrypt message
+         * Otherwise use the recipient for decryption
+         * */
+
         if (recipient.plain() === this.currentAccount.address) {
             this.decryptedMessage = EncryptedMessage.decrypt(this.message, privateKey, this.signer);
             this.isEncrypted = false;
