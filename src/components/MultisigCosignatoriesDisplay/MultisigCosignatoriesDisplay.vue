@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="margin-bottom:0.3rem;">
         <FormRow v-if="!(multisig && multisig.cosignatoryAddresses.length) && !addModifications.length && !removeModifications.length">
             <template v-slot:inputs>
                 <div>
@@ -10,9 +10,11 @@
             </template>
         </FormRow>
 
-        <div class="rows-scroll-container mt-0">
+        <div class="form-row-inner-container">
             <!-- COSIGNATORIES -->
             <FormRow v-if="cosignatories && cosignatories.length">
+                <template v-slot:label>
+                </template>
                 <template v-slot:inputs>
                     <div
                         v-for="({ address }, index) in cosignatories"
