@@ -121,5 +121,10 @@ export default {
             commit('setSelectedContact', null);
             dispatch('SAVE_ADDRESS_BOOK');
         },
+
+        async RESOLVE_ADDRESS({ commit, dispatch, getters }, address) {
+            const addressBook: AddressBook = getters.getAddressBook;
+            return addressBook.getContactByAddress(address);
+        },
     },
 };
