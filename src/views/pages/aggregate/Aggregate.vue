@@ -3,9 +3,9 @@
         <div class="lef-container">
             <div class="left-top-container">
                 <div class="title-container">
-                    <h1 class="title-style">
+                    <span class="title-style">
                         {{$t('transaction_type_title')}}
-                    </h1>
+                    </span>
                 </div>
                 <!--- TODO: ADD onClick Action to all add_button-->
                 <div class="transaction-type-container">
@@ -49,9 +49,9 @@
             </div>
             <div class="left-bottom-container">
                 <div class="title-container">
-                    <h1 class="title-style">
+                    <span class="title-style">
                         {{$t('my_transaction_title')}}
-                    </h1>
+                    </span>
                 </div>
                 <!-- TODO: DYNAMIC TRANSACTION LIST & REMOVE onClick Action to all remove_button -->
                 <div class="transaction-list-container">
@@ -76,21 +76,20 @@
                 </div>
                 <div class="bottom-container">
                     <button class="inverted-button pl-2 pr-2" style="cursor: pointer;">
-                        {{$t('send_aggregate')}}
+                        {{ $t('aggregate_send') }}
                     </button>
                 </div>
             </div>
         </div>
         <div class="right-container">
-        <!-- TODO: TRANSFER FORM GOES HERE Same as Dashboard Transfer
-        <AggregateTransaction />-->
             <div class="title-container">
-                <h1 class="title-style">
-                    <!---->
-                    Simple transaction 1
-                </h1>
+                <span class="title-style">
+                    right
+                </span>
                 <div class="transaction-form">
                     <div>
+                        <!-- TODO: TRANSFER FORM GOES HERE Same as Dashboard Transfer-->
+                        <AggregateTransaction />
                     </div>
                 </div>
             </div>

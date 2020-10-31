@@ -62,6 +62,7 @@ interface AccountState {
     currentAccount: AccountModel;
     currentAccountAddress: Address;
     currentAccountMultisigInfo: MultisigAccountInfo;
+    multisigAccountGraph: MultisigAccountInfo[][];
     isCosignatoryMode: boolean;
     signers: Signer[];
     currentSigner: Signer;
@@ -97,6 +98,7 @@ const accountState: AccountState = {
     multisigAccountsInfo: [],
     subscriptions: {},
     currentRecipient: null,
+    multisigAccountGraph: null,
 };
 
 /**
@@ -128,6 +130,7 @@ export default {
         getSubscriptions: (state: AccountState) => state.subscriptions,
         currentRecipient: (state: AccountState) => state.currentRecipient,
         currentAccountAliases: (state: AccountState) => state.currentAccountAliases,
+        multisigAccountGraph: (state: AccountState) => state.multisigAccountGraph,
     },
     mutations: {
         setInitialized: (state: AccountState, initialized: boolean) => {
@@ -181,6 +184,10 @@ export default {
 
         setSubscriptions: (state: AccountState, subscriptions: Record<string, SubscriptionType[]>) => {
             state.subscriptions = subscriptions;
+        },
+
+        multisigAccountGraph: (state: AccountState, multisigAccountGraph) => {
+            state.multisigAccountGraph = multisigAccountGraph;
         },
         updateSubscriptions: (state: AccountState, payload: { address: string; subscriptions: SubscriptionType }) => {
             const { address, subscriptions } = payload;
@@ -381,6 +388,8 @@ export default {
                 .getMultisigAccountGraphInfo(currentAccountAddress)
                 .pipe(
                     map((g) => {
+                        // sorted array to be represented in multisig tree
+                        commit('multisigAccountGraph', MultisigService.getMultisigGraphArraySorted(g.multisigEntries));
                         return MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
                     }),
                     catchError(() => {
@@ -399,9 +408,14 @@ export default {
             commit('currentAccountAliases', aliases);
 
             const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise;
-
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
             const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
+
+            // update multisig flag in currentAccount
+            if (currentAccountMultisigInfo && currentAccountMultisigInfo.isMultisig() && currentAccount.isMultisig) {
+                const accountService = new AccountService();
+                accountService.updateIsMultisig(currentAccount, true);
+            }
 
             const signers = new MultisigService().getSigners(
                 networkType,

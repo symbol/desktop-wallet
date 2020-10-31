@@ -210,9 +210,12 @@ export default class AccountSelectionTs extends Vue {
                 // - check balance
                 const hasNetworkMosaic = mosaics.find((mosaicOwned) => mosaicOwned.id.equals(mosaic));
 
-                // - account doesn't hold network mosaic
+                // - account doesn't hold network mosaic so the balance is zero
                 if (hasNetworkMosaic === undefined) {
-                    return null;
+                    return {
+                        address: address.plain(),
+                        balance: 0,
+                    };
                 }
                 // - map balance to address
                 const balance = hasNetworkMosaic.amount.compact();

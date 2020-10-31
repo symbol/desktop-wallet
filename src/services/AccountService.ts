@@ -55,6 +55,10 @@ export class AccountService {
         return this.saveAccount(Object.assign(account, { name }));
     }
 
+    public updateIsMultisig(account: AccountModel, isMultisig: boolean): AccountModel {
+        return this.saveAccount(Object.assign(account, { isMultisig }));
+    }
+
     public updateRemoteAccount(account: AccountModel, encRemoteAccountPrivateKey: string): AccountModel {
         return this.saveAccount(Object.assign(account, { encRemoteAccountPrivateKey }));
     }

@@ -13,16 +13,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-@import '../../views/resources/css/variables.less';
 
-.switch_language {
-    -webkit-app-region: no-drag;
-    position: relative;
-    display: flex;
-    align-items: center;
-
-    > img {
-        width: 24px;
-        height: 24px;
-    }
+export enum TableAssetType {
+    Mosaic = 'mosaic',
+    Namespace = 'namespace',
+    Metadata = 'metadata',
 }
