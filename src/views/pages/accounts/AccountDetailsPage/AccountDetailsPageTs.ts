@@ -35,6 +35,9 @@ import AccountActions from '@/components/AccountActions/AccountActions.vue';
 import AccountLinks from '@/components/AccountLinks/AccountLinks.vue';
 // @ts-ignore
 import AccountAliasDisplay from '@/components/AccountAliasDisplay/AccountAliasDisplay.vue';
+// @ts-ignore
+import AccountMultisigGraph from '@/components/AccountMultisigGraph/AccountMultisigGraph.vue';
+
 import { AccountModel } from '@/core/database/entities/AccountModel';
 
 @Component({
@@ -48,6 +51,7 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
         AccountAddressDisplay,
         AccountPublicKeyDisplay,
         AccountAliasDisplay,
+        AccountMultisigGraph,
     },
     computed: {
         ...mapGetters({

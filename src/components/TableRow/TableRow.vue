@@ -1,5 +1,10 @@
 <template>
-    <div :class="['table-row-container', assetType === 'mosaic' ? 'mosaic-columns' : 'namespace-columns']">
+    <div
+        :class="[
+            'table-row-container',
+            assetType !== 'metadata' ? (assetType === 'mosaic' ? 'mosaic-columns' : 'namespace-columns') : 'metadata-columns',
+        ]"
+    >
         <div v-for="(value, name, index) in rowValues" :key="index" :class="['table-cell', `${name}-cell`]">
             <div v-if="name === 'balance'">
                 <AmountDisplay :value="value" />

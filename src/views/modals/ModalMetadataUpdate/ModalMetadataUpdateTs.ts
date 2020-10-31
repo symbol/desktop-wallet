@@ -13,16 +13,31 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-@import '../../views/resources/css/variables.less';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
-.switch_language {
-    -webkit-app-region: no-drag;
-    position: relative;
-    display: flex;
-    align-items: center;
+@Component({
+    components: {},
+})
+export class ModalMetadataUpdateTs extends Vue {
+    @Prop({
+        default: false,
+    })
+    visible: boolean;
 
-    > img {
-        width: 24px;
-        height: 24px;
+    /**
+     * Visibility state
+     * @type {boolean}
+     */
+    get show(): boolean {
+        return this.visible;
+    }
+
+    /**
+     * Emits close event
+     */
+    set show(val) {
+        if (!val) {
+            this.$emit('close');
+        }
     }
 }

@@ -292,6 +292,16 @@ export const routes: AppRoute[] = [
                         // @ts-ignore
                         component: () => import('@/views/pages/accounts/AccountBackupPage/AccountBackupPage.vue'),
                     },
+                    {
+                        path: '/metadata',
+                        name: 'accounts.metadata',
+                        meta: {
+                            protected: true,
+                            title: 'page_title_account_metadata',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/accounts/AccountMetadataPage/AccountMetadataPage.vue'),
+                    },
                     // {
                     //   path: 'harvesting',
                     //   name: 'wallet.harvesting',
