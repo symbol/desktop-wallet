@@ -65,7 +65,7 @@
 
 .mosaic_data {
     height: 0.65rem;
-    padding: 0.15rem 0.25rem 0.15rem 0;
+    padding: 0.15rem 0.1rem 0.15rem 0;
     left: 0.45rem;
     width: 3.7rem;
     display: flex;
@@ -76,6 +76,8 @@
     align-items: center;
     border-bottom: 0.01rem solid @line;
     position: relative;
+    color: @purpleDark;
+    font-family: @symbolFontLight;
 
     .img_container {
         display: inline-block;
@@ -94,13 +96,12 @@
         position: relative;
         top: 0;
         left: 0.4rem;
-        width: 3rem;
-        font-size: @normalFont;
+        width: 1.8rem;
+        font-size: @bigFont;
         font-weight: 400;
-        overflow: hidden;
+        overflow: initial;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: @black;
     }
 
     .add_button {
@@ -119,9 +120,14 @@
 }
 
 .transfer_data {
-    height: 0.4rem;
-    left: 0.45rem;
-    width: 3.5rem;
+    background-color: @accentPinkLight;
+    border-radius: 4px;
+    padding: 2%;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-bottom: 15px;
+    left: 5%;
+    width: 90%;
     display: flex;
     flex-direction: row;
     justify-items: center;
@@ -146,12 +152,13 @@
         top: 0;
         left: 0.2rem;
         width: 3rem;
-        font-size: @normalFont;
+        font-size: @bigFont;
         font-weight: 400;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: @black;
+        color: @purpleDark;
+        font-family: @symbolFontLight;
     }
 
     .remove_button {
@@ -167,4 +174,9 @@
             height: 0.2rem;
         }
     }
+}
+
+.padding-1{
+    border-radius: 5px;
+    padding: 0.1rem;
 }
