@@ -700,5 +700,6 @@
     "form_label_new_contact_address": "New contact address",
     "delete_confirmation_message": "Are you sure do you want to delete?",
     "tab_accounts_accounts": "My accounts",
-    "tab_accounts_addressbook": "My contacts"
+    "tab_accounts_addressbook": "My contacts",
+    "select_contact": "Select contact"
 }
