@@ -154,4 +154,10 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
     width: 100%;
     height: 100%;
 }
+
+/deep/ .form-row {
+    .form-row-inner-container {
+       grid-template-columns: 3rem auto;
+    }
+}
 </style>
