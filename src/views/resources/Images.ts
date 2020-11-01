@@ -16,9 +16,9 @@
 import { TransactionType } from 'symbol-sdk';
 
 // @ts-ignore
-import createImg from '@/views/resources/img/login/create.png';
+import createImg from '@/views/resources/img/icons/Read.svg';
 // @ts-ignore
-import seedImg from '@/views/resources/img/login/seed.png';
+import seedImg from '@/views/resources/img/icons/Incoming.svg';
 // @ts-ignore
 import trezorImg from '@/views/resources/img/login/trezor.png';
 // @ts-ignore

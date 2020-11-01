@@ -4,16 +4,8 @@
             <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
                 <form onsubmit="event.preventDefault()">
                     <div class="form-row">
-                        <div class="form-headline">
+                        <div class="form-create-headline">
                             {{ $t('choose_profile_name_and_password') }}
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-line-container">
-                            <div class="form-text">
-                                {{ $t('profile_creation_description') }}
-                            </div>
                         </div>
                     </div>
 
@@ -26,7 +18,7 @@
                                 :name="$t('newProfileName')"
                                 :rules="validationRules.newAccountName"
                                 tag="div"
-                                class="inputs-container items-container"
+                                class="inputs-create-container items-container"
                             >
                                 <ErrorTooltip :errors="errors">
                                     <input
@@ -44,7 +36,7 @@
                     <FormRow>
                         <template v-slot:label> {{ $t('set_network_type') }}: </template>
                         <template v-slot:inputs>
-                            <div class="inputs-container select-container">
+                            <div class="inputs-create-container select-container">
                                 <Select
                                     v-model="formItems.networkType"
                                     :placeholder="$t('choose_network')"
@@ -69,7 +61,7 @@
                                 :name="$t('password')"
                                 :rules="validationRules.password"
                                 tag="div"
-                                class="inputs-container select-container"
+                                class="inputs-create-container select-container"
                             >
                                 <ErrorTooltip :errors="errors">
                                     <input
@@ -93,7 +85,7 @@
                                 :name="$t('confirmPassword')"
                                 :rules="validationRules.confirmPassword"
                                 tag="div"
-                                class="inputs-container items-container"
+                                class="inputs-create-container items-container"
                             >
                                 <ErrorTooltip :errors="errors">
                                     <input
@@ -117,7 +109,7 @@
                                 :name="$t('hint')"
                                 :rules="validationRules.message"
                                 tag="div"
-                                class="inputs-container items-container"
+                                class="inputs-create-container items-container"
                             >
                                 <ErrorTooltip :errors="errors">
                                     <input v-model="formItems.hint" class="input-size input-style" @input="stripTagsProfile" />
@@ -126,16 +118,16 @@
                         </template>
                     </FormRow>
 
-                    <div class="form-line-container form-row">
-                        <div class="flex-container mt-3">
+                    <div class="form-line-container form-row" >
+                        <div class="flex-container mt-3" style="padding-left: 0.7rem;">
                             <button
                                 type="button"
-                                class="button-style back-button"
+                                class="button-create-style back-create-button"
                                 @click="$router.push({ name: 'profiles.importProfile.importStrategy' })"
                             >
                                 {{ $t('back') }}
                             </button>
-                            <button type="submit" class="button-style validation-button" @click="handleSubmit(submit)">
+                            <button type="submit" class="button-create-style validation-create-button" @click="handleSubmit(submit)">
                                 {{ $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'restore_mnemonic' : 'generating_mnemonic') }}
                             </button>
                         </div>

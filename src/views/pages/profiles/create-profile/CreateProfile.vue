@@ -13,17 +13,20 @@
                         <p class="text">
                             {{ $t('profile_description_tips2') }}
                         </p>
-                        <p class="text red">
+                        <p class="text_red">
                             {{ $t('profile_description_tips3') }}
                         </p>
                     </div>
                 </div>
                 <div v-if="getCurrentStep() === 1">
                     <div class="right-hints-section">
-                        <p class="title">
-                            MNEMONIC
+                        <p class="text1">
+                            {{ $t('generate_mnemonic_title') }}
                         </p>
                         <p class="text">
+                            {{ $t('move_your_mouse_tip1') }}
+                        </p>
+                        <p class="text_red">
                             {{ $t('move_your_mouse') }}
                         </p>
                     </div>
@@ -74,8 +77,10 @@
         </div>
         <div class="form-box">
             <div class="steps">
-                <div v-for="(text, index) in StepBarTitleList" :key="index" :class="['single-step', getStepClassName(index)]">
-                    {{ $t(text) }}
+                <div class="step-group">
+                    <div v-for="(text, index) in StepBarTitleList" :key="index" :class="['single-step', getStepClassName(index)]">
+                        {{ $t(text) }}
+                    </div>
                 </div>
             </div>
             <div class="form">

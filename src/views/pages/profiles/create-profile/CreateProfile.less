@@ -25,31 +25,59 @@
     overflow-y: auto;
 
     .explanation-box {
-        flex: 0.4;
+        flex: 0.3;
         display: flex;
         align-items: center;
         text-align: left;
 
         .text-wrapper {
             display: block;
-            width: 100%;
+            width: 85%;
+        }
+
+        .text1{
+            color: @purpleDark;
+            font-size: 30px;
+            font-family: @normalFont;
+            margin-bottom: 5%;
+        }
+
+        .text{
+            color: @purpleDark;
+            font-size: @bigFont;
+            margin-bottom: 2%;
+        }
+        .text_red{
+            color: @purpleDark;
+            font-family: @symbolFontSemiBold;
+            font-size: @bigFont;
         }
     }
 
     .form-box {
-        flex: 0.6;
+        flex: 0.7;
+        border-radius: 5px;
         display: flex;
         align-items: center;
         background-color: @white;
         height: 100%;
 
         .steps {
-            width: 400px;
+            width: 25%;
+            border-right: 0.5px solid #d3d3d3;
+            height: 100%;
+            display: flex;
+
+            .step-group{
+                margin: auto;
+                width: 100%;
+            }
 
             .single-step {
-                padding: 10px 40px;
-                font-size: @normalFont;
+                padding: 8% 20% 8% 20%;
+                font-size: @bigFont;
                 color: @grayLight;
+                font-family: @symbolFontSemiBold;
                  &.done {
                      color: @purpleDark
                  }
@@ -57,28 +85,16 @@
                     content: 'X';
                 }
                 &.active {
-                    background-color: @purpleDark;
+                    background: linear-gradient(315.55deg, #44004e -1.68%, #5200c6 110.7%);
                     color: @white;
                 }
             }
         }
         .form {
             flex: 1;
-            max-width: 467px;
+            max-width: 70%;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     .inner-container {
         .create-profile-box {
@@ -97,3 +113,4 @@
         }
     }
 }
+
