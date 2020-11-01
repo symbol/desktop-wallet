@@ -1,5 +1,5 @@
 <template>
-    <FormWrapper>
+    <FormWrapper :whitelisted="true">
         <div>
             <span>{{ messageDisplay }}</span>
             <span v-if="isEncrypted && !unannounced">
