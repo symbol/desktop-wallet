@@ -722,5 +722,6 @@
     "welcome_to_symbol": "欢迎使用Symbol",
     "word": "字",
     "x_seconds": "{seconds}秒",
-    "aggregate_send": "发送汇总"
+    "aggregate_send": "发送汇总",
+    "progress" : "正在下载"
 }
