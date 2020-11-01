@@ -84,7 +84,7 @@
                     </div>
                     <div class="detail-row" style="margin-top: 1rem">
                         <div class="bottom-buttons-container">
-                            <button type="button" class="centered-button button-style inverted-button danger-button">{{ $t('delete_account') }}</button>
+                            <button type="button" class="centered-button button-style button danger-button">{{ $t('delete_account') }}</button>
                             <button type="button" class="centered-button button-style inverted-button ">{{ $t('hide_account') }}</button>
                         </div>
                     </div>
