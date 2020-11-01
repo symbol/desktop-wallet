@@ -79,4 +79,14 @@ export default class FormNodeEdit extends FormNodeEditTs {}
     padding-top: 5%;
     padding-right: 16%;
 }
+
+/deep/ .auto-complete-style {
+    .ivu-input {
+        background: transparent !important;
+    }
+}
+
+/deep/ .node-list-container {
+    width: 84%;
+}
 </style>

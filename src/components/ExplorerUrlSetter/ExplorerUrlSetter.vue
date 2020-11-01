@@ -28,3 +28,14 @@
 import { ExplorerUrlSetterTs } from './ExplorerUrlSetterTs';
 export default class ExplorerUrlSetter extends ExplorerUrlSetterTs {}
 </script>
+<style lang="less" scoped>
+/deep/ .auto-complete-style {
+    
+    padding:none !important;
+    padding-left: 3%;
+
+    .ivu-input {
+        background: transparent !important;
+    }
+}
+</style>

@@ -6,7 +6,7 @@
                     <FormRow>
                         <template v-slot:label> {{ $t('form_label_language') }}: </template>
                         <template v-slot:inputs>
-                            <div class="inputs-container select-container">
+                            <div class="inputs-container">
                                 <LanguageSelector v-model="formItems.language" :auto-submit="false" :default-form-style="true" />
                             </div>
                         </template>
@@ -73,11 +73,17 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
 .form-submit {
     display: flex;
     padding-top: 5%;
-    padding-right: 16%;
+    padding-right: 17%;
     flex-flow: row-reverse;
 
     button[type='reset'] {
         margin-right: 35px;
+    }
+}
+
+/deep/ .form-row {
+    .form-row-inner-container {
+       grid-template-columns: 3rem 5rem;
     }
 }
 </style>
