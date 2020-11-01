@@ -27,7 +27,7 @@
 .left-bottom-container {
     display: grid;
     height: calc(50% - 0.15rem);
-    grid-template-rows: 0.8rem auto 0.5rem;
+    grid-template-rows: 0.8rem auto 0.5rem 0.08rem;
     background-color: white;
     overflow: hidden;
     border-radius: @borderRadius;
@@ -35,9 +35,11 @@
 
     .transaction-list-container {
         overflow-y: auto;
+    
     }
 
     .bottom-container {
+
         text-align: right;
         margin-right: 0.4rem;
     }
@@ -105,6 +107,7 @@
     }
 
     .add_button {
+        color: @purpleDark;
         margin-left: 0.5rem;
         text-align: right;
         background-color: transparent;
@@ -114,10 +117,21 @@
             display: inline-block;
             margin-top: 0.05rem;
             width: 0.22rem;
-            height: 0.2rem;
+            height: auto;
         }
-    }
+        
+        &:hover {
+            &:after{
+                background-color:@purpleHover;
+                color:@purpleHover;
+                transition:0.3s;
+            }
+           
+        }
+
+    }   
 }
+
 
 .transfer_data {
     background-color: @accentPinkLight;
@@ -175,4 +189,5 @@
         }
     }
 }
+
 
