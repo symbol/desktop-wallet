@@ -122,12 +122,12 @@
                         <div class="flex-container mt-3" style="padding-left: 0.7rem;">
                             <button
                                 type="button"
-                                class="button-create-style back-create-button"
+                                class="solid-button button-style fat-button create-account-style"
                                 @click="$router.push({ name: 'profiles.importProfile.importStrategy' })"
                             >
                                 {{ $t('back') }}
                             </button>
-                            <button type="submit" class="button-create-style validation-create-button" @click="handleSubmit(submit)">
+                            <button type="submit" class="inverted-button button-style fat-button create-account-style" @click="handleSubmit(submit)">
                                 {{ $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'restore_mnemonic' : 'generating_mnemonic') }}
                             </button>
                         </div>

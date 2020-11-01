@@ -485,6 +485,22 @@
 }
 */
 
+.solid-button {
+    border: none;
+    background-color:none;
+    position: relative;
+    background-color: @primary;
+    color: white;
+    letter-spacing: 0.05em;
+    padding-top:0.05em;
+    font-weight: 700;
+    z-index: 1;
+}
+
+.solid-button:hover {
+    background-color: @purpleHover;
+    transition: 0.5s;
+}
 
 .inverted-button {
     border: none;
@@ -797,16 +813,12 @@
     }
 }
 
-.button-create-style {
-    text-align: center;
-    display: inline-block;
+.create-account-style {
     // width: auto !important;
     font-size: @bigFont;
     font-family: @symbolFontSemiBold;
     border-radius: @buttonBorderRadius;
-    cursor: pointer;
     width: 20%;
-    padding: 5px;
 }
 
 .back-create-button{

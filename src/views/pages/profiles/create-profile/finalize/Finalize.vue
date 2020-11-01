@@ -14,10 +14,10 @@
                 </p>
                 <div class="buttons clear">
                     <div class="flex-container mt-3">
-                        <button type="button" class="button-create-style back-create-button" @click="$router.back()">
+                        <button type="button" class="solid-button button-style fat-button create-account-style" @click="$router.back()">
                             {{ $t('back') }}
                         </button>
-                        <button type="submit" class="button-create-style validation-create-button" @click="submit">
+                        <button type="submit" class="inverted-button button-style fat-button create-account-style" @click="submit">
                             {{ $t('next') }}
                         </button>
                     </div>
