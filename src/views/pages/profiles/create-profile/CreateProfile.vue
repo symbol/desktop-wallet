@@ -33,33 +33,19 @@
                 </div>
                 <div v-if="getCurrentStep() === 2">
                     <div class="create-mnemonic-right">
-                        <Alert type="warning" show-icon>
-                            {{ $t('do_not_disclose_title') }}
-                            <template slot="desc">
-                                {{ $t('do_not_disclose') }}
-                            </template>
-                        </Alert>
-                        <Alert type="success" show-icon>
-                            {{ $t('please_backup_mnemonic_passphrase_title') }}
-                            <template slot="desc">
-                                {{ $t('please_backup_mnemonic_passphrase') }}
-
-                                <div class="mnemonic-backup-options-desc">
-                                    <span>
-                                        <p>
-                                            <Icon type="md-download" />
-                                            {{ $t('mnemonic_backup_options_download_desc') }}
-                                        </p>
-                                    </span>
-                                    <span>
-                                        <p>
-                                            <Icon type="md-copy" />
-                                            {{ $t('mnemonic_backup_options_copy_desc') }}
-                                        </p>
-                                    </span>
-                                </div>
-                            </template>
-                        </Alert>
+                        <div class="right-hints-section">
+                            <p class="text1">
+                                {{ $t('do_not_disclose_title_mnemonic') }}
+                            </p>
+                            <p class="text">
+                                <span class="subtitle-info"> <img src="@/views/resources/img/icons/warning.svg" class="warning-icon"> {{ $t('do_not_disclose_title') }}</span><br>
+                                <span>{{ $t('do_not_disclose') }}</span>
+                            </p>
+                            <p class="text">
+                                <span class="subtitle-info"> <img src="@/views/resources/img/icons/warning.svg" class="warning-icon">{{ $t('please_backup_mnemonic_passphrase_title') }}</span><br>
+                                <span>{{ $t('please_backup_mnemonic_passphrase') }}</span>
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div v-if="getCurrentStep() === 3">
@@ -71,7 +57,8 @@
                     </p>
                 </div>
                 <div v-if="getCurrentStep() === 4">
-                    <span class="set-title"> {{ $t('creation_successful') }}</span>
+                    <img src="@/views/resources/img/icons/success.svg" style="width: 30%;">
+                    <span class="success-title"> {{ $t('creation_successful') }}</span>
                 </div>
             </div>
         </div>

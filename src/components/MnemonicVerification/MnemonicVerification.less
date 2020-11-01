@@ -33,12 +33,31 @@
         overflow-y: scroll;
 
         span {
-            font-size: 18px;
-            color: #222222;
+            font-size: 14px;
+            color: #44004e;
+            padding: 0.1rem 0.2rem;
+            background: #d3d3d3;
             margin: 8px;
             float: left;
             cursor: pointer;
-            line-height: 20px;
+            border-radius: 4px;
+
+            .ivu-tag{
+                background: transparent;
+                border: none;
+                font-size: 14px;
+                color: #44004e !important;
+                padding-left: 0px;
+                margin: 0px;
+            }
+            .ivu-tag-text{
+                color: none;
+                font-family: noto-sans-regular;
+            }
+            .ivu-icon{
+                color: #44004e !important;
+            }
+
         }
 
         .ghost {
@@ -56,15 +75,15 @@
         width: 100%;
 
         .confirmed_word {
-            background-color: orange;
+            background-color: #44004e;
             color: white;
         }
 
         span {
             font-size: 16px;
             font-weight: 400;
-            color: rgba(255, 255, 255, 0.8);
-            background: #6401ee;
+            color: #44004e;
+            background: #d3d3d3;
             padding: 8px 18px 10px;
             border-radius: 4px;
             margin-right: 20px;
@@ -82,7 +101,4 @@
         }
     }
 
-    .ivu-tag {
-        height: auto;
-    }
 }

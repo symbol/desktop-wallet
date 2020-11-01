@@ -1,15 +1,16 @@
 <template>
     <div class="create-mnemonic-sec" @keyup.enter="$router.push({ name: 'profiles.createProfile.verifyMnemonic' })">
-        <p class="set-title">
+        <p class="set-title-create">
             {{ $t('backup_mnemonic_words') }}
+            <img src="@/views/resources/img/icons/Incoming.svg" class="clipboard-icon">
         </p>
         <div class="create-mnemonic-col">
             <div class="create-mnemonic-left">
                 <MnemonicDisplay :words="mnemonicWordsList">
                     <div slot class="mnemonic-container">
                         <div v-if="!showMnemonic" class="show-mnemonic">
-                            <img src="@/views/resources/img/invisible.png" />
-                            <button class="button-style validation-button" @click="showMnemonic = true">
+                            <img src="@/views/resources/img/icons/View.svg" style="margin-top: 10px;"/>
+                            <button class="button-create-style validation-create-button" @click="showMnemonic = true" style="width: 30%">
                                 {{ $t('display_mnemonic') }}
                             </button>
                         </div>
@@ -33,14 +34,14 @@
                     <div class="flex-container mt-3">
                         <button
                             type="button"
-                            class="button-style back-button"
+                            class="button-create-style back-create-button"
                             @click="$router.push({ name: 'profiles.createProfile.info' })"
                         >
                             {{ $t('back') }}
                         </button>
                         <button
                             type="submit"
-                            class="button-style validation-button"
+                            class="button-create-style validation-create-button"
                             @click="$router.push({ name: 'profiles.createProfile.verifyMnemonic' })"
                         >
                             {{ $t('verify_backup_mnemonics') }}

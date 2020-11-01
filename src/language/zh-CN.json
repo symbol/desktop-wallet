@@ -171,6 +171,7 @@
     "divisibility_invalid": "当前值与可分性位于区间 [0-6] 不匹配",
     "do_not_disclose": "请不要透露你备份的记助词，任何人有了记助词将可以彻底掌控其下的钱包资产。",
     "do_not_disclose_title": "保持私密",
+    "do_not_disclose_title_mnemonic": "备份助记密码",
     "do_not_share_mnemonics_with_anyone": "不要和任何人分享助记词",
     "download": "下载",
     "duration": "持续时间",

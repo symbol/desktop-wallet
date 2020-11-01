@@ -171,6 +171,7 @@
     "divisibility_invalid": "可分性が無効です [0-6]",
     "do_not_disclose": "この情報は秘匿してください。ニーモニックパス語群を他人と共有した場合、アセットは危機にさらされる可能性があります。",
     "do_not_disclose_title": "これを非公開にしてください！",
+    "do_not_disclose_title_mnemonic": "ニーモニックパスフレーズをバックアップします",
     "do_not_share_mnemonics_with_anyone": "ニーモニックは誰にも共有してはいけません",
     "download": "ダウンロード",
     "duration": "期間",
