@@ -77,6 +77,7 @@ interface AccountState {
     subscriptions: Record<string, SubscriptionType[]>;
     currentRecipient: PublicAccount;
     currentAccountAliases: AccountNames[];
+    selectedAddressesToInteract: number[];
 }
 
 // account state initial definition
@@ -99,6 +100,7 @@ const accountState: AccountState = {
     subscriptions: {},
     currentRecipient: null,
     multisigAccountGraph: null,
+    selectedAddressesToInteract: [],
 };
 
 /**
@@ -131,6 +133,7 @@ export default {
         currentRecipient: (state: AccountState) => state.currentRecipient,
         currentAccountAliases: (state: AccountState) => state.currentAccountAliases,
         multisigAccountGraph: (state: AccountState) => state.multisigAccountGraph,
+        selectedAddressesToInteract: (state: AccountState) => state.selectedAddressesToInteract,
     },
     mutations: {
         setInitialized: (state: AccountState, initialized: boolean) => {
@@ -204,6 +207,21 @@ export default {
             const newSubscriptions: SubscriptionType[] = [...oldSubscriptions, subscriptions];
             // update state
             Vue.set(state.subscriptions, address, newSubscriptions);
+        },
+        addToSelectedAddressesToInteract: (state: AccountState, pathNumber: number) => {
+            console.log('addToSelectedAddressesToInteract', pathNumber);
+            const selectedAccounts = [...state.selectedAddressesToInteract];
+            selectedAccounts.push(pathNumber);
+            state.selectedAddressesToInteract = selectedAccounts;
+            console.log('addToSelectedAddressesToInteract2', state.selectedAddressesToInteract);
+        },
+        removeFromSelectedAddressesToInteract: (state: AccountState, pathNumber: number) => {
+            console.log('removeFromSelectedAddressesToInteract', pathNumber);
+            const selectedAccounts = [...state.selectedAddressesToInteract];
+            const indexToDelete = selectedAccounts.indexOf(pathNumber);
+            selectedAccounts.splice(indexToDelete, 1);
+            state.selectedAddressesToInteract = selectedAccounts;
+            console.log('removeFromSelectedAddressesToInteract', state.selectedAddressesToInteract);
         },
     },
     actions: {
