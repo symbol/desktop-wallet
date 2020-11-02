@@ -210,19 +210,15 @@ export default {
             Vue.set(state.subscriptions, address, newSubscriptions);
         },
         addToSelectedAddressesToInteract: (state: AccountState, pathNumber: number) => {
-            console.log('addToSelectedAddressesToInteract', pathNumber);
             const selectedAccounts = [...state.selectedAddressesToInteract];
             selectedAccounts.push(pathNumber);
             state.selectedAddressesToInteract = selectedAccounts;
-            console.log('addToSelectedAddressesToInteract2', state.selectedAddressesToInteract);
         },
         removeFromSelectedAddressesToInteract: (state: AccountState, pathNumber: number) => {
-            console.log('removeFromSelectedAddressesToInteract', pathNumber);
             const selectedAccounts = [...state.selectedAddressesToInteract];
             const indexToDelete = selectedAccounts.indexOf(pathNumber);
             selectedAccounts.splice(indexToDelete, 1);
             state.selectedAddressesToInteract = selectedAccounts;
-            console.log('removeFromSelectedAddressesToInteract', state.selectedAddressesToInteract);
         },
     },
     actions: {

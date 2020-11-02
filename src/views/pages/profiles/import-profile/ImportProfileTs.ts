@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Formatters } from '@/core/utils/Formatters';
 import { mapGetters } from 'vuex';
 import { MnemonicPassPhrase } from 'symbol-hd-wallets';
@@ -92,30 +92,39 @@ export default class ImportProfileTs extends Vue {
     public selectedAccounts: number[];
 
     /**
+     * Indicates if account balance and addresses are already fetched
+     */
+    private initialized: boolean = false;
+
+    /**
      * Hook called when the page is mounted
      * @return {void}
      */
     async mounted() {
-        await this.$store.dispatch('temporary/initialize');
         this.accountService = new AccountService();
-
         Vue.nextTick().then(() => {
             setTimeout(() => this.initAccounts(), 300);
         });
+
+        await this.$store.dispatch('temporary/initialize');
     }
 
+    @Watch('selectedAccounts')
     /**
      * Fetch account balances and map to address
      * @return {void}
      */
     private async initAccounts() {
+        if (this.initialized) {
+            return;
+        }
+
         // - generate addresses
         this.addressesList = this.accountService.getAddressesFromMnemonic(
             new MnemonicPassPhrase(this.currentMnemonic),
             this.currentProfile.networkType,
             10,
         );
-        console.log('addressesList', this.addressesList);
         const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
         // fetch accounts info
         const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
@@ -124,6 +133,8 @@ export default class ImportProfileTs extends Vue {
         }
         // map balances
         this.addressMosaicMap = this.mapBalanceByAddress(accountsInfo, this.networkMosaic);
+
+        this.initialized = true;
     }
 
     public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaic: MosaicId): Record<string, number> {
