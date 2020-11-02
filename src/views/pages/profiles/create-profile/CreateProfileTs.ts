@@ -48,6 +48,6 @@ export default class CreateProfileTs extends Vue {
     }
 
     public getStepClassName(index: number): string {
-        return this.getCurrentStep() == index ? 'active' : (this.getCurrentStep() > index ? 'done': '');
+        return this.getCurrentStep() == index ? 'active' : this.getCurrentStep() > index ? 'done' : '';
     }
 }

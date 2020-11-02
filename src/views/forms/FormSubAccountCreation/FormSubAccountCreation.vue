@@ -111,7 +111,6 @@ export default class FormSubAccountCreation extends FormSubAccountCreationTs {}
     width: 100%;
     clear: both;
     min-height: 1rem;
-
 }
 /deep/.form-row-inner-container {
     text-align: left;

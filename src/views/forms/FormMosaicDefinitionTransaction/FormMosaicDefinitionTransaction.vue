@@ -56,9 +56,7 @@ export default class FormMosaicDefinitionTransaction extends FormMosaicDefinitio
 </script>
 
 <style lang="less" scoped>
-
 .checkboxes {
-    
     display: grid;
     grid-auto-flow: column;
     align-items: baseline;
@@ -67,8 +65,7 @@ export default class FormMosaicDefinitionTransaction extends FormMosaicDefinitio
 
 /deep/ .form-row {
     .form-row-inner-container {
-       grid-template-columns: 3rem 8rem;
+        grid-template-columns: 3rem 8rem;
     }
 }
-
 </style>

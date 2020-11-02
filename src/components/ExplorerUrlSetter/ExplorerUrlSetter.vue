@@ -30,8 +30,7 @@ export default class ExplorerUrlSetter extends ExplorerUrlSetterTs {}
 </script>
 <style lang="less" scoped>
 /deep/ .auto-complete-style {
-    
-    padding:none !important;
+    padding: none !important;
     padding-left: 3%;
 
     .ivu-input {

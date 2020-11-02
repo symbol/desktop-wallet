@@ -118,7 +118,7 @@
                         </template>
                     </FormRow>
 
-                    <div class="form-line-container form-row" >
+                    <div class="form-line-container form-row">
                         <div class="flex-container mt-3" style="padding-left: 0.7rem;">
                             <button
                                 type="button"
@@ -127,7 +127,11 @@
                             >
                                 {{ $t('back') }}
                             </button>
-                            <button type="submit" class="inverted-button button-style fat-button create-account-style" @click="handleSubmit(submit)">
+                            <button
+                                type="submit"
+                                class="inverted-button button-style fat-button create-account-style"
+                                @click="handleSubmit(submit)"
+                            >
                                 {{ $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'restore_mnemonic' : 'generating_mnemonic') }}
                             </button>
                         </div>
@@ -157,7 +161,7 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
 
 /deep/ .form-row {
     .form-row-inner-container {
-       grid-template-columns: 3rem auto;
+        grid-template-columns: 3rem auto;
     }
 }
 </style>

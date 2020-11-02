@@ -5,7 +5,7 @@
             {{ account.publicKey }}
         </div>
         <ButtonCopyToClipboard v-if="account" v-model="account.publicKey">
-                <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
+            <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
         </ButtonCopyToClipboard>
     </div>
 </template>
@@ -28,7 +28,6 @@ export default class AccountPublicKeyDisplay extends AccountPublicKeyDisplayTs {
     grid-auto-flow: column;
     grid-auto-columns: max-content;
 }
-
 
 .value {
     display: inline;

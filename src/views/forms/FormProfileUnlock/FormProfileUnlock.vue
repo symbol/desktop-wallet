@@ -24,7 +24,7 @@
                         </ValidationProvider>
                         <button
                             v-if="!hideSubmit"
-                            class="button-style inverted-button  right-side-button"
+                            class="button-style inverted-button right-side-button"
                             type="submit"
                             @click="processVerification"
                         >

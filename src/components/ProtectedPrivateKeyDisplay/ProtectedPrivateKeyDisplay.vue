@@ -11,7 +11,7 @@
         <div v-else>
             <div class="value">
                 <button type="button" class="show-button" @click="onClickDisplay">
-                    {{$t('show_button')}}
+                    {{ $t('show_button') }}
                 </button>
             </div>
         </div>
@@ -22,8 +22,7 @@
             :on-success="onAccountUnlocked"
             @close="hasAccountUnlockModal = false"
         />
-        
-    </div> 
+    </div>
 </template>
 
 <script>
@@ -34,13 +33,12 @@ export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDispl
 <style lang="less" scoped>
 @import './../../views/resources/css/variables.less';
 
-
 .show-button {
-    border:  none !important;
+    border: none !important;
     font-weight: bold;
     cursor: pointer;
     background-color: transparent;
-    color:@purpleLightest;
+    color: @purpleLightest;
 }
 
 .copy-icon {

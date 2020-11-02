@@ -57,10 +57,10 @@
                 </div>
             </div>
             <div class="button-container flex-container">
-                <button class="button-style info-button back-button" @click="previous">
+                <button class="button-style info-button back-create-button fat-button" @click="previous">
                     {{ $t('previous') }}
                 </button>
-                <button class="button-style validation-button" @click="submit">
+                <button class="button-style validation-create-button fat-button" @click="submit">
                     {{ $t('next') }}
                 </button>
             </div>

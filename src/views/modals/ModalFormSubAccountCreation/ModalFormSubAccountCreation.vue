@@ -2,9 +2,7 @@
     <div class="container">
         <Modal v-model="show" class-name="modal-container" :title="$t('modal_title_enter_account_name')" :transfer="false">
             <FormSubAccountCreation @submit="onSubmit" />
-            <div slot="footer" class="modal-footer">
-                
-            </div>
+            <div slot="footer" class="modal-footer"></div>
         </Modal>
     </div>
 </template>
@@ -20,11 +18,11 @@ export default class ModalFormSubAccountCreation extends ModalFormSubAccountCrea
 }
 
 .modal-footer {
-    border:none;
+    border: none;
 }
 
 hr {
-    color:transparent;
+    color: transparent;
     background-color: transparent;
 }
 </style>

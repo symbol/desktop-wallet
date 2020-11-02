@@ -32,8 +32,10 @@
 
                     <!-- Add mosaic button -->
                     <div class="form-row align-right action-link">
-                        <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button">
-                        <a v-if="mosaicInputsManager.hasFreeSlots()" @click="addMosaicAttachmentInput" style="color: #5200c6;">{{ $t('add_mosaic') }}</a>
+                        <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" />
+                        <a v-if="mosaicInputsManager.hasFreeSlots()" style="color: #5200c6;" @click="addMosaicAttachmentInput">{{
+                            $t('add_mosaic')
+                        }}</a>
                     </div>
 
                     <!-- Transfer message input field -->

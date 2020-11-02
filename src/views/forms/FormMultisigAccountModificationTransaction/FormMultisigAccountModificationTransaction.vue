@@ -16,8 +16,10 @@
 
                 <FormRow>
                     <template v-slot:label>
-                        <div v-if="multisigOperationType === 'conversion'" style="padding-top:0.4rem;">{{ $t('form_label_account_to_be_converted') }}:</div>
-                        <div v-else style="padding-top:0.4rem;">{{ $t('form_label_multisig_account') }}:</div>
+                        <div v-if="multisigOperationType === 'conversion'" style="padding-top: 0.4rem;">
+                            {{ $t('form_label_account_to_be_converted') }}:
+                        </div>
+                        <div v-else style="padding-top: 0.4rem;">{{ $t('form_label_multisig_account') }}:</div>
                     </template>
                     <template v-slot:inputs>
                         <SignerSelector v-model="formItems.signerAddress" :signers="signers" :no-label="true" @input="onChangeSigner" />
@@ -111,13 +113,10 @@ export default class FormMultisigAccountModificationTransaction extends FormMult
 <style lang="less" scoped>
 /deep/ .form-row {
     .form-row-inner-container {
-       grid-template-columns: 3.35rem 8rem;
+        grid-template-columns: 3.35rem 8rem;
     }
 }
 
 /deep/ .form-row-emphasis {
-
 }
-
 </style>
-

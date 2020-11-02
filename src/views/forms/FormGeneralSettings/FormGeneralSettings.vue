@@ -33,11 +33,7 @@
                     </FormRow>
 
                     <div class="form-row form-submit">
-                        <button
-                            class="button-style inverted-button pl-2 pr-2"
-                            type="submit"
-                            @click="handleSubmit(onSubmit)"
-                        >
+                        <button class="button-style inverted-button pl-2 pr-2" type="submit" @click="handleSubmit(onSubmit)">
                             {{ $t('confirm') }}
                         </button>
                         <button class="button-style button danger-button pl-2 pr-2" type="reset" @click.prevent="resetForm">
@@ -83,7 +79,7 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
 
 /deep/ .form-row {
     .form-row-inner-container {
-       grid-template-columns: 3rem 5rem;
+        grid-template-columns: 3rem 5rem;
     }
 }
 </style>

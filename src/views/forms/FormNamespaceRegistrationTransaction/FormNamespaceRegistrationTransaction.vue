@@ -83,8 +83,7 @@ export default class FormNamespaceRegistrationTransaction extends FormNamespaceR
 
 /deep/ .form-row {
     .form-row-inner-container {
-       grid-template-columns: 3rem 8rem;
+        grid-template-columns: 3rem 8rem;
     }
 }
-
 </style>

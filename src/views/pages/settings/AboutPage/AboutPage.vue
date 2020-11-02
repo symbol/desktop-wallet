@@ -159,7 +159,7 @@ export default class AboutPage extends Vue {
         display: grid;
         grid-template-columns: 20% 80%;
         font-size: @smallFont;
-        color:@primary;
+        color: @primary;
         min-height: unset;
     }
 

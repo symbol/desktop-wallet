@@ -16,9 +16,9 @@
         <div class="dashboard-right-container">
             <!--TODO: Harvesting dashboard following standard style.-->
             <div class="header-container-placeholder">
-                    <h1 class="section-title">
-                        {{$t('harvested_blocks')}}
-                    </h1>
+                <h1 class="section-title">
+                    {{ $t('harvested_blocks') }}
+                </h1>
             </div>
         </div>
     </div>
@@ -52,5 +52,4 @@ export default class HarvestingDashboardPage extends Vue {}
         font-family: @symbolFont;
     }
 }
-
 </style>

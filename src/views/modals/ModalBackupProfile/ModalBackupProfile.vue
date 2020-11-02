@@ -13,13 +13,13 @@
                 <button class="button-style solid-button fat-button" :loading="downloadInProgress" @click="onDownload">
                     <span> <Icon :type="'md-download'" size="12" /> {{ $t('button_download') }}</span>
                 </button>
-                <br>
-                <p class="temp_notif"><span v-if="downloadInProgress">{{ $t('progress') }}</span></p>
+                <br />
+                <p class="temp_notif">
+                    <span v-if="downloadInProgress">{{ $t('progress') }}</span>
+                </p>
             </div>
 
-            <div slot="footer" class="modal-footer">
-               
-            </div>
+            <div slot="footer" class="modal-footer"></div>
         </Modal>
     </div>
 </template>
@@ -34,8 +34,7 @@ export default class ModalBackupProfile extends ModalBackupProfileTs {}
 @import './ModalBackupProfile.less';
 
 .temp_notif {
-    margin-top:0.5em;
-    color:@primary;
+    margin-top: 0.5em;
+    color: @primary;
 }
-
 </style>

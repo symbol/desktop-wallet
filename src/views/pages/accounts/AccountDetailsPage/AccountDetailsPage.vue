@@ -7,7 +7,7 @@
             <div class="right-container">
                 <div class="account-details-grid">
                     <div class="detail-row">
-                        <AccountNameDisplay v-if="currentAccount" :account="currentAccount" :editable="true"/>
+                        <AccountNameDisplay v-if="currentAccount" :account="currentAccount" :editable="true" />
                     </div>
 
                     <div class="detail-row">
@@ -55,7 +55,7 @@
                     </div>
                     <!-- TODO : Make a "CosignatoryDisplay" component -->
                     <div class="detail-row">
-                        <div class="account-detail-row">
+                        <div class="account-detail-row" style="display: none;">
                             <div>
                                 <span class="title">{{ $t('cosignatory_of') }}</span>
                             </div>
@@ -82,10 +82,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="detail-row" style="margin-top: 1rem">
+                    <div class="detail-row" style="margin-top: 1rem;">
                         <div class="bottom-buttons-container">
-                            <button type="button" class="centered-button button-style button danger-button">{{ $t('delete_account') }}</button>
-                            <button type="button" class="centered-button button-style inverted-button ">{{ $t('hide_account') }}</button>
+                            <button type="button" class="centered-button button-style button danger-button">
+                                {{ $t('delete_account') }}
+                            </button>
+                            <button type="button" class="centered-button button-style inverted-button">{{ $t('hide_account') }}</button>
                         </div>
                     </div>
                 </div>
@@ -110,11 +112,10 @@ export default class AccountDetailsPage extends AccountDetailsPageTs {}
 </script>
 
 <style lang="less" scoped>
-
 @import './AccountDetailsPage.less';
 
 .title {
-    color:@primary;
+    color: @primary;
     font-size: 18px;
 }
 
@@ -135,5 +136,4 @@ export default class AccountDetailsPage extends AccountDetailsPageTs {}
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
 </style>

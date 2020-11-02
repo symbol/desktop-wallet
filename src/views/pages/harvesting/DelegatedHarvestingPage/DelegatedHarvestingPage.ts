@@ -36,6 +36,4 @@ import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue';
         }),
     },
 })
-export class DelegatedHarvestingPage extends Vue {
-
-}
+export class DelegatedHarvestingPage extends Vue {}

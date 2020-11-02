@@ -4,7 +4,7 @@
             <div class="left-top-container">
                 <div class="title-container">
                     <h1 class="title-style">
-                        {{$t('transaction_type_title')}}
+                        {{ $t('transaction_type_title') }}
                     </h1>
                 </div>
                 <!--- TODO: ADD onClick Action to all add_button-->
@@ -13,7 +13,7 @@
                         <span class="img_container">
                             <img src="@/views/resources/img/icons/transactions.svg" alt />
                         </span>
-                        <span class="mosaic_name">{{$t('simple_transfer_type')}}</span>
+                        <span class="mosaic_name">{{ $t('simple_transfer_type') }}</span>
                         <button class="add_button">
                             <img src="@/views/resources/img/icons/add.svg" alt />
                         </button>
@@ -22,7 +22,7 @@
                         <span class="img_container">
                             <img src="@/views/resources/img/icons/mosaic.svg" alt />
                         </span>
-                        <span class="mosaic_name">{{$t('mosaic_transfer_type')}}</span>
+                        <span class="mosaic_name">{{ $t('mosaic_transfer_type') }}</span>
                         <button class="add_button">
                             <img src="@/views/resources/img/icons/add.svg" alt />
                         </button>
@@ -31,7 +31,7 @@
                         <span class="img_container">
                             <img src="@/views/resources/img/icons/namespace.svg" alt />
                         </span>
-                        <span class="mosaic_name">{{$t('namespace_transfer_type')}}</span>
+                        <span class="mosaic_name">{{ $t('namespace_transfer_type') }}</span>
                         <button class="add_button">
                             <img src="@/views/resources/img/icons/add.svg" alt />
                         </button>
@@ -40,7 +40,7 @@
                         <span class="img_container">
                             <img src="@/views/resources/img/icons/multisig.svg" alt />
                         </span>
-                        <span class="mosaic_name">{{$t('multisignature_transfer_type')}}</span>
+                        <span class="mosaic_name">{{ $t('multisignature_transfer_type') }}</span>
                         <button class="add_button">
                             <img src="@/views/resources/img/icons/add.svg" alt />
                         </button>
@@ -50,7 +50,7 @@
             <div class="left-bottom-container">
                 <div class="title-container">
                     <h1 class="title-style">
-                        {{$t('my_transaction_title')}}
+                        {{ $t('my_transaction_title') }}
                     </h1>
                 </div>
                 <!-- TODO: DYNAMIC TRANSACTION LIST & REMOVE onClick Action to all remove_button -->
@@ -82,7 +82,7 @@
             </div>
         </div>
         <div class="right-container">
-        <!-- TODO: TRANSFER FORM GOES HERE Same as Dashboard Transfer
+            <!-- TODO: TRANSFER FORM GOES HERE Same as Dashboard Transfer
         <AggregateTransaction />-->
             <div class="title-container">
                 <h1 class="title-style">
@@ -90,8 +90,7 @@
                     Simple transaction 1
                 </h1>
                 <div class="transaction-form">
-                    <div>
-                    </div>
+                    <div></div>
                 </div>
             </div>
         </div>

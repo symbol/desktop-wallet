@@ -5,7 +5,7 @@
             {{ getPrettyAddress() }}
         </div>
         <ButtonCopyToClipboard v-model="address">
-                <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
+            <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
         </ButtonCopyToClipboard>
     </div>
 </template>

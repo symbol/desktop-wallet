@@ -1,8 +1,7 @@
 <template>
     <AssetListPageWrap>
         <template v-slot:table-section>
-            <TableDisplay asset-type="mosaic" class="table-section">
-            </TableDisplay>
+            <TableDisplay asset-type="mosaic" class="table-section"> </TableDisplay>
         </template>
     </AssetListPageWrap>
 </template>
