@@ -16,8 +16,8 @@
 
 @import 'variables';
 
-@formFieldHeight: 0.45rem;
-@formLabelWidth: 2.4rem;
+@formFieldHeight: 0.3rem;
+@formLabelWidth: 1.9rem;
 @formInputsWidth: 8rem;
 
 /*************************************************************
@@ -83,6 +83,7 @@
     .form-row-inner-container {
         display: grid;
         width: 100%;
+        align-items: center;
         height: 100%;
         min-height: @formFieldHeight;
         grid-template-columns: @formLabelWidth @formInputsWidth;
@@ -109,13 +110,15 @@
     word-spacing: 0px;
 
     .form-label {
+        padding-left: 0.7rem;
         font-style: normal;
         font-weight: 500;
-        font-size: 18px;
+        font-size: @bigFont;
+        font-family: @symbolFont;
         line-height: 25px;
         align-items: center;
-        text-align: right;
-        color: #5200c6;
+        text-align: left;
+        color: @purpleDark;
     }
 
     .form-label-description {
@@ -172,19 +175,19 @@
     display: grid;
     align-items: center;
     text-align: left;
-    font-size: 1em;
-    font-weight: 400;
-    color: @black;
-    height: 100%;
+    font-size: @bigFont;
+    color: @purpleDark;
+    font-family: @symbolFontLight;
+    padding-top: 0.04rem;
 }
 
 .inline-field-description {
     display: grid;
     align-items: center;
     text-align: left;
-    font-weight: 400;
-    font-size: 1em;
-    color: @black;
+    font-size: @smallFont;
+    color: @purpleDark;
+    font-style: italic;
     height: 100%;
 }
 
@@ -201,7 +204,8 @@
     line-height: @formFieldHeight;
     width: 100%;
     display: block;
-    font-size: @smallerFont;
+    font-size: @smallFont;
+    color: @purpleDark;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -232,12 +236,12 @@
     display: grid;
     width: 100%;
     height: @formFieldHeight !important;
-    grid-template-columns: auto 0.4rem;
+    grid-template-columns: auto 0.2rem;
     grid-template-rows: 100%;
     font-size: 0.9em;
     padding-left: 0.05rem;
     font-weight: 400;
-    font-color: @blackLight;
+    font-color: @purpleDark;
 
     .cosignatory-removed {
         text-decoration: line-through;
@@ -247,14 +251,14 @@
 .row-cosignatory-modification-display.link {
     display: flex;
     justify-content: flex-end;
-    width: 97%;
+    width: 82%;
 }
 
 .row-cosignatory-modification-display.empty-message {
     display: flex;
     justify-content: center;
     width: 97%;
-    color: @blackLight;
+    color: @purpleDark;
     font-size: 0.9em;
     font-weight: 400;
 }
@@ -286,6 +290,10 @@
     grid-template-rows: 100%;
 }
 
+.cosignatory-address-container {
+    color: @purpleDark;
+}
+
 .submit-button {
     width: 100% !important;
 }
@@ -298,18 +306,22 @@
 .inputs-container {
     align-items: center;
     width: 100%;
-    height: 100%;
+    height: @formFieldHeight;
+
     .ivu-tooltip {
         width: 100%;
-        height: 100%;
+        height: @formFieldHeight;
         border-radius: 0.04rem;
         background: #f2f2f2;
         .ivu-tooltip-rel {
             width: 100%;
-            height: 100%;
+            height: @formFieldHeight;
             border: none;
             outline: none;
         }
+    }
+    .display-value {
+        padding-top: 0.01rem;
     }
 }
 
@@ -319,7 +331,7 @@
     outline: none;
     padding-left: 0.2rem;
     padding-right: 0.15rem;
-    font-size: @smallerFont;
+    font-size: @smallFont;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -328,8 +340,8 @@
 
 .textarea-style {
     outline: none;
-    padding: 0.1rem 0.2rem;
-    font-size: @smallerFont;
+    padding: 0.06rem 0.2rem;
+    font-size: @smallFont;
     border-radius: 0.04rem;
     background-color: @grayLightest;
 }
@@ -338,7 +350,7 @@
     height: @formFieldHeight;
     line-height: @formFieldHeight;
     display: block;
-    font-size: @smallerFont !important;
+    font-size: @smallFont !important;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -350,17 +362,17 @@
 
     .ivu-select-selection {
         box-shadow: unset;
-        padding-top: 0.07rem;
         border: unset;
         background: @grayLightest;
         border-radius: 3.4px;
     }
 
     .ivu-select-selected-value {
-        font-size: @smallerFont !important;
+        font-size: @smallFont !important;
         padding-left: 0;
         height: @formFieldHeight;
         line-height: @formFieldHeight;
+        color: @purpleDark;
     }
 
     .ivu-select-item-selected {
@@ -369,18 +381,17 @@
 
     .ivu-select-dropdown {
         min-width: unset !important;
-        margin: 0.12rem 0;
         left: 0px !important;
         width: 100%;
         background-color: @grayLightest;
+        margin: 0 !important;
     }
 
     .ivu-select-arrow {
-        top: 66%;
     }
 
     .ivu-select-placeholder {
-        font-size: @smallerFont;
+        font-size: @smallFont;
         padding-left: 0;
         height: @formFieldHeight;
         line-height: @formFieldHeight;
@@ -420,7 +431,7 @@
 
     .ivu-input {
         height: 0.4rem;
-        font-size: @smallerFont;
+        font-size: @smallFont;
         border-bottom: unset;
         padding: 0;
         background: #f2f2f2;
@@ -435,20 +446,20 @@
 // Styles common to all buttons
 .button-style {
     text-align: center;
+
     height: @formFieldHeight !important;
     display: inline-block;
     // width: auto !important;
     font-size: @normalFont;
     font-weight: bold;
-    border-radius: 0.06rem;
+    border-radius: @buttonBorderRadius;
     cursor: pointer;
-    text-transform: uppercase;
 }
 
 .round-button {
     color: @primary;
     background-color: @white;
-    font-size: 0.45rem;
+    font-size: 0.3rem;
     border: none;
     outline: none;
     cursor: pointer;
@@ -474,10 +485,67 @@
 }
 */
 
+.solid-button {
+    border: none;
+    background-color: none;
+    position: relative;
+    background-color: @primary;
+    color: white;
+    letter-spacing: 0.05em;
+    padding-top: 0.05em;
+    font-weight: 700;
+    z-index: 1;
+}
+
+.solid-button:hover {
+    background-color: @purpleHover;
+    transition: 0.5s;
+}
+
 .inverted-button {
-    border: 3px solid @primary;
-    background: @white;
-    color: @primary;
+    border: none;
+    background-color: none;
+    position: relative;
+    background-image: linear-gradient(315.55deg, #44004e -1.68%, #5200c6 110.7%);
+    color: white;
+    letter-spacing: 0.05em;
+    padding-top: 0.05em;
+    font-weight: 700;
+    z-index: 1;
+}
+
+.inverted-button::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: linear-gradient(315.55deg, #5200c6 -1.68%, #49004e 110.7%);
+    z-index: -1;
+    transition: opacity 0.5s linear;
+    opacity: 0;
+    border-radius: inherit;
+}
+
+.inverted-button:hover::before {
+    opacity: 1;
+    border-radius: inherit;
+}
+
+.fat-button {
+    padding-top: 0.6em;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 2em;
+}
+
+.full-width-centered-button {
+    width: 100%;
+    left: 5%;
+    align-content: center;
+    align-items: center;
+    position: relative;
 }
 
 .inverted-button:disabled {
@@ -492,6 +560,26 @@
     border: 2px solid @grayDark;
 }
 
+.danger-button {
+    border: none;
+    letter-spacing: 0.05em;
+    padding-top: 0.05em;
+    font-weight: 700;
+    background-image: none;
+    background: none;
+    background-color: transparent;
+    color: @pink;
+    border: 2px solid @pink !important;
+}
+
+.danger-button:hover {
+    background-image: none;
+    background: none;
+    background-color: @pink;
+    color: white;
+    transition: 0.5s;
+}
+
 /*
 .back-button:hover {
     box-shadow: 0 0 0.1rem @grayLight;
@@ -504,7 +592,6 @@
 .text-button {
     border-color: transparent;
     background: transparent;
-    color: @primary;
 }
 
 .remove-button {
@@ -687,4 +774,59 @@
             padding-left: 0.1rem;
         }
     }
+}
+.icon-left-button {
+    width: 0.15rem;
+    height: 0.15rem;
+    color: @purpleDark;
+    margin-right: 10px;
+}
+
+.form-create-headline {
+    color: @purpleDark;
+    font-size: 25px;
+    font-family: @symbolFontSemiBold;
+    padding-left: 0.7rem;
+}
+
+.inputs-create-container {
+    align-items: center;
+    width: 85%;
+    height: @formFieldHeight;
+
+    .ivu-tooltip {
+        width: 100%;
+        height: @formFieldHeight;
+        border-radius: 0.04rem;
+        background: #f2f2f2;
+        .ivu-tooltip-rel {
+            width: 100%;
+            height: @formFieldHeight;
+            border: none;
+            outline: none;
+        }
+    }
+    .display-value {
+        padding-top: 0.01rem;
+    }
+}
+
+.create-account-style {
+    // width: auto !important;
+    font-size: @bigFont;
+    font-family: @symbolFontSemiBold;
+    border-radius: @buttonBorderRadius;
+    width: 20%;
+}
+
+.back-create-button {
+    color: white;
+    background: @purpleDark;
+    border: none;
+}
+
+.validation-create-button {
+    border: 2px solid @primary;
+    background: linear-gradient(315.55deg, #44004e -1.68%, #5200c6 110.7%);
+    color: @white;
 }

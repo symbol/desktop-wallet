@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="margin-bottom: 0.3rem;">
         <FormRow v-if="!(multisig && multisig.cosignatoryAddresses.length) && !addModifications.length && !removeModifications.length">
             <template v-slot:inputs>
                 <div>
@@ -10,9 +10,10 @@
             </template>
         </FormRow>
 
-        <div class="rows-scroll-container mt-0">
+        <div class="form-row-inner-container">
             <!-- COSIGNATORIES -->
             <FormRow v-if="cosignatories && cosignatories.length">
+                <template v-slot:label> </template>
                 <template v-slot:inputs>
                     <div
                         v-for="({ address }, index) in cosignatories"
@@ -72,19 +73,33 @@
                     <div
                         v-for="({ address }, index) in addModifications"
                         :key="index"
-                        :class="['row-cosignatory-modification-display', 'inputs-container', 'mx-1', 'pl-2', 'pr-2', 'green-background']"
+                        :class="[
+                            'row-cosignatory-modification-display',
+                            'inputs-container',
+                            'mx-1',
+                            'pl-2',
+                            'pr-2',
+                            'accent-pink-background',
+                        ]"
                     >
                         <div class="cosignatory-address-container">
                             <span>{{ address.pretty() }}</span>
                         </div>
-                        <Icon type="md-trash" size="21" class="icon-button" @click="onUndoModification(address)" />
+                        <img
+                            src="@/views/resources/img/icons/bin.svg"
+                            size="21"
+                            class="icon-button"
+                            style="font-size: 0.3rem;"
+                            @click="onUndoModification(address)"
+                        />
                     </div>
                 </template>
             </FormRow>
 
             <AddCosignatoryInput v-if="isAddingCosignatory" @added="onAddCosignatory" />
             <div v-if="!isAddingCosignatory" class="row-cosignatory-modification-display inputs-container link mx-1">
-                <a href="#" @click="isAddingCosignatory = true">{{ $t('form_label_add_cosignatory') }}</a>
+                <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" />
+                <a href="#" style="color: #5200c6;" @click="isAddingCosignatory = true">{{ $t('form_label_add_cosignatory') }}</a>
             </div>
         </div>
     </div>

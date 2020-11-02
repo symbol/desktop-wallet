@@ -4,7 +4,6 @@
     position: relative;
     width: 100%;
     height: 100%;
-    padding: 0.1rem 0.1rem 0.35rem 0.2rem;
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 100%;
@@ -13,7 +12,6 @@
         position: relative;
         width: 100%;
         height: 100%;
-        padding: 0.2rem 0 0.35rem 0.2rem;
         display: grid;
         grid-template-columns: 100%;
         grid-template-rows: 0.6rem auto;
@@ -23,7 +21,14 @@
     }
 
     .top-container {
-        padding-left: 0.4rem;
+        padding: 0 0.4rem;
+        margin: 0.2rem 0;
+        .page-title {
+            font-weight: 600;
+            color: @purpleDark;
+            font-family: @symbolFont;
+            font-size: @bigFont;
+        }
     }
 
     .bottom-container {

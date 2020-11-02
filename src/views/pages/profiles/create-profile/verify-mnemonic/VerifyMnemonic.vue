@@ -3,7 +3,7 @@
         <div class="skip pointer" @click="$router.push({ name: 'profiles.createProfile.finalize' })">
             {{ $t('skip') }}
         </div>
-        <p class="set-title">
+        <p class="set-title-create">
             {{ $t('verify_mnemonics') }}
         </p>
         <div class="check-mnemonic-col">
@@ -13,14 +13,6 @@
                     @success="$router.push({ name: 'profiles.createProfile.finalize' })"
                     @cancelled="$router.back()"
                 />
-            </div>
-            <div class="check-mnemonic-right">
-                <p class="text1">
-                    {{ $t('tips') }}
-                </p>
-                <p class="text">
-                    {{ $t('the_backup_is_wrong') }}
-                </p>
             </div>
         </div>
     </div>
