@@ -36,7 +36,7 @@
                     </span>
                 </div>
                 <div class="form-line-container button-container">
-                    <div class="flex-container mt-3">
+                    <div class="float-right mt-3">
                         <button
                             type="button"
                             class="solid-button button-style fat-button create-account-style"
