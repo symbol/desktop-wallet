@@ -122,14 +122,15 @@
                         <div class="flex-container mt-3" style="padding-left: 0.7rem;">
                             <button
                                 type="button"
-                                class="solid-button button-style fat-button create-account-style"
+                                class="solid-button button-style create-account-stylebutton create-account-style"
                                 @click="$router.push({ name: 'profiles.importProfile.importStrategy' })"
                             >
                                 {{ $t('back') }}
                             </button>
                             <button
                                 type="submit"
-                                class="inverted-button button-style fat-button create-account-style"
+                                class="inverted-button button-style create-account-style"
+                                :class="{ 'restore-button': nextPage === 'profiles.importProfile.importMnemonic' }"
                                 @click="handleSubmit(submit)"
                             >
                                 {{ $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'restore_mnemonic' : 'generating_mnemonic') }}
@@ -148,6 +149,8 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
 </script>
 
 <style lang="less" scoped>
+@import '../../resources/css/variables.less';
+
 .right-hints-section {
     display: block;
     width: 5rem;
@@ -157,6 +160,14 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
 .form-account-creation-container {
     width: 100%;
     height: 100%;
+}
+
+.restore-button {
+    border: 2px solid @pink;
+    background: transparent;
+    color: @pink;
+    width: auto;
+    padding: 0 0.1rem;
 }
 
 /deep/ .form-row {

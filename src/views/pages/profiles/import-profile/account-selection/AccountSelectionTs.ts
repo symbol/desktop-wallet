@@ -40,6 +40,7 @@ import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorag
             currentProfile: 'profile/currentProfile',
             currentPassword: 'temporary/password',
             currentMnemonic: 'temporary/mnemonic',
+            selectedAccounts: 'account/selectedAddressesToInteract',
         }),
     },
     components: { MosaicAmountDisplay },
@@ -98,12 +99,6 @@ export default class AccountSelectionTs extends Vue {
     public profileService: ProfileService = new ProfileService();
 
     /**
-     * List of addresses
-     * @var {Address[]}
-     */
-    public addressesList: Address[] = [];
-
-    /**
      * Balances map
      * @var {any}
      */
@@ -113,7 +108,13 @@ export default class AccountSelectionTs extends Vue {
      * Map of selected accounts
      * @var {number[]}
      */
-    public selectedAccounts: number[] = [];
+    public selectedAccounts: number[];
+
+    /**
+     * List of addresses
+     * @var {Address[]}
+     */
+    public addressesList: Address[] = [];
 
     public networkCurrency: NetworkCurrencyModel;
 
@@ -276,20 +277,6 @@ export default class AccountSelectionTs extends Vue {
      * @param {number} pathNumber
      */
     protected onAddAddress(pathNumber: number): void {
-        const selectedAccounts = [...this.selectedAccounts];
-        selectedAccounts.push(pathNumber);
-        this.selectedAccounts = selectedAccounts;
-    }
-
-    /**
-     * Called when clicking on an address to remove it from the selection
-     * @protected
-     * @param {number} pathNumber
-     */
-    protected onRemoveAddress(pathNumber: number): void {
-        const selectedAccounts = [...this.selectedAccounts];
-        const indexToDelete = selectedAccounts.indexOf(pathNumber);
-        selectedAccounts.splice(indexToDelete, 1);
-        this.selectedAccounts = selectedAccounts;
+        this.$store.commit('account/addToSelectedAddressesToInteract', pathNumber);
     }
 }

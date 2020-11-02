@@ -560,7 +560,7 @@
     "restore_mnemonic": "Restore mnemonic passphrase",
     "restrictable": "Restrictable",
     "rules_describe": "Rules description",
-    "safe_storage_tips": "Safe storage tips=>",
+    "safe_storage_tips": "Safe storage tips",
     "save_backups": "Make multiple copies offline and save backups in multiple locations. Use encrypted disks for digital backups.",
     "scenes_to_be_used": "Use cases",
     "see_transactions_other_account": "Display multi-signature account transactions",
