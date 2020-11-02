@@ -22,7 +22,17 @@ module.exports = {
   lintOnSave: true,
   // webpack
   // see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
-  chainWebpack: config => {},
+  chainWebpack: (config) => {
+    config.plugin('define').tap((args) => {
+      const env = args[0]['process.env'];
+      args[0]['process.env'] = {
+          ...env,
+          PACKAGE_VERSION: packageVersion,
+          WEB: web,
+      };
+      return args;
+    });
+  },
   // generate map
   productionSourceMap: true,
   //use template in vue
@@ -66,8 +76,6 @@ module.exports = {
   pluginOptions: {
     "process.env": {
       NODE_ENV: '"development"',
-      PACKAGE_VERSION: packageVersion,
-      WEB: web,
     }
   }
 }
