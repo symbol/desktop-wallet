@@ -27,10 +27,10 @@
             </div>
         </div>
         <div class="button-container flex-container">
-            <button class="button-style back-create-button" @click="previous">
-                {{ $t('previous') }}
+            <button class="button-style back-create-button button" @click="previous">
+                {{ $t('back') }}
             </button>
-            <button class="button-style validation-create-button" @click="submit">
+            <button class="button-style validation-create-button button" @click="submit">
                 {{ $t('next') }}
             </button>
         </div>
