@@ -484,7 +484,7 @@ export default {
             commit('knownAccounts', knownAccounts);
         },
 
-        DELETE_CURRENT_ACCOUNT({ commit, getters, rootGetters }, account: AccountModel) {
+        DELETE_CURRENT_ACCOUNT({ commit, rootGetters }, account: AccountModel) {
             if (!account) {
                 return;
             }
