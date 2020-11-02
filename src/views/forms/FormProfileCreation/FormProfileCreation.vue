@@ -119,7 +119,7 @@
                     </FormRow>
 
                     <div class="form-line-container form-row">
-                        <div class="float-right mt-3" >
+                        <div class="float-right mt-3">
                             <button
                                 type="button"
                                 class="solid-button button-style fat-button create-account-style"
