@@ -7,12 +7,12 @@
             <MnemonicInput :seed="importedMnemonic" @handle-words="setSeed" />
             <div class="form-line-container form-row">
                 <div class="flex-container mt-3">
-                    <button type="button" class="button-style back-create-button" @click="deleteProfileAndBack">
+                    <button type="button" class="button-style back-create-button fat-button" @click="deleteProfileAndBack">
                         {{ $t('back') }}
                     </button>
                     <ImportQRButton valid-qr-types="[5]">
                         <template v-slot:trigger="importQRButton">
-                            <button type="button" class="button-style back-create-button" @click="importQRButton.trigger">
+                            <button type="button" class="button-style back-create-button fat-button" @click="importQRButton.trigger">
                                 {{ $t('from_qr_code') }}
                             </button>
                         </template>
