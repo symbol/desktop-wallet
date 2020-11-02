@@ -1,16 +1,26 @@
 <template>
     <div class="accounts-main-container">
         <div class="left-container">
-            <div class="account-switch-container">
-                <NavigationLinks
-                    :direction="'horizontal'"
-                    :items="panelItems"
-                    :current-item-index="activePanel"
-                    translation-prefix="tab_accounts_"
-                    @selected="(i) => (activePanel = i)"
-                />
-                <AccountSelectorPanel v-if="activePanel === 0" />
-                <ContactSelectorPanel v-if="activePanel === 1" />
+            <div class="left-top-container">
+                <div class="account-switch-container">
+                    <NavigationLinks
+                        :direction="'horizontal'"
+                        :items="panelItems"
+                        :current-item-index="activePanel"
+                        translation-prefix="tab_accounts_"
+                        @selected="(i) => (activePanel = i)"
+                    />
+                    <AccountSelectorPanel v-if="activePanel === 0" />
+                    <ContactSelectorPanel v-if="activePanel === 1" />
+                </div>
+            </div>
+            <div class="left-bottom-container">
+                <!--TODO: Display hidden accounts following AccountSelectorPanel style.-->
+                <div class="hidden-account-header">
+                    <h1 class="section-title">
+                        {{ $t('hidden_accounts') }}
+                    </h1>
+                </div>
             </div>
         </div>
         <div class="right-container" v-if="activePanel === 0">
@@ -39,4 +49,14 @@ export default class Accounts extends AccountsTs {}
 
 <style lang="less" scoped>
 @import './Accounts.less';
+
+.hidden-account-header {
+    padding: 0 0.4rem;
+    margin: 0.2rem 0;
+    .section-title {
+        font-weight: 600;
+        color: @purpleDark;
+        font-family: @symbolFont;
+    }
+}
 </style>

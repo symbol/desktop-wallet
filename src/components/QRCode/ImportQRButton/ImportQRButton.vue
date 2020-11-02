@@ -2,7 +2,7 @@
     <div>
         <slot name="trigger" :trigger="onClick">
             <div class="trigger-importqr pointer level" @click="onClick">
-                <img class="navbar-icon level-item" src="@/views/resources/img/navbar/import.svg" />
+                <img class="navbar-icon level-item" src="@/views/resources/img/newicons/NavQRCode.svg" />
                 <span class="level-item">{{ $t('import_qr_code') }}</span>
             </div>
         </slot>

@@ -281,7 +281,7 @@ export const routes: AppRoute[] = [
                         },
                         // @ts-ignore
                         component: () => import('@/views/pages/accounts/AccountDetailsPage/AccountDetailsPage.vue'),
-                    }
+                    },
                 ],
             },
             {

@@ -28,6 +28,34 @@
     }
 }
 
+.metadata-columns {
+    grid-template-columns: 20% 15% 15% 25% 10% 15%;
+    .targetAddress-header,
+    .targetAddress-cell {
+        text-align: left;
+    }
+    .targetID-header,
+    .targetID-cell {
+        text-align: left;
+    }
+    .targetType-header,
+    .targetType-cell {
+        text-align: left;
+    }
+    .scopedMetadataKey-header,
+    .scopedMetadataKey-cell {
+        text-align: left;
+    }
+    .status-header,
+    .status-cell {
+        text-align: left;
+    }
+    .changeTimes-header,
+    .changeTimes-cell {
+        text-align: left;
+    }
+}
+
 .hexId-header {
     text-align: left;
 }
@@ -123,6 +151,16 @@
                 right: 0.5rem;
                 bottom: 0.2rem;
                 color: @black;
+                .add-metadata-button {
+                    align-items: center;
+                    display: flex;
+                    justify-content: center;
+                    user-select: none;
+                    cursor: pointer;
+                    .add-icon {
+                        padding: 3px 5px 0px 4px;
+                    }
+                }
                 .ivu-icon-ios-sync {
                     margin-left: 0.2rem;
                     font-weight: 600;
@@ -193,10 +231,10 @@
         display: grid;
         width: 100%;
         text-align: right;
-        color: @black;
+        color: @purpleDark;
         background-color: @white;
-        font-weight: 500;
-        font-size: 0.875em;
+        font-size: @normalFont;
+        font-family: @symbolFontMedium;
 
         .table-header-item {
             padding: 0 0.1rem;
@@ -217,6 +255,9 @@
         overflow-y: auto;
         overflow-x: hidden;
         position: relative;
+        font-family: @symbolFontLight;
+        font-size: @normalFont;
+        color: @purpleDark;
         .table-rows-container {
             width: 100%;
             height: 100%;

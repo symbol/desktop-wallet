@@ -7,10 +7,10 @@
                 Streamlines the amount of time it takes to...
             </span>
         </div>
-        <div>
-            <button class="info-text inverted-button pl-2 pr-2" style="cursor: pointer;">
-                <!-- TODO: DELEGATED -->
-                ACTIVATE
+        <div class="bottom-container">
+            <button class="button-style inverted-button fat-button" style="cursor: pointer;">
+                <!-- TODO: Add onClick action. -->
+                {{ $t('stop_harvesting') }}
             </button>
         </div>
     </div>

@@ -27,13 +27,14 @@ export class MultisigService {
      */
     public static getMultisigInfoFromMultisigGraphInfo(graphInfo: MultisigAccountGraphInfo): MultisigAccountInfo[] {
         const { multisigEntries } = graphInfo;
+        return [].concat(...this.getMultisigGraphArraySorted(multisigEntries)).map((item) => item); // flatten
+    }
 
-        const multisigsInfo = [...multisigEntries.keys()]
+    public static getMultisigGraphArraySorted(multisigEntries: Map<number, MultisigAccountInfo[]>): MultisigAccountInfo[][] {
+        return [...multisigEntries.keys()]
             .sort((a, b) => b - a) // Get addresses from top to bottom
             .map((key) => multisigEntries.get(key) || [])
             .filter((x) => x.length > 0);
-
-        return [].concat(...multisigsInfo).map((item) => item); // flatten
     }
 
     public getSigners(

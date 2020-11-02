@@ -1,6 +1,6 @@
 <template>
     <div class="login-profile-wrapper">
-        <div class="login-profile-background-img">
+        <VideoBackground class="video-background-section" :src="require('@/views/resources/videos/symbol_3d_rotate.mp4')">
             <ValidationObserver v-slot="{ handleSubmit }" slim>
                 <form onsubmit="event.preventDefault()">
                     <div class="switch-language-container">
@@ -8,16 +8,15 @@
                     </div>
                     <div class="welcome-box">
                         <div class="banner-image">
-                            <span class="top-welcome-text">{{ $t('welcome') }}</span>
-                            <span class="top-to-symbol-text">{{ $t('to_symbol') }}</span>
-                            <div class="bottom-welcome-text">
-                                {{ $t('program_description') }}
-                            </div>
+                            <span class="top-welcome-text">{{ $t('welcome_to_symbol') }}</span>
+                            <div class="bottom-welcome-text">{{ $t('program_description_line1') }}</div>
+                            <div class="bottom-welcome-text">{{ $t('program_description_line2') }}</div>
+                            <div class="bottom-welcome-text">{{ $t('program_description_line3') }}</div>
                         </div>
                         <div class="login-card radius">
                             <div class="img-box" />
                             <p class="login-title">
-                                {{ $t('login') }}
+                                {{ $t('login_to_symbol_account') }}
                             </p>
                             <p class="profile-name">
                                 {{ $t('profile_name') }}
@@ -109,7 +108,9 @@
                     </div>
                 </form>
             </ValidationObserver>
-        </div>
+            <span class="version-panel">{{ $t('version') }}: {{ packageVersion }}</span>
+            <span class="powered_by_label">{{ $t('powered_by') }}</span>
+        </VideoBackground>
     </div>
 </template>
 

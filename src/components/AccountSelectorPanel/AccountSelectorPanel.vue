@@ -15,13 +15,14 @@
                     <span class="mosaic_name">{{ item.name }}</span>
                     <span class="mosaic_value">
                         <span :class="['amount', 'overflow_ellipsis', 'green']">
-                            <AmountDisplay
+                            <MosaicAmountDisplay :absolute-amount="balances[item.address]" />
+                            <!-- <AmountDisplay
                                 :value="balances[item.address] ? balances[item.address] : 0"
                                 :decimals="6"
                                 :size="'normal'"
                                 :show-ticker="false"
                                 :ticker="false"
-                            />
+                            /> -->
                         </span>
                     </span>
                 </div>
@@ -43,11 +44,16 @@
         </div>
 
         <div class="account-switch-footer-container">
-            <span class="add-account pointer button" @click="hasAddAccountModal = true">
+            <span type="button" class="add-account pointer button" @click="hasAddAccountModal = true">
+                <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" />
                 {{ $t('button_add_account') }}
             </span>
+
             <div v-if="!isPrivateKeyProfile" class="account-switch-header-right-container" @click="hasBackupProfileModal = true">
-                <span class="back-up pointer">{{ $t('backup_profile') }}</span>
+                <span type="button" class="back-up pointer button" @click="hasAddAccountModal = true">
+                    <img src="@/views/resources/img/newicons/Download.svg" class="icon-left-button" />
+                    {{ $t('backup_profile') }}
+                </span>
             </div>
             <ModalFormSubAccountCreation v-if="hasAddAccountModal" :visible="hasAddAccountModal" @close="hasAddAccountModal = false" />
 

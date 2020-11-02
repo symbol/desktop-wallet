@@ -4,7 +4,6 @@
     position: relative;
     width: 100%;
     height: 100%;
-    padding: 0.1rem 0.1rem 0.35rem 0.2rem;
     display: grid;
     grid-template-columns: 4.5rem auto;
     grid-template-rows: 100%;
@@ -28,7 +27,7 @@
 .left-bottom-container {
     display: grid;
     height: calc(50% - 0.15rem);
-    grid-template-rows: 0.8rem auto 0.5rem;
+    grid-template-rows: 0.8rem auto 0.5rem 0.08rem;
     background-color: white;
     overflow: hidden;
     border-radius: @borderRadius;
@@ -54,19 +53,21 @@
 }
 
 .title-container {
-    padding: 0.25rem;
-    height: 0.65rem;
+    padding: 0 0.4rem;
+    margin: 0.2rem 0;
     .title-style {
-        font-size: 0.25rem;
-        color: @black;
+        font-weight: 600;
+        color: @purpleDark;
+        font-family: @symbolFont;
+        font-size: @bigFont;
     }
 }
 
 .mosaic_data {
     height: 0.65rem;
-    padding: 0.15rem 0.25rem 0.15rem 0;
-    left: 0.25rem;
-    width: 4rem;
+    padding: 0.15rem 0.1rem 0.15rem 0;
+    left: 0.45rem;
+    width: 3.7rem;
     display: flex;
     flex-direction: row;
     justify-items: center;
@@ -75,6 +76,8 @@
     align-items: center;
     border-bottom: 0.01rem solid @line;
     position: relative;
+    color: @purpleDark;
+    font-family: @symbolFontLight;
 
     .img_container {
         display: inline-block;
@@ -93,16 +96,16 @@
         position: relative;
         top: 0;
         left: 0.4rem;
-        width: 3rem;
-        font-size: @smallerFont;
+        width: 1.8rem;
+        font-size: @bigFont;
         font-weight: 400;
-        overflow: hidden;
+        overflow: initial;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: @black;
     }
 
     .add_button {
+        color: @purpleDark;
         margin-left: 0.5rem;
         text-align: right;
         background-color: transparent;
@@ -112,16 +115,28 @@
             display: inline-block;
             margin-top: 0.05rem;
             width: 0.22rem;
-            height: 0.2rem;
+            height: auto;
+        }
+
+        &:hover {
+            &:after {
+                background-color: @purpleHover;
+                color: @purpleHover;
+                transition: 0.3s;
+            }
         }
     }
 }
 
 .transfer_data {
-    height: 0.65rem;
-    padding: 0.15rem 0.25rem 0.15rem 0;
-    left: 0.25rem;
-    width: 4rem;
+    background-color: @accentPinkLight;
+    border-radius: 4px;
+    padding: 2%;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-bottom: 15px;
+    left: 5%;
+    width: 90%;
     display: flex;
     flex-direction: row;
     justify-items: center;
@@ -132,11 +147,10 @@
 
     .img_container {
         display: inline-block;
-        position: absolute;
-        top: 0.23rem;
-        margin-right: 0.15rem;
+        position: relative;
         img {
             display: inline-block;
+            margin-top: 0.05rem;
             width: 0.22rem;
             height: 0.2rem;
         }
@@ -145,14 +159,15 @@
     .transfer_name {
         position: relative;
         top: 0;
-        left: 0.4rem;
+        left: 0.2rem;
         width: 3rem;
-        font-size: @smallFont;
+        font-size: @bigFont;
         font-weight: 400;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: @black;
+        color: @purpleDark;
+        font-family: @symbolFontLight;
     }
 
     .remove_button {

@@ -80,4 +80,10 @@ export default class FormNamespaceRegistrationTransaction extends FormNamespaceR
 </script>
 <style lang="less" scoped>
 @import './FormNamespaceRegistrationTransaction.less';
+
+/deep/ .form-row {
+    .form-row-inner-container {
+        grid-template-columns: 3rem 8rem;
+    }
+}
 </style>

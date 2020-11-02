@@ -1,13 +1,7 @@
 <template>
     <AssetListPageWrap>
         <template v-slot:table-section>
-            <TableDisplay asset-type="mosaic" class="table-section">
-                <template v-slot:table-title>
-                    <h1 class="section-title">
-                        {{ $t('mosaics_list') }}
-                    </h1>
-                </template>
-            </TableDisplay>
+            <TableDisplay asset-type="mosaic" class="table-section"> </TableDisplay>
         </template>
     </AssetListPageWrap>
 </template>
@@ -31,7 +25,7 @@ export default class MosaicListPage extends Vue {}
 
 <style lang="less" scoped>
 .table-section {
-    padding: 0.2rem 0 0 0.2rem;
+    padding-left: 0.2rem;
     height: 100%;
 }
 </style>

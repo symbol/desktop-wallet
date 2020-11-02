@@ -15,15 +15,14 @@
  */
 @import '../../views/resources/css/variables.less';
 
-.wrap {
-    .top_window {
-        .controller {
-            .app_controller {
-                .switch_language {
-                    -webkit-app-region: no-drag;
-                    position: relative;
-                }
-            }
-        }
+.switch_language {
+    -webkit-app-region: no-drag;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    > img {
+        width: 24px;
+        height: 24px;
     }
 }
