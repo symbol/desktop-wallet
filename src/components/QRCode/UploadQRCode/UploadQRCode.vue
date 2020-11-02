@@ -44,7 +44,7 @@
                     <li v-if="validQrTypes.includes(4)" :class="qrType == 4 ? 'selected' : ''">
                         {{ $t('upload_qr_code_explanation_type_cosignatureqr') }}
                     </li>
-                    <li v-if="validQrTypes.includes(6)" :class="qrType == 6 ? 'selected' : ''">
+                    <li v-if="validQrTypes.includes(5)" :class="qrType == 5 ? 'selected' : ''">
                         {{ $t('upload_qr_code_explanation_type_mnemonicqr') }}
                     </li>
                     <li v-if="invalidType" class="selected">

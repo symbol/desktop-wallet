@@ -9,8 +9,14 @@
                             <div class="inputs-container">
                                 <div class="select-container">
                                     <Select v-model="formItems.type" class="select-size select-style">
-                                        <Option v-show="!isPrivateKeyProfile" value="child_account">
+                                        <Option v-if="isPrivateKeyProfile" value="privatekey_account">
+                                            {{ $t('option_hd_account') }}
+                                        </Option>
+                                        <Option v-else value="child_account">
                                             {{ $t('option_child_account') }}
+                                        </Option>
+                                        <Option value="privatekey_account">
+                                            {{ $t('option_privatekey_account') }}
                                         </Option>
                                     </Select>
                                 </div>
@@ -72,7 +78,7 @@
                         <template v-slot:inputs>
                             <div class="align-right">
                                 <button
-                                    class="button-style validation-button left-side-button"
+                                    class="button-style fat-button inverted-button left-side-button"
                                     type="submit"
                                     @click="handleSubmit(onSubmit)"
                                 >
@@ -108,6 +114,6 @@ export default class FormSubAccountCreation extends FormSubAccountCreationTs {}
 }
 /deep/.form-row-inner-container {
     text-align: left;
-    grid-template-columns: 25% 75%;
+    grid-template-columns: 30% 60%;
 }
 </style>

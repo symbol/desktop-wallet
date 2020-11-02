@@ -13,18 +13,27 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator';
+// external dependencies
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel';
 // child components
 // @ts-ignore
-import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue';
+import AccountActions from '@/components/AccountActions/AccountActions.vue';
+// @ts-ignore
+import TableDisplay from '@/components/TableDisplay/TableDisplay.vue';
+// @ts-ignore
+import AssetListPageWrap from '@/views/pages/assets/AssetListPageWrap/AssetListPageWrap.vue';
+// @ts-ignore
+import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadataUpdate.vue';
 
 @Component({
     components: {
-        FormTransferTransaction,
+        AccountActions,
+        AssetListPageWrap,
+        TableDisplay,
+        ModalMetadataUpdate,
     },
     computed: {
         ...mapGetters({
@@ -32,11 +41,26 @@ import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormT
         }),
     },
 })
-export class DashboardHarvestingPageTs extends Vue {
+export class AccountMetadataPageTs extends Vue {
     /**
      * Currently active account
-     * @see {Store.Account}
-     * @var {AccountModel}
      */
     public currentAccount: AccountModel;
+
+    /**
+     * Update metadata modal visible
+     */
+    @Prop({
+        default: false,
+    })
+    public showUpdateModal: boolean;
+
+    /**
+     * Triggers the add metadata form modal
+     * @protected
+     * @return {void}
+     */
+    protected showAddMetadataModel(): void {
+        this.showUpdateModal = !this.showUpdateModal;
+    }
 }

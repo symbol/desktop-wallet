@@ -28,7 +28,6 @@
         height: 100%;
         background-color: white;
         position: relative;
-        padding-left: 0.5rem;
 
         .invoice-section-container {
             width: 100%;
@@ -36,9 +35,11 @@
             height: auto;
             display: grid;
             grid-template-rows: 100%;
-            grid-template-columns: 2.4rem auto;
+            grid-template-columns: 1.8rem auto;
             margin: 0.3rem 0;
+            margin-bottom: 0.5rem;
             overflow: hidden;
+            padding-left: 0.5rem;
 
             .image-container {
                 width: 100%;
@@ -58,11 +59,18 @@
                     grid-gap: 0.1rem auto;
                     align-items: center;
                     margin-bottom: 0.1rem;
+                    font-size: 14px;
 
                     .top-qr-text-title {
                         font-size: @smallFont;
-                        font-weight: @bold;
-                        color: @secondary;
+                        font-family: @symbolFont;
+                        color: @purpleDark;
+                        text-align: left;
+                    }
+                    span.gray {
+                        font-family: @symbolFontLight;
+                        color: @purpleDark;
+                        font-size: @smallFont;
                     }
                 }
             }

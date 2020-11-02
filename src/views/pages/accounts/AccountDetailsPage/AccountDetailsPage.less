@@ -17,21 +17,26 @@
 
 .account-detail-outer-container {
     width: 100%;
+    height: 100%;
     display: grid;
-    grid-template-rows: 3.6rem 4.2rem;
+    grid-template-rows: auto rem;
     background-color: @white;
     border-radius: 0.04rem;
     overflow: hidden;
+    padding-top: 2%;
 
     .account-detail-inner-container {
         width: 100%;
         padding: 0.2rem 0.4rem;
         margin: 0;
         display: grid;
-        grid-template-columns: 10rem auto;
+        grid-template-columns: 20%80%;
+        grid-template-rows: 8rem;
 
-        .left-container {
+        .right-container {
+            height: 100%;
             width: 100%;
+            overflow-x: hidden;
 
             .title-row {
                 font-size: @biggerFont;
@@ -42,7 +47,7 @@
                 display: grid;
             }
 
-            .left-container-title {
+            .right-container-title {
                 font-size: @normalFont;
                 color: #222;
                 font-weight: 500;
@@ -50,10 +55,10 @@
 
             .account-details-grid {
                 background-color: white;
+                font-size: 18px;
                 display: inline-grid;
-                font-size: @normalFont;
                 font-weight: 400;
-                color: #222;
+                color: @primary;
                 grid-auto-rows: 0.5rem;
                 padding-left: 10px;
             }
@@ -68,32 +73,44 @@
 
             .account-detail-row-3cols {
                 display: grid;
-                grid-template-columns: 1.4rem 8.6rem 0.2rem;
+                grid-template-columns: 1.4rem 5rem auto;
             }
 
             .account-detail-row {
                 display: grid;
-                grid-template-columns: 1.4rem 8.6rem;
+                grid-template-columns: 1.4rem 5rem;
+            }
+
+            .account-detail-cosignatory  {
+                display: grid;
+                grid-template-rows: auto rem;
             }
 
             .account-detail-row,
             .account-detail-row-3cols {
-                .label {
-                    font-size: @normalFont;
-                    font-weight: 400;
-                    color: #666;
+                font .label {
+                    font-family: @symbolFontMedium;
+                    font-weight: bold;
                     margin-right: 10px;
                     width: 1.4rem;
                 }
 
                 /deep/ .value {
-                    font-weight: @bolder;
+                    font-family: @symbolFontLight;
+                    text-overflow: ellipsis;
+                    color: @purpleDark;
+                }
+
+                /deep/ .value {
                 }
             }
         }
 
-        .right-container {
-            background-color: white;
+        .left-container {
+            /deep/ .qr-code-image {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
         }
     }
 
@@ -101,7 +118,6 @@
         background-color: lightgray;
         width: 100%;
         padding: 25px 0 0 0;
-        background-color: #eee;
 
         .account-actions-inner-container {
             background-color: lightseagreen;
@@ -114,4 +130,16 @@
 .edit-account-name {
     margin-left: 0.18rem;
     cursor: pointer;
+}
+
+.icon-left-button {
+    width: 0.3rem;
+    height: 0.3rem;
+    color: @purpleDark;
+    margin-right: 0.18rem;
+}
+
+.consignatory_row {
+    display: grid;
+    grid-template-columns: 0.4rem 4.6rem;
 }

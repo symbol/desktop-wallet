@@ -31,6 +31,9 @@ export class AccountLinksTs extends Vue {
         default: null,
     })
     account: AccountModel;
+    @Prop({ default: '' }) title: string;
+    @Prop({ default: '' }) link: string;
+    @Prop({ default: '' }) icon: string;
 
     public explorerBaseUrl: string;
     public faucetBaseUrl: string;

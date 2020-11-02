@@ -8,21 +8,33 @@
     .transaction-list-filter-container {
         margin-right: 0.2rem;
         min-width: 2rem;
+        color: @white !important;
 
         /deep/.ivu-select {
             .ivu-select-selection {
                 font-size: @normalFont;
-
+                border: none !important;
                 &:hover {
-                    color: @white;
-                    background-color: @purpleDark;
+                    color: @primary;
 
+                    .ivu-icon-ios-arrow-down {
+                        color: @primary !important;
+                    }
                     .ivu-icon-ios-arrow-down::before {
-                        color: @white !important;
+                        color: @primary !important;
                     }
                     .ivu-select-prefix {
                         color: @white;
                     }
+                }
+
+                & {
+                    background-color: @grayLightest;
+                    color: @primary;
+                }
+
+                .ivu-icon-ios-arrow-down {
+                    color: @primary !important;
                 }
 
                 .ivu-select-prefix {
@@ -45,12 +57,34 @@
                     color: @white;
                 }
             }
+
+            .ivu-select-dropdown {
+                padding: 0 !important;
+                .ivu-select-dropdown-list {
+                    .ivu-select-large {
+                    }
+
+                    .ivu-select-item-selected {
+                        color: @primary;
+                        background-color: @grayLightest;
+                    }
+                }
+
+                background-color: @grayLightest;
+            }
+
             .ivu-select-group-title {
                 font-size: @smallerFont !important;
+                color: @grayDark;
             }
 
             .ivu-select-item {
                 font-size: @smallFont !important;
+                color: @grayDark;
+            }
+
+            .ivu-select-item:hover {
+                background-color: @white;
             }
         }
     }
@@ -60,4 +94,20 @@
         align-items: center;
         cursor: pointer;
     }
+}
+
+.transaction-list-search-container {
+    margin-right: 0.2rem;
+    background-color: @grayLightest;
+    border: none;
+    border-radius: @buttonBorderRadius;
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+}
+
+::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-size: @normalFont;
+    color: @primary;
+    opacity: 10;
 }

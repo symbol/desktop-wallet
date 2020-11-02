@@ -135,6 +135,20 @@ export class NetworkConfigurationHelpers {
         );
     }
 
+    public static epochAdjustment(
+        networkConfiguration: NetworkConfiguration | undefined,
+        defaultValue: number | undefined = undefined,
+    ): number {
+        return (
+            (networkConfiguration &&
+                networkConfiguration.plugins &&
+                networkConfiguration.plugins.mosaic &&
+                TimeHelpers.durationStringToSeconds(networkConfiguration.network.epochAdjustment)) ||
+            defaultValue ||
+            this.defaults.epochAdjustment
+        );
+    }
+
     public static minNamespaceDuration(
         networkConfiguration: NetworkConfiguration | undefined,
         defaultValue: number | undefined = undefined,

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { TransferTransaction } from 'symbol-sdk';
+import { PublicAccount, TransferTransaction } from 'symbol-sdk';
 // internal dependencies
 import { TransactionView } from './TransactionView';
 import { AttachedMosaic } from '@/services/MosaicService';
@@ -89,7 +89,19 @@ export class ViewTransferTransaction extends TransactionView<TransferTransaction
             { key: 'sender', value: this.sender },
             { key: 'transfer_target', value: this.transaction.recipientAddress, isAddress: true },
             ...mosaicItems,
-            { key: 'message', value: message.payload || '-' },
+            {
+                key: 'message',
+                value: {
+                    message: message,
+                    incoming: this.isIncoming,
+                    recipient: this.transaction.recipientAddress,
+                    unannounced: this.transaction.isUnannounced(),
+                    signer: this.transaction.signer
+                        ? PublicAccount.createFromPublicKey(this.transaction.signer.publicKey, this.transaction.networkType)
+                        : null,
+                },
+                isMessage: true,
+            },
         ];
     }
 }

@@ -5,7 +5,7 @@
                 <form onsubmit="event.preventDefault()">
                     <div v-if="showTransactionActions" class="transfer-actions">
                         <a @click="isImportTransactionUriModalVisible = true">
-                            <Icon type="md-arrow-round-down" />{{ $t('import_transaction_uri') }}
+                            <!--<Icon type="md-arrow-round-down" />-->{{ $t('import_transaction_uri') }}
                         </a>
                     </div>
 
@@ -32,11 +32,23 @@
 
                     <!-- Add mosaic button -->
                     <div class="form-row align-right action-link">
-                        <a v-if="mosaicInputsManager.hasFreeSlots()" @click="addMosaicAttachmentInput">{{ $t('add_mosaic') }}</a>
+                        <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" />
+                        <a v-if="mosaicInputsManager.hasFreeSlots()" style="color: #5200c6;" @click="addMosaicAttachmentInput">{{
+                            $t('add_mosaic')
+                        }}</a>
                     </div>
 
                     <!-- Transfer message input field -->
                     <MessageInput v-model="formItems.messagePlain" @input="onChangeMessage" />
+                    <FormRow>
+                        <template v-slot:inputs>
+                            <div class="inputs-container checkboxes">
+                                <Checkbox v-model="formItems.encryptMessage" @input="onEncryptionChange">
+                                    {{ $t('encrypt_message') }}
+                                </Checkbox>
+                            </div>
+                        </template>
+                    </FormRow>
 
                     <!-- Transaction fee selector and submit button -->
                     <MaxFeeAndSubmit
@@ -71,6 +83,13 @@
                 :visible="isImportTransactionUriModalVisible"
                 @close="onImportTransactionURIModalClose"
                 @importTransaction="onImportTransaction"
+            />
+
+            <ModalFormProfileUnlock
+                v-if="hasAccountUnlockModal"
+                :visible="hasAccountUnlockModal"
+                :on-success="onAccountUnlocked"
+                @close="closeAccountUnlockModal"
             />
         </FormWrapper>
 

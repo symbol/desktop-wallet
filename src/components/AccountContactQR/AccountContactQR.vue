@@ -1,11 +1,10 @@
 <template>
     <div>
         <div class="clearfix centered">
-            <span class="qr-code-title">{{ $t('address_qr_code') }}</span>
-        </div>
-
-        <div class="clearfix centered">
             <img class="qr-code-image" :src="qrCode$" />
+        </div>
+        <div class="clearfix centered">
+            <span class="qr-code-title">{{ $t('address_qr_code') }}</span>
         </div>
     </div>
 </template>
@@ -16,6 +15,7 @@ export default class AccountContactQR extends AccountContactQRTs {}
 </script>
 
 <style lang="less" scoped>
+@import '../../views/resources/css/variables.less';
 .centered {
     text-align: center;
 }
@@ -24,6 +24,7 @@ export default class AccountContactQR extends AccountContactQRTs {}
     font-size: 16px;
     text-align: center;
     font-weight: 400;
+    color: @grayDark;
 }
 
 .qr-code-image {

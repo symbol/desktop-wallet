@@ -2,22 +2,30 @@
     <div class="table-container">
         <div class="upper-section-container">
             <div class="table-title-container section-title">
-                <slot name="table-title" />
                 <div class="user-operation">
-                    <Checkbox v-model="showExpired" class="table-filter-item-container">
+                    <span v-show="assetType === 'metadata'" class="add-metadata-button" @click="$emit('add-metadata')">
+                        <Icon class="add-icon" type="md-add-circle" />
+                        {{ $t('add_metadata') }}
+                    </span>
+                    <Checkbox v-if="assetType !== 'metadata'" v-model="showExpired" class="table-filter-item-container">
                         <span v-show="assetType === 'mosaic'">{{ $t('show_expired_mosaics') }}</span>
                         <span v-show="assetType === 'namespace'">{{ $t('show_expired_namespaces') }}</span>
                     </Checkbox>
                     <div v-if="signers.length > 1">
                         <SignerFilter :signers="signers" @signer-change="onSignerSelectorChange" />
                     </div>
-                    <span class="table-filter-item-container" @click="onRefresh">
+                    <span v-if="assetType !== 'metadata'" class="table-filter-item-container" @click="onRefresh">
                         <Icon :class="{ 'animation-rotate': isRefreshing }" type="ios-sync" />
                     </span>
                 </div>
             </div>
         </div>
-        <div :class="['table-header-container', assetType === 'mosaic' ? 'mosaic-columns' : 'namespace-columns']">
+        <div
+            :class="[
+                'table-header-container',
+                assetType !== 'metadata' ? (assetType === 'mosaic' ? 'mosaic-columns' : 'namespace-columns') : 'metadata-columns',
+            ]"
+        >
             <div
                 v-for="({ name, label }, index) in tableFields"
                 :key="index"
@@ -49,11 +57,11 @@
                 />
             </div>
             <div v-else-if="!isLoading && (!displayedValues || displayedValues.length === 0)" class="no-data-outer-container">
-                <div class="no-data-message-container">
+                <!--<div class="no-data-message-container">
                     <div>
                         {{ assetType === 'mosaic' ? $t('no_data_mosaics') : $t('no_data_namespaces') }}
                     </div>
-                </div>
+                </div>-->
                 <div class="no-data-inner-container">
                     <div v-for="item in nodata" :key="item">
                         &nbsp;

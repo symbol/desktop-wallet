@@ -23,6 +23,7 @@
     grid-template-rows: 0.6rem auto 1rem;
     overflow: hidden;
     background-color: white;
+    border-radius: @borderRadius;
 
     .account-switch-header-container {
         display: grid;
@@ -30,17 +31,19 @@
         grid-template-rows: 100%;
 
         .account-switch-header-left-container {
-            padding: 0.17rem 0 0.4rem 0.2rem;
+            padding: 0 0.4rem;
+            margin: 0.2rem 0;
 
             .section-title {
-                font-size: @normalFont;
+                font-weight: 600;
+                color: @purpleDark;
+                font-family: @symbolFont;
             }
         }
 
         .account-switch-header-right-container {
             text-align: right;
             padding: 0.19rem 0.2rem 0 0;
-
             .back-up {
             }
         }
@@ -53,39 +56,20 @@
         height: 100%;
         display: grid;
         grid-template-columns: 100%;
-        grid-auto-rows: 0.9rem;
-        grid-row-gap: 0.1rem;
+        grid-auto-rows: 0.7rem;
         position: relative;
         .active-background {
-            background: linear-gradient(178deg, rgba(82, 0, 198, 1) 0%, rgba(57, 0, 139, 1) 69%, rgba(41, 0, 99, 1) 100%);
-            color: white;
-        }
-
-        .active-background:after {
-            display: block;
-            position: absolute;
-            width: 0;
-            height: 0;
-            border: 0.1rem solid transparent;
-            border-left-color: @purple;
-            right: -0.19rem;
-            bottom: 0.3rem;
-            content: '';
+            color: @black;
         }
 
         .inactive-background {
-            background: rgba(237, 233, 245, 1);
-            color: rgba(51, 51, 51, 1);
+            color: @grayLight;
         }
 
         .account-tile {
             margin: 0 0.24rem;
             position: relative;
             padding: 0.14rem 0.25rem;
-            border-radius: 10px;
-            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
-            border-radius: 5px;
-
             .account-tile-inner-container {
                 display: grid;
                 width: 100%;
@@ -98,6 +82,7 @@
 
                 .account-tile-upper-container {
                     .account-name {
+                        color: @white;
                     }
                 }
 
@@ -127,10 +112,10 @@
         grid-template-columns: 50% 50%;
         grid-template-rows: 100%;
         text-align: center;
-        font-size: @smallerFont;
-        font-weight: 400;
+        font-size: @normalFont;
+        font-family: @symbolFont;
         line-height: 22px;
-        color: rgba(68, 0, 78, 1);
+        color: @purpleLightest;
 
         .add-account {
             .ivu-icon {
@@ -150,4 +135,99 @@
             }
         }
     }
+}
+
+.mosaic_data {
+    height: 0.65rem;
+    padding: 0.15rem 0.25rem 0.15rem 0;
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    border-bottom: 0.01rem solid @line;
+    position: relative;
+    color: @purpleDark;
+    font-family: @symbolFontLight;
+
+    .namege_img {
+        position: absolute;
+        display: inline-block;
+        top: 0.2rem;
+
+        .mosaicIcon {
+            display: inline-block;
+            width: 0.28rem;
+            height: 0.28rem;
+            margin-left: 0.1rem;
+        }
+    }
+
+    .img_container {
+        display: inline-block;
+        position: absolute;
+        top: 0.23rem;
+        margin-right: 0.15rem;
+
+        img {
+            display: inline-block;
+            width: 0.22rem;
+            height: 0.2rem;
+        }
+
+        img.grayed-xym-logo {
+            opacity: 0.4;
+            -webkit-filter: grayscale(100%);
+            -moz-filter: grayscale(100%);
+            -o-filter: grayscale(100%);
+            -ms-filter: grayscale(100%);
+            filter: grayscale(100%);
+        }
+    }
+
+    .mosaic_name {
+        position: relative;
+        top: 0;
+        left: 0.4rem;
+        width: 1.8rem;
+        font-size: @bigFont;
+        font-weight: 400;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        .active-background {
+            color: @black;
+        }
+    }
+
+    .mosaic_value {
+        margin-left: 0.5rem;
+        text-align: right;
+
+        div:first-of-type {
+            font-size: 0.16rem;
+            font-weight: 400;
+            color: @blackLight;
+        }
+
+        div:nth-of-type(2) {
+            font-size: 0.16rem;
+            font-weight: 400;
+            color: @grayDark;
+        }
+    }
+
+    .small_icon {
+        width: 0.2rem;
+        height: 0.2rem;
+        margin-bottom: 0.05rem;
+    }
+}
+
+.icon-left-button {
+    width: 0.15rem;
+    height: 0.15rem;
+    color: @purpleDark;
 }

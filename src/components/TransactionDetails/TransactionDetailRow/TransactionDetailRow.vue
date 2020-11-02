@@ -21,6 +21,15 @@
             <span v-else-if="item.isAddress">
                 <AddressDisplay :address="item.value" />
             </span>
+            <span v-else-if="item.isMessage">
+                <MessageDisplay
+                    :message="item.value.message"
+                    :incoming="item.value.incoming"
+                    :recipient="item.value.recipient"
+                    :unannounced="item.value.unannounced"
+                    :signer="item.value.signer"
+                />
+            </span>
             <span v-else>
                 {{ item.value }}
             </span>
@@ -40,10 +49,12 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue';
 // @ts-ignore
 import PaidFeeDisplay from '@/components/PaidFeeDisplay/PaidFeeDisplay.vue';
+// @ts-ignore
+import MessageDisplay from '@/components/MessageDisplay/MessageDisplay.vue';
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
 
 @Component({
-    components: { MosaicAmountDisplay, AddressDisplay, PaidFeeDisplay },
+    components: { MosaicAmountDisplay, AddressDisplay, PaidFeeDisplay, MessageDisplay },
     computed: mapGetters({ explorerBaseUrl: 'app/explorerUrl' }),
 })
 export default class TransactionDetailRow extends Vue {

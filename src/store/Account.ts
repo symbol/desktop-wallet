@@ -14,7 +14,16 @@
  *
  */
 import Vue from 'vue';
-import { AccountInfo, Address, IListener, MultisigAccountInfo, NetworkType, RepositoryFactory } from 'symbol-sdk';
+import {
+    AccountInfo,
+    AccountNames,
+    Address,
+    IListener,
+    MultisigAccountInfo,
+    NetworkType,
+    PublicAccount,
+    RepositoryFactory,
+} from 'symbol-sdk';
 import { of, Subscription } from 'rxjs';
 // internal dependencies
 import { $eventBus } from '../events';
@@ -53,6 +62,7 @@ interface AccountState {
     currentAccount: AccountModel;
     currentAccountAddress: Address;
     currentAccountMultisigInfo: MultisigAccountInfo;
+    multisigAccountGraph: MultisigAccountInfo[][];
     isCosignatoryMode: boolean;
     signers: Signer[];
     currentSigner: Signer;
@@ -65,6 +75,8 @@ interface AccountState {
     accountsInfo: AccountInfo[];
     multisigAccountsInfo: MultisigAccountInfo[];
     subscriptions: Record<string, SubscriptionType[]>;
+    currentRecipient: PublicAccount;
+    currentAccountAliases: AccountNames[];
 }
 
 // account state initial definition
@@ -73,6 +85,7 @@ const accountState: AccountState = {
     currentAccount: null,
     currentAccountAddress: null,
     currentAccountMultisigInfo: null,
+    currentAccountAliases: [],
     isCosignatoryMode: false,
     signers: [],
     currentSigner: null,
@@ -84,6 +97,8 @@ const accountState: AccountState = {
     accountsInfo: [],
     multisigAccountsInfo: [],
     subscriptions: {},
+    currentRecipient: null,
+    multisigAccountGraph: null,
 };
 
 /**
@@ -113,6 +128,9 @@ export default {
         },
         multisigAccountsInfo: (state: AccountState) => state.multisigAccountsInfo,
         getSubscriptions: (state: AccountState) => state.subscriptions,
+        currentRecipient: (state: AccountState) => state.currentRecipient,
+        currentAccountAliases: (state: AccountState) => state.currentAccountAliases,
+        multisigAccountGraph: (state: AccountState) => state.multisigAccountGraph,
     },
     mutations: {
         setInitialized: (state: AccountState, initialized: boolean) => {
@@ -123,6 +141,9 @@ export default {
         },
         currentAccountAddress: (state: AccountState, accountAddress: Address) => {
             state.currentAccountAddress = accountAddress;
+        },
+        currentAccountAliases: (state: AccountState, currentAccountAliases: AccountNames[]) => {
+            state.currentAccountAliases = currentAccountAliases;
         },
         currentSigner: (state: AccountState, currentSigner: Signer) => {
             state.currentSigner = currentSigner;
@@ -157,9 +178,16 @@ export default {
         currentSignerMultisigInfo: (state: AccountState, currentSignerMultisigInfo) => {
             state.currentSignerMultisigInfo = currentSignerMultisigInfo;
         },
+        currentRecipient: (state: AccountState, currentRecipient) => {
+            state.currentRecipient = currentRecipient;
+        },
 
         setSubscriptions: (state: AccountState, subscriptions: Record<string, SubscriptionType[]>) => {
             state.subscriptions = subscriptions;
+        },
+
+        multisigAccountGraph: (state: AccountState, multisigAccountGraph) => {
+            state.multisigAccountGraph = multisigAccountGraph;
         },
         updateSubscriptions: (state: AccountState, payload: { address: string; subscriptions: SubscriptionType }) => {
             const { address, subscriptions } = payload;
@@ -228,6 +256,9 @@ export default {
             dispatch('SET_CURRENT_SIGNER', {
                 address: currentAccountAddress,
             });
+            //reset current account alias
+            dispatch('LOAD_CURRENT_ACCOUNT_ALIASES', currentAccountAddress);
+
             $eventBus.$emit('onAccountChange', currentAccountAddress.plain());
         },
 
@@ -237,6 +268,7 @@ export default {
             commit('currentAccountAddress', null);
             commit('currentSignerAddress', null);
             commit('currentSignerPublicKey', null);
+            commit('currentAccountAliases', []);
         },
 
         async SET_CURRENT_SIGNER({ commit, dispatch, getters, rootGetters }, { address }: { address: Address }) {
@@ -297,6 +329,41 @@ export default {
             dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
         },
 
+        async GET_RECIPIENT({ commit, rootGetters }, recipientAddress?: Address) {
+            if (recipientAddress) {
+                //First check known accounts
+                const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
+                const knownAccounts = new AccountService().getKnownAccounts(currentProfile.accounts);
+                const knownRecipient = knownAccounts.find((ka) => ka.address === recipientAddress.plain());
+                if (knownRecipient) {
+                    commit('currentRecipient', AccountModel.getObjects(knownRecipient).publicAccount);
+                } else {
+                    const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+                    const getAccountsInfoPromise = repositoryFactory
+                        .createAccountRepository()
+                        .getAccountInfo(recipientAddress)
+                        .toPromise()
+                        .catch(() => commit('currentRecipient', null));
+                    const accountsInfo = await getAccountsInfoPromise;
+
+                    commit('currentRecipient', (accountsInfo as AccountInfo).publicAccount);
+                }
+            } else {
+                commit('currentRecipient', null);
+            }
+        },
+
+        async LOAD_CURRENT_ACCOUNT_ALIASES({ commit, rootGetters }, currentAccountAddress: Address) {
+            const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+            const aliasPromise = repositoryFactory
+                .createNamespaceRepository()
+                .getAccountsNames([currentAccountAddress])
+                .toPromise()
+                .catch(() => commit('currentAccountAliases', []));
+            const aliases = await aliasPromise;
+            commit('currentAccountAliases', aliases);
+        },
+
         async LOAD_ACCOUNT_INFO({ commit, getters, rootGetters }) {
             const networkType: NetworkType = rootGetters['network/networkType'];
             const currentAccount: AccountModel = getters.currentAccount;
@@ -321,6 +388,8 @@ export default {
                 .getMultisigAccountGraphInfo(currentAccountAddress)
                 .pipe(
                     map((g) => {
+                        // sorted array to be represented in multisig tree
+                        commit('multisigAccountGraph', MultisigService.getMultisigGraphArraySorted(g.multisigEntries));
                         return MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
                     }),
                     catchError(() => {
@@ -330,10 +399,23 @@ export default {
                 .toPromise();
 
             // REMOTE CALL
-            const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise;
+            const aliasPromise = repositoryFactory
+                .createNamespaceRepository()
+                .getAccountsNames([currentAccountAddress])
+                .toPromise()
+                .catch(() => commit('currentAccountAliases', []));
+            const aliases = await aliasPromise;
+            commit('currentAccountAliases', aliases);
 
+            const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise;
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
             const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
+
+            // update multisig flag in currentAccount
+            if (currentAccountMultisigInfo && currentAccountMultisigInfo.isMultisig() && currentAccount.isMultisig) {
+                const accountService = new AccountService();
+                accountService.updateIsMultisig(currentAccount, true);
+            }
 
             const signers = new MultisigService().getSigners(
                 networkType,

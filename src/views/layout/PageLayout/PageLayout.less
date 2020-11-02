@@ -16,22 +16,19 @@
 @import '../../resources/css/variables.less';
 
 .main-outer-container {
-    display: block;
-    float: left;
-    position: relative;
-    clear: both;
-    width: 100%;
-    height: 100%;
-    padding: 0 0.2rem 0 0;
+    margin: 0 50px;
+    height: calc(100% - 200px);
+}
+
+.logo-container {
+    width: 150px;
+    .logo-img {
+        width: 100%;
+    }
 }
 
 .wrap {
-    padding: 0.6rem 0 0 1rem;
     height: 100vh;
-    max-height: 100vh;
-    width: 100%;
-    position: relative;
-
     .alert {
         margin-left: 50%;
         left: -380px;
@@ -155,57 +152,57 @@
     }
 
     .top_window {
-        position: absolute;
-        top: 0;
-        left: 0;
-        background-image: linear-gradient(120deg, @primary, @secondary);
-        -webkit-app-region: drag;
-        width: 100%;
-        height: 50px;
+        flex: 1;
+        background-color: transparent;
+        margin: 0 50px;
+        height: 100px;
+        font-size: @minimumFont;
 
-        .controller {
-            .app_controller {
-                float: right;
-                font-size: 20px;
-                margin-right: 20px;
+        .navbar-item {
+            margin: 0 15px;
+        }
 
-                .title {
-                    font-size: 18px;
-                    text-align: center;
-                    padding: 10px;
-                    min-width: 450px;
-                }
+        /deep/.navbar-item {
+            line-height: 1.5 !important;
+        }
 
-                > div {
-                    float: left;
-                    margin-left: 25px;
-                    position: relative;
-                    font-size: @smallerFont;
-                    i {
-                        font-size: 0.2rem;
-                        margin-right: 0.02rem;
-                    }
-                }
+        /deep/.debug-console-trigger  {
+            color: @purpleDark;
+            font-size: @smallFont !important;
+            cursor: pointer;
+        }
+
+        /deep/.trigger-importqr {
+            color: @purpleDark;
+        }
+
+        .debug-console-trigger-icon {
+        }
+
+        /deep/.ivu-icon {
+            color: @purpleDark;
+        }
+
+        /deep/.ivu-select-selection {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+            height: auto !important;
+            .ivu-select-placeholder,
+            .ivu-select-selected-value {
+                font-size: 14px !important;
+                color: @purpleDark;
+                padding: 0 !important;
             }
-
-            .debug-console-trigger {
-                padding-top: 0.01rem;
-                font-size: @smallerFont;
-                color: @white;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-
-                .debug-console-trigger-icon {
-                    font-size: 22px;
-                    position: relative;
-                    display: block;
-                    // float: left;
-                    // height: .6rem;
-                    // padding-top: 0.17rem;
-                    padding-right: 0.04rem;
-                }
+            i::before {
+                display: none;
             }
+        }
+
+        /deep/.ivu-select-selection {
+            line-height: 1.5 !important;
+            height: 1.5 !important;
+            color: @purpleDark;
         }
     }
 
@@ -261,56 +258,28 @@
             background-color: #f3f3f3;
         }
     }
+
+    .ivu-select-dropdown {
+        z-index: 2147483647 !important;
+    }
+
     //unused
     .node-input-container {
         width: 100%;
         margin-right: 20px;
     }
-}
-.mac.wrap {
-    .top_window {
-        .controller {
-            .app_controller {
-                margin-right: 40px !important;
-                /deep/.switch_account {
-                    -webkit-app-region: no-drag;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                    margin-top: 0.16rem;
-                    .select_account_icon {
-                        width: 22px;
-                        height: 22px;
-                        position: relative;
-                        top: 0.04rem;
-                        filter: brightness(100);
-                    }
-                    .ivu-select {
-                        font-size: 20px;
-                    }
-                }
-                /deep/.ivu-select-selection {
-                    background-color: transparent;
-                    border: none;
-                    box-shadow: none;
-                    .ivu-select-placeholder,
-                    .ivu-select-selected-value {
-                        font-size: @smallerFont;
-                        font-weight: 400;
-                        color: white !important;
-                        margin-left: 0;
-                    }
-                    i::before {
-                        display: none;
-                    }
-                }
+    .general_view {
+        .footer {
+            height: 100px;
+            margin: 0 50px;
+            display: flex;
+            align-items: center;
+
+            .footer-phrase {
+                color: @purpleDark;
+                font-size: 14px;
+                margin-left: 10px;
             }
         }
-    }
-}
-
-.max-z-index {
-    .ivu-select-dropdown {
-        z-index: 2147483647 !important;
     }
 }

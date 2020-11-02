@@ -22,7 +22,6 @@ import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyMo
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { MosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel';
 import { first, tap } from 'rxjs/operators';
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 const Lock = AwaitLock.create();
 
@@ -154,10 +153,9 @@ export default {
         async LOAD_NETWORK_CURRENCIES({ commit, rootGetters }) {
             const mosaicService = new MosaicService();
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
-            const networkConfig: NetworkConfigurationModel = rootGetters['network/networkConfiguration'];
             const generationHash: string = rootGetters['network/generationHash'];
             await mosaicService
-                .getNetworkCurrencies(repositoryFactory, generationHash, networkConfig)
+                .getNetworkCurrencies(repositoryFactory, generationHash)
                 .pipe(
                     tap((networkCurrencies) => {
                         commit('networkCurrency', networkCurrencies.networkCurrency);

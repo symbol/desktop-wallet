@@ -29,6 +29,7 @@ interface NamespaceState {
     namespaces: NamespaceModel[];
     ownedNamespaces: NamespaceModel[];
     isFetchingNamespaces: boolean;
+    linkedAddress: Address | null;
 }
 
 const namespaceState: NamespaceState = {
@@ -36,6 +37,7 @@ const namespaceState: NamespaceState = {
     namespaces: [],
     ownedNamespaces: [],
     isFetchingNamespaces: false,
+    linkedAddress: null,
 };
 
 export default {
@@ -46,6 +48,7 @@ export default {
         namespaces: (state: NamespaceState) => state.namespaces,
         ownedNamespaces: (state: NamespaceState) => state.ownedNamespaces,
         isFetchingNamespaces: (state: NamespaceState) => state.isFetchingNamespaces,
+        linkedAddress: (state: NamespaceState) => state.linkedAddress,
     },
     mutations: {
         setInitialized: (state: NamespaceState, initialized) => {
@@ -65,6 +68,7 @@ export default {
         },
         isFetchingNamespaces: (state: NamespaceState, isFetchingNamespaces: boolean) =>
             Vue.set(state, 'isFetchingNamespaces', isFetchingNamespaces),
+        linkedAddress: (state: NamespaceState, linkedAddress: Address | null) => Vue.set(state, 'linkedAddress', linkedAddress),
     },
     actions: {
         async initialize({ commit, getters }) {
@@ -103,6 +107,18 @@ export default {
         RESET_NAMESPACES({ commit }) {
             const namespaces: NamespaceModel[] = [];
             commit('namespaces', { namespaces, undefined });
+        },
+
+        async GET_LINKED_ADDRESS({ commit, rootGetters }, namespaceId: NamespaceId) {
+            const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+            const getLinkedAccountPromise = repositoryFactory
+                .createNamespaceRepository()
+                .getLinkedAddress(namespaceId)
+                .toPromise()
+                .catch(() => commit('linkedAddress', null));
+            const linkedAddress = await getLinkedAccountPromise;
+
+            commit('linkedAddress', linkedAddress);
         },
 
         SIGNER_CHANGED({ commit, rootGetters, getters }) {

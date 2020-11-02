@@ -14,6 +14,8 @@
  *
  */
 
+import { DtoMapping } from 'symbol-sdk';
+
 export class TimeHelpers {
     public static addZero = function (number: number): string {
         return number < 10 ? `0${number}` : `${number}`;
@@ -117,6 +119,10 @@ export class TimeHelpers {
             total += parseInt(seconds[1]) * 1000;
         }
         return total;
+    }
+
+    public static durationStringToMillisecondsSDK(value: string): number {
+        return DtoMapping.parseServerDuration(value).toMillis();
     }
 
     public static formatDate = (timestamp) => {

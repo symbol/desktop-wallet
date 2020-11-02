@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+
+@import '../../views/resources/css/variables.less';
+
 .top_network_info {
     background-color: transparent;
     justify-content: space-between;
@@ -23,31 +26,26 @@
 
     .top_account_info {
         display: grid;
-        grid-template-columns: repeat(4, 23.56%);
+        grid-template-columns: repeat(3, 33%);
         grid-template-rows: 100%;
-        column-gap: 25px;
+
+        padding-top: 8px;
+        padding-bottom: 8px;
+
+        border-radius: @borderRadius;
+        background-color: white;
 
         > div {
             padding: 18px 0 18px 30px;
             position: relative;
 
-            img {
-                position: absolute;
-                display: inline-block;
-                height: 36px;
-                width: 36px;
-                vertical-align: top;
-                top: 20px;
-                right: 20px;
-            }
-
             .title {
                 margin-bottom: 18px;
 
                 .title_txt {
-                    font-size: 24px;
+                    font-size: 20px;
                     line-height: 33px;
-                    color: rgba(68, 0, 78, 0.75);
+                    color: @purpleDark;
                 }
             }
         }
@@ -75,10 +73,6 @@
             color: rgba(82, 0, 198, 1);
             opacity: 0.75;
             text-transform: lowercase;
-        }
-
-        .account-info-tile {
-            border-radius: 3px;
         }
     }
 }

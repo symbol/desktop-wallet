@@ -1,0 +1,186 @@
+@import '../../resources/css/variables.less';
+
+.main-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 4.5rem auto;
+    grid-template-rows: 100%;
+    grid-column-gap: 0.3rem;
+    grid-row-gap: 0.3rem;
+}
+
+.left-top-container {
+    display: grid;
+    height: calc(50% - 0.15rem);
+    grid-template-rows: 0.8rem auto;
+    background-color: white;
+    overflow: hidden;
+    border-radius: @borderRadius;
+
+    .transaction-type-container {
+        overflow: auto;
+    }
+}
+
+.left-bottom-container {
+    display: grid;
+    height: calc(50% - 0.15rem);
+    grid-template-rows: 0.8rem auto 0.5rem 0.08rem;
+    background-color: white;
+    overflow: hidden;
+    border-radius: @borderRadius;
+    margin-top: 0.3rem;
+
+    .transaction-list-container {
+        overflow-y: auto;
+    }
+
+    .bottom-container {
+        text-align: right;
+        margin-right: 0.4rem;
+    }
+}
+
+.right-container {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 0.6rem auto;
+    background-color: white;
+    overflow: hidden;
+    border-radius: @borderRadius;
+}
+
+.title-container {
+    padding: 0 0.4rem;
+    margin: 0.2rem 0;
+    .title-style {
+        font-weight: 600;
+        color: @purpleDark;
+        font-family: @symbolFont;
+        font-size: @bigFont;
+    }
+}
+
+.mosaic_data {
+    height: 0.65rem;
+    padding: 0.15rem 0.1rem 0.15rem 0;
+    left: 0.45rem;
+    width: 3.7rem;
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    border-bottom: 0.01rem solid @line;
+    position: relative;
+    color: @purpleDark;
+    font-family: @symbolFontLight;
+
+    .img_container {
+        display: inline-block;
+        position: absolute;
+        top: 0.23rem;
+        margin-right: 0.15rem;
+
+        img {
+            display: inline-block;
+            width: 0.22rem;
+            height: 0.2rem;
+        }
+    }
+
+    .mosaic_name {
+        position: relative;
+        top: 0;
+        left: 0.4rem;
+        width: 1.8rem;
+        font-size: @bigFont;
+        font-weight: 400;
+        overflow: initial;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .add_button {
+        color: @purpleDark;
+        margin-left: 0.5rem;
+        text-align: right;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        img {
+            display: inline-block;
+            margin-top: 0.05rem;
+            width: 0.22rem;
+            height: auto;
+        }
+
+        &:hover {
+            &:after {
+                background-color: @purpleHover;
+                color: @purpleHover;
+                transition: 0.3s;
+            }
+        }
+    }
+}
+
+.transfer_data {
+    background-color: @accentPinkLight;
+    border-radius: 4px;
+    padding: 2%;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-bottom: 15px;
+    left: 5%;
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    position: relative;
+
+    .img_container {
+        display: inline-block;
+        position: relative;
+        img {
+            display: inline-block;
+            margin-top: 0.05rem;
+            width: 0.22rem;
+            height: 0.2rem;
+        }
+    }
+
+    .transfer_name {
+        position: relative;
+        top: 0;
+        left: 0.2rem;
+        width: 3rem;
+        font-size: @bigFont;
+        font-weight: 400;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: @purpleDark;
+        font-family: @symbolFontLight;
+    }
+
+    .remove_button {
+        margin-left: 0.5rem;
+        text-align: right;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        img {
+            display: inline-block;
+            margin-top: 0.05rem;
+            width: 0.22rem;
+            height: 0.2rem;
+        }
+    }
+}

@@ -30,6 +30,8 @@ import { dashboardImages, officialIcons, transactionTypeToIcon } from '@/views/r
 import { TransactionViewFactory } from '@/core/transactions/TransactionViewFactory';
 import { TransactionView } from '@/core/transactions/TransactionView';
 import { TransactionStatus } from '@/core/transactions/TransactionStatus';
+import { NetworkConfigurationModel } from '../../../core/database/entities/NetworkConfigurationModel';
+import { DateTimeFormatter } from '@js-joda/core';
 
 @Component({
     components: {
@@ -39,11 +41,14 @@ import { TransactionStatus } from '@/core/transactions/TransactionStatus';
     computed: mapGetters({
         networkMosaic: 'mosaic/networkMosaic',
         explorerBaseUrl: 'app/explorerUrl',
+        networkConfiguration: 'network/networkConfiguration',
     }),
 })
 export class TransactionRowTs extends Vue {
     @Prop({ default: [] })
     public transaction: Transaction;
+
+    protected networkConfiguration: NetworkConfigurationModel;
 
     /**
      * Explorer base path
@@ -172,5 +177,11 @@ export class TransactionRowTs extends Vue {
      */
     public get explorerUrl() {
         return this.explorerBaseUrl.replace(/\/+$/, '') + '/transactions/' + this.transaction.transactionInfo.hash;
+    }
+
+    public get deadline() {
+        return this.transaction.deadline
+            .toLocalDateTime(this.networkConfiguration.epochAdjustment)
+            .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
     }
 }

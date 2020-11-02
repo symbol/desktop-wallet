@@ -13,14 +13,88 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+
+@import '../../../resources/css/variables.less';
+
 .create-profile-wrapper {
     width: 100%;
     height: 100%;
     display: flex;
-    background-color: white;
     align-items: center;
     justify-content: center;
-    overflow-y: auto;
+
+    .explanation-box {
+        flex: 0.3;
+        display: flex;
+        align-items: center;
+        text-align: left;
+
+        .text-wrapper {
+            display: block;
+            width: 85%;
+        }
+
+        .text1 {
+            color: @purpleDark;
+            font-size: 30px;
+            font-family: @normalFont;
+            margin-bottom: 5%;
+        }
+
+        .text {
+            color: @purpleDark;
+            font-size: @bigFont;
+            margin-bottom: 2%;
+        }
+        .text_red {
+            color: @purpleDark;
+            font-family: @symbolFontSemiBold;
+            font-size: @bigFont;
+        }
+    }
+
+    .form-box {
+        flex: 0.7;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        background-color: @white;
+        height: 100%;
+
+        .steps {
+            width: 25%;
+            border-right: 0.5px solid #d3d3d3;
+            height: 100%;
+            display: flex;
+
+            .step-group {
+                margin: auto;
+                width: 100%;
+            }
+
+            .single-step {
+                padding: 8% 20% 8% 20%;
+                font-size: @bigFont;
+                color: @grayLight;
+                font-family: @symbolFontSemiBold;
+                &.done {
+                    color: @purpleDark;
+                }
+                &.done:before {
+                    content: 'X';
+                }
+                &.active {
+                    background: linear-gradient(315.55deg, #44004e -1.68%, #5200c6 110.7%);
+                    color: @white;
+                }
+            }
+        }
+        .form {
+            flex: 1;
+            max-width: 70%;
+            overflow: hidden;
+        }
+    }
 
     .inner-container {
         .create-profile-box {
@@ -38,4 +112,15 @@
             }
         }
     }
+}
+.subtitle-info {
+    font-family: @symbolFontSemiBold;
+}
+.warning-icon {
+    width: 18px;
+    margin-right: 10px;
+}
+.success-title {
+    font-size: @biggestFont;
+    color: @purpleDark;
 }

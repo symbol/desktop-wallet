@@ -105,6 +105,7 @@ ul {
 input {
     background-color: transparent;
     outline: none;
+    color: @primary;
 }
 
 input::placeholder {
@@ -113,11 +114,24 @@ input::placeholder {
 button:focus {
     outline: none;
 }
+
+a {
+    color: @primary;
+}
+
+textarea {
+    color: @primary;
+}
+
 #app {
-    background-color: @white;
+    background: url('../img/wallpaper.png');
+    background-size: 100% 100%;
+    min-width: 100%;
+    max-width: 100%;
+    width: auto;
     height: auto;
-    min-height: 100vh;
-    max-height: 100vh;
+    min-height: 100%;
+    max-height: 100%;
     overflow-x: hidden;
     overflow-y: hidden;
 }
@@ -216,15 +230,15 @@ button:focus {
 
 ::-webkit-scrollbar-thumb {
     border-radius: 5px;
-    background-color: @purple;
+    background-color: @grayLight;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: @purple;
+    background-color: @grayDark;
 }
 
 ::-webkit-scrollbar-thumb:active {
-    background-color: @purple;
+    background-color: @grayDark;
     cursor: pointer;
 }
 
@@ -440,8 +454,10 @@ button:disabled {
 }
 .version-panel {
     position: absolute;
-    right: 20px;
-    bottom: 7px;
+    right: 75px;
+    bottom: 40px;
+    color: @purpleDark;
+    font-size: 14px;
 }
 
 .web-warning-panel {
@@ -450,4 +466,43 @@ button:disabled {
     font-weight: bold;
     left: 120px;
     bottom: 7px;
+}
+
+.level {
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+
+    img {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .level-left,
+    .level-right {
+        flex-basis: auto;
+        flex-grow: 0;
+        flex-shrink: 0;
+
+        .level-item {
+            align-items: center;
+            display: flex;
+            flex-basis: auto;
+            flex-grow: 0;
+            flex-shrink: 0;
+            justify-content: center;
+        }
+    }
+
+    .level-left {
+        align-items: center;
+        justify-content: flex-start;
+        display: flex;
+    }
+
+    .level-right {
+        align-items: center;
+        justify-content: flex-end;
+        display: flex;
+    }
 }

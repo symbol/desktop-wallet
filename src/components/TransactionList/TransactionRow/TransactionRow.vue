@@ -1,5 +1,5 @@
 <template>
-    <div class="transaction-row-container transaction-table-columns" @click="$emit('click', transaction)">
+    <div class="transaction-row-container transaction-row-columns" @click="$emit('click', transaction)">
         <!-- FIRST COLUMN -->
         <div class="icon-cell">
             <img :src="getIcon()" class="icon-cell-image" />
@@ -29,14 +29,16 @@
 
         <!-- FIFTH COLUMN -->
         <div class="hash-cell">
+            <!--
             <span class="hash-cell-transaction-hash">
                 <a class="url_text" target="_blank" :href="explorerUrl">
                     {{ formatters.miniHash(transaction.transactionInfo.hash) }}
                 </a>
             </span>
+            -->
             <span class="hash-cell-time">
                 <!-- @TODO: Should be transaction time instead of deadline -->
-                {{ timeHelpers.formatTimestamp(transaction.deadline.value) }}
+                {{ deadline }}
             </span>
         </div>
     </div>

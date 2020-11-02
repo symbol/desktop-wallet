@@ -282,26 +282,6 @@ export const routes: AppRoute[] = [
                         // @ts-ignore
                         component: () => import('@/views/pages/accounts/AccountDetailsPage/AccountDetailsPage.vue'),
                     },
-                    {
-                        path: '/backup',
-                        name: 'accounts.backup',
-                        meta: {
-                            protected: true,
-                            title: 'page_title_account_backup',
-                        },
-                        // @ts-ignore
-                        component: () => import('@/views/pages/accounts/AccountBackupPage/AccountBackupPage.vue'),
-                    },
-                    // {
-                    //   path: 'harvesting',
-                    //   name: 'wallet.harvesting',
-                    //   meta: {
-                    //     protected: true,
-                    //     title: 'page_title_account_harvesting',
-                    //   },
-                    //   // @ts-ignore
-                    //   component: () => import('@/views/pages/accounts/AccountHarvestingPage/AccountHarvestingPage.vue'),
-                    // },
                 ],
             },
             {
@@ -410,7 +390,72 @@ export const routes: AppRoute[] = [
                 ],
             },
             {
-                path: '/communityPanel',
+                path: '/harvesting', //TODO: Harvesting
+                name: 'harvesting',
+                redirect: '/harvestingNormal',
+                meta: {
+                    protected: true,
+                    clickable: true,
+                    title: 'sidebar_item_harvesting',
+                    icon: officialIcons.harvest,
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/harvesting/HarvestingDashboardPage/HarvestingDashboardPage.vue'),
+                children: [
+                    {
+                        path: '/harvestingNormal',
+                        name: 'harvesting.normal',
+                        meta: { protected: true, title: 'page_title_harvesting' },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/harvesting/HarvestingPage/HarvestingPage.vue'),
+                    },
+                    {
+                        path: '/delegatedHarvesting',
+                        name: 'harvesting.delegated',
+                        meta: { protected: true, title: 'page_title_delegated_harvesting' },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/harvesting/DelegatedHarvestingPage/DelegatedHarvestingPage.vue'),
+                    },
+                ],
+            },
+            {
+                path: '/aggregate', //TODO: Aggregate
+                name: 'aggregate',
+                redirect: '/aggregateTransaction',
+                meta: {
+                    protected: true,
+                    clickable: true,
+                    title: 'sidebar_item_aggregate',
+                    icon: officialIcons.aggregate,
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/aggregate/Aggregate.vue'),
+                children: [
+                    {
+                        path: '/aggregateTransaction',
+                        name: 'aggregate.index',
+                        meta: { protected: true },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/aggregate/aggregateTransaction/AggregateTransaction.vue'),
+                    },
+                ],
+            },
+            {
+                path: '/privacy',
+                name: 'privacy',
+                meta: { protected: false, hideFromMenu: true },
+                // @ts-ignore
+                component: () => import('@/views/pages/privacy/PrivacyPolicy.vue'),
+            },
+            {
+                path: '/terms',
+                name: 'terms',
+                meta: { protected: false, hideFromMenu: true },
+                // @ts-ignore
+                component: () => import('@/views/pages/terms/TermsAndConditions.vue'),
+            },
+            {
+                path: '/communityPanel', //TODO: Harvesting
                 name: 'community',
                 redirect: '/information',
                 meta: {

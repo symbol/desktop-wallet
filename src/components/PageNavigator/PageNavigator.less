@@ -20,45 +20,36 @@
 
 .wrap {
     .left-navigator {
-        position: absolute;
-        padding-top: 115px;
-        left: 0;
-        bottom: 0;
         height: 100%;
-        width: 100px;
+        width: 250px;
         background-color: @white;
-        display: grid;
-        grid-template-columns: 100%;
-        grid-template-rows: auto @iconHeight;
-        color: @secondary;
+        color: @purpleDark;
+        font-size: @normalFont;
 
         .navigator-items-container {
-            display: grid;
-            grid-template-columns: 100%;
-            grid-auto-rows: @iconHeight;
+            // overflow-y: scroll;
+            overflow: hidden;
+            height: calc(100% - 200px);
         }
 
         .navigator-item-container {
-            display: block;
             width: 100%;
-            height: 100%;
+            height: 70px;
             text-align: center;
-            display: grid;
-            grid-template-columns: 100%;
-            grid-template-rows: 0.7rem 0.3rem;
+            justify-content: center;
+            align-items: center;
+            display: flex;
             background-color: @white;
             cursor: pointer;
 
             .navigator-icon-container {
-                display: block;
-                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 height: 100%;
-
+                width: 85px;
                 .navigator-icon {
-                    font-size: 0.55rem;
-                    margin-top: 0.1rem;
-                    width: 0.55rem;
-                    height: 0.55rem;
+                    width: 35px;
                 }
                 .ivu-icon {
                     color: @purpleDark;
@@ -66,26 +57,41 @@
             }
 
             .navigator-text-container {
-                display: block;
-                width: 100%;
-                height: 100%;
-                font-size: @smallerFont;
-                overflow: hidden;
-                margin-bottom: 0.05rem;
+                flex: 1;
+                padding-left: 10px;
+                text-align: left;
             }
         }
-
         .active {
-            background: linear-gradient(120deg, @primary, @secondary);
-            color: @white;
+            background: #f2eef8;
             opacity: 1;
             cursor: not-allowed;
-            .ivu-icon {
-                color: @white !important;
-            }
-            .navigator-icon {
-                filter: brightness(0) invert(1);
-            }
+            border-right: 0.3em #ff00ff solid;
+            padding-right: 0.5em;
+            font-weight: bold;
         }
     }
+}
+
+.logo-container {
+    text-align: center;
+    width: 100%;
+    height: 100px;
+    img {
+        width: auto;
+        max-height: 100px;
+        padding: 25px;
+    }
+}
+
+.network-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    width: 250px;
+    height: 100px;
+    text-align: center;
+    border-top: 1px solid @grayLight;
+    background-color: @white;
 }

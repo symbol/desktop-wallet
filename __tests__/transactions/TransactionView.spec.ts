@@ -16,16 +16,19 @@
 import { Deadline, NamespaceId, NetworkType, PlainMessage, TransferTransaction } from 'symbol-sdk';
 import { createStore } from '@MOCKS/Store';
 import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 const store = createStore({});
 const transfer = TransferTransaction.create(
-    Deadline.create(),
+    Deadline.create(1573430400),
     new NamespaceId('alias'),
     [],
     PlainMessage.create('test-message'),
     NetworkType.MIJIN_TEST,
 );
-
+const networkConfig = new NetworkConfigurationModel();
+Object.assign(networkConfig, { epochAdjustment: 1573430400 });
+store.getters['network/networkConfiguration'] = networkConfig;
 describe('transactions/TransactionView', () => {
     describe('use() should', () => {
         test('set transaction property', () => {

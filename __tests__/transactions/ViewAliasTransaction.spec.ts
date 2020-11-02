@@ -16,16 +16,25 @@
 import { AliasAction, Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, NetworkType } from 'symbol-sdk';
 import { createStore } from '@MOCKS/Store';
 import { ViewAliasTransaction } from '@/core/transactions/ViewAliasTransaction';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 const store = createStore({});
-
+const epochAdjustment = 1573430400;
 describe('transactions/ViewAliasTransaction', () => {
     describe('use() should', () => {
         test('populate mosaic alias transaction fields', () => {
             const namespaceId = new NamespaceId('alias');
             const mosaicId = new MosaicId('747B276C30626442');
-            const alias = MosaicAliasTransaction.create(Deadline.create(), AliasAction.Link, namespaceId, mosaicId, NetworkType.MIJIN_TEST);
-
+            const alias = MosaicAliasTransaction.create(
+                Deadline.create(epochAdjustment),
+                AliasAction.Link,
+                namespaceId,
+                mosaicId,
+                NetworkType.MIJIN_TEST,
+            );
+            const networkConfig = new NetworkConfigurationModel();
+            Object.assign(networkConfig, { epochAdjustment: 1573430400 });
+            store.getters['network/networkConfiguration'] = networkConfig;
             const view = new ViewAliasTransaction(store, alias);
 
             // assert

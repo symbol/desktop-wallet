@@ -16,6 +16,8 @@
 import { mapGetters } from 'vuex';
 import { Component, Vue } from 'vue-property-decorator';
 import { NetworkType, Password } from 'symbol-sdk';
+import VideoBackground from 'vue-responsive-video-background-player';
+
 // internal dependencies
 import { $eventBus } from '@/events';
 import { NotificationType } from '@/core/utils/NotificationType';
@@ -48,9 +50,15 @@ import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
         ValidationProvider,
         ValidationObserver,
         LanguageSelector,
+        VideoBackground,
     },
 })
 export default class LoginPageTs extends Vue {
+    /**
+     * Display the application version. This is injected in the app when built.
+     */
+    public packageVersion = process.env.PACKAGE_VERSION || '0';
+
     /**
      * All known profiles
      */

@@ -4,27 +4,25 @@
     display: grid;
     width: 100%;
     grid-template-rows: 100%;
-    padding: 2px 0 10px;
-    font-size: @smallerFont;
+    font-size: @normalFont;
+    margin-top: 0.1rem;
     text-align: left;
-    background-color: @grayLightest;
+    background-color: white;
+    font-family: @symbolFontMedium !important;
 
     .address-header {
         text-align: left;
         line-height: 0.35rem;
-        padding-left: 0.1rem;
     }
 
     .amount-header {
-        text-align: right;
-        padding: 0 0.13rem 0 0.3rem;
+        text-align: center;
         line-height: 0.35rem;
     }
 
     .confirmation-header {
-        text-align: right;
+        text-align: center;
         line-height: 0.35rem;
-        padding-right: 0.5rem;
     }
 
     .hash-header {
@@ -33,8 +31,9 @@
     }
 
     span {
-        font-size: @smallerFont;
-        color: @secondary;
+        font-size: @normalFont;
+        color: @purpleDark;
+        font-weight: normal;
     }
 
     .account {

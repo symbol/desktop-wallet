@@ -27,7 +27,7 @@ export default class MultisigFormPage extends Vue {}
     width: 100%;
     padding: 0.2rem 0 0 0.2rem;
     display: grid;
-    grid-template-columns: 12.7rem auto;
+    grid-template-columns: 90% auto;
     grid-template-rows: 100%;
     .main-out-container {
         position: relative;
@@ -37,7 +37,7 @@ export default class MultisigFormPage extends Vue {}
     }
     .left-container {
         width: 100%;
-        padding: 0.3rem 0.5rem;
+        padding-left: 0.5rem;
         background-color: white;
     }
 

@@ -16,9 +16,9 @@
 import { TransactionType } from 'symbol-sdk';
 
 // @ts-ignore
-import createImg from '@/views/resources/img/login/create.png';
+import createImg from '@/views/resources/img/icons/Read.svg';
 // @ts-ignore
-import seedImg from '@/views/resources/img/login/seed.png';
+import seedImg from '@/views/resources/img/icons/Incoming.svg';
 // @ts-ignore
 import trezorImg from '@/views/resources/img/login/trezor.png';
 // @ts-ignore
@@ -89,9 +89,9 @@ import addAccount from '@/views/resources/img/icons/add-profile.png';
 // @ts-ignore
 import addAggregate from '@/views/resources/img/icons/add-aggregate.png';
 // @ts-ignore
-import aggregate from '@/views/resources/img/icons/aggregate.png';
+import aggregate from '@/views/resources/img/icons/aggregate.svg';
 // @ts-ignore
-import aggregateTransaction from '@/views/resources/img/icons/aggregate-transaction.png';
+import aggregateTransaction from '@/views/resources/img/icons/aggregate.svg';
 // @ts-ignore
 import alias from '@/views/resources/img/icons/alias.png';
 // @ts-ignore
@@ -133,11 +133,11 @@ import encryptedMessage from '@/views/resources/img/icons/encrypted-message.png'
 // @ts-ignore
 import enterprise from '@/views/resources/img/icons/enterprise.png';
 // @ts-ignore
-import explorer from '@/views/resources/img/icons/explorer.png';
+import explorer from '@/views/resources/img/newicons/NavExplorer.svg';
 // @ts-ignore
 import fingerprint from '@/views/resources/img/icons/fingerprint.png';
 // @ts-ignore
-import harvest from '@/views/resources/img/icons/harvest.png';
+import harvest from '@/views/resources/img/icons/harvest.svg';
 // @ts-ignore
 import incoming from '@/views/resources/img/icons/incoming.png';
 // @ts-ignore
@@ -147,21 +147,21 @@ import message from '@/views/resources/img/icons/message.png';
 // @ts-ignore
 import metadata from '@/views/resources/img/icons/metadata.png';
 // @ts-ignore
-import mosaic from '@/views/resources/img/icons/mosaic.png';
+import mosaic from '@/views/resources/img/icons/mosaic.svg';
 // @ts-ignore
 import mosaicRestriction from '@/views/resources/img/icons/mosaic-restriction.png';
 // @ts-ignore
 import multipleParties from '@/views/resources/img/icons/multiple-parties.png';
 // @ts-ignore
-import multisig from '@/views/resources/img/icons/multisig.png';
+import multisig from '@/views/resources/img/icons/multisig.svg';
 // @ts-ignore
-import namespace from '@/views/resources/img/icons/namespace.png';
+import namespace from '@/views/resources/img/icons/namespace.svg';
 // @ts-ignore
 import nem2Cli from '@/views/resources/img/icons/nem2-cli.png';
 // @ts-ignore
 import nem2Sdk from '@/views/resources/img/icons/nem2-sdk.png';
 // @ts-ignore
-import news from '@/views/resources/img/icons/news.png';
+import news from '@/views/resources/img/icons/news.svg';
 // @ts-ignore
 import nodeReputation from '@/views/resources/img/icons/node-reputation.png';
 // @ts-ignore
@@ -191,7 +191,7 @@ import send from '@/views/resources/img/icons/send.png';
 // @ts-ignore
 import sent from '@/views/resources/img/icons/sent.png';
 // @ts-ignore
-import settings from '@/views/resources/img/icons/settings.png';
+import settings from '@/views/resources/img/newicons/NavSettings.svg';
 // @ts-ignore
 import signatureRequired from '@/views/resources/img/icons/signature-required.png';
 // @ts-ignore
@@ -209,7 +209,7 @@ import transferTransactions from '@/views/resources/img/icons/transfer-transacti
 // @ts-ignore
 import unlock from '@/views/resources/img/icons/unlock.png';
 // @ts-ignore
-import wallet from '@/views/resources/img/icons/wallet.png';
+import wallet from '@/views/resources/img/icons/wallet.svg';
 // @ts-ignore
 import xymCoin from '@/views/resources/img/icons/xym-coin.png';
 // @ts-ignore
@@ -219,7 +219,9 @@ import importPrivateKeyStepImage2 from '@/views/resources/img/login/2-3.png';
 // @ts-ignore
 import importPrivateKeyStepImage3 from '@/views/resources/img/login/3-3.png';
 // @ts-ignore
-import voting from '@/views/resources/img/icons/voting.png';
+import voting from '@/views/resources/img/navbar/explorer.svg';
+// @ts-ignore
+import faucet from '@/views/resources/img/navbar/faucet.svg';
 
 /// region exported image objects
 export const walletTypeImages = {
@@ -342,6 +344,7 @@ export const officialIcons = {
     wallet,
     xymCoin,
     voting,
+    faucet,
 };
 
 export const transactionTypeToIcon = {

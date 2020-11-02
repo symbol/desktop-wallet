@@ -32,7 +32,9 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue';
 // @ts-ignore
 import ModalFormSubAccountCreation from '@/views/modals/ModalFormSubAccountCreation/ModalFormSubAccountCreation.vue';
 // @ts-ignore
-import ModalMnemonicExport from '@/views/modals/ModalMnemonicExport/ModalMnemonicExport.vue';
+import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
+// @ts-ignore
+import ModalBackupProfile from '@/views/modals/ModalBackupProfile/ModalBackupProfile.vue';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 
@@ -43,7 +45,8 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
         ErrorTooltip,
         FormLabel,
         ValidationProvider,
-        ModalMnemonicExport,
+        AmountDisplay,
+        ModalBackupProfile,
     },
     computed: {
         ...mapGetters({
@@ -175,11 +178,11 @@ export class AccountSelectorPanelTs extends Vue {
         this.isAddingAccount = f;
     }
 
-    public get hasMnemonicExportModal(): boolean {
+    public get hasBackupProfileModal(): boolean {
         return this.isViewingExportModal;
     }
 
-    public set hasMnemonicExportModal(f: boolean) {
+    public set hasBackupProfileModal(f: boolean) {
         this.isViewingExportModal = f;
     }
 

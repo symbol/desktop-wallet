@@ -2,7 +2,7 @@
     <div :class="[isConnected ? 'endpoint-healthy' : 'endpoint-unhealthy']">
         <Poptip v-if="!isEmbedded" v-model="poptipVisible" placement="bottom-end" class="endpoint-poptip" @on-popper-show="onPopTipShow">
             <i class="pointer point" />
-            <span v-if="isConnected" class="network-text pointer">{{ $t(networkTypeText) }}</span>
+            <span v-if="isConnected" class="network-text pointer">{{ $t('node') }}</span>
             <div slot="content" class="node-selector-container">
                 <div class="current-node-info">
                     <Row>

@@ -15,7 +15,7 @@
  */
 @import '../../../views/resources/css/variables.less';
 
-@headerHeight: 0.35rem;
+@headerHeight: 0.45rem;
 @rowHeight: 0.75rem;
 @maxDisplayedRow: 6;
 
@@ -31,7 +31,11 @@
     grid-template-columns: 100%;
     grid-template-rows: @headerHeight calc(100% - @headerHeight);
     .transaction-table-columns {
-        grid-template-columns: 0.65rem 5.05rem 1.8rem 2rem auto;
+        grid-template-columns: 4% 35% 19% 17% 19% auto;
+    }
+
+    .transaction-row-columns {
+        grid-template-columns: 4% 34% 19% 17% 19% auto;
     }
 
     .transaction-rows-outer-container {
@@ -54,22 +58,26 @@
     }
 
     /deep/.transaction-row-container {
-        font-size: @smallFont;
+        font-size: @normalFont;
         display: grid;
         width: 100%;
         height: 100%;
         margin: 0;
+        color: @purpleDark;
+        font-family: @symbolFontLight;
         cursor: pointer;
         border-bottom: 0.01rem solid @line;
+        padding-left: 3%;
+        padding-top: 1%;
 
         .icon-cell {
             position: relative;
             width: 100%;
             height: 100%;
             display: block;
-            padding-top: 0.2rem;
 
             .icon-cell-image {
+                color: @purpleDark;
                 width: 0.28rem;
                 height: 0.28rem;
                 margin: auto;
@@ -84,23 +92,20 @@
             height: 100%;
             grid-template-columns: 100%;
             grid-template-rows: repeat(2, 50%);
-            padding: 0.1rem 0 0.1rem 0.1rem;
             overflow: hidden;
         }
 
         .amount-cell {
-            text-align: right;
-            padding: 0.2rem 0.13rem 0.2rem 0.3rem;
+            text-align: center;
+            font-family: @symbolFont;
         }
 
         .confirmation-cell {
-            text-align: right;
-            padding: 0.2rem 0.5rem 0.2rem 0;
+            text-align: center;
         }
 
         .hash-cell {
             text-align: left;
-            padding: 0.1rem 0 0.1rem 0;
             overflow: hidden;
             display: grid;
             grid-template-columns: 100%;

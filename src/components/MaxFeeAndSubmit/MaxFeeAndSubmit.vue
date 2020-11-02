@@ -8,10 +8,10 @@
                     :calculated-recommended-fee="calculatedRecommendedFee"
                     :calculated-highest-fee="calculatedHighestFee"
                 />
-                <div v-if="!hideSubmit" class="pl-2">
+                <div v-if="!hideSubmit" class="ml-2">
                     <button
                         type="submit"
-                        class="centered-button button-style validation-button submit-button"
+                        class="centered-button button-style inverted-button submit-button"
                         :disabled="disableSubmit"
                         @click="$emit('button-clicked')"
                     >
