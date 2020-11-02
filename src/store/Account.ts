@@ -485,24 +485,23 @@ export default {
         },
 
         DELETE_CURRENT_ACCOUNT({ commit, getters, rootGetters }, account: AccountModel) {
-            const currentAccount: AccountModel = getters.currentAccount;
-            const accountService = new AccountService();
-
-            if (!currentAccount) {
+            if (!account) {
                 return;
             }
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             if (!currentProfile) {
                 return;
             }
+            const accountService = new AccountService();
             accountService.deleteAccount(account);
-            const accountsIds = accountService.getAccounts().map((a) => a.id);
+            const accountsIds = accountService.getAccounts().map((acc) => acc.id);
             // update accounts in profile
             new ProfileService().updateAccounts(currentProfile, [...accountsIds]);
             // set first account to be selected
-            commit('currentAccount', accountService.getKnownAccounts(currentProfile.accounts)[0]);
+            const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
+            commit('currentAccount', knownAccounts[0]);
             // update known Accounts
-            commit('knownAccounts', accountService.getKnownAccounts(currentProfile.accounts));
+            commit('knownAccounts', knownAccounts);
         },
 
         SET_KNOWN_ACCOUNTS({ commit }, accounts: string[]) {
