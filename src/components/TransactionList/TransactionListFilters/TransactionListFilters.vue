@@ -1,6 +1,10 @@
 <template>
     <div class="transaction-list-filters-container">
-        <input type="search" class="transaction-list-search-container" placeholder="Search" />
+        <div class="transaction-list-search-container">
+
+            <input type="search" class="transaction-list-search-input" placeholder="Search" />
+            <i class="ivu-icon ivu-icon-ios-search"/>
+        </div>
         <div class="transaction-list-filter-container">
             <TransactionStatusFilter @status-change="onStatusSelectorChange" />
         </div>
