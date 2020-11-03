@@ -22,7 +22,7 @@ import { TransactionFilterOptionsState, TransactionState } from '@/store/Transac
  */
 export class TransactionFilterService {
     /**
-     * Filters transactions depends of selected filter options.
+     * Filters transactions depends on selected filter options.
      * @param state for extracting transactions filter options and list filtered by group.
      * @param currentSignerAddress selected signer address
      */
@@ -39,14 +39,14 @@ export class TransactionFilterService {
         let result: Transaction[] = areAllGroupResultsShown ? [...transactions] : [];
 
         if (!areAllGroupResultsShown) {
-            if (filterOptions.isConfirmedSelected) {
-                result = result.concat(confirmedTransactions);
+            if (filterOptions.isPartialSelected) {
+                result = result.concat(partialTransactions);
             }
             if (filterOptions.isUnconfirmedSelected) {
                 result = result.concat(unconfirmedTransactions);
             }
-            if (filterOptions.isPartialSelected) {
-                result = result.concat(partialTransactions);
+            if (filterOptions.isConfirmedSelected) {
+                result = result.concat(confirmedTransactions);
             }
         }
 
@@ -54,7 +54,7 @@ export class TransactionFilterService {
     }
 
     /**
-     * Filters transactions depends of selected sent status filter options.
+     * Filters transactions depends on selected sent status filter options.
      * @param transactions
      * @param filterOptions
      * @param currentSignerAddress selected signer address

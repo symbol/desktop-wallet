@@ -200,7 +200,7 @@ export default {
             state.partialTransactions = conditionalSort(transactions, transactionComparator);
         },
         setAllTransactions: (state: TransactionState) => {
-            state.transactions = [...state.confirmedTransactions, ...state.unconfirmedTransactions, ...state.partialTransactions];
+            state.transactions = [...state.partialTransactions, ...state.unconfirmedTransactions, ...state.confirmedTransactions];
         },
         filterTransactions: (
             state: TransactionState,
@@ -282,31 +282,33 @@ export default {
                 ),
             );
 
-            subscriptions.push(
-                subscribeTransactions(
-                    TransactionGroupState.unconfirmed,
-                    transactionRepository.search({
-                        group: TransactionGroup.Unconfirmed,
-                        address: currentSignerAddress,
-                        pageSize: 100,
-                        pageNumber: 1, // not paginating
-                        order: Order.Desc,
-                    }),
-                ),
-            );
+            if (pageNumber === 1) {
+                subscriptions.push(
+                    subscribeTransactions(
+                        TransactionGroupState.unconfirmed,
+                        transactionRepository.search({
+                            group: TransactionGroup.Unconfirmed,
+                            address: currentSignerAddress,
+                            pageSize: 100,
+                            pageNumber: 1, // not paginating
+                            order: Order.Desc,
+                        }),
+                    ),
+                );
 
-            subscriptions.push(
-                subscribeTransactions(
-                    TransactionGroupState.partial,
-                    transactionRepository.search({
-                        group: TransactionGroup.Partial,
-                        address: currentSignerAddress,
-                        pageSize: 100,
-                        pageNumber: 1, // not paginating
-                        order: Order.Desc,
-                    }),
-                ),
-            );
+                subscriptions.push(
+                    subscribeTransactions(
+                        TransactionGroupState.partial,
+                        transactionRepository.search({
+                            group: TransactionGroup.Partial,
+                            address: currentSignerAddress,
+                            pageSize: 100,
+                            pageNumber: 1, // not paginating
+                            order: Order.Desc,
+                        }),
+                    ),
+                );
+            }
 
             combineLatest(subscriptions).subscribe({
                 complete: () => {
