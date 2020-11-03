@@ -1,7 +1,17 @@
 <template>
     <div class="accounts-main-container">
         <div class="left-container">
-            <AccountSelectorPanel />
+            <div class="left-top-container">
+                <AccountSelectorPanel />
+            </div>
+            <div class="left-bottom-container">
+                <!--TODO: Display hidden accounts following AccountSelectorPanel style.-->
+                <div class="hidden-account-header">
+                    <h1 class="section-title">
+                        {{ $t('hidden_accounts') }}
+                    </h1>
+                </div>
+            </div>
         </div>
         <div class="right-container">
             <div class="header-container">
@@ -22,4 +32,14 @@ export default class Accounts extends AccountsTs {}
 
 <style lang="less" scoped>
 @import './Accounts.less';
+
+.hidden-account-header {
+    padding: 0 0.4rem;
+    margin: 0.2rem 0;
+    .section-title {
+        font-weight: 600;
+        color: @purpleDark;
+        font-family: @symbolFont;
+    }
+}
 </style>

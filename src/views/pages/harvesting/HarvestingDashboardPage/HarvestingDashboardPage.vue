@@ -1,20 +1,25 @@
 <template>
     <div class="dashboard-container">
-        <div class="dashboard-status-container">
-            <HarvestStatisticsPanel />
-        </div>
-        <div class="dashboard-bottom-container">
+        <div class="dashboard-left-container">
+            <div class="dashboard-top-left-container">
+                <HarvestStatisticsPanel />
+            </div>
             <div class="dashboard-bottom-left-container">
-                <div class="dashboard-inner-container">
-                    <div class="header-container">
-                        <NavigationTabs direction="horizontal" :parent-route-name="'harvesting'" />
-                    </div>
-                    <div class="bottom-container">
-                        <router-view />
-                    </div>
+                <div class="header-container">
+                    <NavigationTabs direction="horizontal" :parent-route-name="'harvesting'" />
+                </div>
+                <div class="harvesting-container">
+                    <router-view />
                 </div>
             </div>
-            <div class="dashboard-bottom-right-container"></div>
+        </div>
+        <div class="dashboard-right-container">
+            <!--TODO: Harvesting dashboard following standard style.-->
+            <div class="header-container-placeholder">
+                <h1 class="section-title">
+                    {{ $t('harvested_blocks') }}
+                </h1>
+            </div>
         </div>
     </div>
 </template>
@@ -37,4 +42,14 @@ export default class HarvestingDashboardPage extends Vue {}
 </script>
 <style lang="less" scoped>
 @import './HarvestingDashboardPage.less';
+
+.header-container-placeholder {
+    padding: 0 0.4rem;
+    margin: 0.2rem 0;
+    .section-title {
+        font-weight: 600;
+        color: @purpleDark;
+        font-family: @symbolFont;
+    }
+}
 </style>

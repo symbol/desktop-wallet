@@ -10,8 +10,8 @@
         </div>
         <div v-else>
             <div class="value">
-                <button type="button" class="show-button inverted-button" @click="onClickDisplay">
-                    SHOW
+                <button type="button" class="show-button" @click="onClickDisplay">
+                    {{ $t('show_button') }}
                 </button>
             </div>
         </div>
@@ -31,14 +31,16 @@ export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDispl
 </script>
 
 <style lang="less" scoped>
+@import './../../views/resources/css/variables.less';
+
 .show-button {
-    height: 0.3rem !important;
-    width: 0.8rem !important;
-    border-radius: 3px;
-    font-size: 14px;
+    border: none !important;
     font-weight: bold;
     cursor: pointer;
+    background-color: transparent;
+    color: @purpleLightest;
 }
+
 .copy-icon {
     width: 0.24rem;
     height: 0.24rem;

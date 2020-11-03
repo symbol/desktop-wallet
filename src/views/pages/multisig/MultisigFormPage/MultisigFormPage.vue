@@ -37,7 +37,7 @@ export default class MultisigFormPage extends Vue {}
     }
     .left-container {
         width: 100%;
-        padding: 0.3rem 0.5rem;
+        padding-left: 0.5rem;
         background-color: white;
     }
 

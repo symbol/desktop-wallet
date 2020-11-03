@@ -20,7 +20,7 @@
                     {{ $t('if_you_need_to_back_up_your_mnemonics_again_you_can') }}
                 </p>
                 <div class="jump-btn">
-                    <button class="button-style validation-button" @click="$router.push({ name: 'dashboard' })">
+                    <button class="button-style validation-create-button" @click="$router.push({ name: 'dashboard' })">
                         {{ $t('next') }}
                     </button>
                 </div>
