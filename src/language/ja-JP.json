@@ -283,6 +283,12 @@
     "form_label_removed_cosignatory_tooltip": "トランザクション内で許可される署名者の削除は1つだけです",
     "form_label_supply_delta": "供給変更量",
     "form_label_supply_direction": "供給変更方向",
+    "form_label_by_account": "アカウント別",
+    "form_label_target_account": "ターゲットアカウント",
+    "form_label_target_mosaic_id": "ターゲットモザイクID",
+    "form_label_scoped_metadata_key": "スコープメタデータキー",
+    "form_label_value": "値",
+    "form_label_max_fee": "最大料金",
     "from_qr_code": "QRコードから",
     "from_to_action": "From/To (アクション)",
     "generate_a_new_profile": "新しいプロファイルを生成する",
@@ -406,6 +412,9 @@
     "modal_title_transaction_confirmation": "トランザクション(s)に署名",
     "modal_title_transaction_details": "トランザクション詳細",
     "modal_title_unlink_alias": "エイリアスをネームスペースからアンリンク",
+    "modal_title_account_metadata": "アカウントのメタデータ",
+    "modal_title_mosaic_metadata": "モザイクメタデータ",
+    "modal_title_namespace_metadata": "名前空間メタデータ",
     "more_access_tool_is_working": "たくさんの認証ツールを開発中です",
     "mosaic": "モザイク",
     "mosaic_alias_not_exist": "モザイクエイリアスは存在しません",
@@ -754,5 +763,6 @@
     "welcome": "ようこそ",
     "welcome_to_symbol": "ようこそ Symbol へ",
     "word": "文字",
-    "x_seconds": "{seconds}秒"
+    "x_seconds": "{seconds}秒",
+    "progress": "ダウンロード中"
 }

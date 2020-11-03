@@ -285,6 +285,12 @@
     "form_label_supply_direction": "改变供应量管理",
     "from_qr_code": "从二维码",
     "from_to_action": "发起/接受（行为）",
+    "from_label_by_account": "帐户",
+    "form_label_target_account": "目标账户",
+    "form_label_target_mosaic_id": "目标镶嵌ID",
+    "form_label_scoped_metadata_key": "作用域元数据密钥",
+    "form_label_value": "值",
+    "form_label_max_fee": "最高费用",
     "generate_a_new_profile": "生成一个新账户",
     "generate_entropy_increase_success": "生成熵增成功，页面即将跳转。",
     "generate_mnemonic": "生成助记词",
@@ -406,6 +412,9 @@
     "modal_title_transaction_confirmation": "签署交易",
     "modal_title_transaction_details": "交易详情",
     "modal_title_unlink_alias": "取消别名与命名空间的链接",
+    "modal_title_account_metadata": "帐户元数据",
+    "modal_title_mosaic_metadata": "马赛克元数据",
+    "modal_title_namespace_metadata": "命名空间元数据",
     "more_access_tool_is_working": "更多接入方式正在开发中",
     "mosaic": "马赛克",
     "mosaic_alias_not_exist": "马赛克别名不存在",
@@ -755,5 +764,6 @@
     "welcome": "Welcome",
     "welcome_to_symbol": "欢迎使用Symbol",
     "word": "字",
-    "x_seconds": "{seconds}秒"
+    "x_seconds": "{seconds}秒",
+    "progress": "正在下载"
 }
