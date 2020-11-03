@@ -2,7 +2,7 @@
     "name": "symbol-desktop-wallet",
     "description": "Symbol Wallet",
     "homepage": "https://github.com/nemgrouplimited/symbol-desktop-wallet",
-    "version": "0.13.1",
+    "version": "0.13.2",
     "repository": {
         "type": "git",
         "url": "https://github.com/nemgrouplimited/symbol-desktop-wallet.git"
@@ -44,11 +44,6 @@
         "request": "^2.88.0",
         "rss-parser": "^3.7.3",
         "rxjs": "^6.5.2",
-        "symbol-hd-wallets": "0.14.0-alpha-202010231206",
-        "symbol-paper-wallets": "^1.0.2",
-        "symbol-qr-library": "0.13.1-alpha-202010241730",
-        "symbol-sdk": "0.21.1-alpha-202010272018",
-        "symbol-uri-scheme": "0.5.2-alpha-202010291746",
         "trezor-connect": "^7.0.5",
         "utf8": "^3.0.0",
         "vee-validate": "^3.2.3",
@@ -61,6 +56,7 @@
         "vue-number-animation": "1.0.5",
         "vue-property-decorator": "^8.1.0",
         "vue-qrcode-reader": "^2.3.10",
+        "vue-responsive-video-background-player": "^1.1.4",
         "vue-router": "^3.1.3",
         "vue-rx": "^6.2.0",
         "vuedraggable": "^2.23.2",
@@ -116,7 +112,12 @@
         "typescript": "^3.7.2",
         "utf-8-validate": "^5.0.2",
         "vue-jest": "^3.0.5",
-        "vue-template-compiler": "^2.6.10"
+        "vue-template-compiler": "^2.6.10",
+        "symbol-hd-wallets": "0.14.0-alpha-202010231206",
+        "symbol-paper-wallets": "^1.0.2",
+        "symbol-qr-library": "0.13.1-alpha-202010241730",
+        "symbol-sdk": "0.21.1-alpha-202010272018",
+        "symbol-uri-scheme": "0.5.2-alpha-202010291746"
     },
     "resolutions": {
         "@babel/preset-env": "7.5.5"

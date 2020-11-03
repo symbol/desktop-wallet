@@ -10,16 +10,16 @@
                     <p>{{ $t('backup_profile_explanation_desc') }}</p>
                 </div>
 
-                <Button class="button-style validation-button download-button" :loading="downloadInProgress" @click="onDownload">
-                    <span v-if="!downloadInProgress"> <Icon :type="'md-download'" size="20" /> {{ $t('button_download') }}</span>
-                </Button>
+                <button class="button-style solid-button fat-button" :loading="downloadInProgress" @click="onDownload">
+                    <span> <Icon :type="'md-download'" size="12" /> {{ $t('button_download') }}</span>
+                </button>
+                <br />
+                <p class="temp_notif">
+                    <span v-if="downloadInProgress">{{ $t('progress') }}</span>
+                </p>
             </div>
 
-            <div slot="footer" class="modal-footer">
-                <button type="submit" class="centered-button button-style back-button float-right" @click="show = false">
-                    {{ $t('close') }}
-                </button>
-            </div>
+            <div slot="footer" class="modal-footer"></div>
         </Modal>
     </div>
 </template>
@@ -32,4 +32,9 @@ export default class ModalBackupProfile extends ModalBackupProfileTs {}
 
 <style lang="less" scoped>
 @import './ModalBackupProfile.less';
+
+.temp_notif {
+    margin-top: 0.5em;
+    color: @primary;
+}
 </style>

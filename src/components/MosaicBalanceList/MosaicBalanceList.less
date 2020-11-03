@@ -121,7 +121,7 @@
     position: absolute;
     display: inline-block;
     width: 0.6rem;
-    font-size: 0.16rem;
+    font-size: @normalFont;
     text-align: center;
     right: -0.6rem;
     color: @purple;
@@ -207,9 +207,9 @@
         top: 0;
         left: 0.4rem;
         width: 1.8rem;
-        font-size: @smallFont;
+        font-size: @normalFont;
         font-weight: 400;
-        color: @blackLight;
+        color: @purpleDark;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -218,6 +218,7 @@
     .mosaic_value {
         margin-left: 0.5rem;
         text-align: right;
+        color: @purpleDark;
 
         div:first-of-type {
             font-size: 0.16rem;
@@ -260,10 +261,10 @@
 }
 
 /deep/.ivu-tabs-tab {
-    font-size: 0.2rem !important;
-    color: black !important;
+    font-size: @bigFont !important;
+    color: @primary !important;
     padding: 0.08rem 0.1rem !important;
-    font-weight: 500;
+    font-weight: @bold;
 }
 
 /deep/.ivu-tabs-ink-bar {

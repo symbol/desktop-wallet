@@ -18,12 +18,8 @@
 
 .create-mnemonic-sec {
     position: relative;
-
+    padding-left: 0.7rem;
     .create-mnemonic-col {
-        display: grid;
-        grid-template-columns: 9.5rem 5.16rem;
-        column-gap: 0.3rem;
-
         .create-mnemonic-left {
             width: 100%;
 
@@ -79,7 +75,6 @@
 
     .mnemonic-container {
         padding-top: 5px;
-        width: 950px;
         height: 260px;
         border: 1px solid rgba(51, 51, 51, 0.2);
         border-radius: 5px;
@@ -90,8 +85,8 @@
         position: relative;
         .copy-button {
             position: absolute;
-            bottom: 0.17rem;
-            right: 2.3rem;
+            bottom: 10px;
+            right: 10px;
         }
     }
 
@@ -102,16 +97,15 @@
 
     .mnemonic-list {
         padding: 10px;
-        border-right: 1px solid #eae6e6;
 
         span {
             display: inline-block;
-            background-color: #6401ee;
-            padding: 5px 10px;
+            background-color: #d3d3d3;
+            padding: 10px 20px;
             border-radius: 4px;
             margin: 5px;
             font-size: @smallFont;
-            color: rgba(255, 255, 255, 0.9);
+            color: @purpleDark;
         }
     }
 
@@ -143,4 +137,14 @@
             }
         }
     }
+}
+.set-title-create {
+    color: #44004e;
+    font-size: 0.25rem;
+    font-family: 'noto-sans-semibold';
+    margin-bottom: 20px;
+}
+.clipboard-icon {
+    width: 25px;
+    margin-left: 10px;
 }
