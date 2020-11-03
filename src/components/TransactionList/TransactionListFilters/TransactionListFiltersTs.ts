@@ -25,7 +25,6 @@ import TransactionStatusFilter from '@/components/TransactionList/TransactionLis
 import ButtonRefresh from '@/components/ButtonRefresh/ButtonRefresh.vue';
 import { Signer } from '@/store/Account';
 import { AccountModel } from '@/core/database/entities/AccountModel';
-import { TransactionGroupState } from '@/store/Transaction';
 import { Address } from 'symbol-sdk';
 
 @Component({
