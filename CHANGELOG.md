@@ -3,6 +3,43 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.2][v0.13.2] - 02-Nov-2020
+
+### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+
+#### Added
+
+- Docker support on the wallet web mode. Docker images can be created for development and testing purposes.
+- Added warning banner on footer when the wallet is running under dev (web) mode.
+- Added paper wallet account backup which generates multiple pages backup with both mnemonic and private key accounts.
+- Added Encrypt / Decrypt message support in TransferTransaction.
+
+#### Changes
+
+- Upgraded symbol-hd-wallets, symbol-qr-library and symbol-uri-scheme with removed Symbol-SDK dependency
+- Upgraded symbol-sdk to latest v0.21.13 alpha (0.10.x compat)
+- Allow multiple private key accounts to be imported into the same profile as the mnemonic account.
+- Profile backup is now using Symbole-Paper-Wallet with multiple accounts support.
+- Applied the first iteration of UI implementation.
+    - Restyled login access profile
+    - Restyled profile creation and profile import with new UI styles
+    - General layouts applied
+    - Styled buttons, forms, and tables
+    - Aggregate page UI layout
+    - Harversting page UI layout
+
+#### Fixed
+
+- Fees (various available) are set to be visible with sorting in the transaction creation form.
+- Fixed Deadline timestamp issue in the transaction list view.
+- Fixed Alias display issue in account info page when signer of the alias transaction is not current account.
+- Fixed multi-level multisig account creation & display issue.
+- Improved available note list view, separated node's friendly name, and url.
+- Fixed issues when resetting transaction entry forms.
+- Fixed issues in node switching when currently selected node becomes not available.
+- Fixed subnamespace display issue. Subnamnespace is not visible with corrected type labels.
+- Various UI issues fixed.
+
 ## [0.13.0][v0.13.0] - 25-Sep-2020
 
 ### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0)
@@ -272,7 +309,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
 
-
+[v0.13.2]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.0...v0.13.2
 [v0.13.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.11.0...v0.13.0
 [v0.12.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.11.0...v0.12.0
 [v0.11.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.10.0...v0.11.0

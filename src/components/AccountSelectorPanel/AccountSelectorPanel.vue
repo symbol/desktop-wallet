@@ -13,6 +13,8 @@
                         <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="grayed-xym-logo" />
                     </span>
                     <span class="mosaic_name">{{ item.name }}</span>
+                    <span class="account-type">{{ item.type === 1 ? `(${$t('Seed')})` : `(${$t('private_key')})` }} </span>
+
                     <span class="mosaic_value">
                         <span :class="['amount', 'overflow_ellipsis', 'green']">
                             <MosaicAmountDisplay :absolute-amount="balances[item.address]" />
