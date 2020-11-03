@@ -35,6 +35,8 @@ import { TableAssetType } from './TableAssetType';
 // @ts-ignore
 import TableRow from '@/components/TableRow/TableRow.vue';
 // @ts-ignore
+import ButtonAdd from '@/components/ButtonAdd/ButtonAdd';
+// @ts-ignore
 import ModalFormWrap from '@/views/modals/ModalFormWrap/ModalFormWrap.vue';
 // @ts-ignore
 import FormAliasTransaction from '@/views/forms/FormAliasTransaction/FormAliasTransaction.vue';
@@ -59,6 +61,7 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
         FormExtendNamespaceDurationTransaction,
         FormMosaicSupplyChangeTransaction,
         SignerFilter,
+        ButtonAdd,
     },
     computed: {
         ...mapGetters({

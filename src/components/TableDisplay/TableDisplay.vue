@@ -3,9 +3,12 @@
         <div class="upper-section-container">
             <div class="table-title-container section-title">
                 <div class="user-operation">
-                    <span v-show="assetType === 'metadata'" class="add-metadata-button" @click="$emit('add-metadata')">
-                        <Icon class="add-icon" type="md-add-circle" />
-                        {{ $t('add_metadata') }}
+                    <span class="add-metadata-button" >
+                        <ButtonAdd
+                            :title="$t('add_metadata')"
+                            :disabled="false"
+                            @click="$emit('on-add-metadata')"
+                        />
                     </span>
                     <Checkbox v-if="assetType !== 'metadata'" v-model="showExpired" class="table-filter-item-container">
                         <span v-show="assetType === 'mosaic'">{{ $t('show_expired_mosaics') }}</span>
