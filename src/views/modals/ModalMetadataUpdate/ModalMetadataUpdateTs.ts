@@ -13,16 +13,41 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+
+// import external components
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { TranslateResult } from 'vue-i18n';
+import { MetadataType } from 'symbol-sdk';
+
+// import internal components
+import { MetadataModel } from '@/core/database/entities/MetadataModel';
+// @ts-ignore
+import FormMetadataCreation from '@/views/forms/FormMetadataCreation/FormMetadataCreation.vue';
 
 @Component({
-    components: {},
+    components: {
+        FormMetadataCreation
+    },
 })
 export class ModalMetadataUpdateTs extends Vue {
     @Prop({
         default: false,
     })
     visible: boolean;
+
+    /**
+     * @MetadataModel
+     * Determine edit or add
+     */
+    protected metadata: MetadataModel;
+
+    /**
+     * Metadata update modal type
+     */
+    @Prop({
+        default: MetadataType.Account
+    })
+    protected type: MetadataType;
 
     /**
      * Visibility state
@@ -39,5 +64,36 @@ export class ModalMetadataUpdateTs extends Vue {
         if (!val) {
             this.$emit('close');
         }
+    }
+
+    /**
+     * Modal title from modal type
+     * @type {TranslateResult}
+     */
+    get modalTitle(): TranslateResult {
+        var title : TranslateResult = '';
+        switch(this.type) {
+            case MetadataType.Mosaic:
+                title = this.$t('modal_title_mosaic_metadata');
+                break;
+            
+            case MetadataType.Namespace:
+                title = this.$t('modal_title_namespace_metadata');
+                break;
+
+            default:
+                title = this.$t('modal_title_account_metadata');
+                break;
+        }
+        return title;
+    }
+
+    /**
+     * Save Metadata handler
+     * @param {void}
+     */
+    protected saveMetadata() : void {
+        console.log('create metadata handle');
+        this.$emit('close');
     }
 }

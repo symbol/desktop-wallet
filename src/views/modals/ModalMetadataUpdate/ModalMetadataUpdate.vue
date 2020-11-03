@@ -4,11 +4,13 @@
             v-model="show"
             class-name="vertical-center-modal"
             :footer-hide="true"
-            :width="1000"
             :transfer="false"
             @on-cancel="$emit('close-modal')"
         >
-            Here is Metadata List:
+            <FormMetadataCreation
+                :title="modalTitle"
+                @on-create="saveMetadata" />
+
         </Modal>
     </div>
 </template>
