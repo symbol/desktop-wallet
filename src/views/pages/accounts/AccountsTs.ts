@@ -29,6 +29,8 @@ import ContactSelectorPanel from '@/components/ContactSelectorPanel/ContactSelec
 import ContactDetailPanel from '@/components/ContactDetailPanel/ContactDetailPanel.vue';
 // @ts-ignore
 import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
+// @ts-ignore
+import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue';
 
 @Component({
     components: {
@@ -37,6 +39,7 @@ import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
         ContactSelectorPanel,
         ContactDetailPanel,
         NavigationLinks,
+        ButtonAdd,
     },
     computed: {
         ...mapGetters({}),

@@ -26,6 +26,9 @@
         <div v-if="activePanel === 0" class="right-container">
             <div class="header-container">
                 <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
+                <div class="header-end">
+                    <ButtonAdd :title="$t('add_metadata')" :disabled="false" />
+                </div>
             </div>
 
             <div class="bottom-container">
