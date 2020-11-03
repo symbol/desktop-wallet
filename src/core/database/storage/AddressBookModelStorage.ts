@@ -14,7 +14,7 @@
  *
  */
 
-import {VersionedObjectStorage} from "@/core/database/backends/VersionedObjectStorage";
+import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage';
 
 /**
  * Stored cache for the known block infos.

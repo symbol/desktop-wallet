@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 
 // child components
 // @ts-ignore
@@ -21,7 +21,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue';
 // @ts-ignore
-import ButtonCopyToClipboard from "@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue";
+import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue';
 
 @Component({
     components: {

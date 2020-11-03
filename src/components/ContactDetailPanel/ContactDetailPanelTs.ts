@@ -14,8 +14,8 @@
  *
  */
 // external dependencies
-import {Component, Vue} from 'vue-property-decorator';
-import {mapGetters} from 'vuex';
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 // child components
 // @ts-ignore
 import AccountNameDisplay from '@/components/AccountNameDisplay/AccountNameDisplay.vue';
@@ -26,12 +26,12 @@ import AccountAddressDisplay from '@/components/AccountAddressDisplay/AccountAdd
 // @ts-ignore
 import AccountActions from '@/components/AccountActions/AccountActions.vue';
 // @ts-ignore
-import FormInputEditable from "@/components/FormInputEditable/FormInputEditable.vue";
+import FormInputEditable from '@/components/FormInputEditable/FormInputEditable.vue';
 // @ts-ignore
-import ModalConfirmDelete from "@/views/modals/ModalConfirmDelete/ModalConfirmDelete.vue";
+import ModalConfirmDelete from '@/views/modals/ModalConfirmDelete/ModalConfirmDelete.vue';
 
-import {NetworkType, PublicAccount} from "symbol-sdk";
-import { AddressBook, IContact} from "symbol-address-book";
+import { NetworkType, PublicAccount } from 'symbol-sdk';
+import { AddressBook, IContact } from 'symbol-address-book';
 
 @Component({
     components: {
@@ -50,7 +50,6 @@ import { AddressBook, IContact} from "symbol-address-book";
     },
 })
 export class ContactDetailPanelTs extends Vue {
-
     public addressBook: AddressBook;
 
     public selectedContact: IContact;
@@ -61,11 +60,11 @@ export class ContactDetailPanelTs extends Vue {
         return PublicAccount.createFromPublicKey('0'.repeat(64), NetworkType.MAIN_NET);
     }
 
-    public saveProperty(propName: string){
+    public saveProperty(propName: string) {
         return (newVal: string) => {
             this.selectedContact[propName] = newVal;
             this.addressBook.updateContact(this.selectedContact.id, this.selectedContact);
-        }
+        };
     }
 
     public get showDeleteModal() {
@@ -73,10 +72,10 @@ export class ContactDetailPanelTs extends Vue {
     }
 
     public set showDeleteModal(val: boolean) {
-        this.showDeleteConfirmModal = val
+        this.showDeleteConfirmModal = val;
     }
 
     public removeContact() {
-        this.$store.dispatch('addressBook/REMOVE_CONTACT', this.selectedContact.id)
+        this.$store.dispatch('addressBook/REMOVE_CONTACT', this.selectedContact.id);
     }
 }

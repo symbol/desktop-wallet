@@ -55,8 +55,8 @@ export class AccountsTs extends Vue {
 
     public get activePanel() {
         return this.activeIndex;
-    };
+    }
     public set activePanel(panel) {
         this.activeIndex = panel;
-    };
+    }
 }

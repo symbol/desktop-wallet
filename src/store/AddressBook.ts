@@ -15,25 +15,25 @@
  */
 
 import { AwaitLock } from './AwaitLock';
-import {AddressBook, IContact} from "symbol-address-book";
-import Vue from "vue";
-import {AddressBookService} from "@/services/AddressBookService";
+import { AddressBook, IContact } from 'symbol-address-book';
+import Vue from 'vue';
+import { AddressBookService } from '@/services/AddressBookService';
 
 /// region globals
 const Lock = AwaitLock.create();
 /// end-region globals
 
 type AddressBookState = {
-    initialized: boolean,
-    addressBook: AddressBook,
-    selectedContact: IContact,
-}
+    initialized: boolean;
+    addressBook: AddressBook;
+    selectedContact: IContact;
+};
 
 const addressBookState: AddressBookState = {
     initialized: false,
     addressBook: null,
     selectedContact: null,
-}
+};
 
 /**
  * AddressBook Store
@@ -73,7 +73,7 @@ export default {
             };
             await Lock.initialize(callback, { getters });
         },
-        async uninitialize({ commit, dispatch, getters } ) {
+        async uninitialize({ commit, dispatch, getters }) {
             const callback = async () => {
                 await dispatch('SAVE_ADDRESS_BOOK');
                 commit('setInitialized', false);
@@ -81,12 +81,12 @@ export default {
             await Lock.uninitialize(callback, { getters });
         },
 
-        async SAVE_ADDRESS_BOOK({ commit, dispatch, getters }) {
+        async SAVE_ADDRESS_BOOK({ getters }) {
             const addressBook: AddressBook = getters.getAddressBook;
             await new AddressBookService().saveAddressBook(addressBook);
         },
 
-        async LOAD_ADDRESS_BOOK({ commit, dispatch }) {
+        async LOAD_ADDRESS_BOOK({ commit }) {
             //TODO LOAD ADDRESS BOOK FROM DB
             const addressBook = await new AddressBookService().getAddressBook();
             console.log(addressBook);
@@ -122,7 +122,7 @@ export default {
             dispatch('SAVE_ADDRESS_BOOK');
         },
 
-        async RESOLVE_ADDRESS({ commit, dispatch, getters }, address) {
+        async RESOLVE_ADDRESS({ getters }, address) {
             const addressBook: AddressBook = getters.getAddressBook;
             return addressBook.getContactByAddress(address);
         },

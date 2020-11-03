@@ -15,10 +15,9 @@
  */
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { MosaicId, NetworkType } from 'symbol-sdk';
 import { ValidationProvider } from 'vee-validate';
 // internal dependencies
-import {AddressBook, IContact} from "symbol-address-book";
+import { AddressBook, IContact } from 'symbol-address-book';
 // child components
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue';
@@ -34,9 +33,7 @@ import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
 import ModalBackupProfile from '@/views/modals/ModalBackupProfile/ModalBackupProfile.vue';
 // @ts-ignore
 import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
-import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
-import { MosaicModel } from '@/core/database/entities/MosaicModel';
-import ModalContactCreation from "@/views/modals/ModalContactCreation/ModalContactCreation.vue";
+import ModalContactCreation from '@/views/modals/ModalContactCreation/ModalContactCreation.vue';
 import { UIHelpers } from '@/core/utils/UIHelpers';
 
 @Component({
@@ -88,14 +85,15 @@ export class ContactSelectorPanelTs extends Vue {
     }
 
     public isActiveContact(contact: IContact): boolean {
-        if (!this.selectedContact) return false;
+        if (!this.selectedContact) {
+            return false;
+        }
         return this.selectedContact.id === contact.id;
     }
 
     public downloadAddressBook() {
-        UIHelpers.downloadBytesAsFile(this.addressBook.toJSON(),`address-book.json`, 'application/json' );
+        UIHelpers.downloadBytesAsFile(this.addressBook.toJSON(), `address-book.json`, 'application/json');
     }
 
     /// end-region computed properties getter/setter
-
 }

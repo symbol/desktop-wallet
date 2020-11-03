@@ -20,7 +20,7 @@
                         type="text"
                     />
                 </ErrorTooltip>
-                <div style="text-align: right" >
+                <div style="text-align: right;">
                     <ContactSelector @change="onSelectContact" />
                 </div>
             </ValidationProvider>

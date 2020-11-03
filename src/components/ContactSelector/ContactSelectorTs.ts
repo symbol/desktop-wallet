@@ -17,7 +17,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 //@ts-ignore
 import ModalNetworkNotMatchingProfile from '@/views/modals/ModalNetworkNotMatchingProfile/ModalNetworkNotMatchingProfile.vue';
-import {IContact, AddressBook} from "symbol-address-book";
+import { IContact, AddressBook } from 'symbol-address-book';
 
 @Component({
     components: { ModalNetworkNotMatchingProfile },
@@ -35,7 +35,7 @@ export class ContactSelectorTs extends Vue {
 
     /// region computed properties getter/setter
     get contactList(): IContact[] {
-        return this.addressBook.getAllContacts()
+        return this.addressBook.getAllContacts();
     }
 
     /// end-region computed properties getter/setter

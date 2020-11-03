@@ -14,9 +14,7 @@
  *
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { mapGetters } from 'vuex';
 // internal dependencies
-import { ProfileModel } from '@/core/database/entities/ProfileModel';
 // child components
 // @ts-ignore
 import FormContactCreation from '@/views/forms/FormContactCreation/FormContactCreation.vue';

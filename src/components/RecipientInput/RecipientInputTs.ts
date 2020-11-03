@@ -28,14 +28,14 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
 import ContactSelector from '@/components/ContactSelector/ContactSelector.vue';
-import {AddressBook} from "symbol-address-book/AddressBook";
+import { AddressBook } from 'symbol-address-book/AddressBook';
 
 @Component({
     components: {
         ValidationProvider,
         ErrorTooltip,
         FormRow,
-        ContactSelector
+        ContactSelector,
     },
     computed: {
         ...mapGetters({
@@ -79,6 +79,8 @@ export class RecipientInputTs extends Vue {
 
     public onSelectContact(id: string) {
         const contact = this.addressBook.getContactById(id);
-        if (contact) this.rawValue = contact.address;
+        if (contact) {
+            this.rawValue = contact.address;
+        }
     }
 }

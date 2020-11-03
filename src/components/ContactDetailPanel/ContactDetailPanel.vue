@@ -59,7 +59,7 @@
                     <div class="detail-row" style="margin-top: 1rem;">
                         <div class="bottom-buttons-container">
                             <div></div>
-                            <button type="button" @click="showDeleteModal = true" class="centered-button button-style button danger-button">
+                            <button type="button" class="centered-button button-style button danger-button" @click="showDeleteModal = true">
                                 {{ $t('delete_account') }}
                             </button>
                         </div>

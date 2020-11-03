@@ -33,7 +33,7 @@ import CommunityStore from '@/store/Community';
 import { onPeerConnection } from '@/store/plugins/onPeerConnection';
 // use AwaitLock for initialization routines
 import { AwaitLock } from '@/store/AwaitLock';
-import AddressBook from "@/store/AddressBook";
+import AddressBook from '@/store/AddressBook';
 
 const Lock = AwaitLock.create();
 

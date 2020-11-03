@@ -15,14 +15,8 @@
  */
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { Account, NetworkType, Password, Crypto } from 'symbol-sdk';
-import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
-import { DerivationService } from '@/services/DerivationService';
-import { NotificationType } from '@/core/utils/NotificationType';
-import { AccountService } from '@/services/AccountService';
-import { AccountModel } from '@/core/database/entities/AccountModel';
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 // @ts-ignore
@@ -34,12 +28,9 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 // configuration
-import { appConfig } from '@/config';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
-import {AddressBook} from "symbol-address-book/AddressBook";
-
-const { MAX_SEED_ACCOUNTS_NUMBER } = appConfig.constants;
+import { AddressBook } from 'symbol-address-book/AddressBook';
 
 @Component({
     components: {
@@ -97,7 +88,7 @@ export class FormContactCreationTs extends Vue {
             name: this.formItems.name,
             address: this.formItems.address,
         });
-        this.$emit('submit')
+        this.$emit('submit');
     }
 
     /**

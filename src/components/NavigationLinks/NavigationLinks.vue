@@ -3,8 +3,8 @@
         <span
             v-for="(item, index) in items"
             :key="index"
-            @click="$emit('selected', index)"
             :class="['nav-item', index === currentItemIndex ? 'active-item' : 'inactive-item']"
+            @click="$emit('selected', index)"
         >
             {{ $t(translationPrefix + item.toLowerCase()) }}
         </span>

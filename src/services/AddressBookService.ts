@@ -14,8 +14,8 @@
  *
  */
 
-import {AddressBookModelStorage} from "@/core/database/storage/AddressBookModelStorage";
-import {AddressBook} from "symbol-address-book/AddressBook";
+import { AddressBookModelStorage } from '@/core/database/storage/AddressBookModelStorage';
+import { AddressBook } from 'symbol-address-book/AddressBook';
 
 export class AddressBookService {
     /**

@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <div class="right-container" v-if="activePanel === 0">
+        <div v-if="activePanel === 0" class="right-container">
             <div class="header-container">
                 <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
             </div>
@@ -32,9 +32,11 @@
                 <router-view />
             </div>
         </div>
-        <div class="right-container" v-if="activePanel === 1">
+        <div v-if="activePanel === 1" class="right-container">
             <div class="header-container">
-                <div class="tabs horizontal"><span class="tab-item active">{{$t('contact_information')}}</span></div>
+                <div class="tabs horizontal">
+                    <span class="tab-item active">{{ $t('contact_information') }}</span>
+                </div>
             </div>
             <div class="bottom-container">
                 <ContactDetailPanel />
