@@ -27,7 +27,7 @@
             <div class="header-container">
                 <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
                 <div class="header-end">
-                    <ButtonAdd :title="$t('add_metadata')" :disabled="false" />
+                    <ButtonAdd :title="$t('add_metadata')" :disabled="false" @click="showMetadataModal = true" />
                 </div>
             </div>
 
@@ -35,6 +35,7 @@
                 <router-view />
             </div>
         </div>
+<<<<<<< HEAD
         <div v-if="activePanel === 1" class="right-container">
             <div class="header-container">
                 <div class="tabs horizontal">
@@ -45,6 +46,10 @@
                 <ContactDetailPanel />
             </div>
         </div>
+=======
+        
+        <ModalMetadataUpdate v-if="showMetadataModal" :visible="showMetadataModal" @close="showMetadataModal = false" />
+>>>>>>> add metadata button on account information page
     </div>
 </template>
 
