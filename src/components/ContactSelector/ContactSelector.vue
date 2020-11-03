@@ -1,7 +1,10 @@
 <template>
     <div class="endpoint-healthy">
         <Poptip v-model="poptipVisible" placement="bottom-end" class="endpoint-poptip" @on-popper-show="onPopTipShow">
-            <span class="network-text pointer">{{ $t('select_contact') }}</span>
+            <div class="button-container">
+                <span class="network-text pointer">{{ $t('select_contact') }}</span>
+                <img src="@/views/resources/img/newicons/Tag.svg" class="icon-left-button" />
+            </div>
             <div slot="content" class="node-selector-container">
                 <div class="node-list-container">
                     <div class="node-list-content">

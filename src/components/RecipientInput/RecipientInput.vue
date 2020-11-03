@@ -1,5 +1,5 @@
 <template>
-    <FormRow class-name="emphasis">
+    <FormRow class-name="emphasis" style="margin-bottom: 0.3rem;">
         <template v-slot:label> {{ $t('transfer_target') }}: </template>
         <template v-slot:inputs>
             <ValidationProvider
@@ -20,7 +20,7 @@
                         type="text"
                     />
                 </ErrorTooltip>
-                <div style="text-align: right;">
+                <div style="text-align: right; margin-top: 5px;">
                     <ContactSelector @change="onSelectContact" />
                 </div>
             </ValidationProvider>
