@@ -204,12 +204,18 @@ export default {
         },
         filterTransactions: (
             state: TransactionState,
-            { filterOption, currentSignerAddress }: { filterOption?: FilterOption; currentSignerAddress: string },
+            {
+                filterOption,
+                currentSignerAddress,
+                shouldFilterOptionChange = true,
+            }: { filterOption?: FilterOption; currentSignerAddress: string; shouldFilterOptionChange: boolean },
         ) => {
-            if (filterOption) {
-                state.filterOptions.setFilterOption(filterOption);
-            } else {
-                state.filterOptions = new TransactionFilterOptionsState();
+            if (shouldFilterOptionChange) {
+                if (filterOption) {
+                    state.filterOptions.setFilterOption(filterOption);
+                } else {
+                    state.filterOptions = new TransactionFilterOptionsState();
+                }
             }
 
             state.filteredTransactions = TransactionFilterService.filter(state, currentSignerAddress);
@@ -375,7 +381,10 @@ export default {
             });
         },
 
-        ADD_TRANSACTION({ commit, getters }, { group, transaction }: { group: TransactionGroupState; transaction: Transaction }) {
+        ADD_TRANSACTION(
+            { commit, getters, rootGetters },
+            { group, transaction }: { group: TransactionGroupState; transaction: Transaction },
+        ) {
             if (!group) {
                 throw Error("Missing mandatory field 'group' for action transaction/ADD_TRANSACTION.");
             }
@@ -386,6 +395,8 @@ export default {
             // format transactionAttribute to store variable name
             const transactionAttribute = transactionGroupToStateVariable(group);
 
+            const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
+
             // register transaction
             const transactions = getters[transactionAttribute] || [];
             if (!transactions.find((t) => t.transactionInfo.hash === transaction.transactionInfo.hash)) {
@@ -395,10 +406,20 @@ export default {
                     refresh: true,
                     pageInfo: getters['currentConfirmedPage'],
                 });
+
+                commit('setAllTransactions');
+                commit('filterTransactions', {
+                    filterOption: null,
+                    currentSignerAddress: currentSignerAddress.plain(),
+                    shouldFilterOptionChange: false,
+                });
             }
         },
 
-        REMOVE_TRANSACTION({ commit, getters }, { group, transactionHash }: { group: TransactionGroupState; transactionHash: string }) {
+        REMOVE_TRANSACTION(
+            { commit, getters, rootGetters },
+            { group, transactionHash }: { group: TransactionGroupState; transactionHash: string },
+        ) {
             if (!group) {
                 throw Error("Missing mandatory field 'group' for action transaction/REMOVE_TRANSACTION.");
             }
@@ -409,12 +430,21 @@ export default {
             // format transactionAttribute to store variable name
             const transactionAttribute = transactionGroupToStateVariable(group);
 
+            const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
+
             // register transaction
             const transactions = getters[transactionAttribute] || [];
             commit(transactionAttribute, {
                 transactions: transactions.filter((t) => t.transactionInfo.hash !== transactionHash),
                 refresh: true,
                 pageInfo: getters['currentConfirmedPage'],
+            });
+
+            commit('setAllTransactions');
+            commit('filterTransactions', {
+                filterOption: null,
+                currentSignerAddress: currentSignerAddress.plain(),
+                shouldFilterOptionChange: false,
             });
         },
 
