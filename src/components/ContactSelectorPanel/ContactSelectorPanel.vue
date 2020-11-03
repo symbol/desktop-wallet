@@ -1,5 +1,5 @@
 <template>
-    <div class="account-switch-container">
+    <div class="account-selector-panel">
         <div v-auto-scroll="'active-background'" class="account-switch-body-container scroll">
             <div
                 v-for="(item, index) in allContacts"
@@ -19,15 +19,18 @@
 
         <div class="account-switch-footer-container">
             <span type="button" class="add-account pointer button" @click="hasAddAccountModal = true">
+                <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" />
                 {{ $t('add_contact') }}
             </span>
 
             <div class="account-switch-header-right-container" @click="hasBackupProfileModal = true">
                 <span type="button" class="back-up pointer button" @click="downloadAddressBook">
+                    <img src="@/views/resources/img/newicons/Download.svg" class="icon-left-button" />
                     {{ $t('backup_address_book') }}
                 </span>
             </div>
         </div>
+
         <ModalContactCreation v-if="hasAddAccountModal" :visible="hasAddAccountModal" @close="hasAddAccountModal = false" />
     </div>
 </template>

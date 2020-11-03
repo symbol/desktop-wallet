@@ -34,6 +34,7 @@
         </div>
         <div class="right-container" v-if="activePanel === 1">
             <div class="header-container">
+                <div class="tabs horizontal"><span class="tab-item active">{{$t('contact_information')}}</span></div>
             </div>
             <div class="bottom-container">
                 <ContactDetailPanel />
@@ -58,5 +59,11 @@ export default class Accounts extends AccountsTs {}
         color: @purpleDark;
         font-family: @symbolFont;
     }
+}
+
+.account-switch-container {
+    display: grid;
+    height: 100%;
+    grid-template-rows: 0.6rem auto;
 }
 </style>

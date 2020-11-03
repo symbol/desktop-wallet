@@ -6,48 +6,65 @@
             </div>
             <div class="right-container">
                 <div class="account-details-grid">
-                    <FormInputEditable
-                        :model="selectedContact"
-                        :value="selectedContact.name"
-                        :new-value="selectedContact.name"
-                        :editing="false"
-                        :label="$t('contact_name')"
-                        :on-edit="saveProperty('name')"
-                    />
-                    <FormInputEditable
-                        :model="selectedContact"
-                        :value="selectedContact.address"
-                        :new-value="selectedContact.address"
-                        :editing="false"
-                        :label="$t('contact_address')"
-                        :on-edit="saveProperty('address')"
-                    />
-                    <FormInputEditable
-                        :model="selectedContact"
-                        :value="selectedContact.phone"
-                        :new-value="selectedContact.phone"
-                        :editing="false"
-                        :label="$t('contact_phone')"
-                        :on-edit="saveProperty('phone')"
-                    />
-                    <FormInputEditable
-                        :model="selectedContact"
-                        :value="selectedContact.email"
-                        :new-value="selectedContact.email"
-                        :editing="false"
-                        :label="$t('contact_email')"
-                        :on-edit="saveProperty('email')"
-                    />
-                    <FormInputEditable
-                        :model="selectedContact"
-                        :value="selectedContact.notes"
-                        :new-value="selectedContact.notes"
-                        :editing="false"
-                        :label="$t('contact_notes')"
-                        :on-edit="saveProperty('notes')"
-                    />
+                    <div class="detail-row">
+                        <FormInputEditable
+                            :model="selectedContact"
+                            :value="selectedContact.name"
+                            :new-value="selectedContact.name"
+                            :editing="false"
+                            :label="$t('contact_name')"
+                            :on-edit="saveProperty('name')"
+                        />
+                    </div>
+                    <div class="detail-row">
+                        <FormInputEditable
+                            :model="selectedContact"
+                            :value="selectedContact.address"
+                            :new-value="selectedContact.address"
+                            :editing="false"
+                            :label="$t('contact_address')"
+                            :on-edit="saveProperty('address')"
+                        />
+                    </div>
+                    <div class="detail-row">
+                        <FormInputEditable
+                            :model="selectedContact"
+                            :value="selectedContact.phone"
+                            :new-value="selectedContact.phone"
+                            :editing="false"
+                            :label="$t('contact_phone')"
+                            :on-edit="saveProperty('phone')"
+                        />
+                    </div>
+                    <div class="detail-row">
+                        <FormInputEditable
+                            :model="selectedContact"
+                            :value="selectedContact.email"
+                            :new-value="selectedContact.email"
+                            :editing="false"
+                            :label="$t('contact_email')"
+                            :on-edit="saveProperty('email')"
+                        />
+                    </div>
+                    <div class="detail-row">
+                        <FormInputEditable
+                            :model="selectedContact"
+                            :value="selectedContact.notes"
+                            :new-value="selectedContact.notes"
+                            :editing="false"
+                            :label="$t('contact_notes')"
+                            :on-edit="saveProperty('notes')"
+                        />
+                    </div>
+                    <div class="detail-row" style="margin-top: 1rem;">
+                        <div class="bottom-buttons-container">
+                            <div></div>
+                            <button type="button" @click="showDeleteModal = true" class="centered-button button-style button danger-button">
+                                {{ $t('delete_account') }}
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <button @click="showDeleteModal = true"> REMOVE </button>
             </div>
         </div>
         <ModalConfirmDelete :visible="showDeleteModal" @close="showDeleteModal = false" @delete="removeContact" />
@@ -61,4 +78,27 @@ export default class ContactDetailPanel extends ContactDetailPanelTs {}
 
 <style lang="less" scoped>
 @import './ContactDetailPanel.less';
+
+.title {
+    color: @primary;
+    font-size: 18px;
+}
+
+.bottom-buttons-container {
+    margin-left: auto;
+    margin-right: 1em;
+    width: 50%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+.bottom-buttons-container button {
+    margin: 0 0.5em;
+}
+
+.overflow-elipsis {
+    display: inline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 </style>

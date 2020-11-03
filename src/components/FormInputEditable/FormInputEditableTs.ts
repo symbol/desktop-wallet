@@ -20,11 +20,14 @@ import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue';
+// @ts-ignore
+import ButtonCopyToClipboard from "@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue";
 
 @Component({
     components: {
         ErrorTooltip,
         FormLabel,
+        ButtonCopyToClipboard,
     },
 })
 export class FormInputEditableTs extends Vue {

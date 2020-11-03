@@ -734,5 +734,6 @@
     "delete_confirmation_message": "Are you sure do you want to delete?",
     "tab_accounts_accounts": "My accounts",
     "tab_accounts_addressbook": "My contacts",
-    "select_contact": "Select contact"
+    "select_contact": "Select contact",
+    "contact_information": "Contact information"
 }

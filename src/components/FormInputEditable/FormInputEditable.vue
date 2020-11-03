@@ -1,16 +1,20 @@
 <template>
-    <div class="account-detail-row">
+    <div class="account-detail-row-3cols">
         <div class="label">{{ label }}:</div>
+
         <div class="value field-name">
             <span v-if="!editing" class="accountName">{{ value }}</span>
-            <input v-if="editing" v-model="newValue" class="accountName" />
-            <button v-if="!editing" type="button" class="edit-button" @click="startEditing()">
-                <Icon type="md-create" />
-            </button>
-            <button v-if="editing" type="button" class="edit-button" @click.stop="finishEdition()">
+            <input v-if="editing" v-model="newValue" class="edit-input" />
+        </div>
+
+        <button v-if="!editing" type="button" class="edit-button" @click.stop="startEditing()">
+            <Icon type="md-create" />
+        </button>
+        <div v-if="editing">
+            <button type="button" class="edit-button" @click.stop="finishEdition()">
                 <Icon type="md-add-circle" />
             </button>
-            <button v-if="editing" type="button" class="edit-button" @click.stop="cancelEdition()">
+            <button type="button" class="edit-button" @click.stop="cancelEdition()">
                 <Icon type="md-trash" />
             </button>
         </div>
@@ -25,47 +29,32 @@ export default class FormInputEditable extends FormInputEditableTs {}
 
 <style lang="less" scoped>
 @import '../../views/resources/css/variables.less';
+
 .edit-button {
     height: 0.1rem !important;
     width: 0.1rem !important;
-    background: @grayLightest;
+    background: transparent;
     border: none;
     color: @blackLight;
-    float: right;
-    margin-right: 2%;
     text-align: center;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 1em;
+    margin-right: 30px;
 }
 
-.field-name {
-    background: @grayLightest;
-
-    padding-left: 6px;
-    border-radius: 3px;
-    width: 400px;
+.value {
+    display: inline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.account-detail-row-3cols {
-    display: grid;
-    grid-template-columns: 1.4rem 8.6rem 0.2rem;
-}
-
-.account-detail-row {
-    display: grid;
-    grid-template-columns: 1.4rem 8.6rem;
-}
-
-.account-detail-row,
-.account-detail-row-3cols {
-    .label {
-        font-weight: 400;
-        margin-right: 10px;
-        width: 1.4rem;
-    }
-
-    /deep/ .value {
-        color: @black;
-    }
+.edit-input {
+    border: 0;
+    padding-left: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background-color: @grayLightest;
+    width: 100%;
 }
 </style>

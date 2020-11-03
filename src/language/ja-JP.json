@@ -723,5 +723,19 @@
     "word": "文字",
     "x_seconds": "{seconds}秒",
     "aggregate_send": "集計を送信する",
-    "progress": "ダウンロード中"
+    "progress": "ダウンロード中",
+    "contact_name": "名前",
+    "contact_address": "住所",
+    "contact_phone": "電話",
+    "contact_email": "Eメール",
+    "contact_notes": "ノート",
+    "add_contact": "連絡先を追加",
+    "backup_address_book": "アドレス帳をバックアップする",
+    "form_label_new_contact_name": "新しい連絡先名",
+    "form_label_new_contact_address": "新しい連絡先アドレス",
+    "delete_confirmation_message": "削除してもよろしいですか？",
+    "tab_accounts_accounts": "私のアカウント",
+    "tab_accounts_addressbook": "私の連絡先",
+    "select_contact": "連絡先を選択",
+    "contact_information": "連絡先"
 }

@@ -723,5 +723,19 @@
     "word": "字",
     "x_seconds": "{seconds}秒",
     "aggregate_send": "发送汇总",
-    "progress": "正在下载"
+    "progress": "正在下载",
+    "contact_name": "名称",
+    "contact_address": "联系地址",
+    "contact_phone": "电话",
+    "contact_email": "电子邮件",
+    "contact_notes": "笔记",
+    "add_contact": "增加联系人",
+    "backup_address_book": "备份通讯录",
+    "form_label_new_contact_name": "新联络人姓名",
+    "form_label_new_contact_address": "新的联络地址",
+    "delete_confirmation_message": "您确定要删除吗？",
+    "tab_accounts_accounts": "我的帐户",
+    "tab_accounts_addressbook": "我的联系方式",
+    "select_contact": "选择联系人",
+    "contact_information": "联系信息"
 }
