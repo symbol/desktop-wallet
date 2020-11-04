@@ -8,4 +8,52 @@
         color: @purple;
         font-weight: bolder;
     }
+
+    /deep/.form-row-inner-container {
+        align-items: self-start;
+
+        .label-container {
+            .form-label-container {
+                .form-label {
+                    padding-left: 0;
+                }
+            }
+        }
+        .inputs-container {
+            height: auto;
+            .select-container {
+                display: flex;
+                align-items: center;
+                .button-style {
+                    background-color: @purpleLightest;
+                    background-image: none;
+                    &:hover {
+                        background-image: none;
+                    }
+                    &::before {
+                        background-image: none;
+                    }
+                }
+            }
+            .input-container {
+                height: 0.3rem;
+                background-color: #f3f4f8;
+
+                .input-style {
+                    background-color: #f3f4f8 !important;
+                }
+            }
+            .value-container {
+                .metadata-value-input {
+                    height: 1.9rem;
+                    background-color: #f3f4f8;
+                    border-radius: 0.05rem;
+                    padding: 0.16rem;
+                }
+            }
+        }
+    }
+    .ivu-modal-close {
+        right: 0.195rem;
+    }
 }

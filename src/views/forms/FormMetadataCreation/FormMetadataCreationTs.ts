@@ -14,13 +14,36 @@
  *
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
+import { NotificationType } from '@/core/utils/NotificationType';
+import { MetadataService } from '@/services/MetadataService';
+
+// child components
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
+// @ts-ignore
+import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
+// @ts-ignore
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 
 @Component({
     components: {
-        FormRow
+        ValidationObserver,
+        ValidationProvider,
+        ErrorTooltip,
+        MaxFeeSelector,
+        FormRow,
+    },
+    computed: {
+        ...mapGetters({
+            knownAccounts: 'account/knownAccounts',
+        })
+    },
+    mounted: function() {
+        console.log("----------", this.knownAccounts);
     }
 })
 export class FormMetadataCreationTs extends Vue {
@@ -29,5 +52,32 @@ export class FormMetadataCreationTs extends Vue {
         default: ''
     })
     protected title: string;
+
+    /**
+     * Form fields
+     * @var {Object}
+     */
+    public formItems = {
+        accountAddress: '',
+        targetAccount: '',
+        scopedKey: '',
+        metadataValue: '',
+        maxFee: '',
+        password: ''
+    }
+
+    /**
+     * Validation rules
+     * @var {ValidationRuleset}
+     */
+    public validationRules = ValidationRuleset;
+
+    /**
+     * Persist created metadata
+     * @return {void}
+     */
+    private persistMetadata() {
+
+    }
 
 }
