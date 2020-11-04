@@ -50,7 +50,7 @@
                                             class="table-item pointer"
                                             @click="onRemoveAddress(index)"
                                         >
-                                            <div class="row flex-start">
+                                            <div class="row flex-start address-item">
                                                 <span class="address-id"> {{ index + 1 }} </span>
                                                 <div class="table-item-content">
                                                     <div class="row">

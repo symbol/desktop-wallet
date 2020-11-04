@@ -3,27 +3,27 @@
         <p class="set-title">
             {{ $t('input_mnemonic') }}
         </p>
-        <div class="create-mnemonic">
+        <div class="input-mnemonic">
             <MnemonicInput :seed="importedMnemonic" @handle-words="setSeed" />
             <div class="form-line-container form-row">
-                <div class="flex-container mt-3">
-                    <button type="button" class="button-style back-create-button fat-button" @click="deleteProfileAndBack">
+                <div class="flex-container mt-3 buttons-container">
+                    <button type="button" class="button-style back-create-button" @click="deleteProfileAndBack">
                         {{ $t('back') }}
                     </button>
                     <ImportQRButton valid-qr-types="[5]">
                         <template v-slot:trigger="importQRButton">
-                            <button type="button" class="button-style back-create-button fat-button" @click="importQRButton.trigger">
+                            <button type="button" class="button-style back-create-button import-qr-button" @click="importQRButton.trigger">
                                 {{ $t('from_qr_code') }}
                             </button>
                         </template>
                     </ImportQRButton>
                     <button
                         type="submit"
-                        class="button-style validation-create-button fat-button"
+                        class="button-style validation-create-button"
                         :disabled="!(wordsArray.length === 12 || wordsArray.length === 24)"
                         @click="processVerification"
                     >
-                        {{ $t('import_mnemonic') }}
+                        {{ $t('next') }}
                     </button>
                 </div>
             </div>
