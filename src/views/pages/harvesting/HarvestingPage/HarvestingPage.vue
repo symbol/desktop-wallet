@@ -7,7 +7,7 @@
                 Streamlines the amount of time it takes to...
             </span>
         </div>
-        <div>
+        <div> <!-- THIS IS A TEMPORARY CSS STYLE CLASS. WHEN THIS COMPONENT IS IMPLEMENTED THE CLASS PROPERTIES MUST BE RESPECTED (OCA99)-->
             <!-- TODO: Add HARVESTING form followin standard style.-->
         </div>
         <div class="bottom-container">
@@ -16,6 +16,7 @@
                 {{ $t('stop_harvesting') }}
             </button>
         </div>
+        <div></div>
     </div>
 </template>
 

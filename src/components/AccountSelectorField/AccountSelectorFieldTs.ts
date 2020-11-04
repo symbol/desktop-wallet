@@ -38,6 +38,11 @@ export class AccountSelectorFieldTs extends Vue {
     })
     defaultFormStyle: boolean;
 
+    @Prop({
+        default: true,
+    })
+    showIcon: boolean;
+
     /**
      * Currently active account
      * @see {Store.Account}

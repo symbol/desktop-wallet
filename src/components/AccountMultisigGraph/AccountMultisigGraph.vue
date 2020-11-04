@@ -1,6 +1,6 @@
 <template>
     <div class="account-detail-row-3cols">
-        <span class="label"> {{ $t('multisig_account_graph') }}</span>
+        <span class="label"> {{ $t('multisig_account_graph') }}:</span>
         <div class="value">
             <tree :data="multisigGraphTree"></tree>
         </div>

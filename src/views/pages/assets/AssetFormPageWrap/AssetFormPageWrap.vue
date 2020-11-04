@@ -9,6 +9,7 @@
                 <div>
                     <slot name="form-description" />
                 </div>
+                <div slot="footer" class="modal-footer"></div>
             </Modal>
         </div>
     </div>
