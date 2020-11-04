@@ -1,32 +1,30 @@
 <template>
     <AssetListPageWrap>
         <template v-slot:table-section>
-            <TableDisplay asset-type="namespace" class="table-section">
+            <TableDisplay
+                asset-type="namespace"
+                class="table-section"
+                @on-add-metadata="showMetadataModal = true"
+            >
                 <template v-slot:table-title>
                     <h1 class="section-title">
                         {{ $t('namespace_and_sub_namespace') }}
                     </h1>
                 </template>
             </TableDisplay>
+            <ModalMetadataUpdate
+                v-if="showMetadataModal"
+                :visible="showMetadataModal"
+                :type="2"
+                @close="showMetadataModal = false"
+            />
         </template>
     </AssetListPageWrap>
 </template>
 
 <script lang="ts">
-// external dependencies
-import { Component, Vue } from 'vue-property-decorator';
-
-// child components
-import AssetListPageWrap from '@/views/pages/assets/AssetListPageWrap/AssetListPageWrap.vue';
-import TableDisplay from '@/components/TableDisplay/TableDisplay.vue';
-
-@Component({
-    components: {
-        AssetListPageWrap,
-        TableDisplay,
-    },
-})
-export default class NamespaceListPage extends Vue {}
+import { NamespaceListPageTs } from './NamespaceListPageTs';
+export default class NamespaceListPage extends NamespaceListPageTs {};
 </script>
 
 <style scoped lang="less">
