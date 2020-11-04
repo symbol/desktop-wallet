@@ -2,8 +2,26 @@
 .create-mnemonic-sec {
     position: relative;
 
-    .button-container {
-        display: inline;
+    .set-title {
+        color: @purpleDark;
+    }
+
+    .buttons-container {
+        justify-content: flex-end;
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            margin-left: 16px;
+            padding-left: 0.4rem;
+            padding-right: 0.4rem;
+        }
+
+        .import-qr-button {
+            width: auto;
+        }
     }
 
     .button-container {
@@ -19,4 +37,12 @@
             cursor: not-allowed;
         }
     }
+}
+
+/deep/.validation-create-button {
+    border: none;
+}
+
+.form {
+    padding: 5% 5% !important;
 }
