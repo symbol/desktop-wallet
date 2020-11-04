@@ -84,7 +84,12 @@
                     </div>
                     <div class="detail-row" style="margin-top: 1rem;">
                         <div class="bottom-buttons-container">
-                            <button type="button" class="centered-button button-style button danger-button">
+                            <button
+                                type="button"
+                                class="centered-button button-style button danger-button"
+                                :disabled="knownAccounts.length <= 1"
+                                @click="deleteAccount()"
+                            >
                                 {{ $t('delete_account') }}
                             </button>
                             <button type="button" class="centered-button button-style inverted-button">{{ $t('hide_account') }}</button>
@@ -93,6 +98,12 @@
                 </div>
             </div>
         </div>
+        <ModalFormProfileUnlock
+            v-if="hasAccountUnlockModal"
+            :visible="hasAccountUnlockModal"
+            :on-success="onAccountUnlocked"
+            @close="hasAccountUnlockModal = false"
+        />
 
         <!--<div class="account-detail-inner-container">
             <div class="left-container">
