@@ -16,7 +16,7 @@
                 </p>
 
                 <div class="buttons-container">
-                    <div class="flex-container mt-3">
+                    <div class="float-right mt-3">
                         <button type="button" class="button-style back-button" @click="$router.back(-1)">
                             {{ $t('back') }}
                         </button>

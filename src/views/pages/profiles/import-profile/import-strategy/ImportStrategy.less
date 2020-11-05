@@ -18,13 +18,18 @@
 .import-way-wrapper {
     height: 100%;
     overflow: hidden;
-
     display: flex;
     align-items: center;
     justify-content: center;
 
+    .import-way-inner-panel {
+        width: 100%;
+        padding: 0 0.5rem;
+        margin: auto 0;
+    }
+
     .welcome-head {
-        margin-bottom: 5%;
+        margin: 0 auto 0.4rem auto;
 
         .title {
             font-size: @biggestFont;
@@ -34,8 +39,8 @@
         }
 
         .title-tips {
-            margin-top: 0.2rem;
-            font-size: @bigFont;
+            margin-top: 0.3rem;
+            font-size: @normalFont;
             color: @purpleDark;
         }
 
@@ -47,16 +52,13 @@
     }
 
     .profile-type {
-        width: 14.48rem;
-        height: 2.46rem;
-        margin: 0 auto;
         display: flex;
-        justify-content: space-between;
 
         .profile-item {
             text-align: center;
-            width: 3.32rem;
-            height: 2.46rem;
+            width: 2.6rem;
+            height: 2.6rem;
+            margin-right: 0.42rem;
             background: @white;
             border-radius: 0.05rem;
             cursor: pointer;
@@ -81,7 +83,7 @@
             .access-info {
                 margin: 0.1rem auto 0 auto;
                 width: 2.6rem;
-                font-size: @smallFont;
+                font-size: @smallerFont;
                 color: @purpleDark;
                 line-height: 0.22rem;
                 opacity: 0.6;
@@ -94,13 +96,11 @@
     }
 
     .bottom-text {
-        margin-top: 1.83rem;
-        text-align: center;
+        margin-top: 0.4rem;
         height: 20px;
         font-size: @smallerFont;
         font-weight: 400;
         color: @grayDark;
-        opacity: 0.6;
     }
     .bottom-link {
         color: @purple;
