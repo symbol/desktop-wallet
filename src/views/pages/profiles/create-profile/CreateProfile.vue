@@ -64,7 +64,7 @@
                     </p>
                 </div>
                 <div v-if="getCurrentStep() === 4">
-                    <img src="@/views/resources/img/icons/success.svg" style="width: 30%;" />
+                    <img src="@/views/resources/img/icons/success.png" style="width: 30%;" />
                     <span class="success-title"> {{ $t('creation_successful') }}</span>
                 </div>
             </div>

@@ -18,9 +18,7 @@
             <div class="general_view" style="width: 100%;">
                 <div class="top_window level">
                     <div class="level-left">
-                        <div v-if="!currentAccount" class="logo-container">
-                            <img class="logo-img" src="@/views/resources/symbol_logo.png" />
-                        </div>
+                        <AppLogo class="level-item" />
                     </div>
 
                     <!--OCA99: These are window controls for electron. Disabling them for now. Not sure if they should be here.-->
@@ -29,18 +27,18 @@
                     <div class="level-right">
                         <ImportQRButton v-if="!!currentAccount" class="level-item navbar-item" valid-qr-types="[1, 3, 4]" />
                         <AccountLinks
-                            :account="currentAccount"
-                            :link="explorerUrl"
-                            :icon="explorerIcon"
-                            :title="$t('accounts_links_explorer')"
-                            class="level-item navbar-item"
-                        />
-                        <AccountLinks
                             v-if="isTestnet"
                             :account="currentAccount"
                             :link="faucetUrl"
                             :icon="faucetIcon"
                             :title="$t('accounts_links_faucet')"
+                            class="level-item navbar-item"
+                        />
+                        <AccountLinks
+                            :account="currentAccount"
+                            :link="explorerUrl"
+                            :icon="explorerIcon"
+                            :title="$t('accounts_links_explorer')"
                             class="level-item navbar-item"
                         />
                         <AccountSelectorField class="level-item navbar-item" @input="onChangeAccount" />

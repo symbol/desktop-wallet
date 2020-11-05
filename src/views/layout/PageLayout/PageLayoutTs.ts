@@ -208,7 +208,7 @@ export class PageLayoutTs extends Vue {
     }
 
     public get explorerIcon() {
-        return officialIcons.explorer;
+        return officialIcons.voting;
     }
 
     /// end-region computed properties getter/setter
