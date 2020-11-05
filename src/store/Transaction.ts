@@ -319,7 +319,11 @@ export default {
             combineLatest(subscriptions).subscribe({
                 complete: () => {
                     commit('setAllTransactions');
-                    commit('filterTransactions', { filterOption: null, currentSignerAddress: currentSignerAddress.plain() });
+                    commit('filterTransactions', {
+                        filterOption: null,
+                        currentSignerAddress: currentSignerAddress.plain(),
+                        shouldFilterOptionChange: false,
+                    });
                     commit('isFetchingTransactions', false);
                 },
             });
@@ -466,6 +470,9 @@ export default {
             ) {
                 dispatch('namespace/LOAD_NAMESPACES', {}, { root: true });
             }
+
+            await dispatch('LOAD_TRANSACTIONS');
+
             // Reloading Balances
             await dispatch('account/LOAD_ACCOUNT_INFO', {}, { root: true });
             dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
@@ -495,10 +502,18 @@ export default {
             const generationHash = rootGetters['network/generationHash'];
             const cosigner = PublicAccount.createFromPublicKey(transaction.signerPublicKey, generationHash);
             const cosignature = new AggregateTransactionCosignature(transaction.signature, cosigner);
+            const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
 
             // update the partial transaction cosignatures
             transactions[index] = transactions[index].addCosignatures([cosignature]);
+
             commit('partialTransactions', transactions);
+            commit('setAllTransactions');
+            commit('filterTransactions', {
+                filterOption: null,
+                currentSignerAddress: currentSignerAddress.plain(),
+                shouldFilterOptionChange: false,
+            });
         },
     },
 };
