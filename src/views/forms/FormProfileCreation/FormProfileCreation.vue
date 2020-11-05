@@ -127,12 +127,7 @@
                             >
                                 {{ $t('back') }}
                             </button>
-                            <button
-                                type="submit"
-                                class="inverted-button button-style create-account-style"
-                                :class="{ 'restore-button': nextPage === 'profiles.importProfile.importMnemonic' }"
-                                @click="handleSubmit(submit)"
-                            >
+                            <button type="submit" class="inverted-button button-style create-account-style" @click="handleSubmit(submit)">
                                 {{ $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'restore_mnemonic' : 'generating_mnemonic') }}
                             </button>
                         </div>
