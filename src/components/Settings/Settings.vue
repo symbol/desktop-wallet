@@ -1,6 +1,6 @@
 <template>
     <div class="settings-container">
-        <Icon type="ios-settings" class="pointer" @click="toggleSettings" />
+        <img :src="settingsIcon" class="setting-menu-icon" @click="toggleSettings" />
         <ModalSettings v-if="isSettingsVisible" :visible="isSettingsVisible" @close="toggleSettings" />
     </div>
 </template>

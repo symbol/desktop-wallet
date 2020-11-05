@@ -29,18 +29,18 @@
                     <div class="level-right">
                         <ImportQRButton v-if="!!currentAccount" class="level-item navbar-item" valid-qr-types="[1, 3, 4]" />
                         <AccountLinks
-                            :account="currentAccount"
-                            :link="explorerUrl"
-                            :icon="explorerIcon"
-                            :title="$t('accounts_links_explorer')"
-                            class="level-item navbar-item"
-                        />
-                        <AccountLinks
                             v-if="isTestnet"
                             :account="currentAccount"
                             :link="faucetUrl"
                             :icon="faucetIcon"
                             :title="$t('accounts_links_faucet')"
+                            class="level-item navbar-item"
+                        />
+                        <AccountLinks
+                            :account="currentAccount"
+                            :link="explorerUrl"
+                            :icon="explorerIcon"
+                            :title="$t('accounts_links_explorer')"
                             class="level-item navbar-item"
                         />
                         <AccountSelectorField class="level-item navbar-item" @input="onChangeAccount" />

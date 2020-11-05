@@ -13,7 +13,7 @@
                     {{ $t('if_you_need_to_back_up_your_mnemonics_again_you_can') }}
                 </p>
                 <div class="buttons clear">
-                    <div class="flex-container mt-3">
+                    <div class="float-right mt-3">
                         <button type="button" class="solid-button button-style fat-button create-account-style" @click="$router.back()">
                             {{ $t('back') }}
                         </button>
