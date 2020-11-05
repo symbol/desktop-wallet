@@ -81,6 +81,7 @@
         "@vue/cli-service": "^4.0.5",
         "@vue/eslint-config-typescript": "^5.0.1",
         "@vue/test-utils": "^1.0.0-beta.29",
+        "symbol-address-book": "^1.0.0",
         "babel-core": "7.0.0-bridge.0",
         "babel-jest": "^25.2.6",
         "babel-plugin-syntax-dynamic-import": "^6.18.0",
