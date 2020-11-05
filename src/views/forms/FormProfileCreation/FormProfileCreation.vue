@@ -9,8 +9,8 @@
                         </div>
                     </div>
 
-                    <FormRow>
-                        <template v-slot:label> {{ $t('set_account_name') }}: </template>
+                    <FormRow vertical="true">
+                        <template v-slot:label> {{ $t('set_account_name') }} </template>
                         <template v-slot:inputs>
                             <ValidationProvider
                                 v-slot="{ errors }"
@@ -33,8 +33,8 @@
                         </template>
                     </FormRow>
 
-                    <FormRow>
-                        <template v-slot:label> {{ $t('set_network_type') }}: </template>
+                    <FormRow vertical="true">
+                        <template v-slot:label> {{ $t('set_network_type') }} </template>
                         <template v-slot:inputs>
                             <div class="inputs-create-container select-container">
                                 <Select
@@ -51,8 +51,8 @@
                     </FormRow>
 
                     <!-- @TODO: Place hint(should contain at least 8 characters, 1 letter and 1 number) -->
-                    <FormRow>
-                        <template v-slot:label> {{ $t('new_password_label') }}: </template>
+                    <FormRow vertical="true">
+                        <template v-slot:label> {{ $t('new_password_label') }} </template>
                         <template v-slot:inputs>
                             <ValidationProvider
                                 v-slot="{ errors }"
@@ -76,8 +76,8 @@
                         </template>
                     </FormRow>
 
-                    <FormRow>
-                        <template v-slot:label> {{ $t('repeat_password_label') }}: </template>
+                    <FormRow vertical="true">
+                        <template v-slot:label> {{ $t('repeat_password_label') }} </template>
                         <template v-slot:inputs>
                             <ValidationProvider
                                 v-slot="{ errors }"
@@ -100,8 +100,8 @@
                         </template>
                     </FormRow>
 
-                    <FormRow>
-                        <template v-slot:label> {{ $t('password_hint') }}: </template>
+                    <FormRow vertical="true">
+                        <template v-slot:label> {{ $t('password_hint') }} </template>
                         <template v-slot:inputs>
                             <ValidationProvider
                                 v-slot="{ errors }"
@@ -119,7 +119,7 @@
                     </FormRow>
 
                     <div class="form-line-container form-row">
-                        <div class="flex-container mt-3" style="padding-left: 0.7rem;">
+                        <div class="float-right mt-3" >
                             <button
                                 type="button"
                                 class="solid-button button-style create-account-stylebutton create-account-style"
