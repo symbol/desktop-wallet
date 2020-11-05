@@ -40,6 +40,9 @@ import AccountMultisigGraph from '@/components/AccountMultisigGraph/AccountMulti
 
 import { AccountModel } from '@/core/database/entities/AccountModel';
 
+import { AccountService } from '@/services/AccountService';
+// @ts-ignore
+import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 @Component({
     components: {
         AccountNameDisplay,
@@ -52,11 +55,13 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
         AccountPublicKeyDisplay,
         AccountAliasDisplay,
         AccountMultisigGraph,
+        ModalFormProfileUnlock,
     },
     computed: {
         ...mapGetters({
             defaultAccount: 'app/defaultAccount',
             currentAccount: 'account/currentAccount',
+            knownAccounts: 'account/knownAccounts',
         }),
     },
 })
@@ -68,10 +73,43 @@ export class AccountDetailsPageTs extends Vue {
      */
     public defaultAccount: string;
 
+    public knownAccounts: AccountModel[];
+    /**
+     * Whether account is currently being unlocked
+     * @var {boolean}
+     */
+    public isUnlockingAccount: boolean = false;
+
     /**
      * Currently active account
      * @see {Store.Account}
      * @var {AccountModel}
      */
     public currentAccount: AccountModel;
+    public readonly accountService: AccountService = new AccountService();
+
+    public async deleteAccount() {
+        if (this.currentAccount) {
+            this.hasAccountUnlockModal = true;
+            return;
+        }
+    }
+    public get hasAccountUnlockModal(): boolean {
+        return this.isUnlockingAccount;
+    }
+
+    public set hasAccountUnlockModal(f: boolean) {
+        this.isUnlockingAccount = f;
+    }
+    /**
+     * When account is unlocked, the sub account can be created
+     */
+    public async onAccountUnlocked() {
+        try {
+            await this.$store.dispatch('account/DELETE_CURRENT_ACCOUNT', this.currentAccount);
+        } catch (e) {
+            this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.');
+            console.error(e);
+        }
+    }
 }

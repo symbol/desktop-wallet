@@ -15,7 +15,7 @@
         "build": "npm run build:web",
         "build:web": "rimraf dist && mkdir dist && tsc && vue-cli-service build",
         "release": "npm run build && npm run release:all",
-        "release:all": "npm run release:mac && npm run release:win && npm run release:lin",
+        "release:all": "npm run release:win && npm run release:lin",
         "release:mac": "electron-builder --mac",
         "release:win": "electron-builder --win",
         "release:lin": "electron-builder --linux deb snap tar.xz",

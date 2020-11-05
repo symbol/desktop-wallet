@@ -35,6 +35,7 @@ import * as _ from 'lodash';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { catchError, map } from 'rxjs/operators';
+import { ProfileService } from '@/services/ProfileService';
 
 /// region globals
 const Lock = AwaitLock.create();
@@ -480,6 +481,26 @@ export default {
             const accountService = new AccountService();
             accountService.updateRemoteAccount(currentAccount, encRemoteAccountPrivateKey);
             const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
+            commit('knownAccounts', knownAccounts);
+        },
+
+        DELETE_CURRENT_ACCOUNT({ commit, rootGetters }, account: AccountModel) {
+            if (!account) {
+                return;
+            }
+            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
+            if (!currentProfile) {
+                return;
+            }
+            const accountService = new AccountService();
+            accountService.deleteAccount(account);
+            const accountsIds = accountService.getAccounts().map((acc) => acc.id);
+            // update accounts in profile
+            new ProfileService().updateAccounts(currentProfile, [...accountsIds]);
+            // set first account to be selected
+            const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
+            commit('currentAccount', knownAccounts[0]);
+            // update known Accounts
             commit('knownAccounts', knownAccounts);
         },
 
