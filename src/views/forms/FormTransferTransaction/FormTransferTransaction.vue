@@ -40,7 +40,7 @@
 
                     <!-- Transfer message input field -->
                     <MessageInput v-model="formItems.messagePlain" @input="onChangeMessage" />
-                    <FormRow>
+                    <FormRow v-if="!selectedSigner.multisig">
                         <template v-slot:inputs>
                             <div class="inputs-container checkboxes">
                                 <Checkbox v-model="formItems.encryptMessage" @input="onEncryptionChange">
