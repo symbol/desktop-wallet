@@ -8,7 +8,7 @@
             @on-cancel="$emit('close-modal')"
         >
             <FormMetadataCreation
-                :title="modalTitle"
+                :type="type"
                 @on-create="saveMetadata" />
 
         </Modal>

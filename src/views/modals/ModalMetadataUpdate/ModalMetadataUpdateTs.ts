@@ -16,7 +16,6 @@
 
 // import external components
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { TranslateResult } from 'vue-i18n';
 import { MetadataType } from 'symbol-sdk';
 
 // import internal components
@@ -67,33 +66,10 @@ export class ModalMetadataUpdateTs extends Vue {
     }
 
     /**
-     * Modal title from modal type
-     * @type {TranslateResult}
-     */
-    get modalTitle(): TranslateResult {
-        var title : TranslateResult = '';
-        switch(this.type) {
-            case MetadataType.Mosaic:
-                title = this.$t('modal_title_mosaic_metadata');
-                break;
-            
-            case MetadataType.Namespace:
-                title = this.$t('modal_title_namespace_metadata');
-                break;
-
-            default:
-                title = this.$t('modal_title_account_metadata');
-                break;
-        }
-        return title;
-    }
-
-    /**
      * Save Metadata handler
      * @param {void}
      */
     protected saveMetadata() : void {
-        console.log('create metadata handle');
         this.$emit('close');
     }
 }
