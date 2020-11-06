@@ -29,12 +29,29 @@ import { ExplorerUrlSetterTs } from './ExplorerUrlSetterTs';
 export default class ExplorerUrlSetter extends ExplorerUrlSetterTs {}
 </script>
 <style lang="less" scoped>
+@import '../../views/resources/css/variables.less';
+
+/deep/ .ivu-select-dropdown {
+    margin:0 !important;
+    margin-top: -0.5% !important;
+    margin-left: -0.1% !important;
+    padding:0 !important;
+    background: @grayLightest;
+}
+
 /deep/ .auto-complete-style {
     padding: none !important;
-    padding-left: 3%;
+    padding-left: 2.1%;
 
     .ivu-input {
+        margin-top: -0.5% !important;
         background: transparent !important;
+        color: @primary;
     }
 }
+
+/deep/ .ivu-select-item-focus{
+    color: @primary;
+}
+
 </style>

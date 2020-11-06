@@ -153,6 +153,8 @@ export default class AboutPage extends Vue {
     width: 100%;
     clear: both;
     min-height: 1rem;
+    padding-left: 6%;
+
 
     .form-row {
         width: 100%;

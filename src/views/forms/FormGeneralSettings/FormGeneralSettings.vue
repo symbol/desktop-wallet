@@ -79,7 +79,13 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
 
 /deep/ .form-row {
     .form-row-inner-container {
-        grid-template-columns: 3rem 5rem;
+        grid-template-columns: none !important;
+    }
+    .inputs-container {
+        margin-top: 0.05rem;
+        padding-left: 0.35rem;
+        margin-bottom: 0.1rem;
+        padding-right: 0.85rem;
     }
 }
 </style>
