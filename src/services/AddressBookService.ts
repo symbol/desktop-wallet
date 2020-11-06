@@ -25,7 +25,7 @@ export class AddressBookService {
 
     public getAddressBook(): AddressBook {
         try {
-            return AddressBook.fromJSON(this.addressBookModelStorage.get())
+            return AddressBook.fromJSON(this.addressBookModelStorage.get());
         } catch (e) {
             return new AddressBook();
         }

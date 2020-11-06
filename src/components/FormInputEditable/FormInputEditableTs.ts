@@ -23,7 +23,7 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue';
 // @ts-ignore
 import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue';
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate';
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
 
 @Component({
     components: {

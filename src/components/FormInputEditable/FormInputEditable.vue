@@ -16,7 +16,14 @@
                     class="inputs-container items-container"
                 >
                     <ErrorTooltip :errors="errors">
-                        <input v-model="newValue" type="text" name="name" class="input-size input-style" style="width: 100%;" autocomplete="new-password" />
+                        <input
+                            v-model="newValue"
+                            type="text"
+                            name="name"
+                            class="input-size input-style"
+                            style="width: 100%;"
+                            autocomplete="new-password"
+                        />
                     </ErrorTooltip>
                 </ValidationProvider>
             </div>

@@ -32,7 +32,7 @@ import ModalConfirmDelete from '@/views/modals/ModalConfirmDelete/ModalConfirmDe
 
 import { NetworkType, PublicAccount } from 'symbol-sdk';
 import { AddressBook, IContact } from 'symbol-address-book';
-import {ValidationRuleset} from "@/core/validation/ValidationRuleset";
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 
 @Component({
     components: {
