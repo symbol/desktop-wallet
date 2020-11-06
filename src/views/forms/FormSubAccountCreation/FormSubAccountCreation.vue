@@ -78,7 +78,7 @@
                         <template v-slot:inputs>
                             <div class="align-right">
                                 <button
-                                    class="button-style fat-button inverted-button left-side-button"
+                                    class="button-style inverted-button left-side-button pl-2 pr-2"
                                     type="submit"
                                     @click="handleSubmit(onSubmit)"
                                 >
