@@ -29,7 +29,7 @@
                     <!-- default account flag -->
                     <div v-if="currentAccount && defaultAccount === currentAccount.id" class="detail-row">
                         <div class="account-detail-row">
-                            <span class="label">{{ $t('accounts_flags_default_account') }}</span>
+                            <span class="label">{{ $t('accounts_flags_default_account') }}:</span>
                             <div class="value">
                                 <span>{{ $t('accounts_flags_default_account_explain') }}</span>
                             </div>

@@ -27,7 +27,7 @@
                                             </ErrorTooltip>
                                         </ValidationProvider>
                                         <button
-                                            class="button-style validation-button right-side-button"
+                                            class="button-style inverted-button right-side-button"
                                             type="submit"
                                             @click="handleSubmit(onSubmit)"
                                         >
