@@ -219,7 +219,6 @@ import faucet from '@/views/resources/img/navbar/faucet.svg';
 // @ts-ignore
 import settings from '@/views/resources/img/navbar/settings.svg';
 
-
 /// region exported image objects
 export const walletTypeImages = {
     createImg,

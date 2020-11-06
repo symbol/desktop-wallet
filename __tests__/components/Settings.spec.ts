@@ -27,7 +27,7 @@ const options: ThisTypedShallowMountOptions<Vue> = {
 describe('Settings', () => {
     test('trigger commit', () => {
         const wrapper = shallowMount(Settings, options);
-        wrapper.find('.ivu-icon-ios-settings').trigger('click');
+        wrapper.find('.setting-menu-icon').trigger('click');
         expect(wrapper.vm.$store.commit).toBeCalledWith('profile/toggleSettings');
         wrapper.destroy();
     });
