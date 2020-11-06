@@ -43,12 +43,12 @@ export class UIHelpers {
     /**
      * Helper method to download byte array as a file
      *
-     * @param {Uint8Array} bytes Byte array to be downloaded as a file
+     * @param {Uint8Array | string} bytes Byte array to be downloaded as a file
      * @param {string} fileName
      * @param {string} fileMimeType
      * @return {Observable<boolean>}
      */
-    public static downloadBytesAsFile(bytes: Uint8Array, fileName: string, fileMimeType: string): Promise<boolean> {
+    public static downloadBytesAsFile(bytes: Uint8Array | string, fileName: string, fileMimeType: string): Promise<boolean> {
         return new Promise((resolve) => {
             const blob = new Blob([bytes], {
                 type: fileMimeType,

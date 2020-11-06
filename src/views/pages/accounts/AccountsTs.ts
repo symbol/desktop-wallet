@@ -23,11 +23,20 @@ import { mapGetters } from 'vuex';
 import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue';
 // @ts-ignore
 import AccountSelectorPanel from '@/components/AccountSelectorPanel/AccountSelectorPanel.vue';
+// @ts-ignore
+import ContactSelectorPanel from '@/components/ContactSelectorPanel/ContactSelectorPanel.vue';
+// @ts-ignore
+import ContactDetailPanel from '@/components/ContactDetailPanel/ContactDetailPanel.vue';
+// @ts-ignore
+import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
 
 @Component({
     components: {
         NavigationTabs,
         AccountSelectorPanel,
+        ContactSelectorPanel,
+        ContactDetailPanel,
+        NavigationLinks,
     },
     computed: {
         ...mapGetters({}),
@@ -39,4 +48,15 @@ export class AccountsTs extends Vue {
      * @var {string}
      */
     public parentRouteName: string = 'accounts';
+
+    public panelItems = ['accounts', 'addressbook'];
+
+    public activeIndex = 0;
+
+    public get activePanel() {
+        return this.activeIndex;
+    }
+    public set activePanel(panel) {
+        this.activeIndex = panel;
+    }
 }
