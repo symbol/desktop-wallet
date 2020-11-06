@@ -26,6 +26,13 @@
                 <Checkbox id="Received" @input="(value) => onChange(transactionFilterOptions.received, value)" />
                 <label for="Received">Received</label>
             </div>
+            <div class="filter-options-container__divider"></div>
+            <div class="filter-options-container__option">
+                <label for="HeightFrom">From</label>
+                <Input element-id="HeightFrom" :rows="1" :number="true" type="number" :value="heightFrom" @input="onHeightFromChange" />
+                <label for="HeightTo">To</label>
+                <Input element-id="HeightTo" :rows="1" :number="true" type="number" :value="heightTo" @input="onHeightToChange" />
+            </div>
         </div>
     </div>
 </template>

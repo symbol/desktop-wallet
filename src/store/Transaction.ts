@@ -27,6 +27,7 @@ import {
     Page,
     TransactionStatus,
     Order,
+    UInt64,
 } from 'symbol-sdk';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -241,9 +242,21 @@ export default {
 
         LOAD_TRANSACTIONS(
             { commit, rootGetters },
-            { pageSize, pageNumber }: { pageSize: number; pageNumber: number } = {
+            {
+                pageSize,
+                pageNumber,
+                heightFrom,
+                heightTo,
+            }: {
+                pageSize: number;
+                pageNumber: number;
+                heightFrom: number;
+                heightTo: number;
+            } = {
                 pageSize: 20,
                 pageNumber: 1,
+                heightFrom: 0,
+                heightTo: Number.MAX_SAFE_INTEGER,
             },
         ) {
             const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
@@ -284,6 +297,8 @@ export default {
                         pageSize,
                         pageNumber,
                         order: Order.Desc,
+                        fromHeight: UInt64.fromUint(heightFrom),
+                        toHeight: UInt64.fromUint(heightTo),
                     }),
                 ),
             );
@@ -298,6 +313,8 @@ export default {
                             pageSize: 100,
                             pageNumber: 1, // not paginating
                             order: Order.Desc,
+                            fromHeight: UInt64.fromUint(heightFrom),
+                            toHeight: UInt64.fromUint(heightTo),
                         }),
                     ),
                 );
@@ -311,6 +328,8 @@ export default {
                             pageSize: 100,
                             pageNumber: 1, // not paginating
                             order: Order.Desc,
+                            fromHeight: UInt64.fromUint(heightFrom),
+                            toHeight: UInt64.fromUint(heightTo),
                         }),
                     ),
                 );
