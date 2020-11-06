@@ -21,6 +21,18 @@
         }
         .inputs-container {
             height: auto;
+            position: relative;
+            .auto-complete-size {
+                width: 100%;
+                .ivu-auto-complete {
+                    left: 0.12rem !important;
+                    .auto-complete-style {
+                        .ivu-input {
+                            height: -webkit-fill-available;
+                        }
+                    }
+                }
+            }
             .select-container {
                 display: flex;
                 align-items: center;
@@ -52,8 +64,5 @@
                 }
             }
         }
-    }
-    .ivu-modal-close {
-        right: 0.195rem;
     }
 }
