@@ -21,4 +21,8 @@ export class StorageHelpers {
     public static sessionRead = (key) => {
         return sessionStorage.getItem(key) || '';
     };
+
+    public static cleanSession = () => {
+        sessionStorage.clear();
+    }
 }
