@@ -1,24 +1,39 @@
 <template>
-    <div class="account-detail-row-3cols">
-        <div class="label">{{ label }}:</div>
+    <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
+        <form class="account-detail-row-3cols" onsubmit="event.preventDefault()">
+            <div class="label">{{ label }}:</div>
 
-        <div class="value field-name">
-            <span v-if="!editing" class="accountName">{{ value }}</span>
-            <input v-if="editing" v-model="newValue" class="edit-input" />
-        </div>
+            <div class="value field-name">
+                <span v-if="!editing" class="accountName">{{ value }}</span>
+                <ValidationProvider
+                    v-if="editing"
+                    v-slot="{ errors }"
+                    mode="lazy"
+                    vid="name"
+                    :name="label"
+                    :rules="rules"
+                    tag="div"
+                    class="inputs-container items-container"
+                >
+                    <ErrorTooltip :errors="errors">
+                        <input v-model="newValue" type="text" name="name" class="input-size input-style" style="width: 100%;" autocomplete="new-password" />
+                    </ErrorTooltip>
+                </ValidationProvider>
+            </div>
 
-        <button v-if="!editing" type="button" class="edit-button" @click.stop="startEditing()">
-            <Icon type="md-create" />
-        </button>
-        <div v-if="editing">
-            <button type="button" class="edit-button" @click.stop="finishEdition()">
-                <Icon type="md-add-circle" />
+            <button v-if="!editing" type="button" class="edit-button" @click.stop="startEditing()">
+                <Icon type="md-create" />
             </button>
-            <button type="button" class="edit-button" @click.stop="cancelEdition()">
-                <Icon type="md-trash" />
-            </button>
-        </div>
-    </div>
+            <div v-if="editing">
+                <button type="submit" class="edit-button" @click="handleSubmit(finishEdition)">
+                    <Icon type="md-add-circle" />
+                </button>
+                <button type="button" class="edit-button" @click.stop="cancelEdition()">
+                    <Icon type="md-trash" />
+                </button>
+            </div>
+        </form>
+    </ValidationObserver>
 </template>
 
 <script>

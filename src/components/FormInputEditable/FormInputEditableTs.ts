@@ -22,12 +22,16 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 import FormLabel from '@/components/FormLabel/FormLabel.vue';
 // @ts-ignore
 import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue';
+// child components
+import {ValidationObserver, ValidationProvider} from 'vee-validate';
 
 @Component({
     components: {
         ErrorTooltip,
         FormLabel,
         ButtonCopyToClipboard,
+        ValidationObserver,
+        ValidationProvider,
     },
 })
 export class FormInputEditableTs extends Vue {
@@ -40,12 +44,25 @@ export class FormInputEditableTs extends Vue {
     @Prop()
     value: string;
 
+    @Prop({ default: 'required' })
+    rules: string;
+
     newValue: string;
 
     @Prop()
     onEdit: (v: string) => {};
 
     editing: boolean = false;
+
+    /**
+     * Type the ValidationObserver refs
+     * @type {{
+     *     observer: InstanceType<typeof ValidationObserver>
+     *   }}
+     */
+    public $refs!: {
+        observer: InstanceType<typeof ValidationObserver>;
+    };
 
     public startEditing() {
         this.newValue = '' + (this.value ? this.value : '');
