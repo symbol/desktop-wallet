@@ -35,7 +35,6 @@
         }
     ],
     "dependencies": {
-        "symbol-address-book": "git+git@github.com:nemgrouplimited/symbol-wallet-address-book.git",
         "@js-joda/core": "^3.2.0",
         "animate.css": "^3.7.2",
         "await-lock": "^2.0.1",
@@ -81,7 +80,6 @@
         "@vue/cli-service": "^4.0.5",
         "@vue/eslint-config-typescript": "^5.0.1",
         "@vue/test-utils": "^1.0.0-beta.29",
-        "symbol-address-book": "^1.0.0",
         "babel-core": "7.0.0-bridge.0",
         "babel-jest": "^25.2.6",
         "babel-plugin-syntax-dynamic-import": "^6.18.0",
@@ -115,6 +113,7 @@
         "utf-8-validate": "^5.0.2",
         "vue-jest": "^3.0.5",
         "vue-template-compiler": "^2.6.10",
+        "symbol-address-book": "^1.0.0",
         "symbol-hd-wallets": "0.14.0-alpha-202010231206",
         "symbol-paper-wallets": "^1.0.2",
         "symbol-qr-library": "0.13.1-alpha-202010241730",
