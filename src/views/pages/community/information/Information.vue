@@ -10,7 +10,7 @@
                         <span class="article-link">
                             <a :href="a.link" target="_blank">{{ $t('news_read_more') }}</a
                             >&nbsp;
-                            <Icon type="md-open" size="15" class="link-icon" />
+                            <!--<Icon type="md-open" size="15" class="link-icon" />-->
                         </span>
                     </div>
                     <div class="article-right-section">
