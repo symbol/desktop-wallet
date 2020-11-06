@@ -1,90 +1,47 @@
 @import '../../../../resources/css/variables.less';
 
 .account-selection-container {
-    display: grid;
-    grid-template-rows: 100%;
-    grid-template-columns: repeat(2, 50%);
-    grid-column-gap: 25px;
-    height: calc(100% - 160px);
-
-    .left-container {
-        display: grid;
-        height: 100%;
-        grid-template-rows: 55px auto;
-
-        .dialog-title {
-            font-size: @biggerFont;
-            color: rgba(51, 51, 51);
-            padding: 0 0 10px 0;
-            padding: 0.1rem;
-        }
-
-        .dialog-sub-tips {
-            font-size: 22px;
-            color: rgba(51, 51, 51, 1);
-            padding: 0.1rem;
-            font-weight: bolder;
-        }
-
-        .choose-hd-path {
-            position: relative;
-            border: 1px solid rgba(224, 223, 229);
-            width: 100%;
-            height: 100%;
-            padding: 10px 0;
-        }
-
-        .hd-path {
-            font-size: 20px;
-            padding: 10px 30px;
-            border-bottom: 1px solid rgba(224, 223, 229);
-
-            .hd-path-title {
-                margin-right: 40px;
-                color: rgba(51, 51, 51);
-            }
-
-            .hd-path-type,
-            .hd-path-value {
-                color: rgba(136, 136, 136);
-                line-height: 17px;
-            }
-        }
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: @purpleDark;
+    .dialog-title {
+        font-size: @biggerFont;
+        color: rgba(51, 51, 51);
+        padding: 0 0 10px 0;
+        padding: 0.1rem;
+        width: 100%;
+        text-align: start;
     }
 
-    .right-container {
-        display: grid;
-        height: 100%;
-        grid-template-rows: 55px auto 0.8rem;
+    .dialog-sub-tips {
+        font-size: 22px;
+        color: @purpleDark;
+        padding: 0.1rem;
+        font-weight: bolder;
+    }
 
-        .address-list-container {
-            position: relative;
-            border: 1px solid rgba(224, 223, 229);
-            width: 700px;
-            height: 100%;
-            padding: 10px 0 5px 0;
-            font-size: 16px;
+    .choose-hd-path {
+        position: relative;
+        width: 100%;
+        height: 80%;
+        padding: 10px 0;
+    }
+
+    .hd-path {
+        font-size: 20px;
+        padding: 10px 30px;
+        border-bottom: 1px solid rgba(224, 223, 229);
+
+        .hd-path-title {
+            margin-right: 40px;
             color: rgba(51, 51, 51);
         }
 
-        .address-id {
-            margin-right: 30px;
-        }
-
-        .right-container-title {
-            font-size: 0.22rem;
-            color: #333333;
-            padding: 0.1rem 0 0.2rem 0;
-            font-weight: bolder;
-        }
-
-        .remove-icon {
-            width: 50px;
-
-            img {
-                width: 21px;
-                height: 21px;
-            }
+        .hd-path-type,
+        .hd-path-value {
+            color: rgba(136, 136, 136);
+            line-height: 17px;
         }
     }
 
@@ -99,7 +56,7 @@
         .table-item,
         .table-title {
             padding: 5px 14px;
-            color: rgba(150, 150, 153);
+            color: @purpleDark;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -151,13 +108,15 @@
 
     .button-container {
         display: flex;
-        padding-top: 20px;
-        align-items: center;
-        width: 700px;
+        margin-top: 40px;
+        align-items: flex-end;
+        justify-content: flex-end;
+        width: 100%;
 
         button {
-            margin-top: 20px;
-            height: 50px;
+            margin-left: 16px;
+            padding-left: 0.4rem;
+            padding-right: 0.4rem;
         }
     }
 
@@ -176,4 +135,12 @@
             border: 1px solid #ccc;
         }
     }
+}
+
+.button {
+    width: 150px;
+}
+
+.scrollable {
+    max-height: 350px;
 }

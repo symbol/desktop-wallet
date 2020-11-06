@@ -9,8 +9,8 @@
                         </div>
                     </div>
 
-                    <FormRow>
-                        <template v-slot:label> {{ $t('set_account_name') }}: </template>
+                    <FormRow vertical="true">
+                        <template v-slot:label> {{ $t('set_account_name') }} </template>
                         <template v-slot:inputs>
                             <ValidationProvider
                                 v-slot="{ errors }"
@@ -33,8 +33,8 @@
                         </template>
                     </FormRow>
 
-                    <FormRow>
-                        <template v-slot:label> {{ $t('set_network_type') }}: </template>
+                    <FormRow vertical="true">
+                        <template v-slot:label> {{ $t('set_network_type') }} </template>
                         <template v-slot:inputs>
                             <div class="inputs-create-container select-container">
                                 <Select
@@ -51,8 +51,8 @@
                     </FormRow>
 
                     <!-- @TODO: Place hint(should contain at least 8 characters, 1 letter and 1 number) -->
-                    <FormRow>
-                        <template v-slot:label> {{ $t('new_password_label') }}: </template>
+                    <FormRow vertical="true">
+                        <template v-slot:label> {{ $t('new_password_label') }} </template>
                         <template v-slot:inputs>
                             <ValidationProvider
                                 v-slot="{ errors }"
@@ -76,8 +76,8 @@
                         </template>
                     </FormRow>
 
-                    <FormRow>
-                        <template v-slot:label> {{ $t('repeat_password_label') }}: </template>
+                    <FormRow vertical="true">
+                        <template v-slot:label> {{ $t('repeat_password_label') }} </template>
                         <template v-slot:inputs>
                             <ValidationProvider
                                 v-slot="{ errors }"
@@ -100,8 +100,8 @@
                         </template>
                     </FormRow>
 
-                    <FormRow>
-                        <template v-slot:label> {{ $t('password_hint') }}: </template>
+                    <FormRow vertical="true">
+                        <template v-slot:label> {{ $t('password_hint') }} </template>
                         <template v-slot:inputs>
                             <ValidationProvider
                                 v-slot="{ errors }"
@@ -119,19 +119,15 @@
                     </FormRow>
 
                     <div class="form-line-container form-row">
-                        <div class="flex-container mt-3" style="padding-left: 0.7rem;">
+                        <div class="float-right mt-3">
                             <button
                                 type="button"
-                                class="solid-button button-style fat-button create-account-style"
+                                class="solid-button button-style create-account-stylebutton create-account-style"
                                 @click="$router.push({ name: 'profiles.importProfile.importStrategy' })"
                             >
                                 {{ $t('back') }}
                             </button>
-                            <button
-                                type="submit"
-                                class="inverted-button button-style fat-button create-account-style"
-                                @click="handleSubmit(submit)"
-                            >
+                            <button type="submit" class="inverted-button button-style create-account-style" @click="handleSubmit(submit)">
                                 {{ $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'restore_mnemonic' : 'generating_mnemonic') }}
                             </button>
                         </div>
@@ -148,6 +144,8 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
 </script>
 
 <style lang="less" scoped>
+@import '../../resources/css/variables.less';
+
 .right-hints-section {
     display: block;
     width: 5rem;
@@ -157,6 +155,14 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
 .form-account-creation-container {
     width: 100%;
     height: 100%;
+}
+
+.restore-button {
+    border: 2px solid @pink;
+    background: transparent;
+    color: @pink;
+    width: auto;
+    padding: 0 0.1rem;
 }
 
 /deep/ .form-row {

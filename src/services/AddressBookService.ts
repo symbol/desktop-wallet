@@ -24,7 +24,11 @@ export class AddressBookService {
     private readonly addressBookModelStorage = AddressBookModelStorage.INSTANCE;
 
     public getAddressBook(): AddressBook {
-        return AddressBook.fromJSON(this.addressBookModelStorage.get()) || new AddressBook();
+        try {
+            return AddressBook.fromJSON(this.addressBookModelStorage.get());
+        } catch (e) {
+            return new AddressBook();
+        }
     }
 
     public saveAddressBook(addressBook: AddressBook) {

@@ -22,6 +22,7 @@
                             :value="selectedContact.address"
                             :new-value="selectedContact.address"
                             :editing="false"
+                            :rules="validationRules.addressOrPublicKey"
                             :label="$t('contact_address')"
                             :on-edit="saveProperty('address')"
                         />

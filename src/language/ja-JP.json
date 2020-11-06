@@ -560,7 +560,7 @@
     "restore_mnemonic": "ニーモニック語群のリストア",
     "restrictable": "制限可",
     "rules_describe": "ルール説明",
-    "safe_storage_tips": "安全な保管の知恵 =>",
+    "safe_storage_tips": "安全な保管の知恵",
     "save_backups": "複数のコピーをオフラインで作成し、複数の場所にバックアップを保存します。デジタルバックアップには暗号化されたディスクを使用してください。",
     "scenes_to_be_used": "使用例",
     "see_transactions_other_account": "マルチシグアカウントのトランザクション表示",

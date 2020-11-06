@@ -32,6 +32,7 @@ import ModalConfirmDelete from '@/views/modals/ModalConfirmDelete/ModalConfirmDe
 
 import { NetworkType, PublicAccount } from 'symbol-sdk';
 import { AddressBook, IContact } from 'symbol-address-book';
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 
 @Component({
     components: {
@@ -55,6 +56,11 @@ export class ContactDetailPanelTs extends Vue {
     public selectedContact: IContact;
 
     public showDeleteConfirmModal: boolean = false;
+    /**
+     * Validation rules
+     * @var {ValidationRuleset}
+     */
+    public validationRules = ValidationRuleset;
 
     public get selectedContactPublicAccount(): PublicAccount {
         return PublicAccount.createFromPublicKey('0'.repeat(64), NetworkType.MAIN_NET);
