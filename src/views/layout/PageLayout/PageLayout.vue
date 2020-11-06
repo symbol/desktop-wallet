@@ -17,8 +17,9 @@
             <PageNavigator v-if="!$route.matched.map(({ name }) => name).includes('profiles')" />
             <div class="general_view" style="width: 100%;">
                 <div class="top_window level">
+                   
                     <div class="level-left">
-                        <AppLogo class="level-item" />
+                        <!--<AppLogo class="level-item" />-->
                     </div>
 
                     <!--OCA99: These are window controls for electron. Disabling them for now. Not sure if they should be here.-->
