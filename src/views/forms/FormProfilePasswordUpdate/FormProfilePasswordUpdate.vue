@@ -101,6 +101,8 @@ export default class FormProfilePasswordUpdate extends FormProfilePasswordUpdate
     width: 100%;
     clear: both;
     min-height: 1rem;
+    padding-top: 0.8rem;
+    padding-bottom: 0.4rem;
 }
 .text-right {
     text-align: right;

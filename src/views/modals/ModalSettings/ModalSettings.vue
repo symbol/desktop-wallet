@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Modal v-model="show" class="settings-modal-container" :footer-hide="true" :title="$t('sidebar_item_settings')">
+        <Modal v-model="show" class="settings-modal-container" :footer-hide="true">
             <NavigationLinks
                 class="settings-tabs-container"
                 :items="availableTabs"
