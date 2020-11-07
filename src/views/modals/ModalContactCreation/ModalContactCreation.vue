@@ -12,7 +12,6 @@
 </template>
 
 <script lang="ts">
-//@ts-ignore
 import { ModalContactCreationTs } from './ModalContactCreationTs';
 export default class ModalContactCreation extends ModalContactCreationTs {}
 </script>
