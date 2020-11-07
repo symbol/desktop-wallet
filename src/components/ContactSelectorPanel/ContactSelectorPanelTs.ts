@@ -33,6 +33,7 @@ import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
 import ModalBackupProfile from '@/views/modals/ModalBackupProfile/ModalBackupProfile.vue';
 // @ts-ignore
 import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
+// @ts-ignore
 import ModalContactCreation from '@/views/modals/ModalContactCreation/ModalContactCreation.vue';
 import { UIHelpers } from '@/core/utils/UIHelpers';
 
