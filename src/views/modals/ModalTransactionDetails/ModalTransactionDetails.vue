@@ -2,6 +2,8 @@
     <div class="transaction_modal">
         <Modal v-model="show" :title="$t('modal_title_transaction_details')" :transfer="false" @close="show = false">
             <TransactionDetails :transaction="transaction" />
+            <div slot="footer" class="modal-footer">
+            </div>
         </Modal>
     </div>
 </template>

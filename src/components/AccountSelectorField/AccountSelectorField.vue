@@ -22,4 +22,8 @@ export default class AccountSelectorField extends AccountSelectorFieldTs {}
 </script>
 <style lang="less" scoped>
 @import './AccountSelectorField.less';
+
+.ivu-select-dropdown {
+    margin: 0 !important;
+}
 </style>
