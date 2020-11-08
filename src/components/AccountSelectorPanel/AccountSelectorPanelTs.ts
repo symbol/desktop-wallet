@@ -34,6 +34,8 @@ import ModalFormSubAccountCreation from '@/views/modals/ModalFormSubAccountCreat
 // @ts-ignore
 import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
 // @ts-ignore
+import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
+// @ts-ignore
 import ModalBackupProfile from '@/views/modals/ModalBackupProfile/ModalBackupProfile.vue';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
@@ -47,6 +49,7 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
         ValidationProvider,
         AmountDisplay,
         ModalBackupProfile,
+        NavigationLinks,
     },
     computed: {
         ...mapGetters({
