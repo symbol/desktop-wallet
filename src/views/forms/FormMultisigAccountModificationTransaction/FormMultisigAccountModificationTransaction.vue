@@ -21,11 +21,14 @@
                         </div>
                         <div v-else style="padding-top: 0.22rem;">{{ $t('form_label_multisig_account') }}:</div>
                     </template>
+
                     <template v-slot:inputs>
                         <SignerSelector v-model="formItems.signerAddress" :signers="signers" :no-label="true" @input="onChangeSigner" />
                     </template>
+
                 </FormRow>
 
+                
                 <FormRow v-if="multisigOperationType === 'modification' && currentMultisigInfo" :class-name="'emphasis'">
                     <template v-slot:label> {{ $t('form_label_multisig_current_info') }}: </template>
 
@@ -52,7 +55,7 @@
                         </div>
                     </template>
                 </FormRow>
-
+                
                 <MultisigCosignatoriesDisplay
                     :multisig="currentMultisigInfo"
                     :cosignatory-modifications="formItems.cosignatoryModifications"

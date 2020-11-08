@@ -1,22 +1,42 @@
 @import '../../views/resources/css/variables.less';
 
 .vertical {
+    border-right: 2px solid @grayLight;
     .symbol-tab-nav {
-        padding-top: 0.2rem;
+        height: 0.75rem;
+        display:table;
+        width: 100.5%;
+
         .nav-item {
-            padding-bottom: 0.35rem;
+            padding-left: 0.3rem;
             font-size: @normalFont;
             font-weight: 400;
-            color: @tipFontColor;
+            color: @primary;
             cursor: pointer;
+            display:table-cell;
+            vertical-align:middle;
 
             &.active-item {
-                color: @purple;
+                color: @primary;
+                font-family: @symbolFontSemiBold;
             }
+        }
+        &.active-item {
+            background-color: #f2eef8;
         }
     }
 
-    .symbol-tabs-content {
-        padding: 0.05rem;
+}
+
+
+.header-container {
+    padding-left: 0.25rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.45rem;
+
+    .title-style {
+        color: @primary;
+        font-size: @bigFont;
+        font-family: @symbolFontSemiBold;
     }
 }

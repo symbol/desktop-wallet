@@ -1,17 +1,18 @@
 @import '../../resources/css/variables.less';
 
 .settings-modal-container {
+    overflow-y: auto;
     /deep/.ivu-modal {
         width: 12rem !important;
-        padding: none !important;
+
         .auto-complete-size {
             width: 100%;
         }
     }
 
-
     /deep/.ivu-modal-body {
         display: grid;
-        grid-template-columns: 15% 85%;
+        grid-template-columns: 20% 80%;
+        padding: 0 !important;
     }
 }

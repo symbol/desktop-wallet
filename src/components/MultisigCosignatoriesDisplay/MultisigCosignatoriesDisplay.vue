@@ -54,7 +54,7 @@
                     <div
                         v-for="({ address }, index) in removeModifications"
                         :key="index"
-                        :class="['row-cosignatory-modification-display', 'inputs-container', 'mx-1', 'pl-2', 'pr-2', 'red-background']"
+                        :class="['row-cosignatory-modification-display', 'mx-1', 'pl-2', 'pr-2', 'red-background']"
                     >
                         <div class="cosignatory-address-container">
                             <span class="cosignatory-removed">{{ address.pretty() }}</span>
@@ -67,7 +67,7 @@
             <!-- ADDED COSIGNATORIES -->
             <FormRow v-if="modifiable && addModifications && addModifications.length">
                 <template v-slot:label>
-                    {{ $t('form_label_new_cosignatories') }}
+                    {{ $t('form_label_new_cosignatories') }}:
                 </template>
                 <template v-slot:inputs>
                     <div
@@ -125,5 +125,10 @@ export default class MultisigCosignatoriesDisplay extends MultisigCosignatoriesD
 }
 /deep/.ivu-tooltip {
     text-transform: none;
+}
+
+/deep/ .inputs-container {
+    overflow: auto !important;
+    height: 0.5rem;
 }
 </style>
