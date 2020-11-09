@@ -65,7 +65,7 @@ export class MetadataService {
 
         const metadataModelList = this.metadataModelStorage.get(generationHash) || [];
         const metadataRepository = repositoryFactory.createMetadataRepository();
-        const searchCriteria = {targetAddress: address, metadataType: metadataType};
+        const searchCriteria = { targetAddress: address, metadataType: metadataType };
 
         return metadataRepository
             .search(searchCriteria)

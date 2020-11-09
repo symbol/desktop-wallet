@@ -13,7 +13,7 @@
                 </FormRow>
                 <FormRow>
                     <template v-slot:label> {{ $t('form_label_target_account') }}: </template>
-                    <template v-slot:inputs>                        
+                    <template v-slot:inputs>
                         <ValidationProvider
                             v-slot="{ errors }"
                             vid="targetAccount"
@@ -25,8 +25,8 @@
                         >
                             <ErrorTooltip :errors="errors">
                                 <input
-                                    class="input-size input-style"
                                     v-model="formItems.targetAccount"
+                                    class="input-size input-style"
                                     :placeholder="$t('form_label_target_account_hint')"
                                     type="text"
                                 />
@@ -37,11 +37,7 @@
                 <FormRow v-if="type === MetadataType.Mosaic">
                     <template v-slot:label> {{ $t(targetLabel) }}: </template>
                     <template v-slot:inputs>
-                        <MosaicSelector
-                            v-model="formItems.targetId"
-                            :mosaic-hex-ids="ownedTargetHexIds"
-                            default-mosaic="firstInList"
-                        />
+                        <MosaicSelector v-model="formItems.targetId" :mosaic-hex-ids="ownedTargetHexIds" default-mosaic="firstInList" />
                     </template>
                 </FormRow>
                 <div v-if="type === MetadataType.Namespace">
@@ -66,8 +62,8 @@
                         >
                             <ErrorTooltip :errors="errors">
                                 <AutoComplete
-                                    class="auto-complete-size auto-complete-style"
                                     v-model="formItems.scopedKey"
+                                    class="auto-complete-size auto-complete-style"
                                     :placeholder="$t('form_label_scoped_metadata_key_hint')"
                                     :data="cashedScopedKeys"
                                 />
@@ -97,10 +93,7 @@
                         </ValidationProvider>
                     </template>
                 </FormRow>
-                <MaxFeeAndSubmit
-                    v-model="formItems.maxFee"
-                    @button-clicked="handleSubmit(onSubmit)"
-                />
+                <MaxFeeAndSubmit v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
             </form>
         </ValidationObserver>
         <ModalTransactionConfirmation
@@ -115,7 +108,7 @@
 </template>
 
 <script lang="ts">
-import { FormMetadataCreationTs } from './FormMetadataCreationTs'
+import { FormMetadataCreationTs } from './FormMetadataCreationTs';
 export default class FormMetadataCreation extends FormMetadataCreationTs {}
 </script>
 

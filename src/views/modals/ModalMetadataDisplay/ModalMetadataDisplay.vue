@@ -1,12 +1,6 @@
 <template>
     <div class="modal-metadata">
-        <Modal
-            v-model="show"
-            class-name="vertical-center-modal"
-            :footer-hide="true"
-            :transfer="false"
-            @on-cancel="$emit('close-modal')"
-        >
+        <Modal v-model="show" class-name="vertical-center-modal" :footer-hide="true" :transfer="false" @on-cancel="$emit('close-modal')">
             <FormRow>
                 <template v-slot:label> {{ $t('metadata') }}: </template>
                 <template v-slot:inputs>
@@ -20,14 +14,10 @@
                     </div>
                 </template>
             </FormRow>
-            <FormRow noLabel="true">
+            <FormRow no-label="true">
                 <template v-slot:inputs>
                     <div class="value-container">
-                        <textarea
-                            class="metadata-value-input"
-                            :placeholder="$t('form_label_value_hint')"
-                            v-model="metadata.value" 
-                        />
+                        <textarea v-model="metadata.value" class="metadata-value-input" :placeholder="$t('form_label_value_hint')" />
                     </div>
                 </template>
             </FormRow>

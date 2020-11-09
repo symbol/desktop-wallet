@@ -69,5 +69,4 @@ export class AccountsTs extends Vue {
      * Show add metadata modal
      */
     public showMetadataModal: boolean = false;
-
 }

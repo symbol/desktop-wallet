@@ -14,7 +14,7 @@
  *
  */
 
-import { Metadata, MetadataType, Address, UInt64, MosaicId, NamespaceId } from 'symbol-sdk';
+import { Metadata, MetadataType } from 'symbol-sdk';
 
 /**
  * Stored POJO that holds mosaic information.

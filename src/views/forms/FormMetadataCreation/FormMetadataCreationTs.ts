@@ -31,7 +31,6 @@ import { ScopedMetadataKeysHelpers } from '@/core/utils/ScopedMetadataKeysHelper
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { AccountModel } from '@/core/database/entities/AccountModel';
-import { TransactionCommandMode } from '@/services/TransactionCommand';
 import { Signer } from '@/store/Account';
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
@@ -76,7 +75,6 @@ import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
     },
 })
 export class FormMetadataCreationTs extends FormTransactionBase {
-
     /**
      * Metadata type
      * @type {MetadataType}
@@ -189,12 +187,12 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      * @type {string}
      */
     get modalTitle(): string {
-        let title : string = '';
-        switch(this.type) {
+        let title: string = '';
+        switch (this.type) {
             case MetadataType.Mosaic:
                 title = 'modal_title_mosaic_metadata';
                 break;
-            
+
             case MetadataType.Namespace:
                 title = 'modal_title_namespace_metadata';
                 break;
@@ -211,20 +209,20 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      * @param {void}
      * @returns {string}
      */
-    get targetLabel() : string {
-        let title : string = '';
-        switch(this.type) {
+    get targetLabel(): string {
+        let title: string = '';
+        switch (this.type) {
             case MetadataType.Mosaic:
                 title = 'form_label_target_mosaic_id';
                 break;
-            
+
             case MetadataType.Namespace:
                 title = 'form_label_target_namespace_id';
                 break;
         }
         return title;
     }
-    
+
     /**
      * Default explorer link list
      * @readonly
@@ -242,13 +240,12 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         return this.isMosaic() ? 'mosaic_id' : 'namespace_id';
     }
 
-    get ownedTargetHexIds() : string[] {
+    get ownedTargetHexIds(): string[] {
         return this.type === MetadataType.Namespace
             ? this.ownedNamespaces.map(({ namespaceIdHex }) => namespaceIdHex)
             : this.ownedMosaics
-                .filter(({ ownerRawPlain }) => ownerRawPlain === this.currentAccount.address)
-                .map(({ mosaicIdHex }) => mosaicIdHex);
-
+                  .filter(({ ownerRawPlain }) => ownerRawPlain === this.currentAccount.address)
+                  .map(({ mosaicIdHex }) => mosaicIdHex);
     }
 
     // /**
@@ -295,5 +292,4 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         await this.$store.dispatch('metadata/SET_METADATA_FORM_STATE', metadataForm);
         await this.$store.dispatch('metadata/RESOLVE_METADATA_TRANSACTIONS');
     }
-
 }

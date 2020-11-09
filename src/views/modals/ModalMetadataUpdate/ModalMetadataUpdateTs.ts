@@ -25,7 +25,7 @@ import FormMetadataCreation from '@/views/forms/FormMetadataCreation/FormMetadat
 
 @Component({
     components: {
-        FormMetadataCreation
+        FormMetadataCreation,
     },
 })
 export class ModalMetadataUpdateTs extends Vue {
@@ -44,7 +44,7 @@ export class ModalMetadataUpdateTs extends Vue {
      * Metadata update modal type
      */
     @Prop({
-        default: MetadataType.Account
+        default: MetadataType.Account,
     })
     protected type: MetadataType;
 
@@ -69,7 +69,7 @@ export class ModalMetadataUpdateTs extends Vue {
      * Save Metadata handler
      * @param {void}
      */
-    protected saveMetadata() : void {
+    protected saveMetadata(): void {
         this.$emit('close');
     }
 }

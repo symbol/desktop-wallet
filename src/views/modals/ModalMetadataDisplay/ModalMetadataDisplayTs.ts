@@ -20,14 +20,12 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
 
-
 @Component({
     components: {
-        FormRow
-    }
+        FormRow,
+    },
 })
 export class ModalMetadataDisplayTs extends Vue {
-    
     /**
      * Modal visibility
      */
@@ -41,8 +39,7 @@ export class ModalMetadataDisplayTs extends Vue {
      * @param {MetadataModel} metadata
      */
     @Prop({
-        required: true
+        required: true,
     })
-    protected metadata : MetadataModel;
-
+    protected metadata: MetadataModel;
 }

@@ -33,10 +33,8 @@ import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadat
     },
 })
 export class MosaicListPageTs extends Vue {
-
     /**
      * Show add metadata modal
      */
     public showMetadataModal: boolean = false;
-
 }

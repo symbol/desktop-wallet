@@ -24,5 +24,5 @@ export class StorageHelpers {
 
     public static cleanSession = () => {
         sessionStorage.clear();
-    }
+    };
 }

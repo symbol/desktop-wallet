@@ -1,7 +1,7 @@
 <template>
     <div v-if="!disabled" class="round-button" @click="$emit('click')">
         <Icon type="md-add-circle" />
-        <span v-if="title" class="add-button-title">{{title}}</span>
+        <span v-if="title" class="add-button-title">{{ title }}</span>
     </div>
 </template>
 
