@@ -5,7 +5,7 @@
     		<span class="title-style">{{$t('sidebar_item_settings')}}</span>
     	</div>
         <div v-for="(item, index) in items" :key="index" @click="$emit('selected', index)">
-            <div :class="['symbol-tab-nav', index === currentItemIndex ? 'active-item' : 'inactive-item']">	
+            <div :class="['symbol-tab-nav', index === currentItemIndex ? 'active-item' : 'inactive-item']">
                 <span :class="['nav-item', index === currentItemIndex ? 'active-item' : 'inactive-item']">{{
                     $t('settings_tab_' + item.toLowerCase())
                 }}</span>

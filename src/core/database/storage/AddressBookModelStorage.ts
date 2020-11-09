@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-.multisig_ban_container {
-    font-size: 16px !important;
-    .is_multisig {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        background-color: white;
-        opacity: 0.4;
-        z-index: 2;
-        left: 1.9rem;
+
+import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage';
+
+/**
+ * Stored cache for the known block infos.
+ */
+export class AddressBookModelStorage extends VersionedObjectStorage<string> {
+    /**
+     * Singleton instance as we want to run the migration just once
+     */
+    public static INSTANCE = new AddressBookModelStorage();
+
+    private constructor() {
+        super('addressBook');
     }
 }
