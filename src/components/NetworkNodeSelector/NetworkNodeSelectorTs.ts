@@ -1,6 +1,5 @@
 // external dependencies
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import { NodeHttp, NodeInfo } from 'symbol-sdk';
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
 // internal dependencies
@@ -20,27 +19,29 @@ import FormRow from '@/components/FormRow/FormRow.vue';
     },
     computed: {
         ...mapGetters({
-            knowNodes: 'network/knowNodes',
-            repositoryFactory: 'network/repositoryFactory',
+            knownNodes: 'network/knowNodes',
         }),
     },
 })
 export class NetworkNodeSelectorTs extends Vue {
     @Prop({ default: () => [] }) excludeRoles: number[];
+    @Prop()
+    value: string;
 
     /**
      * Validation rules
      */
     public validationRules = ValidationRuleset;
 
-    public knowNodes: NodeModel[];
+    public knownNodes: NodeModel[];
 
     /**
      * Form items
      */
-    protected formItems = { nodeUrl: '' };
+    protected formNodeUrl = '';
 
     public customNodeData = [];
+
     public isFetchingNodeInfo = false;
 
     /**
@@ -50,17 +51,10 @@ export class NetworkNodeSelectorTs extends Vue {
      */
     protected async handleInput(): Promise<void> {
         try {
-            const nodeUrl = URLHelpers.getNodeUrl(this.formItems.nodeUrl);
+            const nodeUrl = URLHelpers.getNodeUrl(this.formNodeUrl);
             new URL(nodeUrl);
 
-            const publicKey = await this.fetchNodePublicKey();
-
-            if (publicKey && publicKey.length) {
-                this.$emit('input', publicKey);
-
-                const associationValues: Array<string> = /.+\u003a\d{2,}/.test(nodeUrl) ? [nodeUrl] : [nodeUrl + ':3000'];
-                this.customNodeData = associationValues;
-            }
+            await this.fetchNodePublicKey();
         } catch (error) {
             // set error in the error tooltip
             this.$emit('error', error.message);
@@ -72,30 +66,41 @@ export class NetworkNodeSelectorTs extends Vue {
      * @protected
      * @returns {Promise<void>}
      */
-    protected async fetchNodePublicKey(): Promise<string> {
-        if (!this.formItems.nodeUrl.length) {
+    protected async fetchNodePublicKey() {
+        if (!this.formNodeUrl?.length) {
             return '';
         }
 
-        let nodeInfo: NodeInfo;
         this.isFetchingNodeInfo = true;
         try {
-            const nodeUrl = URLHelpers.getNodeUrl(this.formItems.nodeUrl);
-            nodeInfo = await new NodeHttp(nodeUrl).getNodeInfo().toPromise();
+            const nodeUrl = URLHelpers.getNodeUrl(this.formNodeUrl);
+            await this.$store.dispatch('network/UPDATE_PEER', nodeUrl);
         } catch (error) {
             console.log(error);
             throw new Error('Node_connection_failed');
         } finally {
             this.isFetchingNodeInfo = false;
         }
-
-        // if (this.excludeRoles.length && this.excludeRoles.includes(nodeInfo.roles))
-        //   throw new Error('harvesting_node_not_eligible')
-
-        return nodeInfo.publicKey;
     }
 
     public created() {
-        this.customNodeData = this.knowNodes.map((n) => n.url);
+        this.customNodeData = this.knownNodes.map((n) => n.url);
+    }
+
+    @Watch('knownNodes')
+    protected knownNodesWatcher(nodes: NodeModel[]) {
+        const selectedNode = nodes.find((n) => n.url === this.formNodeUrl);
+        if (selectedNode) {
+            this.$emit('input', selectedNode.publicKey);
+        }
+    }
+
+    @Watch('value', { immediate: true })
+    protected valueWatcher(newVal) {
+        if (newVal) {
+            this.formNodeUrl = this.knownNodes.find((n) => n.publicKey === this.value)?.url;
+        } else {
+            this.formNodeUrl = '';
+        }
     }
 }

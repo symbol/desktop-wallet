@@ -1,58 +1,56 @@
 <template>
     <div class="top_harvesting_info">
         <div class="top_account_info">
-            <div class="remote-status">
-                <div class="title">
-                    <span class="title_txt">Remote status</span>
-                </div>
-                <div class="level">
-                    <div class="level-left">
-                        <div class="level-item">
-                            <div class="status-indicator green"></div>
-                        </div>
-                        <div class="level-item txt-small">Connected</div>
-                    </div>
-                </div>
-            </div>
-
             <div class="harvesting-status">
                 <div class="title">
-                    <span class="title_txt">Harvesting status</span>
+                    <span class="title_txt">{{ $t('harvesting_status') }}</span>
                 </div>
                 <div class="level">
                     <div class="level-left">
                         <div class="level-item">
-                            <div class="status-indicator green"></div>
+                            <div :class="harvestingStatusIndicator.cls"></div>
                         </div>
-                        <div class="level-item txt-small">Connected</div>
+                        <div class="level-item txt-small">{{ harvestingStatusIndicator.text }}</div>
                     </div>
                 </div>
             </div>
 
             <div class="made-blocks">
                 <div class="title">
-                    <span class="title_txt">Blocks made</span>
+                    <span class="title_txt">{{ $t('blocks_made') }}</span>
                 </div>
-                <span class="txt_info">
-                    N/A
-                </span>
+                <div class="txt_info">
+                    <Spin
+                        v-if="isFetchingHarvestedBlockStats"
+                        v-show="isFetchingHarvestedBlockStats"
+                        class="inline-spin"
+                        size="small"
+                    ></Spin>
+
+                    <span v-if="!isFetchingHarvestedBlockStats">
+                        {{ harvestedBlockStats.totalBlockCount }}
+                    </span>
+                </div>
             </div>
 
             <div class="collected-fees">
                 <div class="title">
-                    <span class="title_txt">Fees collected</span>
+                    <span class="title_txt">{{ $t('fees_collected') }}</span>
                 </div>
                 <span class="txt_info">
-                    N/A
+                    <Spin
+                        v-if="isFetchingHarvestedBlockStats"
+                        v-show="isFetchingHarvestedBlockStats"
+                        class="inline-spin"
+                        size="small"
+                    ></Spin>
+
+                    <span v-if="!isFetchingHarvestedBlockStats">
+                        {{ totalFeesEarned }}
+                    </span>
                 </span>
             </div>
         </div>
-
-        <ModalHarvestingWizard
-            v-if="isHarvestingWizardDisplayed"
-            :visible="isHarvestingWizardDisplayed"
-            @close="isHarvestingWizardDisplayed = false"
-        />
     </div>
 </template>
 

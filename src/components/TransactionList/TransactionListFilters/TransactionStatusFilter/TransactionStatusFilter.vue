@@ -1,21 +1,32 @@
 <template>
-    <div>
-        <Select v-model="selectedStatus" size="large">
-            <Option class="select-all" :value="'all'">
-                Recent
-            </Option>
-            <OptionGroup label="Status">
-                <Option :value="'confirmed'">
-                    Confirmed
-                </Option>
-                <Option :value="'unconfirmed'">
-                    Unconfirmed
-                </Option>
-                <Option :value="'partial'">
-                    Partial
-                </Option>
-            </OptionGroup>
-        </Select>
+    <div class="transactions-filter">
+        <div class="filter-button" @click="toggleSelection">
+            <span>Filter</span>
+            <div class="filter-button-arrow" :class="{ 'arrow-up': isSelectionShown }" />
+        </div>
+        <div v-if="isSelectionShown" class="filter-options-container">
+            <div class="filter-options-container__option">
+                <Checkbox id="Confirmed" @input="(value) => onChange(transactionFilterOptions.confirmed, value)" />
+                <label for="Confirmed">Confirmed</label>
+            </div>
+            <div class="filter-options-container__option">
+                <Checkbox id="Unconfirmed" @input="(value) => onChange(transactionFilterOptions.unconfirmed, value)" />
+                <label for="Unconfirmed">Unconfirmed</label>
+            </div>
+            <div class="filter-options-container__option">
+                <Checkbox id="Partial" @input="(value) => onChange(transactionFilterOptions.partial, value)" />
+                <label for="Partial">Partial</label>
+            </div>
+            <div class="filter-options-container__divider"></div>
+            <div class="filter-options-container__option">
+                <Checkbox id="Sent" @input="(value) => onChange(transactionFilterOptions.sent, value)" />
+                <label for="Sent">Sent</label>
+            </div>
+            <div class="filter-options-container__option">
+                <Checkbox id="Received" @input="(value) => onChange(transactionFilterOptions.received, value)" />
+                <label for="Received">Received</label>
+            </div>
+        </div>
     </div>
 </template>
 <script lang="ts">

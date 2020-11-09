@@ -1,12 +1,7 @@
 <template>
     <div class="transaction-list-filters-container">
-        <div class="transaction-list-search-container">
-
-            <input type="search" class="transaction-list-search-input" placeholder="Search" />
-            <i class="ivu-icon ivu-icon-ios-search"/>
-        </div>
         <div class="transaction-list-filter-container">
-            <TransactionStatusFilter @status-change="onStatusSelectorChange" />
+            <TransactionStatusFilter />
         </div>
         <div v-if="signers.length > 1" class="transaction-list-filter-container">
             <SignerFilter :signers="signers" @signer-change="onSignerSelectorChange" />

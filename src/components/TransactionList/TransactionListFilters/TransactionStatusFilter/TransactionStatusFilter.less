@@ -1,3 +1,72 @@
-.ivu-icon-md-apps {
-    font-size: 0.3rem;
+@import '../../../../views/resources/css/variables.less';
+
+.transactions-filter {
+    position: relative;
+    color: @primary;
+}
+
+.filter-button {
+    position: relative;
+    box-shadow: unset;
+    border: unset;
+    background: @grayLightest;
+    border-radius: 3.4px;
+    padding: 0.07rem 0.12rem;
+    font-size: @smallFont;
+    cursor: pointer;
+}
+
+.filter-button-arrow {
+    position: absolute;
+    top: 45%;
+    right: 0.12rem;
+    line-height: 1;
+    transform: translateY(-50%) rotate(135deg);
+    font-size: 0.14rem;
+    color: #808695;
+    width: 0.07rem;
+    height: 0.07rem;
+    border-top: 1px solid @primary;
+    border-right: 1px solid @primary;
+    transition: all 0.2s ease-in-out;
+    display: inline-block;
+    font-family: Ionicons;
+    speak: none;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: -0.125em;
+    text-align: center;
+}
+
+.arrow-up {
+    top: 55%;
+    transform: translateY(-50%) rotate(315deg);
+    display: inline-block;
+}
+
+.filter-options-container {
+    position: absolute;
+    top: calc(@smallerFont + 0.14rem);
+    width: 100%;
+    background: @grayLightest;
+    font-size: @minimumFont;
+    z-index: 1061 !important;
+    padding: 0.14rem 0;
+
+    &__option {
+        margin-bottom: 0.07rem;
+        padding: 0 0.15rem;
+    }
+
+    &__divider {
+        width: 100%;
+        height: 2px;
+        background: @grayDark;
+        margin: 0.14rem 0 0.07rem 0;
+    }
 }
