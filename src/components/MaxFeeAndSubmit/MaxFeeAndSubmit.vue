@@ -11,11 +11,11 @@
                 <div v-if="!hideSubmit" class="ml-2">
                     <button
                         type="submit"
-                        class="centered-button button-style inverted-button submit-button"
+                        :class="'centered-button button-style submit-button ' + submitButtonClasses"
                         :disabled="disableSubmit"
                         @click="$emit('button-clicked')"
                     >
-                        {{ $t('send') }}
+                        {{ $t(submitButtonText) }}
                     </button>
                 </div>
             </div>
@@ -72,6 +72,16 @@ export default class MaxFeeAndSubmit extends Vue {
      * Whether warnings are visible
      */
     @Prop({ default: true }) showWarnings: boolean;
+
+    /**
+     * Submit button text
+     */
+    @Prop({ default: 'send' }) submitButtonText: string;
+
+    /**
+     * Submit button classes
+     */
+    @Prop({ default: 'inverted-button' }) submitButtonClasses: string;
 
     /**
      * Get max fee value from the value prop

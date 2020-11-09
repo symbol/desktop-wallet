@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { VrfKeyLinkTransaction, LinkAction } from 'symbol-sdk';
+import { LinkAction, NodeKeyLinkTransaction } from 'symbol-sdk';
 import { TransactionView } from './TransactionView';
 import i18n from '@/language';
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
 
-export class ViewVrfKeyLinkTransaction extends TransactionView<VrfKeyLinkTransaction> {
+export class ViewNodeKeyLinkTransaction extends TransactionView<NodeKeyLinkTransaction> {
     /**
      * Displayed items
      */
     protected resolveDetailItems(): TransactionDetailItem[] {
         return [
             { key: 'link_action', value: this.transaction.linkAction == LinkAction.Link ? i18n.t('link') : i18n.t('unlink') },
-            { key: 'linked_vrf_public_key', value: this.transaction.linkedPublicKey },
+            { key: 'linked_node_public_key', value: this.transaction.linkedPublicKey },
         ];
     }
 }

@@ -14,7 +14,16 @@
  *
  */
 import Vue from 'vue';
-import { BlockInfo, IListener, Listener, NetworkType, RepositoryFactory, TransactionFees, RentalFees } from 'symbol-sdk';
+import {
+    BlockInfo,
+    IListener,
+    Listener,
+    NetworkType,
+    RepositoryFactory,
+    TransactionFees,
+    RentalFees,
+    RepositoryFactoryHttp,
+} from 'symbol-sdk';
 import { Subscription } from 'rxjs';
 // internal dependencies
 import { $eventBus } from '../events';
@@ -163,6 +172,16 @@ export default {
                 return;
             }
             const newNodes = knowNodes.filter((n) => n !== toBeDeleted);
+            new NodeService().saveNodes(newNodes);
+            Vue.set(state, 'knowNodes', newNodes);
+        },
+        updateNode: (state: NetworkState, node: NodeModel) => {
+            const knowNodes: NodeModel[] = state.knowNodes;
+            const toBeUpdated = knowNodes.find((p: NodeModel) => p.url === node.url);
+            if (!toBeUpdated) {
+                return;
+            }
+            const newNodes = knowNodes.map((n) => (n.url === node.url ? node : n));
             new NodeService().saveNodes(newNodes);
             Vue.set(state, 'knowNodes', newNodes);
         },
@@ -321,6 +340,14 @@ export default {
         },
         REMOVE_KNOWN_PEER({ commit }, peerUrl) {
             commit('removePeer', peerUrl);
+        },
+
+        async UPDATE_PEER({ commit }, peerUrl) {
+            const repositoryFactory = new RepositoryFactoryHttp(peerUrl);
+            const nodeService = new NodeService();
+
+            const knownNodes = await nodeService.getNodes(repositoryFactory, peerUrl).toPromise();
+            commit('knowNodes', knownNodes);
         },
 
         async RESET_PEERS({ dispatch, getters }) {

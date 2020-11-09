@@ -13,101 +13,67 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-// configuration
-// child components
-// @ts-ignore
-// @ts-ignore
-import ModalHarvestingWizard from '@/views/modals/ModalHarvestingWizard/ModalHarvestingWizard.vue';
-import { officialIcons } from '@/views/resources/Images';
 
-import { AccountModel, AccountType as ProfileType } from '@/core/database/entities/AccountModel';
-import { NodeModel } from '@/core/database/entities/NodeModel';
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
+import { AccountInfo } from 'symbol-sdk';
+import { HarvestedBlockStats, HarvestingStatus } from '@/store/Harvesting';
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 
 @Component({
-    components: {
-        ModalHarvestingWizard,
-    },
     computed: {
         ...mapGetters({
-            currentAccount: 'account/currentAccount',
-            networkConfiguration: 'network/networkConfiguration',
-            countTransactions: 'statistics/countTransactions',
-            countAccounts: 'statistics/countAccounts',
-            countNodes: 'statistics/countNodes',
-            currentHeight: 'network/currentHeight',
-            currentPeerInfo: 'network/currentPeerInfo',
+            currentSignerAccountInfo: 'account/currentSignerAccountInfo',
+            harvestingStatus: 'harvesting/status',
+            harvestedBlockStats: 'harvesting/harvestedBlockStats',
+            isFetchingHarvestedBlockStats: 'harvesting/isFetchingHarvestedBlockStats',
+            networkCurrency: 'mosaic/networkCurrency',
         }),
     },
 })
 export class HarvestStatisticsPanelTs extends Vue {
-    /**
-     * The icons resources.
-     */
-    public officialIcons = officialIcons;
+    public currentSignerAccountInfo: AccountInfo;
+    public harvestingStatus: HarvestingStatus;
+    public harvestedBlockStats: HarvestedBlockStats;
+    public isFetchingHarvestedBlockStats: boolean;
+    public networkCurrency: NetworkCurrencyModel;
 
-    /**
-     * The current account.
-     */
-    private currentAccount: AccountModel;
-
-    /**
-     * The network configuration.
-     */
-    private networkConfiguration: NetworkConfigurationModel;
-
-    /**
-     * Number of transactions on the network
-     */
-    public countTransactions: number;
-
-    /**
-     * Number of accounts on the network
-     */
-    public countAccounts: number;
-
-    /**
-     * Number of nodes on the network
-     */
-    public countNodes: number;
-
-    /**
-     * Current network block height
-     */
-    public currentHeight: number;
-
-    /**
-     * Currently connect peer information
-     */
-    public currentPeerInfo: NodeModel;
-
-    /**
-     * Whether harvesting wizard is currently displayed
-     */
-    protected isHarvestingWizardDisplayed = false;
-
-    /**
-     * The supported profile types for harvesting
-     */
-    protected harvestingSupportedProfileTypes: ProfileType[] = [ProfileType.SEED];
-
-    /**
-     * Whether harvesting is enabled for current account
-     */
-    protected isHarvestingEnabled = false;
-
-    /**
-     * Current network target block time
-     */
-    protected get blockGenerationTargetTime(): number {
-        return this.networkConfiguration.blockGenerationTargetTime;
+    created() {
+        this.refresh();
     }
 
-    public created() {
-        if (this.currentAccount) {
-            this.isHarvestingEnabled = this.harvestingSupportedProfileTypes.includes(this.currentAccount.type);
+    public refresh() {
+        this.refreshHarvestingStatus();
+        this.refreshHarvestingStats();
+    }
+
+    public refreshHarvestingStats() {
+        this.$store.dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS');
+    }
+
+    public refreshHarvestingStatus() {
+        this.$store.dispatch('harvesting/FETCH_STATUS');
+    }
+
+    public get harvestingStatusIndicator() {
+        switch (this.harvestingStatus) {
+            case HarvestingStatus.ACTIVE:
+                return { cls: 'status-indicator green', text: 'Active' };
+            case HarvestingStatus.INACTIVE:
+                return { cls: 'status-indicator red', text: 'Inactive' };
+            case HarvestingStatus.INPROGRESS_ACTIVATION:
+                return { cls: 'status-indicator amber', text: 'Activation in progress' };
+            case HarvestingStatus.INPROGRESS_DEACTIVATION:
+                return { cls: 'status-indicator amber', text: 'Deactivation in progress' };
         }
+    }
+
+    public get totalFeesEarned() {
+        return this.harvestedBlockStats.totalFeesEarned.compact() / Math.pow(10, this.networkCurrency.divisibility);
+    }
+
+    @Watch('currentSignerAccountInfo')
+    public refreshWatcher() {
+        this.refresh();
     }
 }
