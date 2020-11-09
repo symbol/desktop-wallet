@@ -736,6 +736,5 @@
     "word": "Word",
     "x_seconds": "{seconds}s.",
     "node": "Node",
-    "to_symbol": "to Symbol",
-    "program_description": "Based on the design of the Symbol blockchain chain, the open source Symbol digital asset system, it is convenient to access the symbol network, create accounts, manage assets and more operations..."
+    "to_symbol": "to Symbol"
 }

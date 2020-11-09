@@ -535,7 +535,6 @@
     "profile_not_matching_network_option_3": "ネットワークを閉じて切り替えます",
     "profile_not_matching_network_warning_message": "プロファイルのネットワークが現在のネットワークと一致しません。 問題を解決するには、次のいずれかのオプションを選択してください。",
     "profile_not_matching_network_warning_title": "警告",
-    "program_description": "オープンソースのSymbolデジタルアセットシステムであるSymbolブロックチェーンチェーンの設計に基づいて、シンボルネットワークへのアクセス、アカウントの作成、アセットの管理などの操作が便利です...",
     "program_description_line1": "このプログラムは、オープンソースのデジタルアセット管理システムである",
     "program_description_line2": "Symbol ブロックチェーンを基礎として構成されています。",
     "program_description_line3": "ネットワークへアクセスし、プロファイルの作成、アカウントやアセットの管理などを行います。",
