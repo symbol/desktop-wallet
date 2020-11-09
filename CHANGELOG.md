@@ -9,16 +9,16 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 #### Added
 
-- Added AddressBook to the the user profile.
+- Added AddressBook to the user profile.
 - Added AddressBook backup function.
 - Added AddressQR feature to symbol-qr-library.
 - Added `Sender` and `Recipient` filter in transaction history.
-- Fist part (1/2) of Delegated Harvesting release. Enabled delegated harvesting activation and deactivation on exsting known nodes only. Activation status and full peer nodes selection will be released in next drop.
+- First part (1/2) of Delegated Harvesting release. Enabled delegated harvesting activation and deactivation on existing known nodes only. Activation status and full peer nodes selection will be released in the next drop.
 
 #### Changes
 
 - Recipient input can now use known contacts from AddressBook
-- Conatact names (known contacts from AddressBook) are shown in transaction history list.
+- Contact names (known contacts from AddressBook) are shown in the transaction history list.
 - Restyled news page.
 - Removed modal close buttons.
 - Restyled general modals structure.
@@ -34,9 +34,9 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 #### Fixed
 
-- Fixed minApproval and minRemoval showing wrong values issue.
+- Fixed minApproval and minRemoval showing the wrong values issue.
 - Blocked users form adding currently selected account as a cosigner for itself.
-- Fixed multisig graph showing on non-multisig acount issue.
+- Fixed multisig graph showing on non-multisig account issue.
 - Set overlay component position to block transactions forms properly in multisig accounts
 - Fixed issues in transaction history export csv.
 - Various UI issues fixed.
