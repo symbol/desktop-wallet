@@ -2,7 +2,17 @@
     <div class="accounts-main-container">
         <div class="left-container">
             <div class="left-top-container">
-                <AccountSelectorPanel />
+                <div class="account-switch-container">
+                    <NavigationLinks
+                        :direction="'horizontal'"
+                        :items="panelItems"
+                        :current-item-index="activePanel"
+                        translation-prefix="tab_accounts_"
+                        @selected="(i) => (activePanel = i)"
+                    />
+                    <AccountSelectorPanel v-if="activePanel === 0" />
+                    <ContactSelectorPanel v-if="activePanel === 1" />
+                </div>
             </div>
             <div class="left-bottom-container">
                 <!--TODO: Display hidden accounts following AccountSelectorPanel style.-->
@@ -13,13 +23,23 @@
                 </div>
             </div>
         </div>
-        <div class="right-container">
+        <div v-if="activePanel === 0" class="right-container">
             <div class="header-container">
                 <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
             </div>
 
             <div class="bottom-container">
                 <router-view />
+            </div>
+        </div>
+        <div v-if="activePanel === 1" class="right-container">
+            <div class="header-container">
+                <div class="tabs horizontal">
+                    <span class="tab-item active">{{ $t('contact_information') }}</span>
+                </div>
+            </div>
+            <div class="bottom-container">
+                <ContactDetailPanel />
             </div>
         </div>
     </div>
@@ -41,5 +61,11 @@ export default class Accounts extends AccountsTs {}
         color: @purpleDark;
         font-family: @symbolFont;
     }
+}
+
+.account-switch-container {
+    display: grid;
+    height: 100%;
+    grid-template-rows: 0.6rem auto;
 }
 </style>

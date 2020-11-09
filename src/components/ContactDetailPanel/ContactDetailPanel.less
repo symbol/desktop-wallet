@@ -1,0 +1,145 @@
+/*
+ * Copyright 2020 NEM (https://nem.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ */
+@import '../../views/resources/css/variables.less';
+
+.account-detail-outer-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto rem;
+    background-color: @white;
+    border-radius: 0.04rem;
+    overflow: hidden;
+    padding-top: 2%;
+
+    .account-detail-inner-container {
+        width: 100%;
+        padding: 0.2rem 0.4rem;
+        margin: 0;
+        display: grid;
+        grid-template-columns: 20%80%;
+        grid-template-rows: 8rem;
+
+        .right-container {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+
+            .title-row {
+                font-size: @biggerFont;
+            }
+
+            .account-details-container {
+                height: 100%;
+                display: grid;
+            }
+
+            .right-container-title {
+                font-size: @normalFont;
+                color: #222;
+                font-weight: 500;
+            }
+
+            .account-details-grid {
+                background-color: white;
+                font-size: 18px;
+                display: inline-grid;
+                font-weight: 400;
+                color: @primary;
+                grid-auto-rows: 0.5rem;
+                padding-left: 10px;
+            }
+
+            .detail-row {
+                grid-row: span 1;
+            }
+
+            .detail-double-row {
+                grid-row: span 2;
+            }
+
+            .account-detail-row-3cols {
+                display: grid;
+                grid-template-columns: 1.4rem 5rem auto;
+            }
+
+            .account-detail-row {
+                display: grid;
+                grid-template-columns: 1.4rem 5rem;
+            }
+
+            .account-detail-cosignatory  {
+                display: grid;
+                grid-template-rows: auto rem;
+            }
+
+            .account-detail-row,
+            .account-detail-row-3cols {
+                font .label {
+                    font-family: @symbolFontMedium;
+                    font-weight: bold;
+                    margin-right: 10px;
+                    width: 1.4rem;
+                }
+
+                /deep/ .value {
+                    font-family: @symbolFontLight;
+                    text-overflow: ellipsis;
+                    color: @purpleDark;
+                }
+
+                /deep/ .value {
+                }
+            }
+        }
+
+        .left-container {
+            /deep/ .qr-code-image {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
+        }
+    }
+
+    .account-actions-outer-container {
+        background-color: lightgray;
+        width: 100%;
+        padding: 25px 0 0 0;
+
+        .account-actions-inner-container {
+            background-color: lightseagreen;
+            width: 100%;
+            border-radius: 0.04rem;
+        }
+    }
+}
+
+.edit-account-name {
+    margin-left: 0.18rem;
+    cursor: pointer;
+}
+
+.icon-left-button {
+    width: 0.3rem;
+    height: 0.3rem;
+    color: @purpleDark;
+    margin-right: 0.18rem;
+}
+
+.consignatory_row {
+    display: grid;
+    grid-template-columns: 0.4rem 4.6rem;
+}

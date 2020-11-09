@@ -26,16 +26,21 @@ import { ValidationProvider } from 'vee-validate';
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
+// @ts-ignore
+import ContactSelector from '@/components/ContactSelector/ContactSelector.vue';
+import { AddressBook } from 'symbol-address-book/AddressBook';
 
 @Component({
     components: {
         ValidationProvider,
         ErrorTooltip,
         FormRow,
+        ContactSelector,
     },
     computed: {
         ...mapGetters({
             networkType: 'network/networkType',
+            addressBook: 'addressBook/getAddressBook',
         }),
     },
 })
@@ -50,6 +55,11 @@ export class RecipientInputTs extends Vue {
      * @var {NetworkType}
      */
     public networkType: NetworkType;
+    /**
+     * Current address book
+     * @var {AddressBook}
+     */
+    public addressBook: AddressBook;
 
     /**
      * Validation rules
@@ -66,4 +76,11 @@ export class RecipientInputTs extends Vue {
         this.$emit('input', input);
     }
     /// end-region computed properties getter/setter
+
+    public onSelectContact(id: string) {
+        const contact = this.addressBook.getContactById(id);
+        if (contact) {
+            this.rawValue = contact.address;
+        }
+    }
 }
