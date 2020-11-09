@@ -49,6 +49,8 @@ export class CSVHelpers {
                 result[mergedArray[i][1]['key']] = mergedArray[i][1]['value'].maxFee.compact().toString();
             } else if (mergedArray[i][1]['key'] == 'transfer_target') {
                 result[mergedArray[i]['key']] = mergedArray[i][1]['value'].address;
+            } else if (mergedArray[i][1]['key'] == 'block_height') {
+                result[mergedArray[i]['key']] = mergedArray[i][1]['value'].replace('#', '');
             } else {
                 result[mergedArray[i][1]['key']] = mergedArray[i][1]['value'];
             }

@@ -51,7 +51,11 @@
                     </div>
 
                     <div class="graph-row">
-                        <AccountMultisigGraph v-if="currentAccount" :account="currentAccount" :visible="true" />
+                        <AccountMultisigGraph
+                            v-if="currentAccount && currentAccount.isMultisig"
+                            :account="currentAccount"
+                            :visible="currentAccount.isMultisig"
+                        />
                     </div>
                     <!-- TODO : Make a "CosignatoryDisplay" component -->
                     <div class="detail-row">

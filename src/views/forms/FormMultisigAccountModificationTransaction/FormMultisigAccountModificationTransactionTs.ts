@@ -104,7 +104,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
     };
 
     public get multisigOperationType(): 'conversion' | 'modification' {
-        if (this.isCosignatoryMode) {
+        if (this.isCosignatoryMode || this.currentAccount.isMultisig) {
             return 'modification';
         }
         return 'conversion';
