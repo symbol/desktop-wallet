@@ -3,6 +3,44 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.3][v0.13.3] - 09-Nov-2020
+
+### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+
+#### Added
+
+- Added AddressBook to the user profile.
+- Added AddressBook backup function.
+- Added AddressQR feature to symbol-qr-library.
+- Added `Sender` and `Recipient` filter in transaction history.
+- First part (1/2) of Delegated Harvesting release. Enabled delegated harvesting activation and deactivation on existing known nodes only. Activation status and full peer nodes selection will be released in the next drop.
+
+#### Changes
+
+- Recipient input can now use known contacts from AddressBook
+- Contact names (known contacts from AddressBook) are shown in the transaction history list.
+- Restyled news page.
+- Removed modal close buttons.
+- Restyled general modals structure.
+- Aligned dropdowns with input sizes.
+- Restyled confirm buttons on modals.
+- Fee dropdown hover styles.
+- Fix multisig add cosignatories was overlapping.
+- New layout in settings modal.
+- Refactored navigation links for settings and account.
+- Styled contact list.
+- Styled address book details page.
+- Disabled encrypting / decrypting message for multisig account.
+
+#### Fixed
+
+- Fixed minApproval and minRemoval showing the wrong values issue.
+- Blocked users form adding currently selected account as a cosigner for itself.
+- Fixed multisig graph showing on non-multisig account issue.
+- Set overlay component position to block transactions forms properly in multisig accounts
+- Fixed issues in transaction history export csv.
+- Various UI issues fixed.
+
 ## [0.13.2][v0.13.2] - 02-Nov-2020
 
 ### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
@@ -21,12 +59,12 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Allow multiple private key accounts to be imported into the same profile as the mnemonic account.
 - Profile backup is now using Symbole-Paper-Wallet with multiple accounts support.
 - Applied the first iteration of UI implementation.
-    - Restyled login access profile
-    - Restyled profile creation and profile import with new UI styles
-    - General layouts applied
-    - Styled buttons, forms, and tables
-    - Aggregate page UI layout
-    - Harversting page UI layout
+  - Restyled login access profile
+  - Restyled profile creation and profile import with new UI styles
+  - General layouts applied
+  - Styled buttons, forms, and tables
+  - Aggregate page UI layout
+  - Harversting page UI layout
 
 #### Fixed
 
