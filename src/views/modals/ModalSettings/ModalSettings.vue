@@ -1,8 +1,10 @@
 <template>
     <div>
         <Modal v-model="show" class="settings-modal-container" :footer-hide="true">
-            <div class="header-container">
-                <span class="title-style">{{ $t('sidebar_item_settings') }}</span>
+            <div class="nav-links-wrapper">
+                <div class="header-container">
+                    <span class="title-style">{{ $t('sidebar_item_settings') }}</span>
+                </div>
                 <div class="nav-wrapper">
                     <NavigationLinks
                         class="settings-tabs-container"

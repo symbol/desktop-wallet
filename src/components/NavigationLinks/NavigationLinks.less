@@ -1,11 +1,9 @@
 @import '../../views/resources/css/variables.less';
 
 .vertical {
-    border-right: 2px solid @grayLight;
-    padding-top: 0.2rem;
     .symbol-tab-nav {
         height: 0.75rem;
-        display: table;
+        display:table;
         width: 100.5%;
 
         .nav-item {
@@ -14,28 +12,19 @@
             font-weight: 400;
             color: @primary;
             cursor: pointer;
-            display: table-cell;
-            vertical-align: middle;
-        }
-    }
-    span {
-        display: block;
-    }
-    .nav-item {
-        padding-bottom: 0.35rem;
-        font-size: @normalFont;
-        font-weight: 400;
-        color: @tipFontColor;
-        cursor: pointer;
+            display:table-cell;
+            vertical-align:middle;
 
-        &.active-item {
-            color: @primary;
+            &.active-item {
+                color: @primary;
                 font-family: @symbolFontSemiBold;
+            }
         }
         &.active-item {
             background-color: #f2eef8;
         }
     }
+
 }
 
 .horizontal {
@@ -45,6 +34,12 @@
     justify-items: start;
     justify-content: start;
     background-color: transparent;
+
+    .empty {
+        display: flex;
+        height: 100%;
+        width: 100%;
+    }
 
     .nav-item {
         font-size: 14px;
@@ -64,7 +59,7 @@
             display: inline-block;
         }
     }
-    .nav-item:not(:first-child) {
+    .border {
         border-left: 2px solid @primary;
     }
 
