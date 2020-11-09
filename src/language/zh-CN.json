@@ -678,6 +678,7 @@
     "table_header_target_id": "目标ID",
     "table_header_target_type": "目标类型",
     "table_header_transferable": "可传输性",
+    "target_account_invalid_name": "目标账户",
     "terms_and_conditions": "条款和条件",
     "the_backup_is_wrong": "记助词一旦备份错了，你的资产可能不能被恢复，请谨慎确认记助词的单词和列表顺序。",
     "the_mnemonic_order_is_correct_and_the_backup_is_successful": "助记词顺序正确，备份成功",

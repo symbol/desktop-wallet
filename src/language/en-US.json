@@ -677,6 +677,7 @@
     "table_header_target_id": "TargetID",
     "table_header_target_type": "TargetType",
     "table_header_transferable": "Transferable",
+    "target_account_invalid_name": "target account",
     "terms_and_conditions": "Terms and Conditions",
     "the_backup_is_wrong": "Your mnemonic words backup is invalid. Please, carefully select the words in the correct order.",
     "the_mnemonic_order_is_correct_and_the_backup_is_successful": "The mnemonic order is correct and the backup is successful.",
