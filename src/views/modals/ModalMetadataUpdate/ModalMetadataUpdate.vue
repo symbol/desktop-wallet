@@ -9,8 +9,8 @@
         >
             <FormMetadataCreation
                 :type="type"
-                @on-create="saveMetadata" />
-
+                @on-create="saveMetadata"
+                @on-confirmation-success="show=false" />
         </Modal>
     </div>
 </template>

@@ -21,43 +21,66 @@
                 </FormRow>
                 <FormRow>
                     <template v-slot:label> {{ $t('form_label_target_account') }}: </template>
-                    <template v-slot:inputs>
-                        <div class="input-container">
-                            <input
-                                class="input-size input-style"
-                                autocomplete="false"
-                                v-model="formItems.targetAccount"
-                                :placeholder="$t('form_label_target_account_hint')"
-                                type="text"
-                            />
-                        </div>
+                    <template v-slot:inputs>                        
+                        <ValidationProvider
+                            v-slot="{ errors }"
+                            vid="targetAccount"
+                            mode="lazy"
+                            :name="$t('target_account_invalid_name')"
+                            :rules="`required|${validationRules.addressOrPublicKey}`"
+                            tag="div"
+                            class="row-metadata-input input-container"
+                        >
+                            <ErrorTooltip :errors="errors">
+                                <input
+                                    class="input-size input-style"
+                                    v-model="formItems.targetAccount"
+                                    :placeholder="$t('form_label_target_account_hint')"
+                                    type="text"
+                                />
+                            </ErrorTooltip>
+                        </ValidationProvider>
                     </template>
                 </FormRow>
-                <FormRow v-if="type !== 0">
+                <FormRow v-if="type === MetadataType.Mosaic">
                     <template v-slot:label> {{ $t(targetLabel) }}: </template>
                     <template v-slot:inputs>
-                        <div class="select-container">
-                            <Select
-                                v-model="formItems.targetId"
-                                :placeholder="$t('select')"
-                                class="select-size select-style"
-                            >
-                                <Option v-for="(targetId, index) in ownedTargetHexIds" :key="index" :value="targetId">
-                                    {{ targetId }}
-                                </Option>
-                            </Select>
-                        </div>
+                        <MosaicSelector
+                            v-model="formItems.targetId"
+                            :mosaic-hex-ids="ownedTargetHexIds"
+                            default-mosaic="firstInList"
+                        />
                     </template>
                 </FormRow>
+                <div v-if="type === MetadataType.Namespace">
+                    <NamespaceSelector
+                        v-model="formItems.targetId"
+                        :namespaces="ownedTargetHexIds"
+                        :disable-linked="false"
+                        label="targetLabel"
+                    />
+                </div>
                 <FormRow>
                     <template v-slot:label> {{ $t('form_label_scoped_metadata_key') }}: </template>
                     <template v-slot:inputs>
-                        <AutoComplete
-                            class="auto-complete-size auto-complete-style"
-                            v-model="formItems.scopedKey"
-                            :placeholder="$t('form_label_scoped_metadata_key_hint')"
-                            :data="cashedScopedKeys"
-                        />
+                        <ValidationProvider
+                            v-slot="{ errors }"
+                            vid="scopedKey"
+                            mode="lazy"
+                            :name="$t('form_label_scoped_metadata_key')"
+                            :rules="'required'"
+                            tag="div"
+                            class="autocomplete-container"
+                        >
+                            <ErrorTooltip :errors="errors">
+                                <AutoComplete
+                                    class="auto-complete-size auto-complete-style"
+                                    v-model="formItems.scopedKey"
+                                    :placeholder="$t('form_label_scoped_metadata_key_hint')"
+                                    :data="cashedScopedKeys"
+                                />
+                            </ErrorTooltip>
+                        </ValidationProvider>
                     </template>
                 </FormRow>
                 <FormRow>
@@ -68,7 +91,7 @@
                             vid="value"
                             mode="lazy"
                             :name="$t('form_label_value')"
-                            :rules="`required`"
+                            :rules="'required'"
                             tag="div"
                             class="row-metadata-input value-container"
                         >
@@ -82,45 +105,20 @@
                         </ValidationProvider>
                     </template>
                 </FormRow>
-                <FormRow>
-                    <template v-slot:label> {{ $t('form_label_max_fee') }}: </template>
-                    <template v-slot:inputs>
-                        <MaxFeeSelector v-model="formItems.maxFee" />
-                    </template>
-                </FormRow>
-                <FormRow>
-                    <template v-slot:label> {{ $t('form_label_password') }}: </template>
-                    <template v-slot:inputs>
-                        <ValidationProvider
-                            v-slot="{ errors }"
-                            vid="password"
-                            mode="lazy"
-                            :name="$t('password')"
-                            :rules="validationRules.profilePassword"
-                            tag="div"
-                            class="select-container"
-                        >
-                            <ErrorTooltip :errors="errors">
-                                <input
-                                    v-model="formItems.password"
-                                    class="input-size input-style"
-                                    :placeholder="$t('form_label_password_hint')"
-                                    autocomplete="new-password"
-                                    type="password"
-                                />
-                            </ErrorTooltip>
-                            <button
-                                class="button-style fat-button inverted-button right-side-button"
-                                type="submit"
-                                @click="handleSubmit(onSubmit)"
-                            >
-                                {{ $t('confirm') }}
-                            </button>
-                        </ValidationProvider>
-                    </template>
-                </FormRow>
+                <MaxFeeAndSubmit
+                    v-model="formItems.maxFee"
+                    @button-clicked="handleSubmit(onSubmit)"
+                />
             </form>
         </ValidationObserver>
+        <ModalTransactionConfirmation
+            v-if="hasConfirmationModal"
+            :command="command"
+            :visible="hasConfirmationModal"
+            @success="onConfirmationSuccess"
+            @error="onConfirmationError"
+            @close="onConfirmationCancel"
+        />
     </div>
 </template>
 

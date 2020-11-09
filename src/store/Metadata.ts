@@ -62,7 +62,7 @@ export default {
             Vue.set(
                 state,
                 'ownedMetadatas',
-                uniqueMetadatas.filter((n) => n.sourceAddress.plain() === currentSignerAddress.plain()),
+                uniqueMetadatas.filter((n) => n.sourceAddress === currentSignerAddress.plain()),
             );
         },
         isFetchingMetadatas: (state: MetadataState, isFetchingMetadatas: boolean) =>
@@ -102,5 +102,11 @@ export default {
                 })
                 .add(() => commit('isFetchingMetadatas', false));
         },
+
+        async AssignMetadata({ commit, rootGetters }) {
+            const repositoryFactory = rootGetters['network/repositoryFactory'];
+            
+            
+        }
     },
 };

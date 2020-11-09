@@ -13,18 +13,32 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { MetadataType } from 'symbol-sdk';
+import {
+    MetadataType,
+    AccountMetadataTransaction,
+    PublicAccount,
+    Deadline,
+    KeyGenerator,
+    UInt64,
+    MosaicMetadataTransaction,
+    NamespaceMetadataTransaction,
+    Address,
+    Transaction,
+    MosaicId,
+    NamespaceId,
+} from 'symbol-sdk';
+import { Component, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
 // @ts-ignore
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
-
+import { AddressValidator } from '@/core/validation/validators';
+import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
 import { ScopedMetadataKeysHelpers } from '@/core/utils/ScopedMetadataKeysHelpers';
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { AccountModel } from '@/core/database/entities/AccountModel';
-
+import { Signer } from '@/store/Account';
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 // @ts-ignore
@@ -32,7 +46,15 @@ import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
+import NamespaceSelector from '@/components/NamespaceSelector/NamespaceSelector.vue';
+// @ts-ignore
+import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue';
+// @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
+// @ts-ignore
+import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
+// @ts-ignore
+import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
 
 @Component({
     components: {
@@ -40,18 +62,21 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
         ValidationProvider,
         ErrorTooltip,
         MaxFeeSelector,
+        MosaicSelector,
+        NamespaceSelector,
+        MaxFeeAndSubmit,
         FormRow,
+        ModalTransactionConfirmation,
     },
     computed: {
         ...mapGetters({
-            currentAccount: 'account/currentAccount',
             knownAccounts: 'account/knownAccounts',            namespaces: 'namespace/ownedNamespaces',
             ownedMosaics: 'mosaic/ownedMosaics',
             ownedNamespaces: 'namespace/ownedNamespaces',
         })
     },
 })
-export class FormMetadataCreationTs extends Vue {
+export class FormMetadataCreationTs extends FormTransactionBase {
 
     /**
      * Metadata type
@@ -64,16 +89,27 @@ export class FormMetadataCreationTs extends Vue {
     protected type: MetadataType;
 
     /**
+     * Metadata type
+     */
+    protected MetadataType = MetadataType;
+
+    /**
+     * Currently active signer
+     */
+    public selectedSigner: Signer;
+
+    /**
      * Form fields
      * @var {Object}
      */
     public formItems = {
+        formType: MetadataType.Account,
         accountAddress: '',
         targetAccount: '',
         targetId: '',
         scopedKey: '',
         metadataValue: '',
-        maxFee: '',
+        maxFee: 0,
         password: ''
     }
     
@@ -99,13 +135,6 @@ export class FormMetadataCreationTs extends Vue {
     protected ownedNamespaces: NamespaceModel[];
 
     /**
-     * Current account
-     * @protected
-     * @type {AccountModel}
-     */
-    protected currentAccount: AccountModel;
-
-    /**
      * Mosaic check
      * @return {boolean}
      */
@@ -118,10 +147,15 @@ export class FormMetadataCreationTs extends Vue {
      * @return {void}
      */
     protected resetForm() {
-        this.formItems.accountAddress = this.currentAccount.address;
+        this.formItems.accountAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
+
+        // - set default form values
         this.formItems.metadataValue = '';
         this.formItems.scopedKey = '';
         this.formItems.metadataValue = '';
+
+        // - maxFee must be absolute
+        this.formItems.maxFee = this.defaultFee;
     }
 
     /**
@@ -198,21 +232,68 @@ export class FormMetadataCreationTs extends Vue {
     public validationRules = ValidationRuleset;
 
     /**
-     * Persist created metadata
-     * @return {void}
+     * Getter for metadata transactions that will be staged
+     * @see {FormTransactionBase}
+     * @return {MetadataTransaction}
      */
-    protected onSubmit() : void {
-        ScopedMetadataKeysHelpers.storeKey(this.formItems.scopedKey);
+    protected getTransactions(): Transaction[] {
+        let targetAddress: Address;
+        if (AddressValidator.validate(this.formItems.targetAccount)) {
+            targetAddress = Address.createFromRawAddress(this.formItems.targetAccount);
+        } else {
+            const targetPublicAccount = PublicAccount.createFromPublicKey(this.formItems.targetAccount, this.networkType);
+            targetAddress = targetPublicAccount.address;
+        }
+        const deadline = Deadline.create(this.epochAdjustment);
+        const scopedMetadataKey = KeyGenerator.generateUInt64Key(this.formItems.scopedKey);
+        const maxFee = UInt64.fromUint(this.formItems.maxFee);
 
         switch(this.type) {
             case MetadataType.Account:
-                break;
+                return [
+                    AccountMetadataTransaction.create(
+                        deadline,
+                        targetAddress,
+                        scopedMetadataKey,
+                        this.formItems.metadataValue.length,
+                        this.formItems.metadataValue,
+                        this.networkType,
+                        maxFee,
+                    )
+                ];
 
             case MetadataType.Mosaic:
-                break;
+                const mosaicId = new MosaicId(this.formItems.targetId);
+                return [
+                    MosaicMetadataTransaction.create(
+                        deadline,
+                        targetAddress,
+                        scopedMetadataKey,
+                        mosaicId,
+                        this.formItems.metadataValue.length,
+                        this.formItems.metadataValue,
+                        this.networkType,
+                        maxFee,
+                    )
+                ];
 
             case MetadataType.Namespace:
-                break;
+                const namespaceId = new NamespaceId(this.formItems.targetId);
+                return [
+                    NamespaceMetadataTransaction.create(
+                        deadline,
+                        targetAddress,
+                        scopedMetadataKey,
+                        namespaceId,
+                        this.formItems.metadataValue.length,
+                        this.formItems.metadataValue,
+                        this.networkType,
+                        maxFee,
+                    )
+                ];
+
+            default:
+                return [];
         }
     }
 

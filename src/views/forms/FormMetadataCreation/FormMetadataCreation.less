@@ -22,14 +22,19 @@
         .inputs-container {
             height: auto;
             position: relative;
-            .auto-complete-size {
-                width: 100%;
-                .ivu-auto-complete {
-                    left: 0.12rem !important;
-                    .auto-complete-style {
-                        .ivu-input {
-                            height: -webkit-fill-available;
-                        }
+            padding-left: 0;
+            .autocomplete-container {
+                .auto-complete-size {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    div {
+                        width: 100%;
+                    }
+                }
+                .auto-complete-style {
+                    .ivu-input {
+                        height: initial;
                     }
                 }
             }
