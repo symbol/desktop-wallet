@@ -1,12 +1,17 @@
 <template>
     <div>
         <Modal v-model="show" class="settings-modal-container" :footer-hide="true">
-            <NavigationLinks
-                class="settings-tabs-container"
-                :items="availableTabs"
-                :current-item-index="currentTabIndex"
-                @selected="onTabChange"
-            />
+            <div class="header-container">
+                <span class="title-style">{{ $t('sidebar_item_settings') }}</span>
+                <div class="nav-wrapper">
+                    <NavigationLinks
+                        class="settings-tabs-container"
+                        :items="availableTabs"
+                        :current-item-index="currentTabIndex"
+                        @selected="onTabChange"
+                    />
+                </div>
+            </div>
 
             <div v-if="knownTabs[currentTabIndex] === 'GENERAL' && !!currentAccount">
                 <FormGeneralSettings />
