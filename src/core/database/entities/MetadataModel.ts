@@ -26,20 +26,20 @@ import { Metadata, MetadataType, Address, UInt64, MosaicId, NamespaceId } from '
  */
 export class MetadataModel {
     public readonly metadataId: string;
-    public readonly sourceAddress: Address;
-    public readonly targetAddress: Address;
-    public readonly scopedMetadataKey: UInt64;
+    public readonly sourceAddress: string;
+    public readonly targetAddress: string;
+    public readonly scopedMetadataKey: string;
     public readonly metadataType: MetadataType;
     public readonly value: string;
-    public readonly targetId?: MosaicId | NamespaceId | undefined;
+    public readonly targetId?: string | undefined;
 
     constructor(metadata: Metadata) {
         this.metadataId = metadata.id;
-        this.sourceAddress = metadata.metadataEntry.sourceAddress;
+        this.sourceAddress = metadata.metadataEntry.sourceAddress.plain();
         this.metadataType = metadata.metadataEntry.metadataType;
-        this.scopedMetadataKey = metadata.metadataEntry.scopedMetadataKey;
-        this.targetAddress = metadata.metadataEntry.targetAddress;
-        this.targetId = metadata.metadataEntry.targetId;
+        this.scopedMetadataKey = metadata.metadataEntry.scopedMetadataKey.toHex();
+        this.targetAddress = metadata.metadataEntry.targetAddress.plain();
+        this.targetId = metadata.metadataEntry.targetId.toHex();
         this.value = metadata.metadataEntry.value;
     }
 }
