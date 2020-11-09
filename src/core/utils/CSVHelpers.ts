@@ -92,7 +92,6 @@ export class CSVHelpers {
         data.forEach((transaction) => {
             let result = {};
             if (transaction['type'] == TransactionType.AGGREGATE_BONDED || transaction['type'] == TransactionType.AGGREGATE_COMPLETE) {
-                console.log(transaction);
                 result = this.constructAggregateTransactionsObject(transaction);
             } else {
                 result = this.constructTransactionsObject(transaction);
