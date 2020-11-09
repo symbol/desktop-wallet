@@ -13,11 +13,18 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { MetadataModel } from '@/core/database/entities/MetadataModel';
-import { Address, MetadataType, RepositoryFactory } from 'symbol-sdk';
+import { 
+    Address, 
+    MetadataType, 
+    RepositoryFactory, 
+    RepositoryFactoryHttp,
+    AccountMetadataTransaction, 
+    TransactionService,
+} from 'symbol-sdk';
 import { Observable, of } from 'rxjs';
-import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { map, tap } from 'rxjs/operators';
+import { MetadataModel } from '@/core/database/entities/MetadataModel';
+import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { MetadataModelStorage } from '@/core/database/storage/MetadataModelStorage';
 
 /**
@@ -53,9 +60,10 @@ export class MetadataService {
 
         const metadataModelList = this.metadataModelStorage.get(generationHash) || [];
         const metadataRepository = repositoryFactory.createMetadataRepository();
+        const searchCriteria = {targetAddress: address, metadataType: metadataType};
 
         return metadataRepository
-            .search({ sourceAddress: address })
+            .search(searchCriteria)
             .pipe(map((metadatasPage) => metadatasPage.data.map((metadata) => new MetadataModel(metadata))))
             .pipe(
                 tap((d: MetadataModel[]) => this.metadataModelStorage.set(generationHash, d)),
