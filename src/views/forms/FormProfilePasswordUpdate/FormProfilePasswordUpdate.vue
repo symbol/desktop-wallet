@@ -121,5 +121,4 @@ export default class FormProfilePasswordUpdate extends FormProfilePasswordUpdate
         padding-right: 0.8rem;
     }
 }
-
 </style>

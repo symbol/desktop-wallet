@@ -34,5 +34,3 @@ export default class Finalize extends FinalizeTs {}
 <style lang="less" scoped>
 @import './Finalize.less';
 </style>
-
-

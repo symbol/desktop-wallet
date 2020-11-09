@@ -66,9 +66,7 @@
 
             <!-- ADDED COSIGNATORIES -->
             <FormRow v-if="modifiable && addModifications && addModifications.length">
-                <template v-slot:label>
-                    {{ $t('form_label_new_cosignatories') }}:
-                </template>
+                <template v-slot:label> {{ $t('form_label_new_cosignatories') }}: </template>
                 <template v-slot:inputs>
                     <div
                         v-for="({ address }, index) in addModifications"

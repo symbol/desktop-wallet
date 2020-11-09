@@ -32,10 +32,10 @@ export default class ExplorerUrlSetter extends ExplorerUrlSetterTs {}
 @import '../../views/resources/css/variables.less';
 
 /deep/ .ivu-select-dropdown {
-    margin:0 !important;
+    margin: 0 !important;
     margin-top: -0.5% !important;
     margin-left: -0.1% !important;
-    padding:0 !important;
+    padding: 0 !important;
     background: @grayLightest;
 }
 
@@ -50,8 +50,7 @@ export default class ExplorerUrlSetter extends ExplorerUrlSetterTs {}
     }
 }
 
-/deep/ .ivu-select-item-focus{
+/deep/ .ivu-select-item-focus {
     color: @primary;
 }
-
 </style>
