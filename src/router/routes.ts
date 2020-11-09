@@ -344,7 +344,7 @@ export const routes: AppRoute[] = [
             {
                 path: '/harvesting', //TODO: Harvesting
                 name: 'harvesting',
-                redirect: '/harvestingNormal',
+                redirect: '/delegatedHarvesting',
                 meta: {
                     protected: true,
                     clickable: true,
@@ -355,18 +355,11 @@ export const routes: AppRoute[] = [
                 component: () => import('@/views/pages/harvesting/HarvestingDashboardPage/HarvestingDashboardPage.vue'),
                 children: [
                     {
-                        path: '/harvestingNormal',
-                        name: 'harvesting.normal',
-                        meta: { protected: true, title: 'page_title_harvesting' },
-                        // @ts-ignore
-                        component: () => import('@/views/pages/harvesting/HarvestingPage/HarvestingPage.vue'),
-                    },
-                    {
                         path: '/delegatedHarvesting',
                         name: 'harvesting.delegated',
                         meta: { protected: true, title: 'page_title_delegated_harvesting' },
                         // @ts-ignore
-                        component: () => import('@/views/pages/harvesting/DelegatedHarvestingPage/DelegatedHarvestingPage.vue'),
+                        component: () => import('@/views/pages/harvesting/HarvestingPage/HarvestingPage.vue'),
                     },
                 ],
             },

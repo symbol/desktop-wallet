@@ -15,15 +15,17 @@
  */
 import {
     Address,
-    TransferTransaction,
     UInt64,
-    PersistentHarvestingDelegationMessage,
     AccountKeyLinkTransaction,
     LinkAction,
     Transaction,
-    PublicAccount,
+    VrfKeyLinkTransaction,
+    Account,
+    NodeKeyLinkTransaction,
+    PersistentDelegationRequestTransaction,
+    AccountInfo,
 } from 'symbol-sdk';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
 // internal dependencies
@@ -39,11 +41,20 @@ import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirm
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
 // @ts-ignore
-import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
+import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
 // @ts-ignore
 import NetworkNodeSelector from '@/components/NetworkNodeSelector/NetworkNodeSelector.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
+
+import { feesConfig } from '@/config';
+import { HarvestingStatus } from '@/store/Harvesting';
+
+export enum HarvestingAction {
+    START = 1,
+    STOP = 2,
+    SWAP = 3,
+}
 
 @Component({
     components: {
@@ -51,20 +62,21 @@ import FormRow from '@/components/FormRow/FormRow.vue';
         ModalTransactionConfirmation,
         SignerSelector,
         ValidationObserver,
-        MaxFeeSelector,
+        MaxFeeAndSubmit,
         FormRow,
         NetworkNodeSelector,
     },
     computed: {
         ...mapGetters({
             currentHeight: 'network/currentHeight',
+            currentSignerAccountInfo: 'account/currentSignerAccountInfo',
+            harvestingStatus: 'harvesting/status',
         }),
     },
 })
 export class FormPersistentDelegationRequestTransactionTs extends FormTransactionBase {
-    @Prop({ required: true }) remoteAccount: PublicAccount;
     @Prop({ default: null }) signerAddress: string;
-    @Prop({ default: true }) withLink: boolean;
+    //@Prop({ default: true }) withLink: boolean;
 
     /**
      * Formatters helpers
@@ -76,10 +88,20 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      */
     public formItems = {
         nodePublicKey: '',
-        vrfPublicKey: '',
         signerAddress: '',
-        maxFee: 0,
     };
+
+    private newVrfKeyAccount: Account;
+    private newRemoteAccount: Account;
+
+    /**
+     * Current signer account info
+     */
+    private currentSignerAccountInfo: AccountInfo;
+
+    private action = HarvestingAction.START;
+
+    private harvestingStatus: HarvestingStatus;
 
     /**
      * Reset the form with properties
@@ -87,12 +109,21 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      */
     protected resetForm() {
         // - set default form values
-        this.formItems.signerAddress =
-            this.signerAddress || (this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address);
-        this.formItems.nodePublicKey = '';
-        this.formItems.vrfPublicKey = '';
+        this.action = HarvestingAction.START;
         // - maxFee must be absolute
-        this.formItems.maxFee = this.defaultFee;
+        this.newVrfKeyAccount = Account.generateNewAccount(this.networkType);
+        this.newRemoteAccount = Account.generateNewAccount(this.networkType);
+    }
+
+    @Watch('currentSignerAccountInfo', { immediate: true })
+    private currentSignerWatch() {
+        this.formItems.signerAddress = this.signerAddress || this.currentSignerAccountInfo?.address.plain();
+
+        if (this.isNodeKeyLinked) {
+            this.formItems.nodePublicKey = this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey;
+        } else {
+            this.formItems.nodePublicKey = '';
+        }
     }
 
     /**
@@ -101,35 +132,100 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * @return {TransferTransaction[]}
      */
     protected getTransactions(): Transaction[] {
-        const maxFee = UInt64.fromUint(this.formItems.maxFee);
-        const message = PersistentHarvestingDelegationMessage.create(
-            this.remoteAccount.publicKey,
-            this.formItems.vrfPublicKey,
-            this.formItems.nodePublicKey,
-            this.networkType,
-        );
+        const maxFee = UInt64.fromUint(feesConfig.highest); // fixed to the Highest, txs must get confirmed
+        const txs: Transaction[] = [];
 
-        const linkTx = AccountKeyLinkTransaction.create(
-            this.createDeadline(),
-            this.remoteAccount.publicKey,
-            LinkAction.Link,
-            this.networkType,
-            maxFee,
-        );
-        const transferTx = TransferTransaction.create(
-            this.createDeadline(),
-            this.instantiatedRecipient,
-            [],
-            message,
-            this.networkType,
-            maxFee,
-        );
+        /*
+         START => link all (new keys)
+         STOP =>  unlink all (linked keys)
+         SWAP =>  unlink(linked) + link all (new keys)
+         */
 
-        if (this.withLink === true) {
-            return [linkTx, transferTx];
+        if (this.isAccountKeyLinked) {
+            const accountKeyUnLinkTx = this.createAccountKeyLinkTx(
+                this.currentSignerAccountInfo.supplementalPublicKeys.linked.publicKey,
+                LinkAction.Unlink,
+                maxFee,
+            );
+            txs.push(accountKeyUnLinkTx);
         }
 
-        return [transferTx];
+        if (this.isVrfKeyLinked) {
+            const vrfKeyUnLinkTx = this.createVrfKeyLinkTx(
+                this.currentSignerAccountInfo.supplementalPublicKeys.vrf.publicKey,
+                LinkAction.Unlink,
+                maxFee,
+            );
+            txs.push(vrfKeyUnLinkTx);
+        }
+
+        if (this.isNodeKeyLinked) {
+            const nodeUnLinkTx = this.createNodeKeyLinkTx(
+                this.currentSignerAccountInfo.supplementalPublicKeys.node.publicKey,
+                LinkAction.Unlink,
+                maxFee,
+            );
+
+            txs.push(nodeUnLinkTx);
+        }
+
+        if (this.action !== HarvestingAction.STOP) {
+            const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
+            const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
+            const nodeLinkTx = this.createNodeKeyLinkTx(this.formItems.nodePublicKey, LinkAction.Link, maxFee);
+
+            txs.push(accountKeyLinkTx, vrfKeyLinkTx, nodeLinkTx);
+
+            const persistentDelegationReqTx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
+                this.createDeadline(),
+                this.newRemoteAccount.privateKey,
+                this.newVrfKeyAccount.privateKey,
+                this.formItems.nodePublicKey,
+                this.networkType,
+                maxFee,
+            );
+            txs.push(persistentDelegationReqTx);
+        }
+
+        return txs;
+    }
+
+    private createAccountKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): AccountKeyLinkTransaction {
+        return AccountKeyLinkTransaction.create(this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
+    }
+    private createVrfKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): VrfKeyLinkTransaction {
+        return VrfKeyLinkTransaction.create(this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
+    }
+    private createNodeKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): NodeKeyLinkTransaction {
+        return NodeKeyLinkTransaction.create(this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
+    }
+
+    /**
+     * Whether all keys are linked
+     */
+    private get allKeysLinked(): boolean {
+        return this.isAccountKeyLinked && this.isVrfKeyLinked && this.isNodeKeyLinked;
+    }
+
+    /**
+     * Whether account key is linked
+     */
+    private get isAccountKeyLinked(): boolean {
+        return !!this.currentSignerAccountInfo?.supplementalPublicKeys.linked;
+    }
+
+    /**
+     * Whether vrf key is linked
+     */
+    private get isVrfKeyLinked(): boolean {
+        return !!this.currentSignerAccountInfo?.supplementalPublicKeys.vrf;
+    }
+
+    /**
+     * Whether node key is linked
+     */
+    private get isNodeKeyLinked(): boolean {
+        return !!this.currentSignerAccountInfo?.supplementalPublicKeys.node;
     }
 
     /**
@@ -151,14 +247,34 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return Address.createFromPublicKey(this.formItems.nodePublicKey, this.networkType);
     }
 
+    public onStart() {
+        this.action = HarvestingAction.START;
+        this.onSubmit();
+    }
+
+    public onStop() {
+        this.action = HarvestingAction.STOP;
+        this.onSubmit();
+    }
+
+    public onSwap() {
+        this.action = HarvestingAction.SWAP;
+        this.onSubmit();
+    }
+
+    public get swapDisabled(): boolean {
+        return this.formItems.nodePublicKey === this.currentSignerAccountInfo.supplementalPublicKeys?.node?.publicKey;
+    }
+
     public onSubmit() {
-        if (!this.formItems.nodePublicKey.length) {
+        if (!this.allKeysLinked && !this.formItems.nodePublicKey.length) {
             this.$refs.observer.setErrors({ endpoint: this.$t('invalid_node').toString() });
             return;
         }
 
         // - open signature modal
         this.command = this.createTransactionCommand();
+        this.onShowConfirmationModal();
         return this.command;
     }
 }

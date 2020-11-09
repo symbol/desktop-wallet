@@ -117,7 +117,7 @@
         "symbol-hd-wallets": "0.14.0-alpha-202010231206",
         "symbol-paper-wallets": "^1.0.2",
         "symbol-qr-library": "0.13.1-alpha-202010241730",
-        "symbol-sdk": "0.21.1-alpha-202010272018",
+        "symbol-sdk": "0.21.1-alpha-202011091331",
         "symbol-uri-scheme": "0.5.2-alpha-202010291746"
     },
     "resolutions": {
