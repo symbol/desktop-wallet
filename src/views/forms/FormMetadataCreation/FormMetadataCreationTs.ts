@@ -31,12 +31,13 @@ import { mapGetters } from 'vuex';
 
 // @ts-ignore
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
-import { AddressValidator, PublicKeyValidator } from '@/core/validation/validators';
+import { AddressValidator } from '@/core/validation/validators';
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
 import { ScopedMetadataKeysHelpers } from '@/core/utils/ScopedMetadataKeysHelpers';
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { AccountModel } from '@/core/database/entities/AccountModel';
+import { TransactionCommandMode } from '@/services/TransactionCommand';
 import { Signer } from '@/store/Account';
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
@@ -56,7 +57,6 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
-
 @Component({
     components: {
         ValidationObserver,
@@ -233,6 +233,15 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      * @var {ValidationRuleset}
      */
     public validationRules = ValidationRuleset;
+    
+    /**
+     * Override
+     * @see {FormTransactionBase}
+     * @param transactions 
+     */
+    protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
+        return TransactionCommandMode.AGGREGATE;
+    }
 
     /**
      * Getter for metadata transactions that will be staged
@@ -249,7 +258,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         }        
         const scopedMetadataKey = KeyGenerator.generateUInt64Key(this.formItems.scopedKey);
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
-
+        
         switch(this.type) {
             case MetadataType.Account:
                 return [
@@ -276,7 +285,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
                         this.formItems.metadataValue,
                         this.networkType,
                         maxFee,
-                    )
+                    ),
                 ];
 
             case MetadataType.Namespace:
@@ -291,7 +300,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
                         this.formItems.metadataValue,
                         this.networkType,
                         maxFee,
-                    )
+                    ),
                 ];
 
             default:

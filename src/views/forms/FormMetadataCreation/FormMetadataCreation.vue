@@ -3,7 +3,14 @@
         <div class="modal-title">{{ $t(modalTitle) }}</div>
         <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
             <form autocomplete="off" onsubmit="event.preventDefault()" class="form-line-container mt-3">
-                <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
+                <FormRow>
+                    <template v-slot:label> {{ $t('form_label_by_account') }}: </template>
+                    <template v-slot:inputs>
+                        <div class="select-container">
+                            <SignerSelector v-model="formItems.signerAddress" :signers="signers" :no-label="true" @input="onChangeSigner" />
+                        </div>
+                    </template>
+                </FormRow>
                 <FormRow>
                     <template v-slot:label> {{ $t('form_label_target_account') }}: </template>
                     <template v-slot:inputs>                        
