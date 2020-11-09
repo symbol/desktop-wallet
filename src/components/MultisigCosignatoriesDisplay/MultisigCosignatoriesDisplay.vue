@@ -28,10 +28,10 @@
                         ]"
                     >
                         <div class="cosignatory-address-container">
-                            <span>{{ address.pretty() }}</span>
+                            <span v-if="address">{{ address.pretty() }}</span>
                         </div>
                         <Icon
-                            v-if="modifiable && removeModifications && removeModifications.length === 0"
+                            v-if="address && modifiable && removeModifications && removeModifications.length === 0"
                             type="md-trash"
                             size="21"
                             class="icon-button"
@@ -83,7 +83,7 @@
                         ]"
                     >
                         <div class="cosignatory-address-container">
-                            <span>{{ address.pretty() }}</span>
+                            <span v-if="address">{{ address.pretty() }}</span>
                         </div>
                         <img
                             src="@/views/resources/img/icons/bin.svg"

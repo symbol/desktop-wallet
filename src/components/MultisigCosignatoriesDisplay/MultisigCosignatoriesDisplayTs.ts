@@ -43,7 +43,10 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
     @Prop({ default: null }) multisig: MultisigAccountInfo;
     @Prop({ default: false }) modifiable: boolean;
     @Prop({ default: {} }) cosignatoryModifications: Record<string, Modification>;
-
+    @Prop({
+        default: '',
+    })
+    currentAddress: string;
     /**
      * Whether the add cosignatory form input is visible
      */
@@ -102,9 +105,12 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
         if (isCosignatory || this.cosignatoryModifications[cosigAddress.plain()]) {
             this.$store.dispatch('notification/ADD_WARNING', 'warning_already_a_cosignatory');
             return;
+        } else if (cosigAddress.plain() === this.currentAddress) {
+            this.$store.dispatch('notification/ADD_WARNING', 'current_cosigner_matches_current_account');
+            return;
+        } else {
+            this.$emit('add', cosigAddress);
         }
-
-        this.$emit('add', cosigAddress);
     }
 
     /**
