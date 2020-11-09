@@ -36,9 +36,12 @@ export class ScopedMetadataKeysHelpers {
     }
 
     public static storeKey = (key) => {
-        const keys = ScopedMetadataKeysHelpers.loadScopedMetadataKeys();
+        let keys = ScopedMetadataKeysHelpers.loadScopedMetadataKeys();
         if (keys.length >= MAX_STORE_LENGTH) {
             keys.pop();
+        } else if (keys.includes(key)) {
+            keys = keys.filter(item => item !== key);
+            keys.unshift(key);
         } else {
             keys.unshift(key);
         }
