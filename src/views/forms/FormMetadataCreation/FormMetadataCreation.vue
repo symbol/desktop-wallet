@@ -3,22 +3,7 @@
         <div class="modal-title">{{ $t(modalTitle) }}</div>
         <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
             <form autocomplete="off" onsubmit="event.preventDefault()" class="form-line-container mt-3">
-                <FormRow>
-                    <template v-slot:label> {{ $t('form_label_by_account') }}: </template>
-                    <template v-slot:inputs>
-                        <div class="select-container">
-                            <Select
-                                v-model="formItems.accountAddress"
-                                :placeholder="$t('select_accounts')"
-                                class="select-size select-style"
-                            >
-                                <Option v-for="(account, index) in knownAccounts" :key="index" :value="account.address">
-                                    {{ account.address }}
-                                </Option>
-                            </Select>
-                        </div>
-                    </template>
-                </FormRow>
+                <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
                 <FormRow>
                     <template v-slot:label> {{ $t('form_label_target_account') }}: </template>
                     <template v-slot:inputs>                        

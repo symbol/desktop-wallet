@@ -17,7 +17,6 @@ import {
     MetadataType,
     AccountMetadataTransaction,
     PublicAccount,
-    Deadline,
     KeyGenerator,
     UInt64,
     MosaicMetadataTransaction,
@@ -32,7 +31,7 @@ import { mapGetters } from 'vuex';
 
 // @ts-ignore
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
-import { AddressValidator } from '@/core/validation/validators';
+import { AddressValidator, PublicKeyValidator } from '@/core/validation/validators';
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
 import { ScopedMetadataKeysHelpers } from '@/core/utils/ScopedMetadataKeysHelpers';
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
@@ -55,6 +54,8 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
+// @ts-ignore
+import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
 
 @Component({
     components: {
@@ -67,10 +68,12 @@ import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirm
         MaxFeeAndSubmit,
         FormRow,
         ModalTransactionConfirmation,
+        SignerSelector,
     },
     computed: {
         ...mapGetters({
-            knownAccounts: 'account/knownAccounts',            namespaces: 'namespace/ownedNamespaces',
+            knownAccounts: 'account/knownAccounts',            
+            namespaces: 'namespace/ownedNamespaces',
             ownedMosaics: 'mosaic/ownedMosaics',
             ownedNamespaces: 'namespace/ownedNamespaces',
         })
@@ -104,7 +107,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      */
     public formItems = {
         formType: MetadataType.Account,
-        accountAddress: '',
+        signerAddress: '',
         targetAccount: '',
         targetId: '',
         scopedKey: '',
@@ -147,7 +150,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      * @return {void}
      */
     protected resetForm() {
-        this.formItems.accountAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
+        this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
 
         // - set default form values
         this.formItems.metadataValue = '';
@@ -243,8 +246,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         } else {
             const targetPublicAccount = PublicAccount.createFromPublicKey(this.formItems.targetAccount, this.networkType);
             targetAddress = targetPublicAccount.address;
-        }
-        const deadline = Deadline.create(this.epochAdjustment);
+        }        
         const scopedMetadataKey = KeyGenerator.generateUInt64Key(this.formItems.scopedKey);
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
 
@@ -252,7 +254,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
             case MetadataType.Account:
                 return [
                     AccountMetadataTransaction.create(
-                        deadline,
+                        this.createDeadline(),
                         targetAddress,
                         scopedMetadataKey,
                         this.formItems.metadataValue.length,
@@ -266,7 +268,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
                 const mosaicId = new MosaicId(this.formItems.targetId);
                 return [
                     MosaicMetadataTransaction.create(
-                        deadline,
+                        this.createDeadline(),
                         targetAddress,
                         scopedMetadataKey,
                         mosaicId,
@@ -281,7 +283,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
                 const namespaceId = new NamespaceId(this.formItems.targetId);
                 return [
                     NamespaceMetadataTransaction.create(
-                        deadline,
+                        this.createDeadline(),
                         targetAddress,
                         scopedMetadataKey,
                         namespaceId,
