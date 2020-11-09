@@ -16,11 +16,12 @@
 
                 <FormRow>
                     <template v-slot:label>
-                        <div v-if="multisigOperationType === 'conversion'" style="padding-top: 0.4rem;">
+                        <div v-if="multisigOperationType === 'conversion'" style="padding-top: 0.22rem;">
                             {{ $t('form_label_account_to_be_converted') }}:
                         </div>
-                        <div v-else style="padding-top: 0.4rem;">{{ $t('form_label_multisig_account') }}:</div>
+                        <div v-else style="padding-top: 0.22rem;">{{ $t('form_label_multisig_account') }}:</div>
                     </template>
+
                     <template v-slot:inputs>
                         <SignerSelector v-model="formItems.signerAddress" :signers="signers" :no-label="true" @input="onChangeSigner" />
                     </template>

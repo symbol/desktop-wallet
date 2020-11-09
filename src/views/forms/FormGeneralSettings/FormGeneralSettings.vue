@@ -27,7 +27,7 @@
                         <template v-slot:label> {{ $t('form_label_default_account') }}: </template>
                         <template v-slot:inputs>
                             <div class="inputs-container select-container">
-                                <AccountSelectorField v-model="formItems.defaultAccount" :default-form-style="true" />
+                                <AccountSelectorField v-model="formItems.defaultAccount" :default-form-style="true" :show-icon="false" />
                             </div>
                         </template>
                     </FormRow>
@@ -64,6 +64,8 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
     width: 100%;
     clear: both;
     min-height: 1rem;
+    padding-top: 0.8rem;
+    padding-bottom: 0.4rem;
 }
 
 .form-submit {
@@ -79,7 +81,13 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
 
 /deep/ .form-row {
     .form-row-inner-container {
-        grid-template-columns: 3rem 5rem;
+        grid-template-columns: none !important;
+    }
+    .inputs-container {
+        margin-top: 0.05rem;
+        padding-left: 0.35rem;
+        margin-bottom: 0.1rem;
+        padding-right: 0.85rem;
     }
 }
 </style>
