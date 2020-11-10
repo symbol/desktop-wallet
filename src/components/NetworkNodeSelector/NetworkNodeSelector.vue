@@ -1,14 +1,15 @@
 <template>
     <FormRow class-name="emphasis">
-        <template v-slot:label> {{ $t('Node_URL') }}: </template>
+        <template v-slot:label> {{ $t('node_url') }}: </template>
         <template v-slot:inputs>
             <div class="row-75-25 inputs-container">
                 <AutoComplete
-                    v-model="formItems.nodeUrl"
+                    v-model="formNodeUrl"
                     name="endpoint"
                     :data="customNodeData"
                     class="auto-complete-size auto-complete-style"
                     :placeholder="$t('form_label_network_node_url')"
+                    placement="bottom"
                     @on-select="fetchNodePublicKey"
                     @on-change="handleInput"
                 ></AutoComplete>

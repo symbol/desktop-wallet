@@ -29,7 +29,7 @@
                     <!-- default account flag -->
                     <div v-if="currentAccount && defaultAccount === currentAccount.id" class="detail-row">
                         <div class="account-detail-row">
-                            <span class="label">{{ $t('accounts_flags_default_account') }}</span>
+                            <span class="label">{{ $t('accounts_flags_default_account') }}:</span>
                             <div class="value">
                                 <span>{{ $t('accounts_flags_default_account_explain') }}</span>
                             </div>
@@ -51,7 +51,11 @@
                     </div>
 
                     <div class="graph-row">
-                        <AccountMultisigGraph v-if="currentAccount" :account="currentAccount" :visible="true" />
+                        <AccountMultisigGraph
+                            v-if="currentAccount && currentAccount.isMultisig"
+                            :account="currentAccount"
+                            :visible="currentAccount.isMultisig"
+                        />
                     </div>
                     <!-- TODO : Make a "CosignatoryDisplay" component -->
                     <div class="detail-row">

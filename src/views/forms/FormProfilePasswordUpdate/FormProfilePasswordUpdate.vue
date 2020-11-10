@@ -101,11 +101,24 @@ export default class FormProfilePasswordUpdate extends FormProfilePasswordUpdate
     width: 100%;
     clear: both;
     min-height: 1rem;
-    margin-top: 0.5rem;
+    padding-top: 0.8rem;
+    padding-bottom: 0.4rem;
 }
 .text-right {
     text-align: right;
     padding-top: 5%;
     padding-right: 16%;
+}
+
+/deep/ .form-row {
+    .form-row-inner-container {
+        grid-template-columns: none !important;
+    }
+    .inputs-container {
+        margin-top: 0.05rem;
+        padding-left: 0.35rem;
+        margin-bottom: 0.1rem;
+        padding-right: 0.8rem;
+    }
 }
 </style>

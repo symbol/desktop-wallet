@@ -129,6 +129,9 @@ export default {
         currentAccountAccountInfo: (state: AccountState): AccountInfo => {
             return state.accountsInfo.find(({ publicKey }) => publicKey === state.currentAccount.publicKey);
         },
+        currentSignerAccountInfo: (state: AccountState): AccountInfo => {
+            return state.accountsInfo.find(({ address }) => address.plain() === state.currentSigner.address.plain());
+        },
         multisigAccountsInfo: (state: AccountState) => state.multisigAccountsInfo,
         getSubscriptions: (state: AccountState) => state.subscriptions,
         currentRecipient: (state: AccountState) => state.currentRecipient,
@@ -425,9 +428,8 @@ export default {
             const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise;
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
             const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
-
             // update multisig flag in currentAccount
-            if (currentAccountMultisigInfo && currentAccountMultisigInfo.isMultisig() && currentAccount.isMultisig) {
+            if (currentAccountMultisigInfo && currentAccountMultisigInfo.isMultisig() && !currentAccount.isMultisig) {
                 const accountService = new AccountService();
                 accountService.updateIsMultisig(currentAccount, true);
             }

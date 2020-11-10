@@ -1,12 +1,5 @@
 <template>
-    <div class="account-switch-container">
-        <div class="account-switch-header-container">
-            <div class="account-switch-header-left-container">
-                <h1 class="section-title">
-                    {{ $t('account_management') }}
-                </h1>
-            </div>
-        </div>
+    <div class="account-selector-panel">
         <div v-auto-scroll="'active-background'" class="account-switch-body-container scroll">
             <div
                 v-for="(item, index) in currentAccounts"
@@ -25,30 +18,9 @@
                     <span class="mosaic_value">
                         <span :class="['amount', 'overflow_ellipsis', 'green']">
                             <MosaicAmountDisplay :absolute-amount="balances[item.address]" />
-                            <!-- <AmountDisplay
-                                :value="balances[item.address] ? balances[item.address] : 0"
-                                :decimals="6"
-                                :size="'normal'"
-                                :show-ticker="false"
-                                :ticker="false"
-                            /> -->
                         </span>
                     </span>
                 </div>
-
-                <!--div class="account-tile-inner-container">
-                    <div class="account-tile-upper-container">
-                        <div class="account-name">
-                            <span>{{ item.name }}</span>
-                        </div>
-                    </div>
-
-                    <div class="account-tile-lower-container">
-                        <div class="account-amount">
-                            <MosaicAmountDisplay :absolute-amount="balances[item.address]" :size="'bigger'" />
-                        </div>
-                    </div>
-                </div-->
             </div>
         </div>
 
@@ -59,7 +31,8 @@
             </span>
 
             <div v-if="!isPrivateKeyProfile" class="account-switch-header-right-container" @click="hasBackupProfileModal = true">
-                <span type="button" class="back-up pointer button" @click="hasAddAccountModal = true">
+                <!-- <span type="button" class="back-up pointer button" @click="hasAddAccountModal = true"> -->
+                <span type="button" class="back-up pointer button">
                     <img src="@/views/resources/img/newicons/Download.svg" class="icon-left-button" />
                     {{ $t('backup_profile') }}
                 </span>

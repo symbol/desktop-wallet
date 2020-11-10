@@ -1,5 +1,34 @@
 @import '../../resources/css/variables.less';
 
+.header-container {
+    color: @purpleDark;
+    font-weight: 600;
+    font-size: @bigFont;
+    position: relative;
+
+    .tabs {
+        display: grid;
+        grid-template-columns: auto;
+        grid-auto-flow: column;
+        justify-items: start;
+        -webkit-box-pack: start;
+        justify-content: start;
+        height: 100%;
+        background-color: transparent;
+        .tab-item {
+            font-size: @bigFont;
+            position: relative;
+            font-weight: 600;
+            height: 0.2rem;
+            width: auto;
+            padding: 0 0.4rem;
+            margin: 0.2rem 0;
+            line-height: 0.2rem;
+            text-align: center;
+        }
+    }
+}
+
 .accounts-main-container {
     position: relative;
     width: 100%;
@@ -42,4 +71,11 @@
         height: 100%;
         overflow-y: auto;
     }
+}
+
+.account-switch-container {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-radius: @borderRadius;
 }

@@ -2,7 +2,7 @@
     "name": "symbol-desktop-wallet",
     "description": "Symbol Wallet",
     "homepage": "https://github.com/nemgrouplimited/symbol-desktop-wallet",
-    "version": "0.13.2",
+    "version": "0.13.3",
     "repository": {
         "type": "git",
         "url": "https://github.com/nemgrouplimited/symbol-desktop-wallet.git"
@@ -15,7 +15,7 @@
         "build": "npm run build:web",
         "build:web": "rimraf dist && mkdir dist && tsc && vue-cli-service build",
         "release": "npm run build && npm run release:all",
-        "release:all": "npm run release:win && npm run release:lin",
+        "release:all": "npm run release:mac && npm run release:win && npm run release:lin",
         "release:mac": "electron-builder --mac",
         "release:win": "electron-builder --win",
         "release:lin": "electron-builder --linux deb snap tar.xz",
@@ -113,10 +113,11 @@
         "utf-8-validate": "^5.0.2",
         "vue-jest": "^3.0.5",
         "vue-template-compiler": "^2.6.10",
+        "symbol-address-book": "^1.0.0",
         "symbol-hd-wallets": "0.14.0-alpha-202010231206",
         "symbol-paper-wallets": "^1.0.2",
         "symbol-qr-library": "0.13.1-alpha-202010241730",
-        "symbol-sdk": "0.21.1-alpha-202010272018",
+        "symbol-sdk": "0.21.1-alpha-202011091442",
         "symbol-uri-scheme": "0.5.2-alpha-202010291746"
     },
     "resolutions": {

@@ -5,6 +5,8 @@ node_js:
   - 12
 os:
   - linux
+  - osx
+osx_image: xcode11.3
 env:
   global:
     - ELECTRON_CACHE=$HOME/.cache/electron
@@ -23,22 +25,22 @@ jobs:
     - stage: test
       name: lint tests
       script: npm run lint
+      os: linux
 
     - name: unit tests
       script: npm run test
+      os: linux
 
     - stage: alpha
       name: publish alpha docker
       script: /bin/sh travis/docker.sh
       if: branch = env(DEV_BRANCH) AND type = push
+      os: linux
 
-    - script: npm run release:lin
-      name: build linux desktop artifacts
+    - script: npm run release:all
+      name: build desktop artifacts
       if: branch = env(DEV_BRANCH) AND type = push
-
-    - script: npm run release:win
-      name: build win desktop artifacts
-      if: branch = env(DEV_BRANCH) AND type = push
+      os: osx
 
     - stage: release
       name: release docker
@@ -49,3 +51,4 @@ jobs:
     - name: release desktop artifacts, tag and update version
       script: /bin/sh travis/release.sh
       if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
+      os: osx

@@ -1,4 +1,13 @@
 @import '../../resources/css/variables.less';
+.node-edit-form {
+    padding-top: 0.8rem;
+    padding-bottom: 0.4rem;
+}
+
+/deep/ .node-list-content {
+    height: 1.5rem !important;
+}
+
 .select-container {
     padding-left: 0.1rem;
 }
@@ -19,7 +28,8 @@
 
 .button-container {
     text-align: right;
-
+    padding-top: 5%;
+    padding-right: 16%;
     .button-style {
         display: inline-block;
     }
@@ -29,11 +39,13 @@ input:disabled {
     background-color: @disabledInputBackgroundColor;
     cursor: not-allowed;
 }
+
 /deep/.node-selector-container {
     width: 100%;
     min-height: unset;
     .node-list-container {
         margin-top: unset;
+        padding-left: 6%;
     }
 }
 .inputs-container {
@@ -45,4 +57,44 @@ input:disabled {
         font-size: 0.18rem !important;
         color: @purple;
     }
+}
+
+/deep/ .auto-complete-style {
+    padding: none !important;
+    padding-left: 2.1%;
+
+    .ivu-input {
+        margin-top: -0.5% !important;
+        background: transparent !important;
+        color: @primary;
+    }
+}
+
+/deep/ .node-list-container {
+    width: 84%;
+    padding-bottom: 0.1rem;
+}
+
+/deep/ .form-row {
+    .form-row-inner-container {
+        grid-template-columns: none !important;
+    }
+    .inputs-container {
+        margin-top: 0.05rem;
+        padding-left: 0.35rem;
+        margin-bottom: 0.1rem;
+        padding-right: 0.85rem;
+    }
+}
+
+/deep/ .ivu-select-dropdown {
+    margin: 0 !important;
+    margin-top: -0.5% !important;
+    margin-left: -0.1% !important;
+    padding: 0 !important;
+    background: @grayLightest;
+}
+
+/deep/ .ivu-select-item-focus {
+    color: @primary;
 }

@@ -6,6 +6,7 @@
                     v-for="{ address, addOrRemove } in modifications"
                     :key="address"
                     class="row-cosignatory-modification-display inputs-container gray-background mx-1"
+                    style="overflow: auto;"
                 >
                     <Icon v-if="addOrRemove === 'add'" class="modification-type-icon" type="md-person-add" />
                     <Icon v-else class="modification-type-icon red" type="md-remove-circle" />
