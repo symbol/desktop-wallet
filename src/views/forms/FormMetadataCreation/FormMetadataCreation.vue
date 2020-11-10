@@ -85,9 +85,9 @@
                         >
                             <ErrorTooltip :errors="errors">
                                 <textarea
+                                    v-model="formItems.metadataValue"
                                     class="metadata-value-input"
                                     :placeholder="$t('form_label_value_hint')"
-                                    v-model="formItems.metadataValue" 
                                 />
                             </ErrorTooltip>
                         </ValidationProvider>
