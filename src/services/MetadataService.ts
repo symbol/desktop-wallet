@@ -16,10 +16,15 @@
 import { 
     Address, 
     MetadataType, 
-    RepositoryFactory, 
-    RepositoryFactoryHttp,
-    AccountMetadataTransaction, 
-    TransactionService,
+    RepositoryFactory,
+    Transaction,
+    NetworkType,
+    Deadline,
+    UInt64,
+    KeyGenerator,
+    MosaicId,
+    NamespaceId,
+    MetadataTransactionService,
 } from 'symbol-sdk';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -69,5 +74,76 @@ export class MetadataService {
                 tap((d: MetadataModel[]) => this.metadataModelStorage.set(generationHash, d)),
                 ObservableHelpers.defaultFirst(metadataModelList),
             );
+    }
+
+    /**
+     * get metadata creation observable
+     * @returns {Observable<Transaction>}
+     */
+    public metadataTransactionObserver(
+        repositoryFactory: RepositoryFactory,
+        deadline: Deadline,
+        networkType: NetworkType,
+        sourceAddress: Address,
+        targetAddress: Address,
+        scopedKey: string,
+        value: string,
+        targetId: string,
+        metadataType: MetadataType,
+        maxFee: UInt64,
+    ): Observable<Transaction> {
+        const scopedMetadataKey = KeyGenerator.generateUInt64Key(scopedKey);
+        
+        const metadataRepository = repositoryFactory.createMetadataRepository();
+        const metadataTransactionService = new MetadataTransactionService(metadataRepository);
+
+        let metadataObservable: Observable<Transaction> = null;
+        
+        switch(metadataType) {
+            case MetadataType.Account:
+                metadataObservable = metadataTransactionService.createAccountMetadataTransaction(
+                    deadline,
+                    networkType,
+                    targetAddress,
+                    scopedMetadataKey,
+                    value,
+                    sourceAddress,
+                    maxFee
+                );
+                break;
+
+            case MetadataType.Mosaic:
+                const mosaicId = new MosaicId(targetId);
+                metadataObservable = metadataTransactionService.createMosaicMetadataTransaction(
+                    deadline,
+                    networkType,
+                    targetAddress,
+                    mosaicId,
+                    scopedMetadataKey,
+                    value,
+                    sourceAddress,
+                    maxFee
+                );
+                break;
+
+            case MetadataType.Namespace:
+                const namespaceId = new NamespaceId(targetId);
+                metadataObservable = metadataTransactionService.createNamespaceMetadataTransaction(
+                    deadline,
+                    networkType,
+                    targetAddress,
+                    namespaceId,
+                    scopedMetadataKey,
+                    value,
+                    sourceAddress,
+                    maxFee
+                );
+                break;
+
+            default:
+                break;
+        }
+
+        return metadataObservable;
     }
 }

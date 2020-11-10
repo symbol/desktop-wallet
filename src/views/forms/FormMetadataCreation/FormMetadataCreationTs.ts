@@ -15,16 +15,10 @@
  */
 import {
     MetadataType,
-    AccountMetadataTransaction,
-    PublicAccount,
-    KeyGenerator,
-    UInt64,
-    MosaicMetadataTransaction,
-    NamespaceMetadataTransaction,
     Address,
     Transaction,
-    MosaicId,
-    NamespaceId,
+    PublicAccount,
+    RepositoryFactory,
 } from 'symbol-sdk';
 import { Component, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
@@ -57,6 +51,7 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
+
 @Component({
     components: {
         ValidationObserver,
@@ -72,10 +67,11 @@ import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
     },
     computed: {
         ...mapGetters({
-            knownAccounts: 'account/knownAccounts',            
-            namespaces: 'namespace/ownedNamespaces',
+            knownAccounts: 'account/knownAccounts',
             ownedMosaics: 'mosaic/ownedMosaics',
             ownedNamespaces: 'namespace/ownedNamespaces',
+            repositoryFactory: 'network/repositoryFactory',
+            metadataTransactions: 'metadata/transactions',
         })
     },
 })
@@ -97,6 +93,16 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     protected MetadataType = MetadataType;
 
     /**
+     * Repository factory for metadata transaction service
+     */
+    protected repositoryFactory: RepositoryFactory;
+
+    /**
+     * metadata transactions
+     */
+    protected metadataTransactions: Transaction[];
+
+    /**
      * Currently active signer
      */
     public selectedSigner: Signer;
@@ -106,16 +112,20 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      * @var {Object}
      */
     public formItems = {
-        formType: MetadataType.Account,
         signerAddress: '',
         targetAccount: '',
         targetId: '',
         scopedKey: '',
         metadataValue: '',
         maxFee: 0,
-        password: ''
     }
-    
+
+    /**
+     * Validation rules
+     * @var {ValidationRuleset}
+     */
+    public validationRules = ValidationRuleset;
+
     /**
      * Known accounts
      * @protected
@@ -159,6 +169,19 @@ export class FormMetadataCreationTs extends FormTransactionBase {
 
         // - maxFee must be absolute
         this.formItems.maxFee = this.defaultFee;
+        this.$store.dispatch('metadata/SET_METADATA_TYPE', this.type);
+    }
+
+    /**
+     * @override
+     * @see {FormTransactionBase}
+     */
+    public async onSubmit() {
+        await this.persistFormState();
+
+        // - open signature modal
+        this.command = this.createTransactionCommand();
+        this.onShowConfirmationModal();
     }
 
     /**
@@ -228,20 +251,14 @@ export class FormMetadataCreationTs extends FormTransactionBase {
 
     }
 
-    /**
-     * Validation rules
-     * @var {ValidationRuleset}
-     */
-    public validationRules = ValidationRuleset;
-    
-    /**
-     * Override
-     * @see {FormTransactionBase}
-     * @param transactions 
-     */
-    protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
-        return TransactionCommandMode.AGGREGATE;
-    }
+    // /**
+    //  * Override
+    //  * @see {FormTransactionBase}
+    //  * @param transactions 
+    //  */
+    // protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
+    //     return TransactionCommandMode.AGGREGATE;
+    // }
 
     /**
      * Getter for metadata transactions that will be staged
@@ -249,63 +266,34 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      * @return {MetadataTransaction}
      */
     protected getTransactions(): Transaction[] {
+        return this.metadataTransactions;
+    }
+
+    private async persistFormState() {
         let targetAddress: Address;
         if (AddressValidator.validate(this.formItems.targetAccount)) {
             targetAddress = Address.createFromRawAddress(this.formItems.targetAccount);
         } else {
             const targetPublicAccount = PublicAccount.createFromPublicKey(this.formItems.targetAccount, this.networkType);
             targetAddress = targetPublicAccount.address;
-        }        
-        const scopedMetadataKey = KeyGenerator.generateUInt64Key(this.formItems.scopedKey);
-        const maxFee = UInt64.fromUint(this.formItems.maxFee);
-        
-        switch(this.type) {
-            case MetadataType.Account:
-                return [
-                    AccountMetadataTransaction.create(
-                        this.createDeadline(),
-                        targetAddress,
-                        scopedMetadataKey,
-                        this.formItems.metadataValue.length,
-                        this.formItems.metadataValue,
-                        this.networkType,
-                        maxFee,
-                    )
-                ];
-
-            case MetadataType.Mosaic:
-                const mosaicId = new MosaicId(this.formItems.targetId);
-                return [
-                    MosaicMetadataTransaction.create(
-                        this.createDeadline(),
-                        targetAddress,
-                        scopedMetadataKey,
-                        mosaicId,
-                        this.formItems.metadataValue.length,
-                        this.formItems.metadataValue,
-                        this.networkType,
-                        maxFee,
-                    ),
-                ];
-
-            case MetadataType.Namespace:
-                const namespaceId = new NamespaceId(this.formItems.targetId);
-                return [
-                    NamespaceMetadataTransaction.create(
-                        this.createDeadline(),
-                        targetAddress,
-                        scopedMetadataKey,
-                        namespaceId,
-                        this.formItems.metadataValue.length,
-                        this.formItems.metadataValue,
-                        this.networkType,
-                        maxFee,
-                    ),
-                ];
-
-            default:
-                return [];
         }
+        
+        const metadataForm: {
+            targetAddress: Address;
+            metadataValue: string,
+            scopedKey: string,
+            targetId: string,
+            maxFee: number,
+        } = {
+            targetAddress,
+            metadataValue: this.formItems.metadataValue,
+            scopedKey: this.formItems.scopedKey,
+            targetId: this.formItems.targetId,
+            maxFee: this.formItems.maxFee,
+        }
+
+        await this.$store.dispatch('metadata/SET_METADATA_FORM_STATE', metadataForm);
+        await this.$store.dispatch('metadata/RESOLVE_METADATA_TRANSACTIONS');
     }
 
 }

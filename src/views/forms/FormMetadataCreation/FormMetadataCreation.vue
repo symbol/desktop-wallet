@@ -91,7 +91,7 @@
                                 <textarea
                                     class="metadata-value-input"
                                     :placeholder="$t('form_label_value_hint')"
-                                    v-model="formItems.value" 
+                                    v-model="formItems.metadataValue" 
                                 />
                             </ErrorTooltip>
                         </ValidationProvider>
