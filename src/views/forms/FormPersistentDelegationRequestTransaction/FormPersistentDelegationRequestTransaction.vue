@@ -39,7 +39,7 @@
                                         </Option>
                                     </Select>
 
-                                    <div v-if="!swapDisabled" type="warning" class="warning-node-swap">
+                                    <div v-if="harvestingStatus !== 'INACTIVE' && !swapDisabled" type="warning" class="warning-node-swap">
                                         <Icon type="ios-warning-outline" />
                                         {{ $t('harvesting_warning_node_swap') }}
                                     </div>

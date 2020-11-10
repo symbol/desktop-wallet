@@ -259,8 +259,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     public get swapDisabled(): boolean {
         return (
-            this.formItems.nodePublicKey.toLowerCase() ===
-            this.currentSignerAccountInfo.supplementalPublicKeys?.node?.publicKey.toLowerCase()
+            this.formItems.nodePublicKey?.toLowerCase() ===
+            this.currentSignerAccountInfo.supplementalPublicKeys?.node?.publicKey?.toLowerCase()
         );
     }
 
