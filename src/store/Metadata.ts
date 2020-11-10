@@ -28,10 +28,10 @@ const Lock = AwaitLock.create();
 
 interface MetadataFormState {
     targetAddress: Address;
-    metadataValue: string,
-    scopedKey: string,
-    targetId: string,
-    maxFee: number,
+    metadataValue: string;
+    scopedKey: string;
+    targetId: string;
+    maxFee: number;
 }
 
 interface MetadataState {
@@ -39,8 +39,8 @@ interface MetadataState {
     metadatas: MetadataModel[];
     isFetchingMetadatas: boolean;
     transactions: Transaction[];
-    metadataType: MetadataType,
-    metadataForm: MetadataFormState,
+    metadataType: MetadataType;
+    metadataForm: MetadataFormState;
 }
 
 const metadataState: MetadataState = {
@@ -55,7 +55,7 @@ const metadataState: MetadataState = {
         metadataValue: '',
         targetId: '',
         maxFee: 0,
-    }
+    },
 };
 
 export default {
@@ -82,7 +82,8 @@ export default {
             Vue.set(
                 state,
                 'ownedMetadatas',
-                uniqueMetadatas.filter((n) => n.sourceAddress === currentSignerAddress.plain()),            );
+                uniqueMetadatas.filter((n) => n.sourceAddress === currentSignerAddress.plain()),
+            );
         },
         isFetchingMetadatas: (state: MetadataState, isFetchingMetadatas: boolean) =>
             Vue.set(state, 'isFetchingMetadatas', isFetchingMetadatas),
@@ -94,7 +95,7 @@ export default {
         },
         transactions: (state: MetadataState, transactions: Transaction[]) => {
             Vue.set(state, 'transactions', transactions);
-        }
+        },
     },
     actions: {
         async initialize({ commit, getters }) {
@@ -146,26 +147,27 @@ export default {
             const metadataType = rootGetters['metadata/metadataType'];
             const networkType = rootGetters['network/networkType'];
             const metadataForm: MetadataFormState = rootGetters['metadata/metadataForm'];
-            
+
             if (!currentSignerAddress) {
                 return;
             }
 
             const metadataService = new MetadataService();
-            metadataService.metadataTransactionObserver(
-                repositoryFactory,
-                Deadline.create(epochAdjustment),
-                networkType,
-                currentSignerAddress,
-                metadataForm.targetAddress,
-                metadataForm.scopedKey,
-                metadataForm.metadataValue,
-                metadataForm.targetId,
-                metadataType,
-                UInt64.fromUint(metadataForm.maxFee),
-            ).subscribe(transaction => {
-                commit('transactions', [transaction])
-            });
-        }
+            const metadataTransaction = await metadataService
+                .metadataTransactionObserver(
+                    repositoryFactory,
+                    Deadline.create(epochAdjustment),
+                    networkType,
+                    currentSignerAddress,
+                    metadataForm.targetAddress,
+                    metadataForm.scopedKey,
+                    metadataForm.metadataValue,
+                    metadataForm.targetId,
+                    metadataType,
+                    UInt64.fromUint(metadataForm.maxFee),
+                )
+                .toPromise();
+            commit('transactions', [metadataTransaction]);
+        },
     },
 };

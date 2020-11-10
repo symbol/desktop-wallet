@@ -13,13 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {
-    MetadataType,
-    Address,
-    Transaction,
-    PublicAccount,
-    RepositoryFactory,
-} from 'symbol-sdk';
+import { MetadataType, Address, Transaction, PublicAccount, RepositoryFactory } from 'symbol-sdk';
 import { Component, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
@@ -71,7 +65,7 @@ import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
             ownedNamespaces: 'namespace/ownedNamespaces',
             repositoryFactory: 'network/repositoryFactory',
             metadataTransactions: 'metadata/transactions',
-        })
+        }),
     },
 })
 export class FormMetadataCreationTs extends FormTransactionBase {
@@ -116,7 +110,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         scopedKey: '',
         metadataValue: '',
         maxFee: 0,
-    }
+    };
 
     /**
      * Validation rules
@@ -174,8 +168,8 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      * @override
      * @see {FormTransactionBase}
      */
-    public async onSubmit() {
-        await this.persistFormState();
+    public onSubmit() {
+        this.persistFormState();
 
         // - open signature modal
         this.command = this.createTransactionCommand();
@@ -248,15 +242,6 @@ export class FormMetadataCreationTs extends FormTransactionBase {
                   .map(({ mosaicIdHex }) => mosaicIdHex);
     }
 
-    // /**
-    //  * Override
-    //  * @see {FormTransactionBase}
-    //  * @param transactions 
-    //  */
-    // protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
-    //     return TransactionCommandMode.AGGREGATE;
-    // }
-
     /**
      * Getter for metadata transactions that will be staged
      * @see {FormTransactionBase}
@@ -274,20 +259,20 @@ export class FormMetadataCreationTs extends FormTransactionBase {
             const targetPublicAccount = PublicAccount.createFromPublicKey(this.formItems.targetAccount, this.networkType);
             targetAddress = targetPublicAccount.address;
         }
-        
+
         const metadataForm: {
             targetAddress: Address;
-            metadataValue: string,
-            scopedKey: string,
-            targetId: string,
-            maxFee: number,
+            metadataValue: string;
+            scopedKey: string;
+            targetId: string;
+            maxFee: number;
         } = {
             targetAddress,
             metadataValue: this.formItems.metadataValue,
             scopedKey: this.formItems.scopedKey,
             targetId: this.formItems.targetId,
             maxFee: this.formItems.maxFee,
-        }
+        };
 
         await this.$store.dispatch('metadata/SET_METADATA_FORM_STATE', metadataForm);
         await this.$store.dispatch('metadata/RESOLVE_METADATA_TRANSACTIONS');
