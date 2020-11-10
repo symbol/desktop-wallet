@@ -168,8 +168,8 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      * @override
      * @see {FormTransactionBase}
      */
-    public onSubmit() {
-        this.persistFormState();
+    public async onSubmit() {
+        await this.persistFormState();
 
         // - open signature modal
         this.command = this.createTransactionCommand();
