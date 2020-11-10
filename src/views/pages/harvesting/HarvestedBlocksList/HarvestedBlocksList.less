@@ -12,4 +12,23 @@
     /deep/.ivu-table-wrapper {
         height: calc(90% - 0.45rem);
     }
+
+    /deep/.ivu-table {
+        th {
+            color: @purpleDark;
+            background-color: @white;
+            font-size: @normalFont;
+            font-family: @symbolFontMedium;
+        }
+
+        td {
+            font-family: @symbolFontLight;
+            font-size: @normalFont;
+            color: @purpleDark;
+        }
+
+        tr.ivu-table-row-hover td {
+            background-color: @accentPinkLight;
+        }
+    }
 }
