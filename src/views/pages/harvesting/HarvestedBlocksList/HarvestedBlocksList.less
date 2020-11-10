@@ -3,6 +3,16 @@
 .table-container {
     height: 100%;
 
+    /deep/ .ivu-table-header {
+        display: grid;
+        width: 100%;
+        text-align: left;
+        color: @primary;
+        background-color: @white !important;
+        font-size: @normalFont;
+        font-family: @symbolFontMedium;
+    }
+
     .table-footer-container  {
         text-align: right;
         padding-top: 0.1rem;
@@ -12,4 +22,13 @@
     /deep/.ivu-table-wrapper {
         height: calc(90% - 0.45rem);
     }
+}
+
+    
+thead {
+	background-color: @white;
+}
+
+/deep/ .ivu-table {
+	color: @primary;
 }

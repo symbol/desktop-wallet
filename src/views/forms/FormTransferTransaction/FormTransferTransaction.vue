@@ -16,7 +16,7 @@
                     <RecipientInput v-model="formItems.recipientRaw" @input="onChangeRecipient" />
 
                     <!-- Mosaics attachments input fields -->
-                    <div v-for="(attachedMosaic, index) in formItems.attachedMosaics" :key="index">
+                    <div v-for="(attachedMosaic, index) in formItems.attachedMosaics" :key="index" style="margin-top: 0.5rem;">
                         <MosaicAttachmentInput
                             v-if="attachedMosaic.uid"
                             :mosaic-attachment="attachedMosaic"

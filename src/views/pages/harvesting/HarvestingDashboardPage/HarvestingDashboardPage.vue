@@ -14,7 +14,6 @@
             </div>
         </div>
         <div class="dashboard-right-container">
-            <!--TODO: Harvesting dashboard following standard style.-->
             <div class="header-container-placeholder">
                 <h1 class="section-title">
                     {{ $t('harvested_blocks') }}
