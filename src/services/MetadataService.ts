@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { 
-    Address, 
-    MetadataType, 
+import {
+    Address,
+    MetadataType,
     RepositoryFactory,
     Transaction,
     NetworkType,
@@ -93,55 +93,46 @@ export class MetadataService {
         maxFee: UInt64,
     ): Observable<Transaction> {
         const scopedMetadataKey = KeyGenerator.generateUInt64Key(scopedKey);
-        
+
         const metadataRepository = repositoryFactory.createMetadataRepository();
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
 
         let metadataObservable: Observable<Transaction> = null;
-        
-        switch(metadataType) {
-            case MetadataType.Account:
-                metadataObservable = metadataTransactionService.createAccountMetadataTransaction(
-                    deadline,
-                    networkType,
-                    targetAddress,
-                    scopedMetadataKey,
-                    value,
-                    sourceAddress,
-                    maxFee
-                );
-                break;
 
-            case MetadataType.Mosaic:
-                const mosaicId = new MosaicId(targetId);
-                metadataObservable = metadataTransactionService.createMosaicMetadataTransaction(
-                    deadline,
-                    networkType,
-                    targetAddress,
-                    mosaicId,
-                    scopedMetadataKey,
-                    value,
-                    sourceAddress,
-                    maxFee
-                );
-                break;
-
-            case MetadataType.Namespace:
-                const namespaceId = new NamespaceId(targetId);
-                metadataObservable = metadataTransactionService.createNamespaceMetadataTransaction(
-                    deadline,
-                    networkType,
-                    targetAddress,
-                    namespaceId,
-                    scopedMetadataKey,
-                    value,
-                    sourceAddress,
-                    maxFee
-                );
-                break;
-
-            default:
-                break;
+        if (metadataType === MetadataType.Account) {
+            metadataObservable = metadataTransactionService.createAccountMetadataTransaction(
+                deadline,
+                networkType,
+                targetAddress,
+                scopedMetadataKey,
+                value,
+                sourceAddress,
+                maxFee,
+            );
+        } else if (metadataType === MetadataType.Mosaic) {
+            const mosaicId = new MosaicId(targetId);
+            metadataObservable = metadataTransactionService.createMosaicMetadataTransaction(
+                deadline,
+                networkType,
+                targetAddress,
+                mosaicId,
+                scopedMetadataKey,
+                value,
+                sourceAddress,
+                maxFee,
+            );
+        } else {
+            const namespaceId = new NamespaceId(targetId);
+            metadataObservable = metadataTransactionService.createNamespaceMetadataTransaction(
+                deadline,
+                networkType,
+                targetAddress,
+                namespaceId,
+                scopedMetadataKey,
+                value,
+                sourceAddress,
+                maxFee,
+            );
         }
 
         return metadataObservable;
