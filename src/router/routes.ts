@@ -317,6 +317,28 @@ export const routes: AppRoute[] = [
                 ],
             },
             {
+                path: '/aggregate', //TODO: Aggregate
+                name: 'aggregate',
+                redirect: '/aggregateTransaction',
+                meta: {
+                    protected: true,
+                    clickable: true,
+                    title: 'sidebar_item_aggregate',
+                    icon: officialIcons.aggregate,
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/aggregate/Aggregate.vue'),
+                children: [
+                    {
+                        path: '/aggregateTransaction',
+                        name: 'aggregate.index',
+                        meta: { protected: true },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/aggregate/aggregateTransaction/AggregateTransaction.vue'),
+                    },
+                ],
+            },
+            {
                 path: '/multisig',
                 name: 'multisig',
                 meta: {
@@ -360,28 +382,6 @@ export const routes: AppRoute[] = [
                         meta: { protected: true, title: 'page_title_delegated_harvesting' },
                         // @ts-ignore
                         component: () => import('@/views/pages/harvesting/HarvestingPage/HarvestingPage.vue'),
-                    },
-                ],
-            },
-            {
-                path: '/aggregate', //TODO: Aggregate
-                name: 'aggregate',
-                redirect: '/aggregateTransaction',
-                meta: {
-                    protected: true,
-                    clickable: true,
-                    title: 'sidebar_item_aggregate',
-                    icon: officialIcons.aggregate,
-                },
-                // @ts-ignore
-                component: () => import('@/views/pages/aggregate/Aggregate.vue'),
-                children: [
-                    {
-                        path: '/aggregateTransaction',
-                        name: 'aggregate.index',
-                        meta: { protected: true },
-                        // @ts-ignore
-                        component: () => import('@/views/pages/aggregate/aggregateTransaction/AggregateTransaction.vue'),
                     },
                 ],
             },

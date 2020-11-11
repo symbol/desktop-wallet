@@ -70,3 +70,19 @@
         margin: 0.14rem 0 0.07rem 0;
     }
 }
+
+/deep/ .ivu-checkbox {
+    .ivu-checkbox-inner {
+        background: white;
+        box-shadow: 0 0.02rem 0.04rem rgba(37, 46, 55, 0.0774148);
+    }
+}
+
+/deep/ .ivu-checkbox-checked {
+        border-radius: 0.02rem;
+        background: @primary !important;
+
+        .ivu-checkbox-inner {
+        background: transparent;
+    }
+}
