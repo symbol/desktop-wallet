@@ -26,6 +26,7 @@ export default class MosaicListPage extends Vue {}
 <style lang="less" scoped>
 .table-section {
     padding-left: 0.2rem;
+    padding-right: 0.2rem;
     height: 100%;
 }
 </style>
