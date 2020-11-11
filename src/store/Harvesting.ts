@@ -228,7 +228,7 @@ export default {
                     ),
                     reduce(
                         (acc, harvestedBlock) => ({
-                            totalBlockCount: counter++,
+                            totalBlockCount: ++counter,
                             totalFeesEarned: acc.totalFeesEarned.add(harvestedBlock.fee),
                         }),
                         {

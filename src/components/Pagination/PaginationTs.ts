@@ -65,6 +65,9 @@ export default class PaginationTs extends Vue {
      * Hook called when next page button is clicked
      */
     public next() {
+        if (this.lastPage) {
+            return;
+        }
         this.targetPage = this.currentPage + 1;
         this.$emit('targetPage', this.targetPage);
     }
@@ -73,6 +76,9 @@ export default class PaginationTs extends Vue {
      * Hook called when previous page button is clicked
      */
     public prev() {
+        if (this.currentPage <= 1) {
+            return;
+        }
         this.targetPage = this.currentPage - 1;
         this.$emit('targetPage', this.targetPage);
     }

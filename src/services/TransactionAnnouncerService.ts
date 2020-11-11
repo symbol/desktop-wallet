@@ -123,6 +123,18 @@ export class TransactionAnnouncerService {
             .pipe(map((t) => this.createBroadcastResult(signedAggregateTransaction, t)));
     }
 
+    public announceChainedBinary(first: SignedTransaction, second: SignedTransaction): Observable<BroadcastResult> {
+        const listener: IListener = this.$store.getters['network/listener'];
+        const service = this.createService();
+        return service
+            .announce(first, listener)
+            .pipe(this.timeout(this.timeoutMessage(first.type)))
+            .pipe(flatMap(() => service.announce(second, listener).pipe(this.timeout(this.timeoutMessage(second.type)))))
+
+            .pipe(catchError((e) => of(e as Error)))
+            .pipe(map((t) => this.createBroadcastResult(second, t)));
+    }
+
     public announceAggregateBondedCosignature(singedTransaction: CosignatureSignedTransaction): Observable<BroadcastResult> {
         const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
         const transactionHttp = repositoryFactory.createTransactionRepository();
