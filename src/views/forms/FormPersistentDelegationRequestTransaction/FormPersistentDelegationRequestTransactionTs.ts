@@ -14,7 +14,6 @@
  *
  */
 import {
-    Address,
     UInt64,
     AccountKeyLinkTransaction,
     LinkAction,
@@ -24,6 +23,8 @@ import {
     NodeKeyLinkTransaction,
     PersistentDelegationRequestTransaction,
     AccountInfo,
+    AggregateTransaction,
+    PublicAccount,
 } from 'symbol-sdk';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
@@ -52,6 +53,7 @@ import { ValidationProvider } from 'vee-validate';
 
 import { feesConfig } from '@/config';
 import { HarvestingStatus } from '@/store/Harvesting';
+import { TransactionCommandMode } from '@/services/TransactionCommand';
 
 export enum HarvestingAction {
     START = 1,
@@ -139,8 +141,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     protected getTransactions(): Transaction[] {
         const maxFee = UInt64.fromUint(feesConfig.highest); // fixed to the Highest, txs must get confirmed
         const txs: Transaction[] = [];
+        const txsToBeAggregated: Transaction[] = [];
 
         /*
+         LINK
          START => link all (new keys)
          STOP =>  unlink all (linked keys)
          SWAP =>  unlink(linked) + link all (new keys)
@@ -152,7 +156,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 LinkAction.Unlink,
                 maxFee,
             );
-            txs.push(accountKeyUnLinkTx);
+            txsToBeAggregated.push(accountKeyUnLinkTx);
         }
 
         if (this.isVrfKeyLinked) {
@@ -161,7 +165,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 LinkAction.Unlink,
                 maxFee,
             );
-            txs.push(vrfKeyUnLinkTx);
+            txsToBeAggregated.push(vrfKeyUnLinkTx);
         }
 
         if (this.isNodeKeyLinked) {
@@ -171,16 +175,34 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 maxFee,
             );
 
-            txs.push(nodeUnLinkTx);
+            txsToBeAggregated.push(nodeUnLinkTx);
         }
 
         if (this.action !== HarvestingAction.STOP) {
             const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
             const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
             const nodeLinkTx = this.createNodeKeyLinkTx(this.formItems.nodePublicKey, LinkAction.Link, maxFee);
+            txsToBeAggregated.push(accountKeyLinkTx, vrfKeyLinkTx, nodeLinkTx);
+        }
 
-            txs.push(accountKeyLinkTx, vrfKeyLinkTx, nodeLinkTx);
+        if (txsToBeAggregated.length == 1) {
+            txs.push(txsToBeAggregated[0]);
+        }
 
+        if (txsToBeAggregated.length > 1) {
+            const currentSigner = PublicAccount.createFromPublicKey(this.currentSignerPublicKey, this.networkType);
+            txs.push(
+                AggregateTransaction.createComplete(
+                    this.createDeadline(),
+                    txsToBeAggregated.map((t) => t.toAggregate(currentSigner)),
+                    this.networkType,
+                    [],
+                    maxFee,
+                ),
+            );
+        }
+
+        if (this.action !== HarvestingAction.STOP) {
             const persistentDelegationReqTx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
                 this.createDeadline(),
                 this.newRemoteAccount.privateKey,
@@ -193,6 +215,13 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
 
         return txs;
+    }
+
+    protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
+        if (this.action === HarvestingAction.STOP) {
+            return TransactionCommandMode.SIMPLE;
+        }
+        return TransactionCommandMode.CHAINED_BINARY;
     }
 
     private createAccountKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): AccountKeyLinkTransaction {
