@@ -13,37 +13,38 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { MetadataType, Address, Transaction, PublicAccount, RepositoryFactory } from 'symbol-sdk';
-import { Component, Prop } from 'vue-property-decorator';
-import { mapGetters } from 'vuex';
-
-// @ts-ignore
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
-import { AddressValidator } from '@/core/validation/validators';
-import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
-import { ScopedMetadataKeysHelpers } from '@/core/utils/ScopedMetadataKeysHelpers';
-import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
-import { MosaicModel } from '@/core/database/entities/MosaicModel';
-import { AccountModel } from '@/core/database/entities/AccountModel';
-import { Signer } from '@/store/Account';
-// child components
-import { ValidationObserver, ValidationProvider } from 'vee-validate';
-// @ts-ignore
-import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
-// @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue';
-// @ts-ignore
-import NamespaceSelector from '@/components/NamespaceSelector/NamespaceSelector.vue';
-// @ts-ignore
-import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue';
+import { MosaicMetadataTransaction, KeyGenerator } from 'symbol-sdk';
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
+import FormRow from '@/components/FormRow/FormRow.vue';
+// @ts-ignore
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
 // @ts-ignore
-import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
+import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
+// @ts-ignore
+import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue';
+// @ts-ignore
+import NamespaceSelector from '@/components/NamespaceSelector/NamespaceSelector.vue';
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { MosaicModel } from '@/core/database/entities/MosaicModel';
+import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
+import { ScopedMetadataKeysHelpers } from '@/core/utils/ScopedMetadataKeysHelpers';
+// @ts-ignore
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
+import { AddressValidator } from '@/core/validation/validators';
+import { TransactionCommandMode } from '@/services/TransactionCommand';
+import { Signer } from '@/store/Account';
+import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
+// @ts-ignore
+import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
+import { Address, MetadataType, PublicAccount, RepositoryFactory, Transaction } from 'symbol-sdk';
+// child components
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
+import { Component, Prop } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 
 @Component({
     components: {
@@ -167,6 +168,15 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     /**
      * @override
      * @see {FormTransactionBase}
+     * @param transactions
+     */
+    protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
+        return TransactionCommandMode.AGGREGATE;
+    }
+
+    /**
+     * @override
+     * @see {FormTransactionBase}
      */
     public async onSubmit() {
         await this.persistFormState();
@@ -252,14 +262,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     }
 
     private async persistFormState() {
-        let targetAddress: Address;
-        if (AddressValidator.validate(this.formItems.targetAccount)) {
-            targetAddress = Address.createFromRawAddress(this.formItems.targetAccount);
-        } else {
-            const targetPublicAccount = PublicAccount.createFromPublicKey(this.formItems.targetAccount, this.networkType);
-            targetAddress = targetPublicAccount.address;
-        }
-
+        const targetAddress: Address = this.getTargetAddress();
         const metadataForm: {
             targetAddress: Address;
             metadataValue: string;
@@ -276,5 +279,17 @@ export class FormMetadataCreationTs extends FormTransactionBase {
 
         await this.$store.dispatch('metadata/SET_METADATA_FORM_STATE', metadataForm);
         await this.$store.dispatch('metadata/RESOLVE_METADATA_TRANSACTIONS');
+    }
+
+    private getTargetAddress(): Address {
+        let targetAddress: Address;
+        if (AddressValidator.validate(this.formItems.targetAccount)) {
+            targetAddress = Address.createFromRawAddress(this.formItems.targetAccount);
+        } else {
+            const targetPublicAccount = PublicAccount.createFromPublicKey(this.formItems.targetAccount, this.networkType);
+            targetAddress = targetPublicAccount.address;
+        }
+
+        return targetAddress;
     }
 }
