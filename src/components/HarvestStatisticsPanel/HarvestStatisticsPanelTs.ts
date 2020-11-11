@@ -58,13 +58,14 @@ export class HarvestStatisticsPanelTs extends Vue {
     public get harvestingStatusIndicator() {
         switch (this.harvestingStatus) {
             case HarvestingStatus.ACTIVE:
-                return { cls: 'status-indicator green', text: 'Active' };
+                //TODO fix here when status endpoint ready // return { cls: 'status-indicator green', text: 'Active' };
+                return { cls: 'status-indicator amber', text: this.$t('harvesting_status_active') };
             case HarvestingStatus.INACTIVE:
-                return { cls: 'status-indicator red', text: 'Inactive' };
+                return { cls: 'status-indicator red', text: this.$t('harvesting_status_inactive') };
             case HarvestingStatus.INPROGRESS_ACTIVATION:
-                return { cls: 'status-indicator amber', text: 'Activation in progress' };
+                return { cls: 'status-indicator amber', text: this.$t('harvesting_status_inprogress_activation') };
             case HarvestingStatus.INPROGRESS_DEACTIVATION:
-                return { cls: 'status-indicator amber', text: 'Deactivation in progress' };
+                return { cls: 'status-indicator amber', text: this.$t('harvesting_status_inprogress_deactivation') };
         }
     }
 
