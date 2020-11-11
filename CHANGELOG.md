@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.4][v0.13.4] - 11-Nov-2020
+
+### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+
+#### Fixed
+
+- Fixed delegated harvesting activation iseue.
+- Added existing NGL harvesting nodes to delegated harvesting node selector for function preview purposes.
+- UI fixed on delegated harvesting activation cofirmation page.
+
 ## [0.13.3][v0.13.3] - 09-Nov-2020
 
 ### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
