@@ -9,9 +9,9 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 #### Fixed
 
-- Fixed delegated harvesting activation iseue.
+- Fixed delegated harvesting activation issues.
 - Added existing NGL harvesting nodes to delegated harvesting node selector for function preview purposes.
-- UI fixed on delegated harvesting activation cofirmation page.
+- UI fixed on the delegated harvesting activation confirmation page.
 
 ## [0.13.3][v0.13.3] - 09-Nov-2020
 
