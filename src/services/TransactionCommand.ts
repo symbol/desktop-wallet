@@ -18,8 +18,6 @@ import {
     Account,
     AggregateTransaction,
     Deadline,
-    MosaicMetadataTransaction,
-    HashLockTransaction,
     LockFundsTransaction,
     Mosaic,
     MosaicId,
@@ -28,7 +26,6 @@ import {
     SignedTransaction,
     Transaction,
     TransactionFees,
-    MetadataType,
     UInt64,
 } from 'symbol-sdk';
 import { Signer } from '@/store/Account';
@@ -131,46 +128,48 @@ export class TransactionCommand {
             return of([]);
         }
         const maxFee = this.stageTransactions.sort((a, b) => a.maxFee.compare(b.maxFee))[0].maxFee;
-        const currentSigner = PublicAccount.createFromPublicKey(this.signerPublicKey, this.networkType);
         if (this.mode === TransactionCommandMode.SIMPLE || this.mode === TransactionCommandMode.CHAINED_BINARY) {
             return of(this.stageTransactions.map((t) => this.calculateSuggestedMaxFee(t)));
-        } else if (this.mode === TransactionCommandMode.AGGREGATE) {
-            const aggregate = this.calculateSuggestedMaxFee(
-                AggregateTransaction.createComplete(
-                    Deadline.create(this.epochAdjustment),
-                    this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
-                    this.networkType,
-                    [],
-                    maxFee,
-                ),
-            );
-            return of([aggregate]);
-        } else if (this.mode === TransactionCommandMode.MULTISIGN) {
-            const aggregate = this.calculateSuggestedMaxFee(
-                AggregateTransaction.createBonded(
-                    Deadline.create(this.epochAdjustment),
-                    this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
-                    this.networkType,
-                    [],
-                    maxFee,
-                ),
-            );
+        } else {
+            const currentSigner = PublicAccount.createFromPublicKey(this.signerPublicKey, this.networkType);
+            if (this.mode === TransactionCommandMode.AGGREGATE) {
+                const aggregate = this.calculateSuggestedMaxFee(
+                    AggregateTransaction.createComplete(
+                        Deadline.create(this.epochAdjustment),
+                        this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
+                        this.networkType,
+                        [],
+                        maxFee,
+                    ),
+                );
+                return of([aggregate]);
+            } else {
+                const aggregate = this.calculateSuggestedMaxFee(
+                    AggregateTransaction.createBonded(
+                        Deadline.create(this.epochAdjustment),
+                        this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
+                        this.networkType,
+                        [],
+                        maxFee,
+                    ),
+                );
 
-            return account.signTransaction(aggregate, this.generationHash).pipe(
-                map((signedAggregateTransaction) => {
-                    const hashLock = this.calculateSuggestedMaxFee(
-                        LockFundsTransaction.create(
-                            Deadline.create(this.epochAdjustment),
-                            new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
-                            UInt64.fromUint(1000),
-                            signedAggregateTransaction,
-                            this.networkType,
-                            maxFee,
-                        ),
-                    );
-                    return [hashLock, aggregate];
-                }),
-            );
+                return account.signTransaction(aggregate, this.generationHash).pipe(
+                    map((signedAggregateTransaction) => {
+                        const hashLock = this.calculateSuggestedMaxFee(
+                            LockFundsTransaction.create(
+                                Deadline.create(this.epochAdjustment),
+                                new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
+                                UInt64.fromUint(1000),
+                                signedAggregateTransaction,
+                                this.networkType,
+                                maxFee,
+                            ),
+                        );
+                        return [hashLock, aggregate];
+                    }),
+                );
+            }
         }
     }
 

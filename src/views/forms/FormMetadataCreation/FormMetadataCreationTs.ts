@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { MosaicMetadataTransaction, KeyGenerator } from 'symbol-sdk';
+import { Address, MetadataType, PublicAccount, RepositoryFactory, Transaction } from 'symbol-sdk';
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
@@ -28,19 +28,20 @@ import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue';
 import NamespaceSelector from '@/components/NamespaceSelector/NamespaceSelector.vue';
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
+// @ts-ignore
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
+// @ts-ignore
+import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
+
+import { TransactionCommand, TransactionCommandMode } from '@/services/TransactionCommand';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
 import { ScopedMetadataKeysHelpers } from '@/core/utils/ScopedMetadataKeysHelpers';
-// @ts-ignore
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 import { AddressValidator } from '@/core/validation/validators';
-import { TransactionCommandMode } from '@/services/TransactionCommand';
 import { Signer } from '@/store/Account';
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
-// @ts-ignore
-import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
-import { Address, MetadataType, PublicAccount, RepositoryFactory, Transaction } from 'symbol-sdk';
+
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import { Component, Prop } from 'vue-property-decorator';
@@ -168,10 +169,21 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     /**
      * @override
      * @see {FormTransactionBase}
-     * @param transactions
      */
-    protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
-        return TransactionCommandMode.AGGREGATE;
+    public createTransactionCommand(): TransactionCommand {
+        return new TransactionCommand(
+            TransactionCommandMode.AGGREGATE,
+            this.selectedSigner,
+            this.currentSignerPublicKey,
+            this.metadataTransactions,
+            this.networkMosaic,
+            this.generationHash,
+            this.networkType,
+            this.epochAdjustment,
+            this.networkConfiguration,
+            this.transactionFees,
+            0,
+        );
     }
 
     /**
@@ -250,15 +262,6 @@ export class FormMetadataCreationTs extends FormTransactionBase {
             : this.ownedMosaics
                   .filter(({ ownerRawPlain }) => ownerRawPlain === this.currentAccount.address)
                   .map(({ mosaicIdHex }) => mosaicIdHex);
-    }
-
-    /**
-     * Getter for metadata transactions that will be staged
-     * @see {FormTransactionBase}
-     * @return {MetadataTransaction}
-     */
-    protected getTransactions(): Transaction[] {
-        return this.metadataTransactions;
     }
 
     private async persistFormState() {
