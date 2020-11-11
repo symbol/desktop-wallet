@@ -399,7 +399,7 @@
     "modal_title_extend_namespace_duration": "Extend namespace duration",
     "modal_title_link_alias": "Create an alias",
     "modal_title_mosaic_supply_change": "Modify mosaic supply",
-    "modal_title_transaction_confirmation": "Sign a transaction",
+    "modal_title_transaction_confirmation": "Sign transaction(s)",
     "modal_title_transaction_details": "Details about a transaction",
     "modal_title_unlink_alias": "Unlink alias from namespace",
     "more_access_tool_is_working": "More authentication tools are being worked on...",
