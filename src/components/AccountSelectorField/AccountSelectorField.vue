@@ -1,7 +1,7 @@
 <template>
     <div v-if="currentAccounts.length" class="switch_account">
         <img v-if="showIcon" class="navbar-icon" src="@/views/resources/img/navbar/account.svg" />
-        <Select v-model="currentAccountIdentifier" class="select-size select-style" :transfer="true">
+        <Select v-model="currentAccountIdentifier" :class="{ 'select-size select-style': defaultFormStyle }"> <!-- Adding :transfer="true" breaks the style and moves the dropdown to the document root -->
             <Option v-for="{ id, name } in currentAccounts" :key="id" :value="id">
                 {{ truncate(name) }}
             </Option>
@@ -15,8 +15,4 @@ export default class AccountSelectorField extends AccountSelectorFieldTs {}
 </script>
 <style lang="less" scoped>
 @import './AccountSelectorField.less';
-
-.ivu-select-dropdown {
-    margin: 0 !important;
-}
 </style>
