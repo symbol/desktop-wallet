@@ -97,11 +97,6 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     protected metadataTransactions: Transaction[];
 
     /**
-     * Currently active signer
-     */
-    public selectedSigner: Signer;
-
-    /**
      * Form fields
      * @var {Object}
      */
@@ -182,7 +177,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
             this.epochAdjustment,
             this.networkConfiguration,
             this.transactionFees,
-            0,
+            this.selectedSigner.requiredCosignatures,
         );
     }
 
@@ -282,6 +277,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
 
         await this.$store.dispatch('metadata/SET_METADATA_FORM_STATE', metadataForm);
         await this.$store.dispatch('metadata/RESOLVE_METADATA_TRANSACTIONS');
+        // await this.onChangeSigner(this.getTargetAddress().plain());
     }
 
     private getTargetAddress(): Address {
