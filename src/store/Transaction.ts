@@ -54,6 +54,10 @@ export enum TransactionFilterOptions {
     received = 'isReceivedSelected',
 }
 
+export class HeightFilter {
+    constructor(public from: number = 0, public to: number = Number.MAX_SAFE_INTEGER) {}
+}
+
 export class FilterOption {
     constructor(public option: TransactionFilterOptions = TransactionFilterOptions.confirmed, public value: boolean = false) {}
 }
@@ -139,6 +143,7 @@ export interface TransactionState {
     unconfirmedTransactions: Transaction[];
     partialTransactions: Transaction[];
     filterOptions: TransactionFilterOptionsState;
+    heightFilter: HeightFilter;
     currentConfirmedPage: PageInfo;
 }
 
@@ -151,6 +156,7 @@ const transactionState: TransactionState = {
     unconfirmedTransactions: [],
     partialTransactions: [],
     filterOptions: new TransactionFilterOptionsState(),
+    heightFilter: new HeightFilter(),
     currentConfirmedPage: { pageNumber: 1, isLastPage: false },
 };
 export default {
@@ -165,6 +171,7 @@ export default {
         },
         filterOptions: (state: TransactionState) => state.filterOptions,
         currentConfirmedPage: (state: TransactionState) => state.currentConfirmedPage,
+        heightFilter: (state: TransactionState) => state.heightFilter,
     },
     mutations: {
         setInitialized: (state: TransactionState, initialized: boolean) => {
@@ -221,6 +228,9 @@ export default {
 
             state.filteredTransactions = TransactionFilterService.filter(state, currentSignerAddress);
         },
+        setHeightFilter: (state: TransactionState, heightFilter: HeightFilter) => {
+            state.heightFilter = heightFilter;
+        },
     },
     actions: {
         async initialize({ commit, getters }) {
@@ -241,22 +251,16 @@ export default {
         },
 
         LOAD_TRANSACTIONS(
-            { commit, rootGetters },
+            { commit, rootGetters, state },
             {
                 pageSize,
                 pageNumber,
-                heightFrom,
-                heightTo,
             }: {
                 pageSize: number;
                 pageNumber: number;
-                heightFrom: number;
-                heightTo: number;
             } = {
                 pageSize: 20,
                 pageNumber: 1,
-                heightFrom: 0,
-                heightTo: Number.MAX_SAFE_INTEGER,
             },
         ) {
             const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
@@ -297,8 +301,8 @@ export default {
                         pageSize,
                         pageNumber,
                         order: Order.Desc,
-                        fromHeight: UInt64.fromUint(heightFrom),
-                        toHeight: UInt64.fromUint(heightTo),
+                        fromHeight: UInt64.fromUint(state.heightFilter.from),
+                        toHeight: UInt64.fromUint(state.heightFilter.to),
                     }),
                 ),
             );
@@ -313,8 +317,8 @@ export default {
                             pageSize: 100,
                             pageNumber: 1, // not paginating
                             order: Order.Desc,
-                            fromHeight: UInt64.fromUint(heightFrom),
-                            toHeight: UInt64.fromUint(heightTo),
+                            fromHeight: UInt64.fromUint(state.heightFilter.from),
+                            toHeight: UInt64.fromUint(state.heightFilter.to),
                         }),
                     ),
                 );
@@ -328,8 +332,8 @@ export default {
                             pageSize: 100,
                             pageNumber: 1, // not paginating
                             order: Order.Desc,
-                            fromHeight: UInt64.fromUint(heightFrom),
-                            toHeight: UInt64.fromUint(heightTo),
+                            fromHeight: UInt64.fromUint(state.heightFilter.from),
+                            toHeight: UInt64.fromUint(state.heightFilter.to),
                         }),
                     ),
                 );
@@ -521,18 +525,10 @@ export default {
             const generationHash = rootGetters['network/generationHash'];
             const cosigner = PublicAccount.createFromPublicKey(transaction.signerPublicKey, generationHash);
             const cosignature = new AggregateTransactionCosignature(transaction.signature, cosigner);
-            const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
 
             // update the partial transaction cosignatures
             transactions[index] = transactions[index].addCosignatures([cosignature]);
-
             commit('partialTransactions', transactions);
-            commit('setAllTransactions');
-            commit('filterTransactions', {
-                filterOption: null,
-                currentSignerAddress: currentSignerAddress.plain(),
-                shouldFilterOptionChange: false,
-            });
         },
     },
 };

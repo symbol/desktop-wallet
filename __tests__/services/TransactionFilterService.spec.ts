@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { TransactionFilterOptionsState, TransactionState } from '@/store/Transaction';
+import { HeightFilter, TransactionFilterOptionsState, TransactionState } from '@/store/Transaction';
 import { TransactionFilterService } from '@/services/TransactionFilterService';
 import { getTestAccount } from '@MOCKS/Accounts';
 import { TransferTransaction } from 'symbol-sdk';
@@ -42,6 +42,7 @@ const transactionState: TransactionState = {
     unconfirmedTransactions: [(receivedTransaction as unknown) as TransferTransaction],
     partialTransactions: [],
     filterOptions: new TransactionFilterOptionsState(),
+    heightFilter: new HeightFilter(),
     currentConfirmedPage: { pageNumber: 1, isLastPage: false },
 };
 

@@ -28,10 +28,13 @@
             </div>
             <div class="filter-options-container__divider"></div>
             <div class="filter-options-container__option">
-                <label for="HeightFrom">From</label>
+                <label for="HeightFrom">{{ $t('from') }}</label>
                 <Input element-id="HeightFrom" :rows="1" :number="true" type="number" :value="heightFrom" @input="onHeightFromChange" />
-                <label for="HeightTo">To</label>
+                <label for="HeightTo">{{ $t('to') }}</label>
                 <Input element-id="HeightTo" :rows="1" :number="true" type="number" :value="heightTo" @input="onHeightToChange" />
+                <Button class="filter-options-container__option__ok-button" type="primary" size="small" @click="onHeightFilterClick">
+                    {{ $t('ok') }}
+                </Button>
             </div>
         </div>
     </div>
