@@ -41,9 +41,9 @@
     }
 
     .nav-item {
-        font-size: 14px;
+        font-size: @bigFont;
         position: relative;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
         height: 0.2rem;
         padding: 0 0.4rem;
@@ -57,6 +57,14 @@
             margin-top: 0.02rem;
             display: inline-block;
         }
+        &.active-item {
+                color: @primary;
+                font-family: @symbolFontSemiBold;
+            }
+        &.inactive-item {
+                color: @grayLight;
+                font-family: @symbolFont;
+            }
     }
     .border {
         border-left: 2px solid @primary;

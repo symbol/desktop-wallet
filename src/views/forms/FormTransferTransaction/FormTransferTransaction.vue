@@ -31,11 +31,11 @@
                     </div>
 
                     <!-- Add mosaic button -->
-                    <div class="form-row align-right action-link">
-                        <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" />
-                        <a v-if="mosaicInputsManager.hasFreeSlots()" style="color: #5200c6;" @click="addMosaicAttachmentInput">{{
+                    <div class="form-row align-right action-link" style="margin-top: -0.1rem;">
+                        <a v-if="mosaicInputsManager.hasFreeSlots()" style="color: #44004e; margin-right: 0.1rem; font-size: 0.14rem;" @click="addMosaicAttachmentInput">{{
                             $t('add_mosaic')
                         }}</a>
+                        <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" style="vertical-align: middle;" />
                     </div>
 
                     <!-- Transfer message input field -->

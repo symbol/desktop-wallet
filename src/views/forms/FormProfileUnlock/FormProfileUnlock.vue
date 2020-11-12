@@ -4,7 +4,7 @@
             <FormRow>
                 <template v-slot:label> {{ $t('form_label_password') }}: </template>
                 <template v-slot:inputs>
-                    <div class="row-75-25 inputs-container">
+                    <div class="row-75-25 inputs-container" style="margin-top:0.1rem;">
                         <ValidationProvider
                             v-slot="{ errors }"
                             vid="password"
