@@ -521,6 +521,8 @@ export default {
                 return;
             }
 
+            const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
+
             // convert CosignatureSignedTransaction to AggregateTransactionCosignature
             const generationHash = rootGetters['network/generationHash'];
             const cosigner = PublicAccount.createFromPublicKey(transaction.signerPublicKey, generationHash);
@@ -528,7 +530,14 @@ export default {
 
             // update the partial transaction cosignatures
             transactions[index] = transactions[index].addCosignatures([cosignature]);
+
             commit('partialTransactions', transactions);
+            commit('setAllTransactions');
+            commit('filterTransactions', {
+                filterOption: null,
+                currentSignerAddress: currentSignerAddress.plain(),
+                shouldFilterOptionChange: false,
+            });
         },
     },
 };
