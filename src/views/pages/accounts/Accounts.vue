@@ -69,7 +69,7 @@ export default class Accounts extends AccountsTs {}
     grid-template-rows: 0.6rem auto;
 
     ::-webkit-scrollbar-track {
-        background-color: none;
+        background-color: transparent;
     }
 }
 </style>
