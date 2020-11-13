@@ -174,21 +174,19 @@
                 /deep/.ivu-select {
                     .ivu-select-selection {
                         font-size: @normalFont;
-
-                        &:hover {
-                            color: @white;
-                            background-color: @purpleDark;
-
-                            .ivu-icon-ios-arrow-down::before {
-                                color: @white !important;
-                            }
-                            .ivu-select-prefix {
-                                color: @white;
-                            }
+                        background-color: @grayLightest !important;
+                        border:none !important;
+                        box-shadow: none !important;
+                        color: @primary;
+                        :hover {
+                            border:none;
+                            box-shadow: none;
                         }
-
                         .ivu-select-prefix {
                             color: @purpleDark;
+                        }
+                    .ivu-select-selected-value {
+                            padding-right: 0.35rem !important;
                         }
                     }
 
@@ -215,8 +213,45 @@
                         font-size: @smallFont !important;
                     }
                 }
+                /deep/ .ivu-select-dropdown {
+                    background-color: @grayLightest;
+
+                    .ivu-select-item-selected {
+                        color: @primary;
+                        background-color: @grayLightest;
+                        }
+
+                    .ivu-select-item-selected:hover {
+                        background-color: @grayLightest !important;
+                        }    
+                    }
+
+                    .ivu-select-item-selected:hover {
+                        background-color: @grayLightest !important;
+                    }
+                }
+                /deep/ .ivu-select-item:hover {
+                       background-color: @white !important;
             }
         }
+
+        /deep/ .ivu-select-dropdown {
+        background-color: @grayLightest !important;
+
+    .ivu-select-item-selected {
+        color: @primary !important;
+        background-color: @grayLightest !important;
+    }
+
+    .ivu-select-item-selected:hover {
+        background-color: @grayLightest !important;
+    }
+
+ }
+
+/deep/ .ivu-select-item:hover {
+           background-color: @white !important;
+}
 
         .table-actions-container {
             text-align: right;
