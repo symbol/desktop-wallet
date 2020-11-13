@@ -6,6 +6,8 @@
 
 .table-container {
     height: 100%;
+    width: 90%;
+    margin-left: 5%;
 
     /deep/.ivu-table-header {
         display: grid;
@@ -15,6 +17,11 @@
         background-color: @white !important;
         font-size: @normalFont;
         font-family: @symbolFontMedium;
+    }
+
+    /deep/th {
+        background-color: @white !important;
+        //border-bottom: none !important;
     }
 
     .table-footer-container  {

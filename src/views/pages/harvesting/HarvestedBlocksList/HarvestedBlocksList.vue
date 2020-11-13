@@ -1,6 +1,6 @@
 <template>
     <div class="table-container">
-        <Table :loading="isFetchingHarvestedBlocks" :columns="columns" :data="blockList"> </Table>
+        <Table :loading="isFetchingHarvestedBlocks" :columns="columns" :data="blockList"></Table>
 
         <div class="table-footer-container">
             <Pagination page-size="pageSize" :current="pageInfo.pageNumber" :last-page="pageInfo.isLastPage" @targetPage="onPageChange" />
