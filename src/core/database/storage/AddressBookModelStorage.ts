@@ -19,13 +19,13 @@ import { VersionedObjectStorage } from '@/core/database/backends/VersionedObject
 /**
  * Stored cache for the known block infos.
  */
-export class AddressBookModelStorage extends VersionedObjectStorage<string> {
+export class AddressBookModelStorage extends VersionedObjectStorage<Record<string, string>> {
     /**
      * Singleton instance as we want to run the migration just once
      */
     public static INSTANCE = new AddressBookModelStorage();
 
     private constructor() {
-        super('addressBook');
+        super('addressBookPerProfile');
     }
 }

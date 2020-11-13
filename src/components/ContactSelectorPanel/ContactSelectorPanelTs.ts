@@ -28,6 +28,8 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue';
 // @ts-ignore
 import ModalFormSubAccountCreation from '@/views/modals/ModalFormSubAccountCreation/ModalFormSubAccountCreation.vue';
 // @ts-ignore
+import ModalImportAddressBook from '@/views/modals/ModalImportAddressBook/ModalImportAddressBook.vue';
+// @ts-ignore
 import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
 // @ts-ignore
 import ModalBackupProfile from '@/views/modals/ModalBackupProfile/ModalBackupProfile.vue';
@@ -41,6 +43,7 @@ import { UIHelpers } from '@/core/utils/UIHelpers';
     components: {
         MosaicAmountDisplay,
         ModalFormSubAccountCreation,
+        ModalImportAddressBook,
         ErrorTooltip,
         FormLabel,
         ValidationProvider,
@@ -72,12 +75,10 @@ export class ContactSelectorPanelTs extends Vue {
 
     public hasAddAccountModal: boolean = false;
 
+    public hasImportProfileModal: boolean = false;
+
     public get allContacts(): IContact[] {
         return this.addressBook.getAllContacts();
-    }
-
-    public get selectedContactId() {
-        return this.selectedContact ? this.selectedContact.id : null;
     }
 
     public set selectedContactId(id: string) {

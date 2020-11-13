@@ -23,15 +23,18 @@ export class AddressBookService {
      */
     private readonly addressBookModelStorage = AddressBookModelStorage.INSTANCE;
 
-    public getAddressBook(): AddressBook {
+    public getAddressBook(profileName: string): AddressBook {
         try {
-            return AddressBook.fromJSON(this.addressBookModelStorage.get());
+            const allAddressBooks = this.addressBookModelStorage.get() || {};
+            return AddressBook.fromJSON(allAddressBooks[profileName]);
         } catch (e) {
             return new AddressBook();
         }
     }
 
-    public saveAddressBook(addressBook: AddressBook) {
-        return this.addressBookModelStorage.set(addressBook.toJSON(false));
+    public saveAddressBook(addressBook: AddressBook, profileName: string) {
+        const allAddressBooks = this.addressBookModelStorage.get() || {};
+        allAddressBooks[profileName] = addressBook.toJSON(false);
+        return this.addressBookModelStorage.set(allAddressBooks);
     }
 }

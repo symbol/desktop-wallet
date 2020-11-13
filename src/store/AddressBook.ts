@@ -18,6 +18,7 @@ import { AwaitLock } from './AwaitLock';
 import { AddressBook, IContact } from 'symbol-address-book';
 import Vue from 'vue';
 import { AddressBookService } from '@/services/AddressBookService';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 
 /// region globals
 const Lock = AwaitLock.create();
@@ -66,9 +67,8 @@ export default {
          *    skipTransactions: boolean,
          * }
          */
-        async initialize({ commit, dispatch, getters }) {
+        async initialize({ commit, getters }) {
             const callback = async () => {
-                await dispatch('LOAD_ADDRESS_BOOK');
                 commit('setInitialized', true);
             };
             await Lock.initialize(callback, { getters });
@@ -81,16 +81,20 @@ export default {
             await Lock.uninitialize(callback, { getters });
         },
 
-        async SAVE_ADDRESS_BOOK({ getters }) {
+        async SAVE_ADDRESS_BOOK({ getters, rootGetters }) {
+            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const addressBook: AddressBook = getters.getAddressBook;
-            await new AddressBookService().saveAddressBook(addressBook);
+            await new AddressBookService().saveAddressBook(addressBook, currentProfile.profileName);
         },
 
-        async LOAD_ADDRESS_BOOK({ commit }) {
-            //TODO LOAD ADDRESS BOOK FROM DB
-            const addressBook = await new AddressBookService().getAddressBook();
-            console.log(addressBook);
+        async LOAD_ADDRESS_BOOK({ commit, rootGetters }) {
+            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
+            const addressBook = await new AddressBookService().getAddressBook(currentProfile.profileName);
             commit('setAddressBook', addressBook);
+            const allContacts = addressBook.getAllContacts();
+            if (allContacts.length > 0) {
+                commit('setSelectedContact', allContacts[0]);
+            }
         },
 
         async ADD_CONTACT({ commit, dispatch, getters }, contact) {
@@ -103,13 +107,9 @@ export default {
             dispatch('SAVE_ADDRESS_BOOK');
         },
 
-        async UPDATE_CONTACT({ commit, dispatch, getters }, { address, contact }) {
+        async UPDATE_CONTACT({ dispatch, getters }, { id, contact }) {
             const addressBook: AddressBook = getters.getAddressBook;
-            addressBook.updateContact(address, contact);
-            const newAddressBook = AddressBook.fromJSON(addressBook.toJSON());
-            commit('setAddressBook', newAddressBook);
-            const newSelectedContact = newAddressBook.getContactById(contact.id);
-            commit('setSelectedContact', newSelectedContact);
+            addressBook.updateContact(id, contact);
             dispatch('SAVE_ADDRESS_BOOK');
         },
 
