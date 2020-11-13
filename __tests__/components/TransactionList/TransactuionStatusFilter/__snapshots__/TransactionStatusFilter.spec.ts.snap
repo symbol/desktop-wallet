@@ -35,7 +35,7 @@ exports[`TransactionStatusFilter renders correctly 2`] = `
     <div class="filter-options-container__option"><label for="HeightFrom">From</label>
       <input-stub type="number" value="0" size="default" placeholder="" rows="1" number="true" autocomplete="off" elementid="HeightFrom" wrap="soft" prefix="" suffix=""></input-stub> <label for="HeightTo">To</label>
       <input-stub type="number" value="0" size="default" placeholder="" rows="1" number="true" autocomplete="off" elementid="HeightTo" wrap="soft" prefix="" suffix=""></input-stub>
-      <button-stub target="_self" type="primary" size="small" htmltype="button" icon="" customicon="">
+      <button-stub target="_self" type="primary" size="small" htmltype="button" icon="" customicon="" class="filter-options-container__option__ok-button">
         OK
       </button-stub>
     </div>
