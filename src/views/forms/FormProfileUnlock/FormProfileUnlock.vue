@@ -4,7 +4,7 @@
             <FormRow>
                 <template v-slot:label> {{ $t('form_label_password') }}: </template>
                 <template v-slot:inputs>
-                    <div class="row-75-25 inputs-container" style="margin-top:0.1rem;">
+                    <div class="row-75-25 inputs-container">
                         <ValidationProvider
                             v-slot="{ errors }"
                             vid="password"
@@ -48,5 +48,13 @@ export default class FormProfileUnlock extends FormProfileUnlockTs {}
     width: 100%;
     clear: both;
     min-height: 1rem;
+}
+
+/deep/ .form-label {
+    padding-left: 0.5rem;
+}
+
+/deep/ .form-row-inner-container {
+    grid-template-columns: 18% 60% !important;
 }
 </style>
