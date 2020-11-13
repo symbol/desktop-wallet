@@ -16,4 +16,38 @@
 @import '../../../views/resources/css/variables.less';
 
 .modal-metadata {
+    /deep/.ivu-modal-body {
+        padding: 0.7rem;
+        .modal-title {
+            font-size: @subtitleFont;
+            color: @purple;
+            font-weight: bolder;
+        }
+        .form-row {
+            .form-row-inner-container {
+                grid-template-columns: 16% auto;
+                .label-container {
+                    .form-label-container {
+                        .form-label {
+                            padding-left: 0;
+                        }
+                    }
+                }
+                .inputs-container {
+                    height: auto;
+                    align-items: center;
+                    display: flex;
+                    .value-container {
+                        width: 100%;
+                        .metadata-value-input {
+                            height: 1.9rem;
+                            background-color: #f3f4f8;
+                            border-radius: 0.05rem;
+                            padding: 0.16rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

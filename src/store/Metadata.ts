@@ -14,7 +14,7 @@
  *
  */
 
-import { Address, Deadline, MetadataType, Transaction, UInt64 } from 'symbol-sdk';
+import { Address, Deadline, MetadataType, MosaicId, NamespaceId, Transaction, UInt64 } from 'symbol-sdk';
 import Vue from 'vue';
 
 // internal dependencies
@@ -36,8 +36,10 @@ interface MetadataFormState {
 
 interface MetadataState {
     initialized: boolean;
-    metadatas: MetadataModel[];
-    isFetchingMetadatas: boolean;
+    accountMetadataList: MetadataModel[];
+    mosaicMetadataList: MetadataModel[];
+    namespaceMetadataList: MetadataModel[];
+    isFetchingMetadata: boolean;
     transactions: Transaction[];
     metadataType: MetadataType;
     metadataForm: MetadataFormState;
@@ -45,8 +47,10 @@ interface MetadataState {
 
 const metadataState: MetadataState = {
     initialized: false,
-    metadatas: [],
-    isFetchingMetadatas: false,
+    accountMetadataList: [],
+    mosaicMetadataList: [],
+    namespaceMetadataList: [],
+    isFetchingMetadata: false,
     transactions: [],
     metadataType: MetadataType.Account,
     metadataForm: {
@@ -63,8 +67,17 @@ export default {
     state: metadataState,
     getters: {
         getInitialized: (state: MetadataState) => state.initialized,
-        metadatas: (state: MetadataState) => state.metadatas,
-        isFetchingMetadatas: (state: MetadataState) => state.isFetchingMetadatas,
+        accountMetadataList: (state: MetadataState) =>
+            state.accountMetadataList.filter((metadata) => metadata.metadataType === MetadataType.Account),
+        mosaicMetadataList: (state: MetadataState, mosaicId: MosaicId) =>
+            state.accountMetadataList.filter(
+                (metadataModel) => metadataModel.targetId === mosaicId.toHex() && metadataModel.metadataType === MetadataType.Mosaic,
+            ),
+        namespaceMetadataList: (state: MetadataState, namespaceId: NamespaceId) =>
+            state.accountMetadataList.filter(
+                (metadataModel) => metadataModel.targetId === namespaceId.toHex() && metadataModel.metadataType === MetadataType.Namespace,
+            ),
+        isFetchingMetadata: (state: MetadataState) => state.isFetchingMetadata,
         metadataType: (state: MetadataState) => state.metadataType,
         metadataForm: (state: MetadataState) => state.metadataForm,
         transactions: (state: MetadataState) => state.transactions,
@@ -73,20 +86,19 @@ export default {
         setInitialized: (state: MetadataState, initialized) => {
             state.initialized = initialized;
         },
-        metadatas: (
-            state: MetadataState,
-            { metadatas, currentSignerAddress }: { metadatas: MetadataModel[]; currentSignerAddress: Address },
-        ) => {
-            const uniqueMetadatas = _.uniqBy(metadatas, (n) => n.metadataId);
-            Vue.set(state, 'metadatas', uniqueMetadatas);
-            Vue.set(
-                state,
-                'ownedMetadatas',
-                uniqueMetadatas.filter((n) => n.sourceAddress === currentSignerAddress.plain()),
-            );
+        accountMetadataList: (state: MetadataState, metadataList: MetadataModel[]) => {
+            const uniqueMetadataList = _.uniqBy(metadataList, (n) => n.metadataId);
+            Vue.set(state, 'accountMetadataList', uniqueMetadataList);
         },
-        isFetchingMetadatas: (state: MetadataState, isFetchingMetadatas: boolean) =>
-            Vue.set(state, 'isFetchingMetadatas', isFetchingMetadatas),
+        mosaicMetadataList: (state: MetadataState, metadataList: MetadataModel[]) => {
+            const uniqueMetadataList = _.uniqBy(metadataList, (n) => n.metadataId);
+            Vue.set(state, 'mosaicMetadataList', uniqueMetadataList);
+        },
+        namespaceMetadataList: (state: MetadataState, metadataList: MetadataModel[]) => {
+            const uniqueMetadataList = _.uniqBy(metadataList, (n) => n.metadataId);
+            Vue.set(state, 'namespaceMetadataList', uniqueMetadataList);
+        },
+        isFetchingMetadata: (state: MetadataState, isFetchingMetadata: boolean) => Vue.set(state, 'isFetchingMetadata', isFetchingMetadata),
         metadataType: (state: MetadataState, metadataType: MetadataType) => {
             Vue.set(state, 'metadataType', metadataType);
         },
@@ -114,37 +126,45 @@ export default {
             await Lock.uninitialize(callback, { getters });
         },
 
-        async SET_METADATA_TYPE({ commit }, metadataType: MetadataType) {
-            commit('metadataType', metadataType);
-        },
-
         async SET_METADATA_FORM_STATE({ commit }, metadataForm: MetadataFormState) {
             commit('metadataForm', metadataForm);
         },
 
-        async LOAD_METADATAS({ commit, rootGetters }) {
+        async SIGNER_CHANGED({ dispatch }) {
+            await dispatch('LOAD_METADATA_LIST');
+        },
+
+        async LOAD_METADATA_LIST(
+            { commit, rootGetters },
+            metadataType: MetadataType = MetadataType.Account,
+            targetId: MosaicId | NamespaceId = undefined,
+        ) {
             const repositoryFactory = rootGetters['network/repositoryFactory'];
             const generationHash = rootGetters['network/generationHash'];
-            const metadataType = rootGetters['metadata/metadataType'];
             const metadataService = new MetadataService();
             const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
             if (!currentSignerAddress) {
                 return;
             }
-            commit('isFetchingMetadatas', true);
+            commit('isFetchingMetadata', true);
             metadataService
-                .getMetadataList(repositoryFactory, generationHash, currentSignerAddress, metadataType)
-                .subscribe((metadatas) => {
-                    commit('metadatas', { metadatas, currentSignerAddress });
+                .getMetadataList(repositoryFactory, generationHash, currentSignerAddress, metadataType, targetId)
+                .subscribe((metadataList) => {
+                    if (metadataType === MetadataType.Account) {
+                        commit('accountMetadataList', metadataList);
+                    } else if (metadataType === MetadataType.Mosaic) {
+                        commit('mosaicMetadataList', metadataList);
+                    } else {
+                        commit('namespaceMetadataList', metadataList);
+                    }
                 })
-                .add(() => commit('isFetchingMetadatas', false));
+                .add(() => commit('isFetchingMetadata', false));
         },
 
-        async RESOLVE_METADATA_TRANSACTIONS({ commit, rootGetters }) {
+        async RESOLVE_METADATA_TRANSACTIONS({ commit, rootGetters }, metadataType: MetadataType) {
             const currentSignerAddress = rootGetters['account/currentSignerAddress'];
             const repositoryFactory = rootGetters['network/repositoryFactory'];
             const epochAdjustment = rootGetters['network/epochAdjustment'];
-            const metadataType = rootGetters['metadata/metadataType'];
             const networkType = rootGetters['network/networkType'];
             const metadataForm: MetadataFormState = rootGetters['metadata/metadataForm'];
 

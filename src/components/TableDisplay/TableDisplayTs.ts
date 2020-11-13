@@ -69,12 +69,12 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
             currentAccount: 'account/currentAccount',
             holdMosaics: 'mosaic/holdMosaics',
             ownedNamespaces: 'namespace/ownedNamespaces',
-            attachedMetadatas: 'metadata/metadatas',
+            attachedMetadataList: 'metadata/accountMetadataList',
             networkConfiguration: 'network/networkConfiguration',
             signers: 'account/signers',
             isFetchingNamespaces: 'namespace/isFetchingNamespaces',
             isFetchingMosaics: 'mosaic/isFetchingMosaics',
-            isFetchingMetadatas: 'metadata/isFetchingMetadatas',
+            isFetchingMetadata: 'metadata/isFetchingMetadata',
         }),
     },
 })
@@ -103,11 +103,11 @@ export class TableDisplayTs extends Vue {
     private ownedNamespaces: NamespaceModel[];
 
     /**
-     * Current account attached metadatas
+     * Current account attached metadata list
      * @protected
      * @type {MetadataModel[]}
      */
-    private attachedMetadatas: MetadataModel[];
+    private attachedMetadataList: MetadataModel[];
 
     private currentAccount: AccountModel;
 
@@ -124,7 +124,7 @@ export class TableDisplayTs extends Vue {
 
     public isFetchingMosaics: boolean;
 
-    public isFetchingMetadatas: boolean;
+    public isFetchingMetadata: boolean;
 
     /**
      * Loading state of the data to be shown in the table
@@ -135,7 +135,7 @@ export class TableDisplayTs extends Vue {
             case TableAssetType.Namespace:
                 return this.isFetchingNamespaces;
             case TableAssetType.Metadata:
-                return this.isFetchingMetadatas;
+                return this.isFetchingMetadata;
             default:
                 return this.isFetchingMosaics;
         }
@@ -248,7 +248,7 @@ export class TableDisplayTs extends Vue {
                 return new NamespaceTableService(this.currentHeight, this.ownedNamespaces, this.networkConfiguration);
 
             case TableAssetType.Metadata:
-                return new MetadataTableService(this.currentHeight, this.attachedMetadatas, this.networkConfiguration);
+                return new MetadataTableService(this.currentHeight, this.attachedMetadataList, this.networkConfiguration);
 
             default:
                 throw new Error(`Asset type '${this.assetType}' does not exist in TableDisplay.`);
@@ -342,7 +342,7 @@ export class TableDisplayTs extends Vue {
                 break;
 
             case TableAssetType.Metadata:
-                await this.$store.dispatch('metadata/LOAD_METADATAS');
+                await this.$store.dispatch('metadata/LOAD_METADATA_LIST');
                 break;
         }
     }

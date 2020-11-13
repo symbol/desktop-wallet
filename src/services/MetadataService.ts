@@ -25,6 +25,7 @@ import {
     MosaicId,
     NamespaceId,
     MetadataTransactionService,
+    MetadataSearchCriteria,
 } from 'symbol-sdk';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -58,22 +59,19 @@ export class MetadataService {
         address: Address,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         metadataType: MetadataType,
+        targetId: MosaicId | NamespaceId | undefined,
     ): Observable<MetadataModel[]> {
         if (!address) {
             return of([]);
         }
 
-        const metadataModelList = this.metadataModelStorage.get(generationHash) || [];
         const metadataRepository = repositoryFactory.createMetadataRepository();
-        const searchCriteria = { targetAddress: address, metadataType: metadataType };
+        const searchCriteria: MetadataSearchCriteria = { sourceAddress: address, metadataType };
+        targetId && (searchCriteria.targetId = targetId);
 
         return metadataRepository
             .search(searchCriteria)
-            .pipe(map((metadatasPage) => metadatasPage.data.map((metadata) => new MetadataModel(metadata))))
-            .pipe(
-                tap((d: MetadataModel[]) => this.metadataModelStorage.set(generationHash, d)),
-                ObservableHelpers.defaultFirst(metadataModelList),
-            );
+            .pipe(map((metadataListPage) => metadataListPage.data.map((metadata) => new MetadataModel(metadata))));
     }
 
     /**

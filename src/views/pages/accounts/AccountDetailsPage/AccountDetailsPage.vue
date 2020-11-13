@@ -50,6 +50,10 @@
                         <AccountAliasDisplay :account="currentAccount" />
                     </div>
 
+                    <div class="detail-row">
+                        <AccountMetadataDisplay :account="currentAccount" @on-view-metadata="onShowMetadataDetailModal" />
+                    </div>
+
                     <div class="graph-row">
                         <AccountMultisigGraph
                             v-if="currentAccount && currentAccount.isMultisig"
@@ -107,6 +111,12 @@
             :visible="hasAccountUnlockModal"
             :on-success="onAccountUnlocked"
             @close="hasAccountUnlockModal = false"
+        />
+        <ModalMetadataDisplay
+            v-if="showMetadataDetailModal"
+            :metadata="currentMetadata"
+            :visible="showMetadataDetailModal"
+            @close="showMetadataDetailModal = false"
         />
 
         <!--<div class="account-detail-inner-container">

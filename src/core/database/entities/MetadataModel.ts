@@ -39,7 +39,7 @@ export class MetadataModel {
         this.metadataType = metadata.metadataEntry.metadataType;
         this.scopedMetadataKey = metadata.metadataEntry.scopedMetadataKey.toHex();
         this.targetAddress = metadata.metadataEntry.targetAddress.plain();
-        this.targetId = metadata.metadataEntry.targetId.toHex();
+        this.targetId = metadata.metadataEntry.targetId?.toHex();
         this.value = metadata.metadataEntry.value;
     }
 }

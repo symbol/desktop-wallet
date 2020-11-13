@@ -36,6 +36,8 @@ import AccountLinks from '@/components/AccountLinks/AccountLinks.vue';
 // @ts-ignore
 import AccountAliasDisplay from '@/components/AccountAliasDisplay/AccountAliasDisplay.vue';
 // @ts-ignore
+import AccountMetadataDisplay from '@/components/AccountMetadataDisplay/AccountMetadataDisplay.vue';
+// @ts-ignore
 import AccountMultisigGraph from '@/components/AccountMultisigGraph/AccountMultisigGraph.vue';
 
 import { AccountModel } from '@/core/database/entities/AccountModel';
@@ -43,6 +45,10 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
 import { AccountService } from '@/services/AccountService';
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
+// @ts-ignore
+import ModalMetadataDisplay from '@/views/modals/ModalMetadataDisplay/ModalMetadataDisplay.vue';
+import { MetadataModel } from '@/core/database/entities/MetadataModel';
+
 @Component({
     components: {
         AccountNameDisplay,
@@ -54,14 +60,17 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
         AccountAddressDisplay,
         AccountPublicKeyDisplay,
         AccountAliasDisplay,
+        AccountMetadataDisplay,
         AccountMultisigGraph,
         ModalFormProfileUnlock,
+        ModalMetadataDisplay,
     },
     computed: {
         ...mapGetters({
             defaultAccount: 'app/defaultAccount',
             currentAccount: 'account/currentAccount',
             knownAccounts: 'account/knownAccounts',
+            accountMetadata: 'metadata/transactions',
         }),
     },
 })
@@ -81,12 +90,22 @@ export class AccountDetailsPageTs extends Vue {
     public isUnlockingAccount: boolean = false;
 
     /**
+     * metadata detail modal visibility
+     */
+    public showMetadataDetailModal: boolean = false;
+
+    /**
      * Currently active account
      * @see {Store.Account}
      * @var {AccountModel}
      */
     public currentAccount: AccountModel;
     public readonly accountService: AccountService = new AccountService();
+
+    /**
+     * Current Metadata
+     */
+    public currentMetadata: MetadataModel;
 
     public async deleteAccount() {
         if (this.currentAccount) {
@@ -111,5 +130,10 @@ export class AccountDetailsPageTs extends Vue {
             this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.');
             console.error(e);
         }
+    }
+
+    public onShowMetadataDetailModal(metadataModel: MetadataModel) {
+        this.showMetadataDetailModal = true;
+        this.currentMetadata = metadataModel;
     }
 }

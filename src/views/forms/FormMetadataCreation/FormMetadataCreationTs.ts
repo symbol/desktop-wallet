@@ -158,7 +158,6 @@ export class FormMetadataCreationTs extends FormTransactionBase {
 
         // - maxFee must be absolute
         this.formItems.maxFee = this.defaultFee;
-        this.$store.dispatch('metadata/SET_METADATA_TYPE', this.type);
     }
 
     /**
@@ -276,7 +275,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         };
 
         await this.$store.dispatch('metadata/SET_METADATA_FORM_STATE', metadataForm);
-        await this.$store.dispatch('metadata/RESOLVE_METADATA_TRANSACTIONS');
+        await this.$store.dispatch('metadata/RESOLVE_METADATA_TRANSACTIONS', this.type);
         // await this.onChangeSigner(this.getTargetAddress().plain());
     }
 

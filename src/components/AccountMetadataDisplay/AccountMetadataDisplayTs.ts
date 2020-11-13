@@ -13,56 +13,42 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator';
+// external dependencies
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 
-// import internal components
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
-// @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue';
 
 @Component({
-    components: {
-        FormRow,
-    },
+    computed: mapGetters({
+        accountMetadataList: 'metadata/accountMetadataList',
+    }),
 })
-export class ModalMetadataDisplayTs extends Vue {
+export class AccountMetadataDisplayTs extends Vue {
     /**
-     * Modal visibility
+     * account metadata list
      */
-    @Prop({
-        default: false,
-    })
-    public visible: boolean;
+    protected accountMetadataList: MetadataModel[];
 
     /**
-     * Metadata Key
-     * @param {MetadataModel} metadata
+     * selected metadata model id
      */
-    @Prop({
-        required: true,
-    })
-    protected metadata: MetadataModel;
+    protected value: string = '';
 
-    /**
-     * selected metadata key value
-     */
-    public metadataKey: string = '';
+    set chosenValue(newValue: string) {
+        this.value = newValue;
+    }
 
-    /**
-     * Visibility state
-     * @type {boolean}
-     */
-    get show(): boolean {
-        return this.visible;
+    get chosenValue(): string {
+        return this.value;
     }
 
     /**
-     * Emits close event
+     * action show M
      */
-    set show(val) {
-        if (!val) {
-            this.$emit('close');
-        }
+    protected showMetadataDetail() {
+        const selectedMetadata: MetadataModel = this.accountMetadataList.find((metadata) => metadata.metadataId === this.value);
+        this.$emit('on-view-metadata', selectedMetadata);
     }
 
     /**
@@ -71,8 +57,8 @@ export class ModalMetadataDisplayTs extends Vue {
      */
     public mounted(): void {
         // set default value to the first namespace in the list
-        if (this.metadata) {
-            this.metadataKey = this.metadata.scopedMetadataKey;
+        if (this.accountMetadataList.length) {
+            this.chosenValue = this.accountMetadataList[0].metadataId;
         }
     }
 }
