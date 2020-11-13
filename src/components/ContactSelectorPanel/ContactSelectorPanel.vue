@@ -23,15 +23,31 @@
                 {{ $t('add_contact') }}
             </span>
 
-            <div class="account-switch-header-right-container" @click="hasBackupProfileModal = true">
+            <div
+                v-if="addressBook.getAllContacts().length > 0"
+                class="account-switch-header-right-container"
+                @click="hasBackupProfileModal = true"
+            >
                 <span type="button" class="back-up pointer button" @click="downloadAddressBook">
                     <img src="@/views/resources/img/newicons/Download.svg" class="icon-left-button" />
                     {{ $t('backup_address_book') }}
                 </span>
             </div>
+
+            <div
+                v-if="addressBook.getAllContacts().length === 0"
+                class="account-switch-header-right-container"
+                @click="hasImportProfileModal = true"
+            >
+                <span type="button" class="back-up pointer button" @click="hasImportProfileModal = true">
+                    <img src="@/views/resources/img/navbar/import.svg" class="icon-left-button" />
+                    {{ $t('import_address_book') }}
+                </span>
+            </div>
         </div>
 
         <ModalContactCreation v-if="hasAddAccountModal" :visible="hasAddAccountModal" @close="hasAddAccountModal = false" />
+        <ModalImportAddressBook v-if="hasImportProfileModal" :visible="hasImportProfileModal" @close="hasImportProfileModal = false" />
     </div>
 </template>
 

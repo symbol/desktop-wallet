@@ -2,7 +2,7 @@
     <div v-if="selectedContact" class="account-detail-outer-container">
         <div class="account-detail-inner-container">
             <div class="left-container">
-                <AccountContactQR :account="selectedContactPublicAccount" />
+                <AddressQR :contact="selectedContact" />
             </div>
             <div class="right-container">
                 <div class="account-details-grid">
@@ -33,6 +33,7 @@
                             :value="selectedContact.phone"
                             :new-value="selectedContact.phone"
                             :editing="false"
+                            :rules="''"
                             :label="$t('contact_phone')"
                             :on-edit="saveProperty('phone')"
                         />
@@ -43,6 +44,7 @@
                             :value="selectedContact.email"
                             :new-value="selectedContact.email"
                             :editing="false"
+                            :rules="''"
                             :label="$t('contact_email')"
                             :on-edit="saveProperty('email')"
                         />
@@ -53,6 +55,7 @@
                             :value="selectedContact.notes"
                             :new-value="selectedContact.notes"
                             :editing="false"
+                            :rules="''"
                             :label="$t('contact_notes')"
                             :on-edit="saveProperty('notes')"
                         />
@@ -61,7 +64,7 @@
                         <div class="bottom-buttons-container">
                             <div></div>
                             <button type="button" class="centered-button button-style button danger-button" @click="showDeleteModal = true">
-                                {{ $t('delete_account') }}
+                                {{ $t('delete_contact') }}
                             </button>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 <template>
     <div class="accounts-main-container">
         <div class="left-container">
-            <div class="left-top-container">
+            <div :class="[activePanel === 0 ? 'left-top-container' : 'left-top-full-container']">
                 <div class="account-switch-container">
                     <NavigationLinks
                         :direction="'horizontal'"
@@ -14,7 +14,7 @@
                     <ContactSelectorPanel v-if="activePanel === 1" />
                 </div>
             </div>
-            <div class="left-bottom-container">
+            <div v-if="activePanel === 0" class="left-bottom-container">
                 <!--TODO: Display hidden accounts following AccountSelectorPanel style.-->
                 <div class="hidden-account-header">
                     <h1 class="section-title">
