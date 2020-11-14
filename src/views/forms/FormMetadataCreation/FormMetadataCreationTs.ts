@@ -39,7 +39,6 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
 import { ScopedMetadataKeysHelpers } from '@/core/utils/ScopedMetadataKeysHelpers';
 import { AddressValidator } from '@/core/validation/validators';
-import { Signer } from '@/store/Account';
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
 
 // child components

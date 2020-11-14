@@ -28,9 +28,8 @@ import {
     MetadataSearchCriteria,
 } from 'symbol-sdk';
 import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
-import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { MetadataModelStorage } from '@/core/database/storage/MetadataModelStorage';
 
 /**
@@ -58,7 +57,6 @@ export class MetadataService {
             return of([]);
         }
 
-        const metadataModelList = this.metadataModelStorage.get(generationHash) || [];
         const metadataRepository = repositoryFactory.createMetadataRepository();
         const searchCriteria: MetadataSearchCriteria = { sourceAddress: address };
 

@@ -14,16 +14,14 @@
  *
  */
 
-import { Address, Deadline, MetadataType, MosaicId, NamespaceId, Transaction, UInt64 } from 'symbol-sdk';
+import { Address, Deadline, MetadataType, Transaction, UInt64 } from 'symbol-sdk';
+import * as _ from 'lodash';
 import Vue from 'vue';
 
 // internal dependencies
 import { AwaitLock } from './AwaitLock';
 import { MetadataService } from '@/services/MetadataService';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
-
-import * as _ from 'lodash';
-import { AccountModel } from '@/core/database/entities/AccountModel';
 
 const Lock = AwaitLock.create();
 
