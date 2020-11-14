@@ -53,21 +53,14 @@ export class MetadataService {
      * @param generationHash the current network generation hash.
      * @param address the current address.
      */
-    public getMetadataList(
-        repositoryFactory: RepositoryFactory,
-        generationHash: string,
-        address: Address,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        metadataType: MetadataType,
-        targetId: MosaicId | NamespaceId | undefined,
-    ): Observable<MetadataModel[]> {
+    public getMetadataList(repositoryFactory: RepositoryFactory, generationHash: string, address: Address): Observable<MetadataModel[]> {
         if (!address) {
             return of([]);
         }
 
+        const metadataModelList = this.metadataModelStorage.get(generationHash) || [];
         const metadataRepository = repositoryFactory.createMetadataRepository();
-        const searchCriteria: MetadataSearchCriteria = { sourceAddress: address, metadataType };
-        targetId && (searchCriteria.targetId = targetId);
+        const searchCriteria: MetadataSearchCriteria = { sourceAddress: address };
 
         return metadataRepository
             .search(searchCriteria)
@@ -134,5 +127,14 @@ export class MetadataService {
         }
 
         return metadataObservable;
+    }
+
+    /**
+     * get metadata list by target id
+     * @param metadataList
+     * @param targetId MosaicId | NamespaceId
+     */
+    public static getMosaicMetadataByTargetId(metadataList: MetadataModel[], targetId: string) {
+        return metadataList.filter((metadataModel) => metadataModel.targetId === targetId);
     }
 }

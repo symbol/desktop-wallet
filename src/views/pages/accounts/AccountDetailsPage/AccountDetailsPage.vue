@@ -51,7 +51,7 @@
                     </div>
 
                     <div class="detail-row">
-                        <AccountMetadataDisplay :account="currentAccount" @on-view-metadata="onShowMetadataDetailModal" />
+                        <AccountMetadataDisplay :metadata-list="accountMetadataList" @on-view-metadata="showMetadataDetailModal = true" />
                     </div>
 
                     <div class="graph-row">
@@ -114,8 +114,8 @@
         />
         <ModalMetadataDisplay
             v-if="showMetadataDetailModal"
-            :metadata="currentMetadata"
             :visible="showMetadataDetailModal"
+            :metadata-list="accountMetadataList"
             @close="showMetadataDetailModal = false"
         />
 

@@ -44,6 +44,8 @@ import FormAliasTransaction from '@/views/forms/FormAliasTransaction/FormAliasTr
 import FormExtendNamespaceDurationTransaction from '@/views/forms/FormExtendNamespaceDurationTransaction/FormExtendNamespaceDurationTransaction.vue';
 // @ts-ignore
 import FormMosaicSupplyChangeTransaction from '@/views/forms/FormMosaicSupplyChangeTransaction/FormMosaicSupplyChangeTransaction.vue';
+// @ts-ignore
+import ModalMetadataDisplay from '@/views/modals/ModalMetadataDisplay/ModalMetadataDisplay.vue';
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
@@ -60,6 +62,7 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
         FormAliasTransaction,
         FormExtendNamespaceDurationTransaction,
         FormMosaicSupplyChangeTransaction,
+        ModalMetadataDisplay,
         SignerFilter,
         ButtonAdd,
     },
@@ -108,6 +111,12 @@ export class TableDisplayTs extends Vue {
      * @type {MetadataModel[]}
      */
     private attachedMetadataList: MetadataModel[];
+
+    /**
+     * target mosaic or namespace metadata view
+     * @type {MetadataModel[]}
+     */
+    protected targetedMetadataList: MetadataModel[];
 
     private currentAccount: AccountModel;
 
@@ -468,6 +477,11 @@ export class TableDisplayTs extends Vue {
     protected showModifyMosaicSupplyForm(rowValues: Record<string, string>): void {
         this.modalFormsProps.mosaicId = new MosaicId(rowValues.hexId);
         Vue.set(this.modalFormsVisibility, 'mosaicSupplyChangeTransaction', true);
+    }
+
+    protected showMetadataValue(metadataList: MetadataModel[]) {
+        this.targetedMetadataList = metadataList;
+        Vue.set(this.modalFormsVisibility, 'targetedMetadataValue', true);
     }
 
     /**

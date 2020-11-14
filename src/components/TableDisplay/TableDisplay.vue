@@ -53,6 +53,7 @@
                     @on-show-alias-form="showAliasForm"
                     @on-show-extend-namespace-duration-form="showExtendNamespaceDurationForm"
                     @on-show-mosaic-supply-change-form="showModifyMosaicSupplyForm"
+                    @on-show-metadata="showMetadataValue"
                 />
             </div>
             <div v-else-if="!isLoading && (!displayedValues || displayedValues.length === 0)" class="no-data-outer-container">
@@ -116,6 +117,13 @@
                 />
             </template>
         </ModalFormWrap>
+
+        <ModalMetadataDisplay
+            v-if="modalFormsVisibility.targetedMetadataValue"
+            :visible="modalFormsVisibility.targetedMetadataValue"
+            :metadata-list="targetedMetadataList"
+            @close="closeModal('targetedMetadataValue')"
+        />
     </div>
 </template>
 

@@ -14,21 +14,22 @@
  *
  */
 // external dependencies
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
 
 @Component({
-    computed: mapGetters({
-        accountMetadataList: 'metadata/accountMetadataList',
-    }),
+    computed: mapGetters({}),
 })
 export class AccountMetadataDisplayTs extends Vue {
     /**
      * account metadata list
      */
-    protected accountMetadataList: MetadataModel[];
+    @Prop({
+        default: [],
+    })
+    protected metadataList: MetadataModel[];
 
     /**
      * selected metadata model id
@@ -44,21 +45,13 @@ export class AccountMetadataDisplayTs extends Vue {
     }
 
     /**
-     * action show M
-     */
-    protected showMetadataDetail() {
-        const selectedMetadata: MetadataModel = this.accountMetadataList.find((metadata) => metadata.metadataId === this.value);
-        this.$emit('on-view-metadata', selectedMetadata);
-    }
-
-    /**
      * Hook called when the layout is mounted
      * @return {void}
      */
     public mounted(): void {
         // set default value to the first namespace in the list
-        if (this.accountMetadataList.length) {
-            this.chosenValue = this.accountMetadataList[0].metadataId;
+        if (this.metadataList.length) {
+            this.chosenValue = this.metadataList[0].metadataId;
         }
     }
 }

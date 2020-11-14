@@ -70,7 +70,7 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
             defaultAccount: 'app/defaultAccount',
             currentAccount: 'account/currentAccount',
             knownAccounts: 'account/knownAccounts',
-            accountMetadata: 'metadata/transactions',
+            accountMetadataList: 'metadata/accountMetadataList',
         }),
     },
 })
@@ -82,7 +82,18 @@ export class AccountDetailsPageTs extends Vue {
      */
     public defaultAccount: string;
 
+    /**
+     * known accounts on current network
+     * @type {AccountModel[]}
+     */
     public knownAccounts: AccountModel[];
+
+    /**
+     * account metadata list
+     * @type {MetadataModel[]}
+     */
+    public accountMetadataList: MetadataModel[];
+
     /**
      * Whether account is currently being unlocked
      * @var {boolean}
@@ -102,17 +113,13 @@ export class AccountDetailsPageTs extends Vue {
     public currentAccount: AccountModel;
     public readonly accountService: AccountService = new AccountService();
 
-    /**
-     * Current Metadata
-     */
-    public currentMetadata: MetadataModel;
-
     public async deleteAccount() {
         if (this.currentAccount) {
             this.hasAccountUnlockModal = true;
             return;
         }
     }
+
     public get hasAccountUnlockModal(): boolean {
         return this.isUnlockingAccount;
     }
@@ -130,10 +137,5 @@ export class AccountDetailsPageTs extends Vue {
             this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.');
             console.error(e);
         }
-    }
-
-    public onShowMetadataDetailModal(metadataModel: MetadataModel) {
-        this.showMetadataDetailModal = true;
-        this.currentMetadata = metadataModel;
     }
 }

@@ -35,18 +35,25 @@ export class ModalMetadataDisplayTs extends Vue {
     public visible: boolean;
 
     /**
-     * Metadata Key
-     * @param {MetadataModel} metadata
+     * Metadata models
+     * @param {MetadataModel[]} metadataList
      */
     @Prop({
         required: true,
     })
-    protected metadata: MetadataModel;
+    protected metadataList: MetadataModel[];
 
     /**
      * selected metadata key value
      */
     public metadataKey: string = '';
+
+    /**
+     * get selected metadata model by current key
+     */
+    protected get selectedMetadata(): MetadataModel {
+        return this.metadataList.find((metadata) => metadata.scopedMetadataKey === this.metadataKey);
+    }
 
     /**
      * Visibility state
@@ -71,8 +78,8 @@ export class ModalMetadataDisplayTs extends Vue {
      */
     public mounted(): void {
         // set default value to the first namespace in the list
-        if (this.metadata) {
-            this.metadataKey = this.metadata.scopedMetadataKey;
+        if (this.metadataList.length) {
+            this.metadataKey = this.metadataList[0].scopedMetadataKey;
         }
     }
 }

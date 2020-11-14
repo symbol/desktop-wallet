@@ -23,6 +23,7 @@ import { MetadataService } from '@/services/MetadataService';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
 
 import * as _ from 'lodash';
+import { AccountModel } from '@/core/database/entities/AccountModel';
 
 const Lock = AwaitLock.create();
 
@@ -67,16 +68,9 @@ export default {
     state: metadataState,
     getters: {
         getInitialized: (state: MetadataState) => state.initialized,
-        accountMetadataList: (state: MetadataState) =>
-            state.accountMetadataList.filter((metadata) => metadata.metadataType === MetadataType.Account),
-        mosaicMetadataList: (state: MetadataState, mosaicId: MosaicId) =>
-            state.accountMetadataList.filter(
-                (metadataModel) => metadataModel.targetId === mosaicId.toHex() && metadataModel.metadataType === MetadataType.Mosaic,
-            ),
-        namespaceMetadataList: (state: MetadataState, namespaceId: NamespaceId) =>
-            state.accountMetadataList.filter(
-                (metadataModel) => metadataModel.targetId === namespaceId.toHex() && metadataModel.metadataType === MetadataType.Namespace,
-            ),
+        accountMetadataList: (state: MetadataState) => state.accountMetadataList,
+        mosaicMetadataList: (state: MetadataState) => state.mosaicMetadataList,
+        namespaceMetadataList: (state: MetadataState) => state.namespaceMetadataList,
         isFetchingMetadata: (state: MetadataState) => state.isFetchingMetadata,
         metadataType: (state: MetadataState) => state.metadataType,
         metadataForm: (state: MetadataState) => state.metadataForm,
@@ -86,17 +80,23 @@ export default {
         setInitialized: (state: MetadataState, initialized) => {
             state.initialized = initialized;
         },
-        accountMetadataList: (state: MetadataState, metadataList: MetadataModel[]) => {
+        metadataList: (state: MetadataState, metadataList: MetadataModel[]) => {
             const uniqueMetadataList = _.uniqBy(metadataList, (n) => n.metadataId);
-            Vue.set(state, 'accountMetadataList', uniqueMetadataList);
-        },
-        mosaicMetadataList: (state: MetadataState, metadataList: MetadataModel[]) => {
-            const uniqueMetadataList = _.uniqBy(metadataList, (n) => n.metadataId);
-            Vue.set(state, 'mosaicMetadataList', uniqueMetadataList);
-        },
-        namespaceMetadataList: (state: MetadataState, metadataList: MetadataModel[]) => {
-            const uniqueMetadataList = _.uniqBy(metadataList, (n) => n.metadataId);
-            Vue.set(state, 'namespaceMetadataList', uniqueMetadataList);
+            Vue.set(
+                state,
+                'accountMetadataList',
+                uniqueMetadataList.filter((metadata) => metadata.metadataType === MetadataType.Account),
+            );
+            Vue.set(
+                state,
+                'mosaicMetadataList',
+                uniqueMetadataList.filter((metadata) => metadata.metadataType === MetadataType.Mosaic),
+            );
+            Vue.set(
+                state,
+                'namespaceMetadataList',
+                uniqueMetadataList.filter((metadata) => metadata.metadataType === MetadataType.Namespace),
+            );
         },
         isFetchingMetadata: (state: MetadataState, isFetchingMetadata: boolean) => Vue.set(state, 'isFetchingMetadata', isFetchingMetadata),
         metadataType: (state: MetadataState, metadataType: MetadataType) => {
@@ -134,11 +134,7 @@ export default {
             await dispatch('LOAD_METADATA_LIST');
         },
 
-        async LOAD_METADATA_LIST(
-            { commit, rootGetters },
-            metadataType: MetadataType = MetadataType.Account,
-            targetId: MosaicId | NamespaceId = undefined,
-        ) {
+        async LOAD_METADATA_LIST({ commit, rootGetters }) {
             const repositoryFactory = rootGetters['network/repositoryFactory'];
             const generationHash = rootGetters['network/generationHash'];
             const metadataService = new MetadataService();
@@ -148,16 +144,8 @@ export default {
             }
             commit('isFetchingMetadata', true);
             metadataService
-                .getMetadataList(repositoryFactory, generationHash, currentSignerAddress, metadataType, targetId)
-                .subscribe((metadataList) => {
-                    if (metadataType === MetadataType.Account) {
-                        commit('accountMetadataList', metadataList);
-                    } else if (metadataType === MetadataType.Mosaic) {
-                        commit('mosaicMetadataList', metadataList);
-                    } else {
-                        commit('namespaceMetadataList', metadataList);
-                    }
-                })
+                .getMetadataList(repositoryFactory, generationHash, currentSignerAddress)
+                .subscribe((metadataList) => commit('metadataList', metadataList))
                 .add(() => commit('isFetchingMetadata', false));
         },
 
