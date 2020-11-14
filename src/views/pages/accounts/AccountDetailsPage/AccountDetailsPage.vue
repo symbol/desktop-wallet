@@ -47,11 +47,11 @@
                     </div>
 
                     <div class="detail-row">
-                        <AccountAliasDisplay :account="currentAccount" />
+                        <AccountMetadataDisplay :metadata-list="accountMetadataList" @on-view-metadata="showMetadataDetailModal = true" />
                     </div>
 
                     <div class="detail-row">
-                        <AccountMetadataDisplay :metadata-list="accountMetadataList" @on-view-metadata="showMetadataDetailModal = true" />
+                        <AccountAliasDisplay :account="currentAccount" />
                     </div>
 
                     <div class="graph-row">
