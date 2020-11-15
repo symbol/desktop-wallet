@@ -98,7 +98,7 @@ export default {
                 mosaicMetadataList: MetadataModel[];
             },
         ) => {
-            const uniqueMosaics = _.uniqBy(mosaics, (mosaic) => mosaic.mosaicIdHex).map((mosaic) => {
+            const uniqueMosaics = mosaics.map((mosaic) => {
                 mosaic.metadataList = MetadataService.getMosaicMetadataByTargetId(mosaicMetadataList, mosaic.mosaicIdHex);
                 return mosaic;
             });
