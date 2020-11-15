@@ -133,6 +133,6 @@ export class MetadataService {
      * @param targetId MosaicId | NamespaceId
      */
     public static getMosaicMetadataByTargetId(metadataList: MetadataModel[], targetId: string) {
-        return metadataList.filter((metadataModel) => metadataModel.targetId === targetId);
+        return (metadataList && metadataList.filter((metadataModel) => metadataModel.targetId === targetId)) || [];
     }
 }
