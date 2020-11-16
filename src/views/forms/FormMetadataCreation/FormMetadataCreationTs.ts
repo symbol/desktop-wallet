@@ -168,9 +168,11 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      * @see {FormTransactionBase}
      * @param transactions
      */
-    protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
+    protected getTransactionCommandMode(): TransactionCommandMode {
         const target = this.getTargetAddress().plain();
-        if (this.formItems.signerAddress === target) {
+        if (this.selectedSigner.multisig) {
+            return TransactionCommandMode.MULTISIGN;
+        } else if (this.formItems.signerAddress === target) {
             return TransactionCommandMode.AGGREGATE;
         } else if (this.isMultisigAccount) {
             // multisig mode
