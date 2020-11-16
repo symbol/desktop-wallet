@@ -154,7 +154,9 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
             this.currentSelectedTransaction = {};
         }
     }
-
+    /**
+     * create transfer transaction
+     */
     private createTransferTx(tx: {}): TransferTransaction {
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
         this.formItems.recipientRaw = tx['formItems']['recipientRaw'];
@@ -189,6 +191,9 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
         }
         return t;
     }
+    /**
+     * create mosaic definition transaction
+     */
     private createMosaicTx(tx: {}): MosaicDefinitionTransaction {
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
         //const publicAccount = PublicAccount.createFromPublicKey(this.selectedSigner.publicKey, this.networkType)
@@ -210,7 +215,9 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
             maxFee,
         );
     }
-
+    /**
+     * create root namespace transaction
+     */
     private CreateRootNameSpaceTx(tx: {}): NamespaceRegistrationTransaction {
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
 
