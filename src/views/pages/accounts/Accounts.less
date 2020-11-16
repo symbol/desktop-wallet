@@ -70,10 +70,20 @@
 .right-container {
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 0.6rem auto;
+    grid-template-rows: 0.9rem auto;
     background-color: white;
     overflow: hidden;
     border-radius: @borderRadius;
+    .header-container {
+        height: fit-content;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 0.2rem;
+        .header-end {
+            margin-right: 0.4rem;
+        }
+    }
     & > .bottom-container {
         height: 100%;
         overflow-y: auto;

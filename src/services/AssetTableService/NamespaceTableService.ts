@@ -58,6 +58,7 @@ export class NamespaceTableService extends AssetTableService {
                 expired: expired,
                 aliasType: this.getAliasType(namespaceModel),
                 aliasIdentifier: this.getAliasIdentifier(namespaceModel),
+                metadataList: namespaceModel.metadataList || [],
             };
         });
     }

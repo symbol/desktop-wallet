@@ -99,6 +99,10 @@ export class TableRowTs extends Vue {
         return this.rowValues.expiration !== 'expired';
     }
 
+    protected get hasMetadata(): boolean {
+        return this.rowValues.metadataList && this.rowValues.metadataList.length;
+    }
+
     /**
      * Whether link or unlink should be the alias form button label
      * @protected

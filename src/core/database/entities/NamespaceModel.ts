@@ -15,6 +15,7 @@
  */
 
 import { NamespaceInfo } from 'symbol-sdk';
+import { MetadataModel } from './MetadataModel';
 
 /**
  * Stored POJO that holds namespace information.
@@ -37,8 +38,9 @@ export class NamespaceModel {
     public readonly startHeight: number;
     public readonly endHeight: number;
     public readonly depth: number;
+    public metadataList: MetadataModel[];
 
-    constructor(namespaceInfo: NamespaceInfo, name: string) {
+    constructor(namespaceInfo: NamespaceInfo, name: string, metadataList: MetadataModel[] = []) {
         this.namespaceIdHex = namespaceInfo.id.toHex();
         this.name = name;
         this.isRoot = namespaceInfo.isRoot();
@@ -52,5 +54,6 @@ export class NamespaceModel {
         this.startHeight = namespaceInfo.startHeight.compact();
         this.endHeight = namespaceInfo.endHeight.compact();
         this.depth = namespaceInfo.depth;
+        this.metadataList = metadataList;
     }
 }

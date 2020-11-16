@@ -21,6 +21,8 @@ import { NamespaceService } from '@/services/NamespaceService';
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
 
 import * as _ from 'lodash';
+import { MetadataModel } from '@/core/database/entities/MetadataModel';
+import { MetadataService } from '@/services/MetadataService';
 
 const Lock = AwaitLock.create();
 
@@ -56,9 +58,16 @@ export default {
         },
         namespaces: (
             state: NamespaceState,
-            { namespaces, currentSignerAddress }: { namespaces: NamespaceModel[]; currentSignerAddress: Address },
+            {
+                namespaces,
+                currentSignerAddress,
+                namespaceMetadataList,
+            }: { namespaces: NamespaceModel[]; currentSignerAddress: Address; namespaceMetadataList: MetadataModel[] },
         ) => {
-            const uniqueNamespaces = _.uniqBy(namespaces, (n) => n.namespaceIdHex);
+            const uniqueNamespaces = _.uniqBy(namespaces, (n) => n.namespaceIdHex).map((namespace) => {
+                namespace.metadataList = MetadataService.getMosaicMetadataByTargetId(namespaceMetadataList, namespace.namespaceIdHex);
+                return namespace;
+            });
             Vue.set(state, 'namespaces', uniqueNamespaces);
             Vue.set(
                 state,
@@ -92,6 +101,7 @@ export default {
             const generationHash = rootGetters['network/generationHash'];
             const namespaceService = new NamespaceService();
             const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
+            const namespaceMetadataList: MetadataModel[] = rootGetters['metadata/namespaceMetadataList'];
             if (!currentSignerAddress) {
                 return;
             }
@@ -99,7 +109,7 @@ export default {
             namespaceService
                 .getNamespaces(repositoryFactory, generationHash, [currentSignerAddress])
                 .subscribe((namespaces) => {
-                    commit('namespaces', { namespaces, currentSignerAddress });
+                    commit('namespaces', { namespaces, currentSignerAddress, namespaceMetadataList });
                 })
                 .add(() => commit('isFetchingNamespaces', false));
         },

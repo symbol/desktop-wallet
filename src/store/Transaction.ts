@@ -462,6 +462,11 @@ export default {
                 transaction instanceof AggregateTransaction ? transaction.innerTransactions.map(({ type }) => type) : [transaction.type],
             );
 
+            await dispatch('LOAD_TRANSACTIONS');
+
+            // reload metadata list first so that mosaics and namespaces can be updated
+            await dispatch('metadata/LOAD_METADATA_LIST', {}, { root: true });
+
             // add actions to the dispatcher according to the transaction types
             if (
                 [TransactionType.NAMESPACE_REGISTRATION, TransactionType.MOSAIC_ALIAS, TransactionType.ADDRESS_ALIAS].some((a) =>
@@ -470,8 +475,6 @@ export default {
             ) {
                 dispatch('namespace/LOAD_NAMESPACES', {}, { root: true });
             }
-
-            await dispatch('LOAD_TRANSACTIONS');
 
             // Reloading Balances
             await dispatch('account/LOAD_ACCOUNT_INFO', {}, { root: true });

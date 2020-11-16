@@ -203,7 +203,7 @@ export class FormTransactionBase extends Vue {
     get multisigAccounts(): Signer[] {
         const signers = this.signers;
         // if "self" is multisig, also return self
-        if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
+        if (this.isMultisigAccount) {
             return signers;
         }
 
@@ -217,6 +217,10 @@ export class FormTransactionBase extends Vue {
 
     set hasConfirmationModal(f: boolean) {
         this.isAwaitingSignature = f;
+    }
+
+    get isMultisigAccount(): boolean {
+        return this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig();
     }
 
     /// end-region computed properties getter/setter
