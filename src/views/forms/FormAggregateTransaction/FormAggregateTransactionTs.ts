@@ -3,8 +3,6 @@ import { mapGetters } from 'vuex';
 // @ts-ignore
 import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue';
 // @ts-ignore
-import FormMultisigAccountModificationTransaction from '@/views/forms/FormMultisigAccountModificationTransaction/FormMultisigAccountModificationTransaction.vue';
-// @ts-ignore
 import FormNamespaceRegistrationTransaction from '@/views/forms/FormNamespaceRegistrationTransaction/FormNamespaceRegistrationTransaction.vue';
 // @ts-ignore
 import FormMosaicDefinitionTransaction from '@/views/forms/FormMosaicDefinitionTransaction/FormMosaicDefinitionTransaction.vue';
@@ -21,7 +19,6 @@ import {
     MosaicNonce,
     MosaicId,
     MosaicFlags,
-    MultisigAccountModificationTransaction,
     NamespaceRegistrationTransaction,
 } from 'symbol-sdk';
 import { AccountModel } from '@/core/database/entities/AccountModel';
@@ -45,7 +42,6 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
         FormWrapper,
         ValidationObserver,
         FormTransferTransaction,
-        FormMultisigAccountModificationTransaction,
         FormNamespaceRegistrationTransaction,
         FormMosaicDefinitionTransaction,
         FormRow,
@@ -120,10 +116,6 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
             case 3:
                 this.transaction['title'] = `${this.$t('namespace_transaction')}` + this.aggregateTransactionIndex;
                 this.transaction['component'] = FormNamespaceRegistrationTransaction;
-                break;
-            case 4:
-                this.transaction['title'] = `${this.$t('multisig_transaction')}` + this.aggregateTransactionIndex;
-                this.transaction['component'] = FormMultisigAccountModificationTransaction;
                 break;
         }
         this.currentSelectedTransaction = this.transaction;
@@ -219,11 +211,6 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
         );
     }
 
-    // TODO:: Allow multisig Txs in aggregate transactions
-    private createMultisigTx(tx: {}): MultisigAccountModificationTransaction {
-        return;
-    }
-
     private CreateRootNameSpaceTx(tx: {}): NamespaceRegistrationTransaction {
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
 
@@ -311,14 +298,9 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
                 } else if (tx['title'].indexOf(`${this.$t('mosaic_transaction')}`) !== -1) {
                     transaction = this.createMosaicTx(tx);
                     // @ts-ignore
-                } else if (tx['title'].indexOf(`${this.$t('namespace_transaction')}`) !== -1) {
-                    // transaction
-                    transaction = this.CreateRootNameSpaceTx(tx);
                 } else {
-                    transaction = this.createMultisigTx(tx);
+                    transaction = this.CreateRootNameSpaceTx(tx);
                 }
-                // else if ()
-
                 aggregateTransactions.push(transaction);
             });
         }

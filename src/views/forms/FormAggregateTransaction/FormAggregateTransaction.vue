@@ -36,15 +36,6 @@
                             <img src="@/views/resources/img/icons/add.svg" alt />
                         </button>
                     </div>
-                    <!-- <div class="mosaic_data">
-                        <span class="img_container">
-                            <img src="@/views/resources/img/icons/multisig.svg" alt />
-                        </span>
-                        <span class="mosaic_name">{{ $t('multisignature_transfer_type') }}</span>
-                        <button class="add_button" @click="onClickAdd(4)">
-                            <img src="@/views/resources/img/icons/add.svg" alt />
-                        </button>
-                    </div> -->
                 </div>
             </div>
             <div class="left-bottom-container">
@@ -75,12 +66,7 @@
                                             src="@/views/resources/img/icons/mosaic.svg"
                                             alt
                                         />
-                                        <img
-                                            v-else-if="title.indexOf(`${$t('namespace_transaction')}`) !== -1"
-                                            src="@/views/resources/img/icons/namespace.svg"
-                                            alt
-                                        />
-                                        <img v-else src="@/views/resources/img/icons/multisig.svg" alt />
+                                        <img v-else src="@/views/resources/img/icons/namespace.svg" alt />
                                     </span>
                                     <span class="transfer_name">{{ title }}</span>
                                     <button class="remove_button" @click="onClickDelete(title)">
