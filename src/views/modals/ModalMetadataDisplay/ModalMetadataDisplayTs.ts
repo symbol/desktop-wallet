@@ -13,40 +13,47 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-
-// import external components
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { MetadataType } from 'symbol-sdk';
 
 // import internal components
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
 // @ts-ignore
-import FormMetadataCreation from '@/views/forms/FormMetadataCreation/FormMetadataCreation.vue';
+import FormRow from '@/components/FormRow/FormRow.vue';
 
 @Component({
     components: {
-        FormMetadataCreation,
+        FormRow,
     },
 })
-export class ModalMetadataUpdateTs extends Vue {
+export class ModalMetadataDisplayTs extends Vue {
+    /**
+     * Modal visibility
+     */
     @Prop({
         default: false,
     })
-    visible: boolean;
+    public visible: boolean;
 
     /**
-     * @MetadataModel
-     * Determine edit or add
-     */
-    protected metadata: MetadataModel;
-
-    /**
-     * Metadata update modal type
+     * Metadata models
+     * @param {MetadataModel[]} metadataList
      */
     @Prop({
-        default: MetadataType.Account,
+        required: true,
     })
-    protected type: MetadataType;
+    protected metadataList: MetadataModel[];
+
+    /**
+     * selected metadata key value
+     */
+    public metadataKey: string = '';
+
+    /**
+     * get selected metadata model by current key
+     */
+    protected get selectedMetadata(): MetadataModel {
+        return this.metadataList.find((metadata) => metadata.scopedMetadataKey === this.metadataKey);
+    }
 
     /**
      * Visibility state
@@ -66,10 +73,13 @@ export class ModalMetadataUpdateTs extends Vue {
     }
 
     /**
-     * Save Metadata handler
-     * @param {void}
+     * Hook called when the layout is mounted
+     * @return {void}
      */
-    protected saveMetadata(): void {
-        this.$emit('close');
+    public mounted(): void {
+        // set default value to the first namespace in the list
+        if (this.metadataList.length) {
+            this.metadataKey = this.metadataList[0].scopedMetadataKey;
+        }
     }
 }

@@ -29,6 +29,10 @@ import ContactSelectorPanel from '@/components/ContactSelectorPanel/ContactSelec
 import ContactDetailPanel from '@/components/ContactDetailPanel/ContactDetailPanel.vue';
 // @ts-ignore
 import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
+// @ts-ignore
+import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue';
+// @ts-ignore
+import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadataUpdate.vue';
 
 @Component({
     components: {
@@ -37,6 +41,8 @@ import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
         ContactSelectorPanel,
         ContactDetailPanel,
         NavigationLinks,
+        ButtonAdd,
+        ModalMetadataUpdate,
     },
     computed: {
         ...mapGetters({}),
@@ -59,4 +65,8 @@ export class AccountsTs extends Vue {
     public set activePanel(panel) {
         this.activeIndex = panel;
     }
+    /**
+     * Show add metadata modal
+     */
+    public showMetadataModal: boolean = false;
 }

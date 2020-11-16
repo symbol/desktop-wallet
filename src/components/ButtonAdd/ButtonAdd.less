@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-export class StorageHelpers {
-    public static sessionSave = (key, value) => {
-        sessionStorage.setItem(key, value);
-    };
+@import '../../views/resources/css/variables.less';
 
-    public static sessionRead = (key) => {
-        return sessionStorage.getItem(key) || '';
-    };
+.round-button {
+    display: flex;
+    align-items: center;
 
-    public static cleanSession = () => {
-        sessionStorage.clear();
-    };
+    .add-button-title {
+        font-size: @normalFont;
+        padding-left: 0.1rem;
+    }
 }

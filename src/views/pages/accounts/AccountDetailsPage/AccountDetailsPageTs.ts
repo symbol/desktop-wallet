@@ -36,6 +36,8 @@ import AccountLinks from '@/components/AccountLinks/AccountLinks.vue';
 // @ts-ignore
 import AccountAliasDisplay from '@/components/AccountAliasDisplay/AccountAliasDisplay.vue';
 // @ts-ignore
+import AccountMetadataDisplay from '@/components/AccountMetadataDisplay/AccountMetadataDisplay.vue';
+// @ts-ignore
 import AccountMultisigGraph from '@/components/AccountMultisigGraph/AccountMultisigGraph.vue';
 
 import { AccountModel } from '@/core/database/entities/AccountModel';
@@ -43,6 +45,10 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
 import { AccountService } from '@/services/AccountService';
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
+// @ts-ignore
+import ModalMetadataDisplay from '@/views/modals/ModalMetadataDisplay/ModalMetadataDisplay.vue';
+import { MetadataModel } from '@/core/database/entities/MetadataModel';
+
 @Component({
     components: {
         AccountNameDisplay,
@@ -54,14 +60,17 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
         AccountAddressDisplay,
         AccountPublicKeyDisplay,
         AccountAliasDisplay,
+        AccountMetadataDisplay,
         AccountMultisigGraph,
         ModalFormProfileUnlock,
+        ModalMetadataDisplay,
     },
     computed: {
         ...mapGetters({
             defaultAccount: 'app/defaultAccount',
             currentAccount: 'account/currentAccount',
             knownAccounts: 'account/knownAccounts',
+            accountMetadataList: 'metadata/accountMetadataList',
         }),
     },
 })
@@ -73,12 +82,28 @@ export class AccountDetailsPageTs extends Vue {
      */
     public defaultAccount: string;
 
+    /**
+     * known accounts on current network
+     * @type {AccountModel[]}
+     */
     public knownAccounts: AccountModel[];
+
+    /**
+     * account metadata list
+     * @type {MetadataModel[]}
+     */
+    public accountMetadataList: MetadataModel[];
+
     /**
      * Whether account is currently being unlocked
      * @var {boolean}
      */
     public isUnlockingAccount: boolean = false;
+
+    /**
+     * metadata detail modal visibility
+     */
+    public showMetadataDetailModal: boolean = false;
 
     /**
      * Currently active account
@@ -94,6 +119,7 @@ export class AccountDetailsPageTs extends Vue {
             return;
         }
     }
+
     public get hasAccountUnlockModal(): boolean {
         return this.isUnlockingAccount;
     }

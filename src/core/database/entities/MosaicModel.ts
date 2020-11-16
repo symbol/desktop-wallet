@@ -15,6 +15,7 @@
  */
 
 import { MosaicInfo } from 'symbol-sdk';
+import { MetadataModel } from './MetadataModel';
 
 /**
  * Stored POJO that holds mosaic information.
@@ -33,6 +34,7 @@ export class MosaicModel {
     public readonly duration: number;
     public readonly height: number;
     public readonly supply: number;
+    public metadataList: MetadataModel[] = [];
 
     constructor(
         public readonly addressRawPlain: string,
