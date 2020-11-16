@@ -36,7 +36,7 @@
                             <img src="@/views/resources/img/icons/add.svg" alt />
                         </button>
                     </div>
-                    <div class="mosaic_data">
+                    <!-- <div class="mosaic_data">
                         <span class="img_container">
                             <img src="@/views/resources/img/icons/multisig.svg" alt />
                         </span>
@@ -44,7 +44,7 @@
                         <button class="add_button" @click="onClickAdd(4)">
                             <img src="@/views/resources/img/icons/add.svg" alt />
                         </button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="left-bottom-container">
