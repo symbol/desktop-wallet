@@ -152,7 +152,7 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
     /**
      * on click save transaction, it should be added to the store
      */
-    async onSaveTransaction(value) {
+    onSaveTransaction(value) {
         if (value) {
             this.$store.dispatch('aggregateTransaction/ON_SAVE_TRANSACTION', {
                 title: this.currentSelectedTransaction['title'],
@@ -324,6 +324,7 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
         }
         return aggregateTransactions;
     }
+
     public get hasAccountUnlockModal(): boolean {
         return this.isUnlockingAccount;
     }

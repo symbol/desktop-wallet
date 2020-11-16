@@ -678,7 +678,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     /**
      * watch title to change form items on select different transactions
      */
-    @Watch('title')
+    @Watch('title', { immediate: true })
     onTitleChange() {
         if (this.isAggregate && this.value) {
             Object.assign(this.formItems, this.value);
