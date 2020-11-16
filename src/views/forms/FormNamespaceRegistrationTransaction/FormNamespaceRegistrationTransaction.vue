@@ -8,7 +8,11 @@
                         <template v-slot:label> {{ $t('form_label_registration_type') }}: </template>
                         <template v-slot:inputs>
                             <div class="inputs-container">
-                                <div v-if="$route.path.substring(1) === 'createNamespace'" :value="typeRootNamespace" class="display-value">
+                                <div
+                                    v-if="$route.path.substring(1) === 'createNamespace' || isAggregate"
+                                    :value="typeRootNamespace"
+                                    class="display-value"
+                                >
                                     {{ $t('option_root_namespace') }}
                                 </div>
                                 <div
@@ -57,7 +61,12 @@
                         :rental-type="formItems.registrationType === typeRootNamespace ? 'root-namespace' : 'child-namespace'"
                         :duration="formItems.duration"
                     />
-                    <MaxFeeAndSubmit v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
+                    <MaxFeeAndSubmit v-if="!isAggregate" v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
+                    <div v-else class="ml-2">
+                        <button type="submit" class="centered-button button-style inverted-button submit-button" @click="emitToAggregate">
+                            {{ $t('save') }}
+                        </button>
+                    </div>
                 </form>
             </ValidationObserver>
 

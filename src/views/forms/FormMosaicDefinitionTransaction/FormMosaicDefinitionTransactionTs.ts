@@ -24,7 +24,7 @@ import {
     Transaction,
     UInt64,
 } from 'symbol-sdk';
-import { Component } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 // internal dependencies
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
 // child components
@@ -64,6 +64,20 @@ import RentalFee from '@/components/RentalFees/RentalFee.vue';
     },
 })
 export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
+    @Prop({
+        default: () => ({}),
+    })
+    value: any;
+
+    @Prop({
+        default: '',
+    })
+    title: string;
+
+    @Prop({
+        default: false,
+    })
+    isAggregate: boolean;
     /**
      * Form items
      * @var {Record<string, any>}
@@ -170,5 +184,29 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
 
         // - populate maxFee
         this.formItems.maxFee = definition.maxFee.compact();
+    }
+    /**
+     * emit formItems values to aggregate transaction form to be saved in storage
+     */
+    public emitToAggregate() {
+        if (this.getTransactions().length > 0) {
+            this.$emit('txInput', this.formItems);
+        }
+    }
+    mounted() {
+        if (this.isAggregate && this.value) {
+            Object.assign(this.formItems, this.value);
+            // set supplyMutable to true by default so users will be able to change supply after creating the mosaic
+            this.formItems.supplyMutable = true;
+        }
+    }
+    /**
+     * watch title to change form items on select different transactions
+     */
+    @Watch('title')
+    onTitleChange() {
+        if (this.isAggregate) {
+            Object.assign(this.formItems, this.value);
+        }
     }
 }
