@@ -4,7 +4,8 @@
             <form onsubmit="event.preventDefault()">
                 <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
-                <SupplyInput v-model="formItems.supply" />
+                <!-- hide supply input in aggregate transactions -->
+                <SupplyInput v-if="!isAggregate" v-model="formItems.supply" />
 
                 <DivisibilityInput v-model="formItems.divisibility" />
 
@@ -34,7 +35,12 @@
                     </template>
                 </FormRow>
                 <RentalFee :rental-type="'mosaic'"></RentalFee>
-                <MaxFeeAndSubmit v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
+                <MaxFeeAndSubmit v-if="!isAggregate" v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
+                <div v-else class="ml-2">
+                    <button type="submit" class="centered-button button-style inverted-button submit-button" @click="emitToAggregate">
+                        {{ $t('save') }}
+                    </button>
+                </div>
             </form>
         </ValidationObserver>
 
