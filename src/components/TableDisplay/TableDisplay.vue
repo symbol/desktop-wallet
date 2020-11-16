@@ -3,9 +3,8 @@
         <div class="upper-section-container">
             <div class="table-title-container section-title">
                 <div class="user-operation">
-                    <span v-show="assetType === 'metadata'" class="add-metadata-button" @click="$emit('add-metadata')">
-                        <Icon class="add-icon" type="md-add-circle" />
-                        {{ $t('add_metadata') }}
+                    <span class="add-metadata-button">
+                        <ButtonAdd :title="$t('add_metadata')" :disabled="false" @click="$emit('on-add-metadata')" />
                     </span>
                     <Checkbox v-if="assetType !== 'metadata'" v-model="showExpired" class="table-filter-item-container">
                         <span v-show="assetType === 'mosaic'">{{ $t('show_expired_mosaics') }}</span>
@@ -54,6 +53,7 @@
                     @on-show-alias-form="showAliasForm"
                     @on-show-extend-namespace-duration-form="showExtendNamespaceDurationForm"
                     @on-show-mosaic-supply-change-form="showModifyMosaicSupplyForm"
+                    @on-show-metadata="showMetadataValue"
                 />
             </div>
             <div v-else-if="!isLoading && (!displayedValues || displayedValues.length === 0)" class="no-data-outer-container">
@@ -117,6 +117,13 @@
                 />
             </template>
         </ModalFormWrap>
+
+        <ModalMetadataDisplay
+            v-if="modalFormsVisibility.targetedMetadataValue"
+            :visible="modalFormsVisibility.targetedMetadataValue"
+            :metadata-list="targetedMetadataList"
+            @close="closeModal('targetedMetadataValue')"
+        />
     </div>
 </template>
 

@@ -47,6 +47,10 @@
                     </div>
 
                     <div class="detail-row">
+                        <AccountMetadataDisplay :metadata-list="accountMetadataList" @on-view-metadata="showMetadataDetailModal = true" />
+                    </div>
+
+                    <div class="detail-row">
                         <AccountAliasDisplay :account="currentAccount" />
                     </div>
 
@@ -107,6 +111,12 @@
             :visible="hasAccountUnlockModal"
             :on-success="onAccountUnlocked"
             @close="hasAccountUnlockModal = false"
+        />
+        <ModalMetadataDisplay
+            v-if="showMetadataDetailModal"
+            :visible="showMetadataDetailModal"
+            :metadata-list="accountMetadataList"
+            @close="showMetadataDetailModal = false"
         />
 
         <!--<div class="account-detail-inner-container">

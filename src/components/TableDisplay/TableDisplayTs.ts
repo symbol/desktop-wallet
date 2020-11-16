@@ -35,6 +35,8 @@ import { TableAssetType } from './TableAssetType';
 // @ts-ignore
 import TableRow from '@/components/TableRow/TableRow.vue';
 // @ts-ignore
+import ButtonAdd from '@/components/ButtonAdd/ButtonAdd';
+// @ts-ignore
 import ModalFormWrap from '@/views/modals/ModalFormWrap/ModalFormWrap.vue';
 // @ts-ignore
 import FormAliasTransaction from '@/views/forms/FormAliasTransaction/FormAliasTransaction.vue';
@@ -42,6 +44,8 @@ import FormAliasTransaction from '@/views/forms/FormAliasTransaction/FormAliasTr
 import FormExtendNamespaceDurationTransaction from '@/views/forms/FormExtendNamespaceDurationTransaction/FormExtendNamespaceDurationTransaction.vue';
 // @ts-ignore
 import FormMosaicSupplyChangeTransaction from '@/views/forms/FormMosaicSupplyChangeTransaction/FormMosaicSupplyChangeTransaction.vue';
+// @ts-ignore
+import ModalMetadataDisplay from '@/views/modals/ModalMetadataDisplay/ModalMetadataDisplay.vue';
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
@@ -58,7 +62,9 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
         FormAliasTransaction,
         FormExtendNamespaceDurationTransaction,
         FormMosaicSupplyChangeTransaction,
+        ModalMetadataDisplay,
         SignerFilter,
+        ButtonAdd,
     },
     computed: {
         ...mapGetters({
@@ -66,12 +72,12 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
             currentAccount: 'account/currentAccount',
             holdMosaics: 'mosaic/holdMosaics',
             ownedNamespaces: 'namespace/ownedNamespaces',
-            attachedMetadatas: 'metadata/metadatas',
+            attachedMetadataList: 'metadata/accountMetadataList',
             networkConfiguration: 'network/networkConfiguration',
             signers: 'account/signers',
             isFetchingNamespaces: 'namespace/isFetchingNamespaces',
             isFetchingMosaics: 'mosaic/isFetchingMosaics',
-            isFetchingMetadatas: 'metadata/isFetchingMetadatas',
+            isFetchingMetadata: 'metadata/isFetchingMetadata',
         }),
     },
 })
@@ -100,11 +106,17 @@ export class TableDisplayTs extends Vue {
     private ownedNamespaces: NamespaceModel[];
 
     /**
-     * Current account attached metadatas
+     * Current account attached metadata list
      * @protected
      * @type {MetadataModel[]}
      */
-    private attachedMetadatas: MetadataModel[];
+    private attachedMetadataList: MetadataModel[];
+
+    /**
+     * target mosaic or namespace metadata view
+     * @type {MetadataModel[]}
+     */
+    protected targetedMetadataList: MetadataModel[];
 
     private currentAccount: AccountModel;
 
@@ -121,7 +133,7 @@ export class TableDisplayTs extends Vue {
 
     public isFetchingMosaics: boolean;
 
-    public isFetchingMetadatas: boolean;
+    public isFetchingMetadata: boolean;
 
     /**
      * Loading state of the data to be shown in the table
@@ -132,7 +144,7 @@ export class TableDisplayTs extends Vue {
             case TableAssetType.Namespace:
                 return this.isFetchingNamespaces;
             case TableAssetType.Metadata:
-                return this.isFetchingMetadatas;
+                return this.isFetchingMetadata;
             default:
                 return this.isFetchingMosaics;
         }
@@ -245,7 +257,7 @@ export class TableDisplayTs extends Vue {
                 return new NamespaceTableService(this.currentHeight, this.ownedNamespaces, this.networkConfiguration);
 
             case TableAssetType.Metadata:
-                return new MetadataTableService(this.currentHeight, this.attachedMetadatas, this.networkConfiguration);
+                return new MetadataTableService(this.currentHeight, this.attachedMetadataList, this.networkConfiguration);
 
             default:
                 throw new Error(`Asset type '${this.assetType}' does not exist in TableDisplay.`);
@@ -339,7 +351,7 @@ export class TableDisplayTs extends Vue {
                 break;
 
             case TableAssetType.Metadata:
-                await this.$store.dispatch('metadata/LOAD_METADATAS');
+                await this.$store.dispatch('metadata/LOAD_METADATA_LIST');
                 break;
         }
     }
@@ -465,6 +477,11 @@ export class TableDisplayTs extends Vue {
     protected showModifyMosaicSupplyForm(rowValues: Record<string, string>): void {
         this.modalFormsProps.mosaicId = new MosaicId(rowValues.hexId);
         Vue.set(this.modalFormsVisibility, 'mosaicSupplyChangeTransaction', true);
+    }
+
+    protected showMetadataValue(metadataList: MetadataModel[]) {
+        this.targetedMetadataList = metadataList;
+        Vue.set(this.modalFormsVisibility, 'targetedMetadataValue', true);
     }
 
     /**

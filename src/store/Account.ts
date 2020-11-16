@@ -321,6 +321,7 @@ export default {
             dispatch('namespace/SIGNER_CHANGED', {}, { root: true });
             dispatch('mosaic/SIGNER_CHANGED', {}, { root: true });
             dispatch('transaction/SIGNER_CHANGED', {}, { root: true });
+            dispatch('metadata/SIGNER_CHANGED', {}, { root: true });
 
             // open / close websocket connections
             if (previousSignerAddress) {

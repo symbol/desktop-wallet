@@ -217,7 +217,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return txs;
     }
 
-    protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
+    protected getTransactionCommandMode(): TransactionCommandMode {
         if (this.action === HarvestingAction.STOP) {
             return TransactionCommandMode.SIMPLE;
         }

@@ -13,11 +13,23 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { MetadataModel } from '@/core/database/entities/MetadataModel';
-import { Address, MetadataType, RepositoryFactory } from 'symbol-sdk';
+import {
+    Address,
+    MetadataType,
+    RepositoryFactory,
+    Transaction,
+    NetworkType,
+    Deadline,
+    UInt64,
+    KeyGenerator,
+    MosaicId,
+    NamespaceId,
+    MetadataTransactionService,
+    MetadataSearchCriteria,
+} from 'symbol-sdk';
 import { Observable, of } from 'rxjs';
-import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { MetadataModel } from '@/core/database/entities/MetadataModel';
 import { MetadataModelStorage } from '@/core/database/storage/MetadataModelStorage';
 
 /**
@@ -40,26 +52,87 @@ export class MetadataService {
      * @param generationHash the current network generation hash.
      * @param address the current address.
      */
-    public getMetadataList(
-        repositoryFactory: RepositoryFactory,
-        generationHash: string,
-        address: Address,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        metadataType: MetadataType,
-    ): Observable<MetadataModel[]> {
+    public getMetadataList(repositoryFactory: RepositoryFactory, generationHash: string, address: Address): Observable<MetadataModel[]> {
         if (!address) {
             return of([]);
         }
 
-        const metadataModelList = this.metadataModelStorage.get(generationHash) || [];
         const metadataRepository = repositoryFactory.createMetadataRepository();
+        const searchCriteria: MetadataSearchCriteria = { targetAddress: address };
 
         return metadataRepository
-            .search({ sourceAddress: address })
-            .pipe(map((metadatasPage) => metadatasPage.data.map((metadata) => new MetadataModel(metadata))))
-            .pipe(
-                tap((d: MetadataModel[]) => this.metadataModelStorage.set(generationHash, d)),
-                ObservableHelpers.defaultFirst(metadataModelList),
+            .search(searchCriteria)
+            .pipe(map((metadataListPage) => metadataListPage.data.map((metadata) => new MetadataModel(metadata))));
+    }
+
+    /**
+     * get metadata creation observable
+     * @returns {Observable<Transaction>}
+     */
+    public metadataTransactionObserver(
+        repositoryFactory: RepositoryFactory,
+        deadline: Deadline,
+        networkType: NetworkType,
+        sourceAddress: Address,
+        targetAddress: Address,
+        scopedKey: string,
+        value: string,
+        targetId: string,
+        metadataType: MetadataType,
+        maxFee: UInt64,
+    ): Observable<Transaction> {
+        const scopedMetadataKey = KeyGenerator.generateUInt64Key(scopedKey);
+
+        const metadataRepository = repositoryFactory.createMetadataRepository();
+        const metadataTransactionService = new MetadataTransactionService(metadataRepository);
+
+        let metadataObservable: Observable<Transaction> = null;
+
+        if (metadataType === MetadataType.Account) {
+            metadataObservable = metadataTransactionService.createAccountMetadataTransaction(
+                deadline,
+                networkType,
+                targetAddress,
+                scopedMetadataKey,
+                value,
+                sourceAddress,
+                maxFee,
             );
+        } else if (metadataType === MetadataType.Mosaic) {
+            const mosaicId = new MosaicId(targetId);
+            metadataObservable = metadataTransactionService.createMosaicMetadataTransaction(
+                deadline,
+                networkType,
+                targetAddress,
+                mosaicId,
+                scopedMetadataKey,
+                value,
+                sourceAddress,
+                maxFee,
+            );
+        } else {
+            const namespaceId = new NamespaceId(targetId);
+            metadataObservable = metadataTransactionService.createNamespaceMetadataTransaction(
+                deadline,
+                networkType,
+                targetAddress,
+                namespaceId,
+                scopedMetadataKey,
+                value,
+                sourceAddress,
+                maxFee,
+            );
+        }
+
+        return metadataObservable;
+    }
+
+    /**
+     * get metadata list by target id
+     * @param metadataList
+     * @param targetId MosaicId | NamespaceId
+     */
+    public static getMosaicMetadataByTargetId(metadataList: MetadataModel[], targetId: string) {
+        return (metadataList && metadataList.filter((metadataModel) => metadataModel.targetId === targetId)) || [];
     }
 }
