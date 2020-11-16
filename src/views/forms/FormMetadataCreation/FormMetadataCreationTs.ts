@@ -17,6 +17,8 @@ import { Address, MetadataType, PublicAccount, RepositoryFactory, Transaction } 
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
+import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
+// @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
@@ -55,6 +57,7 @@ import { mapGetters } from 'vuex';
         MosaicSelector,
         NamespaceSelector,
         MaxFeeAndSubmit,
+        FormWrapper,
         FormRow,
         ModalTransactionConfirmation,
         SignerSelector,
@@ -160,23 +163,28 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     }
 
     /**
+     * get transaction command mode
      * @override
      * @see {FormTransactionBase}
+     * @param transactions
      */
-    public createTransactionCommand(): TransactionCommand {
-        return new TransactionCommand(
-            TransactionCommandMode.AGGREGATE,
-            this.selectedSigner,
-            this.currentSignerPublicKey,
-            this.metadataTransactions,
-            this.networkMosaic,
-            this.generationHash,
-            this.networkType,
-            this.epochAdjustment,
-            this.networkConfiguration,
-            this.transactionFees,
-            this.selectedSigner.requiredCosignatures,
-        );
+    protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
+        const target = this.getTargetAddress().plain();
+        if (this.formItems.signerAddress === target) {
+            return TransactionCommandMode.AGGREGATE;
+        } else if (this.isMultisigAccount) {
+            // multisig mode
+        } else {
+            return TransactionCommandMode.MULTISIGN;
+        }
+    }
+
+    /**
+     * get transactions
+     * @see {FormTransactionBase}
+     */
+    public getTransactions() {
+        return this.metadataTransactions;
     }
 
     /**
@@ -275,7 +283,6 @@ export class FormMetadataCreationTs extends FormTransactionBase {
 
         await this.$store.dispatch('metadata/SET_METADATA_FORM_STATE', metadataForm);
         await this.$store.dispatch('metadata/RESOLVE_METADATA_TRANSACTIONS', this.type);
-        // await this.onChangeSigner(this.getTargetAddress().plain());
     }
 
     private getTargetAddress(): Address {
@@ -288,5 +295,19 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         }
 
         return targetAddress;
+    }
+
+    /**
+     * Whether form has any changes
+     * @readonly
+     * @return {boolean}
+     */
+    public get hasFormAnyChanges(): boolean {
+        return (
+            this.formItems.signerAddress.length > 0 ||
+            this.formItems.targetAccount.length > 0 ||
+            this.formItems.scopedKey.length > 0 ||
+            this.formItems.metadataValue.length > 0
+        );
     }
 }
