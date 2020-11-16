@@ -4,7 +4,8 @@
             <form onsubmit="event.preventDefault()">
                 <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
-                <SupplyInput v-model="formItems.supply" />
+                <!-- hide supply input in aggregate transactions -->
+                <SupplyInput v-if="!isAggregate" v-model="formItems.supply" />
 
                 <DivisibilityInput v-model="formItems.divisibility" />
 

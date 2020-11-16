@@ -196,6 +196,8 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     mounted() {
         if (this.isAggregate && this.value) {
             Object.assign(this.formItems, this.value);
+            // set supplyMutable to true by default so users will be able to change supply after creating the mosaic
+            this.formItems.supplyMutable = true;
         }
     }
     /**
