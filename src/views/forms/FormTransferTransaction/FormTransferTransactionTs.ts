@@ -134,6 +134,21 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     })
     showTransactionActions: boolean;
 
+    @Prop({
+        default: () => ({}),
+    })
+    value: any;
+
+    @Prop({
+        default: '',
+    })
+    title: string;
+
+    @Prop({
+        default: false,
+    })
+    isAggregate: boolean;
+
     /// end-region component properties
 
     /**
@@ -156,6 +171,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         messagePlain: '',
         encryptMessage: false,
         maxFee: 0,
+        mosaics: [],
+        signerPublicKey: '',
     };
 
     public currentHeight: number;
@@ -249,8 +266,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             });
         } else {
             // - set attachedMosaics and allocate slots
-            Vue.nextTick(() => {
-                attachedMosaics.forEach((attachedMosaic, index) => {
+            Vue.nextTick().then(async () => {
+                await attachedMosaics.forEach((attachedMosaic, index) => {
                     this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
                     Vue.set(this.formItems.attachedMosaics, index, attachedMosaic);
                 });
@@ -642,5 +659,29 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.formItems.encryptMessage = false;
         this.hasAccountUnlockModal = false;
         this.$store.dispatch('account/GET_RECIPIENT', null);
+    }
+    /**
+     * emit formItems values to aggregate transaction form to be saved in storage
+     */
+    public emitToAggregate() {
+        if (this.transactions && this.transactions[0]) {
+            this.formItems.mosaics = this.transactions[0].mosaics;
+            this.formItems.signerPublicKey = this.currentSignerPublicKey;
+            this.$emit('txInput', this.formItems);
+        }
+    }
+    mounted() {
+        if (this.isAggregate && this.value) {
+            Object.assign(this.formItems, this.value);
+        }
+    }
+    /**
+     * watch title to change form items on select different transactions
+     */
+    @Watch('title')
+    onTitleChange() {
+        if (this.isAggregate && this.value) {
+            Object.assign(this.formItems, this.value);
+        }
     }
 }

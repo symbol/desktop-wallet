@@ -381,7 +381,7 @@ export const routes: AppRoute[] = [
                     icon: officialIcons.aggregate,
                 },
                 // @ts-ignore
-                component: () => import('@/views/pages/aggregate/Aggregate.vue'),
+                component: () => import('@/views/forms/FormAggregateTransaction/FormAggregateTransaction.vue'),
                 children: [
                     {
                         path: '/aggregateTransaction',

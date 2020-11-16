@@ -15,7 +15,7 @@
  */
 // external dependencies
 import { NamespaceId, NamespaceRegistrationTransaction, NamespaceRegistrationType, Transaction, UInt64 } from 'symbol-sdk';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
@@ -72,6 +72,20 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     @Prop({ default: null }) parentNamespaceId: NamespaceId;
     @Prop({ default: null }) duration: number;
 
+    @Prop({
+        default: () => ({}),
+    })
+    value: any;
+
+    @Prop({
+        default: '',
+    })
+    title: string;
+
+    @Prop({
+        default: false,
+    })
+    isAggregate: boolean;
     /**
      * Current account's owned namespaces
      */
@@ -204,5 +218,27 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
      */
     public stripTagsNamesapceName() {
         this.formItems.newNamespaceName = FilterHelpers.stripFilter(this.formItems.newNamespaceName);
+    }
+    /**
+     * emit formItems values to aggregate transaction form to be saved in storage
+     */
+    public emitToAggregate() {
+        if (this.getTransactions().length > 0) {
+            this.$emit('txInput', this.formItems);
+        }
+    }
+    mounted() {
+        if (this.isAggregate && this.value) {
+            Object.assign(this.formItems, this.value);
+        }
+    }
+    /**
+     * watch title to change form items on select different transactions
+     */
+    @Watch('title')
+    onTitleChange() {
+        if (this.isAggregate && this.value) {
+            Object.assign(this.formItems, this.value);
+        }
     }
 }

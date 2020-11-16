@@ -18,7 +18,7 @@
                     <!-- Mosaics attachments input fields -->
                     <div v-for="(attachedMosaic, index) in formItems.attachedMosaics" :key="index">
                         <MosaicAttachmentInput
-                            v-if="attachedMosaic.uid"
+                            v-if="attachedMosaic && attachedMosaic.uid"
                             :mosaic-attachment="attachedMosaic"
                             :mosaic-hex-ids="mosaicInputsManager.getMosaicsBySlot(attachedMosaic.uid)"
                             :absolute="false"
@@ -40,7 +40,7 @@
 
                     <!-- Transfer message input field -->
                     <MessageInput v-model="formItems.messagePlain" @input="onChangeMessage" />
-                    <FormRow v-if="!selectedSigner.multisig">
+                    <FormRow v-if="!selectedSigner.multisig && !isAggregate">
                         <template v-slot:inputs>
                             <div class="inputs-container checkboxes">
                                 <Checkbox v-model="formItems.encryptMessage" @input="onEncryptionChange">
@@ -52,6 +52,7 @@
 
                     <!-- Transaction fee selector and submit button -->
                     <MaxFeeAndSubmit
+                        v-if="!isAggregate"
                         v-model="formItems.maxFee"
                         :hide-submit="hideSubmit"
                         :calculated-recommended-fee="calculatedRecommendedFee"
@@ -59,6 +60,11 @@
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
                     />
+                    <div v-else class="ml-2">
+                        <button type="submit" class="centered-button button-style inverted-button submit-button" @click="emitToAggregate">
+                            {{ $t('save') }}
+                        </button>
+                    </div>
 
                     <!-- Transaction URI display-->
                     <FormRow v-if="transactions && transactions.length > 0" class="transaction-uri-display-row">
