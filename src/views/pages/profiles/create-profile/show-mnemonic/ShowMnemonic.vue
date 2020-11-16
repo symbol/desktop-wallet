@@ -12,7 +12,6 @@
                             <img src="@/views/resources/img/icons/View.svg" style="margin-top: 10px;" />
                             <button
                                 class="inverted-button button-style fat-button create-account-style"
-                                style="width: 30%;"
                                 @click="showMnemonic = true"
                             >
                                 {{ $t('display_mnemonic') }}
