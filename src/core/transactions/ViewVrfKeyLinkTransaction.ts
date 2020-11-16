@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { VrfKeyLinkTransaction, Address, LinkAction } from 'symbol-sdk';
+import { VrfKeyLinkTransaction, LinkAction } from 'symbol-sdk';
 import { TransactionView } from './TransactionView';
 import i18n from '@/language';
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
@@ -24,12 +24,8 @@ export class ViewVrfKeyLinkTransaction extends TransactionView<VrfKeyLinkTransac
      */
     protected resolveDetailItems(): TransactionDetailItem[] {
         return [
-            {
-                key: 'linked_account_address',
-                value: Address.createFromPublicKey(this.transaction.linkedPublicKey, this.transaction.networkType).plain(),
-            },
             { key: 'link_action', value: this.transaction.linkAction == LinkAction.Link ? i18n.t('link') : i18n.t('unlink') },
-            { key: 'linked_public_key', value: this.transaction.linkedPublicKey },
+            { key: 'linked_vrf_public_key', value: this.transaction.linkedPublicKey },
         ];
     }
 }

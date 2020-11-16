@@ -14,16 +14,19 @@
  *
  */
 import {
-    Address,
-    TransferTransaction,
     UInt64,
-    PersistentHarvestingDelegationMessage,
     AccountKeyLinkTransaction,
     LinkAction,
     Transaction,
+    VrfKeyLinkTransaction,
+    Account,
+    NodeKeyLinkTransaction,
+    PersistentDelegationRequestTransaction,
+    AccountInfo,
+    AggregateTransaction,
     PublicAccount,
 } from 'symbol-sdk';
-import { Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
 // internal dependencies
@@ -39,11 +42,24 @@ import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirm
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
 // @ts-ignore
-import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
+import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
 // @ts-ignore
 import NetworkNodeSelector from '@/components/NetworkNodeSelector/NetworkNodeSelector.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
+// @ts-ignore
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
+import { ValidationProvider } from 'vee-validate';
+
+import { feesConfig } from '@/config';
+import { HarvestingStatus } from '@/store/Harvesting';
+import { TransactionCommandMode } from '@/services/TransactionCommand';
+
+export enum HarvestingAction {
+    START = 1,
+    STOP = 2,
+    SWAP = 3,
+}
 
 @Component({
     components: {
@@ -51,20 +67,23 @@ import FormRow from '@/components/FormRow/FormRow.vue';
         ModalTransactionConfirmation,
         SignerSelector,
         ValidationObserver,
-        MaxFeeSelector,
+        MaxFeeAndSubmit,
         FormRow,
         NetworkNodeSelector,
+        ErrorTooltip,
+        ValidationProvider,
     },
     computed: {
         ...mapGetters({
             currentHeight: 'network/currentHeight',
+            currentSignerAccountInfo: 'account/currentSignerAccountInfo',
+            harvestingStatus: 'harvesting/status',
         }),
     },
 })
 export class FormPersistentDelegationRequestTransactionTs extends FormTransactionBase {
-    @Prop({ required: true }) remoteAccount: PublicAccount;
     @Prop({ default: null }) signerAddress: string;
-    @Prop({ default: true }) withLink: boolean;
+    //@Prop({ default: true }) withLink: boolean;
 
     /**
      * Formatters helpers
@@ -76,10 +95,20 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      */
     public formItems = {
         nodePublicKey: '',
-        vrfPublicKey: '',
         signerAddress: '',
-        maxFee: 0,
     };
+
+    private newVrfKeyAccount: Account;
+    private newRemoteAccount: Account;
+
+    /**
+     * Current signer account info
+     */
+    private currentSignerAccountInfo: AccountInfo;
+
+    private action = HarvestingAction.START;
+
+    private harvestingStatus: HarvestingStatus;
 
     /**
      * Reset the form with properties
@@ -87,12 +116,21 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      */
     protected resetForm() {
         // - set default form values
-        this.formItems.signerAddress =
-            this.signerAddress || (this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address);
-        this.formItems.nodePublicKey = '';
-        this.formItems.vrfPublicKey = '';
+        this.action = HarvestingAction.START;
         // - maxFee must be absolute
-        this.formItems.maxFee = this.defaultFee;
+        this.newVrfKeyAccount = Account.generateNewAccount(this.networkType);
+        this.newRemoteAccount = Account.generateNewAccount(this.networkType);
+    }
+
+    @Watch('currentSignerAccountInfo', { immediate: true })
+    private currentSignerWatch() {
+        this.formItems.signerAddress = this.signerAddress || this.currentSignerAccountInfo?.address.plain();
+
+        if (this.isNodeKeyLinked) {
+            this.formItems.nodePublicKey = this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey;
+        } else {
+            this.formItems.nodePublicKey = '';
+        }
     }
 
     /**
@@ -101,35 +139,127 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * @return {TransferTransaction[]}
      */
     protected getTransactions(): Transaction[] {
-        const maxFee = UInt64.fromUint(this.formItems.maxFee);
-        const message = PersistentHarvestingDelegationMessage.create(
-            this.remoteAccount.publicKey,
-            this.formItems.vrfPublicKey,
-            this.formItems.nodePublicKey,
-            this.networkType,
-        );
+        const maxFee = UInt64.fromUint(feesConfig.highest); // fixed to the Highest, txs must get confirmed
+        const txs: Transaction[] = [];
+        const txsToBeAggregated: Transaction[] = [];
 
-        const linkTx = AccountKeyLinkTransaction.create(
-            this.createDeadline(),
-            this.remoteAccount.publicKey,
-            LinkAction.Link,
-            this.networkType,
-            maxFee,
-        );
-        const transferTx = TransferTransaction.create(
-            this.createDeadline(),
-            this.instantiatedRecipient,
-            [],
-            message,
-            this.networkType,
-            maxFee,
-        );
+        /*
+         LINK
+         START => link all (new keys)
+         STOP =>  unlink all (linked keys)
+         SWAP =>  unlink(linked) + link all (new keys)
+         */
 
-        if (this.withLink === true) {
-            return [linkTx, transferTx];
+        if (this.isAccountKeyLinked) {
+            const accountKeyUnLinkTx = this.createAccountKeyLinkTx(
+                this.currentSignerAccountInfo.supplementalPublicKeys.linked.publicKey,
+                LinkAction.Unlink,
+                maxFee,
+            );
+            txsToBeAggregated.push(accountKeyUnLinkTx);
         }
 
-        return [transferTx];
+        if (this.isVrfKeyLinked) {
+            const vrfKeyUnLinkTx = this.createVrfKeyLinkTx(
+                this.currentSignerAccountInfo.supplementalPublicKeys.vrf.publicKey,
+                LinkAction.Unlink,
+                maxFee,
+            );
+            txsToBeAggregated.push(vrfKeyUnLinkTx);
+        }
+
+        if (this.isNodeKeyLinked) {
+            const nodeUnLinkTx = this.createNodeKeyLinkTx(
+                this.currentSignerAccountInfo.supplementalPublicKeys.node.publicKey,
+                LinkAction.Unlink,
+                maxFee,
+            );
+
+            txsToBeAggregated.push(nodeUnLinkTx);
+        }
+
+        if (this.action !== HarvestingAction.STOP) {
+            const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
+            const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
+            const nodeLinkTx = this.createNodeKeyLinkTx(this.formItems.nodePublicKey, LinkAction.Link, maxFee);
+            txsToBeAggregated.push(accountKeyLinkTx, vrfKeyLinkTx, nodeLinkTx);
+        }
+
+        if (txsToBeAggregated.length == 1) {
+            txs.push(txsToBeAggregated[0]);
+        }
+
+        if (txsToBeAggregated.length > 1) {
+            const currentSigner = PublicAccount.createFromPublicKey(this.currentSignerPublicKey, this.networkType);
+            txs.push(
+                AggregateTransaction.createComplete(
+                    this.createDeadline(),
+                    txsToBeAggregated.map((t) => t.toAggregate(currentSigner)),
+                    this.networkType,
+                    [],
+                    maxFee,
+                ),
+            );
+        }
+
+        if (this.action !== HarvestingAction.STOP) {
+            const persistentDelegationReqTx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
+                this.createDeadline(),
+                this.newRemoteAccount.privateKey,
+                this.newVrfKeyAccount.privateKey,
+                this.formItems.nodePublicKey,
+                this.networkType,
+                maxFee,
+            );
+            txs.push(persistentDelegationReqTx);
+        }
+
+        return txs;
+    }
+
+    protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
+        if (this.action === HarvestingAction.STOP) {
+            return TransactionCommandMode.SIMPLE;
+        }
+        return TransactionCommandMode.CHAINED_BINARY;
+    }
+
+    private createAccountKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): AccountKeyLinkTransaction {
+        return AccountKeyLinkTransaction.create(this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
+    }
+    private createVrfKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): VrfKeyLinkTransaction {
+        return VrfKeyLinkTransaction.create(this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
+    }
+    private createNodeKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): NodeKeyLinkTransaction {
+        return NodeKeyLinkTransaction.create(this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
+    }
+
+    /**
+     * Whether all keys are linked
+     */
+    private get allKeysLinked(): boolean {
+        return this.isAccountKeyLinked && this.isVrfKeyLinked && this.isNodeKeyLinked;
+    }
+
+    /**
+     * Whether account key is linked
+     */
+    private get isAccountKeyLinked(): boolean {
+        return !!this.currentSignerAccountInfo?.supplementalPublicKeys.linked;
+    }
+
+    /**
+     * Whether vrf key is linked
+     */
+    private get isVrfKeyLinked(): boolean {
+        return !!this.currentSignerAccountInfo?.supplementalPublicKeys.vrf;
+    }
+
+    /**
+     * Whether node key is linked
+     */
+    private get isNodeKeyLinked(): boolean {
+        return !!this.currentSignerAccountInfo?.supplementalPublicKeys.node;
     }
 
     /**
@@ -141,24 +271,81 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         throw new Error('This transaction can not be staged');
     }
 
-    /**
-     * Recipient used in the transaction
-     * @readonly
-     * @protected
-     * @type {Address}
-     */
-    protected get instantiatedRecipient(): Address {
-        return Address.createFromPublicKey(this.formItems.nodePublicKey, this.networkType);
+    public onStart() {
+        this.action = HarvestingAction.START;
+        this.onSubmit();
+    }
+
+    public onStop() {
+        this.action = HarvestingAction.STOP;
+        this.onSubmit();
+    }
+
+    public onSwap() {
+        this.action = HarvestingAction.SWAP;
+        this.onSubmit();
+    }
+
+    public get swapDisabled(): boolean {
+        return (
+            this.formItems.nodePublicKey?.toLowerCase() ===
+            this.currentSignerAccountInfo.supplementalPublicKeys?.node?.publicKey?.toLowerCase()
+        );
     }
 
     public onSubmit() {
-        if (!this.formItems.nodePublicKey.length) {
+        if (!this.allKeysLinked && !this.formItems.nodePublicKey.length) {
             this.$refs.observer.setErrors({ endpoint: this.$t('invalid_node').toString() });
             return;
         }
 
         // - open signature modal
         this.command = this.createTransactionCommand();
+        this.onShowConfirmationModal();
         return this.command;
+    }
+
+    /**
+     * Static list for the time being - until the dynamic solution
+     */
+    public get nodeList() {
+        return [
+            {
+                publicKey: 'BE60BE426872B3CB46FE2C9BAA521731EA52C0D57E004FC7C84293887AC3BAD0',
+                url: 'beacon-01.ap-northeast-1.0.10.0.x.symboldev.network',
+            },
+            {
+                publicKey: 'EE356A555802003C5666D8485185CDC3844F9502FAF24B589BDC4D6E9148022F',
+                url: 'beacon-01.eu-central-1.0.10.0.x.symboldev.network',
+            },
+            {
+                publicKey: '81890592F960AAEBDA7612C8917FA9C267A845D78D74D4B3651AF093E6775001',
+                url: 'beacon-01.us-west-2.0.10.0.x.symboldev.network',
+            },
+            {
+                publicKey: '2AF52C5AA9A5E13DD548A577DEBF21E7D3CC285A1B0798F4D450239CDDE5A169',
+                url: 'beacon-01.ap-southeast-1.0.10.0.x.symboldev.network',
+            },
+            {
+                publicKey: 'D74B89EE9378DEBD510A4139F8E8B10B878E12956059CD9E13253CF3AD73BDEB',
+                url: 'beacon-01.us-west-1.0.10.0.x.symboldev.network',
+            },
+            {
+                publicKey: '938D6C1BBDB09F3F1B9D95D2D902A94C95E3AA6F1069A805831D9E272DCF927F',
+                url: 'beacon-01.eu-west-1.0.10.0.x.symboldev.network',
+            },
+            {
+                publicKey: '2A40F7895F56389BE40C063B897E9E66E64705D55B19FC43C8CEB5F7F14ABE59',
+                url: 'beacon-01.us-east-1.0.10.0.x.symboldev.network',
+            },
+        ];
+    }
+
+    public get nodePublicKey() {
+        return this.formItems.nodePublicKey;
+    }
+
+    public set nodePublicKey(val) {
+        this.formItems.nodePublicKey = val;
     }
 }

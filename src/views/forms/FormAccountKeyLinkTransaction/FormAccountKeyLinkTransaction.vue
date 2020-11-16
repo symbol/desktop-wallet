@@ -1,6 +1,6 @@
 <template>
     <div>
-        {{ $t('Proxy_settings') }}
+        {{ $t('proxy_settings') }}
         <FormWrapper>
             <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
                 <form onsubmit="event.preventDefault()">

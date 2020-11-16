@@ -39,6 +39,7 @@ export enum TransactionCommandMode {
     SIMPLE = 'SIMPLE',
     AGGREGATE = 'AGGREGATE',
     MULTISIGN = 'MULTISIGN',
+    CHAINED_BINARY = 'CHAINED_BINARY',
 }
 
 export class TransactionCommand {
@@ -70,9 +71,26 @@ export class TransactionCommand {
                 }
                 if (this.mode == TransactionCommandMode.MULTISIGN) {
                     return of([this.announceHashAndAggregateBonded(service, signedTransactions)]);
+                } else if (this.mode == TransactionCommandMode.CHAINED_BINARY) {
+                    return of([this.announceChainedBinary(service, signedTransactions)]);
                 } else {
                     return of(this.announceSimple(service, signedTransactions));
                 }
+            }),
+        );
+    }
+
+    private announceChainedBinary(
+        service: TransactionAnnouncerService,
+        signedTransactions: Observable<SignedTransaction>[],
+    ): Observable<BroadcastResult> {
+        return signedTransactions[0].pipe(
+            flatMap((first) => {
+                return signedTransactions[1].pipe(
+                    flatMap((second) => {
+                        return service.announceChainedBinary(first, second);
+                    }),
+                );
             }),
         );
     }
@@ -110,7 +128,7 @@ export class TransactionCommand {
             return of([]);
         }
         const maxFee = this.stageTransactions.sort((a, b) => a.maxFee.compare(b.maxFee))[0].maxFee;
-        if (this.mode === TransactionCommandMode.SIMPLE) {
+        if (this.mode === TransactionCommandMode.SIMPLE || this.mode === TransactionCommandMode.CHAINED_BINARY) {
             return of(this.stageTransactions.map((t) => this.calculateSuggestedMaxFee(t)));
         } else {
             const currentSigner = PublicAccount.createFromPublicKey(this.signerPublicKey, this.networkType);

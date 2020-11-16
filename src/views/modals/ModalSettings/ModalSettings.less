@@ -1,6 +1,10 @@
+@import '../../resources/css/variables.less';
+
 .settings-modal-container {
+    overflow-y: auto;
     /deep/.ivu-modal {
         width: 12rem !important;
+
         .auto-complete-size {
             width: 100%;
         }
@@ -8,6 +12,27 @@
 
     /deep/.ivu-modal-body {
         display: grid;
-        grid-template-columns: 15% 85%;
+        grid-template-columns: 20% 80%;
+        padding: 0 !important;
+    }
+}
+
+.nav-links-wrapper {
+    border-right: 2px solid @grayLight;
+
+    .header-container {
+        padding-left: 0.25rem;
+        padding-top: 0.25rem;
+        padding-bottom: 0.45rem;
+
+        .title-style {
+            color: @primary;
+            font-size: @bigFont;
+            font-family: @symbolFontSemiBold;
+        }
+
+        .nav-wrapper {
+            height: 100%;
+        }
     }
 }

@@ -15,7 +15,7 @@
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { Account, NetworkType, Password, Crypto } from 'symbol-sdk';
+import { Account, NetworkType, Password, Crypto, Address } from 'symbol-sdk';
 // internal dependencies
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 // child components
@@ -127,7 +127,7 @@ export class ModalBackupProfileTs extends Vue {
             (account) =>
                 ({
                     name: account.name,
-                    address: account.address,
+                    address: Address.createFromRawAddress(account.address).pretty(),
                     publicKey: account.publicKey,
                     privateKey: Crypto.decrypt(account.encryptedPrivateKey, payload.password.value),
                 } as IAccountInfo),

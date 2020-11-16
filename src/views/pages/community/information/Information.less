@@ -3,12 +3,13 @@
     position: relative;
     width: 100%;
     height: 100%;
-    padding-left: 6%;
-    padding-right: 8%;
+    padding-left: 8%;
+    padding-right: 10%;
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 100%;
     overflow: hidden;
+    padding-bottom: 6%;
 }
 
 .articles-container {
@@ -21,25 +22,31 @@
     grid-template-rows: 2rem;
     overflow-x: hidden;
     overflow-y: auto;
+    margin-top: 2%;
+}
+
+.article-outer-container {
+    height: 90%;
 }
 
 .article-inner-container {
+    position: relative;
     display: grid;
     width: 100%;
     height: 100%;
     padding: 0.2rem;
     display: grid;
     grid-template-columns: 20% 80%;
-    grid-template-rows: 2rem;
+    grid-gap: 2%;
+    grid-template-rows: 1.75rem;
     overflow: hidden;
-    border-bottom: 2px solid rgba(68, 0, 78, 0.5);
-    margin-top: 2%; //TODO
+    border-bottom: 2px solid @grayLight;
 }
 
 .article-left-section {
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 0.4rem 0.6rem 1rem auto;
+    grid-template-rows: 0.3rem 0.6rem auto;
 }
 
 .article-right-section {
@@ -49,15 +56,14 @@
 }
 
 .article-from {
-    color: @blackLight;
-    font-weight: 300;
-    font-size: 0.9em;
+    color: @primary;
+    font-size: @bigFont;
+    font-style: italic;
 }
 
 .article-date {
-    color: @blackLight;
-    font-weight: 400;
-    font-size: 1.125em;
+    color: @primary;
+    font-size: @bigFont;
 }
 
 .link-icon {
@@ -66,19 +72,21 @@
 }
 
 .article-link a {
-    color: @blackLight;
-    font-weight: 400;
-    font-size: 0.9em;
+    color: @purpleLightest;
+    font-size: @bigFont;
 }
 
 .article-title {
-    color: @secondary;
-    font-size: 1.125em;
-    font-weight: 600;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: @primary;
+    font-weight: @bold;
+    font-size: @bigFont;
 }
 
 .article-content {
-    color: @blackLight;
-    font-size: 0.9em;
-    font-weight: 400;
+    color: @primary;
+    font-size: @normalFont;
+    font-family: @symbolFontLight;
 }

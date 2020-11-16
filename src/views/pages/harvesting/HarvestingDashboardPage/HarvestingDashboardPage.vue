@@ -20,6 +20,7 @@
                     {{ $t('harvested_blocks') }}
                 </h1>
             </div>
+            <HarvestedBlocksList />
         </div>
     </div>
 </template>
@@ -31,9 +32,10 @@ import { Component, Vue } from 'vue-property-decorator';
 // child components
 import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue';
 import HarvestStatisticsPanel from '@/components/HarvestStatisticsPanel/HarvestStatisticsPanel.vue';
+import HarvestedBlocksList from '@/views/pages/harvesting/HarvestedBlocksList/HarvestedBlocksList.vue';
 
 @Component({
-    components: { NavigationTabs, HarvestStatisticsPanel },
+    components: { NavigationTabs, HarvestStatisticsPanel, HarvestedBlocksList },
     data() {
         return {};
     },
