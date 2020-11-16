@@ -58,7 +58,7 @@ export class MetadataService {
         }
 
         const metadataRepository = repositoryFactory.createMetadataRepository();
-        const searchCriteria: MetadataSearchCriteria = { sourceAddress: address };
+        const searchCriteria: MetadataSearchCriteria = { targetAddress: address };
 
         return metadataRepository
             .search(searchCriteria)
