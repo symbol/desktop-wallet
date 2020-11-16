@@ -144,15 +144,31 @@ export class TransactionCommand {
                 );
                 return of([aggregate]);
             } else {
-                const aggregate = this.calculateSuggestedMaxFee(
-                    AggregateTransaction.createBonded(
-                        Deadline.create(this.epochAdjustment),
-                        this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
-                        this.networkType,
-                        [],
-                        maxFee,
-                    ),
-                );
+                // check if transaction has no signer assigned meaning it's a non-multisig signer sending simple transfer tx
+                const checkIfTxHaveNoSigner = this.stageTransactions.some((tx) => tx.signer === undefined);
+                let aggregate: Transaction;
+                if (checkIfTxHaveNoSigner) {
+                    aggregate = this.calculateSuggestedMaxFee(
+                        AggregateTransaction.createBonded(
+                            Deadline.create(this.epochAdjustment),
+                            this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
+                            this.networkType,
+                            [],
+                            maxFee,
+                        ),
+                    );
+                } else {
+                    // transaction got multisig child signer which should be used to sign the transaction
+                    aggregate = this.calculateSuggestedMaxFee(
+                        AggregateTransaction.createBonded(
+                            Deadline.create(this.epochAdjustment),
+                            this.stageTransactions.map((t) => t.toAggregate(t.signer)),
+                            this.networkType,
+                            [],
+                            maxFee,
+                        ),
+                    );
+                }
 
                 return account.signTransaction(aggregate, this.generationHash).pipe(
                     map((signedAggregateTransaction) => {
