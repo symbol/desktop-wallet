@@ -100,8 +100,8 @@
                         </template>
                     </FormRow>
                     <MaxFeeAndSubmit
-                        :disable-submit="!hasFormAnyChanges"
                         v-model="formItems.maxFee"
+                        :disable-submit="!hasFormAnyChanges"
                         @button-clicked="handleSubmit(onSubmit)"
                     />
                 </form>

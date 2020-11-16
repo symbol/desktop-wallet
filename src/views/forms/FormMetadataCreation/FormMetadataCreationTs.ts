@@ -35,7 +35,7 @@ import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
 
-import { TransactionCommand, TransactionCommandMode } from '@/services/TransactionCommand';
+import { TransactionCommandMode } from '@/services/TransactionCommand';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
