@@ -25,9 +25,14 @@ import {
     AccountInfo,
     AggregateTransaction,
     PublicAccount,
+    Deadline,
+    LockFundsTransaction,
+    Mosaic,
+    SignedTransaction,
 } from 'symbol-sdk';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
+import Vue from 'vue';
 
 // internal dependencies
 import { Formatters } from '@/core/utils/Formatters';
@@ -53,12 +58,18 @@ import { ValidationProvider } from 'vee-validate';
 
 import { feesConfig } from '@/config';
 import { HarvestingStatus } from '@/store/Harvesting';
-import { TransactionCommandMode } from '@/services/TransactionCommand';
+import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
+import { Observable, of } from 'rxjs';
+import { concatMap, flatMap, map, mergeAll, switchMap, tap, toArray } from 'rxjs/operators';
+import { BroadcastResult } from '@/core/transactions/BroadcastResult';
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { NodeModel } from '@/core/database/entities/NodeModel';
 
 export enum HarvestingAction {
     START = 1,
     STOP = 2,
     SWAP = 3,
+    ACTIVATE = 4,
 }
 
 @Component({
@@ -78,6 +89,7 @@ export enum HarvestingAction {
             currentHeight: 'network/currentHeight',
             currentSignerAccountInfo: 'account/currentSignerAccountInfo',
             harvestingStatus: 'harvesting/status',
+            currentSignerAccountModel: 'account/currentSignerAccountModel',
         }),
     },
 })
@@ -94,7 +106,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * Form items
      */
     public formItems = {
-        nodePublicKey: '',
+        nodeModel: { nodePublicKey: '' } as NodeModel,
         signerAddress: '',
     };
 
@@ -106,9 +118,15 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      */
     private currentSignerAccountInfo: AccountInfo;
 
+    private currentSignerAccountModel: AccountModel;
+
     private action = HarvestingAction.START;
 
     private harvestingStatus: HarvestingStatus;
+
+    private tempTransactionSigner: TransactionSigner;
+
+    private activating = false;
 
     /**
      * Reset the form with properties
@@ -120,6 +138,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         // - maxFee must be absolute
         this.newVrfKeyAccount = Account.generateNewAccount(this.networkType);
         this.newRemoteAccount = Account.generateNewAccount(this.networkType);
+        this.tempTransactionSigner = new AccountTransactionSigner(Account.generateNewAccount(this.networkType));
     }
 
     @Watch('currentSignerAccountInfo', { immediate: true })
@@ -127,21 +146,23 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         this.formItems.signerAddress = this.signerAddress || this.currentSignerAccountInfo?.address.plain();
 
         if (this.isNodeKeyLinked) {
-            this.formItems.nodePublicKey = this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey;
+            this.formItems.nodeModel.nodePublicKey = this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey;
+            if (this.currentSignerAccountModel?.selectedHarvestingNode) {
+                this.formItems.nodeModel = this.currentSignerAccountModel.selectedHarvestingNode;
+            } else {
+                this.formItems.nodeModel = { nodePublicKey: '' } as NodeModel;
+            }
         } else {
-            this.formItems.nodePublicKey = '';
+            this.formItems.nodeModel = { nodePublicKey: '' } as NodeModel;
         }
     }
 
     /**
-     * Getter for PERSISTENT DELEGATION REQUEST transactions that will be staged
-     * @see {FormTransactionBase}
-     * @return {TransferTransaction[]}
+     * To get all the key link transactions
      */
-    protected getTransactions(): Transaction[] {
+    protected getKeyLinkTransactions(transactionSigner = this.tempTransactionSigner): Observable<Transaction[]> {
         const maxFee = UInt64.fromUint(feesConfig.highest); // fixed to the Highest, txs must get confirmed
         const txs: Transaction[] = [];
-        const txsToBeAggregated: Transaction[] = [];
 
         /*
          LINK
@@ -156,7 +177,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 LinkAction.Unlink,
                 maxFee,
             );
-            txsToBeAggregated.push(accountKeyUnLinkTx);
+            txs.push(accountKeyUnLinkTx);
         }
 
         if (this.isVrfKeyLinked) {
@@ -165,7 +186,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 LinkAction.Unlink,
                 maxFee,
             );
-            txsToBeAggregated.push(vrfKeyUnLinkTx);
+            txs.push(vrfKeyUnLinkTx);
         }
 
         if (this.isNodeKeyLinked) {
@@ -175,53 +196,202 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 maxFee,
             );
 
-            txsToBeAggregated.push(nodeUnLinkTx);
+            txs.push(nodeUnLinkTx);
         }
 
         if (this.action !== HarvestingAction.STOP) {
             const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
             const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
-            const nodeLinkTx = this.createNodeKeyLinkTx(this.formItems.nodePublicKey, LinkAction.Link, maxFee);
-            txsToBeAggregated.push(accountKeyLinkTx, vrfKeyLinkTx, nodeLinkTx);
+            const nodeLinkTx = this.createNodeKeyLinkTx(this.formItems.nodeModel.nodePublicKey, LinkAction.Link, maxFee);
+            txs.push(accountKeyLinkTx, vrfKeyLinkTx, nodeLinkTx);
         }
 
-        if (txsToBeAggregated.length == 1) {
-            txs.push(txsToBeAggregated[0]);
+        if (txs.length > 0) {
+            if (this.isMultisigMode()) {
+                return this.toMultiSigAggregate(txs, maxFee, transactionSigner);
+            } else {
+                const aggregate = this.calculateSuggestedMaxFee(
+                    AggregateTransaction.createComplete(
+                        Deadline.create(this.epochAdjustment),
+                        txs.map((t) => t.toAggregate(this.currentSignerAccount)),
+                        this.networkType,
+                        [],
+                        maxFee,
+                    ),
+                );
+                return of([aggregate]);
+            }
         }
+        return of([]);
+    }
 
-        if (txsToBeAggregated.length > 1) {
-            const currentSigner = PublicAccount.createFromPublicKey(this.currentSignerPublicKey, this.networkType);
-            txs.push(
-                AggregateTransaction.createComplete(
-                    this.createDeadline(),
-                    txsToBeAggregated.map((t) => t.toAggregate(currentSigner)),
-                    this.networkType,
-                    [],
-                    maxFee,
-                ),
-            );
-        }
+    public toMultiSigAggregate(txs: Transaction[], maxFee, transactionSigner: TransactionSigner) {
+        const aggregate = this.calculateSuggestedMaxFee(
+            AggregateTransaction.createBonded(
+                Deadline.create(this.epochAdjustment),
+                txs.map((t) => t.toAggregate(this.currentSignerAccount)),
+                this.networkType,
+                [],
+                maxFee,
+            ),
+        );
+        return transactionSigner.signTransaction(aggregate, this.generationHash).pipe(
+            map((signedAggregateTransaction) => {
+                const hashLock = this.calculateSuggestedMaxFee(
+                    LockFundsTransaction.create(
+                        Deadline.create(this.epochAdjustment),
+                        new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
+                        UInt64.fromUint(1000),
+                        signedAggregateTransaction,
+                        this.networkType,
+                        maxFee,
+                    ),
+                );
+                return [hashLock, aggregate];
+            }),
+        );
+    }
 
+    public getPersistentDelegationRequestTransaction(
+        transactionSigner: TransactionSigner = this.tempTransactionSigner,
+    ): Observable<Transaction[]> {
+        const maxFee = UInt64.fromUint(feesConfig.highest);
         if (this.action !== HarvestingAction.STOP) {
             const persistentDelegationReqTx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-                this.createDeadline(),
+                Deadline.create(this.epochAdjustment, this.isMultisigMode() ? 24 : 2),
                 this.newRemoteAccount.privateKey,
                 this.newVrfKeyAccount.privateKey,
-                this.formItems.nodePublicKey,
+                this.formItems.nodeModel.nodePublicKey,
                 this.networkType,
                 maxFee,
             );
-            txs.push(persistentDelegationReqTx);
-        }
 
-        return txs;
+            return this.isMultisigMode()
+                ? this.toMultiSigAggregate([persistentDelegationReqTx], maxFee, transactionSigner)
+                : of([this.calculateSuggestedMaxFee(persistentDelegationReqTx)]);
+        }
+        return of([]);
     }
 
-    protected getTransactionCommandMode(): TransactionCommandMode {
-        if (this.action === HarvestingAction.STOP) {
-            return TransactionCommandMode.SIMPLE;
+    public resolveTransactions(): Observable<Transaction[]> {
+        return this.getKeyLinkTransactions().pipe(
+            switchMap((txs) => this.getPersistentDelegationRequestTransaction().pipe(map((ptxs) => [...txs, ...ptxs]))),
+        );
+    }
+
+    public announce(service: TransactionAnnouncerService, transactionSigner: TransactionSigner): Observable<Observable<BroadcastResult>[]> {
+        // announce the keyLink txs and save the signed PersistentDelegationReqTx to the store
+        const accountId = this.currentSignerAccountModel.id;
+        const signedPersistentDelReqTx$ = this.getPersistentDelegationRequestTransaction(transactionSigner).pipe(
+            concatMap((txs) => txs.map((t) => transactionSigner.signTransaction(t, this.generationHash))),
+            mergeAll(),
+            toArray(),
+        );
+
+        return this.getKeyLinkTransactions(transactionSigner).pipe(
+            flatMap((transactions) => {
+                const signedTransactions = transactions.map((t) => transactionSigner.signTransaction(t, this.generationHash));
+                if (!signedTransactions.length) {
+                    return of([]) as Observable<Observable<BroadcastResult>[]>;
+                }
+                if (this.isMultisigMode()) {
+                    return of([this.announceHashAndAggregateBonded(service, signedTransactions)]);
+                } else {
+                    return of(this.announceSimple(service, signedTransactions));
+                }
+            }),
+            tap((resArr) =>
+                resArr[0].subscribe((res) => {
+                    if (res.success) {
+                        signedPersistentDelReqTx$.subscribe((signedTx) => this.saveSignedPersistentDelReqTxs(accountId, signedTx));
+                        this.$store.dispatch('account/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
+                            accountId,
+                            isPersistentDelReqSent: false,
+                        });
+
+                        this.$store.dispatch('account/UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
+                            accountId,
+                            selectedHarvestingNode: this.formItems.nodeModel,
+                        });
+                    }
+                }),
+            ),
+        );
+    }
+
+    private announceHashAndAggregateBonded(
+        service: TransactionAnnouncerService,
+        signedTransactions: Observable<SignedTransaction>[],
+    ): Observable<BroadcastResult> {
+        return signedTransactions[0].pipe(
+            flatMap((signedHashLockTransaction) => {
+                return signedTransactions[1].pipe(
+                    flatMap((signedAggregateTransaction) => {
+                        return service.announceHashAndAggregateBonded(signedHashLockTransaction, signedAggregateTransaction);
+                    }),
+                );
+            }),
+        );
+    }
+
+    private announceSimple(
+        service: TransactionAnnouncerService,
+        signedTransactions: Observable<SignedTransaction>[],
+    ): Observable<BroadcastResult>[] {
+        return signedTransactions.map((o) => o.pipe(flatMap((s) => service.announce(s))));
+    }
+
+    private calculateSuggestedMaxFee(transaction: Transaction): Transaction {
+        const feeMultiplier = this.resolveFeeMultipler(transaction);
+        if (!feeMultiplier) {
+            return transaction;
         }
-        return TransactionCommandMode.CHAINED_BINARY;
+        if (transaction instanceof AggregateTransaction) {
+            return transaction.setMaxFeeForAggregate(feeMultiplier, this.requiredCosignatures);
+        } else {
+            return transaction.setMaxFee(feeMultiplier);
+        }
+    }
+
+    private resolveFeeMultipler(transaction: Transaction): number | undefined {
+        if (transaction.maxFee.compact() == 1) {
+            return this.transactionFees.medianFeeMultiplier || this.networkConfiguration.defaultDynamicFeeMultiplier;
+            // TODO uncomment the following line when https://github.com/nemtech/catapult-rest/issues/326 is resolved
+            // return this.transactionFees.averageFeeMultiplier * 1.2 || this.networkConfiguration.defaultDynamicFeeMultiplier;
+        }
+        if (transaction.maxFee.compact() == 2) {
+            return this.transactionFees.highestFeeMultiplier || this.networkConfiguration.defaultDynamicFeeMultiplier;
+        }
+        return undefined;
+    }
+    private saveSignedPersistentDelReqTxs(accountId: string, signedPersistentDelReqTxs: SignedTransaction[]) {
+        this.$store.dispatch('account/UPDATE_ACCOUNT_SIGNED_PERSISTENT_DEL_REQ_TXS', { accountId, signedPersistentDelReqTxs });
+        if (!signedPersistentDelReqTxs || signedPersistentDelReqTxs.length === 0) {
+            const isPersistentDelReqSent = false;
+            this.$store.dispatch('account/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', { accountId, isPersistentDelReqSent });
+        }
+    }
+
+    protected activateHarvesting() {
+        Vue.set(this, 'activating', true);
+        const accountId = this.currentSignerAccountModel.id;
+        const transactionAnnoucer = new TransactionAnnouncerService(this.$store);
+        let announceResult: Observable<BroadcastResult>;
+
+        if (this.isMultisigMode()) {
+            announceResult = transactionAnnoucer.announceHashAndAggregateBonded(
+                this.signedPersistentDelReqTxs[0],
+                this.signedPersistentDelReqTxs[1],
+            );
+        } else {
+            announceResult = transactionAnnoucer.announce(this.signedPersistentDelReqTxs[0]);
+        }
+        announceResult.subscribe((res) => {
+            if (res.success) {
+                this.$store.dispatch('account/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', { accountId, isPersistentDelReqSent: true });
+            }
+            Vue.set(this, 'activating', false);
+        });
     }
 
     private createAccountKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): AccountKeyLinkTransaction {
@@ -288,64 +458,37 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     public get swapDisabled(): boolean {
         return (
-            this.formItems.nodePublicKey?.toLowerCase() ===
+            this.formItems.nodeModel.nodePublicKey?.toLowerCase() ===
             this.currentSignerAccountInfo.supplementalPublicKeys?.node?.publicKey?.toLowerCase()
         );
     }
 
     public onSubmit() {
-        if (!this.allKeysLinked && !this.formItems.nodePublicKey.length) {
+        if (!this.allKeysLinked && !this.formItems.nodeModel.nodePublicKey.length) {
             this.$refs.observer.setErrors({ endpoint: this.$t('invalid_node').toString() });
             return;
         }
 
         // - open signature modal
-        this.command = this.createTransactionCommand();
+        // this.command = this.createTransactionCommand();
         this.onShowConfirmationModal();
-        return this.command;
     }
 
-    /**
-     * Static list for the time being - until the dynamic solution
-     */
-    public get nodeList() {
-        return [
-            {
-                publicKey: 'BE60BE426872B3CB46FE2C9BAA521731EA52C0D57E004FC7C84293887AC3BAD0',
-                url: 'beacon-01.ap-northeast-1.0.10.0.x.symboldev.network',
-            },
-            {
-                publicKey: 'EE356A555802003C5666D8485185CDC3844F9502FAF24B589BDC4D6E9148022F',
-                url: 'beacon-01.eu-central-1.0.10.0.x.symboldev.network',
-            },
-            {
-                publicKey: '81890592F960AAEBDA7612C8917FA9C267A845D78D74D4B3651AF093E6775001',
-                url: 'beacon-01.us-west-2.0.10.0.x.symboldev.network',
-            },
-            {
-                publicKey: '2AF52C5AA9A5E13DD548A577DEBF21E7D3CC285A1B0798F4D450239CDDE5A169',
-                url: 'beacon-01.ap-southeast-1.0.10.0.x.symboldev.network',
-            },
-            {
-                publicKey: 'D74B89EE9378DEBD510A4139F8E8B10B878E12956059CD9E13253CF3AD73BDEB',
-                url: 'beacon-01.us-west-1.0.10.0.x.symboldev.network',
-            },
-            {
-                publicKey: '938D6C1BBDB09F3F1B9D95D2D902A94C95E3AA6F1069A805831D9E272DCF927F',
-                url: 'beacon-01.eu-west-1.0.10.0.x.symboldev.network',
-            },
-            {
-                publicKey: '2A40F7895F56389BE40C063B897E9E66E64705D55B19FC43C8CEB5F7F14ABE59',
-                url: 'beacon-01.us-east-1.0.10.0.x.symboldev.network',
-            },
-        ];
+    public get currentSignerAccount() {
+        return PublicAccount.createFromPublicKey(this.currentSignerPublicKey, this.networkType);
     }
 
-    public get nodePublicKey() {
-        return this.formItems.nodePublicKey;
+    private get requiredCosignatures() {
+        return this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures;
     }
 
-    public set nodePublicKey(val) {
-        this.formItems.nodePublicKey = val;
+    private get signedPersistentDelReqTxs() {
+        return this.currentSignerAccountModel.signedPersistentDelReqTxs?.map(
+            (st) => new SignedTransaction(st.payload, st.hash, st.signerPublicKey, st.type, st.networkType),
+        );
+    }
+
+    private get isPersistentDelReqSent() {
+        return this.currentSignerAccountModel.isPersistentDelReqSent;
     }
 }
