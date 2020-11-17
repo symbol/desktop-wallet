@@ -23,6 +23,7 @@ import {
     NetworkType,
     PublicAccount,
     RepositoryFactory,
+    SignedTransaction,
 } from 'symbol-sdk';
 import { of, Subscription } from 'rxjs';
 // internal dependencies
@@ -36,6 +37,7 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { catchError, map } from 'rxjs/operators';
 import { ProfileService } from '@/services/ProfileService';
+import { NodeModel } from '@/core/database/entities/NodeModel';
 
 /// region globals
 const Lock = AwaitLock.create();
@@ -79,6 +81,7 @@ interface AccountState {
     currentRecipient: PublicAccount;
     currentAccountAliases: AccountNames[];
     selectedAddressesToInteract: number[];
+    currentSignerAccountModel: AccountModel;
 }
 
 // account state initial definition
@@ -102,6 +105,7 @@ const accountState: AccountState = {
     currentRecipient: null,
     multisigAccountGraph: null,
     selectedAddressesToInteract: [],
+    currentSignerAccountModel: null,
 };
 
 /**
@@ -138,6 +142,8 @@ export default {
         currentAccountAliases: (state: AccountState) => state.currentAccountAliases,
         multisigAccountGraph: (state: AccountState) => state.multisigAccountGraph,
         selectedAddressesToInteract: (state: AccountState) => state.selectedAddressesToInteract,
+        currentSignerAccountModel: (state: AccountState) =>
+            state.knownAccounts.find((a) => a.address === state.currentSignerAddress.plain()),
     },
     mutations: {
         setInitialized: (state: AccountState, initialized: boolean) => {
@@ -500,7 +506,48 @@ export default {
             const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
             commit('knownAccounts', knownAccounts);
         },
-
+        UPDATE_ACCOUNT_SIGNED_PERSISTENT_DEL_REQ_TXS(
+            { commit, rootGetters },
+            { accountId, signedPersistentDelReqTxs }: { accountId: string; signedPersistentDelReqTxs: SignedTransaction[] },
+        ) {
+            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
+            if (!currentProfile) {
+                return;
+            }
+            const accountService = new AccountService();
+            const accountTobeUpdated = accountService.getAccount(accountId);
+            accountService.updateSignedPersistentDelReqTxs(accountTobeUpdated, signedPersistentDelReqTxs);
+            const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
+            commit('knownAccounts', knownAccounts);
+        },
+        UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT(
+            { commit, rootGetters },
+            { accountId, isPersistentDelReqSent }: { accountId: string; isPersistentDelReqSent: boolean },
+        ) {
+            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
+            if (!currentProfile) {
+                return;
+            }
+            const accountService = new AccountService();
+            const accountTobeUpdated = accountService.getAccount(accountId);
+            accountService.updateIsPersistentDelReqSent(accountTobeUpdated, isPersistentDelReqSent);
+            const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
+            commit('knownAccounts', knownAccounts);
+        },
+        UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE(
+            { commit, rootGetters },
+            { accountId, selectedHarvestingNode }: { accountId: string; selectedHarvestingNode: NodeModel },
+        ) {
+            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
+            if (!currentProfile) {
+                return;
+            }
+            const accountService = new AccountService();
+            const accountTobeUpdated = accountService.getAccount(accountId);
+            accountService.updateSelectedHarvestingNode(accountTobeUpdated, selectedHarvestingNode);
+            const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
+            commit('knownAccounts', knownAccounts);
+        },
         DELETE_CURRENT_ACCOUNT({ commit, rootGetters }, account: AccountModel) {
             if (!account) {
                 return;

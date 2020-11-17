@@ -21,6 +21,7 @@ import {
     ReceiptPaginationStreamer,
     ReceiptType,
     RepositoryFactory,
+    RepositoryFactoryHttp,
     UInt64,
 } from 'symbol-sdk';
 import Vue from 'vue';
@@ -28,6 +29,8 @@ import { map, reduce } from 'rxjs/operators';
 // internal dependencies
 import { AwaitLock } from './AwaitLock';
 import { PageInfo } from '@/store/Transaction';
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { URLHelpers } from '@/core/utils/URLHelpers';
 
 const Lock = AwaitLock.create();
 
@@ -44,6 +47,7 @@ export type HarvestedBlockStats = {
 export enum HarvestingStatus {
     ACTIVE = 'ACTIVE',
     INACTIVE = 'INACTIVE',
+    KEYS_LINKED = 'KEYS_LINKED',
     INPROGRESS_ACTIVATION = 'INPROGRESS_ACTIVATION',
     INPROGRESS_DEACTIVATION = 'INPROGRESS_DEACTIVATION',
 }
@@ -125,35 +129,41 @@ export default {
             if (!currentSignerAccountInfo) {
                 return;
             }
-            /* note: uncomment when SDK and REST is ready
-            const knownNodes: NodeModel[] = rootGetters['network/knowNodes'];
-            
-            //find the node url from supplementalPublicKeys
-            const nodePublicKey = currentSignerAccountInfo.supplementalPublicKeys?.node?.publicKey;
-            const harvestingNodeUrl = knownNodes.find((n) => n.publicKey === nodePublicKey)?.url;
-            if (!harvestingNodeUrl) {
-                return;
+            const currentSignerAccountModel: AccountModel = rootGetters['account/currentSignerAccountModel'];
+
+            //find the node url from currentSignerAccountModel (localStorage)
+            const remotePublicKey = currentSignerAccountInfo.supplementalPublicKeys?.linked?.publicKey;
+            const selectedNode = currentSignerAccountModel.selectedHarvestingNode;
+            const harvestingNodeUrl = selectedNode?.url;
+            let unlockedAccounts: string[] = [];
+
+            if (harvestingNodeUrl) {
+                const repositoryFactory = new RepositoryFactoryHttp(URLHelpers.getNodeUrl(harvestingNodeUrl));
+                const nodeRepository = repositoryFactory.createNodeRepository();
+                try {
+                    unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
+                } catch (error) {
+                    //proceed
+                }
             }
-            const repositoryFactory = new RepositoryFactoryHttp(harvestingNodeUrl);
-            const nodeRepository = repositoryFactory.createNodeRepository();
-            let unlockedAccounts: string[] = await nodeRepository.getUnlockedAccount('to_be_replaced').toPromise();
 
             const allKeysLinked =
                 currentSignerAccountInfo.supplementalPublicKeys?.linked &&
                 currentSignerAccountInfo.supplementalPublicKeys?.node &&
                 currentSignerAccountInfo.supplementalPublicKeys?.vrf;
-            const accountUnlocked = unlockedAccounts?.some((publicKey) => publicKey === currentSignerAccountInfo.publicKey);
+            const accountUnlocked = unlockedAccounts?.some((publicKey) => publicKey === remotePublicKey);
+
+            let status: HarvestingStatus;
             if (allKeysLinked) {
-                commit('status', accountUnlocked ? HarvestingStatus.ACTIVE : HarvestingStatus.INPROGRESS_ACTIVATION);
+                status = accountUnlocked
+                    ? HarvestingStatus.ACTIVE
+                    : currentSignerAccountModel.isPersistentDelReqSent
+                    ? HarvestingStatus.INPROGRESS_ACTIVATION
+                    : HarvestingStatus.KEYS_LINKED;
             } else {
-                commit('status', accountUnlocked ? HarvestingStatus.INPROGRESS_DEACTIVATION : HarvestingStatus.INACTIVE);
+                status = accountUnlocked ? HarvestingStatus.INPROGRESS_DEACTIVATION : HarvestingStatus.INACTIVE;
             }
-            */
-            const allKeysLinked =
-                currentSignerAccountInfo.supplementalPublicKeys?.linked &&
-                currentSignerAccountInfo.supplementalPublicKeys?.node &&
-                currentSignerAccountInfo.supplementalPublicKeys?.vrf;
-            commit('status', allKeysLinked ? HarvestingStatus.ACTIVE : HarvestingStatus.INACTIVE);
+            commit('status', status);
         },
         LOAD_HARVESTED_BLOCKS({ commit, rootGetters }, { pageNumber, pageSize }: { pageNumber: number; pageSize: number }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];

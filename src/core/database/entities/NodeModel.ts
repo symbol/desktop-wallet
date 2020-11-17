@@ -27,5 +27,6 @@ export class NodeModel {
         public readonly friendlyName: string,
         public readonly isDefault: boolean,
         public readonly publicKey?: string,
+        public nodePublicKey?: string,
     ) {}
 }
