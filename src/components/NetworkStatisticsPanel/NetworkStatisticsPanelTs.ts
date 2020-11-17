@@ -19,7 +19,6 @@ import { mapGetters } from 'vuex';
 // child components
 // @ts-ignore
 // @ts-ignore
-import ModalHarvestingWizard from '@/views/modals/ModalHarvestingWizard/ModalHarvestingWizard.vue';
 import { officialIcons } from '@/views/resources/Images';
 
 import { AccountModel, AccountType as ProfileType } from '@/core/database/entities/AccountModel';
@@ -27,9 +26,6 @@ import { NodeModel } from '@/core/database/entities/NodeModel';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 @Component({
-    components: {
-        ModalHarvestingWizard,
-    },
     computed: {
         ...mapGetters({
             currentAccount: 'account/currentAccount',

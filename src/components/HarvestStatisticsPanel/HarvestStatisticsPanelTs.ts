@@ -61,6 +61,8 @@ export class HarvestStatisticsPanelTs extends Vue {
                 return { cls: 'status-indicator green', text: 'Active' };
             case HarvestingStatus.INACTIVE:
                 return { cls: 'status-indicator red', text: 'Inactive' };
+            case HarvestingStatus.KEYS_LINKED:
+                return { cls: 'status-indicator amber', text: 'Keys Linked' };
             case HarvestingStatus.INPROGRESS_ACTIVATION:
                 return { cls: 'status-indicator amber', text: 'Activation in progress' };
             case HarvestingStatus.INPROGRESS_DEACTIVATION:

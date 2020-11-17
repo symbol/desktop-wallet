@@ -42,7 +42,9 @@ export class NodeService {
         const nodeRepository = repositoryFactory.createNodeRepository();
 
         return nodeRepository.getNodeInfo().pipe(
-            map((dto: NodeInfo) => this.createNodeModel(repositoryFactoryUrl, dto.friendlyName, undefined, dto.publicKey)),
+            map((dto: NodeInfo) =>
+                this.createNodeModel(repositoryFactoryUrl, dto.friendlyName, undefined, dto.publicKey, dto.nodePublicKey),
+            ),
             ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl)),
             map((currentNode) => _.uniqBy([currentNode, ...storedNodes], 'url')),
             tap((p) => this.saveNodes(p)),
@@ -60,8 +62,15 @@ export class NodeService {
         friendlyName: string | undefined = undefined,
         isDefault: boolean | undefined = undefined,
         publicKey?: string,
+        nodePublicKey?: string,
     ): NodeModel {
-        return new NodeModel(url, friendlyName || '', isDefault || !!networkConfig.nodes.find((n) => n.url === url), publicKey);
+        return new NodeModel(
+            url,
+            friendlyName || '',
+            isDefault || !!networkConfig.nodes.find((n) => n.url === url),
+            publicKey,
+            nodePublicKey,
+        );
     }
 
     private loadNodes(): NodeModel[] {
