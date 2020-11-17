@@ -384,7 +384,6 @@ export default {
         },
 
         async LOAD_ACCOUNT_INFO({ commit, getters, rootGetters }) {
-            console.log('LOAD_ACCOUNT_INFO');
             const networkType: NetworkType = rootGetters['network/networkType'];
             const currentAccount: AccountModel = getters.currentAccount;
             const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
