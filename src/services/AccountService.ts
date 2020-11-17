@@ -22,6 +22,7 @@ import { AccountModel, AccountType } from '@/core/database/entities/AccountModel
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
 import { AccountModelStorage } from '@/core/database/storage/AccountModelStorage';
+import { NodeModel } from '@/core/database/entities/NodeModel';
 
 export class AccountService {
     private readonly storage = AccountModelStorage.INSTANCE;
@@ -67,6 +68,18 @@ export class AccountService {
 
     public updateRemoteAccount(account: AccountModel, encRemoteAccountPrivateKey: string): AccountModel {
         return this.saveAccount(Object.assign(account, { encRemoteAccountPrivateKey }));
+    }
+
+    public updateSignedPersistentDelReqTxs(account: AccountModel, signedPersistentDelReqTxs): AccountModel {
+        return this.saveAccount(Object.assign(account, { signedPersistentDelReqTxs }));
+    }
+
+    public updateIsPersistentDelReqSent(account: AccountModel, isPersistentDelReqSent: boolean): AccountModel {
+        return this.saveAccount(Object.assign(account, { isPersistentDelReqSent }));
+    }
+
+    public updateSelectedHarvestingNode(account: AccountModel, selectedHarvestingNode: NodeModel): AccountModel {
+        return this.saveAccount(Object.assign(account, { selectedHarvestingNode }));
     }
 
     /**
