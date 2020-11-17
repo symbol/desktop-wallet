@@ -47,7 +47,7 @@
                 <!-- TODO: DYNAMIC TRANSACTION LIST & REMOVE onClick Action to all remove_button -->
                 <FormWrapper>
                     <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
-                        <form onsubmit="event.preventDefault()">
+                        <form onsubmit="event.preventDefault()" class="bottom-form-wrapper">
                             <div class="transaction-list-container">
                                 <div
                                     v-for="{ title } in simpleAggregateTransaction"
@@ -74,19 +74,18 @@
                                     </button>
                                 </div>
                             </div>
-                            <div>
-                                <MaxFeeSelector v-model="formItems.maxFee" @button-clicked="handleSubmit(onClickSendAggregate)" />
-                            </div>
-
                             <div class="bottom-container">
-                                <button
-                                    class="full-width-centered-button button-style inverted-button fat-button"
-                                    style="cursor: pointer;"
-                                    type="submit"
-                                    @click="handleSubmit(onSubmit)"
-                                >
-                                    {{ $t('aggregate_send') }}
-                                </button>
+                                <MaxFeeSelector v-model="formItems.maxFee" @button-clicked="handleSubmit(onClickSendAggregate)" />
+                                <div class="send-button">
+                                    <button
+                                        class="full-width-centered-button button-style inverted-button fat-button"
+                                        style="cursor: pointer;"
+                                        type="submit"
+                                        @click="handleSubmit(onSubmit)"
+                                    >
+                                        {{ $t('aggregate_send') }}
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </ValidationObserver>
@@ -112,15 +111,17 @@
                     <h1 class="title-style">
                         {{ currentSelectedTransaction.title }}
                     </h1>
-                    <component
-                        :is="currentSelectedTransaction.component"
-                        v-model="currentTxItems"
-                        :hide-submit="true"
-                        :is-aggregate="true"
-                        :value.sync="currentTxItems"
-                        :title.sync="currentSelectedTransaction.title"
-                        @txInput="onSaveTransaction"
-                    ></component>
+                    <div class="transaction-form-container">
+                        <component
+                            :is="currentSelectedTransaction.component"
+                            v-model="currentTxItems"
+                            :hide-submit="true"
+                            :is-aggregate="true"
+                            :value.sync="currentTxItems"
+                            :title.sync="currentSelectedTransaction.title"
+                            @txInput="onSaveTransaction"
+                        ></component>
+                    </div>
                 </div>
             </div>
         </div>

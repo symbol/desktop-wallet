@@ -13,7 +13,7 @@
                     <SignerSelector v-if="!hideSigner" v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
                     <!-- Transfer recipient input field -->
-                    <RecipientInput v-model="formItems.recipientRaw" @input="onChangeRecipient" style="margin-bottom: 0.5rem;" />
+                    <RecipientInput v-model="formItems.recipientRaw" style="margin-bottom: 0.5rem;" @input="onChangeRecipient" />
 
                     <!-- Mosaics attachments input fields -->
                     <div v-for="(attachedMosaic, index) in formItems.attachedMosaics" :key="index">
@@ -32,9 +32,12 @@
 
                     <!-- Add mosaic button -->
                     <div class="form-row align-right action-link" style="margin-top: -0.1rem;">
-                        <a v-if="mosaicInputsManager.hasFreeSlots()" style="color: #44004e; margin-right: 0.1rem; font-size: 0.14rem;" @click="addMosaicAttachmentInput">{{
-                            $t('add_mosaic')
-                        }}</a>
+                        <a
+                            v-if="mosaicInputsManager.hasFreeSlots()"
+                            style="color: #44004e; margin-right: 0.1rem; font-size: 0.14rem;"
+                            @click="addMosaicAttachmentInput"
+                            >{{ $t('add_mosaic') }}</a
+                        >
                         <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" style="vertical-align: middle;" />
                     </div>
 
@@ -60,8 +63,12 @@
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
                     />
-                    <div v-else class="ml-2">
-                        <button type="submit" class="centered-button button-style inverted-button submit-button" @click="emitToAggregate">
+                    <div v-else class="ml-2" style="text-align: right;">
+                        <button
+                            type="submit"
+                            class="save-button centered-button button-style inverted-button"
+                            @click="emitToAggregate"
+                        >
                             {{ $t('save') }}
                         </button>
                     </div>
@@ -108,3 +115,10 @@
 import { FormTransferTransactionTs } from './FormTransferTransactionTs';
 export default class FormTransferTransaction extends FormTransferTransactionTs {}
 </script>
+
+<style lang="less" scoped>
+.save-button {
+    text-align: center;
+    width: 120px;
+}
+</style>

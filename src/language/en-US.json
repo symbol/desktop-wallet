@@ -616,6 +616,7 @@
     "select_all": "Check all",
     "select_contact": "Select contact",
     "send": "Send",
+    "save": "Save",
     "sender": "From",
     "set_account_name": "Enter a profile name",
     "set_default_explorer": "The url entered is not valid, a default url has been set for you.",

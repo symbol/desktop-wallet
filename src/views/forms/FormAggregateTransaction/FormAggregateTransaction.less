@@ -28,18 +28,38 @@
     display: grid;
     height: calc(50% - 0.15rem);
     grid-template-rows: 0.8rem auto 0.5rem 0.08rem;
+    grid-template-columns: 100%;
     background-color: white;
     overflow: hidden;
     border-radius: @borderRadius;
     margin-top: 0.3rem;
 
-    .transaction-list-container {
-        overflow-y: auto;
-    }
+    .bottom-form-wrapper {
+        display: grid;
+        height: 100%;
+        grid-template-rows: calc(100% - 0.65rem) 0.65rem;
+        .transaction-list-container {
+            width: 100%;
+            overflow-y: auto;
+        }
 
-    .bottom-container {
-        text-align: right;
-        margin-right: 0.4rem;
+        .bottom-container {
+            width: 100%;
+            text-align: right;
+            /deep/.select-container {
+                margin: auto;
+                width: 90%;
+                text-align: center;
+            }
+            .send-button {
+                margin: auto;
+                width: 90%;
+                margin-top: 20px;
+                /deep/.full-width-centered-button {
+                    left: 0;
+                }
+            }
+        }
     }
 }
 
@@ -188,4 +208,8 @@
             height: 0.2rem;
         }
     }
+}
+
+.transaction-form-container {
+    margin-top: .5rem;
 }
