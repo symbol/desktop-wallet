@@ -6,7 +6,7 @@
                 {{ `${metadataModel.scopedMetadataKey} : ${metadataModel.value}` }}
             </Option>
         </Select>
-        <span class="metadata-detail-button" @click="$emit('on-view-metadata')">{{ $t('view_metadata') }}</span>
+        <img src="@/views/resources/img/icons/View.svg" class="metadata-detail-button" @click="$emit('on-view-metadata')">
     </div>
 </template>
 
