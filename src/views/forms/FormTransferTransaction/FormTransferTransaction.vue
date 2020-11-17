@@ -13,10 +13,10 @@
                     <SignerSelector v-if="!hideSigner" v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
                     <!-- Transfer recipient input field -->
-                    <RecipientInput v-model="formItems.recipientRaw" @input="onChangeRecipient" />
+                    <RecipientInput v-model="formItems.recipientRaw" @input="onChangeRecipient" style="margin-bottom: 0.5rem;" />
 
                     <!-- Mosaics attachments input fields -->
-                    <div v-for="(attachedMosaic, index) in formItems.attachedMosaics" :key="index" style="margin-top: 0.5rem;">
+                    <div v-for="(attachedMosaic, index) in formItems.attachedMosaics" :key="index">
                         <MosaicAttachmentInput
                             v-if="attachedMosaic && attachedMosaic.uid"
                             :mosaic-attachment="attachedMosaic"

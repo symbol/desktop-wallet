@@ -42,12 +42,13 @@
     width: 100%;
     height: 100%;
     grid-template-columns: 17% 83%;
-    margin-top: 0.025rem;
-    margin-bottom: 0.025rem;
+    margin-top: 5px;
+    margin-bottom: 5px;
 
     .transaction-details-row-label-container {
         text-align: left;
         font-size: @normalFont;
+        font-family: @symbolFontMedium;
         font-weight: 500;
         color: @primary;
         text-transform: capitalize;
@@ -57,7 +58,8 @@
 
     .transaction-details-row-value-container {
         font-size: @normalFont;
-        color: @secondary;
+        color: @purpleDark;
+        font-family: @symbolFontLight;
         overflow: hidden;
         word-break: break-word;
         display: grid;

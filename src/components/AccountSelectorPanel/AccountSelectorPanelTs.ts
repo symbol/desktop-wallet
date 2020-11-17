@@ -173,6 +173,14 @@ export class AccountSelectorPanelTs extends Vue {
         return this.knownAccounts;
     }
 
+    public get seedAccounts(): AccountModel[] {
+        return this.knownAccounts.filter(_ => _.type === 1);
+    }
+
+    public get pkAccounts(): AccountModel[] {
+        return this.knownAccounts.filter(_ => _.type !== 1);
+    }
+
     public get hasAddAccountModal(): boolean {
         return this.isAddingAccount;
     }
