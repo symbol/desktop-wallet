@@ -31,6 +31,10 @@ export class AccountMetadataDisplayTs extends Vue {
     })
     protected metadataList: MetadataModel[];
 
+    @Prop({
+        default: null,
+    })
+    visible: boolean;
     /**
      * selected metadata model id
      */
@@ -44,6 +48,13 @@ export class AccountMetadataDisplayTs extends Vue {
         return this.value;
     }
 
+    /**
+     * Visibility state
+     * @type {boolean}
+     */
+    get show(): boolean {
+        return this.visible;
+    }
     /**
      * Hook called when the layout is mounted
      * @return {void}
