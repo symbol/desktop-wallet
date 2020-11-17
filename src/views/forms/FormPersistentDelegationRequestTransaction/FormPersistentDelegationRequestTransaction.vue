@@ -12,44 +12,15 @@
                     <!-- Transaction signer selector -->
                     <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
-                    <!-- for now, use input component instead - Node URL Selector 
-                    <NetworkNodeSelector v-model="formItems.nodePublicKey" />
-                    -->
-                    <FormRow>
-                        <template v-slot:label> {{ $t('node_url') }}: </template>
+                    <NetworkNodeSelector v-model="formItems.nodeModel" />
+                    <FormRow v-if="harvestingStatus !== 'INACTIVE' && !swapDisabled">
                         <template v-slot:inputs>
-                            <ValidationProvider
-                                v-slot="{ errors }"
-                                mode="lazy"
-                                vid="nodePublicKey"
-                                :name="$t('node_publicKey')"
-                                rules="required"
-                                tag="div"
-                                class="inputs-container"
-                                ><ErrorTooltip :errors="errors">
-                                    <!-- <input
-                                        v-model="formItems.nodePublicKey"
-                                        class="input-size input-style"
-                                        :placeholder="$t('node_publicKey')"
-                                        type="text"
-                                    /> -->
-                                    <Select v-model="nodePublicKey" class="select-size select-style" :transfer="true">
-                                        <Option v-for="node in nodeList" :key="node.publicKey" :value="node.publicKey">
-                                            {{ node.url }}
-                                        </Option>
-                                    </Select>
-
-                                    <div v-if="harvestingStatus !== 'INACTIVE' && !swapDisabled" type="warning" class="warning-node-swap">
-                                        <Icon type="ios-warning-outline" />
-                                        {{ $t('harvesting_warning_node_swap') }}
-                                    </div>
-                                </ErrorTooltip>
-                            </ValidationProvider>
+                            <div type="warning" class="warning-node-swap">
+                                <Icon type="ios-warning-outline" />
+                                {{ $t('harvesting_warning_node_swap') }}
+                            </div>
                         </template>
                     </FormRow>
-
-                    <!-- Transaction fee selector and submit button -->
-
                     <FormRow class-name="buttons-row">
                         <template v-slot:inputs>
                             <div class="harvesting-buttons-container">
@@ -62,7 +33,15 @@
                                     {{ $t('start') }}
                                 </button>
                                 <button
-                                    v-if="harvestingStatus !== 'INACTIVE'"
+                                    v-if="!isPersistentDelReqSent && harvestingStatus !== 'INACTIVE'"
+                                    class="centered-button button-style submit-button inverted-button"
+                                    :disabled="activating"
+                                    @click="activateHarvesting"
+                                >
+                                    {{ activating ? $t('activating') : $t('activate') }}
+                                </button>
+                                <button
+                                    v-if="isPersistentDelReqSent && harvestingStatus !== 'INACTIVE'"
                                     type="submit"
                                     class="centered-button button-style submit-button inverted-button"
                                     :disabled="swapDisabled"
@@ -86,7 +65,7 @@
         </FormWrapper>
         <ModalTransactionConfirmation
             v-if="hasConfirmationModal"
-            :command="command"
+            :command="this"
             :visible="hasConfirmationModal"
             @success="onConfirmationSuccess"
             @error="onConfirmationError"
