@@ -36,8 +36,12 @@
                 </FormRow>
                 <RentalFee :rental-type="'mosaic'"></RentalFee>
                 <MaxFeeAndSubmit v-if="!isAggregate" v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
-                <div v-else class="ml-2">
-                    <button type="submit" class="centered-button button-style inverted-button submit-button" @click="emitToAggregate">
+                <div v-else class="ml-2" style="text-align: right;">
+                    <button
+                        type="submit"
+                        class="save-button centered-button button-style inverted-button"
+                        @click="emitToAggregate"
+                    >
                         {{ $t('save') }}
                     </button>
                 </div>
@@ -71,7 +75,12 @@ export default class FormMosaicDefinitionTransaction extends FormMosaicDefinitio
 
 /deep/ .form-row {
     .form-row-inner-container {
-        grid-template-columns: 3rem 8rem;
+        grid-template-columns: 3rem calc(100% - 3rem);
     }
+}
+
+.save-button {
+    text-align: center;
+    width: 120px;
 }
 </style>
