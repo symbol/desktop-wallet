@@ -53,12 +53,6 @@
                 </span>
             </div>
         </div>
-
-        <ModalHarvestingWizard
-            v-if="isHarvestingWizardDisplayed"
-            :visible="isHarvestingWizardDisplayed"
-            @close="isHarvestingWizardDisplayed = false"
-        />
     </div>
 </template>
 

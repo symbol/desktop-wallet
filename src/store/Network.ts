@@ -23,8 +23,10 @@ import {
     TransactionFees,
     RentalFees,
     RepositoryFactoryHttp,
+    NodeInfo,
 } from 'symbol-sdk';
 import { Subscription } from 'rxjs';
+import _ from 'lodash';
 // internal dependencies
 import { $eventBus } from '../events';
 import { URLHelpers } from '@/core/utils/URLHelpers';
@@ -40,7 +42,6 @@ import { URLInfo } from '@/core/utils/URLInfo';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { networkConfig } from '@/config';
-
 const Lock = AwaitLock.create();
 
 /// region custom types
@@ -61,6 +62,37 @@ type BlockRangeType = { start: number };
 
 /// end-region custom types
 
+const staticPeerNodes: NodeInfo[] = [
+    {
+        nodePublicKey: 'BE60BE426872B3CB46FE2C9BAA521731EA52C0D57E004FC7C84293887AC3BAD0',
+        host: 'beacon-01.ap-northeast-1.0.10.0.x.symboldev.network',
+    },
+    {
+        nodePublicKey: 'EE356A555802003C5666D8485185CDC3844F9502FAF24B589BDC4D6E9148022F',
+        host: 'beacon-01.eu-central-1.0.10.0.x.symboldev.network',
+    },
+    {
+        nodePublicKey: '81890592F960AAEBDA7612C8917FA9C267A845D78D74D4B3651AF093E6775001',
+        host: 'beacon-01.us-west-2.0.10.0.x.symboldev.network',
+    },
+    {
+        nodePublicKey: '2AF52C5AA9A5E13DD548A577DEBF21E7D3CC285A1B0798F4D450239CDDE5A169',
+        host: 'beacon-01.ap-southeast-1.0.10.0.x.symboldev.network',
+    },
+    {
+        nodePublicKey: 'D74B89EE9378DEBD510A4139F8E8B10B878E12956059CD9E13253CF3AD73BDEB',
+        host: 'beacon-01.us-west-1.0.10.0.x.symboldev.network',
+    },
+    {
+        nodePublicKey: '938D6C1BBDB09F3F1B9D95D2D902A94C95E3AA6F1069A805831D9E272DCF927F',
+        host: 'beacon-01.eu-west-1.0.10.0.x.symboldev.network',
+    },
+    {
+        nodePublicKey: '2A40F7895F56389BE40C063B897E9E66E64705D55B19FC43C8CEB5F7F14ABE59',
+        host: 'beacon-01.us-east-1.0.10.0.x.symboldev.network',
+    },
+] as NodeInfo[];
+
 interface NetworkState {
     initialized: boolean;
     currentPeer: URLInfo;
@@ -79,6 +111,8 @@ interface NetworkState {
     transactionFees: TransactionFees;
     rentalFeeEstimation: RentalFees;
     networkIsNotMatchingProfile: boolean;
+    peerNodes: NodeInfo[];
+    selectedPeerNode: NodeInfo;
 }
 
 const defaultPeer = URLHelpers.formatUrl(networkConfig.defaultNodeUrl);
@@ -101,6 +135,8 @@ const networkState: NetworkState = {
     rentalFeeEstimation: undefined,
     epochAdjustment: networkConfig.networkConfigurationDefaults.epochAdjustment,
     networkIsNotMatchingProfile: false,
+    peerNodes: [],
+    selectedPeerNode: null,
 };
 
 export default {
@@ -124,6 +160,7 @@ export default {
         transactionFees: (state: NetworkState) => state.transactionFees,
         rentalFeeEstimation: (state: NetworkState) => state.rentalFeeEstimation,
         networkIsNotMatchingProfile: (state: NetworkState) => state.networkIsNotMatchingProfile,
+        peerNodes: (state: NetworkState) => state.peerNodes,
     },
     mutations: {
         setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -190,6 +227,7 @@ export default {
             const subscriptions = state.subscriptions;
             Vue.set(state, 'subscriptions', [...subscriptions, payload]);
         },
+        peerNodes: (state: NetworkState, peerNodes: NodeInfo[]) => Vue.set(state, 'peerNodes', peerNodes),
     },
     actions: {
         async initialize({ commit, dispatch, getters }) {
@@ -359,7 +397,14 @@ export default {
 
             dispatch('SET_CURRENT_PEER', networkService.getDefaultUrl());
         },
+        async LOAD_PEER_NODES({ commit, rootGetters }) {
+            const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
+            const nodeRepository = repositoryFactory.createNodeRepository();
 
+            const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
+            const allNodes = [...staticPeerNodes, ...peerNodes.sort((a, b) => a.host.localeCompare(b.host))];
+            commit('peerNodes', _.uniqBy(allNodes, 'host'));
+        },
         /**
          * Websocket API
          */
