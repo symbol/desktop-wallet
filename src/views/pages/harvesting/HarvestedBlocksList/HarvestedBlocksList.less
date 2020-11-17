@@ -5,9 +5,14 @@
 }
 
 .table-container {
+    display: flex;
     height: 100%;
     width: 90%;
-    margin-left: 5%;
+    flex-direction: column;
+
+    .table-component {
+        flex: 1
+    }
 
     /deep/.ivu-table-header {
         display: grid;
@@ -50,7 +55,7 @@
     }
 }
 
-    
+
 thead {
 	background-color: @white;
 }

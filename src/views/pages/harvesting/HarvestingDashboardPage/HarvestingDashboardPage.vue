@@ -19,7 +19,9 @@
                     {{ $t('harvested_blocks') }}
                 </h1>
             </div>
-            <HarvestedBlocksList />
+            <div class="harvested-blocks">
+                <HarvestedBlocksList />
+            </div>
         </div>
     </div>
 </template>
