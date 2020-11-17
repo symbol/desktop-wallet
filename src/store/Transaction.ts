@@ -164,6 +164,9 @@ export default {
         },
         filterOptions: (state: TransactionState) => state.filterOptions,
         currentConfirmedPage: (state: TransactionState) => state.currentConfirmedPage,
+        confirmedTransactions: (state: TransactionState) => state.confirmedTransactions,
+        unconfirmedTransactions: (state: TransactionState) => state.unconfirmedTransactions,
+        partialTransactions: (state: TransactionState) => state.partialTransactions,
     },
     mutations: {
         setInitialized: (state: TransactionState, initialized: boolean) => {

@@ -184,4 +184,10 @@ export class TransactionRowTs extends Vue {
             .toLocalDateTime(this.networkConfiguration.epochAdjustment)
             .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
     }
+    public get date() {
+        return this.transaction.deadline
+            .toLocalDateTime(this.networkConfiguration.epochAdjustment)
+            .minusHours(2)
+            .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+    }
 }
