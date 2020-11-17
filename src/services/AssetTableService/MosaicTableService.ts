@@ -72,6 +72,7 @@ export class MosaicTableService extends AssetTableService {
                     transferable: mosaicInfo.transferable,
                     supplyMutable: mosaicInfo.supplyMutable,
                     restrictable: mosaicInfo.restrictable,
+                    metadataList: mosaicInfo.metadataList || [],
                 };
             })
             .filter((x) => x); // filter out mosaics that are not yet available

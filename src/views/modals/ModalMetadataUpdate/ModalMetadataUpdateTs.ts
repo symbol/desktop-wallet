@@ -13,16 +13,40 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+
+// import external components
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { MetadataType } from 'symbol-sdk';
+
+// import internal components
+import { MetadataModel } from '@/core/database/entities/MetadataModel';
+// @ts-ignore
+import FormMetadataCreation from '@/views/forms/FormMetadataCreation/FormMetadataCreation.vue';
 
 @Component({
-    components: {},
+    components: {
+        FormMetadataCreation,
+    },
 })
 export class ModalMetadataUpdateTs extends Vue {
     @Prop({
         default: false,
     })
     visible: boolean;
+
+    /**
+     * @MetadataModel
+     * Determine edit or add
+     */
+    protected metadata: MetadataModel;
+
+    /**
+     * Metadata update modal type
+     */
+    @Prop({
+        default: MetadataType.Account,
+    })
+    protected type: MetadataType;
 
     /**
      * Visibility state
@@ -39,5 +63,13 @@ export class ModalMetadataUpdateTs extends Vue {
         if (!val) {
             this.$emit('close');
         }
+    }
+
+    /**
+     * Save Metadata handler
+     * @param {void}
+     */
+    protected saveMetadata(): void {
+        this.$emit('close');
     }
 }

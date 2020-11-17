@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { AccountInfo, Address, MosaicId, RepositoryFactory } from 'symbol-sdk';
 import Vue from 'vue';
+import { AccountInfo, Address, MosaicId, RepositoryFactory } from 'symbol-sdk';
 // internal dependencies
 import { AwaitLock } from './AwaitLock';
 import { MosaicService } from '@/services/MosaicService';
@@ -22,6 +22,8 @@ import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyMo
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { MosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel';
 import { first, tap } from 'rxjs/operators';
+import { MetadataModel } from '@/core/database/entities/MetadataModel';
+import { MetadataService } from '@/services/MetadataService';
 
 const Lock = AwaitLock.create();
 
@@ -87,17 +89,23 @@ export default {
                 mosaics,
                 currentSignerAddress,
                 networkCurrency,
+                mosaicMetadataList,
             }: {
                 mosaics: MosaicModel[];
                 currentSignerAddress: Address;
                 networkCurrency: NetworkCurrencyModel;
+                mosaicMetadataList: MetadataModel[];
             },
         ) => {
-            const ownedMosaics = mosaics.filter(
+            const uniqueMosaics = mosaics.map((mosaic) => {
+                mosaic.metadataList = MetadataService.getMosaicMetadataByTargetId(mosaicMetadataList, mosaic.mosaicIdHex);
+                return mosaic;
+            });
+            const ownedMosaics = uniqueMosaics.filter(
                 (m) => m.ownerRawPlain === currentSignerAddress.plain() && m.addressRawPlain === currentSignerAddress.plain(),
             );
 
-            const holdMosaics = mosaics
+            const holdMosaics = uniqueMosaics
                 .filter((m) => m.addressRawPlain === currentSignerAddress.plain())
                 .sort((m1, m2) => {
                     const owner1 = m1.ownerRawPlain === currentSignerAddress.plain();
@@ -120,8 +128,7 @@ export default {
                   ]
                 : [...holdMosaics]
             ).filter((m) => m.isCurrencyMosaic || m.balance > 0);
-
-            Vue.set(state, 'mosaics', mosaics);
+            Vue.set(state, 'mosaics', uniqueMosaics);
             Vue.set(state, 'balanceMosaics', balanceMosaics);
             Vue.set(state, 'ownedMosaics', ownedMosaics);
             Vue.set(
@@ -170,6 +177,7 @@ export default {
             const networkCurrency: NetworkCurrencyModel = rootGetters['mosaic/networkCurrency'];
             const accountsInfo: AccountInfo[] = rootGetters['account/accountsInfo'] || [];
             const generationHash = rootGetters['network/generationHash'];
+            const mosaicMetadataList: MetadataModel[] = rootGetters['metadata/mosaicMetadataList'];
 
             commit('isFetchingMosaics', true);
 
@@ -184,6 +192,7 @@ export default {
                         mosaics: mosaics,
                         currentSignerAddress,
                         networkCurrency,
+                        mosaicMetadataList,
                     });
                 })
                 .add(() => commit('isFetchingMosaics', false));

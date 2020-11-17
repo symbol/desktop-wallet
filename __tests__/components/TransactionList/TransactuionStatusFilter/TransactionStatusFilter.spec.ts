@@ -21,13 +21,31 @@ afterEach(() => {
     wrapper.destroy();
 });
 describe('TransactionStatusFilter', () => {
-    test('renders correctly', async (): Promise<void> => {
-        expect(wrapper).toMatchSnapshot();
+    let wrapper: any;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    let vm: any;
+    beforeEach(() => {
+        wrapper = getComponent(
+            TransactionStatusFilter,
+            { account: AccountStore, transaction: TransactionStore },
+            { currentAccount: null, signers: [] },
+            {},
+            {},
+        );
+        vm = wrapper.vm as TransactionStatusFilter;
+    });
+    afterEach(() => {
+        wrapper.destroy();
+    });
+    describe('TransactionStatusFilter', () => {
+        test('renders correctly', async (): Promise<void> => {
+            expect(wrapper).toMatchSnapshot();
 
-        wrapper.find('.filter-button').trigger('click');
+            wrapper.find('.filter-button').trigger('click');
 
-        await Vue.nextTick();
+            await Vue.nextTick();
 
-        expect(wrapper).toMatchSnapshot();
+            expect(wrapper).toMatchSnapshot();
+        });
     });
 });

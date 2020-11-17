@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TransactionStatusFilter renders correctly 1`] = `
+exports[`TransactionStatusFilter TransactionStatusFilter renders correctly 1`] = `
 <div class="transactions-filter">
   <div class="filter-button"><span>Filter</span>
     <div class="filter-button-arrow"></div>
@@ -9,7 +9,7 @@ exports[`TransactionStatusFilter renders correctly 1`] = `
 </div>
 `;
 
-exports[`TransactionStatusFilter renders correctly 2`] = `
+exports[`TransactionStatusFilter TransactionStatusFilter renders correctly 2`] = `
 <div class="transactions-filter">
   <div class="filter-button"><span>Filter</span>
     <div class="filter-button-arrow arrow-up"></div>

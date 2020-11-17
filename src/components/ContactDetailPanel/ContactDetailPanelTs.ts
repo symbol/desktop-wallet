@@ -20,7 +20,7 @@ import { mapGetters } from 'vuex';
 // @ts-ignore
 import AccountNameDisplay from '@/components/AccountNameDisplay/AccountNameDisplay.vue';
 // @ts-ignore
-import AccountContactQR from '@/components/AccountContactQR/AccountContactQR.vue';
+import AddressQR from '@/components/AddressQR/AddressQR.vue';
 // @ts-ignore
 import AccountAddressDisplay from '@/components/AccountAddressDisplay/AccountAddressDisplay.vue';
 // @ts-ignore
@@ -29,15 +29,13 @@ import AccountActions from '@/components/AccountActions/AccountActions.vue';
 import FormInputEditable from '@/components/FormInputEditable/FormInputEditable.vue';
 // @ts-ignore
 import ModalConfirmDelete from '@/views/modals/ModalConfirmDelete/ModalConfirmDelete.vue';
-
-import { NetworkType, PublicAccount } from 'symbol-sdk';
 import { AddressBook, IContact } from 'symbol-address-book';
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 
 @Component({
     components: {
         AccountNameDisplay,
-        AccountContactQR,
+        AddressQR,
         AccountActions,
         AccountAddressDisplay,
         FormInputEditable,
@@ -62,14 +60,10 @@ export class ContactDetailPanelTs extends Vue {
      */
     public validationRules = ValidationRuleset;
 
-    public get selectedContactPublicAccount(): PublicAccount {
-        return PublicAccount.createFromPublicKey('0'.repeat(64), NetworkType.MAIN_NET);
-    }
-
     public saveProperty(propName: string) {
         return (newVal: string) => {
             this.selectedContact[propName] = newVal;
-            this.addressBook.updateContact(this.selectedContact.id, this.selectedContact);
+            this.$store.dispatch('addressBook/UPDATE_CONTACT', { id: this.selectedContact.id, contact: this.selectedContact });
         };
     }
 

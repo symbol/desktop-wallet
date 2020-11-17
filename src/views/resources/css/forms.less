@@ -340,6 +340,10 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     border-radius: 0.04rem;
+    &:-webkit-autofill::first-line {
+        font-size: @smallFont;
+        font-family: @symbolFontLight;
+    }
 }
 
 .textarea-style {

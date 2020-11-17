@@ -14,7 +14,8 @@
  *
  */
 
-import { Address } from 'symbol-sdk';
+import { Address, Deadline, MetadataType, Transaction, UInt64 } from 'symbol-sdk';
+import * as _ from 'lodash';
 import Vue from 'vue';
 
 // internal dependencies
@@ -22,22 +23,42 @@ import { AwaitLock } from './AwaitLock';
 import { MetadataService } from '@/services/MetadataService';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
 
-import * as _ from 'lodash';
-
 const Lock = AwaitLock.create();
+
+interface MetadataFormState {
+    targetAddress: Address;
+    metadataValue: string;
+    scopedKey: string;
+    targetId: string;
+    maxFee: number;
+}
 
 interface MetadataState {
     initialized: boolean;
-    metadatas: MetadataModel[];
-    ownedMetadatas: MetadataModel[];
-    isFetchingMetadatas: boolean;
+    accountMetadataList: MetadataModel[];
+    mosaicMetadataList: MetadataModel[];
+    namespaceMetadataList: MetadataModel[];
+    isFetchingMetadata: boolean;
+    transactions: Transaction[];
+    metadataType: MetadataType;
+    metadataForm: MetadataFormState;
 }
 
 const metadataState: MetadataState = {
     initialized: false,
-    metadatas: [],
-    ownedMetadatas: [],
-    isFetchingMetadatas: false,
+    accountMetadataList: [],
+    mosaicMetadataList: [],
+    namespaceMetadataList: [],
+    isFetchingMetadata: false,
+    transactions: [],
+    metadataType: MetadataType.Account,
+    metadataForm: {
+        targetAddress: null,
+        scopedKey: '',
+        metadataValue: '',
+        targetId: '',
+        maxFee: 0,
+    },
 };
 
 export default {
@@ -45,28 +66,46 @@ export default {
     state: metadataState,
     getters: {
         getInitialized: (state: MetadataState) => state.initialized,
-        metadatas: (state: MetadataState) => state.metadatas,
-        ownedMetadatas: (state: MetadataState) => state.ownedMetadatas,
-        isFetchingMetadatas: (state: MetadataState) => state.isFetchingMetadatas,
+        accountMetadataList: (state: MetadataState) => state.accountMetadataList,
+        mosaicMetadataList: (state: MetadataState) => state.mosaicMetadataList,
+        namespaceMetadataList: (state: MetadataState) => state.namespaceMetadataList,
+        isFetchingMetadata: (state: MetadataState) => state.isFetchingMetadata,
+        metadataType: (state: MetadataState) => state.metadataType,
+        metadataForm: (state: MetadataState) => state.metadataForm,
+        transactions: (state: MetadataState) => state.transactions,
     },
     mutations: {
         setInitialized: (state: MetadataState, initialized) => {
             state.initialized = initialized;
         },
-        metadatas: (
-            state: MetadataState,
-            { metadatas, currentSignerAddress }: { metadatas: MetadataModel[]; currentSignerAddress: Address },
-        ) => {
-            const uniqueMetadatas = _.uniqBy(metadatas, (n) => n.metadataId);
-            Vue.set(state, 'metadatas', uniqueMetadatas);
+        metadataList: (state: MetadataState, metadataList: MetadataModel[]) => {
+            const uniqueMetadataList = _.uniqBy(metadataList, (n) => n.metadataId);
             Vue.set(
                 state,
-                'ownedMetadatas',
-                uniqueMetadatas.filter((n) => n.sourceAddress.plain() === currentSignerAddress.plain()),
+                'accountMetadataList',
+                uniqueMetadataList.filter((metadata) => metadata.metadataType === MetadataType.Account),
+            );
+            Vue.set(
+                state,
+                'mosaicMetadataList',
+                uniqueMetadataList.filter((metadata) => metadata.metadataType === MetadataType.Mosaic),
+            );
+            Vue.set(
+                state,
+                'namespaceMetadataList',
+                uniqueMetadataList.filter((metadata) => metadata.metadataType === MetadataType.Namespace),
             );
         },
-        isFetchingMetadatas: (state: MetadataState, isFetchingMetadatas: boolean) =>
-            Vue.set(state, 'isFetchingMetadatas', isFetchingMetadatas),
+        isFetchingMetadata: (state: MetadataState, isFetchingMetadata: boolean) => Vue.set(state, 'isFetchingMetadata', isFetchingMetadata),
+        metadataType: (state: MetadataState, metadataType: MetadataType) => {
+            Vue.set(state, 'metadataType', metadataType);
+        },
+        metadataForm: (state: MetadataState, metadataForm: MetadataFormState) => {
+            Vue.set(state, 'metadataForm', metadataForm);
+        },
+        transactions: (state: MetadataState, transactions: Transaction[]) => {
+            Vue.set(state, 'transactions', transactions);
+        },
     },
     actions: {
         async initialize({ commit, getters }) {
@@ -85,22 +124,56 @@ export default {
             await Lock.uninitialize(callback, { getters });
         },
 
-        async LOAD_METADATAS({ commit, rootGetters }) {
+        async SET_METADATA_FORM_STATE({ commit }, metadataForm: MetadataFormState) {
+            commit('metadataForm', metadataForm);
+        },
+
+        async SIGNER_CHANGED({ dispatch }) {
+            await dispatch('LOAD_METADATA_LIST');
+        },
+
+        async LOAD_METADATA_LIST({ commit, rootGetters }) {
             const repositoryFactory = rootGetters['network/repositoryFactory'];
             const generationHash = rootGetters['network/generationHash'];
-            const metadataType = rootGetters['metadata/type'];
             const metadataService = new MetadataService();
             const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
             if (!currentSignerAddress) {
                 return;
             }
-            commit('isFetchingMetadatas', true);
+            commit('isFetchingMetadata', true);
             metadataService
-                .getMetadataList(repositoryFactory, generationHash, currentSignerAddress, metadataType)
-                .subscribe((metadatas) => {
-                    commit('metadatas', { metadatas, currentSignerAddress });
-                })
-                .add(() => commit('isFetchingMetadatas', false));
+                .getMetadataList(repositoryFactory, generationHash, currentSignerAddress)
+                .subscribe((metadataList) => commit('metadataList', metadataList))
+                .add(() => commit('isFetchingMetadata', false));
+        },
+
+        async RESOLVE_METADATA_TRANSACTIONS({ commit, rootGetters }, metadataType: MetadataType) {
+            const currentSignerAddress = rootGetters['account/currentSignerAddress'];
+            const repositoryFactory = rootGetters['network/repositoryFactory'];
+            const epochAdjustment = rootGetters['network/epochAdjustment'];
+            const networkType = rootGetters['network/networkType'];
+            const metadataForm: MetadataFormState = rootGetters['metadata/metadataForm'];
+
+            if (!currentSignerAddress) {
+                return;
+            }
+
+            const metadataService = new MetadataService();
+            const metadataTransaction = await metadataService
+                .metadataTransactionObserver(
+                    repositoryFactory,
+                    Deadline.create(epochAdjustment),
+                    networkType,
+                    currentSignerAddress,
+                    metadataForm.targetAddress,
+                    metadataForm.scopedKey,
+                    metadataForm.metadataValue,
+                    metadataForm.targetId,
+                    metadataType,
+                    UInt64.fromUint(metadataForm.maxFee),
+                )
+                .toPromise();
+            commit('transactions', [metadataTransaction]);
         },
     },
 };

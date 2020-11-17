@@ -102,6 +102,7 @@ export default {
 
             const settings = new SettingService().getProfileSettings(currentProfile.profileName);
             dispatch('app/SET_SETTINGS', settings, { root: true });
+            dispatch('addressBook/LOAD_ADDRESS_BOOK', null, { root: true });
 
             dispatch('diagnostic/ADD_DEBUG', 'Using profile settings ' + Object.values(settings), { root: true });
 

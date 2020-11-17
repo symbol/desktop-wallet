@@ -9,7 +9,7 @@
             <div v-if="name === 'balance'">
                 <AmountDisplay :value="value" />
             </div>
-            <div v-else>
+            <div v-else-if="name !== 'metadataList'">
                 {{ value }}
             </div>
         </div>
@@ -33,6 +33,11 @@
                         <Icon type="md-create" class="edit-icon" />
                         <span>
                             {{ $t('action_label_modify_supply') }}
+                        </span>
+                    </p>
+                    <p v-if="hasMetadata" @click="$emit('on-show-metadata', rowValues.metadataList)">
+                        <span>
+                            {{ $t('view_metadata') }}
                         </span>
                     </p>
                 </div>

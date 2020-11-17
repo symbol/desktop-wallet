@@ -1,6 +1,12 @@
 <template>
     <div class="table-container">
-        <Table :loading="isFetchingHarvestedBlocks" :columns="columns" :data="blockList"></Table>
+        <Table
+            :loading="isFetchingHarvestedBlocks"
+            height="900"
+            :columns="columns"
+            :data="blockList"
+            :no-data-text="$t('no_harvested_blocks_yet')"
+        />
 
         <div class="table-footer-container">
             <Pagination page-size="pageSize" :current="pageInfo.pageNumber" :last-page="pageInfo.isLastPage" @targetPage="onPageChange" />

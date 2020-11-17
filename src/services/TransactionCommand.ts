@@ -39,6 +39,7 @@ export enum TransactionCommandMode {
     SIMPLE = 'SIMPLE',
     AGGREGATE = 'AGGREGATE',
     MULTISIGN = 'MULTISIGN',
+    CHAINED_BINARY = 'CHAINED_BINARY',
 }
 
 export class TransactionCommand {
@@ -70,9 +71,26 @@ export class TransactionCommand {
                 }
                 if (this.mode == TransactionCommandMode.MULTISIGN) {
                     return of([this.announceHashAndAggregateBonded(service, signedTransactions)]);
+                } else if (this.mode == TransactionCommandMode.CHAINED_BINARY) {
+                    return of([this.announceChainedBinary(service, signedTransactions)]);
                 } else {
                     return of(this.announceSimple(service, signedTransactions));
                 }
+            }),
+        );
+    }
+
+    private announceChainedBinary(
+        service: TransactionAnnouncerService,
+        signedTransactions: Observable<SignedTransaction>[],
+    ): Observable<BroadcastResult> {
+        return signedTransactions[0].pipe(
+            flatMap((first) => {
+                return signedTransactions[1].pipe(
+                    flatMap((second) => {
+                        return service.announceChainedBinary(first, second);
+                    }),
+                );
             }),
         );
     }
@@ -110,7 +128,7 @@ export class TransactionCommand {
             return of([]);
         }
         const maxFee = this.stageTransactions.sort((a, b) => a.maxFee.compare(b.maxFee))[0].maxFee;
-        if (this.mode === TransactionCommandMode.SIMPLE) {
+        if (this.mode === TransactionCommandMode.SIMPLE || this.mode === TransactionCommandMode.CHAINED_BINARY) {
             return of(this.stageTransactions.map((t) => this.calculateSuggestedMaxFee(t)));
         } else {
             const currentSigner = PublicAccount.createFromPublicKey(this.signerPublicKey, this.networkType);
@@ -126,15 +144,31 @@ export class TransactionCommand {
                 );
                 return of([aggregate]);
             } else {
-                const aggregate = this.calculateSuggestedMaxFee(
-                    AggregateTransaction.createBonded(
-                        Deadline.create(this.epochAdjustment),
-                        this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
-                        this.networkType,
-                        [],
-                        maxFee,
-                    ),
-                );
+                // check if transaction has no signer assigned meaning it's a non-multisig signer sending simple transfer tx
+                const checkIfTxHaveNoSigner = this.stageTransactions.some((tx) => tx.signer === undefined);
+                let aggregate: Transaction;
+                if (checkIfTxHaveNoSigner) {
+                    aggregate = this.calculateSuggestedMaxFee(
+                        AggregateTransaction.createBonded(
+                            Deadline.create(this.epochAdjustment),
+                            this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
+                            this.networkType,
+                            [],
+                            maxFee,
+                        ),
+                    );
+                } else {
+                    // transaction got multisig child signer which should be used to sign the transaction
+                    aggregate = this.calculateSuggestedMaxFee(
+                        AggregateTransaction.createBonded(
+                            Deadline.create(this.epochAdjustment),
+                            this.stageTransactions.map((t) => t.toAggregate(t.signer)),
+                            this.networkType,
+                            [],
+                            maxFee,
+                        ),
+                    );
+                }
 
                 return account.signTransaction(aggregate, this.generationHash).pipe(
                     map((signedAggregateTransaction) => {
