@@ -46,8 +46,12 @@
                         </div>
                     </div>
 
-                    <div class="detail-row">
-                        <AccountMetadataDisplay :metadata-list="accountMetadataList" @on-view-metadata="showMetadataDetailModal = true" />
+                    <div v-if="!!accountMetadataList.length" class="detail-row">
+                        <AccountMetadataDisplay
+                            :metadata-list="accountMetadataList"
+                            :visible="!!accountMetadataList.length"
+                            @on-view-metadata="showMetadataDetailModal = true"
+                        />
                     </div>
 
                     <div class="detail-row">

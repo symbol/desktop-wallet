@@ -144,32 +144,20 @@ export class TransactionCommand {
                 );
                 return of([aggregate]);
             } else {
-                // check if transaction has no signer assigned meaning it's a non-multisig signer sending simple transfer tx
-                const checkIfTxHaveNoSigner = this.stageTransactions.some((tx) => tx.signer === undefined);
-                let aggregate: Transaction;
-                if (checkIfTxHaveNoSigner) {
-                    aggregate = this.calculateSuggestedMaxFee(
-                        AggregateTransaction.createBonded(
-                            Deadline.create(this.epochAdjustment),
-                            this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
-                            this.networkType,
-                            [],
-                            maxFee,
-                        ),
-                    );
-                } else {
-                    // transaction got multisig child signer which should be used to sign the transaction
-                    aggregate = this.calculateSuggestedMaxFee(
-                        AggregateTransaction.createBonded(
-                            Deadline.create(this.epochAdjustment),
-                            this.stageTransactions.map((t) => t.toAggregate(t.signer)),
-                            this.networkType,
-                            [],
-                            maxFee,
-                        ),
-                    );
-                }
+                // use attached signer (multisig account) if exists
+                const signedInnerTransactions = this.stageTransactions.map((t) => {
+                    return t.signer === undefined ? t.toAggregate(currentSigner) : t.toAggregate(t.signer);
+                });
 
+                const aggregate = this.calculateSuggestedMaxFee(
+                    AggregateTransaction.createBonded(
+                        Deadline.create(this.epochAdjustment),
+                        signedInnerTransactions,
+                        this.networkType,
+                        [],
+                        maxFee,
+                    ),
+                );
                 return account.signTransaction(aggregate, this.generationHash).pipe(
                     map((signedAggregateTransaction) => {
                         const hashLock = this.calculateSuggestedMaxFee(
