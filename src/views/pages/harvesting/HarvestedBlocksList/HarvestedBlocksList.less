@@ -5,13 +5,13 @@
 }
 
 .table-container {
-    display: flex;
+    display: block;
     height: 100%;
     width: 90%;
-    flex-direction: column;
 
     .table-component {
-        flex: 1;
+        height: calc(100% - 1.35rem);
+        overflow-y: scroll;
     }
 
     /deep/.ivu-table-header {
