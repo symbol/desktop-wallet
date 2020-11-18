@@ -3,6 +3,48 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.5][v0.13.5] - 18-Nov-2020
+
+### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+
+#### Added
+
+- Added Delegated Harvesting (Part 2/2).
+  - Split Delegated harvesting activation into 2 steps: Key linking & Persistent delegation message sending.
+  - Activation is now supporting multisig accounts by sending key link & persistent delegation message in AggregaredBonded transaction for cosigning.
+  - Allow the user to manually input the remote node's public for the node key links.
+  - Extended harvest node selector to load all peers. Node public key is loaded automatically for all `Dual Nodes` with latest catapult-rest changes implemented (Due to be released with the next full server release and Testnet patch, note this will not be fully functional until the release, until then please use the known nodes from the drop-down list or provide the node public key manually).
+  - Activation status has been changed to using catapult-server's `unlockedAccount` diagnostic API (Due to be released with the next full server release and Testnet patch, note this will not be fully functional on all peer nodes until the release).
+  - Added delegated harvesting eligibility check (10K stake)
+- Added MeataData for Account / Modaic / Namespace.
+  - Metadata creation with randomly generated scope key.
+  - Existing metadata modification will be implemented in the next release.
+- Added Aggregate Transaction support.
+  - Currently support 3 types of inner transaction: Transfer / MosaicDefination / NamespaceRegistration.
+- Added AddressBook import from JSON back up.
+- Added logout button under the settings page.
+- Added AddressQR to contact details.
+  - AddressQR currently cannot be exported. We acknowledged this issue (not logged in github issues). This will be fixed in the next release.
+
+#### Fixed
+
+- Fixed account name not showing properly after the update.
+- Fixed bugs in transaction CSV download.
+- Fixed bugs in account deletion from multiple profiles.
+- Fixed invalid node URL bug.
+- Fixed the bug of transaction date in transaction history.
+- Fixed harvesting blocks UI.
+- Improved aggregate transactions UI
+- Accounts restyled. The separation between private keys and seed accounts
+- Aligned all dropdowns.
+- Download paper wallets on account creation.
+- Network settings showing a list of nodes.
+- Fixed private key overflow.
+- Changed transaction modals styles.
+- Other UI fixes.
+
+NOTE: We have known issues which have been logged into github and will look for fixing them in the next release.
+
 ## [0.13.4][v0.13.4] - 11-Nov-2020
 
 ### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
@@ -357,6 +399,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
 
+[v0.13.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.4...v0.13.5
 [v0.13.4]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.3...v0.13.4
 [v0.13.3]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.3...v0.13.3
 [v0.13.2]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.0...v0.13.2
