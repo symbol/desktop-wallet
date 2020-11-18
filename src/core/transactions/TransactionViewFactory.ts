@@ -28,6 +28,9 @@ import {
     VotingKeyLinkTransaction,
     VrfKeyLinkTransaction,
     NodeKeyLinkTransaction,
+    AccountMetadataTransaction,
+    MosaicMetadataTransaction,
+    NamespaceMetadataTransaction,
 } from 'symbol-sdk';
 import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction';
 import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction';
@@ -43,6 +46,9 @@ import { TransactionView } from '@/core/transactions/TransactionView';
 import { ViewVotingKeyLinkTransaction } from '@/core/transactions/ViewVotingKeyLinkTransaction';
 import { ViewVrfKeyLinkTransaction } from '@/core/transactions/ViewVrfKeyLinkTransaction';
 import { ViewNodeKeyLinkTransaction } from './ViewNodeKeyLinkTransaction';
+import { ViewAccountMetadataTransaction } from '@/core/transactions/ViewAccountMetadataTransaction';
+import { ViewNamespaceMetadataTransaction } from '@/core/transactions/ViewNamespaceMetadataTransaction';
+import { ViewMosaicMetadataTransaction } from '@/core/transactions/ViewMosaicMetadataTransaction';
 
 /**
  * Transaction view factory.
@@ -58,19 +64,22 @@ export class TransactionViewFactory {
         switch (transaction.type) {
             /// region XXX views for transaction types not yet implemented
             case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
-            case TransactionType.ACCOUNT_METADATA:
             case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
             case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
             case TransactionType.AGGREGATE_BONDED:
             case TransactionType.AGGREGATE_COMPLETE:
             case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
             case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
-            case TransactionType.MOSAIC_METADATA:
-            case TransactionType.NAMESPACE_METADATA:
             case TransactionType.SECRET_LOCK:
             case TransactionType.SECRET_PROOF:
                 return new ViewUnknownTransaction($store, transaction);
             /// end-region XXX views for transaction types not yet implemented
+            case TransactionType.ACCOUNT_METADATA:
+                return new ViewAccountMetadataTransaction($store, transaction as AccountMetadataTransaction);
+            case TransactionType.MOSAIC_METADATA:
+                return new ViewMosaicMetadataTransaction($store, transaction as MosaicMetadataTransaction);
+            case TransactionType.NAMESPACE_METADATA:
+                return new ViewNamespaceMetadataTransaction($store, transaction as NamespaceMetadataTransaction);
             case TransactionType.HASH_LOCK:
                 return new ViewHashLockTransaction($store, transaction as HashLockTransaction);
             case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
