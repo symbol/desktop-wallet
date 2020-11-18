@@ -78,7 +78,7 @@ export class AddressQRTs extends Vue {
     }
 
     get downloadName(): string {
-        return this.contact ? `contact-qr-${this.contact.name}.png` : ''
+        return this.contact ? `contact-qr-${this.contact.name}.png` : '';
     }
     /// end-region computed properties getter/setter
 }
