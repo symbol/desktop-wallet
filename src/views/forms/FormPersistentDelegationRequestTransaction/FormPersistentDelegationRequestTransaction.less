@@ -3,6 +3,12 @@
 /deep/.form-row .auto-complete-size {
     width: 6rem;
     height: 100%;
+    margin-top: 0.125rem;
+    color: @primary;
+}
+
+/deep/ .ivu-icon {
+    margin-top: 0.125rem;
 }
 
 /deep/.form-row .form-row-inner-container {
@@ -10,18 +16,50 @@
     width: 100%;
     height: 100%;
     min-height: 0.45rem;
-    grid-template-columns: 2.3rem 6rem;
+    grid-template-columns: 2rem 7rem;
+
+    /deep/ .signer-selector-single-signer-container {
+        margin-top: 0.075rem;
+    }
+}
+
+/deep/.form-row .auto-complete-size {
+    width: 100%;
+}
+
+/deep/ .ivu-input {
+    color: @primary;
+}
+
+/deep/ .ivu-select-dropdown {
+    background: @grayLightest;
+    .ivu-select-item:hover {
+        background-color: @white;
+    }
+}
+
+/deep/ .ivu-select-item-focus {
+    color: @primary;
 }
 
 .info-text {
     color: @purpleDark;
     font-size: @normalFont;
     font-family: @symbolFontLight;
-    margin-left: 5%;
+    margin-left: 0.7rem;
     margin-top: 5%;
     margin-right: 1rem;
     text-align: justify;
 }
+
+/deep/ .ivu-icon {
+    margin-top: 0;
+}
+
+/deep/ .inputs-container {
+    top: 0.075rem;
+}
+
 .harvesting-buttons-container {
     button {
         max-width: 2rem;

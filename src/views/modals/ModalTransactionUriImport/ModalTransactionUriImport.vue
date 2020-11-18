@@ -4,7 +4,7 @@
             <template v-slot:form>
                 <FormWrapper :whitelisted="true">
                     <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
-                        <form onsubmit="event.preventDefault()" class="form-line-container mt-3">
+                        <form onsubmit="event.preventDefault()" class="form-line-container mt-3" style="margin-bottom: 1rem;">
                             <FormRow>
                                 <template v-slot:label> {{ $t('transaction_uri') }}: </template>
                                 <template v-slot:inputs>

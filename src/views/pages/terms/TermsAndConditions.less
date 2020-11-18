@@ -6,34 +6,41 @@
     margin-right: auto;
     margin-left: auto;
     height: 100%;
+    overflow-y: scroll;
 }
 .title {
-    font-size: 0.751rem;
-    color: black;
+    font-size: @biggestFont;
+    color: @purpleDark;
     text-align: left;
+    font-family: @symbolFontSemiBold;
+    margin-bottom: 50px;
 }
 .sub-title {
     text-align: center;
-    color: black;
-    font-size: 0.3rem;
+    color: @purpleDark;
+    font-size: @subtitleFont;
+    font-family: @symbolFontMedium;
     margin-bottom: 0.5rem;
 }
 
 .second-sub-title {
-    color: black;
-    font-size: 0.3rem;
+    color: @purpleDark;
+    font-size: @fontSize24;
+    font-family: @symbolFontMedium;
     margin-bottom: 0.1rem;
 }
 
 .paragraph {
-    font-size: 0.22rem;
-    color: black;
+    font-size: @bigFont;
+    color: @purpleDark;
+    font-family: @symbolFont;
     margin-bottom: 0.3rem;
 }
 
 .third-sub-title {
-    color: black;
-    font-size: 0.25rem;
+    color: @purpleLight;
+    font-size: @biggerFont;
+    font-family: @symbolFontMedium;
     margin-bottom: 0.1rem;
     line-height: 1.2;
 }
@@ -45,9 +52,12 @@
     list-style: disc;
     font-size: 0.21rem;
     margin-bottom: 0.1rem;
-    color: black;
+    color: @purpleDark;
 }
 
 .link {
     color: @purple;
+}
+b {
+    color: @purpleDark;
 }

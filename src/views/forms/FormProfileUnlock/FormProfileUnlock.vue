@@ -49,4 +49,12 @@ export default class FormProfileUnlock extends FormProfileUnlockTs {}
     clear: both;
     min-height: 1rem;
 }
+
+/deep/ .form-label {
+    padding-left: 0.5rem;
+}
+
+/deep/ .form-row-inner-container {
+    grid-template-columns: 18% 60% !important;
+}
 </style>
