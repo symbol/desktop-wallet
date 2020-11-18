@@ -92,6 +92,7 @@
     "address_format_error": "Address format error",
     "address_invalid": "This address is invalid",
     "address_qr_code": "Address QR code",
+    "contact_qr_code": "Contact QR code",
     "address_to_interact_with": "Address to interact with",
     "address_unknown": "This address is unknown to the network, please try with its public key instead",
     "address_unknown_by_network": "The account is unknown by the network until it sends a first transaction.",

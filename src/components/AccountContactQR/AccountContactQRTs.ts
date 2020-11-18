@@ -83,5 +83,9 @@ export class AccountContactQRTs extends Vue {
             return null;
         }
     }
+
+    get downloadName(): string {
+        return this.account ? `address-qr-${this.account.name}.png` : '';
+    }
     /// end-region computed properties getter/setter
 }
