@@ -60,8 +60,6 @@
                             :account="currentAccount"
                             :visible="currentAccount.isMultisig"
                         />
-                    </div>
-                    <div class="detail-row" style="margin-top: 1rem;">
                         <div class="bottom-buttons-container">
                             <span></span>
                             <button
