@@ -31,10 +31,9 @@ export class ViewAccountMetadataTransaction extends TransactionView<AccountMetad
             { key: 'sender', value: this.transaction.signer.address.pretty() },
             // @ts-ignore
             { key: 'target', value: this.transaction.targetAddress.pretty() },
-            { key: 'scopedMetadataKey', value: this.transaction.scopedMetadataKey.toString() },
+            { key: 'scopedMetadataKey', value: this.transaction.scopedMetadataKey.toHex() },
             { key: 'value', value: this.transaction.value.toString() },
             { key: 'valueSizeDelta', value: this.transaction.valueSizeDelta },
-            { key: 'scopedMetadataKey', value: this.transaction.scopedMetadataKey.toString() },
         ];
     }
 }

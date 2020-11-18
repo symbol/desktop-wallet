@@ -28,7 +28,6 @@ const Lock = AwaitLock.create();
 interface MetadataFormState {
     targetAddress: Address;
     metadataValue: string;
-    scopedKey: string;
     targetId: string;
     maxFee: number;
 }
@@ -54,7 +53,6 @@ const metadataState: MetadataState = {
     metadataType: MetadataType.Account,
     metadataForm: {
         targetAddress: null,
-        scopedKey: '',
         metadataValue: '',
         targetId: '',
         maxFee: 0,
@@ -166,7 +164,6 @@ export default {
                     networkType,
                     currentSignerAddress,
                     metadataForm.targetAddress,
-                    metadataForm.scopedKey,
                     metadataForm.metadataValue,
                     metadataForm.targetId,
                     metadataType,

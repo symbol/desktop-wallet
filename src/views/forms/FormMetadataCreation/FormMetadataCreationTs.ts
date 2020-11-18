@@ -106,7 +106,6 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         signerAddress: '',
         targetAccount: '',
         targetId: '',
-        scopedKey: '',
         metadataValue: '',
         maxFee: 0,
     };
@@ -155,7 +154,6 @@ export class FormMetadataCreationTs extends FormTransactionBase {
 
         // - set default form values
         this.formItems.metadataValue = '';
-        this.formItems.scopedKey = '';
         this.formItems.metadataValue = '';
 
         // - maxFee must be absolute
@@ -272,13 +270,11 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         const metadataForm: {
             targetAddress: Address;
             metadataValue: string;
-            scopedKey: string;
             targetId: string;
             maxFee: number;
         } = {
             targetAddress,
             metadataValue: this.formItems.metadataValue,
-            scopedKey: this.formItems.scopedKey,
             targetId: this.formItems.targetId,
             maxFee: this.formItems.maxFee,
         };
@@ -306,10 +302,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      */
     public get hasFormAnyChanges(): boolean {
         return (
-            this.formItems.signerAddress.length > 0 ||
-            this.formItems.targetAccount.length > 0 ||
-            this.formItems.scopedKey.length > 0 ||
-            this.formItems.metadataValue.length > 0
+            this.formItems.signerAddress.length > 0 || this.formItems.targetAccount.length > 0 || this.formItems.metadataValue.length > 0
         );
     }
 }
