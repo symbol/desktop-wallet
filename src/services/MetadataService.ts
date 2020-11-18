@@ -26,12 +26,12 @@ import {
     NamespaceId,
     MetadataTransactionService,
     MetadataSearchCriteria,
+    Crypto,
 } from 'symbol-sdk';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
 import { MetadataModelStorage } from '@/core/database/storage/MetadataModelStorage';
-
 /**
  * The service in charge of loading and caching anything related to Metadata from Rest.
  * The cache is done by storing the payloads in SimpleObjectStorage.
@@ -75,17 +75,14 @@ export class MetadataService {
         networkType: NetworkType,
         sourceAddress: Address,
         targetAddress: Address,
-        scopedKey: string,
         value: string,
         targetId: string,
         metadataType: MetadataType,
         maxFee: UInt64,
     ): Observable<Transaction> {
-        const scopedMetadataKey = KeyGenerator.generateUInt64Key(scopedKey);
-
+        const scopedMetadataKey = KeyGenerator.generateUInt64Key(Crypto.randomBytes(8));
         const metadataRepository = repositoryFactory.createMetadataRepository();
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
-
         let metadataObservable: Observable<Transaction> = null;
 
         if (metadataType === MetadataType.Account) {

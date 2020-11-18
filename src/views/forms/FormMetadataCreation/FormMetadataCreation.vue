@@ -54,29 +54,7 @@
                             label="targetLabel"
                         />
                     </div>
-                    <FormRow>
-                        <template v-slot:label> {{ $t('form_label_scoped_metadata_key') }}: </template>
-                        <template v-slot:inputs>
-                            <ValidationProvider
-                                v-slot="{ errors }"
-                                vid="scopedKey"
-                                mode="lazy"
-                                :name="$t('form_label_scoped_metadata_key')"
-                                :rules="'required'"
-                                tag="div"
-                                class="autocomplete-container"
-                            >
-                                <ErrorTooltip :errors="errors">
-                                    <AutoComplete
-                                        v-model="formItems.scopedKey"
-                                        class="auto-complete-size auto-complete-style"
-                                        :placeholder="$t('form_label_scoped_metadata_key_hint')"
-                                        :data="cashedScopedKeys"
-                                    />
-                                </ErrorTooltip>
-                            </ValidationProvider>
-                        </template>
-                    </FormRow>
+
                     <FormRow>
                         <template v-slot:label> {{ $t('form_label_value') }}: </template>
                         <template v-slot:inputs>

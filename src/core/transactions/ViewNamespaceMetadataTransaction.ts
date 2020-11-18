@@ -31,7 +31,7 @@ export class ViewNamespaceMetadataTransaction extends TransactionView<NamespaceM
             // @ts-ignore
             { key: 'target', value: this.transaction.targetAddress.pretty() },
             { key: 'namespace', value: this.transaction.targetNamespaceId.toHex() },
-            { key: 'scopedMetadataKey', value: this.transaction.scopedMetadataKey.toString() },
+            { key: 'scopedMetadataKey', value: this.transaction.scopedMetadataKey.toHex() },
             { key: 'value', value: this.transaction.value.toString() },
             { key: 'valueSizeDelta', value: this.transaction.valueSizeDelta },
         ];

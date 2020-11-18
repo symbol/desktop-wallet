@@ -32,7 +32,7 @@ export class ViewMosaicMetadataTransaction extends TransactionView<MosaicMetadat
             // @ts-ignore
             { key: 'target', value: this.transaction.targetAddress.pretty() },
             { key: 'mosaic', value: this.transaction.targetMosaicId.toHex() },
-            { key: 'scopedMetadataKey', value: this.transaction.scopedMetadataKey.toString() },
+            { key: 'scopedMetadataKey', value: this.transaction.scopedMetadataKey.toHex() },
             { key: 'value', value: this.transaction.value.toString() },
             { key: 'valueSizeDelta', value: this.transaction.valueSizeDelta },
         ];
