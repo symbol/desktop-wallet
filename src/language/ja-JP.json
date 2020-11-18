@@ -429,6 +429,7 @@
     "modal_title_transaction_confirmation": "トランザクション(s)に署名",
     "modal_title_transaction_details": "トランザクション詳細",
     "modal_title_unlink_alias": "エイリアスをネームスペースからアンリンク",
+    "modal_title_delete": "確認を削除する",
     "more_access_tool_is_working": "たくさんの認証ツールを開発中です",
     "mosaic": "モザイク",
     "mosaic_alias_not_exist": "モザイクエイリアスは存在しません",

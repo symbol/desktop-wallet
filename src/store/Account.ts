@@ -567,7 +567,10 @@ export default {
             }
             const accountService = new AccountService();
             accountService.deleteAccount(account);
-            const accountsIds = accountService.getAccounts().map((acc) => acc.id);
+            const accountsIds = accountService
+                .getAccounts()
+                .filter((acc) => acc.profileName === currentProfile.profileName)
+                .map((acc) => acc.id);
             // update accounts in profile
             new ProfileService().updateAccounts(currentProfile, [...accountsIds]);
             // set first account to be selected
