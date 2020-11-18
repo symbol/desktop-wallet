@@ -15,16 +15,10 @@
  */
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { mapGetters } from 'vuex';
 
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
-import { AccountModel } from '@/core/database/entities/AccountModel';
 
-@Component({
-    computed: mapGetters({
-        currentAccount: 'account/currentAccount',
-    }),
-})
+@Component({})
 export class AccountMetadataDisplayTs extends Vue {
     /**
      * account metadata list
@@ -34,26 +28,30 @@ export class AccountMetadataDisplayTs extends Vue {
     })
     protected metadataList: MetadataModel[];
 
+    @Prop({
+        default: null,
+    })
+    visible: boolean;
     /**
      * selected metadata model id
      */
     protected value: string = '';
-
-    protected currentAccount: AccountModel;
 
     set chosenValue(newValue: string) {
         this.value = newValue;
     }
 
     get chosenValue(): string {
-        if (this.value !== '') {
-            const chosenItem = this.metadataList.filter((metadata) => metadata.metadataId === this.value);
-            return chosenItem.length && chosenItem[0].metadataId;
-        } else if (this.metadataList.length) {
-            return this.metadataList[0].metadataId;
-        }
+        return this.value;
     }
 
+    /**
+     * Visibility state
+     * @type {boolean}
+     */
+    get show(): boolean {
+        return this.visible;
+    }
     /**
      * Hook called when the layout is mounted
      * @return {void}
