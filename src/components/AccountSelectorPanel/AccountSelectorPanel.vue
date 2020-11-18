@@ -3,8 +3,8 @@
         <div v-auto-scroll="'active-background'" class="account-switch-body-container scroll">
             <div class="account-type-title">Seed accounts</div>
             <div
-                v-for="(item, index) in seedAccounts"
-                :key="index"
+                v-for="item in seedAccounts"
+                :key="item.id"
                 :class="['account-tile', isActiveAccount(item) ? 'active-background' : 'inactive-background', 'pointer']"
                 @click="currentAccountIdentifier = item.id"
             >
@@ -24,8 +24,8 @@
             </div>
             <div v-if="pkAccounts.length > 0" class="account-type-title">Private key accounts</div>
             <div
-                v-for="(item, index) in pkAccounts"
-                :key="index"
+                v-for="item in pkAccounts"
+                :key="item.id"
                 :class="['account-tile', isActiveAccount(item) ? 'active-background' : 'inactive-background', 'pointer']"
                 @click="currentAccountIdentifier = item.id"
             >
