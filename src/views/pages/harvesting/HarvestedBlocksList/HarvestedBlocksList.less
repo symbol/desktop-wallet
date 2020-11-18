@@ -1,16 +1,38 @@
 @import '../../../../views/resources/css/variables.less';
 
+/deep/.table-container {
+    background-color: @white;
+}
+
 .table-container {
+    display: flex;
     height: 100%;
+    width: 90%;
+    flex-direction: column;
+
+    .table-component {
+        flex: 1;
+    }
+
+    /deep/.ivu-table-header {
+        display: grid;
+        width: 100%;
+        text-align: left;
+        color: @primary;
+        background-color: @white !important;
+        font-size: @normalFont;
+        font-family: @symbolFontMedium;
+    }
+
+    /deep/th {
+        background-color: @white !important;
+        //border-bottom: none !important;
+    }
 
     .table-footer-container  {
         text-align: right;
         padding-top: 0.1rem;
         height: 0.45rem;
-    }
-
-    /deep/.ivu-table-wrapper {
-        height: calc(90% - 0.45rem);
     }
 
     /deep/.ivu-table {
@@ -31,4 +53,12 @@
             background-color: @accentPinkLight;
         }
     }
+}
+
+thead {
+    background-color: @white;
+}
+
+/deep/ .ivu-table {
+    color: @primary;
 }

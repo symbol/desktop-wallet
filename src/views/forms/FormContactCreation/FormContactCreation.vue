@@ -55,11 +55,7 @@
                     <FormRow>
                         <template v-slot:inputs>
                             <div class="align-right">
-                                <button
-                                    class="button-style validation-button left-side-button"
-                                    type="submit"
-                                    @click="handleSubmit(onSubmit)"
-                                >
+                                <button class="button-style inverted-button pl-2 pr-2" type="submit" @click="handleSubmit(onSubmit)">
                                     {{ $t('confirm') }}
                                 </button>
                             </div>
@@ -85,6 +81,6 @@ export default class FormContactCreation extends FormContactCreationTs {}
 }
 /deep/.form-row-inner-container {
     text-align: left;
-    grid-template-columns: 25% 75%;
+    grid-template-columns: 25% 65%;
 }
 </style>

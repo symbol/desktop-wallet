@@ -1,12 +1,16 @@
 <template>
     <div>
-        <div class="overflow_ellipsis"><AddressDisplay :address="transaction.signer.address" /></div>
+        <div class="overflow_ellipsis">
+            <AddressDisplay v-if="transaction.type !== transactionType.TRANSFER" :address="transaction.signer.address" />
+            <AddressDisplay
+                v-if="transaction.type === transactionType.TRANSFER"
+                :address="
+                    address.plain() === transaction.signer.address.plain() ? transaction.recipientAddress : transaction.signer.address
+                "
+            />
+        </div>
         <div class="bottom overflow_ellipsis">
-            <span v-if="transaction.type === transactionType.TRANSFER">
-                ->
-                <AddressDisplay :address="transaction.recipientAddress" />
-            </span>
-            <span v-else>{{ $t(`transaction_descriptor_${transaction.type}`) }}</span>
+            <span>{{ $t(`transaction_descriptor_${transaction.type}`) }}</span>
             <span v-if="needsCosignature" class="click-to-cosign">({{ $t('click_to_cosign') }})</span>
         </div>
     </div>
