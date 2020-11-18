@@ -20,10 +20,9 @@
     height: calc(100% - 200px);
 }
 
-.logo-container {
-    width: 150px;
-    .logo-img {
-        width: 100%;
+/deep/ .logo-container {
+    img {
+        padding: 0.225rem !important;
     }
 }
 
@@ -189,7 +188,7 @@
             height: auto !important;
             .ivu-select-placeholder,
             .ivu-select-selected-value {
-                font-size: 14px !important;
+                font-size: @normalFont !important;
                 color: @purpleDark;
                 padding: 0 !important;
             }
@@ -281,4 +280,16 @@
             }
         }
     }
+}
+
+.trigger-accountlink {
+    font-size: @normalFont !important;
+    color: @purpleDark;
+}
+
+.navbar-icon {
+    display: inline;
+    margin-right: 10px;
+    width: 0.15rem;
+    height: 0.15rem;
 }

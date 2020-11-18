@@ -23,7 +23,7 @@
                 </div>
                 <div class="centered-content bottom-space">
                     <button
-                        class="centered-button button-style validation-button right-space"
+                        class="centered-button button-style inverted-button pl-2 pr-2 right-space"
                         :disabled="!marked"
                         @click="approveTermsAndConditions()"
                     >

@@ -2,14 +2,10 @@
     <div class="container">
         <Modal v-model="show" class-name="modal-container" :title="$t('modal_title_enter_account_name')" :transfer="false">
             {{ $t('delete_confirmation_message') }}
-            <div slot="footer" class="modal-footer">
-                <button type="submit" class="centered-button button-style back-button float-right" @click="confirm">
-                    {{ $t('confirm') }}
-                </button>
-                <button type="submit" class="centered-button button-style back-button float-right" @click="show = false">
-                    {{ $t('close') }}
-                </button>
-            </div>
+            <button type="submit" class="position centered-button button-style inverted-button pl-2 pr-2" @click="confirm">
+                {{ $t('confirm') }}
+            </button>
+            <div slot="footer" class="modal-footer"></div>
         </Modal>
     </div>
 </template>
@@ -20,7 +16,20 @@ export default class ModalConfirmDelete extends ModalConfirmDeleteTs {}
 </script>
 
 <style lang="less" scoped>
+@import '../../../views/resources/css/variables.less';
+
 .float-right {
     float: right;
+}
+
+/deep/ .ivu-modal-body {
+    font-size: @bigFont !important;
+    margin-left: 3.5rem;
+    color: @primary;
+    margin-right: 1.5rem;
+}
+
+.position {
+    margin-left: 0.5rem;
 }
 </style>
