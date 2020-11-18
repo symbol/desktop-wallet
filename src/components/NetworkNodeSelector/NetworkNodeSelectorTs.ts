@@ -125,5 +125,6 @@ export class NetworkNodeSelectorTs extends Vue {
     public onClear() {
         // @ts-ignore
         this.$refs.nodeUrlInput.$el.focus();
+        this.$emit('input', { nodePublicKey: '' });
     }
 }
