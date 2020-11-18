@@ -4,10 +4,10 @@
             <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
                 <form class="form-container mt-3" onsubmit="event.preventDefault()" autocomplete="off">
                     <FormRow>
-                        <template v-slot:label> {{ $t('form_label_language') }}: </template>
+                        <template v-slot:label> {{ $t('form_label_default_account') }}: </template>
                         <template v-slot:inputs>
-                            <div class="inputs-container">
-                                <LanguageSelector v-model="formItems.language" :auto-submit="false" :default-form-style="true" />
+                            <div class="inputs-container select-container">
+                                <AccountSelectorField v-model="formItems.defaultAccount" :default-form-style="true" :show-icon="false" />
                             </div>
                         </template>
                     </FormRow>
@@ -24,10 +24,10 @@
                     <ExplorerUrlSetter v-model="formItems.explorerUrl" :auto-submit="false" />
 
                     <FormRow>
-                        <template v-slot:label> {{ $t('form_label_default_account') }}: </template>
+                        <template v-slot:label> {{ $t('form_label_language') }}: </template>
                         <template v-slot:inputs>
-                            <div class="inputs-container select-container">
-                                <AccountSelectorField v-model="formItems.defaultAccount" :default-form-style="true" :show-icon="false" />
+                            <div class="inputs-container">
+                                <LanguageSelector v-model="formItems.language" :auto-submit="false" :default-form-style="true" />
                             </div>
                         </template>
                     </FormRow>
@@ -39,6 +39,11 @@
                         <button class="button-style button danger-button pl-2 pr-2" type="reset" @click.prevent="resetForm">
                             {{ $t('reset') }}
                         </button>
+                        <div style="width: 100%; text-align: left; margin-left: 0.7rem;">
+                            <a class="button-style button danger-button pl-2 pr-2" style="margin-right: 0.4rem;" href="/">
+                                {{ $t('logout') }}
+                            </a>
+                        </div>
                     </div>
                 </form>
             </ValidationObserver>

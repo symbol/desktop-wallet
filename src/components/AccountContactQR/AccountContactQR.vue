@@ -6,6 +6,9 @@
         <div class="clearfix centered">
             <span class="qr-code-title">{{ $t('address_qr_code') }}</span>
         </div>
+        <div class="clearfix centered">
+            <a :href="qrCode$" :download="downloadName">{{ $t('button_download_qr') }}</a>
+        </div>
     </div>
 </template>
 
@@ -24,7 +27,7 @@ export default class AccountContactQR extends AccountContactQRTs {}
     font-size: 16px;
     text-align: center;
     font-weight: 400;
-    color: @grayDark;
+    color: @primary;
 }
 
 .qr-code-image {

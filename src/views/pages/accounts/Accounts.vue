@@ -14,14 +14,6 @@
                     <ContactSelectorPanel v-if="activePanel === 1" />
                 </div>
             </div>
-            <div v-if="activePanel === 0" class="left-bottom-container">
-                <!--TODO: Display hidden accounts following AccountSelectorPanel style.-->
-                <div class="hidden-account-header">
-                    <h1 class="section-title">
-                        {{ $t('hidden_accounts') }}
-                    </h1>
-                </div>
-            </div>
         </div>
         <div v-if="activePanel === 0" class="right-container">
             <div class="header-container">
@@ -71,5 +63,9 @@ export default class Accounts extends AccountsTs {}
     display: grid;
     height: 100%;
     grid-template-rows: 0.6rem auto;
+
+    ::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
 }
 </style>

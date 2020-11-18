@@ -15,6 +15,7 @@ export default class MosaicListPage extends MosaicListPageTs {}
 <style lang="less" scoped>
 .table-section {
     padding-left: 0.2rem;
+    padding-right: 0.2rem;
     height: 100%;
 }
 </style>

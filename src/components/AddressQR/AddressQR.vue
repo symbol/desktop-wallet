@@ -4,7 +4,10 @@
             <img class="qr-code-image" :src="qrCode$" />
         </div>
         <div class="clearfix centered">
-            <span class="qr-code-title">{{ $t('address_qr_code') }}</span>
+            <span class="qr-code-title">{{ $t('contact_qr_code') }}</span>
+        </div>
+        <div class="clearfix centered">
+            <a :href="qrCode$" :download="downloadName">{{ $t('button_download_qr') }}</a>
         </div>
     </div>
 </template>

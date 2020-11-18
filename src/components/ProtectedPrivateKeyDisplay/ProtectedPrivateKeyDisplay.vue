@@ -1,27 +1,29 @@
 <template>
-    <div class="account-detail-row-3cols">
-        <span class="label">{{ $t('private_key') }}:</span>
-        <div v-if="hasPlainPrivateKey" class="value">
-            {{ plainInformation }}
-            <ButtonCopyToClipboard v-model="plainInformation">
-                <img src="@/views/resources/img/account/copyIcon.png" class="copy-icon" />
-            </ButtonCopyToClipboard>
-            <span class="timer-span"> &nbsp; ({{ $t('x_seconds', { seconds: secondsCounter }) }})</span>
-        </div>
-        <div v-else>
-            <div class="value">
-                <button type="button" class="show-button" @click="onClickDisplay">
-                    {{ $t('show_button') }}
-                </button>
+    <div class="detail-row">
+        <div class="account-detail-row-3cols">
+            <span class="label">{{ $t('private_key') }}</span>
+            <span v-if="hasPlainPrivateKey" class="value accountPublicKey">{{ plainInformation }}</span>
+            <span v-if="hasPlainPrivateKey">
+                <span>
+                    <ButtonCopyToClipboard v-model="plainInformation">
+                        <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
+                    </ButtonCopyToClipboard>
+                </span>
+            </span>
+            <div v-else>
+                <div class="value">
+                    <button type="button" class="show-button" @click="onClickDisplay">
+                        {{ $t('show_button') }}
+                    </button>
+                </div>
             </div>
+            <ModalFormProfileUnlock
+                v-if="hasAccountUnlockModal"
+                :visible="hasAccountUnlockModal"
+                :on-success="onAccountUnlocked"
+                @close="hasAccountUnlockModal = false"
+            />
         </div>
-
-        <ModalFormProfileUnlock
-            v-if="hasAccountUnlockModal"
-            :visible="hasAccountUnlockModal"
-            :on-success="onAccountUnlocked"
-            @close="hasAccountUnlockModal = false"
-        />
     </div>
 </template>
 
@@ -44,21 +46,22 @@ export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDispl
 .copy-icon {
     width: 0.24rem;
     height: 0.24rem;
-    margin-left: 0.18rem;
     cursor: pointer;
-}
-.eye-button {
-    height: 0.35rem !important;
-    padding: 0 0.3rem;
-}
-
-.value {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: max-content;
 }
 
 .timer-span {
     padding-left: 8px;
+}
+
+.value {
+    font-family: @symbolFontLight;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: #44004e;
+}
+
+.account-detail-row-3cols {
+    display: grid;
+    grid-template-columns: 1.4rem 5rem auto;
 }
 </style>

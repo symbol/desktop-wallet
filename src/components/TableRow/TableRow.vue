@@ -36,6 +36,7 @@
                         </span>
                     </p>
                     <p v-if="hasMetadata" @click="$emit('on-show-metadata', rowValues.metadataList)">
+                        <Icon type="md-eye" class="edit-icon" />
                         <span>
                             {{ $t('view_metadata') }}
                         </span>

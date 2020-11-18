@@ -21,7 +21,7 @@
             }
         }
         &.active-item {
-            background-color: #f2eef8;
+            background-color: #f3f4f8;
         }
     }
 }
@@ -41,9 +41,9 @@
     }
 
     .nav-item {
-        font-size: 14px;
+        font-size: @bigFont;
         position: relative;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
         height: 0.2rem;
         padding: 0 0.4rem;
@@ -56,6 +56,15 @@
             width: 0.2rem;
             margin-top: 0.02rem;
             display: inline-block;
+        }
+        &.active-item {
+            color: @primary;
+            font-family: @symbolFontSemiBold;
+        }
+        &.inactive-item {
+            color: @grayLight;
+            font-family: @symbolFont;
+            font-weight: 500;
         }
     }
     .border {

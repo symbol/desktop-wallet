@@ -26,6 +26,7 @@ import {
     NamespaceId,
     MetadataTransactionService,
     MetadataSearchCriteria,
+    Crypto,
 } from 'symbol-sdk';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -75,13 +76,12 @@ export class MetadataService {
         networkType: NetworkType,
         sourceAddress: Address,
         targetAddress: Address,
-        scopedKey: string,
         value: string,
         targetId: string,
         metadataType: MetadataType,
         maxFee: UInt64,
     ): Observable<Transaction> {
-        const scopedMetadataKey = KeyGenerator.generateUInt64Key(scopedKey);
+        const scopedMetadataKey = KeyGenerator.generateUInt64Key(Crypto.randomBytes(8));
 
         const metadataRepository = repositoryFactory.createMetadataRepository();
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);

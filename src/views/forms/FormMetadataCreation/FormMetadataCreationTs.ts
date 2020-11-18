@@ -39,7 +39,6 @@ import { TransactionCommandMode } from '@/services/TransactionCommand';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
-import { ScopedMetadataKeysHelpers } from '@/core/utils/ScopedMetadataKeysHelpers';
 import { AddressValidator } from '@/core/validation/validators';
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
 
@@ -106,7 +105,6 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         signerAddress: '',
         targetAccount: '',
         targetId: '',
-        scopedKey: '',
         metadataValue: '',
         maxFee: 0,
     };
@@ -155,7 +153,6 @@ export class FormMetadataCreationTs extends FormTransactionBase {
 
         // - set default form values
         this.formItems.metadataValue = '';
-        this.formItems.scopedKey = '';
         this.formItems.metadataValue = '';
 
         // - maxFee must be absolute
@@ -243,15 +240,6 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     }
 
     /**
-     * Default explorer link list
-     * @readonly
-     * @type {string[]}
-     */
-    get cashedScopedKeys() {
-        return ScopedMetadataKeysHelpers.loadScopedMetadataKeys();
-    }
-
-    /**
      * Target id validator name
      * @return {string}
      */
@@ -272,13 +260,11 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         const metadataForm: {
             targetAddress: Address;
             metadataValue: string;
-            scopedKey: string;
             targetId: string;
             maxFee: number;
         } = {
             targetAddress,
             metadataValue: this.formItems.metadataValue,
-            scopedKey: this.formItems.scopedKey,
             targetId: this.formItems.targetId,
             maxFee: this.formItems.maxFee,
         };
@@ -306,10 +292,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      */
     public get hasFormAnyChanges(): boolean {
         return (
-            this.formItems.signerAddress.length > 0 ||
-            this.formItems.targetAccount.length > 0 ||
-            this.formItems.scopedKey.length > 0 ||
-            this.formItems.metadataValue.length > 0
+            this.formItems.signerAddress.length > 0 || this.formItems.targetAccount.length > 0 || this.formItems.metadataValue.length > 0
         );
     }
 }
