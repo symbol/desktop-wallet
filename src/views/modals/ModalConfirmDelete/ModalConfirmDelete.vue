@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <Modal v-model="show" class-name="modal-container" :title="$t('modal_title_enter_account_name')" :transfer="false">
+        <Modal v-model="show" class-name="modal-container" :title="$t('modal_title_delete')" :transfer="false">
             {{ $t('delete_confirmation_message') }}
             <button type="submit" class="position centered-button button-style inverted-button pl-2 pr-2" @click="confirm">
                 {{ $t('confirm') }}
