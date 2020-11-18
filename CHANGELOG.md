@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.4][v0.13.4] - 11-Nov-2020
+
+### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+
+#### Fixed
+
+- Fixed delegated harvesting activation issues.
+- Added existing NGL harvesting nodes to delegated harvesting node selector for function preview purposes.
+- UI fixed on the delegated harvesting activation confirmation page.
+
 ## [0.13.3][v0.13.3] - 09-Nov-2020
 
 ### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
@@ -347,6 +357,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
 
+[v0.13.4]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.3...v0.13.4
+[v0.13.2]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.3...v0.13.3
 [v0.13.2]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.0...v0.13.2
 [v0.13.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.11.0...v0.13.0
 [v0.12.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.11.0...v0.12.0
