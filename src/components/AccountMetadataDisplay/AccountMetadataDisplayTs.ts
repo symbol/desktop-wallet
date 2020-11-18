@@ -18,9 +18,12 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
+import { AccountModel } from '@/core/database/entities/AccountModel';
 
 @Component({
-    computed: mapGetters({}),
+    computed: mapGetters({
+        currentAccount: 'account/currentAccount',
+    }),
 })
 export class AccountMetadataDisplayTs extends Vue {
     /**
@@ -36,12 +39,19 @@ export class AccountMetadataDisplayTs extends Vue {
      */
     protected value: string = '';
 
+    protected currentAccount: AccountModel;
+
     set chosenValue(newValue: string) {
         this.value = newValue;
     }
 
     get chosenValue(): string {
-        return this.value;
+        if (this.value !== '') {
+            const chosenItem = this.metadataList.filter((metadata) => metadata.metadataId === this.value);
+            return chosenItem.length && chosenItem[0].metadataId;
+        } else if (this.metadataList.length) {
+            return this.metadataList[0].metadataId;
+        }
     }
 
     /**
