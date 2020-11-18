@@ -25,7 +25,6 @@
             <div v-if="pkAccounts.length > 0" class="account-type-title">Private key accounts</div>
             <div
                 v-for="(item, index) in pkAccounts"
-                v-if="pkAccounts.length > 0"
                 :key="index"
                 :class="['account-tile', isActiveAccount(item) ? 'active-background' : 'inactive-background', 'pointer']"
                 @click="currentAccountIdentifier = item.id"

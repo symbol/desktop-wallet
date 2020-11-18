@@ -5,7 +5,6 @@
             <div class="account-detail-row-3cols">
                 <tree :data="multisigGraphTree"></tree>
             </div>
-
         </div>
     </div>
 </template>

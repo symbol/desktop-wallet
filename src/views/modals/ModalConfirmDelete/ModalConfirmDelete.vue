@@ -3,10 +3,9 @@
         <Modal v-model="show" class-name="modal-container" :title="$t('modal_title_enter_account_name')" :transfer="false">
             {{ $t('delete_confirmation_message') }}
             <button type="submit" class="position centered-button button-style inverted-button pl-2 pr-2" @click="confirm">
-                    {{ $t('confirm') }}
+                {{ $t('confirm') }}
             </button>
-            <div slot="footer" class="modal-footer">
-            </div>
+            <div slot="footer" class="modal-footer"></div>
         </Modal>
     </div>
 </template>
@@ -33,5 +32,4 @@ export default class ModalConfirmDelete extends ModalConfirmDeleteTs {}
 .position {
     margin-left: 0.5rem;
 }
-
 </style>

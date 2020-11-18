@@ -3,7 +3,11 @@
         <div>
             <span>{{ messageDisplay }}</span>
             <span v-if="isEncrypted && !unannounced">
-                <button class="button-style inverted-button float-right pl-2 pr-2" @click="hasAccountUnlockModal = true" style="padding-top: 0.03rem;">
+                <button
+                    class="button-style inverted-button float-right pl-2 pr-2"
+                    style="padding-top: 0.03rem;"
+                    @click="hasAccountUnlockModal = true"
+                >
                     {{ $t('decrypt_message') }}
                 </button>
             </span>
