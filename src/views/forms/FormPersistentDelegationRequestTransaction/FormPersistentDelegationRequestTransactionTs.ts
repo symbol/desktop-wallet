@@ -172,6 +172,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     protected getKeyLinkTransactions(transactionSigner = this.tempTransactionSigner): Observable<Transaction[]> {
         const maxFee = UInt64.fromUint(feesConfig.highest); // fixed to the Highest, txs must get confirmed
         const txs: Transaction[] = [];
+        const txsToBeAggregated: Transaction[] = [];
 
         /*
          LINK
@@ -186,7 +187,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 LinkAction.Unlink,
                 maxFee,
             );
-            txs.push(accountKeyUnLinkTx);
+            txsToBeAggregated.push(accountKeyUnLinkTx);
         }
 
         if (this.isVrfKeyLinked) {
@@ -195,7 +196,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 LinkAction.Unlink,
                 maxFee,
             );
-            txs.push(vrfKeyUnLinkTx);
+            txsToBeAggregated.push(vrfKeyUnLinkTx);
         }
 
         if (this.isNodeKeyLinked) {
@@ -205,7 +206,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 maxFee,
             );
 
-            txs.push(nodeUnLinkTx);
+            txsToBeAggregated.push(nodeUnLinkTx);
         }
 
         if (this.action !== HarvestingAction.STOP) {
@@ -403,6 +404,13 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         });
     }
 
+    protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
+        if (this.action === HarvestingAction.STOP) {
+            return TransactionCommandMode.SIMPLE;
+        }
+        return TransactionCommandMode.CHAINED_BINARY;
+    }
+
     private createAccountKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): AccountKeyLinkTransaction {
         return AccountKeyLinkTransaction.create(this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
     }
@@ -502,5 +510,49 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     private get isPersistentDelReqSent() {
         return this.currentSignerAccountModel.isPersistentDelReqSent;
+    }
+
+    /**
+     * Static list for the time being - until the dynamic solution
+     */
+    public get nodeList() {
+        return [
+            {
+                publicKey: 'BE60BE426872B3CB46FE2C9BAA521731EA52C0D57E004FC7C84293887AC3BAD0',
+                url: 'beacon-01.ap-northeast-1.0.10.0.x.symboldev.network',
+            },
+            {
+                publicKey: 'EE356A555802003C5666D8485185CDC3844F9502FAF24B589BDC4D6E9148022F',
+                url: 'beacon-01.eu-central-1.0.10.0.x.symboldev.network',
+            },
+            {
+                publicKey: '81890592F960AAEBDA7612C8917FA9C267A845D78D74D4B3651AF093E6775001',
+                url: 'beacon-01.us-west-2.0.10.0.x.symboldev.network',
+            },
+            {
+                publicKey: '2AF52C5AA9A5E13DD548A577DEBF21E7D3CC285A1B0798F4D450239CDDE5A169',
+                url: 'beacon-01.ap-southeast-1.0.10.0.x.symboldev.network',
+            },
+            {
+                publicKey: 'D74B89EE9378DEBD510A4139F8E8B10B878E12956059CD9E13253CF3AD73BDEB',
+                url: 'beacon-01.us-west-1.0.10.0.x.symboldev.network',
+            },
+            {
+                publicKey: '938D6C1BBDB09F3F1B9D95D2D902A94C95E3AA6F1069A805831D9E272DCF927F',
+                url: 'beacon-01.eu-west-1.0.10.0.x.symboldev.network',
+            },
+            {
+                publicKey: '2A40F7895F56389BE40C063B897E9E66E64705D55B19FC43C8CEB5F7F14ABE59',
+                url: 'beacon-01.us-east-1.0.10.0.x.symboldev.network',
+            },
+        ];
+    }
+
+    public get nodePublicKey() {
+        return this.formItems.nodePublicKey;
+    }
+
+    public set nodePublicKey(val) {
+        this.formItems.nodePublicKey = val;
     }
 }
