@@ -618,6 +618,7 @@
     "select_accounts": "Select Accounts",
     "select_all": "Check all",
     "select_contact": "Select contact",
+    "logout": "Logout",
     "send": "Send",
     "save": "Save",
     "sender": "From",

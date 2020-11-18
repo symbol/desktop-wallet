@@ -39,6 +39,11 @@
                         <button class="button-style button danger-button pl-2 pr-2" type="reset" @click.prevent="resetForm">
                             {{ $t('reset') }}
                         </button>
+                        <div style="width: 100%; text-align: left; margin-left: 0.7rem;">
+                            <a class="button-style button danger-button pl-2 pr-2" style="margin-right: 0.4rem;" href="/">
+                                {{ $t('logout') }}
+                            </a>
+                        </div>
                     </div>
                 </form>
             </ValidationObserver>
