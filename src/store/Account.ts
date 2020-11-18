@@ -477,7 +477,7 @@ export default {
             }
         },
 
-        UPDATE_CURRENT_ACCOUNT_NAME({ commit, getters, rootGetters, dispatch }, name: string) {
+        UPDATE_CURRENT_ACCOUNT_NAME({ commit, getters, rootGetters }, name: string) {
             const currentAccount: AccountModel = getters.currentAccount;
             if (!currentAccount) {
                 return;
@@ -490,7 +490,14 @@ export default {
             accountService.updateName(currentAccount, name);
             const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
             commit('knownAccounts', knownAccounts);
-            dispatch('LOAD_ACCOUNT_INFO');
+            // update current signer name
+            const signers: Signer[] = getters.signers;
+            signers.map((s) => {
+                if (s.address.plain() === currentAccount.address) {
+                    s.label = name;
+                    commit('currentSigner', s);
+                }
+            });
         },
 
         UPDATE_CURRENT_ACCOUNT_REMOTE_ACCOUNT({ commit, getters, rootGetters, dispatch }, encRemoteAccountPrivateKey: string) {

@@ -1,5 +1,5 @@
 <template>
-    <div class="account-detail-row-3cols">
+    <div v-if="show" class="account-detail-row-3cols">
         <span class="label">{{ $t('metadata') }}:</span>
         <Select v-model="chosenValue" class="select-size select-style">
             <Option v-for="metadataModel in metadataList" :key="metadataModel.metadataId" :value="metadataModel.metadataId">
