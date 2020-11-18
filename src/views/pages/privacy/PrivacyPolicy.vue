@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" style="overflow-x: scroll;">
         <h1 class="title">Privacy Policy</h1>
         <h2 class="second-sub-title">Section 1 - What do we do with your information?</h2>
         <p class="paragraph">

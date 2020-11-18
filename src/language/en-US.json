@@ -538,7 +538,7 @@
     "placeholder_address_or_public_key": "Address or public key",
     "placeholder_transaction_uri": "Enter a valid transaction URI",
     "please_accurately_copy_the_safety_backup_mnemonic": "Please accurately copy the safety backup mnemonic",
-    "please_approve_terms_and_conditions": "please accept terms and conditions before starting using the app.",
+    "please_approve_terms_and_conditions": "Please accept terms and conditions before starting using the app.",
     "please_backup_mnemonic_passphrase": "Make sure to create a backup copy of the mnemonic passphrase. You will need this backup when trying to recover your profile.",
     "please_backup_mnemonic_passphrase_title": "Create a backup!",
     "please_click_on_the_mnemonic_in_order_to_confirm_that_you_are_backing_up_correctly": "Please click on the mnemonic in order to confirm that you are backing up correctly.",
