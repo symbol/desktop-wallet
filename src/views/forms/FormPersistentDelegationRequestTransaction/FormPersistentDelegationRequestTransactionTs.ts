@@ -64,6 +64,7 @@ import { concatMap, flatMap, map, mergeAll, switchMap, tap, toArray } from 'rxjs
 import { BroadcastResult } from '@/core/transactions/BroadcastResult';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { NodeModel } from '@/core/database/entities/NodeModel';
+import { MosaicModel } from '@/core/database/entities/MosaicModel';
 
 export enum HarvestingAction {
     START = 1,
@@ -90,6 +91,7 @@ export enum HarvestingAction {
             currentSignerAccountInfo: 'account/currentSignerAccountInfo',
             harvestingStatus: 'harvesting/status',
             currentSignerAccountModel: 'account/currentSignerAccountModel',
+            networkBalanceMosaics: 'mosaic/networkBalanceMosaics',
         }),
     },
 })
@@ -127,6 +129,13 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     private tempTransactionSigner: TransactionSigner;
 
     private activating = false;
+
+    /**
+     * Current account owned mosaics
+     * @protected
+     * @type {MosaicModel[]}
+     */
+    private networkBalanceMosaics: MosaicModel;
 
     /**
      * Reset the form with properties
@@ -443,6 +452,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     public onStart() {
         this.action = HarvestingAction.START;
+        if (this.networkBalanceMosaics.balance / Math.pow(10, this.networkBalanceMosaics.divisibility) < 10000) {
+            this.$store.dispatch('notification/ADD_ERROR', this.$t('harvesting_account_insufficient_balance'));
+            return;
+        }
         this.onSubmit();
     }
 
@@ -465,12 +478,11 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     public onSubmit() {
         if (!this.allKeysLinked && !this.formItems.nodeModel.nodePublicKey.length) {
-            this.$refs.observer.setErrors({ endpoint: this.$t('invalid_node').toString() });
+            this.$store.dispatch('notification/ADD_ERROR', this.$t('invalid_node'));
             return;
         }
 
         // - open signature modal
-        // this.command = this.createTransactionCommand();
         this.onShowConfirmationModal();
     }
 
