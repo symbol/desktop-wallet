@@ -15,13 +15,10 @@
  */
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { mapGetters } from 'vuex';
 
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
 
-@Component({
-    computed: mapGetters({}),
-})
+@Component({})
 export class AccountMetadataDisplayTs extends Vue {
     /**
      * account metadata list

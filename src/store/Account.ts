@@ -500,7 +500,7 @@ export default {
             });
         },
 
-        UPDATE_CURRENT_ACCOUNT_REMOTE_ACCOUNT({ commit, getters, rootGetters }, encRemoteAccountPrivateKey: string) {
+        UPDATE_CURRENT_ACCOUNT_REMOTE_ACCOUNT({ commit, getters, rootGetters, dispatch }, encRemoteAccountPrivateKey: string) {
             const currentAccount: AccountModel = getters.currentAccount;
             if (!currentAccount) {
                 return;
@@ -513,6 +513,7 @@ export default {
             accountService.updateRemoteAccount(currentAccount, encRemoteAccountPrivateKey);
             const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
             commit('knownAccounts', knownAccounts);
+            dispatch('LOAD_ACCOUNT_INFO');
         },
         UPDATE_ACCOUNT_SIGNED_PERSISTENT_DEL_REQ_TXS(
             { commit, rootGetters },
