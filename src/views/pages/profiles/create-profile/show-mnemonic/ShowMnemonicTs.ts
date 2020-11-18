@@ -27,6 +27,9 @@ import { MnemonicQR, QRCodeGenerator } from 'symbol-qr-library';
 // @ts-ignore
 import failureIcon from '@/views/resources/img/monitor/failure.png';
 import { Password } from 'symbol-sdk';
+import { IHDAccountInfo, SymbolPaperWallet } from 'symbol-paper-wallets/index';
+import { UIHelpers } from '@/core/utils/UIHelpers';
+import { AccountService } from '@/services/AccountService';
 
 @Component({
     components: { MnemonicDisplay, ButtonCopyToClipboard },
@@ -100,6 +103,21 @@ export default class ShowMnemonicTs extends Vue {
     }
     public get waitingCopyString(): string {
         return Formatters.splitArrayByDelimiter(this.mnemonicWordsList);
+    }
+
+    public async downloadPaperWallet() {
+        const accountService = new AccountService();
+        const mnemonicObj = new MnemonicPassPhrase(this.currentMnemonic.plain);
+        const account = accountService.getAccountByPath(mnemonicObj, this.currentProfile.networkType);
+        const rootAccountInfo: IHDAccountInfo = {
+            mnemonic: this.currentMnemonic.plain,
+            rootAccountPublicKey: account.publicKey,
+            rootAccountAddress: account.address.pretty(),
+        };
+
+        const paperWallet = new SymbolPaperWallet(rootAccountInfo, [], this.currentProfile.networkType, this.currentProfile.generationHash);
+        const pdfArray: Uint8Array = await paperWallet.toPdf();
+        return UIHelpers.downloadBytesAsFile(pdfArray, `paper-wallet-${this.currentProfile.profileName}`, 'application/pdf');
     }
     /// end-region computed properties getter/setter
 }

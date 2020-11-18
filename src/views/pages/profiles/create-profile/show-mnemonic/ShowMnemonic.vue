@@ -22,15 +22,6 @@
                         </div>
                     </div>
                 </MnemonicDisplay>
-                <div v-if="showMnemonic" class="mnemonic-qrcode">
-                    <img id="qrImg" :src="qrBase64" alt="Mnemonic QR code" />
-                    <span>
-                        <br />
-                        <a :href="qrBase64" :download="'qr_account_mnemonic_' + currentProfile.profileName">
-                            {{ $t('button_download_qr') }}
-                        </a>
-                    </span>
-                </div>
                 <div class="form-line-container button-container">
                     <div class="float-right mt-3">
                         <button
@@ -39,6 +30,13 @@
                             @click="$router.push({ name: 'profiles.createProfile.info' })"
                         >
                             {{ $t('back') }}
+                        </button>
+                        <button
+                            type="button"
+                            class="solid-button button-style fat-button create-account-style"
+                            @click="downloadPaperWallet"
+                        >
+                            {{ $t('button_download_qr') }}
                         </button>
                         <button
                             type="submit"
