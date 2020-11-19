@@ -5,7 +5,24 @@ exports[`TransactionStatusFilter TransactionStatusFilter renders correctly 1`] =
   <div class="filter-button"><span>Filter</span>
     <div class="filter-button-arrow"></div>
   </div>
-  <!---->
+  <div class="filter-options-container" style="display: none;">
+    <div class="filter-options-container__option">
+      <checkbox-stub truevalue="true" size="default" id="Confirmed"></checkbox-stub> <label for="Confirmed">Confirmed</label>
+    </div>
+    <div class="filter-options-container__option">
+      <checkbox-stub truevalue="true" size="default" id="Unconfirmed"></checkbox-stub> <label for="Unconfirmed">Unconfirmed</label>
+    </div>
+    <div class="filter-options-container__option">
+      <checkbox-stub truevalue="true" size="default" id="Partial"></checkbox-stub> <label for="Partial">Partial</label>
+    </div>
+    <div class="filter-options-container__divider"></div>
+    <div class="filter-options-container__option">
+      <checkbox-stub truevalue="true" size="default" id="Sent"></checkbox-stub> <label for="Sent">Sent</label>
+    </div>
+    <div class="filter-options-container__option">
+      <checkbox-stub truevalue="true" size="default" id="Received"></checkbox-stub> <label for="Received">Received</label>
+    </div>
+  </div>
 </div>
 `;
 
@@ -14,7 +31,7 @@ exports[`TransactionStatusFilter TransactionStatusFilter renders correctly 2`] =
   <div class="filter-button"><span>Filter</span>
     <div class="filter-button-arrow arrow-up"></div>
   </div>
-  <div class="filter-options-container">
+  <div class="filter-options-container" style="">
     <div class="filter-options-container__option">
       <checkbox-stub truevalue="true" size="default" id="Confirmed"></checkbox-stub> <label for="Confirmed">Confirmed</label>
     </div>
