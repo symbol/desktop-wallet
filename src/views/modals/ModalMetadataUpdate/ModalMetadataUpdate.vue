@@ -5,6 +5,7 @@
                 :value="value"
                 :edit-mode="editMode"
                 :type="type"
+                :metadata-list="metadataList"
                 @on-create="saveMetadata"
                 @on-confirmation-success="show = false"
             />

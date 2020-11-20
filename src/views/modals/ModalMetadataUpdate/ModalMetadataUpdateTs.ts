@@ -49,6 +49,11 @@ export class ModalMetadataUpdateTs extends Vue {
      */
     protected metadata: MetadataModel;
 
+    @Prop({
+        default: null,
+    })
+    metadataList: MetadataModel[];
+
     /**
      * Metadata update modal type
      */

@@ -60,10 +60,10 @@ export class MetadataService {
         const metadataRepository = repositoryFactory.createMetadataRepository();
 
         // search where user is target
-        const searchCriteria: MetadataSearchCriteria = { targetAddress: address };
+        const targetSearchCriteria: MetadataSearchCriteria = { targetAddress: address };
         const uniquMetaArray: MetadataModel[] = [];
         metadataRepository
-            .search(searchCriteria)
+            .search(targetSearchCriteria)
             .pipe(map((metadataListPage) => metadataListPage.data.map((metadata) => new MetadataModel(metadata))))
             .subscribe((t) => {
                 t.map((value) => {
@@ -74,9 +74,9 @@ export class MetadataService {
             });
 
         // search where user is sender of metadata
-        const searchCriteria2: MetadataSearchCriteria = { sourceAddress: address };
+        const sourceSearchCriteria: MetadataSearchCriteria = { sourceAddress: address };
         metadataRepository
-            .search(searchCriteria2)
+            .search(sourceSearchCriteria)
             .pipe(map((metadataListPage) => metadataListPage.data.map((metadata) => new MetadataModel(metadata))))
             .subscribe((t) => {
                 t.map((value) => {
