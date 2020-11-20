@@ -16,34 +16,20 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { ContactQR } from 'symbol-qr-library';
 import { PublicAccount } from 'symbol-sdk';
-import { Observable, of } from 'rxjs';
-import { concatMap, pluck } from 'rxjs/operators';
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel';
 // resources
-// @ts-ignore
-import failureIcon from '@/views/resources/img/monitor/failure.png';
 import { mapGetters } from 'vuex';
-
+// @ts-ignore
+import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue';
 @Component({
+    components: {
+        QRCodeDisplay,
+    },
     computed: {
         ...mapGetters({
             generationHash: 'network/generationHash',
         }),
-    },
-    subscriptions() {
-        const qrCode$ = this.$watchAsObservable('qrCodeArgs', {
-            immediate: true,
-        }).pipe(
-            pluck('newValue'),
-            concatMap((args) => {
-                if (args instanceof ContactQR) {
-                    return args.toBase64();
-                }
-                return of(failureIcon);
-            }),
-        );
-        return { qrCode$ };
     },
 })
 export class AccountContactQRTs extends Vue {
@@ -57,12 +43,6 @@ export class AccountContactQRTs extends Vue {
      * @var {string}
      */
     public generationHash: string;
-
-    /**
-     * QR Code
-     * @type {Observable<string>}
-     */
-    public qrCode$: Observable<string>;
 
     /// region computed properties getter/setter
     get qrCodeArgs(): ContactQR {
