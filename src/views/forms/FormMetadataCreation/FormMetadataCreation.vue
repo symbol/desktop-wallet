@@ -69,7 +69,7 @@
                         <template v-slot:label> {{ $t('form_label_scoped_metadata_key') }}: </template>
                         <template v-slot:inputs>
                             <input
-                                v-if="type == 0"
+                                v-if="type == MetadataType.Account"
                                 v-model="formItems.scopedKey"
                                 :disabled="editMode"
                                 class="input-size input-style"
