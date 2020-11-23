@@ -51,6 +51,7 @@
                             :metadata-list="accountMetadataList"
                             :visible="!!accountMetadataList.length"
                             @on-view-metadata="showMetadataDetailModal = true"
+                            @on-edit-metadata="openEditModal"
                         />
                     </div>
 
@@ -91,7 +92,13 @@
             :metadata-list="accountMetadataList"
             @close="showMetadataDetailModal = false"
         />
-
+        <ModalMetadataUpdate
+            v-if="showUpdateMetadataModal && metadataEntry"
+            :visible="showUpdateMetadataModal"
+            :value="metadataEntry"
+            :edit-mode="showUpdateMetadataModal"
+            @close="showUpdateMetadataModal = false"
+        />
         <!--<div class="account-detail-inner-container">
             <div class="left-container">
                 <div class="title-row">
