@@ -24,6 +24,7 @@ import {
     RentalFees,
     RepositoryFactoryHttp,
     NodeInfo,
+    RoleType,
 } from 'symbol-sdk';
 import { Subscription } from 'rxjs';
 import _ from 'lodash';
@@ -66,30 +67,37 @@ const staticPeerNodes: NodeInfo[] = [
     {
         nodePublicKey: 'BE60BE426872B3CB46FE2C9BAA521731EA52C0D57E004FC7C84293887AC3BAD0',
         host: 'beacon-01.ap-northeast-1.0.10.0.x.symboldev.network',
+        roles: [RoleType.PeerNode],
     },
     {
         nodePublicKey: 'EE356A555802003C5666D8485185CDC3844F9502FAF24B589BDC4D6E9148022F',
         host: 'beacon-01.eu-central-1.0.10.0.x.symboldev.network',
+        roles: [RoleType.PeerNode],
     },
     {
         nodePublicKey: '81890592F960AAEBDA7612C8917FA9C267A845D78D74D4B3651AF093E6775001',
         host: 'beacon-01.us-west-2.0.10.0.x.symboldev.network',
+        roles: [RoleType.PeerNode],
     },
     {
         nodePublicKey: '2AF52C5AA9A5E13DD548A577DEBF21E7D3CC285A1B0798F4D450239CDDE5A169',
         host: 'beacon-01.ap-southeast-1.0.10.0.x.symboldev.network',
+        roles: [RoleType.PeerNode],
     },
     {
         nodePublicKey: 'D74B89EE9378DEBD510A4139F8E8B10B878E12956059CD9E13253CF3AD73BDEB',
         host: 'beacon-01.us-west-1.0.10.0.x.symboldev.network',
+        roles: [RoleType.PeerNode],
     },
     {
         nodePublicKey: '938D6C1BBDB09F3F1B9D95D2D902A94C95E3AA6F1069A805831D9E272DCF927F',
         host: 'beacon-01.eu-west-1.0.10.0.x.symboldev.network',
+        roles: [RoleType.PeerNode],
     },
     {
         nodePublicKey: '2A40F7895F56389BE40C063B897E9E66E64705D55B19FC43C8CEB5F7F14ABE59',
         host: 'beacon-01.us-east-1.0.10.0.x.symboldev.network',
+        roles: [RoleType.PeerNode],
     },
 ] as NodeInfo[];
 

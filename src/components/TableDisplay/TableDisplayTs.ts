@@ -54,7 +54,8 @@ import { Signer } from '@/store/Account';
 // @ts-ignore
 import SignerFilter from '@/components/SignerFilter/SignerFilter.vue';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
-
+// @ts-ignore
+import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadataUpdate.vue';
 @Component({
     components: {
         TableRow,
@@ -65,6 +66,7 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
         ModalMetadataDisplay,
         SignerFilter,
         ButtonAdd,
+        ModalMetadataUpdate,
     },
     computed: {
         ...mapGetters({
@@ -512,5 +514,12 @@ export class TableDisplayTs extends Vue {
             }
             this.isRefreshing = false;
         }
+    }
+    /**
+     * open edit metadata modal
+     */
+    protected showModalUpdateMetadata(metadataList: MetadataModel[]) {
+        this.targetedMetadataList = metadataList;
+        Vue.set(this.modalFormsVisibility, 'targetValue', true);
     }
 }

@@ -54,6 +54,7 @@
                     @on-show-extend-namespace-duration-form="showExtendNamespaceDurationForm"
                     @on-show-mosaic-supply-change-form="showModifyMosaicSupplyForm"
                     @on-show-metadata="showMetadataValue"
+                    @on-show-edit="showModalUpdateMetadata"
                 />
             </div>
             <div v-else-if="!isLoading && (!displayedValues || displayedValues.length === 0)" class="no-data-outer-container">
@@ -123,6 +124,15 @@
             :visible="modalFormsVisibility.targetedMetadataValue"
             :metadata-list="targetedMetadataList"
             @close="closeModal('targetedMetadataValue')"
+        />
+        <ModalMetadataUpdate
+            v-if="modalFormsVisibility.targetValue"
+            :visible="modalFormsVisibility.targetValue"
+            :value="targetedMetadataList[0]"
+            :metadata-list="targetedMetadataList"
+            :edit-mode="showModalUpdateMetadata"
+            :type="$route.path.indexOf('space') == -1 ? 1 : 2"
+            @close="closeModal('targetValue')"
         />
     </div>
 </template>
