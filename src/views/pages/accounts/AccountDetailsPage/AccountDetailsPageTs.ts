@@ -48,6 +48,8 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
 // @ts-ignore
 import ModalMetadataDisplay from '@/views/modals/ModalMetadataDisplay/ModalMetadataDisplay.vue';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
+// @ts-ignore
+import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadataUpdate.vue';
 
 @Component({
     components: {
@@ -64,6 +66,7 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
         AccountMultisigGraph,
         ModalFormProfileUnlock,
         ModalMetadataDisplay,
+        ModalMetadataUpdate,
     },
     computed: {
         ...mapGetters({
@@ -82,6 +85,7 @@ export class AccountDetailsPageTs extends Vue {
      */
     public defaultAccount: string;
 
+    public metadataEntry: MetadataModel;
     /**
      * known accounts on current network
      * @type {AccountModel[]}
@@ -105,6 +109,10 @@ export class AccountDetailsPageTs extends Vue {
      */
     public showMetadataDetailModal: boolean = false;
 
+    /**
+     * metadata detail modal visibility
+     */
+    public showUpdateMetadataModal: boolean = false;
     /**
      * Currently active account
      * @see {Store.Account}
@@ -137,5 +145,9 @@ export class AccountDetailsPageTs extends Vue {
             this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.');
             console.error(e);
         }
+    }
+    openEditModal(value) {
+        this.showUpdateMetadataModal = true;
+        this.metadataEntry = value;
     }
 }

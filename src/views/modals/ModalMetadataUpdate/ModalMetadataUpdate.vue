@@ -1,7 +1,14 @@
 <template>
     <div class="modal-metadata-update">
         <Modal v-model="show" class-name="vertical-center-modal" :footer-hide="true" :transfer="false" @on-cancel="$emit('close-modal')">
-            <FormMetadataCreation :type="type" @on-create="saveMetadata" @on-confirmation-success="show = false" />
+            <FormMetadataCreation
+                :value="value"
+                :edit-mode="editMode"
+                :type="type"
+                :metadata-list="metadataList"
+                @on-create="saveMetadata"
+                @on-confirmation-success="show = false"
+            />
         </Modal>
     </div>
 </template>

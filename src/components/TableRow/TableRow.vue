@@ -41,6 +41,12 @@
                             {{ $t('view_metadata') }}
                         </span>
                     </p>
+                    <p v-if="hasMetadata" @click="$emit('on-show-edit', rowValues.metadataList)">
+                        <Icon type="ios-link" class="edit-icon" />
+                        <span>
+                            {{ $t('edit_metadata') }}
+                        </span>
+                    </p>
                 </div>
             </Poptip>
         </div>

@@ -29,7 +29,7 @@ export class AccountMetadataDisplayTs extends Vue {
     protected metadataList: MetadataModel[];
 
     @Prop({
-        default: null,
+        default: false,
     })
     visible: boolean;
     /**
@@ -61,5 +61,9 @@ export class AccountMetadataDisplayTs extends Vue {
         if (this.metadataList.length) {
             this.chosenValue = this.metadataList[0].metadataId;
         }
+    }
+    public emitMetadataValue() {
+        const metadataEntry = this.metadataList.find((item) => item.metadataId == this.chosenValue);
+        this.$emit('on-edit-metadata', metadataEntry);
     }
 }
