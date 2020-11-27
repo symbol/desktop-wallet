@@ -490,10 +490,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return PublicAccount.createFromPublicKey(this.currentSignerPublicKey, this.networkType);
     }
 
-    private get requiredCosignatures() {
-        return this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures;
-    }
-
     private get signedPersistentDelReqTxs() {
         return this.currentSignerAccountModel.signedPersistentDelReqTxs?.map(
             (st) => new SignedTransaction(st.payload, st.hash, st.signerPublicKey, st.type, st.networkType),
