@@ -14,6 +14,9 @@
             </div>
         </div>
         <div class="edit-icon-cell">
+            <div v-if="showRemove" @click="$emit('on-remove', rowValues)">
+                <Icon type="md-trash" class="edit-icon" />
+            </div>
             <Poptip v-if="hasAvailableActions" placement="left-start">
                 <Icon type="md-create" class="edit-icon" />
                 <div slot="content" class="asset-action-section">
