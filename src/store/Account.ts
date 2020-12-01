@@ -471,7 +471,7 @@ export default {
             commit('accountsInfo', accountsInfo);
 
             // read signer info to get public key
-            const signerModel = knownAccounts.find((w) => w.address === currentSignerAddress.plain());
+            const signerModel = accountsInfo.find((w) => w.address.equals(currentSignerAddress));
             if (signerModel !== undefined) {
                 commit('currentSignerPublicKey', signerModel.publicKey);
             }
