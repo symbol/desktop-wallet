@@ -328,6 +328,7 @@ export default {
             dispatch('mosaic/SIGNER_CHANGED', {}, { root: true });
             dispatch('transaction/SIGNER_CHANGED', {}, { root: true });
             dispatch('metadata/SIGNER_CHANGED', {}, { root: true });
+            dispatch('harvesting/SET_CURRENT_SIGNER_HARVESTING_MODEL', currentSignerAddress.plain(), { root: true });
 
             // open / close websocket connections
             if (previousSignerAddress) {
@@ -515,48 +516,7 @@ export default {
             commit('knownAccounts', knownAccounts);
             dispatch('LOAD_ACCOUNT_INFO');
         },
-        UPDATE_ACCOUNT_SIGNED_PERSISTENT_DEL_REQ_TXS(
-            { commit, rootGetters },
-            { accountId, signedPersistentDelReqTxs }: { accountId: string; signedPersistentDelReqTxs: SignedTransaction[] },
-        ) {
-            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
-            if (!currentProfile) {
-                return;
-            }
-            const accountService = new AccountService();
-            const accountTobeUpdated = accountService.getAccount(accountId);
-            accountService.updateSignedPersistentDelReqTxs(accountTobeUpdated, signedPersistentDelReqTxs);
-            const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
-            commit('knownAccounts', knownAccounts);
-        },
-        UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT(
-            { commit, rootGetters },
-            { accountId, isPersistentDelReqSent }: { accountId: string; isPersistentDelReqSent: boolean },
-        ) {
-            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
-            if (!currentProfile) {
-                return;
-            }
-            const accountService = new AccountService();
-            const accountTobeUpdated = accountService.getAccount(accountId);
-            accountService.updateIsPersistentDelReqSent(accountTobeUpdated, isPersistentDelReqSent);
-            const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
-            commit('knownAccounts', knownAccounts);
-        },
-        UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE(
-            { commit, rootGetters },
-            { accountId, selectedHarvestingNode }: { accountId: string; selectedHarvestingNode: NodeModel },
-        ) {
-            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
-            if (!currentProfile) {
-                return;
-            }
-            const accountService = new AccountService();
-            const accountTobeUpdated = accountService.getAccount(accountId);
-            accountService.updateSelectedHarvestingNode(accountTobeUpdated, selectedHarvestingNode);
-            const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
-            commit('knownAccounts', knownAccounts);
-        },
+
         DELETE_CURRENT_ACCOUNT({ commit, rootGetters }, account: AccountModel) {
             if (!account) {
                 return;
