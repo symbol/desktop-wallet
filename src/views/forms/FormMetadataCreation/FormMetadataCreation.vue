@@ -26,7 +26,7 @@
                             </div>
                         </template>
                     </FormRow>
-                    <FormRow>
+                    <FormRow v-if="showTargetAccount">
                         <template v-slot:label> {{ $t('form_label_target_account') }}: </template>
                         <template v-slot:inputs>
                             <ValidationProvider
