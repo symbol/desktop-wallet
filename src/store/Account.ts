@@ -23,7 +23,6 @@ import {
     NetworkType,
     PublicAccount,
     RepositoryFactory,
-    SignedTransaction,
 } from 'symbol-sdk';
 import { of, Subscription } from 'rxjs';
 // internal dependencies
@@ -37,8 +36,6 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { catchError, map } from 'rxjs/operators';
 import { ProfileService } from '@/services/ProfileService';
-import { NodeModel } from '@/core/database/entities/NodeModel';
-
 /// region globals
 const Lock = AwaitLock.create();
 /// end-region globals
@@ -437,7 +434,7 @@ export default {
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
             const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
             // update multisig flag in currentAccount
-            if (currentAccountMultisigInfo && currentAccountMultisigInfo.isMultisig() && !currentAccount.isMultisig) {
+            if (currentAccountMultisigInfo && currentAccountMultisigInfo.cosignatoryAddresses.length > 0 && !currentAccount.isMultisig) {
                 const accountService = new AccountService();
                 accountService.updateIsMultisig(currentAccount, true);
             }
