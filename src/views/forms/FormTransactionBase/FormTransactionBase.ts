@@ -302,8 +302,12 @@ export class FormTransactionBase extends Vue {
             this.epochAdjustment,
             this.networkConfiguration,
             this.transactionFees,
-            this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures,
+            this.requiredCosignatures,
         );
+    }
+
+    protected get requiredCosignatures() {
+        return this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures;
     }
 
     /**

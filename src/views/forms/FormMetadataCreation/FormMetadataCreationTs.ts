@@ -167,6 +167,11 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     protected ownedNamespaces: NamespaceModel[];
 
     /**
+     * Wheter target account is visible and editable
+     */
+    protected showTargetAccount = true;
+
+    /**
      * Mosaic check
      * @return {boolean}
      */
@@ -187,6 +192,11 @@ export class FormMetadataCreationTs extends FormTransactionBase {
 
         // - maxFee must be absolute
         this.formItems.maxFee = this.defaultFee;
+        // for mosaics and namespaces, target account will be the signer account's itself (as hidden)
+        if (this.type !== MetadataType.Account) {
+            this.formItems.targetAccount = this.formItems.signerAddress;
+            this.showTargetAccount = false;
+        }
     }
 
     /**
@@ -206,6 +216,17 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         } else {
             return TransactionCommandMode.MULTISIGN;
         }
+    }
+    /**
+     * number of required cosignatures for the tx
+     * @override
+     * @see {FormTransactionBase}
+     */
+    protected get requiredCosignatures(): number {
+        if (!this.selectedSigner.multisig && this.formItems.signerAddress !== this.getTargetAddress().plain()) {
+            return 1;
+        }
+        return this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures;
     }
 
     /**

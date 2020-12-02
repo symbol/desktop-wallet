@@ -52,13 +52,7 @@ export class AccountContactQRTs extends Vue {
 
         try {
             const publicAccount: PublicAccount = AccountModel.getObjects(this.account).publicAccount;
-            return new ContactQR(
-                this.account.name,
-                // @ts-ignore // @TODO: SDK upgrade
-                publicAccount,
-                publicAccount.address.networkType,
-                this.generationHash,
-            );
+            return new ContactQR(this.account.name, publicAccount.publicKey, publicAccount.address.networkType, this.generationHash);
         } catch (error) {
             return null;
         }
