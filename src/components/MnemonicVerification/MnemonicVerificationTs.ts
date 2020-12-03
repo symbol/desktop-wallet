@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
 // internal dependencies
 import { NotificationType } from '@/core/utils/NotificationType';
@@ -65,7 +65,6 @@ export class MnemonicVerificationTs extends Vue {
             this.removeWord(index);
             return;
         }
-
         this.selectedWordIndexes.push(index);
     }
 
@@ -88,17 +87,38 @@ export class MnemonicVerificationTs extends Vue {
 
         // - origin words list does not match
         if (origin !== rebuilt) {
+            this.mnemonicCheckerNotification(origin, rebuilt);
+            return false;
+        }
+        this.mnemonicCheckerNotification(origin, rebuilt);
+        this.$emit('success');
+
+        return true;
+    }
+    /**
+     * Show Notification based on the entered mnemonic validity
+     */
+    private mnemonicCheckerNotification(origin: string, rebuilt: string) {
+        if (origin !== rebuilt) {
             const errorMsg =
                 this.selectedWordIndexes.length < 1
                     ? NotificationType.PLEASE_ENTER_MNEMONIC_INFO
                     : NotificationType.MNEMONIC_INCONSISTENCY_ERROR;
             this.$store.dispatch('notification/ADD_WARNING', errorMsg);
             this.$emit('error', errorMsg);
-            return false;
+        } else {
+            this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS);
         }
-
-        this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS);
-        this.$emit('success');
-        return true;
+    }
+    /**
+     * Watching mnemonic Words changes
+     */
+    @Watch('selectedWordIndexes')
+    onSelectedMnemonicChange() {
+        if (this.selectedWordIndexes.length == 24) {
+            const origin = this.words.join(' ');
+            const rebuilt = this.selectedWordIndexes.map((i) => this.shuffledWords[i]).join(' ');
+            this.mnemonicCheckerNotification(origin, rebuilt);
+        }
     }
 }
