@@ -116,6 +116,7 @@ export class MnemonicVerificationTs extends Vue {
      */
     @Watch('selectedWordIndexes')
     onSelectedMnemonicChange() {
+        // watch mnemonic validity only if mnemonic input is full
         if (this.selectedWordIndexes.length == 24) {
             const origin = this.words.join(' ');
             const rebuilt = this.selectedWordIndexes.map((i) => this.shuffledWords[i]).join(' ');
