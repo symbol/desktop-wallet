@@ -92,9 +92,9 @@ export class MnemonicVerificationTs extends Vue {
         }
         this.mnemonicCheckerNotification(origin, rebuilt);
         this.$emit('success');
-
         return true;
     }
+
     /**
      * Show Notification based on the entered mnemonic validity
      */
@@ -110,6 +110,7 @@ export class MnemonicVerificationTs extends Vue {
             this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS);
         }
     }
+
     /**
      * Watching mnemonic Words changes
      */
