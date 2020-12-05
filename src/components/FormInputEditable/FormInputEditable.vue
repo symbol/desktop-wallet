@@ -33,7 +33,7 @@
             </button>
             <div v-if="editing">
                 <button type="submit" class="edit-button" @click="handleSubmit(finishEdition)">
-                    <Icon type="md-add-circle" />
+                    <Icon type="md-checkmark-circle-outline" />
                 </button>
                 <button type="button" class="edit-button" @click.stop="cancelEdition()">
                     <Icon type="md-trash" />

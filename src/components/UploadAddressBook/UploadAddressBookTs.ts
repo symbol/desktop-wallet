@@ -57,6 +57,7 @@ export default class UploadAddressBookTs extends Vue {
             const jsonData = event.target.result as string;
             try {
                 this.addressBook = AddressBook.fromJSON(jsonData);
+                this.showError = false;
             } catch (e) {
                 this.showError = true;
             }
