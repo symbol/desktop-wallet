@@ -33,10 +33,10 @@
             </button>
             <div v-if="editing">
                 <button type="submit" class="edit-button" @click="handleSubmit(finishEdition)">
-                    <Icon type="md-checkmark-circle-outline" />
+                    <Icon type="md-checkmark" />
                 </button>
                 <button type="button" class="edit-button" @click.stop="cancelEdition()">
-                    <Icon type="md-trash" />
+                    <Icon type="md-close" />
                 </button>
             </div>
         </form>
