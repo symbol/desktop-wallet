@@ -277,11 +277,11 @@ export default {
             commit('currentAccount', currentAccount);
 
             // reset current signer
-            dispatch('SET_CURRENT_SIGNER', {
+            await dispatch('SET_CURRENT_SIGNER', {
                 address: currentAccountAddress,
             });
             //reset current account alias
-            dispatch('LOAD_CURRENT_ACCOUNT_ALIASES', currentAccountAddress);
+            await dispatch('LOAD_CURRENT_ACCOUNT_ALIASES', currentAccountAddress);
 
             $eventBus.$emit('onAccountChange', currentAccountAddress.plain());
         },
