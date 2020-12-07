@@ -91,7 +91,6 @@
     text-align: center;
 }
 
-
 /deep/.namespace-columns {
     grid-template-columns: 15% 60% 15% 10%;
 }
@@ -100,7 +99,7 @@
     display: grid;
     width: 100%;
     height: 100%;
-    grid-template-rows: 0.25rem auto 0.65rem;
+    grid-template-rows: 0.3rem auto;
     grid-template-columns: 100%;
     font-size: 0.16rem;
     overflow-y: auto;
@@ -108,7 +107,7 @@
     .upper-section-container {
         display: grid;
         width: 100%;
-        height: 100%;
+        height: 0.6rem;
         grid-template-rows: 100%;
         grid-template-columns: 100%;
 
@@ -125,7 +124,7 @@
                 display: flex;
                 justify-content: flex-end;
                 position: absolute;
-                right: 0.5rem;
+                right: 0.1rem;
                 bottom: 0.3rem;
                 color: @primary;
                 .add-metadata-button {
@@ -245,86 +244,90 @@
             cursor: pointer;
         }
     }
-
-    .table-header-container {
+    .body-section-container {
         display: grid;
-        width: 100%;
-        text-align: right;
-        color: @purpleDark;
-        background-color: @white;
-        font-size: @normalFont;
-        font-family: @symbolFontMedium;
+        grid-template-rows: 0.3rem auto 0.5rem;
 
-        .table-header-item {
-            text-align: left;
-            padding: 0 0.1rem;
-            line-height: 0.35rem;
-            font-weight: 300;
-            cursor: pointer;
-
-            .header-label {
-            }
-
-            .sort-icon {
-            }
-        }
-    }
-
-    .table-body-container {
-        text-align: left;
-        overflow-y: auto;
-        overflow-x: hidden;
-        position: relative;
-        font-family: @symbolFontLight;
-        font-size: @normalFont;
-        color: @purpleDark;
-        .table-rows-container {
+        .table-header-container {
+            display: grid;
             width: 100%;
-            height: 100%;
-            display: grid;
-            grid-auto-rows: 0.6rem;
-            grid-template-columns: 100%;
-        }
+            text-align: right;
+            color: @purpleDark;
+            background-color: @white;
+            font-size: @normalFont;
+            font-family: @symbolFontMedium;
 
-        .no-data-inner-container {
-            display: grid;
-            grid-auto-rows: 0.6rem;
-            grid-template-columns: 100%;
+            .table-header-item {
+                text-align: left;
+                padding: 0 0.1rem;
+                line-height: 0.35rem;
+                font-weight: 300;
+                cursor: pointer;
 
-            > div {
-                border-bottom: 1px solid @line;
+                .header-label {
+                }
+
+                .sort-icon {
+                }
             }
         }
-    }
 
-    .table-footer-container {
-        text-align: right;
-        padding-top: 0.1rem;
-        padding-right: 0.7rem;
+        .table-body-container {
+            text-align: left;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            font-family: @symbolFontLight;
+            font-size: @normalFont;
+            color: @purpleDark;
+            .table-rows-container {
+                width: 100%;
+                height: 100%;
+                display: grid;
+                grid-auto-rows: 0.6rem;
+                grid-template-columns: 100%;
+            }
 
-        .page {
-            display: inline-block;
-            vertical-align: middle;
+            .no-data-inner-container {
+                display: grid;
+                grid-auto-rows: 0.6rem;
+                grid-template-columns: 100%;
+
+                > div {
+                    border-bottom: 1px solid @line;
+                }
+            }
         }
 
-        /deep/.ivu-page-item {
-            width: 30px;
-            min-width: 30px;
-            height: 30px;
-            border: none;
-            box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.16);
-            color: @grayDark;
-            -webkit-box-shadow: none !important;
-        }
+        .table-footer-container {
+            text-align: right;
+            padding-top: 0.1rem;
+            padding-right: 0.7rem;
 
-        /deep/.ivu-page-item-active a,
-        /deep/.ivu-page-item-active:hover a {
-            color: @primary !important;
-        }
+            .page {
+                display: inline-block;
+                vertical-align: middle;
+            }
 
-        /deep/.ivu-page-prev,
-        /deep/.ivu-page-next {
-            border: none !important;
+            /deep/.ivu-page-item {
+                width: 30px;
+                min-width: 30px;
+                height: 30px;
+                border: none;
+                box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.16);
+                color: @grayDark;
+                -webkit-box-shadow: none !important;
+            }
+
+            /deep/.ivu-page-item-active a,
+            /deep/.ivu-page-item-active:hover a {
+                color: @primary !important;
+            }
+
+            /deep/.ivu-page-prev,
+            /deep/.ivu-page-next {
+                border: none !important;
+            }
         }
     }
 }

@@ -14,19 +14,14 @@
  *
  */
 // internal dependencies
-import {AssetTableService, TableField} from './AssetTableService';
-import {
-    AccountRestriction,
-    Address,
-    AddressRestrictionFlag, MosaicId,
-    MosaicRestrictionFlag,
-    OperationRestrictionFlag, TransactionType
-} from "symbol-sdk";
+// @ts-ignore
+import i18n from '@/language';
+import RestrictionFlagMapping from '@/views/forms/FormAccountRestrictionTransaction/RestrictionFlagMapping';
+import { AccountRestriction, Address, MosaicId } from 'symbol-sdk';
+import { AssetTableService, TableField } from './AssetTableService';
 
 export class AccountRestrictionTableService extends AssetTableService {
-    constructor(
-        private readonly accountRestrictions: AccountRestriction[],
-    ) {
+    constructor(private readonly accountRestrictions: AccountRestriction[]) {
         super(0);
     }
 
@@ -47,61 +42,30 @@ export class AccountRestrictionTableService extends AssetTableService {
      * @returns {MosaicTableRowValues[]}
      */
     public getTableRows(): any[] {
-        // - get reactive mosaic data from the store
-        const accountRestrictions = this.accountRestrictions;
-        return accountRestrictions
+        return this.accountRestrictions
+            .flatMap((r) => r.values.map((v) => ({ ...r, values: [v] } as AccountRestriction)))
             .map((accountRestriction) => {
-                let direction;
-                switch (accountRestriction.restrictionFlags) {
-                    case AddressRestrictionFlag.AllowIncomingAddress:
-                    case AddressRestrictionFlag.BlockIncomingAddress:
-                    case MosaicRestrictionFlag.BlockMosaic:
-                    case MosaicRestrictionFlag.AllowMosaic:
-                        direction = 'incoming';
-                        break;
-                    case AddressRestrictionFlag.BlockOutgoingAddress:
-                    case AddressRestrictionFlag.AllowOutgoingAddress:
-                    case OperationRestrictionFlag.AllowOutgoingTransactionType:
-                    case OperationRestrictionFlag.BlockOutgoingTransactionType:
-                        direction = 'outgoing';
-                        break;
-                }
-                let action;
-                switch (accountRestriction.restrictionFlags) {
-                    case AddressRestrictionFlag.BlockOutgoingAddress:
-                    case AddressRestrictionFlag.BlockIncomingAddress:
-                    case MosaicRestrictionFlag.BlockMosaic:
-                    case OperationRestrictionFlag.BlockOutgoingTransactionType:
-                        action = 'block';
-                        break;
-                    case AddressRestrictionFlag.AllowIncomingAddress:
-                    case AddressRestrictionFlag.AllowOutgoingAddress:
-                    case MosaicRestrictionFlag.AllowMosaic:
-                    case OperationRestrictionFlag.AllowOutgoingTransactionType:
-                        action = 'allow';
-                        break;
-                }
+                const direction = RestrictionFlagMapping.toDirection(accountRestriction.restrictionFlags);
+                const action = RestrictionFlagMapping.toBlockType(accountRestriction.restrictionFlags);
                 let rawValue = '';
-                // TODO: Remove Workaround
-                function getEnumKeyByEnumValue(myEnum, enumValue) {
-                    let keys = Object.keys(myEnum).filter(x => myEnum[x] == enumValue);
-                    return keys.length > 0 ? keys[0] : null;
-                }
-                let first = true
-                for (let value of accountRestriction.values) {
+
+                if (accountRestriction?.values) {
+                    const value = accountRestriction?.values[0];
                     if (value instanceof Address) {
-                        rawValue += (first ? '' : ', ') + value.pretty();
+                        rawValue = value.pretty();
                     } else if (value instanceof MosaicId) {
-                        rawValue += (first ? '' : ', ') + value.toHex()
+                        rawValue = value.toHex();
                     } else {
-                        rawValue += (first ? '' : ', ') + getEnumKeyByEnumValue(TransactionType, value);
+                        rawValue += i18n.t(`transaction_descriptor_${value}`);
                     }
-                    first = false;
                 }
                 return {
                     direction: direction,
                     value: rawValue,
                     action: action,
+                    hiddenData: {
+                        rowObject: accountRestriction,
+                    },
                 };
             })
             .filter((x) => x); // filter out mosaics that are not yet available

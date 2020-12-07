@@ -1,25 +1,63 @@
 <template>
-    <div class="FormTransferTransaction">
+    <div>
         <FormWrapper>
             <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
                 <form onsubmit="event.preventDefault()">
                     <!-- Transaction signer selector -->
-                    <SignerSelector v-if="!hideSigner" v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
+                    <SignerSelector v-model="formItems.signerAddress" :signers="signers" :disabled="isDeleteMode" @input="onChangeSigner" />
 
-                    <RestrictionDirectionInput />
+                    <RestrictionDirectionInput v-model="formItems.direction" :disabled="isDeleteMode || directionDisabled" />
 
-                    <RestrictionTypeInput />
+                    <RestrictionTypeInput v-model="formItems.blockType" :disabled="isDeleteMode || transactionTypeDisabled" />
 
                     <!-- Transfer recipient input field -->
-                    <RecipientInput v-model="formItems.recipientRaw" style="margin-bottom: 0.5rem;" @input="onChangeRecipient" />
+                    <RecipientInput v-if="restrictionTxType === 'ADDRESS'" v-model="formItems.recipientRaw" :disabled="isDeleteMode" />
+
+                    <FormRow v-if="restrictionTxType === 'MOSAIC'" class-name="emphasis">
+                        <template v-slot:label> {{ $t('mosaic_id') }}: </template>
+                        <template v-slot:inputs>
+                            <ValidationProvider
+                                v-slot="{ errors }"
+                                vid="mosaicId"
+                                mode="lazy"
+                                :name="$t('mosaic_id')"
+                                :rules="`required`"
+                                tag="div"
+                                class="row-metadata-input inputs-container"
+                            >
+                                <ErrorTooltip :errors="errors">
+                                    <input v-model="formItems.mosaicIdRaw" :disabled="isDeleteMode" class="input-size input-style" />
+                                    <!-- <MosaicSelector v-model="formItems.mosaicIdRaw" default-mosaic="firstInList" /> -->
+                                </ErrorTooltip>
+                            </ValidationProvider>
+                        </template>
+                    </FormRow>
+
+                    <FormRow v-if="restrictionTxType === 'TRANSACTION_TYPE'" class-name="emphasis">
+                        <template v-slot:label> {{ $t('operation_type') }}: </template>
+                        <template v-slot:inputs>
+                            <ValidationProvider
+                                v-slot="{ errors }"
+                                vid="transactionType"
+                                mode="lazy"
+                                :name="$t('operation_type')"
+                                :rules="`required`"
+                                tag="div"
+                                class="row-metadata-input inputs-container"
+                            >
+                                <ErrorTooltip :errors="errors">
+                                    <transaction-type-selector v-model="formItems.transactionType" :disabled="isDeleteMode" />
+                                </ErrorTooltip>
+                            </ValidationProvider>
+                        </template>
+                    </FormRow>
 
                     <!-- Transaction fee selector and submit button -->
                     <MaxFeeAndSubmit
                         v-model="formItems.maxFee"
-                        :calculated-recommended-fee="calculatedRecommendedFee"
-                        :calculated-highest-fee="calculatedHighestFee"
+                        :submit-button-text="submitButtonText"
+                        :submit-button-classes="submitButtonClasses"
                         @button-clicked="handleSubmit(onSubmit)"
-                        @input="onChangeMaxFee"
                     />
                 </form>
             </ValidationObserver>
@@ -31,13 +69,6 @@
                 @success="onConfirmationSuccess"
                 @error="onConfirmationError"
                 @close="onConfirmationCancel"
-            />
-
-            <ModalFormProfileUnlock
-                v-if="hasAccountUnlockModal"
-                :visible="hasAccountUnlockModal"
-                :on-success="onAccountUnlocked"
-                @close="closeAccountUnlockModal"
             />
         </FormWrapper>
     </div>

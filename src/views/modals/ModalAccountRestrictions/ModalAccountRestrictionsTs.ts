@@ -10,9 +10,10 @@ import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
 //@ts-ignore
 import FormNodeEdit from '@/views/forms/FormNodeEdit/FormNodeEdit.vue';
 //@ts-ignore
-import AccountRestrictionsList from "@/components/AccountRestrictionsList/AccountRestrictionsList.vue";
+import AccountRestrictionsList from '@/components/AccountRestrictionsList/AccountRestrictionsList.vue';
 //@ts-ignore
-import ButtonAdd from "@/components/ButtonAdd/ButtonAdd.vue";
+import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue';
+import { AccountRestriction } from 'symbol-sdk';
 
 /**
  * Settings pages
@@ -42,7 +43,7 @@ export class ModalAccountRestrictionsTs extends Vue {
     /// region component properties
     @Prop({ default: false }) visible: boolean;
 
-    public showAddNewForm = false;
+    public addNewFormVisible = false;
     /// end-region component properties
 
     /**
@@ -70,6 +71,11 @@ export class ModalAccountRestrictionsTs extends Vue {
     protected currentTabIndex = 0;
 
     /**
+     * Restriction object to be deleted recieved from the list(delete button click)
+     */
+    protected restrictionToBeDeleted: AccountRestriction;
+
+    /**
      * Internal visibility state
      * @type {boolean}
      */
@@ -91,6 +97,41 @@ export class ModalAccountRestrictionsTs extends Vue {
      */
     protected onTabChange(index: number) {
         this.currentTabIndex = index;
-        this.showAddNewForm = false
+        this.hideAddNewForm();
+        this.resetRestrictionToBeDeleted();
+    }
+
+    /**
+     * AccountRestriction Delete Event Handler
+     * @param restriction
+     */
+    protected onDeleteRestriction(restriction: AccountRestriction) {
+        this.restrictionToBeDeleted = restriction;
+        this.addNewFormVisible = true;
+    }
+
+    /**
+     * resets restriction obj to be deleted
+     */
+    protected resetRestrictionToBeDeleted() {
+        this.restrictionToBeDeleted = null;
+    }
+
+    /**
+     * Shows AddNew Form (and resets restriction obj to be deleted)
+     *
+     */
+    protected showAddNewForm() {
+        this.resetRestrictionToBeDeleted();
+        this.addNewFormVisible = true;
+    }
+
+    /**
+     * Hides AddNew Form (and resets restriction obj to be deleted)
+     *
+     */
+    protected hideAddNewForm() {
+        this.resetRestrictionToBeDeleted();
+        this.addNewFormVisible = false;
     }
 }
