@@ -129,7 +129,7 @@ export class NetworkNodeSelectorTs extends Vue {
         return this.peerNodes;
     }
 
-    private isIncluded(role) {
+    private isIncluded(role: RoleType) {
         return this.includeRoles?.some((includedRole) => includedRole === role);
     }
 }
