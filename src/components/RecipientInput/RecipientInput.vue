@@ -18,9 +18,10 @@
                         class="input-size input-style"
                         :placeholder="$t('placeholder_address_or_alias')"
                         type="text"
+                        :disabled="disabled"
                     />
                 </ErrorTooltip>
-                <div style="text-align: right; margin-top: 5px;">
+                <div v-if="!disabled && addressBook.getAllContacts().length > 0" style="text-align: right; margin-top: 5px;">
                     <ContactSelector @change="onSelectContact" />
                 </div>
             </ValidationProvider>

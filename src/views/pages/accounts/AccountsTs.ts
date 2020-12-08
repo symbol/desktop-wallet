@@ -33,6 +33,8 @@ import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
 import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue';
 // @ts-ignore
 import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadataUpdate.vue';
+// @ts-ignore
+import ModalAccountRestrictions from '@/views/modals/ModalAccountRestrictions/ModalAccountRestrictions.vue';
 
 @Component({
     components: {
@@ -43,6 +45,7 @@ import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadat
         NavigationLinks,
         ButtonAdd,
         ModalMetadataUpdate,
+        ModalAccountRestrictions,
     },
     computed: {
         ...mapGetters({}),
@@ -69,4 +72,8 @@ export class AccountsTs extends Vue {
      * Show add metadata modal
      */
     public showMetadataModal: boolean = false;
+    /**
+     * Show add metadata modal
+     */
+    public showAccountRestrictionsModal: boolean = false;
 }

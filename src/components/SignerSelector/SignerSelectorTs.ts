@@ -47,6 +47,11 @@ export class SignerSelectorTs extends Vue {
     })
     noLabel: boolean;
 
+    @Prop({
+        default: false,
+    })
+    disabled: boolean;
+
     /// region computed properties getter/setter
     /**
      * Value set by the parent component
