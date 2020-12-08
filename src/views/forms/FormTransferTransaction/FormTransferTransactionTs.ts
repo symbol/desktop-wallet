@@ -540,6 +540,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     @Watch('selectedSigner')
     onSelectedSignerChange() {
+        this.formItems.signerAddress = this.selectedSigner.address.plain();
         if (this.isMultisigMode()) {
             this.resetForm();
         }

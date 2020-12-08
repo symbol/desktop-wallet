@@ -40,7 +40,6 @@ export default class RestrictionDirectionInput extends Vue {
     @Prop({ default: RestrictionDirection.OUTGOING }) readonly value!: RestrictionDirection;
 
     onDirectionChange(newValue) {
-        console.log('onChange:' + newValue);
         this.$emit('input', newValue);
     }
 }
