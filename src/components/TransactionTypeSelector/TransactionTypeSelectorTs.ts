@@ -12,61 +12,42 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and limitations under the License.
  *
- */
+ */ 1;
+import { TransactionType } from 'symbol-sdk';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-// child components
-// @ts-ignore
-import FormRow from '@/components/FormRow/FormRow.vue';
-import { Signer } from '@/store/Account';
 
-@Component({
-    components: { FormRow },
-})
-export class SignerSelectorTs extends Vue {
+@Component
+export default class TransactionTypeSelectorTs extends Vue {
     /**
      * Value set by the parent component's v-model
      * @type {string}
      */
-    @Prop({
-        default: '',
-    })
-    value: string;
+    @Prop({ default: null }) value: string;
 
-    @Prop({
-        default: () => [],
-    })
-    signers: Signer[];
-
-    @Prop({
-        default: 'sender',
-    })
-    label: string;
-
-    @Prop({
-        default: false,
-    })
-    noLabel: boolean;
-
-    @Prop({
-        default: false,
-    })
-    disabled: boolean;
+    @Prop({ default: false }) readonly disabled!: boolean;
 
     /// region computed properties getter/setter
     /**
      * Value set by the parent component
      * @type {string}
      */
-    get chosenSigner(): string {
+    get chosenValue(): string {
         return this.value;
     }
 
     /**
      * Emit value change
      */
-    set chosenSigner(newValue: string) {
+    set chosenValue(newValue: string) {
         this.$emit('input', newValue);
     }
 
-    /// end-region computed properties getter/setter
+    /**
+     * Returns sorted TransactionType list
+     */
+    public get transactionTypeList() {
+        return Object.entries(TransactionType)
+            .filter((e) => !(parseInt(e[0]) >= 0) && e[0] !== 'RESERVED')
+            .sort((e1, e2) => e1[0].localeCompare(e2[0]));
+    }
 }

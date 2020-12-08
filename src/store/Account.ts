@@ -23,7 +23,6 @@ import {
     NetworkType,
     PublicAccount,
     RepositoryFactory,
-    SignedTransaction,
 } from 'symbol-sdk';
 import { of, Subscription } from 'rxjs';
 // internal dependencies
@@ -37,7 +36,6 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { catchError, map } from 'rxjs/operators';
 import { ProfileService } from '@/services/ProfileService';
-import { NodeModel } from '@/core/database/entities/NodeModel';
 
 /// region globals
 const Lock = AwaitLock.create();
@@ -314,6 +312,7 @@ export default {
             });
 
             dispatch('transaction/RESET_TRANSACTIONS', {}, { root: true });
+            dispatch('restriction/RESET_ACCOUNT_RESTRICTIONS', {}, { root: true });
 
             const currentAccountAddress = Address.createFromRawAddress(currentAccount.address);
             const knownAccounts = new AccountService().getKnownAccounts(currentProfile.accounts);
