@@ -50,6 +50,7 @@ const multisigAccountGraphInfoDTO = {
     multisigEntries: [
         {
             multisig: {
+                version: 1,
                 accountAddress: multisigGraphInfoPublicAccount1.address,
                 cosignatoryAddresses: [
                     multisigGraphInfoPublicAccount2.address,
@@ -67,6 +68,7 @@ const multisigAccountGraphInfoDTO = {
 export const multisigEntries1 = multisigAccountGraphInfoDTO.multisigEntries.map(
     (multisigAccountInfoDTO) =>
         new MultisigAccountInfo(
+            1,
             multisigAccountInfoDTO.multisig.accountAddress,
             multisigAccountInfoDTO.multisig.minApproval,
             multisigAccountInfoDTO.multisig.minRemoval,
@@ -80,6 +82,7 @@ const multisigAccountGraphInfoDTO2 = {
     multisigEntries: [
         {
             multisig: {
+                version: 1,
                 accountAddress: multisigGraphInfoPublicAccount5.address,
                 cosignatoryAddresses: [multisigGraphInfoPublicAccount1.address],
                 minApproval: 1,
@@ -93,6 +96,7 @@ const multisigAccountGraphInfoDTO2 = {
 export const multisigEntries2 = multisigAccountGraphInfoDTO2.multisigEntries.map(
     (multisigAccountInfoDTO) =>
         new MultisigAccountInfo(
+            1,
             multisigAccountInfoDTO.multisig.accountAddress,
             multisigAccountInfoDTO.multisig.minApproval,
             multisigAccountInfoDTO.multisig.minRemoval,

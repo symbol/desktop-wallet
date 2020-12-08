@@ -24,7 +24,7 @@ const account1 = PublicAccount.createFromPublicKey('B694186EE4AB0558CA4AFCFDD43B
 const account2 = PublicAccount.createFromPublicKey('CF893FFCC47C33E7F68AB1DB56365C156B0736824A0C1E273F9E00B8DF8F01EB', networkType);
 const account3 = PublicAccount.createFromPublicKey('DAB1C38C3E1642494FCCB33138B95E81867B5FB59FC4277A1D53761C8B9F6D14', networkType);
 const account4 = PublicAccount.createFromPublicKey('1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B', networkType);
-const multisigInfo = new MultisigAccountInfo(account1.address, 1, 1, [account2.address, account3.address], []);
+const multisigInfo = new MultisigAccountInfo(1, account1.address, 1, 1, [account2.address, account3.address], []);
 
 describe('MultisigCosignatoriesDisplay', () => {
     test('Getters should return correct values when no modifications', () => {
