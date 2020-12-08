@@ -311,6 +311,7 @@ export default {
             });
 
             dispatch('transaction/RESET_TRANSACTIONS', {}, { root: true });
+            dispatch('restriction/RESET_ACCOUNT_RESTRICTIONS', {}, { root: true });
 
             const currentAccountAddress = Address.createFromRawAddress(currentAccount.address);
             const knownAccounts = new AccountService().getKnownAccounts(currentProfile.accounts);

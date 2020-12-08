@@ -1,0 +1,344 @@
+@import '../../views/resources/css/variables.less';
+
+.columns {
+    grid-template-columns: 15% 60% 15% 10%;
+    .targetAddress-header,
+    .targetAddress-cell {
+        text-align: left;
+    }
+    .targetID-header,
+    .targetID-cell {
+        text-align: left;
+    }
+    .targetType-header,
+    .targetType-cell {
+        text-align: left;
+    }
+    .scopedMetadataKey-header,
+    .scopedMetadataKey-cell {
+        text-align: left;
+    }
+    .status-header,
+    .status-cell {
+        text-align: left;
+    }
+    .changeTimes-header,
+    .changeTimes-cell {
+        text-align: left;
+    }
+}
+
+.hexId-header {
+    text-align: left;
+}
+
+.supply-header,
+.balance-header,
+.expiration-header {
+    text-align: left;
+}
+
+.name-header {
+    text-align: left;
+}
+
+.divisibility-header {
+    text-align: center;
+}
+
+.transferable-header {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.supplyMutable-header {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.restrictable-header {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.hexId-cell {
+    text-align: left;
+}
+
+.name-cell {
+    text-align: left;
+}
+
+.supply-cell,
+.balance-cell,
+.expiration-cell {
+    text-align: left;
+}
+
+.divisibility-cell {
+    text-align: center;
+}
+
+.transferable-cell {
+    text-align: center;
+}
+
+.supplyMutable-cell {
+    text-align: center;
+}
+
+.restrictable-cell {
+    text-align: center;
+}
+
+/deep/.namespace-columns {
+    grid-template-columns: 15% 60% 15% 10%;
+}
+
+.table-container {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    grid-template-rows: 0.3rem auto;
+    grid-template-columns: 100%;
+    font-size: 0.16rem;
+    overflow-y: auto;
+
+    .upper-section-container {
+        display: grid;
+        width: 100%;
+        height: 0.6rem;
+        grid-template-rows: 100%;
+        grid-template-columns: 100%;
+
+        .table-title-container {
+            padding-left: 0.2rem;
+            padding-top: 0.1rem;
+            position: relative;
+            .section-title {
+                font-size: 1.125em;
+                font-weight: 500;
+                color: @blackLight;
+            }
+            .user-operation {
+                display: flex;
+                justify-content: flex-end;
+                position: absolute;
+                right: 0.1rem;
+                bottom: 0.3rem;
+                color: @primary;
+                .add-metadata-button {
+                    margin-right: 0.3rem;
+                    align-items: center;
+                    display: flex;
+                    justify-content: center;
+                    user-select: none;
+                    cursor: pointer;
+                    .add-icon {
+                        padding: 3px 5px 0px 4px;
+                    }
+                }
+
+                .ivu-checkbox-wrapper {
+                    margin-top: 0.08rem;
+                    margin-right: 0.2rem;
+                }
+
+                .ivu-icon-ios-sync {
+                    margin-left: 0.2rem;
+                    font-weight: 600;
+                    margin-top: 0.08rem;
+                    vertical-align: middle !important;
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+                .table-filter-item-container {
+                }
+                /deep/.ivu-select {
+                    .ivu-select-selection {
+                        font-size: @normalFont;
+                        background-color: @grayLightest !important;
+                        border: none !important;
+                        box-shadow: none !important;
+                        color: @primary;
+                        :hover {
+                            border: none;
+                            box-shadow: none;
+                        }
+                        .ivu-select-prefix {
+                            color: @purpleDark;
+                        }
+                        .ivu-select-selected-value {
+                            padding-right: 0.35rem !important;
+                        }
+                    }
+
+                    .ivu-select-visible {
+                        .ivu-select-selection {
+                            color: @white !important;
+                            background-color: @purpleDark;
+                            border: 0.01rem solid @purpleDark;
+                        }
+
+                        .ivu-icon-ios-arrow-down::before {
+                            color: @white !important;
+                        }
+
+                        .ivu-select-prefix {
+                            color: @white;
+                        }
+                    }
+                    .ivu-select-group-title {
+                        font-size: @smallerFont !important;
+                    }
+
+                    .ivu-select-item {
+                        font-size: @smallFont !important;
+                    }
+                }
+                /deep/ .ivu-select-dropdown {
+                    background-color: @grayLightest;
+
+                    .ivu-select-item-selected {
+                        color: @primary;
+                        background-color: @grayLightest;
+                    }
+
+                    .ivu-select-item-selected:hover {
+                        background-color: @grayLightest !important;
+                    }
+                }
+
+                .ivu-select-item-selected:hover {
+                    background-color: @grayLightest !important;
+                }
+            }
+            /deep/ .ivu-select-item:hover {
+                background-color: @white !important;
+            }
+        }
+
+        /deep/ .ivu-select-dropdown {
+            background-color: @grayLightest !important;
+
+            .ivu-select-item-selected {
+                color: @primary !important;
+                background-color: @grayLightest !important;
+            }
+
+            .ivu-select-item-selected:hover {
+                background-color: @grayLightest !important;
+            }
+        }
+
+        /deep/ .ivu-select-item:hover {
+            background-color: @white !important;
+        }
+
+        .table-actions-container {
+            text-align: right;
+            display: grid;
+            grid-template-columns: 100%;
+            grid-auto-rows: 50%;
+            cursor: pointer;
+        }
+    }
+    .body-section-container {
+        display: grid;
+        grid-template-rows: 0.3rem auto 0.5rem;
+
+        .table-header-container {
+            display: grid;
+            width: 100%;
+            text-align: right;
+            color: @purpleDark;
+            background-color: @white;
+            font-size: @normalFont;
+            font-family: @symbolFontMedium;
+
+            .table-header-item {
+                text-align: left;
+                padding: 0 0.1rem;
+                line-height: 0.35rem;
+                font-weight: 300;
+                cursor: pointer;
+
+                .header-label {
+                }
+
+                .sort-icon {
+                }
+            }
+        }
+
+        .table-body-container {
+            text-align: left;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            font-family: @symbolFontLight;
+            font-size: @normalFont;
+            color: @purpleDark;
+            .table-rows-container {
+                width: 100%;
+                height: 100%;
+                display: grid;
+                grid-auto-rows: 0.6rem;
+                grid-template-columns: 100%;
+            }
+
+            .no-data-inner-container {
+                display: grid;
+                grid-auto-rows: 0.6rem;
+                grid-template-columns: 100%;
+
+                > div {
+                    border-bottom: 1px solid @line;
+                }
+            }
+        }
+
+        .table-footer-container {
+            text-align: right;
+            padding-top: 0.1rem;
+            padding-right: 0.7rem;
+
+            .page {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            /deep/.ivu-page-item {
+                width: 30px;
+                min-width: 30px;
+                height: 30px;
+                border: none;
+                box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.16);
+                color: @grayDark;
+                -webkit-box-shadow: none !important;
+            }
+
+            /deep/.ivu-page-item-active a,
+            /deep/.ivu-page-item-active:hover a {
+                color: @primary !important;
+            }
+
+            /deep/.ivu-page-prev,
+            /deep/.ivu-page-next {
+                border: none !important;
+            }
+        }
+    }
+}
+.animation-rotate {
+    animation: auto-rotate infinite linear 1s;
+}
+@keyframes auto-rotate {
+    from {
+        transform: rotateZ(0);
+    }
+    to {
+        transform: rotateZ(360deg);
+    }
+}
