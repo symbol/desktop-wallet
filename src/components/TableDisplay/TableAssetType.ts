@@ -18,4 +18,5 @@ export enum TableAssetType {
     Mosaic = 'mosaic',
     Namespace = 'namespace',
     Metadata = 'metadata',
+    AccountRestrictions = 'accountRestrictions',
 }

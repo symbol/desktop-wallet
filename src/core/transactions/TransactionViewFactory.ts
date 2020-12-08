@@ -31,6 +31,9 @@ import {
     AccountMetadataTransaction,
     MosaicMetadataTransaction,
     NamespaceMetadataTransaction,
+    AccountAddressRestrictionTransaction,
+    AccountMosaicRestrictionTransaction,
+    AccountOperationRestrictionTransaction,
 } from 'symbol-sdk';
 import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction';
 import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction';
@@ -49,6 +52,9 @@ import { ViewNodeKeyLinkTransaction } from './ViewNodeKeyLinkTransaction';
 import { ViewAccountMetadataTransaction } from '@/core/transactions/ViewAccountMetadataTransaction';
 import { ViewNamespaceMetadataTransaction } from '@/core/transactions/ViewNamespaceMetadataTransaction';
 import { ViewMosaicMetadataTransaction } from '@/core/transactions/ViewMosaicMetadataTransaction';
+import { ViewAccountAddressRestrictionTransaction } from './ViewAccountAddressRestrictionTransaction';
+import { ViewAccountMosaicRestrictionTransaction } from './ViewAccountMosaicRestrictionTransaction';
+import { ViewAccountOperationRestrictionTransaction } from './ViewAccountOperationRestrictionTransaction';
 
 /**
  * Transaction view factory.
@@ -63,9 +69,6 @@ export class TransactionViewFactory {
     public static getView($store: Store<any>, transaction: Transaction): TransactionView<Transaction> {
         switch (transaction.type) {
             /// region XXX views for transaction types not yet implemented
-            case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
-            case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
-            case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
             case TransactionType.AGGREGATE_BONDED:
             case TransactionType.AGGREGATE_COMPLETE:
             case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
@@ -74,6 +77,12 @@ export class TransactionViewFactory {
             case TransactionType.SECRET_PROOF:
                 return new ViewUnknownTransaction($store, transaction);
             /// end-region XXX views for transaction types not yet implemented
+            case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
+                return new ViewAccountAddressRestrictionTransaction($store, transaction as AccountAddressRestrictionTransaction);
+            case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
+                return new ViewAccountMosaicRestrictionTransaction($store, transaction as AccountMosaicRestrictionTransaction);
+            case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
+                return new ViewAccountOperationRestrictionTransaction($store, transaction as AccountOperationRestrictionTransaction);
             case TransactionType.ACCOUNT_METADATA:
                 return new ViewAccountMetadataTransaction($store, transaction as AccountMetadataTransaction);
             case TransactionType.MOSAIC_METADATA:

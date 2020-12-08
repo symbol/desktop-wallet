@@ -50,6 +50,9 @@ export class RecipientInputTs extends Vue {
     })
     value: string;
 
+    @Prop({ default: false })
+    readonly disabled!: boolean;
+
     /**
      * Current network type
      * @var {NetworkType}
