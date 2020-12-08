@@ -20,9 +20,13 @@ export class SignerFilterTs extends Vue {
      */
     public currentSigner: Signer;
 
-    public selectedSigner: string =
-        (this.currentSigner && this.currentSigner.address.plain()) || (this.signers.length && this.signers[0].address.plain()) || '';
+    public selectedSigner: string = '';
 
+    created() {
+        if (this.signers?.length > 0) {
+            this.selectedSigner = this.signers[0].address.plain();
+        }
+    }
     /**
      * onAddressChange
      */
@@ -30,7 +34,7 @@ export class SignerFilterTs extends Vue {
         this.$emit('signer-change', this.selectedSigner);
     }
 
-    @Watch('currentSigner')
+    @Watch('currentSigner', { immediate: true })
     onCurrentSignerChange() {
         this.selectedSigner = this.currentSigner.address.plain();
     }

@@ -21,6 +21,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import TableRow from '@/components/TableRow/TableRow.vue';
 // @ts-ignore
 import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
+import { TableAssetType } from '@/components/TableDisplay/TableAssetType';
 
 @Component({
     components: {
@@ -46,6 +47,12 @@ export class TableRowTs extends Vue {
      * @type {string[]}
      */
     @Prop({ default: [] }) ownedAssetHexIds: string[];
+
+    /**
+     * Show remove button
+     * @type {boolean}
+     */
+    @Prop({ default: false }) showRemove: boolean;
 
     /**
      * Whether the row is a namespace
@@ -77,6 +84,9 @@ export class TableRowTs extends Vue {
      * @type {boolean}
      */
     protected get hasAvailableActions(): boolean {
+        if (this.assetType === TableAssetType.AccountRestrictions) {
+            return false;
+        }
         if (this.rowValues.expiration === 'expired') {
             return false;
         }
@@ -119,5 +129,12 @@ export class TableRowTs extends Vue {
             return 'action_label_alias_link';
         }
         return 'action_label_alias_unlink';
+    }
+
+    /** Returns only visible values of a row */
+    protected get visibleRowValues() {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { hiddenData, ...visible } = this.rowValues;
+        return visible;
     }
 }
