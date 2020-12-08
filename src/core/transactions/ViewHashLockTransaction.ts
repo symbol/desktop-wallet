@@ -40,7 +40,7 @@ export class ViewHashLockTransaction extends TransactionView<HashLockTransaction
             { key: 'duration', value: this.transaction.duration.compact() },
             {
                 key: 'inner_transaction_hash',
-                value: this.transaction.signedTransaction.hash,
+                value: this.transaction.hash,
             },
         ];
     }
