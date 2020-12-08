@@ -49,3 +49,8 @@ export default class ModalFormWrap extends Vue {
     }
 }
 </script>
+<style lang="less" scoped>
+/deep/.ivu-modal-body {
+    overflow: visible;
+}
+</style>
