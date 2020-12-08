@@ -84,13 +84,11 @@ export class MnemonicVerificationTs extends Vue {
     public processVerification(): boolean {
         const origin = this.words.join(' ');
         const rebuilt = this.selectedWordIndexes.map((i) => this.shuffledWords[i]).join(' ');
-
+        const result = this.mnemonicCheckerNotification(origin, rebuilt);
         // - origin words list does not match
-        if (origin !== rebuilt) {
-            this.mnemonicCheckerNotification(origin, rebuilt);
+        if (!result) {
             return false;
         }
-        this.mnemonicCheckerNotification(origin, rebuilt);
         this.$emit('success');
         return true;
     }
@@ -98,7 +96,7 @@ export class MnemonicVerificationTs extends Vue {
     /**
      * Show Notification based on the entered mnemonic validity
      */
-    private mnemonicCheckerNotification(origin: string, rebuilt: string) {
+    private mnemonicCheckerNotification(origin: string, rebuilt: string): boolean {
         if (origin !== rebuilt) {
             const errorMsg =
                 this.selectedWordIndexes.length < 1
@@ -106,8 +104,10 @@ export class MnemonicVerificationTs extends Vue {
                     : NotificationType.MNEMONIC_INCONSISTENCY_ERROR;
             this.$store.dispatch('notification/ADD_WARNING', errorMsg);
             this.$emit('error', errorMsg);
+            return false;
         } else {
             this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS);
+            return true;
         }
     }
 
@@ -120,7 +120,7 @@ export class MnemonicVerificationTs extends Vue {
         if (this.selectedWordIndexes.length == 24) {
             const origin = this.words.join(' ');
             const rebuilt = this.selectedWordIndexes.map((i) => this.shuffledWords[i]).join(' ');
-            this.mnemonicCheckerNotification(origin, rebuilt);
+            return this.mnemonicCheckerNotification(origin, rebuilt);
         }
     }
 }
