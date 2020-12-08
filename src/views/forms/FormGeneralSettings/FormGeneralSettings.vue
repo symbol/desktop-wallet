@@ -40,9 +40,9 @@
                             {{ $t('reset') }}
                         </button>
                         <div style="width: 100%; text-align: left; margin-left: 0.7rem;">
-                            <a class="button-style button danger-button pl-2 pr-2" style="margin-right: 0.4rem;" href="/">
+                            <button class="button-style button danger-button pl-2 pr-2" style="margin-right: 0.4rem;" @click="logout">
                                 {{ $t('logout') }}
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </form>
