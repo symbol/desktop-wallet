@@ -93,4 +93,10 @@ export class ModalSettingsTs extends Vue {
     protected onTabChange(index: number) {
         this.currentTabIndex = index;
     }
+
+    public async logout() {
+        await this.$store.dispatch('profile/LOG_OUT');
+        this.$emit('close');
+        this.$router.push({ name: 'profiles.login' });
+    }
 }
