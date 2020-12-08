@@ -15,7 +15,7 @@
                         </span>
                         <span class="mosaic_name">{{ $t('simple_transfer_type') }}</span>
                         <button class="add_button" @click="onClickAdd(1)">
-                            <img src="@/views/resources/img/icons/add.svg" alt />
+                            <img src="@/views/resources/img/icons/add.png" alt />
                         </button>
                     </div>
                     <div class="mosaic_data">
@@ -24,7 +24,7 @@
                         </span>
                         <span class="mosaic_name">{{ $t('mosaic_transfer_type') }}</span>
                         <button class="add_button" @click="onClickAdd(2)">
-                            <img src="@/views/resources/img/icons/add.svg" alt />
+                            <img src="@/views/resources/img/icons/add.png" alt />
                         </button>
                     </div>
                     <div class="mosaic_data">
@@ -33,7 +33,7 @@
                         </span>
                         <span class="mosaic_name">{{ $t('namespace_transfer_type') }}</span>
                         <button class="add_button" @click="onClickAdd(3)">
-                            <img src="@/views/resources/img/icons/add.svg" alt />
+                            <img src="@/views/resources/img/icons/add.png" alt />
                         </button>
                     </div>
                 </div>
