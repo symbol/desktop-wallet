@@ -1,5 +1,5 @@
 <template>
-    <div class="account-detail-row-3cols">
+    <div class="account-detail-row-3cols" style="margin-top: 0.2rem;">
         <span class="label"> {{ $t('multisig_account_graph') }}:</span>
         <div class="value">
             <div class="account-detail-row-3cols">

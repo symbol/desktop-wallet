@@ -413,7 +413,7 @@ export default {
                 .pipe(
                     map((g) => {
                         // sorted array to be represented in multisig tree
-                        commit('multisigAccountGraph', MultisigService.getMultisigGraphArraySorted(g.multisigEntries));
+                        commit('multisigAccountGraph', g.multisigEntries);
                         return MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
                     }),
                     catchError(() => {

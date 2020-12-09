@@ -17,7 +17,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { mapGetters } from 'vuex';
-import { Address, MultisigAccountInfo } from 'symbol-sdk';
+import { MultisigAccountInfo } from 'symbol-sdk';
 
 @Component({
     computed: {
@@ -37,54 +37,66 @@ export class AccountMultisigGraphTs extends Vue {
         default: null,
     })
     visible: boolean;
-    public multisigAccountGraphInfo: MultisigAccountInfo[][];
+    public multisigAccountGraphInfo: Map<number, MultisigAccountInfo[]>;
     public knownAccounts: AccountModel[];
 
     get multisigGraphTree(): any[] {
         if (this.multisigAccountGraphInfo) {
-            const tree = [];
-            this.multisigAccountGraphInfo.map((level: MultisigAccountInfo[]) => {
-                level.map((entry: MultisigAccountInfo) => {
-                    const selected = this.account.address === entry.accountAddress.plain();
-                    if (!entry.cosignatoryAddresses.length) {
-                        tree.push({
-                            address: entry.accountAddress.plain(),
-                            title: this.getAccountLabel(entry.accountAddress, this.knownAccounts),
-                            children: [],
-                            selected,
-                        });
-                    } else {
-                        // find the entry matching with address matching cosignatory address and update his children
-                        const updateRecursively = (address, object) => (obj) => {
-                            if (obj.address === address) {
-                                obj.children.push(object);
-                            } else if (obj.children) {
-                                obj.children.forEach(updateRecursively(address, object));
-                            }
-                        };
-                        // @ts-ignore
-                        entry.cosignatoryAddresses.forEach((addressVal) => {
-                            tree.forEach(
-                                updateRecursively(addressVal['address'], {
-                                    // @ts-ignore
-                                    address: entry.accountAddress.plain(),
-                                    // @ts-ignore
-                                    title: this.getAccountLabel(entry.accountAddress, this.knownAccounts),
-                                    children: [],
-                                    selected,
-                                }),
-                            );
-                        });
-                    }
-                });
-            });
-            return tree;
+            return this.getMultisigDisplayGraph(this.multisigAccountGraphInfo);
         }
         return [];
     }
 
-    getAccountLabel(address: Address, accounts: AccountModel[]): string {
-        const account = accounts.find((wlt) => address.plain() === wlt.address);
-        return (account && account.name) || address.plain();
+    public getMultisigDisplayGraph(multisigEntries: Map<number, MultisigAccountInfo[]>): any[] {
+        const firstLevelNumber = [...multisigEntries.keys()].sort()[0];
+        const firstLevel = multisigEntries.get(firstLevelNumber);
+        const graph = [];
+        for (const entry of firstLevel) {
+            graph.push({
+                info: entry,
+                address: entry.accountAddress.plain(),
+                title: this.getAccountLabel(entry, this.knownAccounts),
+                children: [this.getMultisigDisplayGraphChildren(firstLevelNumber + 1, entry, multisigEntries)],
+                selected: this.account.address === entry.accountAddress.plain(),
+            });
+        }
+        return graph[0].children;
+    }
+
+    private getMultisigDisplayGraphChildren(
+        level: number,
+        info: MultisigAccountInfo,
+        multisigEntries: Map<number, MultisigAccountInfo[]>,
+    ): any {
+        const entries = multisigEntries.get(level);
+        if (!entries) {
+            return {
+                info: info,
+                address: info.accountAddress.plain(),
+                title: this.getAccountLabel(info, this.knownAccounts),
+                children: [],
+                selected: this.account.address === info.accountAddress.plain(),
+            };
+        }
+        const children = [];
+        for (const entry of entries) {
+            const isFromParent = entry.multisigAddresses.find((address) => address.plain() === info.accountAddress.plain());
+            if (isFromParent) {
+                children.push(this.getMultisigDisplayGraphChildren(level + 1, entry, multisigEntries));
+            }
+        }
+        return {
+            info: info,
+            address: info.accountAddress.plain(),
+            title: this.getAccountLabel(info, this.knownAccounts),
+            children: children,
+            selected: this.account.address === info.accountAddress.plain(),
+        };
+    }
+
+    getAccountLabel(info: MultisigAccountInfo, accounts: AccountModel[]): string {
+        const account = accounts.find((wlt) => info.accountAddress.plain() === wlt.address);
+        const addressOrName = (account && account.name) || info.accountAddress.plain();
+        return addressOrName + (info.isMultisig() ? ` - ${info.minApproval} of ${info.minRemoval}` : '');
     }
 }
