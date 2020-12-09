@@ -55,11 +55,9 @@
                         />
                     </div>
 
-                    <div class="detail-row">
-                        <AccountAliasDisplay :account="currentAccount" />
-                    </div>
-
                     <div class="graph-row">
+                        <AccountAliasDisplay :account="currentAccount" />
+
                         <AccountMultisigGraph
                             v-if="currentAccount && currentAccount.isMultisig"
                             :account="currentAccount"
