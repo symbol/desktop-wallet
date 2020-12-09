@@ -24,6 +24,7 @@ describe('services/MosaicData', () => {
 
             const id = new MosaicId('85BBEA6CC462B244');
             const mosaicInfo = new MosaicInfo(
+                1,
                 '85BBEA6CC462B244',
                 id, // mosaicId
                 new UInt64([3403414400, 2095475]), // supply

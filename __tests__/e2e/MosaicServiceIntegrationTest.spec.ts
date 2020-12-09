@@ -32,6 +32,7 @@ import { of } from 'rxjs';
 import { anything, deepEqual, instance, mock, when } from 'ts-mockito';
 
 const fakeMosaicInfo = new MosaicInfo(
+    1,
     '59FDA0733F17CF0001772CBC',
     new MosaicId([3646934825, 3576016193]),
     new UInt64([3403414400, 2095475]),

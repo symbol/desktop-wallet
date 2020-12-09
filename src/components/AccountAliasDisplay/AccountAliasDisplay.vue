@@ -23,10 +23,7 @@ export default class AccountAliasDisplay extends AccountAliasDisplayTs {}
 }
 
 .account-aliases {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: max-content;
-
+    margin-bottom: 0.3rem;
     span {
         margin-right: 0.08rem;
     }
