@@ -71,7 +71,12 @@
                 </div>
             </div>
         </div>
-        <ModalConfirmDelete :visible="showDeleteModal" @close="showDeleteModal = false" @delete="removeContact" />
+        <ModalConfirm
+            v-model="showDeleteModal"
+            :title="$t('delete_contact_confirmation_title')"
+            :message="$t('delete_contact_confirmation_message', { contactName: selectedContact.name })"
+            @confirmed="removeContact"
+        />
     </div>
 </template>
 
