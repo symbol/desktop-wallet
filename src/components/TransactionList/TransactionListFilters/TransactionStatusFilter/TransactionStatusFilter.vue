@@ -4,7 +4,7 @@
             <span>Filter</span>
             <div class="filter-button-arrow" :class="{ 'arrow-up': isSelectionShown }" />
         </div>
-        <div v-if="isSelectionShown" class="filter-options-container">
+        <div v-show="isSelectionShown" class="filter-options-container">
             <div class="filter-options-container__option">
                 <Checkbox id="Confirmed" @input="(value) => onChange(transactionFilterOptions.confirmed, value)" />
                 <label for="Confirmed">Confirmed</label>
