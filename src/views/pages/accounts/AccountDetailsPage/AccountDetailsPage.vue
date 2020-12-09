@@ -69,7 +69,7 @@
                                 type="button"
                                 class="centered-button button-style button danger-button"
                                 :disabled="knownAccounts.length <= 1"
-                                @click="deleteAccount()"
+                                @click="deleteAccountConfirmation"
                             >
                                 {{ $t('delete_account') }}
                             </button>
@@ -78,6 +78,12 @@
                 </div>
             </div>
         </div>
+        <ModalConfirm
+            v-model="showConfirmationModal"
+            :title="$t('delete_account_confirmation_title')"
+            :message="$t('delete_account_confirmation_message', { accountName: currentAccount.name })"
+            @confirmed="deleteAccount"
+        />
         <ModalFormProfileUnlock
             v-if="hasAccountUnlockModal"
             :visible="hasAccountUnlockModal"
