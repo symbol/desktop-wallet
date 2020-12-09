@@ -50,7 +50,8 @@ import ModalMetadataDisplay from '@/views/modals/ModalMetadataDisplay/ModalMetad
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
 // @ts-ignore
 import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadataUpdate.vue';
-
+// @ts-ignore
+import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
 @Component({
     components: {
         AccountNameDisplay,
@@ -67,6 +68,7 @@ import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadat
         ModalFormProfileUnlock,
         ModalMetadataDisplay,
         ModalMetadataUpdate,
+        ModalConfirm,
     },
     computed: {
         ...mapGetters({
@@ -113,6 +115,9 @@ export class AccountDetailsPageTs extends Vue {
      * metadata detail modal visibility
      */
     public showUpdateMetadataModal: boolean = false;
+
+    public showConfirmationModal = false;
+
     /**
      * Currently active account
      * @see {Store.Account}
@@ -121,7 +126,12 @@ export class AccountDetailsPageTs extends Vue {
     public currentAccount: AccountModel;
     public readonly accountService: AccountService = new AccountService();
 
+    public deleteAccountConfirmation() {
+        this.showConfirmationModal = true;
+    }
+
     public async deleteAccount() {
+        this.showConfirmationModal = false;
         if (this.currentAccount) {
             this.hasAccountUnlockModal = true;
             return;

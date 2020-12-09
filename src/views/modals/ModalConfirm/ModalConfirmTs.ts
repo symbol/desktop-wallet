@@ -14,28 +14,24 @@
  *
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
-// internal dependencies
-// child components
-// @ts-ignore
-import FormContactCreation from '@/views/forms/FormContactCreation/FormContactCreation.vue';
 
-@Component({
-    components: {
-        FormContactCreation,
-    },
-})
-export class ModalConfirmDeleteTs extends Vue {
+@Component
+export default class ModalConfirmTs extends Vue {
     @Prop({
         default: false,
     })
-    visible: boolean;
+    value: boolean;
+
+    @Prop({ default: 'confirmation_title' }) readonly title!: string;
+
+    @Prop({ default: 'confirmation_message' }) readonly message!: string;
 
     /**
      * Visibility state
      * @type {boolean}
      */
     get show(): boolean {
-        return this.visible;
+        return this.value;
     }
 
     /**
@@ -45,11 +41,15 @@ export class ModalConfirmDeleteTs extends Vue {
         if (!val) {
             this.$emit('close');
         }
+        this.$emit('input', val);
     }
 
     public confirm() {
-        this.$emit('close');
-        this.$emit('delete');
+        this.$emit('confirmed');
+    }
+
+    public cancel() {
+        this.$emit('cancelled');
     }
 
     /**
