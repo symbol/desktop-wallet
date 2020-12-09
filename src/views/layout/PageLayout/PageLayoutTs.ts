@@ -174,7 +174,7 @@ export class PageLayoutTs extends Vue {
     }
 
     get info(): { show: boolean; message: string } {
-        if (this.isCosignatoryMode) {
+        if (this.isCosignatoryMode && !this.currentAccount.isMultisig) {
             return { show: true, message: 'info_active_cosignatory_mode' };
         }
 

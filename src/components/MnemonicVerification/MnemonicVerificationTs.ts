@@ -97,7 +97,7 @@ export class MnemonicVerificationTs extends Vue {
      * Show Notification based on the entered mnemonic validity
      */
     private mnemonicCheckerNotification(origin: string, rebuilt: string): boolean {
-        if (origin !== rebuilt) {
+        if (!origin.includes(rebuilt)) {
             const errorMsg =
                 this.selectedWordIndexes.length < 1
                     ? NotificationType.PLEASE_ENTER_MNEMONIC_INFO
@@ -106,7 +106,9 @@ export class MnemonicVerificationTs extends Vue {
             this.$emit('error', errorMsg);
             return false;
         } else {
-            this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS);
+            if (this.selectedWordIndexes.length == 24) {
+                this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS);
+            }
             return true;
         }
     }
@@ -117,10 +119,8 @@ export class MnemonicVerificationTs extends Vue {
     @Watch('selectedWordIndexes')
     onSelectedMnemonicChange() {
         // watch mnemonic validity only if mnemonic input is full
-        if (this.selectedWordIndexes.length == 24) {
-            const origin = this.words.join(' ');
-            const rebuilt = this.selectedWordIndexes.map((i) => this.shuffledWords[i]).join(' ');
-            return this.mnemonicCheckerNotification(origin, rebuilt);
-        }
+        const origin = this.words.join(' ');
+        const rebuilt = this.selectedWordIndexes.map((i) => this.shuffledWords[i]).join(' ');
+        return this.mnemonicCheckerNotification(origin, rebuilt);
     }
 }
