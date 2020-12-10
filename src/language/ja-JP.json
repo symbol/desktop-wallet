@@ -816,5 +816,7 @@
     "welcome": "ようこそ",
     "welcome_to_symbol": "ようこそ Symbol へ",
     "word": "文字",
-    "x_seconds": "{seconds}秒"
+    "x_seconds": "{seconds}秒",
+    "open_restrictions_warning_title": "口座開設の制限",
+    "open_restrictions_warning_text": "アカウント制限は、アカウントを無効にする可能性のある高度な機能です。 以下の画面で行う操作にはご注意ください。 アカウントの制限にアクセスしてもよろしいですか？"
 }
