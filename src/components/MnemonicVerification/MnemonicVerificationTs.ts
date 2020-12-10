@@ -107,7 +107,7 @@ export class MnemonicVerificationTs extends Vue {
             return false;
         } else {
             // watch mnemonic validity only if mnemonic input is full
-            if (this.selectedWordIndexes.length == 24) {
+            if (this.selectedWordIndexes.length === 24) {
                 this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS);
             }
             return true;
