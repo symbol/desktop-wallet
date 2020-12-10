@@ -55,9 +55,7 @@ export class AccountModel {
     public readonly path: string;
     public readonly isMultisig: boolean;
     public readonly encRemoteAccountPrivateKey?: string;
-    public readonly signedPersistentDelReqTxs?: SignedTransaction[];
-    public readonly isPersistentDelReqSent?: boolean;
-    public readonly selectedHarvestingNode?: NodeModel;
+
     /**
      * Permits to return specific field's mapped object instances
      * @return any
