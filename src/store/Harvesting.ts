@@ -138,7 +138,7 @@ export default {
             if (!currentSignerAccountInfo) {
                 return;
             }
-            const currentSignerHarvestingModel: AccountModel = rootGetters['harvesting/currentSignerHarvestingModel'];
+            const currentSignerHarvestingModel: HarvestingModel = rootGetters['harvesting/currentSignerHarvestingModel'];
             let accountUnlocked = false;
 
             if (currentSignerHarvestingModel) {
