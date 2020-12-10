@@ -229,6 +229,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         // default currentAccount Address to recipientRaw
         if (this.$route.path.indexOf('invoice') > -1) {
             this.formItems.recipientRaw = this.currentAccount.address || '';
+            this.onChangeRecipient();
         } else {
             this.formItems.recipientRaw = !!this.recipient ? this.recipient.plain() : '';
         }
@@ -264,6 +265,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                     this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
                 });
             });
+            this.onChangeRecipient();
         } else {
             // - set attachedMosaics and allocate slots
             Vue.nextTick().then(async () => {
@@ -540,6 +542,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     @Watch('selectedSigner')
     onSelectedSignerChange() {
+        this.formItems.signerAddress = this.selectedSigner.address.plain();
         if (this.isMultisigMode()) {
             this.resetForm();
         }

@@ -48,7 +48,10 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
 // @ts-ignore
 import ModalMetadataDisplay from '@/views/modals/ModalMetadataDisplay/ModalMetadataDisplay.vue';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
-
+// @ts-ignore
+import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadataUpdate.vue';
+// @ts-ignore
+import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
 @Component({
     components: {
         AccountNameDisplay,
@@ -64,6 +67,8 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
         AccountMultisigGraph,
         ModalFormProfileUnlock,
         ModalMetadataDisplay,
+        ModalMetadataUpdate,
+        ModalConfirm,
     },
     computed: {
         ...mapGetters({
@@ -82,6 +87,7 @@ export class AccountDetailsPageTs extends Vue {
      */
     public defaultAccount: string;
 
+    public metadataEntry: MetadataModel;
     /**
      * known accounts on current network
      * @type {AccountModel[]}
@@ -106,6 +112,13 @@ export class AccountDetailsPageTs extends Vue {
     public showMetadataDetailModal: boolean = false;
 
     /**
+     * metadata detail modal visibility
+     */
+    public showUpdateMetadataModal: boolean = false;
+
+    public showConfirmationModal = false;
+
+    /**
      * Currently active account
      * @see {Store.Account}
      * @var {AccountModel}
@@ -113,7 +126,12 @@ export class AccountDetailsPageTs extends Vue {
     public currentAccount: AccountModel;
     public readonly accountService: AccountService = new AccountService();
 
+    public deleteAccountConfirmation() {
+        this.showConfirmationModal = true;
+    }
+
     public async deleteAccount() {
+        this.showConfirmationModal = false;
         if (this.currentAccount) {
             this.hasAccountUnlockModal = true;
             return;
@@ -137,5 +155,9 @@ export class AccountDetailsPageTs extends Vue {
             this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.');
             console.error(e);
         }
+    }
+    openEditModal(value) {
+        this.showUpdateMetadataModal = true;
+        this.metadataEntry = value;
     }
 }

@@ -85,6 +85,9 @@ export class ContactSelectorPanelTs extends Vue {
         const newSelectedContact = this.addressBook.getContactById(id);
         this.$store.commit('addressBook/setSelectedContact', newSelectedContact);
     }
+    public get selectedContactId() {
+        return this.selectedContact.id;
+    }
 
     public isActiveContact(contact: IContact): boolean {
         if (!this.selectedContact) {

@@ -482,6 +482,8 @@ export default {
             // Reloading Balances
             await dispatch('account/LOAD_ACCOUNT_INFO', {}, { root: true });
             dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
+
+            await dispatch('restriction/LOAD_ACCOUNT_RESTRICTIONS', {}, { root: true });
         },
         /// end-region scoped actions
 

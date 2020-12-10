@@ -46,7 +46,7 @@ import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTrans
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import { Component, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-
+import { MetadataModel } from '@/core/database/entities/MetadataModel';
 @Component({
     components: {
         ValidationObserver,
@@ -81,7 +81,36 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         required: true,
     })
     protected type: MetadataType;
+    /**
+     * update/edit check
+     * @type {boolean}
+     */
+    @Prop({
+        default: false,
+    })
+    public editMode: boolean;
+    /**
+     * Value for saved metadata
+     * @type {MetadataModel}
+     */
+    @Prop({
+        default: null,
+    })
+    public value: MetadataModel;
+    /**
+     * Value for mosaic and namespace selectboxes
+     * @type {MetadataModel}
+     */
+    @Prop({
+        default: null,
+    })
+    public metadataList: MetadataModel[];
 
+    /**
+     * chosen metaKeyValue
+     * @type {MetadataModel}
+     */
+    protected chosenKeyValue: string = '';
     /**
      * Metadata type
      */
@@ -106,6 +135,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         targetAccount: '',
         targetId: '',
         metadataValue: '',
+        scopedKey: '',
         maxFee: 0,
     };
 
@@ -137,6 +167,11 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     protected ownedNamespaces: NamespaceModel[];
 
     /**
+     * Wheter target account is visible and editable
+     */
+    protected showTargetAccount = true;
+
+    /**
      * Mosaic check
      * @return {boolean}
      */
@@ -153,10 +188,15 @@ export class FormMetadataCreationTs extends FormTransactionBase {
 
         // - set default form values
         this.formItems.metadataValue = '';
-        this.formItems.metadataValue = '';
+        this.formItems.scopedKey = '';
 
         // - maxFee must be absolute
         this.formItems.maxFee = this.defaultFee;
+        // for mosaics and namespaces, target account will be the signer account's itself (as hidden)
+        if (this.type !== MetadataType.Account) {
+            this.formItems.targetAccount = this.formItems.signerAddress;
+            this.showTargetAccount = false;
+        }
     }
 
     /**
@@ -176,6 +216,17 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         } else {
             return TransactionCommandMode.MULTISIGN;
         }
+    }
+    /**
+     * number of required cosignatures for the tx
+     * @override
+     * @see {FormTransactionBase}
+     */
+    protected get requiredCosignatures(): number {
+        if (!this.selectedSigner.multisig && this.formItems.signerAddress !== this.getTargetAddress().plain()) {
+            return 1;
+        }
+        return this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures;
     }
 
     /**
@@ -259,11 +310,13 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         const targetAddress: Address = this.getTargetAddress();
         const metadataForm: {
             targetAddress: Address;
+            scopedKey: string;
             metadataValue: string;
             targetId: string;
             maxFee: number;
         } = {
             targetAddress,
+            scopedKey: this.formItems.scopedKey,
             metadataValue: this.formItems.metadataValue,
             targetId: this.formItems.targetId,
             maxFee: this.formItems.maxFee,
@@ -292,7 +345,34 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      */
     public get hasFormAnyChanges(): boolean {
         return (
-            this.formItems.signerAddress.length > 0 || this.formItems.targetAccount.length > 0 || this.formItems.metadataValue.length > 0
+            this.formItems.signerAddress.length > 0 ||
+            this.formItems.targetAccount.length > 0 ||
+            this.formItems.metadataValue.length > 0 ||
+            this.formItems.scopedKey.length > 0
         );
+    }
+
+    set chosenValue(newValue: string) {
+        this.chosenKeyValue = newValue;
+        const currentItem = this.metadataList.find((item) => item.metadataId === this.chosenKeyValue);
+        this.formItems.signerAddress = currentItem.sourceAddress;
+        this.formItems.targetAccount = currentItem.targetAddress;
+        this.formItems.targetId = currentItem.targetId;
+        this.formItems.metadataValue = currentItem.value;
+        this.formItems.scopedKey = currentItem.scopedMetadataKey;
+    }
+
+    get chosenValue(): string {
+        return this.chosenKeyValue;
+    }
+
+    mounted() {
+        if (this.editMode && this.value && this.type == MetadataType.Account) {
+            this.formItems.signerAddress = this.value.sourceAddress;
+            this.formItems.targetAccount = this.value.targetAddress;
+            this.formItems.targetId = this.value.targetId;
+            this.formItems.metadataValue = this.value.value;
+            this.formItems.scopedKey = this.value.scopedMetadataKey;
+        }
     }
 }

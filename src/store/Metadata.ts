@@ -29,6 +29,7 @@ interface MetadataFormState {
     targetAddress: Address;
     metadataValue: string;
     targetId: string;
+    scopedKey: string;
     maxFee: number;
 }
 
@@ -55,6 +56,7 @@ const metadataState: MetadataState = {
         targetAddress: null,
         metadataValue: '',
         targetId: '',
+        scopedKey: '',
         maxFee: 0,
     },
 };
@@ -141,7 +143,12 @@ export default {
             commit('isFetchingMetadata', true);
             metadataService
                 .getMetadataList(repositoryFactory, generationHash, currentSignerAddress)
-                .subscribe((metadataList) => commit('metadataList', metadataList))
+                .subscribe((metadataList: MetadataModel[]) => {
+                    //wait till value change
+                    setTimeout(() => {
+                        commit('metadataList', metadataList);
+                    }, 2000);
+                })
                 .add(() => commit('isFetchingMetadata', false));
         },
 
@@ -164,6 +171,7 @@ export default {
                     networkType,
                     currentSignerAddress,
                     metadataForm.targetAddress,
+                    metadataForm.scopedKey,
                     metadataForm.metadataValue,
                     metadataForm.targetId,
                     metadataType,

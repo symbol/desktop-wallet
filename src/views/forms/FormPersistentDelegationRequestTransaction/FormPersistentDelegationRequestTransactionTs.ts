@@ -62,9 +62,9 @@ import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigne
 import { Observable, of } from 'rxjs';
 import { concatMap, flatMap, map, mergeAll, switchMap, tap, toArray } from 'rxjs/operators';
 import { BroadcastResult } from '@/core/transactions/BroadcastResult';
-import { AccountModel } from '@/core/database/entities/AccountModel';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
+import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
 
 export enum HarvestingAction {
     START = 1,
@@ -90,7 +90,7 @@ export enum HarvestingAction {
             currentHeight: 'network/currentHeight',
             currentSignerAccountInfo: 'account/currentSignerAccountInfo',
             harvestingStatus: 'harvesting/status',
-            currentSignerAccountModel: 'account/currentSignerAccountModel',
+            currentSignerHarvestingModel: 'harvesting/currentSignerHarvestingModel',
             networkBalanceMosaics: 'mosaic/networkBalanceMosaics',
         }),
     },
@@ -120,7 +120,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      */
     private currentSignerAccountInfo: AccountInfo;
 
-    private currentSignerAccountModel: AccountModel;
+    private currentSignerHarvestingModel: HarvestingModel;
 
     private action = HarvestingAction.START;
 
@@ -156,8 +156,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
         if (this.isNodeKeyLinked) {
             this.formItems.nodeModel.nodePublicKey = this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey;
-            if (this.currentSignerAccountModel?.selectedHarvestingNode) {
-                this.formItems.nodeModel = this.currentSignerAccountModel.selectedHarvestingNode;
+            if (this.currentSignerHarvestingModel?.selectedHarvestingNode) {
+                this.formItems.nodeModel = this.currentSignerHarvestingModel.selectedHarvestingNode;
             } else {
                 this.formItems.nodeModel = { nodePublicKey: '' } as NodeModel;
             }
@@ -290,7 +290,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     public announce(service: TransactionAnnouncerService, transactionSigner: TransactionSigner): Observable<Observable<BroadcastResult>[]> {
         // announce the keyLink txs and save the signed PersistentDelegationReqTx to the store
-        const accountId = this.currentSignerAccountModel.id;
+        const accountAddress = this.currentSignerHarvestingModel.accountAddress;
         const signedPersistentDelReqTx$ = this.getPersistentDelegationRequestTransaction(transactionSigner).pipe(
             concatMap((txs) => txs.map((t) => transactionSigner.signTransaction(t, this.generationHash))),
             mergeAll(),
@@ -312,14 +312,14 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             tap((resArr) =>
                 resArr[0].subscribe((res) => {
                     if (res.success) {
-                        signedPersistentDelReqTx$.subscribe((signedTx) => this.saveSignedPersistentDelReqTxs(accountId, signedTx));
-                        this.$store.dispatch('account/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
-                            accountId,
+                        signedPersistentDelReqTx$.subscribe((signedTx) => this.saveSignedPersistentDelReqTxs(accountAddress, signedTx));
+                        this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
+                            accountAddress,
                             isPersistentDelReqSent: false,
                         });
 
-                        this.$store.dispatch('account/UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
-                            accountId,
+                        this.$store.dispatch('harvesting/UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
+                            accountAddress,
                             selectedHarvestingNode: this.formItems.nodeModel,
                         });
                     }
@@ -373,17 +373,17 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
         return undefined;
     }
-    private saveSignedPersistentDelReqTxs(accountId: string, signedPersistentDelReqTxs: SignedTransaction[]) {
-        this.$store.dispatch('account/UPDATE_ACCOUNT_SIGNED_PERSISTENT_DEL_REQ_TXS', { accountId, signedPersistentDelReqTxs });
+    private saveSignedPersistentDelReqTxs(accountAddress: string, signedPersistentDelReqTxs: SignedTransaction[]) {
+        this.$store.dispatch('harvesting/UPDATE_ACCOUNT_SIGNED_PERSISTENT_DEL_REQ_TXS', { accountAddress, signedPersistentDelReqTxs });
         if (!signedPersistentDelReqTxs || signedPersistentDelReqTxs.length === 0) {
             const isPersistentDelReqSent = false;
-            this.$store.dispatch('account/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', { accountId, isPersistentDelReqSent });
+            this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', { accountAddress, isPersistentDelReqSent });
         }
     }
 
     protected activateHarvesting() {
         Vue.set(this, 'activating', true);
-        const accountId = this.currentSignerAccountModel.id;
+        const accountAddress = this.currentSignerHarvestingModel.accountAddress;
         const transactionAnnoucer = new TransactionAnnouncerService(this.$store);
         let announceResult: Observable<BroadcastResult>;
 
@@ -397,7 +397,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
         announceResult.subscribe((res) => {
             if (res.success) {
-                this.$store.dispatch('account/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', { accountId, isPersistentDelReqSent: true });
+                this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
+                    accountAddress,
+                    isPersistentDelReqSent: true,
+                });
             }
             Vue.set(this, 'activating', false);
         });
@@ -490,17 +493,13 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return PublicAccount.createFromPublicKey(this.currentSignerPublicKey, this.networkType);
     }
 
-    private get requiredCosignatures() {
-        return this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures;
-    }
-
     private get signedPersistentDelReqTxs() {
-        return this.currentSignerAccountModel.signedPersistentDelReqTxs?.map(
+        return this.currentSignerHarvestingModel?.signedPersistentDelReqTxs?.map(
             (st) => new SignedTransaction(st.payload, st.hash, st.signerPublicKey, st.type, st.networkType),
         );
     }
 
     private get isPersistentDelReqSent() {
-        return this.currentSignerAccountModel.isPersistentDelReqSent;
+        return this.currentSignerHarvestingModel?.isPersistentDelReqSent;
     }
 }

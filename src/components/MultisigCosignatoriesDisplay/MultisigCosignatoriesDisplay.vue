@@ -96,7 +96,7 @@
 
             <AddCosignatoryInput v-if="isAddingCosignatory" @added="onAddCosignatory" />
             <div v-if="!isAddingCosignatory" class="row-cosignatory-modification-display inputs-container link mx-1">
-                <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" />
+                <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button clickable" @click="isAddingCosignatory = true" />
                 <a href="#" style="color: #5200c6;" @click="isAddingCosignatory = true">{{ $t('form_label_add_cosignatory') }}</a>
             </div>
         </div>

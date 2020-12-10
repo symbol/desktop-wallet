@@ -412,11 +412,10 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
 
     /**
      * Calculating number of requiredCosignatures to use in maxFee calculation
-     * @readonly
-     * @private
+     * @override
      * @type number
      */
-    private get requiredCosignatures(): number {
+    protected get requiredCosignatures(): number {
         if (this.multisigOperationType === 'conversion') {
             return this.addressAdditions.length;
         }

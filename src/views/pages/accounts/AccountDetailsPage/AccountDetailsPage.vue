@@ -51,14 +51,13 @@
                             :metadata-list="accountMetadataList"
                             :visible="!!accountMetadataList.length"
                             @on-view-metadata="showMetadataDetailModal = true"
+                            @on-edit-metadata="openEditModal"
                         />
                     </div>
 
-                    <div class="detail-row">
-                        <AccountAliasDisplay :account="currentAccount" />
-                    </div>
-
                     <div class="graph-row">
+                        <AccountAliasDisplay :account="currentAccount" />
+
                         <AccountMultisigGraph
                             v-if="currentAccount && currentAccount.isMultisig"
                             :account="currentAccount"
@@ -70,7 +69,7 @@
                                 type="button"
                                 class="centered-button button-style button danger-button"
                                 :disabled="knownAccounts.length <= 1"
-                                @click="deleteAccount()"
+                                @click="deleteAccountConfirmation"
                             >
                                 {{ $t('delete_account') }}
                             </button>
@@ -79,6 +78,12 @@
                 </div>
             </div>
         </div>
+        <ModalConfirm
+            v-model="showConfirmationModal"
+            :title="$t('delete_account_confirmation_title')"
+            :message="$t('delete_account_confirmation_message', { accountName: currentAccount.name })"
+            @confirmed="deleteAccount"
+        />
         <ModalFormProfileUnlock
             v-if="hasAccountUnlockModal"
             :visible="hasAccountUnlockModal"
@@ -91,7 +96,13 @@
             :metadata-list="accountMetadataList"
             @close="showMetadataDetailModal = false"
         />
-
+        <ModalMetadataUpdate
+            v-if="showUpdateMetadataModal && metadataEntry"
+            :visible="showUpdateMetadataModal"
+            :value="metadataEntry"
+            :edit-mode="showUpdateMetadataModal"
+            @close="showUpdateMetadataModal = false"
+        />
         <!--<div class="account-detail-inner-container">
             <div class="left-container">
                 <div class="title-row">
