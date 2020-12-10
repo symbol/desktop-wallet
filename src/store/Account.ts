@@ -435,9 +435,13 @@ export default {
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
             const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
             // update multisig flag in currentAccount
-            if (currentAccountMultisigInfo && currentAccountMultisigInfo.cosignatoryAddresses.length > 0 && !currentAccount.isMultisig) {
-                const accountService = new AccountService();
-                accountService.updateIsMultisig(currentAccount, true);
+            const accountService = new AccountService();
+            if (currentAccountMultisigInfo && currentAccountMultisigInfo.cosignatoryAddresses.length > 0) {
+                if (!currentAccount.isMultisig) {
+                    accountService.updateIsMultisig(currentAccount, true);
+                }
+            } else {
+                accountService.updateIsMultisig(currentAccount, false);
             }
 
             const signers = new MultisigService().getSigners(
