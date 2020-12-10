@@ -814,5 +814,7 @@
     "welcome": "Welcome",
     "welcome_to_symbol": "Welcome to Symbol",
     "word": "Word",
-    "x_seconds": "{seconds}s."
+    "x_seconds": "{seconds}s.",
+    "open_restrictions_warning_title": "Open account restrictions",
+    "open_restrictions_warning_text": "Account restrictions is an advanced functionality that can invalidate your account. Please be careful with the operations you perform in the following screens. \nAre you sure that do you want to access to account restrictions?"
 }

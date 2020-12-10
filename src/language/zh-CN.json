@@ -816,5 +816,7 @@
     "welcome": "Welcome",
     "welcome_to_symbol": "欢迎使用Symbol",
     "word": "字",
-    "x_seconds": "{seconds}秒"
+    "x_seconds": "{seconds}秒",
+    "open_restrictions_warning_title": "开户限制",
+    "open_restrictions_warning_text": "帐户限制是一项高级功能，可以使您的帐户无效。 请注意在以下屏幕中执行的操作。您确定要访问帐户限制吗？"
 }
