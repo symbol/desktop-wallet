@@ -38,14 +38,14 @@
                         v-model="formItems.newNamespaceName"
                         :is-need-auto-focus="false"
                         :namespace-registration-type="formItems.registrationType"
-                        @input="stripTagsNamesapceName"
+                        @input="stripTagsNamespaceName"
                     />
                     <FormRow v-if="formItems.registrationType === typeSubNamespace">
                         <template v-slot:label> {{ $t('current_validity') }}: </template>
                         <template v-slot:inputs>
                             <div class="inputs-container">
                                 <div class="display-value">
-                                    {{ relativeTimetoParent }}
+                                    {{ relativeTimeToParent }}
                                 </div>
                             </div>
                         </template>
