@@ -30,7 +30,7 @@
                             <div class="node-list-content">
                                 <ul v-auto-scroll="'active'">
                                     <li class="list-item pointer" @click="showMetadataModal = true">{{ $t('add_metadata') }}</li>
-                                    <li class="list-item pointer" @click="showAccountRestrictionsModal = true">
+                                    <li class="list-item pointer" @click="showConfirmOpenRestrictionsModal = true">
                                         {{ $t('add_account_restrictions') }}
                                     </li>
                                 </ul>
@@ -55,6 +55,12 @@
             </div>
         </div>
         <ModalMetadataUpdate v-if="showMetadataModal" :visible="showMetadataModal" @close="showMetadataModal = false" />
+        <ModalConfirm
+            v-model="showConfirmOpenRestrictionsModal"
+            :title="$t('open_restrictions_warning_title')"
+            :message="$t('open_restrictions_warning_text')"
+            @confirmed="showAccountRestrictionsModal = true"
+        />
         <ModalAccountRestrictions
             v-if="showAccountRestrictionsModal"
             :visible="showAccountRestrictionsModal"
