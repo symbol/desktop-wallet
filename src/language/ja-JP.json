@@ -218,6 +218,7 @@
     "endpoint": "ノード",
     "enter_your_private_key": "秘密鍵を入力してください",
     "error_account_name_already_exists": "アカウント名は既に存在します。一意なアカウント名を入力してください。",
+    "error_contact_already_exists": "この連絡先はすでに存在します。",
     "error_delete_all_peers": "すべてのノードは削除できません",
     "error_incorrect_field": "{_field_} フィールドは不正です",
     "error_incorrect_url": "有効なURLではありません",
