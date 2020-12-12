@@ -37,6 +37,7 @@ import Vue from 'vue';
 // internal dependencies
 import { Formatters } from '@/core/utils/Formatters';
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
+import { AccountType } from '@/core/database/entities/AccountModel';
 
 // child components
 import { ValidationObserver } from 'vee-validate';
@@ -114,6 +115,13 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     private newVrfKeyAccount: Account;
     private newRemoteAccount: Account;
+
+    /**
+     * Check the account type is Ledger or not
+     */
+    private get isLedger(): boolean {
+        return this.currentAccount.type == AccountType.LEDGER;
+    }
 
     /**
      * Current signer account info

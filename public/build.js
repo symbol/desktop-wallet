@@ -222,6 +222,9 @@ function initialize() {
         height: height,
         autoHideMenuBar: false,
         resizable: true,
+        webPreferences: {
+          nodeIntegration: true,
+        }
       })
     } else {
       height = parseInt((1080 * size.width) / 1920 + 30)
@@ -230,6 +233,9 @@ function initialize() {
         height: height - 50,
         autoHideMenuBar: false,
         resizable: true,
+        webPreferences: {
+          nodeIntegration: true,
+        }
       })
     }
     mainWindow.loadFile(loadUrlPath)
@@ -260,7 +266,7 @@ function initialize() {
       title: app.getName(),
       titleBarStyle: 'hiddenInset',
       webPreferences: {
-        nodeIntegration: false,
+        nodeIntegration: true,
       },
       resizable: true,
     }

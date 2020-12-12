@@ -13,14 +13,15 @@
       <strong>We're sorry but Symbol Wallet doesn't work without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <script>
-        // window.electron = require('electron');
-        // window.node_fs = require('fs')
+      // window.electron = require('electron');
+      // window.node_fs = require('fs')
+      try{window.TransportNodeHid=require('@ledgerhq/hw-transport-node-hid')}catch(e){}
     </script>
+      <script type="text/javascript"></script>
     <div id="app">
       <script type="text/javascript" src="<%= BASE_URL %>config/app.conf.js"></script>
       <script type="text/javascript" src="<%= BASE_URL %>config/fees.conf.js"></script>
       <script type="text/javascript" src="<%= BASE_URL %>config/network.conf.js"></script>
-
     </div>
   </body>
 </html>

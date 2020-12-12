@@ -22,7 +22,7 @@
                         <AccountPublicKeyDisplay :account="currentAccount" />
                     </div>
 
-                    <div class="detail-row">
+                    <div v-if="!isLedger" class="detail-row">
                         <ProtectedPrivateKeyDisplay :account="currentAccount" />
                     </div>
 
