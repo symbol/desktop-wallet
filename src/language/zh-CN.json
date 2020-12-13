@@ -565,7 +565,7 @@
     "peers_number": "节点数量",
     "phishing_warning": "小心网络钓鱼！一般来说，Wallet不会要求您输入助记词。",
     "placeholder_address": "请输入地址",
-    "placeholder_address_or_alias": "直接输入接收地址或别名（例如：nem.foundation）",
+    "placeholder_address_or_alias": "直接输入接收地址或别名（例如：nem.group)",
     "placeholder_address_or_public_key": "地址或公钥",
     "placeholder_transaction_uri": "输入有效的交易URI",
     "please_accurately_copy_the_safety_backup_mnemonic": "请准确抄写安全备份助记词",

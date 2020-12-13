@@ -564,7 +564,7 @@
     "peers_number": "ピア数",
     "phishing_warning": "フィッシングに注意してください！このプログラムではプロファイルを復元する場合以外に、ニーモニックの入力は求めることはありません。",
     "placeholder_address": "アドレスを入力",
-    "placeholder_address_or_alias": "アドレスまたはエイリアス (例 nem.foundation)",
+    "placeholder_address_or_alias": "アドレスまたはエイリアス (例 nem.group)",
     "placeholder_address_or_public_key": "アドレスまたは公開鍵",
     "placeholder_transaction_uri": "有効なトランザクションURIを入力してください",
     "please_accurately_copy_the_safety_backup_mnemonic": "正確にコピーして、ニーモニックを安全にバックアップしてください",
