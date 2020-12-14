@@ -27,10 +27,19 @@ export class TransactionStatusFilterTs extends Vue {
     }
 
     /**
-     * Opens selection options block.
+     * Toggles selection options block.
      */
     public toggleSelection(): void {
+        console.log('1');
         this.isSelectionShown = !this.isSelectionShown;
+    }
+
+    /**
+     * Closes selection options block.
+     */
+    public closeSelection(): void {
+        console.log('2');
+        this.isSelectionShown = false;
     }
 
     @Watch('currentSigner')
