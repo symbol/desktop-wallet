@@ -42,11 +42,11 @@ export const createValidationRuleSet = ({
         namespaceDuration: `required|min_value:${minNamespaceDuration}|maxNamespaceDuration`,
         namespaceName: {
             required: true,
-            regex: '^[a-z0-9]{1}[a-z0-9-_]{1,63}$',
+            regex: '^[a-z0-9]{1}[a-z0-9-_]{0,63}$',
         },
         subNamespaceName: {
             required: true,
-            regex: '^[a-z0-9]{1}[a-z0-9-_]{1,63}$',
+            regex: '^[a-z0-9]{1}[a-z0-9-_]{0,63}$',
         },
         password: `required|min:${MIN_PASSWORD_LENGTH}|passwordRegex`,
         previousPassword: 'required|confirmLock:cipher',

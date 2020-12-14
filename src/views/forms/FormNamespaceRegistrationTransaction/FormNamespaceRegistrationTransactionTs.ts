@@ -195,13 +195,13 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
         this.formItems.maxFee = transaction.maxFee.compact();
     }
 
-    public relativeTimetoParent = '';
+    public relativeTimeToParent = '';
 
-    public getTimeByparentNamespaceName() {
+    public getTimeByParentNamespaceName() {
         const selectedNamespace = this.ownedNamespaces.find((item) => item.name === this.formItems.parentNamespaceName);
 
         if (selectedNamespace) {
-            this.relativeTimetoParent = NamespaceService.getExpiration(
+            this.relativeTimeToParent = NamespaceService.getExpiration(
                 this.networkConfiguration,
                 this.currentHeight,
                 selectedNamespace.endHeight,
@@ -211,12 +211,12 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
 
     setParentNamespaceName(val) {
         this.formItems.parentNamespaceName = val;
-        this.getTimeByparentNamespaceName();
+        this.getTimeByParentNamespaceName();
     }
     /**
      * filter tags
      */
-    public stripTagsNamesapceName() {
+    public stripTagsNamespaceName() {
         this.formItems.newNamespaceName = FilterHelpers.stripFilter(this.formItems.newNamespaceName);
     }
     /**
