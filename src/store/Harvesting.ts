@@ -13,6 +13,12 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
+import { NodeModel } from '@/core/database/entities/NodeModel';
+import { URLHelpers } from '@/core/utils/URLHelpers';
+import { HarvestingService } from '@/services/HarvestingService';
+import { PageInfo } from '@/store/Transaction';
+import { map, reduce } from 'rxjs/operators';
 import {
     AccountInfo,
     Address,
@@ -26,15 +32,8 @@ import {
     UInt64,
 } from 'symbol-sdk';
 import Vue from 'vue';
-import { map, reduce } from 'rxjs/operators';
 // internal dependencies
 import { AwaitLock } from './AwaitLock';
-import { PageInfo } from '@/store/Transaction';
-import { AccountModel } from '@/core/database/entities/AccountModel';
-import { URLHelpers } from '@/core/utils/URLHelpers';
-import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
-import { HarvestingService } from '@/services/HarvestingService';
-import { NodeModel } from '@/core/database/entities/NodeModel';
 
 const Lock = AwaitLock.create();
 
