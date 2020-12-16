@@ -218,6 +218,7 @@
     "endpoint": "Node",
     "enter_your_private_key": "Enter your private key",
     "error_account_name_already_exists": "This account name already exists. Please, enter a unique account name.",
+    "error_contact_already_exists": "This contact already exists.",
     "error_delete_all_peers": "You can not delete all the nodes",
     "error_incorrect_field": "The {_field_} field is incorrect.",
     "error_incorrect_url": "This is not a valid URL",
