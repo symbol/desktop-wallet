@@ -60,7 +60,10 @@ export const createValidationRuleSet = ({
         email: {
             regex: '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$',
         },
-    };
+        contactName: {
+            required: true,
+            regex: '^(?!\\s*$).+',
+        },
 };
 
 // TODO ValidationRuleset needs to be created when the network configuration is resolved, UI needs

@@ -218,6 +218,7 @@
     "endpoint": "节点",
     "enter_your_private_key": "输入您的私钥",
     "error_account_name_already_exists": "该帐户名已经存在。请重新输入唯一的帐户名。",
+    "error_contact_already_exists": "該聯繫人已經存在",
     "error_delete_all_peers": "不能删除所有节点",
     "error_incorrect_field": "{_field_} 字段不正确",
     "error_incorrect_url": "无效URL地址",
