@@ -43,7 +43,7 @@
                                         <span class="address-id">{{ $t('id') }}</span>
                                         <span class="address-value">{{ $t('address') }}</span>
                                     </div>
-                                    <div class="scrollable radius">
+                                    <div v-if="!!addressesList.length" class="scrollable radius">
                                         <div
                                             v-for="index in selectedAccounts"
                                             :key="index"
