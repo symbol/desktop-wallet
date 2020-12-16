@@ -53,7 +53,7 @@ const defaultNetworkConfig: NetworkConfig = {
     explorerUrl: 'http://explorer-0.10.0.x-01.symboldev.network/',
     faucetUrl: 'http://faucet-0.10.0.x-01.symboldev.network/',
     defaultNetworkType: 152,
-    defaultNodeUrl: 'http://api-01.us-east-1.0.10.0.x.symboldev.network:3000',
+    defaultNodeUrl: 'http://api-01.us-west-1.0.10.0.x.symboldev.network:3000',
     networkConfigurationDefaults: {
         maxMosaicDivisibility: 6,
         namespaceGracePeriodDuration: 2592000,
@@ -76,7 +76,7 @@ const defaultNetworkConfig: NetworkConfig = {
     nodes: [
         { friendlyName: 'API EU Central 1', roles: 2, url: 'http://api-01.eu-central-1.0.10.0.x.symboldev.network:3000' },
         { friendlyName: 'API EU West 1', roles: 2, url: 'http://api-01.eu-west-1.0.10.0.x.symboldev.network:3000' },
-        { friendlyName: 'API US East 1', roles: 2, url: 'http://api-01.us-east-1.0.10.0.x.symboldev.network:3000' },
+        // { friendlyName: 'API US East 1', roles: 2, url: 'http://api-01.us-east-1.0.10.0.x.symboldev.network:3000' },
         { friendlyName: 'API US West 1', roles: 2, url: 'http://api-01.us-west-1.0.10.0.x.symboldev.network:3000' },
         { friendlyName: 'API US West 2', roles: 2, url: 'http://api-01.us-west-2.0.10.0.x.symboldev.network:3000' },
         {

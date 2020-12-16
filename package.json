@@ -2,7 +2,7 @@
     "name": "symbol-desktop-wallet",
     "description": "Symbol Wallet",
     "homepage": "https://github.com/nemgrouplimited/symbol-desktop-wallet",
-    "version": "0.13.5",
+    "version": "0.13.6",
     "repository": {
         "type": "git",
         "url": "https://github.com/nemgrouplimited/symbol-desktop-wallet.git"
@@ -15,7 +15,7 @@
         "build": "npm run build:web",
         "build:web": "rimraf dist && mkdir dist && tsc && vue-cli-service build",
         "release": "npm run build && npm run release:all",
-        "release:all": "npm run release:win && npm run release:lin && npm run release:zip",
+        "release:all": "npm run release:win && npm run release:lin && npm run release:mac && npm run release:zip",
         "release:mac": "electron-builder --mac",
         "release:win": "electron-builder --win",
         "release:lin": "electron-builder --linux deb snap tar.xz",

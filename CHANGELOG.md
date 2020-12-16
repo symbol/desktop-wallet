@@ -3,6 +3,41 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.6][v0.13.6] - 11-Dec-2020
+
+### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+
+#### Added
+
+- Added Account Restrictions feature (add and delete restrictions), includes the following types: 
+  - Address Restrictions
+  - Mosaic Restrictions
+  - Operation(Transaction Type) Restrictions
+- Added cross-platform zip artifact release
+  - Allows opening directly index.html in the browser (after unzipping the archive file)
+- Added account metadata transaction update feature
+- Added confirmation modal (with warning) after the delete account button is clicked
+#### Fixed
+
+- Fixed multisig account sends transaction issue.
+- Fixed NodeSelector to filter nodes with role type 'peer'.
+  - Until the mainnet release we will keep the static node list(starts with 'beacon') added on top of the dynamic list.
+- Fixed ContactQR publickey bug on export (Import QR Code, next button missing #725).
+- Fixed required-cosignature count bug on metadata transaction.
+- Fixed target account to the selected signer for mosaic and namespace metadata and removed from the forms.
+- Fixed coins transfered from co-signers instead of multi-sig account issue.
+- Fixed harvesting with multi-sig account on different profile issue.
+- Fixed missing add button in aggregate transactions
+- Fixed show notification in case mnemonic not valid before going to next step
+- Fixed AddressQR and ContactQR to use the same QRDisplay component.
+- Fixed overflow on Transaction Modal.
+- Fixed translation issues (especially Japaneese).
+- Improved multi-sig graph view on Account Details Page and Aliases display.
+- UI fixes 
+  - Fixed unable to add json Address Book after attaching invalid format file issue.
+  - Fixed select contact window issues.
+  - Fixed fee selector is not visible issue on modify mosaic supply modal.
+  - Fixed empty window after logout issue.
 ## [0.13.5][v0.13.5] - 18-Nov-2020
 
 ### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
@@ -399,6 +434,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
 
+[v0.13.6]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.5...v0.13.6
 [v0.13.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.4...v0.13.5
 [v0.13.4]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.3...v0.13.4
 [v0.13.3]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.3...v0.13.3
