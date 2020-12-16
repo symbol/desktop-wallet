@@ -64,6 +64,7 @@ export const createValidationRuleSet = ({
             required: true,
             regex: '^(?!\\s*$).+',
         },
+    };
 };
 
 // TODO ValidationRuleset needs to be created when the network configuration is resolved, UI needs
