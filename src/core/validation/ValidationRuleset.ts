@@ -57,6 +57,10 @@ export const createValidationRuleSet = ({
         newAccountName: 'required|newAccountName',
         profileAccountName: 'required|profileAccountName',
         addressOrPublicKey: 'addressOrPublicKey',
+        contactName: {
+            required: true,
+            regex: '^(?!\\s*$).+',
+        },
     };
 };
 

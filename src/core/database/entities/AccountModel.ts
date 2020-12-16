@@ -14,8 +14,7 @@
  *
  */
 
-import { Address, PublicAccount, SignedTransaction } from 'symbol-sdk';
-import { NodeModel } from './NodeModel';
+import { Address, PublicAccount } from 'symbol-sdk';
 
 export class AccountType {
     public static readonly SEED: number = 1;
