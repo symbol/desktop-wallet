@@ -30,7 +30,6 @@ export class TransactionStatusFilterTs extends Vue {
      * Toggles selection options block.
      */
     public toggleSelection(): void {
-        console.log('1');
         this.isSelectionShown = !this.isSelectionShown;
     }
 
@@ -38,7 +37,6 @@ export class TransactionStatusFilterTs extends Vue {
      * Closes selection options block.
      */
     public closeSelection(): void {
-        console.log('2');
         this.isSelectionShown = false;
     }
 
