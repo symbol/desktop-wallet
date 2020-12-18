@@ -88,6 +88,6 @@ export default class DisabledFormOverlay extends Vue {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import './DisabledFormOverlay.less';
 </style>
