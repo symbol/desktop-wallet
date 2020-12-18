@@ -1,5 +1,5 @@
 <template>
-    <div v-show="alert.length" class="multisig_ban_container">
+    <div v-if="alert.length" class="multisig_ban_container">
         <Alert type="error">
             {{ $t(alert) }}
         </Alert>
@@ -90,9 +90,4 @@ export default class DisabledFormOverlay extends Vue {
 
 <style lang="less">
 @import './DisabledFormOverlay.less';
-
-input,
-textarea {
-    pointer-events: none;
-}
 </style>
