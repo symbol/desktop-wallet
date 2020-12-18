@@ -56,6 +56,7 @@
                             v-if="addNewFormVisible"
                             restriction-tx-type="MOSAIC"
                             :restriction-to-be-deleted="restrictionToBeDeleted"
+                            @on-confirmation-success="hideAddNewForm"
                         />
                         <div class="tab-footer">
                             <button v-if="!addNewFormVisible" class="button-style inverted-button pl-2 pr-2" @click="showAddNewForm">
@@ -82,6 +83,7 @@
                             v-if="addNewFormVisible"
                             restriction-tx-type="TRANSACTION_TYPE"
                             :restriction-to-be-deleted="restrictionToBeDeleted"
+                            @on-confirmation-success="hideAddNewForm"
                         />
                         <div class="tab-footer">
                             <button
