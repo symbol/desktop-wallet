@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { UrlValidator } from '../src/core/validation/validators';
 
 const path = require('path')
 const { app, BrowserWindow, shell, globalShortcut, Menu, ipcMain } = require('electron')
@@ -299,7 +298,7 @@ function initialize() {
     webContents.on('new-window', (event, url) => {
       event.preventDefault();
 
-      if (UrlValidator.validate(url)) {
+      if (url.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g)) {
           shell.openExternal(url)
       }
     })
