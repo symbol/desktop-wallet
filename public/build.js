@@ -1,5 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-var-requires */
+import { UrlValidator } from '../src/core/validation/validators';
+
 const path = require('path')
 const { app, BrowserWindow, shell, globalShortcut, Menu, ipcMain } = require('electron')
 const electron = require('electron')
@@ -295,8 +297,11 @@ function initialize() {
   })
   app.on('web-contents-created', (e, webContents) => {
     webContents.on('new-window', (event, url) => {
-      event.preventDefault()
-      shell.openExternal(url)
+      event.preventDefault();
+
+      if (UrlValidator.validate(url)) {
+          shell.openExternal(url)
+      }
     })
   })
 }
