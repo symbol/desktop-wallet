@@ -54,7 +54,7 @@ const defaultAppConfig: AppConfig = {
         { value: 'ja-JP', label: '日本語' },
     ],
     marketServerUrl: 'http://app.nemcn.io',
-    articlesFeedUrl: 'http://rssmix.com/u/11801188/rss.xml',
+    articlesFeedUrl: 'https://dev-vibes.github.io/symbol-news/',
 };
 const resolvedAppConfig: AppConfig = window['appConfig'] || defaultAppConfig;
 console.log('appConfig resolved!', resolvedAppConfig);

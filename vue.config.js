@@ -65,7 +65,7 @@ module.exports = {
     },
     proxy: {
       '/nemflash': {
-        target: 'http://rssmix.com/u/11801188/rss.xml',
+        target: 'https://dev-vibes.github.io/symbol-news/',
         ws: true,
         changeOrigin: true,
         pathRewrite: { '^/nemflash': '' }
