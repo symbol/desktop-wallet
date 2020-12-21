@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator';
+import {Component, Vue, Watch} from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
 import { NotificationType } from '@/core/utils/NotificationType';
@@ -95,9 +95,10 @@ export class FormGeneralSettingsTs extends Vue {
         this.resetForm();
     }
 
+    @Watch('settings')
     public resetForm() {
         this.formItems = { ...this.settings };
-        this.formItems.explorerUrl = networkConfig.explorerUrl;
+
         if (!this.settings.defaultAccount && this.knownAccounts.length) {
             this.formItems.defaultAccount = this.knownAccounts[0].id;
         }
