@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {Component, Vue, Watch} from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
 import { NotificationType } from '@/core/utils/NotificationType';
@@ -39,7 +39,6 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
 import FormLabel from '@/components/FormLabel/FormLabel.vue';
 import { SettingsModel } from '@/core/database/entities/SettingsModel';
 import { AccountModel } from '@/core/database/entities/AccountModel';
-import { networkConfig } from '@/config';
 
 @Component({
     components: {
@@ -95,7 +94,6 @@ export class FormGeneralSettingsTs extends Vue {
         this.resetForm();
     }
 
-    @Watch('settings')
     public resetForm() {
         this.formItems = { ...this.settings };
 
