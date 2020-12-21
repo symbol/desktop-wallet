@@ -94,7 +94,7 @@ export class MultisigService {
                 return (addressesFromNextLevel = addressesFromNextLevel.concat([
                     {
                         address: term.accountAddress,
-                        multisig: !!term.cosignatoryAddresses.length ? true : false,
+                        multisig: !!term.cosignatoryAddresses.length,
                         label: this.getAccountLabel(term.accountAddress, knownAccounts),
                         requiredCosignatures: (currentAccountMultisigInfo && term.minApproval) || 0,
                     },

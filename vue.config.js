@@ -65,7 +65,7 @@ module.exports = {
     },
     proxy: {
       '/nemflash': {
-        target: 'https://dev-vibes.github.io/symbol-news/',
+        target: 'https://nemgrouplimited.github.io/symbol-news/',
         ws: true,
         changeOrigin: true,
         pathRewrite: { '^/nemflash': '' }
