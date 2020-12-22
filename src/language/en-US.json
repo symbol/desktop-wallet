@@ -99,6 +99,7 @@
     "address_alias_not_exist": "Address alias does not exist",
     "address_format_error": "Address format error",
     "address_invalid": "This address is invalid",
+    "address_not_valid": "Cosignatory address is not valid",
     "address_qr_code": "Address QR code",
     "address_to_interact_with": "Address to interact with",
     "address_unknown": "This address is unknown to the network, please try with its public key instead",
@@ -523,6 +524,8 @@
     "notification_new_transaction_confirmed": "New transaction confirmed",
     "notification_new_unconfirmed_transaction": "New unconfirmed transaction",
     "offline_storage": "Offline storage",
+    "open_restrictions_warning_text": "Account restrictions is an advanced functionality that can invalidate your account. Please be careful with the operations you perform in the following screens. \nAre you sure that do you want to access to account restrictions?",
+    "open_restrictions_warning_title": "Open account restrictions",
     "operation_failed": "Request Failed",
     "operation_type": "Operation Type",
     "option_child_account": "I want to create a seed account for my profile",
@@ -815,7 +818,5 @@
     "welcome": "Welcome",
     "welcome_to_symbol": "Welcome to Symbol",
     "word": "Word",
-    "x_seconds": "{seconds}s.",
-    "open_restrictions_warning_title": "Open account restrictions",
-    "open_restrictions_warning_text": "Account restrictions is an advanced functionality that can invalidate your account. Please be careful with the operations you perform in the following screens. \nAre you sure that do you want to access to account restrictions?"
+    "x_seconds": "{seconds}s."
 }
