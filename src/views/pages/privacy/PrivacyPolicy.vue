@@ -24,7 +24,7 @@
             <a href="mailto:contact@nemn.io">
                 <b>contact@nemn.io</b>
             </a>
-            or mailing us at: NEM.io Foundation Limited. 57 Mohamed Sultan Rd., #01-05, Sultan-Link, Singapore 238997.
+            or mailing us at: NEM Group Limited. 57 Mohamed Sultan Rd., #01-05, Sultan-Link, Singapore 238997.
         </p>
         <h2 class="second-sub-title">Section 3 - Disclosure</h2>
         <p class="paragraph">
@@ -75,7 +75,7 @@
             <a href="mailto:contact@nemn.io">
                 <b class="link">contact@nemn.io</b>
             </a>
-            or by mail at NEM.io Foundation Limited. 57 Mohamed Sultan Rd., #01-05, Sultan-Link, Singapore 238997.
+            or by mail at NEM Group Limited. 57 Mohamed Sultan Rd., #01-05, Sultan-Link, Singapore 238997.
         </p>
     </div>
 </template>

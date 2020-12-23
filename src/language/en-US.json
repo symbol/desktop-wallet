@@ -565,7 +565,7 @@
     "peers_number": "Peers number",
     "phishing_warning": "Beware of phishing! This program will not ask you to enter your mnemonic except when restoring a profile from scratch.",
     "placeholder_address": "Enter an address",
-    "placeholder_address_or_alias": "Enter address or alias (e.g., nem.foundation)",
+    "placeholder_address_or_alias": "Enter address or alias (e.g., nem.group)",
     "placeholder_address_or_public_key": "Address or public key",
     "placeholder_transaction_uri": "Enter a valid transaction URI",
     "please_accurately_copy_the_safety_backup_mnemonic": "Please accurately copy the safety backup mnemonic",
