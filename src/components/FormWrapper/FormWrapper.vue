@@ -1,6 +1,6 @@
 <template>
-    <div class="form-wrapper">
-        <DisabledFormOverlay :whitelisted="whitelisted" />
+    <div ref="form" class="form-wrapper">
+        <DisabledFormOverlay :whitelisted="whitelisted" @disableForm="blockFunctionalTags" />
         <slot />
     </div>
 </template>
@@ -19,5 +19,22 @@ export default class FormWrapper extends Vue {
      * @type{boolean}
      */
     @Prop({ default: false }) whitelisted: boolean;
+
+    public $refs!: {
+        form: HTMLElement;
+    };
+
+    /**
+     * Blocks all content of form if restriction overlay appears.
+     */
+    protected blockFunctionalTags(): void {
+        Vue.nextTick(() => {
+            const childNodes = this.$refs.form.getElementsByTagName('*');
+
+            for (const node of childNodes) {
+                (node as any).disabled = true;
+            }
+        });
+    }
 }
 </script>
