@@ -32,4 +32,10 @@ export default class SignerFilter extends SignerFilterTs {}
     height: 0.35rem !important;
     border-radius: 0.034rem;
 }
+
+/deep/ .ivu-select-dropdown {
+    width: auto !important;
+    left: unset !important;
+    right: 0.4rem !important;
+}
 </style>
