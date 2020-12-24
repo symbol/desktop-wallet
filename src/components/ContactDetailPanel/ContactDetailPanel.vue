@@ -44,7 +44,7 @@
                             :value="selectedContact.email"
                             :new-value="selectedContact.email"
                             :editing="false"
-                            :rules="''"
+                            :rules="validationRules.email"
                             :label="$t('contact_email')"
                             :on-edit="saveProperty('email')"
                         />
