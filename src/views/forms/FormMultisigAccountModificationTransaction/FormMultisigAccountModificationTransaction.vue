@@ -55,7 +55,6 @@
                 </FormRow>
 
                 <MultisigCosignatoriesDisplay
-                    v-if="formItems.signerAddress"
                     :multisig="currentMultisigInfo"
                     :cosignatory-modifications="formItems.cosignatoryModifications"
                     :modifiable="true"
