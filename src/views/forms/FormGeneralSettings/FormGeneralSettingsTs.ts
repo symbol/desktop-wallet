@@ -39,7 +39,6 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
 import FormLabel from '@/components/FormLabel/FormLabel.vue';
 import { SettingsModel } from '@/core/database/entities/SettingsModel';
 import { AccountModel } from '@/core/database/entities/AccountModel';
-import { networkConfig } from '@/config';
 
 @Component({
     components: {
@@ -97,7 +96,7 @@ export class FormGeneralSettingsTs extends Vue {
 
     public resetForm() {
         this.formItems = { ...this.settings };
-        this.formItems.explorerUrl = networkConfig.explorerUrl;
+
         if (!this.settings.defaultAccount && this.knownAccounts.length) {
             this.formItems.defaultAccount = this.knownAccounts[0].id;
         }
