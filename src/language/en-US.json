@@ -724,7 +724,7 @@
     "table_header_value": "Value",
     "target_account_invalid_name": "target account",
     "terms_and_conditions": "Terms and Conditions",
-    "the_backup_is_wrong": "Your mnemonic words backup is invalid. Please, carefully select the words in the correct order.",
+    "the_backup_is_wrong": "Please, carefully select your mnemonic words in the correct order.",
     "the_mnemonic_order_is_correct_and_the_backup_is_successful": "The mnemonic order is correct and the backup is successful.",
     "the_mosaic_to_be_sent_is_empty": "The mosaics list cannot be empty",
     "the_root_namespace_cannot_be_longer_than_16": "A root namespace name cannot be longer than 16 characters",

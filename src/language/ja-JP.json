@@ -724,7 +724,7 @@
     "table_header_value": "値",
     "target_account_invalid_name": "対象アカウント",
     "terms_and_conditions": "利用規約",
-    "the_backup_is_wrong": "ニーモニック単語のバックアップが無効です。正しい順序で単語を慎重に選択してください。",
+    "the_backup_is_wrong": "ニーモニックワードを正しい順序で慎重に選択してください。",
     "the_mnemonic_order_is_correct_and_the_backup_is_successful": "ニーモニックの順序は正しく、バックアップは成功しました。",
     "the_mosaic_to_be_sent_is_empty": "モザイクリストは空にできません",
     "the_root_namespace_cannot_be_longer_than_16": "ルートネームスペース名は16文字以下にする必要があります。",
