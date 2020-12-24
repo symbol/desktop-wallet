@@ -1,6 +1,13 @@
 <template>
     <div class="transaction-uri-container">
-        <Poptip :title="$t('transaction_uri')" trigger="hover" word-wrap width="600" :content="$t('transaction_uri_explanation')">
+        <Poptip
+            :title="$t('transaction_uri')"
+            trigger="hover"
+            word-wrap
+            width="600"
+            :content="$t('transaction_uri_explanation')"
+            placement="top-start"
+        >
             <div class="info-icon">
                 <Icon type="md-link" />
             </div>
