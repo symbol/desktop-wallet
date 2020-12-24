@@ -99,6 +99,7 @@
     "address_alias_not_exist": "地址别名不存在",
     "address_format_error": "地址格式错误",
     "address_invalid": "地址错误",
+    "address_not_valid": "委托人地址无效",
     "address_qr_code": "地址二维码",
     "address_to_interact_with": "与钱包互动的地址",
     "address_unknown": "未知地址，此地址尚未在网络中发送任何交易。",
@@ -524,6 +525,8 @@
     "notification_new_transaction_confirmed": "节点已确认事务",
     "notification_new_unconfirmed_transaction": "节点已接收事务",
     "offline_storage": "离线保管",
+    "open_restrictions_warning_text": "帐户限制是一项高级功能，可以使您的帐户无效。 请注意在以下屏幕中执行的操作。您确定要访问帐户限制吗？",
+    "open_restrictions_warning_title": "开户限制",
     "operation_failed": "操作失败",
     "operation_type": "操作类型",
     "option_child_account": "我想为我的个人资料创建一个种子帐户",
@@ -603,7 +606,6 @@
     "profile_not_matching_network_option_3": "关闭并切换网络",
     "profile_not_matching_network_warning_message": "您的个人资料的网络与当前网络不匹配。请选择以下选项之一来解决此问题。",
     "profile_not_matching_network_warning_title": "警告",
-    "program_description": "基于Symbol区块链设计，开源的Symbol数字资产系统，方便的访问symbol网络，创建账户、管理资产和更多操作…",
     "program_description_line1": "此程序是基于Symbol区块链设计的,",
     "program_description_line2": "一个开放源代码数字资产管理系统。访问Symbol",
     "program_description_line3": "建立网络，创建配置文件，管理帐户和资产等。",
@@ -817,7 +819,5 @@
     "welcome": "Welcome",
     "welcome_to_symbol": "欢迎使用Symbol",
     "word": "字",
-    "x_seconds": "{seconds}秒",
-    "open_restrictions_warning_title": "开户限制",
-    "open_restrictions_warning_text": "帐户限制是一项高级功能，可以使您的帐户无效。 请注意在以下屏幕中执行的操作。您确定要访问帐户限制吗？"
+    "x_seconds": "{seconds}秒"
 }
