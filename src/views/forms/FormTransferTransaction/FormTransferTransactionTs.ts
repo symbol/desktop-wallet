@@ -584,6 +584,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             this.encyptedMessage = null;
             this.hasAccountUnlockModal = false;
         }
+
+        this.triggerChange();
     }
 
     /**
@@ -597,6 +599,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             ? EncryptedMessage.create(this.formItems.messagePlain, this.currentRecipient, account.privateKey)
             : PlainMessage.create('');
         this.formItems.encryptMessage = true;
+        this.triggerChange();
         return true;
     }
 
