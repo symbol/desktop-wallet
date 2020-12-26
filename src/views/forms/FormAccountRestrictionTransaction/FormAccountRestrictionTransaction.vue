@@ -8,10 +8,7 @@
 
                     <RestrictionDirectionInput v-model="formItems.direction" :disabled="isDeleteMode || directionDisabled" />
 
-                    <RestrictionTypeInput
-                        v-model="formItems.blockType"
-                        :disabled="isDeleteMode || transactionTypeDisabled || restrictionTxType === 'TRANSACTION_TYPE'"
-                    />
+                    <RestrictionTypeInput v-model="formItems.blockType" :disabled="isDeleteMode || transactionTypeDisabled" />
 
                     <!-- Transfer recipient input field -->
                     <RecipientInput v-if="restrictionTxType === 'ADDRESS'" v-model="formItems.recipientRaw" :disabled="isDeleteMode" />
