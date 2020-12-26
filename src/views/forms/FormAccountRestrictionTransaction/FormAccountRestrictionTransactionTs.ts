@@ -253,8 +253,10 @@ export class FormAccountRestrictionTransactionTs extends FormTransactionBase {
             restrictions = this.accountOperationRestrictions;
         }
 
-        if (restrictions?.length > 0) {
-            this.formItems.blockType = RestrictionFlagMapping.toBlockType(restrictions[0].restrictionFlags);
+        if (restrictions?.length > 0 || this.restrictionTxType === AccountRestrictionTxType.TRANSACTION_TYPE) {
+            if (restrictions[0]) {
+                this.formItems.blockType = RestrictionFlagMapping.toBlockType(restrictions[0].restrictionFlags);
+            }
             return true;
         }
         return false;
