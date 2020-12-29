@@ -282,7 +282,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 this.networkType,
                 maxFee,
             );
-
             return this.isMultisigMode()
                 ? this.toMultiSigAggregate([persistentDelegationReqTx], maxFee, transactionSigner)
                 : of([this.calculateSuggestedMaxFee(persistentDelegationReqTx)]);
@@ -308,6 +307,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return this.getKeyLinkTransactions(transactionSigner).pipe(
             flatMap((transactions) => {
                 const signedTransactions = transactions.map((t) => transactionSigner.signTransaction(t, this.generationHash));
+
                 if (!signedTransactions.length) {
                     return of([]) as Observable<Observable<BroadcastResult>[]>;
                 }
@@ -492,7 +492,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             this.$store.dispatch('notification/ADD_ERROR', this.$t('invalid_node'));
             return;
         }
-
         // - open signature modal
         this.onShowConfirmationModal();
     }
