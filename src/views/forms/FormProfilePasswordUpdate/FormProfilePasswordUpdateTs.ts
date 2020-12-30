@@ -83,6 +83,18 @@ export class FormProfilePasswordUpdateTs extends Vue {
     };
 
     /**
+     * Indicates if form has no changes and button should be disabled.
+     */
+    public isConfirmButtonDisabled: boolean = true;
+
+    /**
+     * Unlocks confirm button.
+     */
+    public onChange(): void {
+        this.isConfirmButtonDisabled = false;
+    }
+
+    /**
      * Type the ValidationObserver refs
      * @type {{
      *     observer: InstanceType<typeof ValidationObserver>
