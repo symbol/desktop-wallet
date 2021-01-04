@@ -1,6 +1,12 @@
 <template>
     <div class="select-container">
-        <Select v-if="!displayOnly" v-model="chosenMaxFee" :placeholder="$t('fee')" class="select-size select-style">
+        <Select
+            v-if="!displayOnly"
+            v-model="chosenMaxFee"
+            :placeholder="$t('fee')"
+            class="select-size select-style"
+            @input="$emit('on-change')"
+        >
             <Option v-for="{ maxFee, label } in feesCalculated" :key="maxFee" :value="maxFee">
                 {{ label }}
             </Option>

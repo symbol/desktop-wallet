@@ -90,6 +90,18 @@ export class FormGeneralSettingsTs extends Vue {
         defaultAccount: '',
     };
 
+    /**
+     * Indicates if form has no changes and button should be disabled.
+     */
+    public isConfirmButtonDisabled: boolean = true;
+
+    /**
+     * Unlocks confirm button.
+     */
+    public onChange(): void {
+        this.isConfirmButtonDisabled = false;
+    }
+
     public created() {
         this.resetForm();
     }
