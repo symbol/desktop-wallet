@@ -312,7 +312,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                     const info = mosaicsInfo.find((i) => i.mosaicIdHex === spec.mosaicHex);
                     const div = info ? info.divisibility : 0;
                     // - format amount to absolute
-                    return new Mosaic(new MosaicId(RawUInt64.fromHex(spec.mosaicHex)), UInt64.fromUint(spec.amount * Math.pow(10, div)));
+                    return new Mosaic(new MosaicId(RawUInt64.fromHex(spec.mosaicHex)), UInt64.fromUint(spec.amount * Math.pow(1, div)));
                 },
             );
         return [
