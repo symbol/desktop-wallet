@@ -14,7 +14,6 @@
  *
  */
 import RSSParser from 'rss-parser';
-import axios from 'axios';
 // configuration
 import { appConfig } from '@/config';
 
@@ -30,8 +29,14 @@ const request = async (): Promise<string> => {
         feedUrl = '/nemflash';
     }
     // execute request
-    const response = await axios.get(feedUrl, { params: {} });
-    return response.data;
+    const response = await fetch(feedUrl, {
+        method: 'GET',
+    })
+        .then((response) => response.text())
+        .then((str) => {
+            return str;
+        });
+    return response;
 };
 
 /// end-region protected helpers
