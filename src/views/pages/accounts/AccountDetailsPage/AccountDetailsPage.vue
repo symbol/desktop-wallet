@@ -67,7 +67,7 @@
                             <button
                                 v-if="isLedger"
                                 type="button"
-                                class="centered-button button-style button danger-button buttonA"
+                                class="centered-button button-style button solid-button buttonA"
                                 @click="showAddressLedger"
                             >
                                 {{ $t('show_on_ledger') }}

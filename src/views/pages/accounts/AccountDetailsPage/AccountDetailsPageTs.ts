@@ -135,6 +135,40 @@ export class AccountDetailsPageTs extends Vue {
         this.showConfirmationModal = true;
     }
 
+    /**
+     * Error notification handler
+     */
+    private errorNotificationHandler(error: any) {
+        if (error.errorCode) {
+            switch (error.errorCode) {
+                case 'NoDevice':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_no_device');
+                    return;
+                case 'ledger_not_supported_app':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_supported_app');
+                    return;
+                case 26628:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_device_locked');
+                    return;
+                case 27904:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_opened_app');
+                    return;
+                case 27264:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_using_xym_app');
+                    return;
+                case 27013:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_user_reject_request');
+                    return;
+            }
+        } else if (error.name) {
+            switch (error.name) {
+                case 'TransportOpenUserCancelled':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_no_device_selected');
+                    return;
+            }
+        }
+    }
+
     public async showAddressLedger() {
         try {
             const ledgerService = new LedgerService();
@@ -147,11 +181,7 @@ export class AccountDetailsPageTs extends Vue {
             this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
             await this.accountService.getLedgerAccountByPath(this.currentProfile, networkType, currentPath);
         } catch (error) {
-            this.$store.dispatch('SET_UI_DISABLED', {
-                isDisabled: false,
-                message: '',
-            });
-            throw error;
+            this.errorNotificationHandler(error);
         }
     }
 
