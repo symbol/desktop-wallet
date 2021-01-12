@@ -31,11 +31,9 @@ const request = async (): Promise<string> => {
     // execute request
     const response = await fetch(feedUrl, {
         method: 'GET',
-    })
-        .then((response) => response.text())
-        .then((str) => {
-            return str;
-        });
+    }).then((response) => {
+        return response.text();
+    });
     return response;
 };
 
