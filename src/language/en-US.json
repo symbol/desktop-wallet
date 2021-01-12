@@ -200,6 +200,7 @@
     "define": "Registration",
     "delegated_harvesting_info": "Delegated harvesting allows using the importance score of an account to create new blocks and receive rewards\n                            without having to run a node locally. You can send a Delegated Harvesting Request to the selected Node or swap\n                            to another one.",
     "delete": "Delete",
+    "show_on_ledger": "Show on Ledger",
     "delete_account": "Delete Account",
     "delete_account_confirmation_message": "Are you sure you want to delete \"{accountName}\"? You may want to have a backup before you proceed.",
     "delete_account_confirmation_title": "Delete Account?",

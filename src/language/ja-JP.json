@@ -185,6 +185,7 @@
     "define": "登録",
     "delegated_harvesting_info": "デリゲートハーベスティングでは、アカウントのインポータンススコアを使用して新しいブロックを生成し、報酬を受け取ることができます。\n                            ノードをローカルで実行する必要はありません。\n選択したノードにデリゲートハーベスティング要求を送信するか、別のものにスワップすることができます。",
     "delete": "削除",
+    "show_on_ledger": "Ledger に表示",
     "delete_account": "アカウントを削除",
     "delete_account_confirmation_message": "本当に \"{accountName}\" を削除しますか？続行する前にバックアップを取得できます。",
     "delete_account_confirmation_title": "アカウントを削除しますか？",

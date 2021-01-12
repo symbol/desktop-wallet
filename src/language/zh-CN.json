@@ -185,6 +185,7 @@
     "define": "定义",
     "delegated_harvesting_info": "委托收获允许使用帐户的重要性得分来创建新区块并获得奖励\n                            \n无需在本地运行节点。\n您可以将委派的收获请求发送到选定的节点或交换\n                            \n到另一个。",
     "delete": "删除",
+    "show_on_ledger": "在 Ledger 上顯示",
     "delete_account": "删除帐户",
     "delete_account_confirmation_message": "您确定要删除“ {accountName}”吗？\n您可能需要先备份，然后再继续。",
     "delete_account_confirmation_title": "删除帐户？",

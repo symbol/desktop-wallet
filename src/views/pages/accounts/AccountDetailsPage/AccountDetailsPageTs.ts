@@ -16,6 +16,8 @@
 // external dependencies
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
+import { LedgerService } from '@/services/LedgerService';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 // child components
 // @ts-ignore
 import AccountNameDisplay from '@/components/AccountNameDisplay/AccountNameDisplay.vue';
@@ -76,6 +78,7 @@ import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
             currentAccount: 'account/currentAccount',
             knownAccounts: 'account/knownAccounts',
             accountMetadataList: 'metadata/accountMetadataList',
+            currentProfile: 'profile/currentProfile',
         }),
     },
 })
@@ -86,6 +89,8 @@ export class AccountDetailsPageTs extends Vue {
      * @var {string}
      */
     public defaultAccount: string;
+
+    public currentProfile: ProfileModel;
 
     public metadataEntry: MetadataModel;
     /**
@@ -128,6 +133,26 @@ export class AccountDetailsPageTs extends Vue {
 
     public deleteAccountConfirmation() {
         this.showConfirmationModal = true;
+    }
+
+    public async showAddressLedger() {
+        try {
+            const ledgerService = new LedgerService();
+            const isAppSupported = await ledgerService.isAppSupported();
+            if (!isAppSupported) {
+                throw { errorCode: 'ledger_not_supported_app' };
+            }
+            const currentPath = this.currentAccount.path;
+            const networkType = this.currentProfile.networkType;
+            this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
+            await this.accountService.getLedgerAccountByPath(this.currentProfile, networkType, currentPath);
+        } catch (error) {
+            this.$store.dispatch('SET_UI_DISABLED', {
+                isDisabled: false,
+                message: '',
+            });
+            throw error;
+        }
     }
 
     public async deleteAccount() {
