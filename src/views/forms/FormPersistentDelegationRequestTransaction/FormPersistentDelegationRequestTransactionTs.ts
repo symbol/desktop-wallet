@@ -37,7 +37,6 @@ import Vue from 'vue';
 // internal dependencies
 import { Formatters } from '@/core/utils/Formatters';
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
-import { AccountType } from '@/core/database/entities/AccountModel';
 
 // child components
 import { ValidationObserver } from 'vee-validate';
@@ -115,13 +114,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     private newVrfKeyAccount: Account;
     private newRemoteAccount: Account;
-
-    /**
-     * Check the account type is Ledger or not
-     */
-    private get isLedger(): boolean {
-        return this.currentAccount.type == AccountType.LEDGER;
-    }
 
     /**
      * Current signer account info
@@ -282,6 +274,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 this.networkType,
                 maxFee,
             );
+
             return this.isMultisigMode()
                 ? this.toMultiSigAggregate([persistentDelegationReqTx], maxFee, transactionSigner)
                 : of([this.calculateSuggestedMaxFee(persistentDelegationReqTx)]);
@@ -307,7 +300,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return this.getKeyLinkTransactions(transactionSigner).pipe(
             flatMap((transactions) => {
                 const signedTransactions = transactions.map((t) => transactionSigner.signTransaction(t, this.generationHash));
-
                 if (!signedTransactions.length) {
                     return of([]) as Observable<Observable<BroadcastResult>[]>;
                 }
@@ -492,6 +484,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             this.$store.dispatch('notification/ADD_ERROR', this.$t('invalid_node'));
             return;
         }
+
         // - open signature modal
         this.onShowConfirmationModal();
     }

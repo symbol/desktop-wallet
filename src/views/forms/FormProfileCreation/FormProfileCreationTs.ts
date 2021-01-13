@@ -133,6 +133,7 @@ export class FormProfileCreationTs extends Vue {
     get nextPage() {
         return this.$route.meta.nextPage;
     }
+
     /// end-region computed properties getter/setter
 
     /**
