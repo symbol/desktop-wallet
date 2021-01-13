@@ -16,11 +16,18 @@
 
 // external dependencies
 import { Component, Vue, Prop } from 'vue-property-decorator';
-
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
+import { mapGetters } from 'vuex';
 // internal dependencies
 import { TabEntry } from '@/router/TabEntry';
 
-@Component
+@Component({
+    computed: {
+        ...mapGetters({
+            currentAccount: 'account/currentAccount',
+        }),
+    },
+})
 export class NavigationTabsTs extends Vue {
     /**
      * Parent route name
@@ -30,7 +37,20 @@ export class NavigationTabsTs extends Vue {
 
     public get tabEntries(): TabEntry[] {
         // @ts-ignore
-        return this.$router.getTabEntries(this.parentRouteName);
+        const getTabEntries = this.$router.getTabEntries(this.parentRouteName);
+        if (this.isLedger) {
+            return getTabEntries.filter((entry) => {
+                return entry.title !== 'page_title_account_backup';
+            });
+        } else {
+            return getTabEntries;
+        }
+    }
+
+    public currentAccount: AccountModel;
+
+    public get isLedger(): boolean {
+        return this.currentAccount.type == AccountType.LEDGER;
     }
 
     @Prop({ default: 'horizontal' }) direction: 'horizontal' | 'vertical';
