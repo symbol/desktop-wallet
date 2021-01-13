@@ -31,6 +31,7 @@ export interface RouteMeta {
     title?: string;
     // @TODO: REVIEW
     clickable?: boolean;
+    isLedger?: boolean;
     icon?: unknown;
     active?: boolean;
     nextPage?: string;

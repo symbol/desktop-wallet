@@ -1,9 +1,30 @@
 <template>
     <div class="account-selector-panel">
         <div v-auto-scroll="'active-background'" class="account-switch-body-container scroll">
-            <div class="account-type-title">Seed accounts</div>
+            <div v-if="seedAccounts.length > 0" class="account-type-title">Seed accounts</div>
             <div
                 v-for="item in seedAccounts"
+                :key="item.id"
+                :class="['account-tile', isActiveAccount(item) ? 'active-background' : 'inactive-background', 'pointer']"
+                @click="currentAccountIdentifier = item.id"
+            >
+                <div class="mosaic_data">
+                    <span class="img_container">
+                        <img v-if="isActiveAccount(item)" src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                        <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="grayed-xym-logo" />
+                    </span>
+                    <span class="mosaic_name">{{ item.name }}</span>
+
+                    <span class="mosaic_value">
+                        <span :class="['amount', 'overflow_ellipsis', 'green']">
+                            <MosaicAmountDisplay :absolute-amount="balances[item.address]" />
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div v-if="ledgerAccount.length > 0" class="account-type-title">Ledger accounts</div>
+            <div
+                v-for="item in ledgerAccount"
                 :key="item.id"
                 :class="['account-tile', isActiveAccount(item) ? 'active-background' : 'inactive-background', 'pointer']"
                 @click="currentAccountIdentifier = item.id"

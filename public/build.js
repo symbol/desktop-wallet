@@ -223,6 +223,11 @@ function initialize() {
         height: height,
         autoHideMenuBar: false,
         resizable: true,
+        webPreferences: {
+          nodeIntegration: false,
+          enableRemoteModule: false,
+          preload: path.resolve(__dirname, 'preload.js')
+        }
       })
     } else {
       height = parseInt((1080 * size.width) / 1920 + 30)
@@ -231,6 +236,11 @@ function initialize() {
         height: height - 50,
         autoHideMenuBar: false,
         resizable: true,
+        webPreferences: {
+          nodeIntegration: false,
+          enableRemoteModule: false,
+          preload: path.resolve(__dirname, 'preload.js')
+        }
       })
     }
     mainWindow.loadFile(loadUrlPath)
@@ -262,6 +272,8 @@ function initialize() {
       titleBarStyle: 'hiddenInset',
       webPreferences: {
         nodeIntegration: false,
+        enableRemoteModule: false,
+        preload: path.resolve(__dirname, 'preload.js')
       },
       resizable: true,
     }
