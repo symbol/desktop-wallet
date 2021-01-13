@@ -367,7 +367,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             return this.transactionFees.minFeeMultiplier || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         if (transaction.maxFee.compact() == 2) {
-            return this.transactionFees.highestFeeMultiplier || this.networkConfiguration.defaultDynamicFeeMultiplier;
+            const fees = this.transactionFees.highestFeeMultiplier || this.transactionFees.minFeeMultiplier;
+            return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         return undefined;
     }
