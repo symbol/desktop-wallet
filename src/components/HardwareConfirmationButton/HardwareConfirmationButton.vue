@@ -1,7 +1,9 @@
 <template>
-    <Button type="success" @click="processHardware">
-        {{ $t('trezor_confirm_transaction_prompt') }}
-    </Button>
+    <div class="align-right">
+        <Button class="button-style validation-button left-side-button" type="success" @click="processHardware">
+            {{ $t('confirm') }}
+        </Button>
+    </div>
 </template>
 
 <script lang="ts">

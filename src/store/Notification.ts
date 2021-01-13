@@ -40,6 +40,9 @@ export default {
         errors: (state) => {
             return state.history.filter((row) => row.level === 'error').map((log) => log.message);
         },
+        infos: (state) => {
+            return state.history.filter((row) => row.level === 'info').map((log) => log.message);
+        },
     },
     mutations: {
         setInitialized: (state, initialized) => {
@@ -97,6 +100,12 @@ export default {
         async ADD_ERROR({ commit, dispatch }, message) {
             commit('add', { level: 'error', message });
             dispatch('diagnostic/ADD_ERROR', `Notification (Error): ${message}`, {
+                root: true,
+            });
+        },
+        async ADD_INFO({ commit, dispatch }, message) {
+            commit('add', { level: 'info', message });
+            dispatch('diagnostic/ADD_INFO', `Notification (Info): ${message}`, {
                 root: true,
             });
         },

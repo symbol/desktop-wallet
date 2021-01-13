@@ -31,6 +31,7 @@ import {
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
+import { AccountType } from '@/core/database/entities/AccountModel';
 import { Formatters } from '@/core/utils/Formatters';
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
 import { AddressValidator, AliasValidator } from '@/core/validation/validators';
@@ -369,6 +370,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         } else {
             return null;
         }
+    }
+
+    protected get isLedger(): boolean {
+        return this.currentAccount.type == AccountType.LEDGER;
     }
 
     protected get hasAccountUnlockModal(): boolean {
