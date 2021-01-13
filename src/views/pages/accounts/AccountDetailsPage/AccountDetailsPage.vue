@@ -147,6 +147,8 @@ export default class AccountDetailsPage extends AccountDetailsPageTs {}
 }
 
 .bottom-buttons-container .buttonA {
+    margin-left: 0;
+    margin-right: 1em;
     grid-area: a;
 }
 
