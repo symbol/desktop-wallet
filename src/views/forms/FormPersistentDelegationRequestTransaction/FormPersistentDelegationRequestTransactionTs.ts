@@ -364,10 +364,17 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     private resolveFeeMultipler(transaction: Transaction): number | undefined {
         if (transaction.maxFee.compact() == 1) {
-            return this.transactionFees.minFeeMultiplier || this.networkConfiguration.defaultDynamicFeeMultiplier;
+            const fees =
+                this.transactionFees.averageFeeMultiplier * 1.2 < this.transactionFees.minFeeMultiplier
+                    ? this.transactionFees.minFeeMultiplier
+                    : this.transactionFees.averageFeeMultiplier * 1.2;
+            return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         if (transaction.maxFee.compact() == 2) {
-            const fees = this.transactionFees.highestFeeMultiplier || this.transactionFees.minFeeMultiplier;
+            const fees =
+                this.transactionFees.highestFeeMultiplier < this.transactionFees.minFeeMultiplier
+                    ? this.transactionFees.minFeeMultiplier
+                    : this.transactionFees.highestFeeMultiplier;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         return undefined;
