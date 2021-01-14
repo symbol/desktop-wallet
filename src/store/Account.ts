@@ -388,7 +388,7 @@ export default {
             commit('currentAccountAliases', aliases);
         },
 
-        async LOAD_ACCOUNT_INFO({ commit, getters, rootGetters }) {
+        async LOAD_ACCOUNT_INFO({ commit, getters, rootGetters, dispatch }) {
             const networkType: NetworkType = rootGetters['network/networkType'];
             const currentAccount: AccountModel = getters.currentAccount;
             const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
@@ -482,6 +482,7 @@ export default {
                     commit('currentSignerPublicKey', getters.currentSignerAccountInfo.publicKey);
                 }
             }
+            dispatch('aggregateTransaction/CLEAR_AGGREGATE_TRANSACTIONS_LIST', {}, { root: true });
         },
 
         UPDATE_CURRENT_ACCOUNT_NAME({ commit, getters, rootGetters }, name: string) {
