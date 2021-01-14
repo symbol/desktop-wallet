@@ -14,6 +14,9 @@
         <div v-else>
             {{ fees.find((i) => i.maxFee == chosenMaxFee).label }}
         </div>
+        <span v-if="transactionFees.averageFeeMultiplier" style="color: red;">
+            {{ `${$t('minimal_fee_transaction') + transactionFees.averageFeeMultiplier + ' ' + networkMosaicName}` }}
+        </span>
     </div>
 </template>
 
