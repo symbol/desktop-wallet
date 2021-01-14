@@ -2,6 +2,48 @@
 All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+## [0.13.7][v0.13.7] - 15-Jan-2020
+
+### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+
+#### Added
+
+- Add URL validation procedure to the web-contents-created callback  to avoid remote code execution attacks.
+- Added pop-up when co-signatory address is not valid in multisig page.
+- Added icon for NODE_KEY_LINK transactions.
+(**BREAKING CHANGE**)
+- Added minFeeMultiplier to support the new catapult-server minimal fee requirement.
+
+#### Fixed
+
+- Improve Japanese translation.
+- Fixed validation for duplicates in contact creation .
+- Removed additional space in Select Contact window
+- Fixed visibility for balance in profile import form.
+- Updated Electron.
+- Updated feeds to use HTTPS to avoid potential content spoofing.
+- Fixed import account stucks at Mnemonic Passphrase stage.
+- Fixed validation in contact form.
+- Removed Foundation tags.
+- Fixed transaction filter is not closed after clicking outside the dropdown.
+- Fixed UI issue in Account Restrictions.
+  - Button New Address Restriction is out of window.
+  - Button Cancel is out of the window.
+  - Address/ Mosaic deletion window doesn't disappear when restriction was removed.
+  - Multisig account is not fully visible on address restriction page.
+- Fixed not all the Aggregate page is inactive under Multisig account.
+- Fixed carriage in "To" field for Simple transaction under Multisig account via Aggregate.
+- Fixed single character namespace creation is disabled.
+- Fixed note not visible with normal window size in all transaction forms.
+- Fixed import Transaction URI" dialog window has wrong size.
+- Fixed unable to convert account to multi-signature
+- Fixed unablity of converting account to multisig
+- Fixed mnemonic for password backup is always displayed as invalid.
+- Fixed "Add a cosignatory" button missing on Multisig page after toggling from co-signer to not co-signer via upper menu.
+- Fixed setting form url update state.
+- Fixed mnemonic issues.
+- Fixed UI bugs.
+
 
 ## [0.13.6][v0.13.6] - 11-Dec-2020
 
