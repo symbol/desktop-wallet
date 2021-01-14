@@ -361,6 +361,7 @@ export const transactionTypeToIcon = {
     [TransactionType.NAMESPACE_METADATA]: officialIcons.metadata,
     [TransactionType.VOTING_KEY_LINK]: officialIcons.voting,
     [TransactionType.VRF_KEY_LINK]: officialIcons.privateKey,
+    [TransactionType.NODE_KEY_LINK]: officialIcons.privateKey,
 };
 
 /// end-region exported image objects
