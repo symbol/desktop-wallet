@@ -32,7 +32,7 @@ export const createValidationRuleSet = ({
         address: 'required|address|addressNetworkType:currentProfile',
         profilePassword: 'required|profilePassword',
         addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentProfile',
-        amount: `excluded:""|is_not:0|min_value:0|maxDecimals:${maxMosaicDivisibility}|max_value:${maxMosaicAtomicUnits}`,
+        amount: `excluded:""|min_value:0|maxDecimals:${maxMosaicDivisibility}|max_value:${maxMosaicAtomicUnits}`,
         confirmPassword: 'required|confirmPassword:@newPassword',
         divisibility: 'required|min_value:0|max_value:6|integer',
         duration: `required|min_value:0|max_value:${maxMosaicDuration}`,
@@ -42,11 +42,11 @@ export const createValidationRuleSet = ({
         namespaceDuration: `required|min_value:${minNamespaceDuration}|maxNamespaceDuration`,
         namespaceName: {
             required: true,
-            regex: '^[a-z0-9]{1}[a-z0-9-_]{1,63}$',
+            regex: '^[a-z0-9]{1}[a-z0-9-_]{0,63}$',
         },
         subNamespaceName: {
             required: true,
-            regex: '^[a-z0-9]{1}[a-z0-9-_]{1,63}$',
+            regex: '^[a-z0-9]{1}[a-z0-9-_]{0,63}$',
         },
         password: `required|min:${MIN_PASSWORD_LENGTH}|passwordRegex`,
         previousPassword: 'required|confirmLock:cipher',
@@ -57,6 +57,13 @@ export const createValidationRuleSet = ({
         newAccountName: 'required|newAccountName',
         profileAccountName: 'required|profileAccountName',
         addressOrPublicKey: 'addressOrPublicKey',
+        email: {
+            regex: '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$',
+        },
+        contactName: {
+            required: true,
+            regex: '^(?!\\s*$).+',
+        },
     };
 };
 

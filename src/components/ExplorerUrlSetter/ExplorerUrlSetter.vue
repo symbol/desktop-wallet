@@ -17,6 +17,7 @@
                         :placeholder="$t('node')"
                         :data="defaultExplorerLinkList"
                         class="auto-complete-size auto-complete-style"
+                        @on-change="$emit('on-change')"
                     />
                 </ErrorTooltip>
             </ValidationProvider>

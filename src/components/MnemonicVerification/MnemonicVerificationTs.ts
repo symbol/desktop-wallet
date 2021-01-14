@@ -86,7 +86,7 @@ export class MnemonicVerificationTs extends Vue {
         const rebuilt = this.selectedWordIndexes.map((i) => this.shuffledWords[i]).join(' ');
         const result = this.mnemonicCheckerNotification(origin, rebuilt);
         // - origin words list does not match
-        if (!result) {
+        if (!result || origin !== rebuilt) {
             return false;
         }
         this.$emit('success');

@@ -388,7 +388,7 @@ export default {
             commit('currentAccountAliases', aliases);
         },
 
-        async LOAD_ACCOUNT_INFO({ commit, getters, rootGetters }) {
+        async LOAD_ACCOUNT_INFO({ commit, getters, rootGetters, dispatch }) {
             const networkType: NetworkType = rootGetters['network/networkType'];
             const currentAccount: AccountModel = getters.currentAccount;
             const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
@@ -474,10 +474,15 @@ export default {
             commit('accountsInfo', accountsInfo);
 
             // read signer info to get public key
-            const signerModel = accountsInfo.find((w) => w.address.equals(currentSignerAddress));
+            const signerModel = knownAccounts.find((w) => w.address === currentSignerAddress.plain());
             if (signerModel !== undefined) {
                 commit('currentSignerPublicKey', signerModel.publicKey);
+            } else {
+                if (getters.currentSignerAccountInfo) {
+                    commit('currentSignerPublicKey', getters.currentSignerAccountInfo.publicKey);
+                }
             }
+            dispatch('aggregateTransaction/CLEAR_AGGREGATE_TRANSACTIONS_LIST', {}, { root: true });
         },
 
         UPDATE_CURRENT_ACCOUNT_NAME({ commit, getters, rootGetters }, name: string) {

@@ -27,7 +27,7 @@ const aggregateTransactionState: AggregateTransactionState = {
 };
 
 /**
- * AddressBook Store
+ * Aggregate Store
  */
 export default {
     namespaced: true,

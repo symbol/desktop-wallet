@@ -81,11 +81,12 @@ export class AddCosignatoryInputTs extends Vue {
     protected onAddCosignatory(): void {
         if (AddressValidator.validate(this.cosignatory)) {
             this.addCosignerFromAddress();
+            this.addCosignerFromPublicKey();
             this.cosignatory = '';
             return;
+        } else {
+            this.$store.dispatch('notification/ADD_ERROR', 'address_not_valid');
         }
-
-        this.addCosignerFromPublicKey();
         this.cosignatory = '';
     }
 

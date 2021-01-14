@@ -6,7 +6,7 @@
             </Button>
         </slot>
         <img v-else-if="type === 'image'" src="@/views/resources/img/account/copyIcon.png" class="copy-icon" />
-        <Tooltip v-else-if="type === 'icon'" :content="$t(tooltipText)">
+        <Tooltip v-else-if="type === 'icon'" :content="$t(tooltipText)" placement="top">
             <Icon type="md-copy" />
         </Tooltip>
     </div>

@@ -47,7 +47,7 @@ export default class TransactionTypeSelectorTs extends Vue {
      */
     public get transactionTypeList() {
         return Object.entries(TransactionType)
-            .filter((e) => !(parseInt(e[0]) >= 0) && e[0] !== 'RESERVED')
+            .filter((e) => !(parseInt(e[0]) >= 0) && e[0] !== 'RESERVED' && e[1] !== TransactionType.ACCOUNT_OPERATION_RESTRICTION)
             .sort((e1, e2) => e1[0].localeCompare(e2[0]));
     }
 }

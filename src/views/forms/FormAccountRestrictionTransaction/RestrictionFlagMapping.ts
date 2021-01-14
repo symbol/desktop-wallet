@@ -56,11 +56,7 @@ export default class RestrictionFlagMapping {
                     return MosaicRestrictionFlag.AllowMosaic;
                 }
             case AccountRestrictionTxType.TRANSACTION_TYPE:
-                if (blockType === RestrictionBlockType.BLOCK) {
-                    return OperationRestrictionFlag.BlockOutgoingTransactionType;
-                } else {
-                    return OperationRestrictionFlag.AllowOutgoingTransactionType;
-                }
+                return OperationRestrictionFlag.BlockOutgoingTransactionType;
         }
     }
 

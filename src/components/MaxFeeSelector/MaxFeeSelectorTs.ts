@@ -20,6 +20,7 @@ import { feesConfig } from '@/config';
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
+import { TransactionFees } from 'symbol-sdk';
 
 @Component({
     components: {
@@ -30,6 +31,7 @@ import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyMo
             defaultFee: 'app/defaultFee',
             networkMosaicName: 'mosaic/networkMosaicName',
             networkCurrency: 'mosaic/networkCurrency',
+            transactionFees: 'network/transactionFees',
         }),
     },
 })
@@ -54,6 +56,7 @@ export class MaxFeeSelectorTs extends Vue {
      */
     private networkCurrency: NetworkCurrencyModel;
 
+    public transactionFees: TransactionFees;
     /**
      * Default fee setting
      * @var {number}

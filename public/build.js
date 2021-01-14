@@ -1,9 +1,11 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-var-requires */
+
 const path = require('path')
 const { app, BrowserWindow, shell, globalShortcut, Menu, ipcMain } = require('electron')
 const electron = require('electron')
 const name = electron.app.getName()
+const electronLocalshortcut = require('electron-localshortcut');
 
 // Set the path of the folder where the persisted data is stored
 electron.app.setPath('userData', path.join(electron.app.getPath('home'), '.symbol-desktop-wallet'))
@@ -94,7 +96,7 @@ const template = [
       {
         label: 'Learn More',
         click: function () {
-          electron.shell.openExternal('https://github.com/nemfoundation/symbol-desktop-wallet')
+          electron.shell.openExternal('https://github.com/nemgrouplimited/symbol-desktop-wallet')
         },
       },
       {
@@ -285,8 +287,8 @@ function initialize() {
   } else {
     app.on('ready', createWindow)
     app.on('ready', function () {
-      globalShortcut.register('CommandOrControl+R', function () {
-        // do nothing to forbidden default refresh
+      electronLocalshortcut.register('CommandOrControl+R', function () {
+        mainWindow.reload();
       })
     })
   }
@@ -295,8 +297,11 @@ function initialize() {
   })
   app.on('web-contents-created', (e, webContents) => {
     webContents.on('new-window', (event, url) => {
-      event.preventDefault()
-      shell.openExternal(url)
+      event.preventDefault();
+
+      if (url.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g)) {
+          shell.openExternal(url)
+      }
     })
   })
 }
