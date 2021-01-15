@@ -33,7 +33,7 @@ export class LedgerService {
 
     public async getAccount(path: string, networkType: number, display: boolean) {
         try {
-            if (false === DerivationPathValidator.validate(path)) {
+            if (!DerivationPathValidator.validate(path)) {
                 const errorMessage = 'Invalid derivation path: ' + path;
                 throw new Error(errorMessage);
             }
@@ -50,7 +50,7 @@ export class LedgerService {
 
     public async signTransaction(path: string, transferTransaction: any, networkGenerationHash: string, signerPublicKey: string) {
         try {
-            if (false === DerivationPathValidator.validate(path)) {
+            if (!DerivationPathValidator.validate(path)) {
                 const errorMessage = 'Invalid derivation path: ' + path;
                 throw new Error(errorMessage);
             }
@@ -67,7 +67,7 @@ export class LedgerService {
 
     public async signCosignatureTransaction(path: string, cosignatureTransaction: any, signerPublicKey: string) {
         try {
-            if (false === DerivationPathValidator.validate(path)) {
+            if (!DerivationPathValidator.validate(path)) {
                 const errorMessage = 'Invalid derivation path: ' + path;
                 throw new Error(errorMessage);
             }
