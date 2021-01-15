@@ -426,7 +426,7 @@
     "min_removal_amount_illegal": "The minimum number of co-signatories needed for removal must be a number",
     "min_removal_amount_less_than_0": "The minimum number of co-signatories needed for removal cannot be smaller than 1",
     "min_removal_delta": "Min. Removal Delta",
-    "minimal_fee_transaction": "please note that minmimal fees for the current selected node is ",
+    "minimal_fee_transaction": "please note that minmimal fee multiplite for the current selected node is ",
     "mnemonic_backup_options_copy_desc": "Copy the mnemonic words and keep them in a safe place.",
     "mnemonic_backup_options_download_desc": "Download QR Code encrypted with your password. This QR Code can be used to import your accounts in different wallets (e.g. Mobile Wallet)",
     "mnemonic_copy": "Copy",
