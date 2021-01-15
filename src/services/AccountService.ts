@@ -91,7 +91,7 @@ export class AccountService {
         networkType: NetworkType,
         path: string = AccountService.DEFAULT_ACCOUNT_PATH,
     ): Account {
-        if (false === DerivationPathValidator.validate(path)) {
+        if (!DerivationPathValidator.validate(path)) {
             const errorMessage = 'Invalid derivation path: ' + path;
             console.error(errorMessage);
             throw new Error(errorMessage);
@@ -296,7 +296,7 @@ export class AccountService {
      * @return {Promise<string>}
      */
     public async getLedgerPublicKeyByPath(networkType: NetworkType, path: string): Promise<string> {
-        if (false === DerivationPathValidator.validate(path)) {
+        if (!DerivationPathValidator.validate(path)) {
             const errorMessage = 'Invalid derivation path: ' + path;
             console.error(errorMessage);
             throw new Error(errorMessage);
