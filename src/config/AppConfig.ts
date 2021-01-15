@@ -46,7 +46,7 @@ const defaultAppConfig: AppConfig = {
         MAX_SEED_ACCOUNTS_NUMBER: 10,
         MIN_PASSWORD_LENGTH: 8,
         SEED_ACCOUNT_NAME_PREFIX: 'SeedWallet-',
-        ANNOUNCE_TRANSACTION_TIMEOUT: 120000,
+        ANNOUNCE_TRANSACTION_TIMEOUT: 240000,
     },
     languages: [
         { value: 'en-US', label: 'English' },
