@@ -99,10 +99,9 @@ export class SymbolLedger {
     async getAccount(path: string, networkType: number, display: boolean) {
         const GET_ACCOUNT_INS_FIELD = 0x02;
         const chainCode = false;
-        const ed25519 = true;
 
         const bipPath = BIPPath.fromString(path).toPathArray();
-        const curveMask = ed25519 ? 0x80 : 0x40;
+        const curveMask = 0x80; // use Curve25519
 
         // APDU fields configuration
         const apdu = {
@@ -195,9 +194,8 @@ export class SymbolLedger {
         const CONTINUE_SENDING = '0x9000';
 
         const chainCode = false;
-        const ed25519 = true;
 
-        const curveMask = ed25519 ? 0x80 : 0x40;
+        const curveMask = 0x80; // use Curve25519
         const bipPath = BIPPath.fromString(path).toPathArray();
         const apduArray = [];
         let offset = 0;
