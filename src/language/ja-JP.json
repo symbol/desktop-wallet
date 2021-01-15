@@ -426,7 +426,7 @@
     "min_removal_amount_illegal": "削除に必要な連署者の最小数は数字でなければなりません",
     "min_removal_amount_less_than_0": "削除に必要な連署者の最小数を 1 未満にできません",
     "min_removal_delta": "最小削除承認者変更数",
-    "minimal_fee_transaction": "please note that minmimal fees for the current selected node is ",
+    "minimal_fee_transaction": "please note that minmimal fee multiplier for the current selected node is ",
     "mnemonic_backup_options_copy_desc": "ニーモニック語群をコピーして、安全な場所に保管します",
     "mnemonic_backup_options_download_desc": "パスワードで暗号化されたQRコードをダウンロードします。このQRコードを使用して、アカウントをさまざまなウォレット (モバイルウォレットなど) にインポートできます。",
     "mnemonic_copy": "コピー",
