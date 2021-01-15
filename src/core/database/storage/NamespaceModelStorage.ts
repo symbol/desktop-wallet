@@ -24,6 +24,11 @@ export class NamespaceModelStorage extends VersionedNetworkBasedObjectStorage<Na
     public static INSTANCE = new NamespaceModelStorage();
 
     private constructor() {
-        super('namespaceCache');
+        super('namespaceCache', [
+            {
+                description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
+        ]);
     }
 }

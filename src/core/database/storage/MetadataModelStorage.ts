@@ -24,6 +24,11 @@ export class MetadataModelStorage extends VersionedNetworkBasedObjectStorage<Met
     public static INSTANCE = new MetadataModelStorage();
 
     private constructor() {
-        super('metadataCache');
+        super('metadataCache', [
+            {
+                description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
+        ]);
     }
 }
