@@ -23,6 +23,11 @@ export class MosaicConfigurationModelStorage extends VersionedObjectStorage<Reco
     public static INSTANCE = new MosaicConfigurationModelStorage();
 
     private constructor() {
-        super('mosaicConfiguration');
+        super('mosaicConfiguration', [
+            {
+                description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
+        ]);
     }
 }

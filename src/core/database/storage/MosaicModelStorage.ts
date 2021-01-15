@@ -24,6 +24,11 @@ export class MosaicModelStorage extends VersionedNetworkBasedObjectStorage<Mosai
     public static INSTANCE = new MosaicModelStorage();
 
     private constructor() {
-        super('mosaicCache');
+        super('mosaicCache', [
+            {
+                description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
+        ]);
     }
 }

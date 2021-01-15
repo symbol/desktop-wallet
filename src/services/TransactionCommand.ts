@@ -178,7 +178,10 @@ export class TransactionCommand {
     }
 
     private calculateSuggestedMaxFee(transaction: Transaction): Transaction {
-        const feeMultiplier = this.resolveFeeMultipler(transaction);
+        const feeMultiplier =
+            this.resolveFeeMultipler(transaction) < this.transactionFees.minFeeMultiplier
+                ? this.transactionFees.minFeeMultiplier
+                : this.resolveFeeMultipler(transaction);
         if (!feeMultiplier) {
             return transaction;
         }
