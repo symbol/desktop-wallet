@@ -98,7 +98,7 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
         margin-right: 35px;
     }
 }
-.confirm-rest {
+.confirm-reset {
     width: 20%;
 }
 
