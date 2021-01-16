@@ -11,7 +11,11 @@
                     </Row>
                     <Row>
                         <i-col span="5" class="current-node-header">{{ $t('current_endpoint') }}:</i-col>
-                        <i-col span="19" class="current-node-value overflow_ellipsis" :title="currentPeerInfo.url + currentPeerInfo.friendlyName">
+                        <i-col
+                            span="19"
+                            class="current-node-value overflow_ellipsis"
+                            :title="currentPeerInfo.url + currentPeerInfo.friendlyName"
+                        >
                             <div>
                                 <div class="node-list-entry">{{ currentPeerInfo.friendlyName }}</div>
                                 <div class="node-url">{{ currentPeerInfo.url }}</div>
@@ -21,7 +25,8 @@
                 </div>
                 <div class="node-list-container">
                     <div class="node-list-head">
-                        <span>{{ $t('node_list') }}</span><span> ({{ peersList.length }})</span>
+                        <span>{{ $t('node_list') }}</span>
+                        <span> ({{ peersList.length }})</span>
                     </div>
                     <div class="node-list-content">
                         <ul v-auto-scroll="'active'">
@@ -33,7 +38,8 @@
                                 @click="currentPeerInfo.url !== url ? switchPeer(url) : ''"
                             >
                                 <div>
-                                    <div class="node-list-entry">{{ friendlyName }}</div><div class="node-url"> {{ url }}</div>
+                                    <div class="node-list-entry">{{ friendlyName }}</div>
+                                    <div class="node-url">{{ url }}</div>
                                 </div>
                             </li>
                         </ul>
@@ -52,7 +58,8 @@
         <div v-else class="node-selector-container">
             <div class="node-list-container">
                 <div class="node-list-head">
-                    <span>{{ $t('node_list') }}</span><span> ({{ peersList.length }})</span>
+                    <span>{{ $t('node_list') }}</span>
+                    <span> ({{ peersList.length }})</span>
                 </div>
                 <div class="node-list-content">
                     <ul v-auto-scroll="'active'">
