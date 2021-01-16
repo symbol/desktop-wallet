@@ -1,5 +1,5 @@
 <template>
-    <div class="endpoint-healthy">
+    <div class="contact-selector">
         <Poptip v-model="poptipVisible" placement="bottom-end" class="endpoint-poptip" @on-popper-show="onPopTipShow">
             <div class="button-container">
                 <span class="network-text pointer">{{ $t('select_contact') }}</span>
@@ -8,7 +8,7 @@
             <div slot="content" class="node-selector-container">
                 <div class="node-list-container">
                     <div class="node-list-content">
-                        <ul v-auto-scroll="'active'">
+                        <ul>
                             <li
                                 v-for="(contact, index) in contactList"
                                 :key="`sep${index}`"
@@ -17,7 +17,7 @@
                             >
                                 <div>
                                     <div class="node-list-head">{{ contact.name }}</div>
-                                    <div class="node-url overflow_ellipsis" :title="contact.address">{{ contact.address }}</div>
+                                    <div class="overflow_ellipsis" :title="contact.address">{{ contact.address }}</div>
                                 </div>
                             </li>
                         </ul>
