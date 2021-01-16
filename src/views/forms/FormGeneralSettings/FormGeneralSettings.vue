@@ -44,14 +44,14 @@
 
                     <div class="form-row form-submit">
                         <button
-                            class="button-style inverted-button pl-2 pr-2"
+                            class="button-style inverted-button pl-2 pr-2 buttons"
                             type="submit"
                             :disabled="isConfirmButtonDisabled"
                             @click="handleSubmit(onSubmit)"
                         >
                             {{ $t('confirm') }}
                         </button>
-                        <button class="button-style button danger-button pl-2 pr-2" type="reset" @click.prevent="resetForm">
+                        <button class="button-style button danger-button pl-2 pr-2 buttons" type="reset" @click.prevent="resetForm">
                             {{ $t('reset') }}
                         </button>
                         <div style="width: 100%; text-align: left; margin-left: 0.7rem;">
@@ -86,6 +86,9 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
     min-height: 1rem;
     padding-top: 0.8rem;
     padding-bottom: 0.4rem;
+}
+.buttons {
+    width: 20%;
 }
 
 .form-submit {
