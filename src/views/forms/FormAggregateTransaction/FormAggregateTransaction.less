@@ -72,11 +72,7 @@
 }
 
 .right-container {
-    display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 0.6rem auto;
     background-color: white;
-    overflow: hidden;
     border-radius: @borderRadius;
 }
 
@@ -218,6 +214,17 @@
     }
 }
 
+.transaction-container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+}
+
 .transaction-form-container {
-    margin-top: 0.5rem;
+    overflow: auto;
+    padding-left: 0.1rem;
+}
+
+.transaction-form-component {
+    margin-bottom: 0.1rem;
 }
