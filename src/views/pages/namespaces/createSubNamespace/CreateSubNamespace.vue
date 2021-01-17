@@ -37,7 +37,7 @@ export default class CreateSubNamespace extends CreateSubNamespaceTs {}
 </style>
 
 <style lang="less" scoped>
-    /deep/ .namespace-transaction-form-wrapper {
-        max-width: 14rem;
-    }
+/deep/ .namespace-transaction-form-wrapper {
+    max-width: 14rem;
+}
 </style>

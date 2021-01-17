@@ -66,7 +66,7 @@ export default class CreateMosaicPage extends Vue {}
 </script>
 
 <style lang="less" scoped>
-    /deep/ .form-wrapper {
-        max-width: 14rem;
-    }
+/deep/ .form-wrapper {
+    max-width: 14rem;
+}
 </style>

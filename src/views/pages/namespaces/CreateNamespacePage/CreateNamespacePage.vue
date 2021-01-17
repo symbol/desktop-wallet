@@ -52,7 +52,7 @@ export default class CreateNamespacePage extends Vue {}
 </script>
 
 <style lang="less" scoped>
-    /deep/ .namespace-transaction-form-wrapper {
-        max-width: 14rem;
-    }
+/deep/ .namespace-transaction-form-wrapper {
+    max-width: 14rem;
+}
 </style>
