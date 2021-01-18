@@ -289,8 +289,8 @@ export default {
             // subscribe to updates
 
             if (oldGenerationHash != networkModel.generationHash) {
-                dispatch('account/NETWORK_CHANGED', {}, { root: true });
-                dispatch('statistics/LOAD', {}, { root: true });
+                await dispatch('account/NETWORK_CHANGED', {}, { root: true });
+                await dispatch('statistics/LOAD', {}, { root: true });
 
                 // check if current profile network type and generation hash matches current network
                 if (
@@ -305,7 +305,8 @@ export default {
             }
             await dispatch('UNSUBSCRIBE');
             await listener.open();
-            dispatch('SUBSCRIBE');
+            await dispatch('SUBSCRIBE');
+            await dispatch('account/SUBSCRIBE', rootGetters['account/currentSignerAddress'], { root: true });
         },
 
         async SET_CURRENT_PEER({ dispatch }, currentPeerUrl) {
@@ -336,7 +337,7 @@ export default {
                 await dispatch('CONNECT', currentPeerUrl);
             } catch (e) {
                 console.log(e);
-                dispatch(
+                await dispatch(
                     'notification/ADD_ERROR',
                     `${app.$t('error_peer_connection_went_wrong', {
                         peerUrl: currentPeerUrl,
@@ -426,7 +427,7 @@ export default {
             subscriptions.forEach((s) => s.unsubscribe());
             const listener: Listener = getters.listener;
             if (listener) {
-                listener.close();
+                await listener.close();
             }
             // update state
             commit('subscriptions', []);
