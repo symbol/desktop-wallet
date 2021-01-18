@@ -71,6 +71,9 @@ export default class LoginPageTs extends Vue {
         networkType: NetworkType;
         profiles: ProfileModel[];
     }[];
+
+    private performingLogin = false;
+
     /**
      * Currently active profile
      * @see {Store.Profile}
@@ -166,8 +169,9 @@ export default class LoginPageTs extends Vue {
             return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR);
         }
 
+        this.performingLogin = true;
         // now compare password hashes
-        return this.processLogin();
+        return this.processLogin().finally(() => this.performingLogin = false);
     }
 
     /**

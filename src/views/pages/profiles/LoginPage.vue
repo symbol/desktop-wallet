@@ -93,14 +93,15 @@
                                 </span>
                             </div>
                             <div v-if="formItems.hasHint" class="hint">{{ $t('password_hint') }}: {{ getPasswordHint() }}</div>
-                            <button
+                            <Button
                                 v-if="profilesClassifiedByNetworkType"
                                 class="pointer button"
-                                type="submit"
+                                :loading="performingLogin"
+                                html-type="submit"
                                 @click.stop="handleSubmit(submit)"
                             >
                                 {{ $t('login') }}
-                            </button>
+                            </Button>
                             <div v-else class="pointer button" @click="$router.push({ name: 'profiles.importProfile.importStrategy' })">
                                 {{ $t('register') }}
                             </div>
