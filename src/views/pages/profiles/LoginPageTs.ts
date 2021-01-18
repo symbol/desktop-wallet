@@ -171,7 +171,7 @@ export default class LoginPageTs extends Vue {
 
         this.performingLogin = true;
         // now compare password hashes
-        return this.processLogin().finally(() => this.performingLogin = false);
+        return this.processLogin().finally(() => (this.performingLogin = false));
     }
 
     /**
