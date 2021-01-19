@@ -100,6 +100,10 @@ export class AccountModelStorage extends VersionedObjectStorage<Record<string, A
                     return modified;
                 },
             },
+            {
+                description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
         ]);
     }
 }

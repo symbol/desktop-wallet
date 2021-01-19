@@ -116,6 +116,10 @@ export class NetworkModelStorage extends VersionedNetworkBasedObjectStorage<Netw
                     return modified;
                 },
             },
+            {
+                description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
         ]);
     }
 }

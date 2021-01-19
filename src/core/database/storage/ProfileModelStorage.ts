@@ -67,6 +67,10 @@ export class ProfileModelStorage extends VersionedObjectStorage<Record<string, P
                 description: 'Update profiles for 0.10.x network (non backwards compatible due to HD and private key profile separation)',
                 migrate: () => undefined,
             },
+            {
+                description: 'Update profiles for 0.10.0.5 pre main network release (non backwards compatible on protocol v0.10.0.4)',
+                migrate: () => undefined,
+            },
         ]);
     }
 }

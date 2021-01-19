@@ -65,6 +65,10 @@ export class SettingsModelStorage extends VersionedObjectStorage<Record<string, 
                     return modified;
                 },
             },
+            {
+                description: 'Update profiles for 0.10.0.5 pre main network release (non backwards compatible on protocol v0.10.0.4)',
+                migrate: () => undefined,
+            },
         ]);
     }
 }
