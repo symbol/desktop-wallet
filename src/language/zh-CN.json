@@ -427,7 +427,7 @@
     "min_removal_amount_illegal": "Min removal 必须为数字",
     "min_removal_amount_less_than_0": "Min removal 不可小于1",
     "min_removal_delta": "最低移除数",
-    "minimal_fee_transaction": "please note that minmimal fee multiplier for the current selected node is ",
+    "minimal_fee_transaction": "Please note that minmimal fee multiplite for the current selected node is ",
     "mnemonic_backup_options_copy_desc": "複製助記詞並將其保存在安全的地方。",
     "mnemonic_backup_options_download_desc": "下載使用密碼加密的QR碼。 此QR碼可用於將您的帳戶導入不同的錢包（例如，移動錢包）",
     "mnemonic_copy": "复制",

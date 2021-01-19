@@ -2,7 +2,7 @@
     "name": "symbol-desktop-wallet",
     "description": "Symbol Wallet",
     "homepage": "https://github.com/nemgrouplimited/symbol-desktop-wallet",
-    "version": "0.13.7",
+    "version": "0.13.8",
     "repository": {
         "type": "git",
         "url": "https://github.com/nemgrouplimited/symbol-desktop-wallet.git"

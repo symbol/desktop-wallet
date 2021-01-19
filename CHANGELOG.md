@@ -2,9 +2,21 @@
 All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-## [0.13.7][v0.13.7] - 15-Jan-2020
 
-### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+## [0.13.8][v0.13.8] - 15-Jan-2020
+
+### Milestone: [catapult-server@v0.10.0.5](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.5)
+
+**This version only works with latest testnet (0.10.0.5), it is not backward compatible.**
+#### Fixed
+
+- Fixed electron-shortcut dependency issue.
+- Updated reserved testnet node url (0.10.0.5)
+- Reset local storage for new network 0.10.0.5
+
+## [0.13.7][v0.13.7] - 14-Jan-2020
+
+### Milestone: [catapult-server@v0.10.0.5](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.5)
 
 #### Added
 - Add URL validation procedure to the web-contents-created callback to avoid remote code execution attacks.

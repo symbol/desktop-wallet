@@ -27,6 +27,11 @@ export class BlockInfoModelStorage extends VersionedNetworkBasedObjectStorage<Bl
     public static INSTANCE = new BlockInfoModelStorage();
 
     private constructor() {
-        super('blockCache');
+        super('blockCache', [
+            {
+                description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
+        ]);
     }
 }

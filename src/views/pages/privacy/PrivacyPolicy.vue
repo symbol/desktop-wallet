@@ -72,8 +72,8 @@
         <p class="paragraph">
             If you would like to: access, correct, amend or delete any personal information we have about you, register a complaint, or
             simply want more information contact our Privacy Compliance Officer at
-            <a href="mailto:contact@nemn.io">
-                <b class="link">contact@nemn.io</b>
+            <a href="mailto:support@nem.group">
+                <b class="link">support@nem.group</b>
             </a>
             or by mail at NEM Group Limited. 57 Mohamed Sultan Rd., #01-05, Sultan-Link, Singapore 238997.
         </p>
