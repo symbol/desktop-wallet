@@ -1,0 +1,140 @@
+/*
+ * Copyright 2020 NEM (https://nem.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ */
+
+@import '../../../resources/css/variables.less';
+
+.create-profile-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .explanation-box {
+        flex: 0.3;
+        display: flex;
+        align-items: center;
+        text-align: left;
+        min-height: calc(100vh - 255px);
+
+        .text-wrapper {
+            display: block;
+            width: 85%;
+        }
+
+        .text1 {
+            color: @purpleDark;
+            font-size: 30px;
+            font-family: @normalFont;
+            margin-bottom: 5%;
+        }
+
+        .text {
+            color: @purpleDark;
+            font-size: @bigFont;
+            margin-bottom: 2%;
+        }
+        .text_red {
+            color: @purpleDark;
+            font-family: @symbolFontSemiBold;
+            font-size: @bigFont;
+        }
+    }
+
+    .form-box {
+        flex: 0.7;
+        min-height: 90%;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        background-color: @white;
+        min-height: calc(100vh - 255px);
+        max-width: 100%;
+
+        .steps {
+            width: 25%;
+            height: 100%;
+            display: flex;
+
+            .step-group {
+                margin: auto;
+                width: 100%;
+            }
+
+            .single-step {
+                padding: 8%;
+                font-size: @bigFont;
+                color: @grayLight;
+                font-family: @symbolFontSemiBold;
+                display: flex;
+                &.done {
+                    color: @purpleDark;
+                }
+                &.done:before {
+                    content: '';
+                    background-image: url('../../../resources/img/check.png');
+                    background-size: 0.28rem 0.23rem;
+                    display: inline-block;
+                    width: 0.46rem;
+                    height: 0.36rem;
+                    background-repeat: no-repeat;
+                }
+                &.active {
+                    background: linear-gradient(315.55deg, #44004e -1.68%, #5200c6 110.7%);
+                    color: @white;
+                }
+            }
+        }
+        .form {
+            flex: 1;
+            overflow: hidden;
+            border-left: 0.005rem solid #d3d3d3;
+            padding: 1rem 10%;
+            min-height: calc(100vh - 255px);
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    .inner-container {
+        background: transparent;
+
+        .create-profile-box {
+            margin-bottom: 40px;
+            font-size: 40px;
+            color: rgba(0, 0, 0, 0.85);
+            line-height: 40px;
+        }
+
+        .step-bar-container {
+            .step-text-container {
+                span {
+                    width: 20%;
+                }
+            }
+        }
+    }
+}
+.subtitle-info {
+    font-family: @symbolFontSemiBold;
+}
+.warning-icon {
+    width: 18px;
+    margin-right: 10px;
+}
+.success-title {
+    font-size: @biggestFont;
+    color: @purpleDark;
+}

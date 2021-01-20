@@ -9,16 +9,16 @@
     },
     "license": "Apache-2.0",
     "scripts": {
-        "start": "electron .",
+        "start": "npm run node-hid:prebuild-install && electron .",
         "test": "vue-cli-service test:unit",
         "dev": "vue-cli-service serve ",
         "build": "npm run build:web",
         "build:web": "rimraf dist && mkdir dist && tsc && vue-cli-service build",
         "release": "npm run build && npm run release:all",
         "release:all": "npm run release:win && npm run release:lin && npm run release:mac && npm run release:zip",
-        "release:mac": "electron-builder --mac",
-        "release:win": "electron-builder --win",
-        "release:lin": "electron-builder --linux deb snap tar.xz",
+        "release:mac": "npm run node-hid:prebuild-install:mac && electron-builder --mac",
+        "release:win": "npm run node-hid:prebuild-install:win && electron-builder --win",
+        "release:lin": "npm run node-hid:prebuild-install:lin && electron-builder --linux deb snap tar.xz",
         "release:zip": "npm-build-zip --source=dist --destination=release --name=all",
         "lint": "npm run prettier && npm run eslint",
         "lint:fix": "npm run prettier:fix && npm run eslint:fix",
@@ -26,6 +26,11 @@
         "eslint:fix": "eslint src/ --ext .ts --fix && eslint src/ --ext .vue --fix && eslint __tests__/ --ext .ts --fix && eslint __mocks__/ --ext .ts --fix",
         "prettier": "prettier --check ./src ./__tests__ ./__mocks__",
         "prettier:fix": "prettier --write ./src ./__tests__ ./__mocks__",
+        "electron-rebuild": "$(npm bin)/electron-rebuild",
+        "node-hid:prebuild-install": "cd ./node_modules/node-hid && npm run install && cd ../..",
+        "node-hid:prebuild-install:mac": "export npm_config_platform=darwin && npm run node-hid:prebuild-install",
+        "node-hid:prebuild-install:win": "export npm_config_platform=win32 && npm run node-hid:prebuild-install",
+        "node-hid:prebuild-install:lin": "export npm_config_platform=linux && npm run node-hid:prebuild-install",
         "version": "echo $npm_package_version"
     },
     "author": "Greg Saive <greg.saive@nem.software>",
@@ -37,8 +42,14 @@
     ],
     "dependencies": {
         "@js-joda/core": "^3.2.0",
+        "@ledgerhq/hw-transport-node-hid-noevents": "^5.41.0",
+        "@ledgerhq/hw-transport-webusb": "^5.41.0",
         "animate.css": "^3.7.2",
         "await-lock": "^2.0.1",
+        "axios": "0.21.1",
+        "bip32-path": "^0.4.2",
+        "call-bind": "^1.0.2",
+        "decamelize": "^5.0.0",
         "electron-localshortcut": "^3.2.1",
         "file-saver": "^2.0.2",
         "json2csv": "^5.0.1",
@@ -92,6 +103,7 @@
         "electron-builder": "22.9.1",
         "electron-notarize": "1.0.0",
         "electron-packager": "15.2.0",
+        "electron-rebuild": "^2.3.4",
         "electron-updater": "4.3.5",
         "eslint": "^6.8.0",
         "eslint-config-prettier": "^6.11.0",
@@ -137,12 +149,14 @@
         "files": [
             "dist/**/*",
             "package.json",
-            "./public/build.js"
+            "./public/build.js",
+            "./public/preload.js"
         ],
         "directories": {
             "buildResources": "assets",
             "output": "release"
-        }
+        },
+        "npmRebuild": false
     },
     "mac": {
         "category": "public.app-category.finance",

@@ -153,6 +153,35 @@ export const routes: AppRoute[] = [
                             },
                         ],
                     },
+                    {
+                        path: 'accessLedger',
+                        name: 'profiles.accessLedger',
+                        meta: { protected: false },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/profiles/access-ledger/AccessLedger.vue'),
+                        children: [
+                            {
+                                path: 'info',
+                                name: 'profiles.accessLedger.info',
+                                meta: {
+                                    protected: false,
+                                    isLedger: true,
+                                },
+                                // @ts-ignore
+                                component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
+                            },
+                            {
+                                path: 'finishCreate',
+                                name: 'profiles.accessLedger.finalize',
+                                meta: {
+                                    protected: false,
+                                    isLedger: true,
+                                },
+                                // @ts-ignore
+                                component: () => import('@/views/pages/profiles/access-ledger/finalize/Finalize.vue'),
+                            },
+                        ],
+                    },
                 ],
             },
             {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Account, Address, NetworkType, Password, SimpleWallet, Crypto } from 'symbol-sdk';
+import { Account, PublicAccount, Address, NetworkType, Password, SimpleWallet, Crypto } from 'symbol-sdk';
 import { ExtendedKey, MnemonicPassPhrase, Wallet } from 'symbol-hd-wallets';
 // internal dependencies
 import { DerivationPathLevels, DerivationService } from './DerivationService';
@@ -22,6 +22,7 @@ import { AccountModel, AccountType } from '@/core/database/entities/AccountModel
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
 import { AccountModelStorage } from '@/core/database/storage/AccountModelStorage';
+import { LedgerService } from '@/services/LedgerService';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 
 export class AccountService {
@@ -90,7 +91,7 @@ export class AccountService {
         networkType: NetworkType,
         path: string = AccountService.DEFAULT_ACCOUNT_PATH,
     ): Account {
-        if (false === DerivationPathValidator.validate(path)) {
+        if (!DerivationPathValidator.validate(path)) {
             const errorMessage = 'Invalid derivation path: ' + path;
             console.error(errorMessage);
             throw new Error(errorMessage);
@@ -268,9 +269,8 @@ export class AccountService {
      * @param {Password} newPassword
      */
     public updateWalletPassword(account: AccountModel, oldPassword: Password, newPassword: Password): AccountModel {
-        // Password modification is not allowed for hardware wallets
         if (account.type !== AccountType.SEED && account.type !== AccountType.PRIVATE_KEY) {
-            throw new Error('Hardware account password cannot be changed');
+            return account;
         }
 
         const privateKey = Crypto.decrypt(account.encryptedPrivateKey, oldPassword.value);
@@ -287,5 +287,55 @@ export class AccountService {
             ...account,
             encryptedPrivateKey: newSimpleWallet.encryptedPrivateKey,
         };
+    }
+
+    /**
+     * Derive an public key from ledger using a path
+     * @param {NetworkType} networkType
+     * @param {string} paths
+     * @return {Promise<string>}
+     */
+    public async getLedgerPublicKeyByPath(networkType: NetworkType, path: string): Promise<string> {
+        if (!DerivationPathValidator.validate(path)) {
+            const errorMessage = 'Invalid derivation path: ' + path;
+            console.error(errorMessage);
+            throw new Error(errorMessage);
+        }
+        const ledgerService = new LedgerService();
+        const accountResult = await ledgerService.getAccount(path, networkType, true);
+        const { publicKey } = accountResult;
+        return publicKey;
+    }
+
+    /**
+     * Derive an account instance of ledger using a path
+     * @param {ProfileModel} currentProfile
+     * @param {NetworkType} networkType
+     * @param {string} paths
+     * @return {Promise<AccountModel>}
+     */
+    public async getLedgerAccountByPath(currentProfile: ProfileModel, networkType: NetworkType, path: string): Promise<AccountModel> {
+        const publicKey = await this.getLedgerPublicKeyByPath(networkType, path);
+        const address = PublicAccount.createFromPublicKey(publicKey, networkType).address;
+        return {
+            id: SimpleObjectStorage.generateIdentifier(),
+            profileName: currentProfile.profileName,
+            name: currentProfile.profileName,
+            node: '',
+            type: AccountType.LEDGER,
+            address: address.plain(),
+            publicKey: publicKey.toUpperCase(),
+            encryptedPrivateKey: '',
+            path: path,
+            isMultisig: false,
+        };
+    }
+
+    /**
+     * Create a account instance of Ledger from default path
+     * @return {AccountModel}
+     */
+    public async getDefaultLedgerAccount(currentProfile: ProfileModel, networkType: NetworkType): Promise<AccountModel> {
+        return await this.getLedgerAccountByPath(currentProfile, networkType, AccountService.DEFAULT_ACCOUNT_PATH);
     }
 }

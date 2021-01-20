@@ -214,6 +214,7 @@
         />
         <ModalTransactionConfirmation
             v-if="hasConfirmationModal"
+            :delegated="true"
             :command="this"
             :visible="hasConfirmationModal"
             @success="onConfirmationSuccess"
