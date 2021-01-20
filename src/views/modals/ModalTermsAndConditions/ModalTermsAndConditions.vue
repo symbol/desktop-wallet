@@ -1,6 +1,13 @@
 <template>
     <div>
-        <Modal v-model="show" class="modal-terms-and-conditions" :title="$t('terms_and_conditions')" :footer-hide="true">
+        <Modal
+            v-model="show"
+            class="modal-terms-and-conditions"
+            :title="$t('terms_and_conditions')"
+            :footer-hide="true"
+            :closable="false"
+            :mask-closable="false"
+        >
             <div class="container">
                 <div class="centered-content bottom-space">
                     <Icon type="ios-alert-outline" size="50" />
