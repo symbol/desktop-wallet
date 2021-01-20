@@ -161,6 +161,10 @@ export default class LoginPageTs extends Vue {
      * @return {void}
      */
     public async submit() {
+        if (this.performingLogin) {
+            return;
+        }
+
         if (!this.formItems.currentProfileName.length) {
             return this.$store.dispatch('notification/ADD_ERROR', NotificationType.PROFILE_NAME_INPUT_ERROR);
         }
