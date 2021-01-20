@@ -1,9 +1,7 @@
 <template>
     <div class="account-detail-row-3cols">
         <span v-if="!publicKey" class="label">{{ $t('account_public_key') }}:</span>
-        <div class="value accountPublicKey">
-            {{ publicKey || account.publicKey }}
-        </div>
+        <div class="value accountPublicKey">{{ publicKey || account.publicKey }}</div>
         <ButtonCopyToClipboard v-if="account" v-model="account.publicKey">
             <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
         </ButtonCopyToClipboard>

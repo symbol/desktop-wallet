@@ -1,10 +1,8 @@
 <template>
     <div class="account-detail-row-3cols">
         <span class="label">{{ $t('account_address') }}:</span>
-        <div class="value accountAddress">
-            {{ getPrettyAddress() }}
-        </div>
-        <ButtonCopyToClipboard v-model="address">
+        <div class="value accountAddress">{{ prettyAddress }}</div>
+        <ButtonCopyToClipboard v-model="prettyAddress">
             <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
         </ButtonCopyToClipboard>
     </div>

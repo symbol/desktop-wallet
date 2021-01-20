@@ -30,7 +30,7 @@ export class AccountAddressDisplayTs extends Vue {
     })
     address: string;
 
-    public getPrettyAddress(): string {
+    public get prettyAddress(): string {
         return this.address ? Address.createFromRawAddress(this.address).pretty() : '';
     }
 
