@@ -47,9 +47,9 @@ import { Address } from 'symbol-sdk';
             addressBook: 'addressBook/getAddressBook',
             selectedContact: 'addressBook/getSelectedContact',
         }),
-        address: function() {
+        address: function () {
             return Address.createFromRawAddress(this.selectedContact.address).pretty();
-        }
+        },
     },
 })
 export class ContactDetailPanelTs extends Vue {
