@@ -38,6 +38,7 @@ export interface NetworkConfigurationDefaults {
     maxMosaicDivisibility: number;
     maxMessageSize: number;
     epochAdjustment: number;
+    totalChainImportance: number;
 }
 
 export interface NetworkConfig {
@@ -72,6 +73,7 @@ const defaultNetworkConfig: NetworkConfig = {
         harvestingMosaicId: '5F160D7851F3CB30',
         defaultDynamicFeeMultiplier: 1000,
         epochAdjustment: 1573430400,
+        totalChainImportance: 1,
     },
     nodes: [
         { friendlyName: 'API North East 1', roles: 2, url: 'http://api-01.ap-northeast-1.testnet.symboldev.network:3000' },
