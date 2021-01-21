@@ -303,10 +303,14 @@ export default {
                     dispatch('SET_NETWORK_IS_NOT_MATCHING_PROFILE', false);
                 }
             }
+            const currentSignerAddress = rootGetters['account/currentSignerAddress'];
+            // close websocket subscription for old node
             await dispatch('UNSUBSCRIBE');
+            await dispatch('account/UNSUBSCRIBE', currentSignerAddress, { root: true });
+            // subscribe to the newly selected node websocket
             await listener.open();
             await dispatch('SUBSCRIBE');
-            await dispatch('account/SUBSCRIBE', rootGetters['account/currentSignerAddress'], { root: true });
+            await dispatch('account/SUBSCRIBE', currentSignerAddress, { root: true });
         },
 
         async SET_CURRENT_PEER({ dispatch }, currentPeerUrl) {
