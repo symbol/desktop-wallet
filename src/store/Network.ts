@@ -303,7 +303,7 @@ export default {
                     dispatch('SET_NETWORK_IS_NOT_MATCHING_PROFILE', false);
                 }
             }
-            const currentSignerAddress = rootGetters['account/currentSignerAddress']
+            const currentSignerAddress = rootGetters['account/currentSignerAddress'];
             // close websocket subscription for old node
             await dispatch('UNSUBSCRIBE');
             await dispatch('account/UNSUBSCRIBE', currentSignerAddress, { root: true });
