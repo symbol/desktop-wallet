@@ -17,11 +17,15 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { AccountInfo } from 'symbol-sdk';
 // internal dependencies
 import { mapGetters } from 'vuex';
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 @Component({
     computed: {
         ...mapGetters({
             accountsInfo: 'account/accountsInfo',
+            networkCurrency: 'mosaic/networkCurrency',
+            networkConfiguration: 'network/networkConfiguration',
         }),
     },
 })
@@ -31,10 +35,9 @@ export class ImportanceScoreDisplayTs extends Vue {
     })
     address: string;
 
-    /**
-     *
-     */
     private accountsInfo: AccountInfo[];
+    private networkCurrency: NetworkCurrencyModel;
+    private networkConfiguration: NetworkConfigurationModel;
 
     /// region computed properties getter/setter
     get score(): string {
@@ -43,7 +46,18 @@ export class ImportanceScoreDisplayTs extends Vue {
             return '0';
         }
         const importance = accountInfo.importance.compact();
-        return importance.toString();
+
+        const relativeImportance = importance > 0
+            ? importance / this.networkConfiguration.totalChainImportance
+            : importance;
+
+        const divisibility = this.networkCurrency.divisibility;
+        const formatOptions: Intl.NumberFormatOptions = {
+            maximumFractionDigits: divisibility,
+            minimumFractionDigits: divisibility,
+            style: 'percent'
+        };
+        return (relativeImportance).toLocaleString(undefined, formatOptions);
     }
 
     /// end-region computed properties getter/setter
