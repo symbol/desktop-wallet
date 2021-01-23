@@ -47,17 +47,15 @@ export class ImportanceScoreDisplayTs extends Vue {
         }
         const importance = accountInfo.importance.compact();
 
-        const relativeImportance = importance > 0
-            ? importance / this.networkConfiguration.totalChainImportance
-            : importance;
+        const relativeImportance = importance > 0 ? importance / this.networkConfiguration.totalChainImportance : importance;
 
         const divisibility = this.networkCurrency.divisibility;
         const formatOptions: Intl.NumberFormatOptions = {
             maximumFractionDigits: divisibility,
             minimumFractionDigits: divisibility,
-            style: 'percent'
+            style: 'percent',
         };
-        return (relativeImportance).toLocaleString(undefined, formatOptions);
+        return relativeImportance.toLocaleString(undefined, formatOptions);
     }
 
     /// end-region computed properties getter/setter

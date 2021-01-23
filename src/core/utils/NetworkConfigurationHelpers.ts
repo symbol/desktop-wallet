@@ -276,8 +276,7 @@ export class NetworkConfigurationHelpers {
         defaultValue: number | undefined = undefined,
     ): number {
         return (
-            (networkConfiguration?.chain &&
-                Formatters.configurationNumberAsNumber(networkConfiguration.chain.totalChainImportance)) ||
+            (networkConfiguration?.chain && Formatters.configurationNumberAsNumber(networkConfiguration.chain.totalChainImportance)) ||
             defaultValue ||
             this.defaults.totalChainImportance
         );
