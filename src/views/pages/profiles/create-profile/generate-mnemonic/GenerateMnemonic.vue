@@ -1,5 +1,5 @@
 <template>
-    <div class="step-2-wrapper" @mouseover="shouldTrackMouse && handleMousemove($event)">
+    <div class="step-2-wrapper">
         <img src="@/views/resources/img/login/connector-pink.png" />
         <Progress stroke-color="#ff00ff" :percent="percent" />
     </div>
