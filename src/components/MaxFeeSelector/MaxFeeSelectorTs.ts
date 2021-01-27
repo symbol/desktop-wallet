@@ -74,6 +74,11 @@ export class MaxFeeSelectorTs extends Vue {
     @Prop({ default: 0 }) calculatedHighestFee: number;
 
     /**
+     * Show low fee warning
+     */
+    @Prop({ default: false }) showLowFeeWarning: boolean;
+
+    /**
      * The fees to be displayed in the dropw down.
      */
     private fees: { label: string; maxFee: number; calculatedFee: number }[];

@@ -7,6 +7,7 @@
                     v-model="maxFee"
                     :calculated-recommended-fee="calculatedRecommendedFee"
                     :calculated-highest-fee="calculatedHighestFee"
+                    :show-low-fee-warning="showWarnings && anyWarnings && isFeeLowerThanRecommendedFee"
                 />
                 <div v-if="!hideSubmit" class="ml-2">
                     <button
@@ -17,13 +18,6 @@
                     >
                         {{ $t(submitButtonText) }}
                     </button>
-                </div>
-            </div>
-            <div v-if="showWarnings && anyWarnings">
-                <div v-if="isFeeLowerThanRecommendedFee" type="warning" class="warning-fee-low">
-                    <Icon type="ios-warning-outline" />
-                    {{ $t('low_fee_warning_message') }}
-                    expire.
                 </div>
             </div>
         </template>
