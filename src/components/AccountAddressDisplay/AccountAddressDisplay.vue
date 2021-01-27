@@ -2,7 +2,7 @@
     <div class="account-detail-row-3cols">
         <span class="label">{{ $t('account_address') }}:</span>
         <div class="value accountAddress">{{ prettyAddress }}</div>
-        <ButtonCopyToClipboard v-model="prettyAddress">
+        <ButtonCopyToClipboard v-model="address">
             <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" />
         </ButtonCopyToClipboard>
     </div>
