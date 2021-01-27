@@ -11,15 +11,18 @@
                 }"
             >
                 <div v-if="currentSignerAddress" class="account_address">
-                    <span class="address">
-                        {{ currentSignerAddress.plain() }}
-                    </span>
-                    <ButtonCopyToClipboard :value="currentSignerAddress.plain()">
-                        <img class="pointer" src="@/views/resources/img/monitor/monitorCopyDocument.svg" />
-                    </ButtonCopyToClipboard>
+                    <div>
+                        <div class="address-label">{{ $t('address') }}:</div>
+                        <div class="address">{{ currentSignerAddress.pretty() }}</div>
+                    </div>
+                    <div class="copy-button">
+                        <ButtonCopyToClipboard :value="currentSignerAddress.plain()">
+                            <img class="pointer" src="@/views/resources/img/account/cloneIcon_white.svg" />
+                        </ButtonCopyToClipboard>
+                    </div>
                 </div>
                 <div v-if="networkCurrency" class="XEM_amount overflow_ellipsis">
-                    <div>{{ networkCurrency.ticker }} WALLET</div>
+                    <div>{{ networkCurrency.ticker }} {{ $t('balance') }}:</div>
                     <div class="amount">
                         <MosaicAmountDisplay :absolute-amount="absoluteBalance" :size="'biggest'" />
                     </div>
