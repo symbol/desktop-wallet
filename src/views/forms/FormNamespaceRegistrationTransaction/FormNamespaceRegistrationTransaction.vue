@@ -1,6 +1,6 @@
 <template>
     <div>
-        <FormWrapper>
+        <FormWrapper class="namespace-transaction-form-wrapper">
             <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
                 <form onsubmit="event.preventDefault()" class="form-container mt-3 create-namespace-form">
                     <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
@@ -94,9 +94,6 @@ export default class FormNamespaceRegistrationTransaction extends FormNamespaceR
     .form-row-inner-container {
         grid-template-columns: 3rem calc(100% - 3rem);
     }
-}
-/deep/ .form-wrapper {
-    max-width: 12rem;
 }
 
 .save-button {

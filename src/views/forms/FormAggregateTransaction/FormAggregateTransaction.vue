@@ -103,25 +103,26 @@
         <div class="right-container">
             <!-- TODO: TRANSFER FORM GOES HERE Same as Dashboard Transfer -->
             <!-- <AggregateTransaction /> -->
-            <div class="title-container">
-                <div
-                    v-if="currentSelectedTransaction && currentSelectedTransaction.title && currentSelectedTransaction.component"
-                    class="transaction-form"
-                >
+            <div
+                v-if="currentSelectedTransaction && currentSelectedTransaction.title && currentSelectedTransaction.component"
+                class="transaction-container"
+            >
+                <div class="title-container">
                     <h1 class="title-style">
                         {{ currentSelectedTransaction.title }}
                     </h1>
-                    <div class="transaction-form-container">
-                        <component
-                            :is="currentSelectedTransaction.component"
-                            v-model="currentTxItems"
-                            :hide-submit="true"
-                            :is-aggregate="true"
-                            :value.sync="currentTxItems"
-                            :title.sync="currentSelectedTransaction.title"
-                            @txInput="onSaveTransaction"
-                        ></component>
-                    </div>
+                </div>
+                <div class="transaction-form-container">
+                    <component
+                        :is="currentSelectedTransaction.component"
+                        v-model="currentTxItems"
+                        :hide-submit="true"
+                        :is-aggregate="true"
+                        :value.sync="currentTxItems"
+                        :title.sync="currentSelectedTransaction.title"
+                        @txInput="onSaveTransaction"
+                        class="transaction-form-component"
+                    ></component>
                 </div>
             </div>
         </div>
