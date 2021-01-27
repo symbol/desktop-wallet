@@ -97,6 +97,11 @@
             :on-success="onAccountUnlocked"
             @close="hasAccountUnlockModal = false"
         />
+
+        <ModalBackupReminder
+            :visible="isModalBackupReminderShown"
+            @close="closeBackupReminderModal"
+        />
     </div>
 </template>
 
