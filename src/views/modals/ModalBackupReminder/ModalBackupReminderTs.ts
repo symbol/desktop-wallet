@@ -14,8 +14,9 @@
  *
  */
 
-import { Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
+@Component({})
 export class ModalBackupReminderTs extends Vue {
     @Prop({ default: false }) visible: boolean;
 
