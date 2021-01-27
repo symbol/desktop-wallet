@@ -33,7 +33,7 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
 
 .info_container {
     height: 5rem;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .float-right {
