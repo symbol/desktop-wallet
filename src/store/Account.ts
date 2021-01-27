@@ -602,4 +602,16 @@ export default {
             commit('updateSubscriptions', payload);
         },
     },
+
+    async GET_ACCOUNT_INFO({ commit, rootGetters }, address: Address | null) {
+        if (address) {
+            const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+            const accountInfo = await repositoryFactory
+                .createAccountRepository()
+                .getAccountInfo(address)
+                .toPromise();
+        } else {
+
+        }
+    },
 };
