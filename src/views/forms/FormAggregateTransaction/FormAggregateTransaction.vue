@@ -81,6 +81,7 @@
                                         class="full-width-centered-button button-style inverted-button fat-button"
                                         style="cursor: pointer;"
                                         type="submit"
+                                        :disabled="!simpleAggregateTransaction.length"
                                         @click="handleSubmit(onSubmit)"
                                     >
                                         {{ $t('aggregate_send') }}
