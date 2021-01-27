@@ -98,10 +98,7 @@
             @close="hasAccountUnlockModal = false"
         />
 
-        <ModalBackupReminder
-            :visible="isModalBackupReminderShown"
-            @close="closeBackupReminderModal"
-        />
+        <ModalBackupReminder :visible="isModalBackupReminderShown" @close="closeBackupReminderModal" />
     </div>
 </template>
 

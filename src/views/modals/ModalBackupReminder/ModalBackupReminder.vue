@@ -11,10 +11,7 @@
                     </h2>
                 </div>
                 <div class="centered-content bottom-space">
-                    <button
-                        class="centered-button button-style inverted-button pl-2 pr-2"
-                        @click="show = false"
-                    >
+                    <button class="centered-button button-style inverted-button pl-2 pr-2" @click="show = false">
                         {{ $t('button_understand_title') }}
                     </button>
                 </div>

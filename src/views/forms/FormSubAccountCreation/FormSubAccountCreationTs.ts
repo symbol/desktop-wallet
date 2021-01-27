@@ -160,10 +160,9 @@ export class FormSubAccountCreationTs extends Vue {
      * @return {void}
      */
     public onSubmit() {
-        if(this.formItems.type === 'privatekey_account') {
+        if (this.formItems.type === 'privatekey_account') {
             this.isModalBackupReminderShown = true;
-        }
-        else {
+        } else {
             this.hasAccountUnlockModal = true;
         }
 
