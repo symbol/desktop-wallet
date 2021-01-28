@@ -253,8 +253,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
         if (txs.length > 0) {
             if (this.action == HarvestingAction.START) {
-                this.remotePrivateKeyTemp = this.newRemoteAccount.privateKey;
-                this.vrfPrivateKeyTemp = this.newVrfKeyAccount.privateKey;
+                this.remotePrivateKeyTemp = this.newRemoteAccount?.privateKey;
+                this.vrfPrivateKeyTemp = this.newVrfKeyAccount?.privateKey;
             }
             if (this.isMultisigMode()) {
                 return this.toMultiSigAggregate(txs, maxFee, transactionSigner);
@@ -302,8 +302,14 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     public decryptKeys(password?: Password) {
-        this.remoteAccountPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encRemotePrivateKey, password.value);
-        this.vrfPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encVrfPrivateKey, password.value);
+        if (
+            this.currentSignerHarvestingModel?.encRemotePrivateKey &&
+            this.currentSignerHarvestingModel?.encVrfPrivateKey &&
+            this.action == HarvestingAction.ACTIVATE
+        ) {
+            this.remoteAccountPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encRemotePrivateKey, password.value);
+            this.vrfPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encVrfPrivateKey, password.value);
+        }
         return (this.password = password.value);
     }
 
