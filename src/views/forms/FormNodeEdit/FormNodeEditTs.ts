@@ -82,7 +82,7 @@ export class FormNodeEditTs extends Vue {
             this.$store.dispatch('notification/ADD_ERROR', this.$t(NotificationType.ERROR_PEER_UNREACHABLE));
         }
     }
-    public async getInfoFromUrl() {
+    public async getInfoFromUrl(url: string) {
         if (this.$refs.observer.fields && this.$refs.observer.fields.nodeUrl.invalid) {
             this.formItems.networkHash = '';
             this.formItems.networkType = '';
@@ -91,7 +91,7 @@ export class FormNodeEditTs extends Vue {
         const networkService = new NetworkService();
         this.isGettingNodeInfo = true;
         try {
-            const { networkModel, isCandidateUrlAvailable } = await networkService.getNetworkModel(this.formItems.nodeUrl).toPromise();
+            const { networkModel, isCandidateUrlAvailable } = await networkService.getNetworkModel(url).toPromise();
             if (!isCandidateUrlAvailable) {
                 return this.$store.dispatch('notification/ADD_WARNING', this.$t(NotificationType.INVALID_NODE));
             }
@@ -113,7 +113,8 @@ export class FormNodeEditTs extends Vue {
             this.customNodeData = [];
             return;
         }
-        const associationValues: Array<string> = /.+\u003a\d{2,}/.test(value) ? [value] : [value + ':3000'];
-        this.customNodeData = !value ? [] : associationValues;
+        let associationValue: string = /.+\u003a\d{2,}/.test(value) ? value : value + ':3000';
+        associationValue = /https?\:\/\/.+/.test(associationValue) ? associationValue : 'http://' + associationValue;
+        this.customNodeData = !value ? [] : [associationValue];
     }
 }
