@@ -85,6 +85,9 @@
             v-model="showConfirmationModal"
             :title="$t('delete_account_confirmation_title')"
             :message="$t('delete_account_confirmation_message', { accountName: currentAccount.name })"
+            :danger="true"
+            :showCheckbox="true"
+            :checkboxLabel="$t('delete_account_confirmation_checkbox')"
             @confirmed="deleteAccount"
         />
         <ModalFormProfileUnlock
