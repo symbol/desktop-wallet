@@ -1,6 +1,6 @@
 <template>
     <span>
-        <Icon type="ios-sync" class="button-refresh" @click="$emit('click')" />
+        <Icon type="md-refresh" class="button-refresh" @click="$emit('click')" />
     </span>
 </template>
 <script lang="ts">
