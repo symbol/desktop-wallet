@@ -63,6 +63,9 @@
                             :account="currentAccount"
                             :visible="currentAccount.isMultisig"
                         />
+                    </div>
+
+                    <div class="graph-row">
                         <div class="bottom-buttons-container">
                             <span></span>
                             <button

@@ -55,7 +55,6 @@
 }
 
 .mosaicList {
-    height: 100%;
     display: block;
 
     .complete_container {
@@ -109,7 +108,6 @@
 }
 
 .searchMosaic {
-    height: 100%;
     .mosaic_data {
         .mosaic_name {
             left: 0.7rem;
@@ -240,12 +238,6 @@
     }
 }
 
-.mosaic-data-list {
-    .mosaic_data:last-child {
-        margin-bottom: 0.53rem;
-    }
-}
-
 .padding_top_0 {
     padding-top: 0 !important;
     height: 0.55rem !important;
@@ -287,16 +279,13 @@
 }
 
 .mosaics-list-container {
-    height: 100%;
+    overflow: auto;
     /deep/.ivu-tabs {
         height: 100%;
         .ivu-tabs-content {
             height: calc(100% - 0.45rem);
             overflow-y: auto;
         }
-    }
-    .searchMosaic {
-        overflow-y: auto;
     }
 }
 

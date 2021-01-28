@@ -22,10 +22,32 @@
     }
 }
 
+.current-node-header {
+    text-align: right;
+    font-weight: bold;
+}
+
+.current-node-value {
+    text-align: left;
+    padding-left: 0.5em;
+}
+
+.node-url {
+    font-size: @smallFont;
+    color: @grayDark;
+    font-weight: 500;
+}
+
 .node-list-container {
     margin-top: 0.24rem;
 
     .node-list-head {
+        font-size: @smallFont;
+        color: @primary;
+        font-weight: bold;
+    }
+
+    .node-list-entry {
         font-size: @smallFont;
         color: @primary;
         font-weight: 500;
@@ -62,7 +84,6 @@
 .node-list-text {
     margin: 0.08rem 0 0.25rem 0;
     color: @tipFontColor;
-    font-size: @minimumFont;
 
     .ivu-icon-ios-help-circle-outline {
         margin-right: 0.03rem;
@@ -76,7 +97,6 @@
         display: inline-block;
         width: 14px;
         height: 14px;
-        background-color: #18b566;
         border-radius: 50%;
     }
 
@@ -93,8 +113,14 @@
     }
 }
 
+.endpoint-healthy {
+    i.point {
+        background-color: #18b566;
+    }
+}
+
 .endpoint-unhealthy {
-    i {
+    i.point {
         background-color: red;
     }
 }
