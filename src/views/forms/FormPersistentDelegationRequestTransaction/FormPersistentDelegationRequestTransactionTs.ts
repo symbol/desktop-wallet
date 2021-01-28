@@ -76,8 +76,6 @@ import AccountPublicKeyDisplay from '@/components/AccountPublicKeyDisplay/Accoun
 import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/ProtectedPrivateKeyDisplay.vue';
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
-// @ts-ignore
-import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
 
 export enum HarvestingAction {
     START = 1,
@@ -101,7 +99,6 @@ export enum HarvestingAction {
         AccountPublicKeyDisplay,
         ProtectedPrivateKeyDisplay,
         ModalFormProfileUnlock,
-        ModalConfirm,
     },
     computed: {
         ...mapGetters({
@@ -164,8 +161,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * @var {boolean}
      */
     public isUnlockingAccount: boolean = false;
-
-    public showConfirmationModal = false;
 
     private remoteAccountPrivateKey: string;
     private vrfPrivateKey: string;
@@ -556,7 +551,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return this.currentSignerHarvestingModel?.isPersistentDelReqSent;
     }
     public async activateAccount() {
-        this.showConfirmationModal = true;
         this.hasAccountUnlockModal = true;
     }
 
