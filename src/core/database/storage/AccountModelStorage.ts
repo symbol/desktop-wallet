@@ -16,6 +16,7 @@
 
 import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage';
 import { AccountModel } from '@/core/database/entities/AccountModel';
+import { HarvestingService } from '@/services/HarvestingService';
 import { Address } from 'symbol-sdk';
 
 export class AccountModelStorage extends VersionedObjectStorage<Record<string, AccountModel>> {
@@ -63,6 +64,44 @@ export class AccountModelStorage extends VersionedObjectStorage<Record<string, A
             },
             {
                 description: 'Reset accounts for 0.9.6.3 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
+            {
+                description: 'Update accounts to move harvesting fields to HarvestingModelStorage',
+                migrate: (from: any) => {
+                    const harvestingService = new HarvestingService();
+
+                    // update all accounts
+                    const accounts = Object.keys(from);
+
+                    const modified: any = from;
+                    accounts.map((name: string) => {
+                        const {
+                            address,
+                            signedPersistentDelReqTxs,
+                            isPersistentDelReqSent,
+                            selectedHarvestingNode,
+                            ...nonHarvesting
+                        } = modified[name];
+
+                        try {
+                            harvestingService.saveHarvestingModel({
+                                accountAddress: address,
+                                signedPersistentDelReqTxs,
+                                isPersistentDelReqSent,
+                                selectedHarvestingNode,
+                            });
+                            modified[name] = { address, ...nonHarvesting };
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    });
+
+                    return modified;
+                },
+            },
+            {
+                description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
                 migrate: () => undefined,
             },
         ]);

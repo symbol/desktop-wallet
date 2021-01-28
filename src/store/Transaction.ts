@@ -164,6 +164,9 @@ export default {
         },
         filterOptions: (state: TransactionState) => state.filterOptions,
         currentConfirmedPage: (state: TransactionState) => state.currentConfirmedPage,
+        confirmedTransactions: (state: TransactionState) => state.confirmedTransactions,
+        unconfirmedTransactions: (state: TransactionState) => state.unconfirmedTransactions,
+        partialTransactions: (state: TransactionState) => state.partialTransactions,
     },
     mutations: {
         setInitialized: (state: TransactionState, initialized: boolean) => {
@@ -479,6 +482,8 @@ export default {
             // Reloading Balances
             await dispatch('account/LOAD_ACCOUNT_INFO', {}, { root: true });
             dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
+
+            await dispatch('restriction/LOAD_ACCOUNT_RESTRICTIONS', {}, { root: true });
         },
         /// end-region scoped actions
 

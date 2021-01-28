@@ -14,6 +14,14 @@
         height: 100%;
         background-color: @white;
         border-radius: @borderRadius;
+        padding: 0 25px;
+        display: flex;
+        flex-direction: column;
+
+        .harvested-blocks {
+            height: 100%;
+            flex: 1;
+        }
     }
 
     .dashboard-left-container {
@@ -29,6 +37,7 @@
 
         .dashboard-bottom-left-container {
             height: 100%;
+            overflow: scroll;
             background-color: @white;
             border-radius: @borderRadius;
         }

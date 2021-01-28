@@ -1,9 +1,10 @@
 <template>
     <div class="account-selector-panel">
         <div v-auto-scroll="'active-background'" class="account-switch-body-container scroll">
+            <div class="account-type-title">Seed accounts</div>
             <div
-                v-for="(item, index) in currentAccounts"
-                :key="index"
+                v-for="item in seedAccounts"
+                :key="item.id"
                 :class="['account-tile', isActiveAccount(item) ? 'active-background' : 'inactive-background', 'pointer']"
                 @click="currentAccountIdentifier = item.id"
             >
@@ -13,7 +14,27 @@
                         <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="grayed-xym-logo" />
                     </span>
                     <span class="mosaic_name">{{ item.name }}</span>
-                    <span class="account-type">{{ item.type === 1 ? `(${$t('Seed')})` : `(${$t('private_key')})` }} </span>
+
+                    <span class="mosaic_value">
+                        <span :class="['amount', 'overflow_ellipsis', 'green']">
+                            <MosaicAmountDisplay :absolute-amount="balances[item.address]" />
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div v-if="pkAccounts.length > 0" class="account-type-title">Private key accounts</div>
+            <div
+                v-for="item in pkAccounts"
+                :key="item.id"
+                :class="['account-tile', isActiveAccount(item) ? 'active-background' : 'inactive-background', 'pointer']"
+                @click="currentAccountIdentifier = item.id"
+            >
+                <div class="mosaic_data">
+                    <span class="img_container">
+                        <img v-if="isActiveAccount(item)" src="@/views/resources/img/symbol/XYMCoin.png" alt />
+                        <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="grayed-xym-logo" />
+                    </span>
+                    <span class="mosaic_name">{{ item.name }}</span>
 
                     <span class="mosaic_value">
                         <span :class="['amount', 'overflow_ellipsis', 'green']">

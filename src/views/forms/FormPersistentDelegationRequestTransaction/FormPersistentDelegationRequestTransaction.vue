@@ -13,9 +13,9 @@
                     <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
                     <NetworkNodeSelector v-model="formItems.nodeModel" />
-                    <FormRow v-if="harvestingStatus !== 'INACTIVE' && !swapDisabled">
+                    <FormRow class="form-warning-row">
                         <template v-slot:inputs>
-                            <div type="warning" class="warning-node-swap">
+                            <div v-if="harvestingStatus !== 'INACTIVE' && !swapDisabled" type="warning" class="warning-node-swap">
                                 <Icon type="ios-warning-outline" />
                                 {{ $t('harvesting_warning_node_swap') }}
                             </div>

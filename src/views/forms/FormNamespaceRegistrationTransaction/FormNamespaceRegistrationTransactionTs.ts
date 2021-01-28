@@ -195,13 +195,13 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
         this.formItems.maxFee = transaction.maxFee.compact();
     }
 
-    public relativeTimetoParent = '';
+    public relativeTimeToParent = '';
 
-    public getTimeByparentNamespaceName() {
+    public getTimeByParentNamespaceName() {
         const selectedNamespace = this.ownedNamespaces.find((item) => item.name === this.formItems.parentNamespaceName);
 
         if (selectedNamespace) {
-            this.relativeTimetoParent = NamespaceService.getExpiration(
+            this.relativeTimeToParent = NamespaceService.getExpiration(
                 this.networkConfiguration,
                 this.currentHeight,
                 selectedNamespace.endHeight,
@@ -211,12 +211,12 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
 
     setParentNamespaceName(val) {
         this.formItems.parentNamespaceName = val;
-        this.getTimeByparentNamespaceName();
+        this.getTimeByParentNamespaceName();
     }
     /**
      * filter tags
      */
-    public stripTagsNamesapceName() {
+    public stripTagsNamespaceName() {
         this.formItems.newNamespaceName = FilterHelpers.stripFilter(this.formItems.newNamespaceName);
     }
     /**
@@ -239,6 +239,18 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     onTitleChange() {
         if (this.isAggregate && this.value) {
             Object.assign(this.formItems, this.value);
+        }
+    }
+
+    /**
+     * Resetting the form when choosing a multisig signer and changing multisig signer
+     * Is necessary to make the mosaic inputs reactive
+     */
+    @Watch('selectedSigner')
+    onSelectedSignerChange() {
+        this.formItems.signerAddress = this.selectedSigner.address.plain();
+        if (this.isMultisigMode()) {
+            this.resetForm();
         }
     }
 }

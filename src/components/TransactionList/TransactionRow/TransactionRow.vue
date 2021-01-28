@@ -38,7 +38,7 @@
             -->
             <span class="hash-cell-time">
                 <!-- @TODO: Should be transaction time instead of deadline -->
-                {{ deadline }}
+                {{ date }}
             </span>
         </div>
     </div>

@@ -31,6 +31,7 @@ import VueNumber from 'vue-number-animation';
 import { VeeValidateSetup } from '@/core/validation/VeeValidateSetup';
 // @ts-ignore
 import App from '@/app/App.vue';
+import clickOutsideDirective from '@/directives/clickOutside';
 
 /// region UI plugins
 Vue.use(iView, { locale });
@@ -41,6 +42,10 @@ Vue.use(VueNumber);
 VeeValidateSetup.initialize();
 Vue.use(infiniteScroll);
 /// end-region UI plugins
+
+/// directives
+Vue.directive('click-outside', clickOutsideDirective);
+/// end-region directives
 
 const app = new Vue({
     router,

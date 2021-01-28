@@ -224,6 +224,9 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
      * @param {string} address
      */
     public async onChangeSigner(address: string) {
+        if (!address) {
+            return;
+        }
         // whether the new signer is a multisig account
         const signerIsMultisigAccount = this.currentAccount.address !== address;
 
@@ -412,11 +415,10 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
 
     /**
      * Calculating number of requiredCosignatures to use in maxFee calculation
-     * @readonly
-     * @private
+     * @override
      * @type number
      */
-    private get requiredCosignatures(): number {
+    protected get requiredCosignatures(): number {
         if (this.multisigOperationType === 'conversion') {
             return this.addressAdditions.length;
         }
@@ -426,9 +428,9 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
         let requiredCosignatures = this.currentMultisigInfo.minApproval;
 
         if (this.addressAdditions.length > 0) {
-            /* 
-      this is an edge case, since the new additions signatures are mandatory, there might be a case 
-      where all the existing cosignatories sign their parts before new additions do. 
+            /*
+      this is an edge case, since the new additions signatures are mandatory, there might be a case
+      where all the existing cosignatories sign their parts before new additions do.
       So in order to stay safe we are adding all the cosignatories including the new additions.
       */
             requiredCosignatures = this.currentMultisigInfo.cosignatoryAddresses.length + this.addressAdditions.length;

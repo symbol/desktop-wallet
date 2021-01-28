@@ -11,7 +11,7 @@
                                 mode="lazy"
                                 vid="name"
                                 :name="$t('name')"
-                                :rules="'required|min:1'"
+                                :rules="validationRules.contactName"
                                 tag="div"
                                 class="inputs-container items-container"
                             >
@@ -21,7 +21,6 @@
                                         type="text"
                                         name="name"
                                         class="input-size input-style"
-                                        autocomplete="new-password"
                                         @input="stripTagsAccountName"
                                     />
                                 </ErrorTooltip>
@@ -41,13 +40,7 @@
                                 class="inputs-container items-container"
                             >
                                 <ErrorTooltip :errors="errors">
-                                    <input
-                                        v-model="formItems.address"
-                                        type="text"
-                                        name="name"
-                                        class="input-size input-style"
-                                        autocomplete="new-password"
-                                    />
+                                    <input v-model="formItems.address" type="text" name="name" class="input-size input-style" />
                                 </ErrorTooltip>
                             </ValidationProvider>
                         </template>
@@ -56,8 +49,9 @@
                         <template v-slot:inputs>
                             <div class="align-right">
                                 <button
-                                    class="button-style validation-button left-side-button"
+                                    class="button-style inverted-button pl-2 pr-2"
                                     type="submit"
+                                    :disabled="isButtonDisabled"
                                     @click="handleSubmit(onSubmit)"
                                 >
                                     {{ $t('confirm') }}
@@ -85,6 +79,6 @@ export default class FormContactCreation extends FormContactCreationTs {}
 }
 /deep/.form-row-inner-container {
     text-align: left;
-    grid-template-columns: 25% 75%;
+    grid-template-columns: 25% 65%;
 }
 </style>

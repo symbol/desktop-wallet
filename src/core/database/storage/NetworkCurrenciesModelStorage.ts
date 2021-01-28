@@ -60,6 +60,10 @@ export class NetworkCurrenciesModelStorage extends VersionedNetworkBasedObjectSt
                     return new NetworkCurrenciesModel(xymMosaic96x, xymMosaic96x);
                 },
             },
+            {
+                description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
         ]);
     }
 }

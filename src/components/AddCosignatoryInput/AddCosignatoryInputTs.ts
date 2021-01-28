@@ -18,7 +18,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { Address, NetworkType, PublicAccount, RepositoryFactory } from 'symbol-sdk';
 // internal dependencies
-import { AddressValidator } from '@/core/validation/validators';
+import { AddressValidator, PublicKeyValidator } from '@/core/validation/validators';
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
@@ -83,10 +83,14 @@ export class AddCosignatoryInputTs extends Vue {
             this.addCosignerFromAddress();
             this.cosignatory = '';
             return;
+        } else if (PublicKeyValidator.validate(this.cosignatory)) {
+            this.addCosignerFromPublicKey();
+            this.cosignatory = '';
+            return;
+        } else {
+            this.$store.dispatch('notification/ADD_ERROR', 'address_not_valid');
+            return;
         }
-
-        this.addCosignerFromPublicKey();
-        this.cosignatory = '';
     }
 
     /**

@@ -144,32 +144,20 @@ export class TransactionCommand {
                 );
                 return of([aggregate]);
             } else {
-                // check if transaction has no signer assigned meaning it's a non-multisig signer sending simple transfer tx
-                const checkIfTxHaveNoSigner = this.stageTransactions.some((tx) => tx.signer === undefined);
-                let aggregate: Transaction;
-                if (checkIfTxHaveNoSigner) {
-                    aggregate = this.calculateSuggestedMaxFee(
-                        AggregateTransaction.createBonded(
-                            Deadline.create(this.epochAdjustment),
-                            this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
-                            this.networkType,
-                            [],
-                            maxFee,
-                        ),
-                    );
-                } else {
-                    // transaction got multisig child signer which should be used to sign the transaction
-                    aggregate = this.calculateSuggestedMaxFee(
-                        AggregateTransaction.createBonded(
-                            Deadline.create(this.epochAdjustment),
-                            this.stageTransactions.map((t) => t.toAggregate(t.signer)),
-                            this.networkType,
-                            [],
-                            maxFee,
-                        ),
-                    );
-                }
+                // use attached signer (multisig account) if exists
+                const signedInnerTransactions = this.stageTransactions.map((t) => {
+                    return t.signer === undefined ? t.toAggregate(currentSigner) : t.toAggregate(t.signer);
+                });
 
+                const aggregate = this.calculateSuggestedMaxFee(
+                    AggregateTransaction.createBonded(
+                        Deadline.create(this.epochAdjustment),
+                        signedInnerTransactions,
+                        this.networkType,
+                        [],
+                        maxFee,
+                    ),
+                );
                 return account.signTransaction(aggregate, this.generationHash).pipe(
                     map((signedAggregateTransaction) => {
                         const hashLock = this.calculateSuggestedMaxFee(
@@ -190,7 +178,10 @@ export class TransactionCommand {
     }
 
     private calculateSuggestedMaxFee(transaction: Transaction): Transaction {
-        const feeMultiplier = this.resolveFeeMultipler(transaction);
+        const feeMultiplier =
+            this.resolveFeeMultipler(transaction) < this.transactionFees.minFeeMultiplier
+                ? this.transactionFees.minFeeMultiplier
+                : this.resolveFeeMultipler(transaction);
         if (!feeMultiplier) {
             return transaction;
         }
@@ -203,12 +194,18 @@ export class TransactionCommand {
 
     private resolveFeeMultipler(transaction: Transaction): number | undefined {
         if (transaction.maxFee.compact() == 1) {
-            return this.transactionFees.medianFeeMultiplier || this.networkConfiguration.defaultDynamicFeeMultiplier;
-            // TODO uncomment the following line when https://github.com/nemtech/catapult-rest/issues/326 is resolved
-            // return this.transactionFees.averageFeeMultiplier * 1.2 || this.networkConfiguration.defaultDynamicFeeMultiplier;
+            const fees =
+                this.transactionFees.medianFeeMultiplier < this.transactionFees.minFeeMultiplier
+                    ? this.transactionFees.minFeeMultiplier
+                    : this.transactionFees.medianFeeMultiplier;
+            return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         if (transaction.maxFee.compact() == 2) {
-            return this.transactionFees.highestFeeMultiplier || this.networkConfiguration.defaultDynamicFeeMultiplier;
+            const fees =
+                this.transactionFees.highestFeeMultiplier < this.transactionFees.minFeeMultiplier
+                    ? this.transactionFees.minFeeMultiplier
+                    : this.transactionFees.highestFeeMultiplier;
+            return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         return undefined;
     }

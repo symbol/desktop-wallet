@@ -14,7 +14,7 @@
  *
  */
 // external dependencies
-import { RouteConfig } from 'vue-router';
+import RouteConfig from 'vue-router';
 
 // internal dependencies
 import { RouteMeta } from './RouteMeta';
@@ -27,5 +27,6 @@ import { RouteMeta } from './RouteMeta';
 export interface AppRoute extends RouteConfig {
     name: string;
     meta: RouteMeta;
+    path?: string;
     children?: AppRoute[];
 }

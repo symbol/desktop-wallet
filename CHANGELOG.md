@@ -3,6 +3,143 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.8][v0.13.8] - 19-Jan-2021
+
+### Milestone: [catapult-server@v0.10.0.5](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.5)
+
+**This version only works with latest testnet (0.10.0.5), it is not backward compatible.**
+#### Fixed
+
+- Fixed electron-shortcut dependency issue.
+- Updated reserved testnet node url (0.10.0.5)
+- Reset local storage for new network 0.10.0.5
+
+## [0.13.7][v0.13.7] - 14-Jan-2021
+
+### Milestone: [catapult-server@v0.10.0.5](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.5)
+
+#### Added
+- Add URL validation procedure to the web-contents-created callback to avoid remote code execution attacks.
+- Added pop-up when co-signatory address is not valid on multisig page.
+- Added icon for NODE_KEY_LINK transactions.
+- added minFeeMultiplier to support the new catapult-server minimal fee requirement.
+#### Fixed
+- Improve Japanese translation.
+- Fixed validation for duplicates in contact creation.
+- Removed additional space in Select Contact window
+- Fixed visibility for balance in profile import form.
+- Updated Electron.
+- Updated feeds to use HTTPS to avoid potential content spoofing.
+- Fixed import account stalls at Mnemonic Passphrase stage.
+- Fixed validation in the contact form.
+- Removed Foundation tags.
+- Fixed transaction filter is not closed after clicking outside the dropdown.
+- Fixed UI issue in Account Restrictions.
+  - Button New Address Restriction is out of the window.
+  - Button Cancel is out of the window.
+  - Address/ Mosaic deletion window doesn't disappear when the restriction was removed.
+  - Multisig account is not fully visible on the address restriction page.
+- Fixed not all the Aggregate page is inactive under Multisig account.
+- Fixed carriage in "To" field for Simple transaction under Multisig account via Aggregate.
+- Fixed single character namespace creation is disabled.
+- Fixed note not visible with normal window size in all transaction forms.
+- Fixed import Transaction URI" dialog window has the wrong size.
+- Fixed unable to convert the account to multi-signature
+- Fixed inability of converting the account to multisig
+- Fixed mnemonic for password backup is always displayed as invalid.
+- Fixed "Add a cosignatory" button missing on Multisig page after toggling from co-signer to not co-signer via upper menu.
+- Fixed setting form URL update state.
+- Fixed mnemonic issues.
+- Fixed UI bugs.
+
+
+## [0.13.6][v0.13.6] - 11-Dec-2020
+
+### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+
+#### Added
+
+- Added Account Restrictions feature (add and delete restrictions), includes the following types: 
+  - Address Restrictions
+  - Mosaic Restrictions
+  - Operation(Transaction Type) Restrictions
+- Added cross-platform zip artifact release
+  - Allows opening directly index.html in the browser (after unzipping the archive file)
+- Added account metadata transaction update feature
+- Added confirmation modal (with warning) after the delete account button is clicked
+#### Fixed
+
+- Fixed multisig account sends transaction issue.
+- Fixed NodeSelector to filter nodes with role type 'peer'.
+  - Until the mainnet release we will keep the static node list(starts with 'beacon') added on top of the dynamic list.
+- Fixed ContactQR publickey bug on export (Import QR Code, next button missing #725).
+- Fixed required-cosignature count bug on metadata transaction.
+- Fixed target account to the selected signer for mosaic and namespace metadata and removed from the forms.
+- Fixed coins transfered from co-signers instead of multi-sig account issue.
+- Fixed harvesting with multi-sig account on different profile issue.
+- Fixed missing add button in aggregate transactions
+- Fixed show notification in case mnemonic not valid before going to next step
+- Fixed AddressQR and ContactQR to use the same QRDisplay component.
+- Fixed overflow on Transaction Modal.
+- Fixed translation issues (especially Japaneese).
+- Improved multi-sig graph view on Account Details Page and Aliases display.
+- UI fixes 
+  - Fixed unable to add json Address Book after attaching invalid format file issue.
+  - Fixed select contact window issues.
+  - Fixed fee selector is not visible issue on modify mosaic supply modal.
+  - Fixed empty window after logout issue.
+## [0.13.5][v0.13.5] - 18-Nov-2020
+
+### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+
+#### Added
+
+- Added Delegated Harvesting (Part 2/2).
+  - Split Delegated harvesting activation into 2 steps: Key linking & Persistent delegation message sending.
+  - Activation is now supporting multisig accounts by sending key link & persistent delegation message in AggregaredBonded transaction for cosigning.
+  - Allow the user to manually input the remote node's public for the node key links.
+  - Extended harvest node selector to load all peers. Node public key is loaded automatically for all `Dual Nodes` with latest catapult-rest changes implemented (Due to be released with the next full server release and Testnet patch, note this will not be fully functional until the release, until then please use the known nodes from the drop-down list or provide the node public key manually).
+  - Activation status has been changed to using catapult-server's `unlockedAccount` diagnostic API (Due to be released with the next full server release and Testnet patch, note this will not be fully functional on all peer nodes until the release).
+  - Added delegated harvesting eligibility check (10K stake)
+- Added MeataData for Account / Modaic / Namespace.
+  - Metadata creation with randomly generated scope key.
+  - Existing metadata modification will be implemented in the next release.
+- Added Aggregate Transaction support.
+  - Currently support 3 types of inner transaction: Transfer / MosaicDefination / NamespaceRegistration.
+- Added AddressBook import from JSON back up.
+- Added logout button under the settings page.
+- Added AddressQR to contact details.
+  - AddressQR currently cannot be exported. We acknowledged this issue (not logged in github issues). This will be fixed in the next release.
+
+#### Fixed
+
+- Fixed account name not showing properly after the update.
+- Fixed bugs in transaction CSV download.
+- Fixed bugs in account deletion from multiple profiles.
+- Fixed invalid node URL bug.
+- Fixed the bug of transaction date in transaction history.
+- Fixed harvesting blocks UI.
+- Improved aggregate transactions UI
+- Accounts restyled. The separation between private keys and seed accounts
+- Aligned all dropdowns.
+- Download paper wallets on account creation.
+- Network settings showing a list of nodes.
+- Fixed private key overflow.
+- Changed transaction modals styles.
+- Other UI fixes.
+
+NOTE: We have known issues which have been logged into github and will look for fixing them in the next release.
+
+## [0.13.4][v0.13.4] - 11-Nov-2020
+
+### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+
+#### Fixed
+
+- Fixed delegated harvesting activation issues.
+- Added existing NGL harvesting nodes to delegated harvesting node selector for function preview purposes.
+- UI fixed on the delegated harvesting activation confirmation page.
+
 ## [0.13.3][v0.13.3] - 09-Nov-2020
 
 ### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
@@ -347,6 +484,10 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
 
+[v0.13.6]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.5...v0.13.6
+[v0.13.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.4...v0.13.5
+[v0.13.4]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.3...v0.13.4
+[v0.13.3]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.3...v0.13.3
 [v0.13.2]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.0...v0.13.2
 [v0.13.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.11.0...v0.13.0
 [v0.12.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.11.0...v0.12.0

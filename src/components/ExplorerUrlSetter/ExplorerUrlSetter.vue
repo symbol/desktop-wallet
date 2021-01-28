@@ -17,6 +17,7 @@
                         :placeholder="$t('node')"
                         :data="defaultExplorerLinkList"
                         class="auto-complete-size auto-complete-style"
+                        @on-change="$emit('on-change')"
                     />
                 </ErrorTooltip>
             </ValidationProvider>
@@ -33,18 +34,16 @@ export default class ExplorerUrlSetter extends ExplorerUrlSetterTs {}
 
 /deep/ .ivu-select-dropdown {
     margin: 0 !important;
-    margin-top: -0.5% !important;
-    margin-left: -0.1% !important;
+    margin-left: -2% !important;
+    margin-top: 0.5% !important;
     padding: 0 !important;
     background: @grayLightest;
 }
 
 /deep/ .auto-complete-style {
-    padding: none !important;
     padding-left: 2.1%;
 
     .ivu-input {
-        margin-top: -0.5% !important;
         background: transparent !important;
         color: @primary;
     }

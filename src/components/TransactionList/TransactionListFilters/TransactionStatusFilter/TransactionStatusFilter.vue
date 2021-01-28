@@ -1,10 +1,10 @@
 <template>
     <div class="transactions-filter">
-        <div class="filter-button" @click="toggleSelection">
+        <div class="filter-button" @click.stop="toggleSelection">
             <span>Filter</span>
             <div class="filter-button-arrow" :class="{ 'arrow-up': isSelectionShown }" />
         </div>
-        <div v-if="isSelectionShown" class="filter-options-container">
+        <div v-show="isSelectionShown" v-click-outside="closeSelection" class="filter-options-container">
             <div class="filter-options-container__option">
                 <Checkbox id="Confirmed" @input="(value) => onChange(transactionFilterOptions.confirmed, value)" />
                 <label for="Confirmed">Confirmed</label>

@@ -39,7 +39,6 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
 import FormLabel from '@/components/FormLabel/FormLabel.vue';
 import { SettingsModel } from '@/core/database/entities/SettingsModel';
 import { AccountModel } from '@/core/database/entities/AccountModel';
-import { networkConfig } from '@/config';
 
 @Component({
     components: {
@@ -91,13 +90,25 @@ export class FormGeneralSettingsTs extends Vue {
         defaultAccount: '',
     };
 
+    /**
+     * Indicates if form has no changes and button should be disabled.
+     */
+    public isConfirmButtonDisabled: boolean = true;
+
+    /**
+     * Unlocks confirm button.
+     */
+    public onChange(): void {
+        this.isConfirmButtonDisabled = false;
+    }
+
     public created() {
         this.resetForm();
     }
 
     public resetForm() {
         this.formItems = { ...this.settings };
-        this.formItems.explorerUrl = networkConfig.explorerUrl;
+
         if (!this.settings.defaultAccount && this.knownAccounts.length) {
             this.formItems.defaultAccount = this.knownAccounts[0].id;
         }
@@ -135,5 +146,9 @@ export class FormGeneralSettingsTs extends Vue {
             this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.');
             console.error(e);
         }
+    }
+
+    public async logout() {
+        this.$emit('logout');
     }
 }

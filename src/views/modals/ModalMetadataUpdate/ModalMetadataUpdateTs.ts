@@ -34,11 +34,25 @@ export class ModalMetadataUpdateTs extends Vue {
     })
     visible: boolean;
 
+    @Prop({
+        default: null,
+    })
+    value: MetadataModel;
+
+    @Prop({
+        default: false,
+    })
+    editMode: boolean;
     /**
      * @MetadataModel
      * Determine edit or add
      */
     protected metadata: MetadataModel;
+
+    @Prop({
+        default: null,
+    })
+    metadataList: MetadataModel[];
 
     /**
      * Metadata update modal type

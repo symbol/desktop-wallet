@@ -14,13 +14,19 @@
  *
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Transaction, TransactionType } from 'symbol-sdk';
+import { Address, Transaction, TransactionType } from 'symbol-sdk';
 // @ts-ignore
 import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue';
+import { mapGetters } from 'vuex';
 
 @Component({
     components: {
         AddressDisplay,
+    },
+    computed: {
+        ...mapGetters({
+            address: 'account/currentAccountAddress',
+        }),
     },
 })
 export class ActionDisplayTs extends Vue {
@@ -34,6 +40,12 @@ export class ActionDisplayTs extends Vue {
      * @type {TransactionType}
      */
     public transactionType = TransactionType;
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    protected address: Address;
 
     /**
      * Whether the transaction needs a cosignature

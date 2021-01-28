@@ -14,21 +14,30 @@
                     <ContactSelectorPanel v-if="activePanel === 1" />
                 </div>
             </div>
-            <div v-if="activePanel === 0" class="left-bottom-container">
-                <!--TODO: Display hidden accounts following AccountSelectorPanel style.-->
-                <div class="hidden-account-header">
-                    <h1 class="section-title">
-                        {{ $t('hidden_accounts') }}
-                    </h1>
-                </div>
-            </div>
         </div>
         <div v-if="activePanel === 0" class="right-container">
             <div class="header-container">
                 <NavigationTabs direction="horizontal" :parent-route-name="parentRouteName" />
-                <div class="header-end">
-                    <ButtonAdd :title="$t('add_metadata')" :disabled="false" @click="showMetadataModal = true" />
-                </div>
+
+                <Poptip placement="bottom-end" class="endpoint-poptip">
+                    <div class="button-container">
+                        <div class="header-end">
+                            <ButtonAdd :disabled="false" />
+                        </div>
+                    </div>
+                    <div slot="content" class="node-selector-container">
+                        <div class="node-list-container">
+                            <div class="node-list-content">
+                                <ul v-auto-scroll="'active'">
+                                    <li class="list-item pointer" @click="showMetadataModal = true">{{ $t('add_metadata') }}</li>
+                                    <li class="list-item pointer" @click="showConfirmOpenRestrictionsModal = true">
+                                        {{ $t('add_account_restrictions') }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </Poptip>
             </div>
 
             <div class="bottom-container">
@@ -46,6 +55,17 @@
             </div>
         </div>
         <ModalMetadataUpdate v-if="showMetadataModal" :visible="showMetadataModal" @close="showMetadataModal = false" />
+        <ModalConfirm
+            v-model="showConfirmOpenRestrictionsModal"
+            :title="$t('open_restrictions_warning_title')"
+            :message="$t('open_restrictions_warning_text')"
+            @confirmed="showAccountRestrictionsModal = true"
+        />
+        <ModalAccountRestrictions
+            v-if="showAccountRestrictionsModal"
+            :visible="showAccountRestrictionsModal"
+            @close="showAccountRestrictionsModal = false"
+        />
     </div>
 </template>
 
@@ -71,5 +91,9 @@ export default class Accounts extends AccountsTs {}
     display: grid;
     height: 100%;
     grid-template-rows: 0.6rem auto;
+
+    ::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
 }
 </style>

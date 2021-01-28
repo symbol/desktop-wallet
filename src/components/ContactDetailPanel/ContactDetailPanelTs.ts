@@ -28,7 +28,7 @@ import AccountActions from '@/components/AccountActions/AccountActions.vue';
 // @ts-ignore
 import FormInputEditable from '@/components/FormInputEditable/FormInputEditable.vue';
 // @ts-ignore
-import ModalConfirmDelete from '@/views/modals/ModalConfirmDelete/ModalConfirmDelete.vue';
+import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
 import { AddressBook, IContact } from 'symbol-address-book';
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 
@@ -39,7 +39,7 @@ import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
         AccountActions,
         AccountAddressDisplay,
         FormInputEditable,
-        ModalConfirmDelete,
+        ModalConfirm,
     },
     computed: {
         ...mapGetters({

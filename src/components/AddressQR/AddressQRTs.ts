@@ -16,33 +16,18 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { AddressQR } from 'symbol-qr-library';
 import { Address } from 'symbol-sdk';
-import { Observable, of } from 'rxjs';
-import { concatMap, pluck } from 'rxjs/operators';
-// resources
-// @ts-ignore
-import failureIcon from '@/views/resources/img/monitor/failure.png';
 import { mapGetters } from 'vuex';
 import { IContact } from 'symbol-address-book';
-
+// @ts-ignore
+import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue';
 @Component({
+    components: {
+        QRCodeDisplay,
+    },
     computed: {
         ...mapGetters({
             generationHash: 'network/generationHash',
         }),
-    },
-    subscriptions() {
-        const qrCode$ = this.$watchAsObservable('qrCodeArgs', {
-            immediate: true,
-        }).pipe(
-            pluck('newValue'),
-            concatMap((args) => {
-                if (args instanceof AddressQR) {
-                    return args.toBase64();
-                }
-                return of(failureIcon);
-            }),
-        );
-        return { qrCode$ };
     },
 })
 export class AddressQRTs extends Vue {
@@ -57,12 +42,6 @@ export class AddressQRTs extends Vue {
      */
     public generationHash: string;
 
-    /**
-     * QR Code
-     * @type {Observable<string>}
-     */
-    public qrCode$: Observable<string>;
-
     /// region computed properties getter/setter
     get qrCodeArgs(): AddressQR {
         if (!this.contact) {
@@ -75,6 +54,10 @@ export class AddressQRTs extends Vue {
         } catch (error) {
             return null;
         }
+    }
+
+    get downloadName(): string {
+        return this.contact ? `contact-qr-${this.contact.name}.png` : '';
     }
     /// end-region computed properties getter/setter
 }

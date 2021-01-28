@@ -1,0 +1,62 @@
+@import '../../resources/css/variables.less';
+
+.restriction-transaction-modal-container {
+    overflow-y: auto;
+    /deep/.ivu-modal {
+        width: 12rem !important;
+
+        .auto-complete-size {
+            width: 100%;
+        }
+    }
+
+    .body-wrapper {
+        display: grid;
+        max-height: none !important;
+        grid-template-columns: 20% 80%;
+        padding: 0 !important;
+    }
+}
+
+.main-container {
+    padding: 45px;
+    height: 6rem;
+}
+
+.tab-footer {
+    display: block;
+    text-align: right;
+}
+
+.title {
+    font-weight: 600;
+    color: @purpleDark;
+    font-family: @symbolFont;
+    font-size: @bigFont;
+}
+
+.restriction-wrapper {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 0.5rem auto 0.5rem;
+}
+
+.nav-links-wrapper {
+    border-right: 2px solid @grayLight;
+
+    .header-container {
+        padding-left: 0.25rem;
+        padding-top: 0.25rem;
+        padding-bottom: 0.45rem;
+
+        .title-style {
+            color: @primary;
+            font-size: @bigFont;
+            font-family: @symbolFontSemiBold;
+        }
+
+        .nav-wrapper {
+            height: 100%;
+        }
+    }
+}

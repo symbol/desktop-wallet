@@ -9,8 +9,10 @@
         >
             <div class="transactionConfirmationBody">
                 <div v-if="!!stagedTransactions" class="stepItem1">
-                    <div v-for="(transaction, index) in stagedTransactions" :key="index" class="info_container">
-                        <TransactionDetails :transaction="transaction" />
+                    <div class="info_container">
+                        <div v-for="(transaction, index) in stagedTransactions" :key="index">
+                            <TransactionDetails :transaction="transaction" />
+                        </div>
                     </div>
 
                     <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
@@ -28,6 +30,12 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
 
 <style lang="less" scoped>
 @import '../../resources/css/variables.less';
+
+.info_container {
+    height: 5rem;
+    overflow-y: scroll;
+}
+
 .float-right {
     float: right;
 }

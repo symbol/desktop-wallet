@@ -20,8 +20,13 @@ import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 import { AccountInfo, Address, MosaicId, RepositoryFactory } from 'symbol-sdk';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
+// @ts-ignore
+import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue';
 
 @Component({
+    components: {
+        MosaicAmountDisplay,
+    },
     computed: {
         ...mapGetters({
             currentMnemonic: 'temporary/mnemonic',

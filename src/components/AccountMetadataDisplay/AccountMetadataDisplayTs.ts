@@ -15,13 +15,10 @@
  */
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { mapGetters } from 'vuex';
 
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
 
-@Component({
-    computed: mapGetters({}),
-})
+@Component({})
 export class AccountMetadataDisplayTs extends Vue {
     /**
      * account metadata list
@@ -31,6 +28,10 @@ export class AccountMetadataDisplayTs extends Vue {
     })
     protected metadataList: MetadataModel[];
 
+    @Prop({
+        default: false,
+    })
+    visible: boolean;
     /**
      * selected metadata model id
      */
@@ -45,6 +46,13 @@ export class AccountMetadataDisplayTs extends Vue {
     }
 
     /**
+     * Visibility state
+     * @type {boolean}
+     */
+    get show(): boolean {
+        return this.visible;
+    }
+    /**
      * Hook called when the layout is mounted
      * @return {void}
      */
@@ -53,5 +61,9 @@ export class AccountMetadataDisplayTs extends Vue {
         if (this.metadataList.length) {
             this.chosenValue = this.metadataList[0].metadataId;
         }
+    }
+    public emitMetadataValue() {
+        const metadataEntry = this.metadataList.find((item) => item.metadataId == this.chosenValue);
+        this.$emit('on-edit-metadata', metadataEntry);
     }
 }

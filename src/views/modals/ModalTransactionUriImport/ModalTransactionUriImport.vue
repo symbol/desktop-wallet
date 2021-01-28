@@ -2,9 +2,9 @@
     <div>
         <ModalFormWrap :visible="visible" :title="$t('import_transaction_uri')" :hide-footer="true" @close="() => $emit('close')">
             <template v-slot:form>
-                <FormWrapper :whitelisted="true">
+                <FormWrapper :whitelisted="true" class="transaction-uri-import-form">
                     <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
-                        <form onsubmit="event.preventDefault()" class="form-line-container mt-3">
+                        <form onsubmit="event.preventDefault()" class="form-line-container mt-3" style="margin-bottom: 1rem;">
                             <FormRow>
                                 <template v-slot:label> {{ $t('transaction_uri') }}: </template>
                                 <template v-slot:inputs>
@@ -49,3 +49,7 @@ import ModalTransactionUriImportTs from './ModalTransactionUriImportTs';
 
 export default class ModalTransactionUriImport extends ModalTransactionUriImportTs {}
 </script>
+
+<style lang="less" scoped>
+@import './ModalTransactionUriImport.less';
+</style>

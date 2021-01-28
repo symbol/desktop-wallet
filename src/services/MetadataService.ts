@@ -26,8 +26,10 @@ import {
     NamespaceId,
     MetadataTransactionService,
     MetadataSearchCriteria,
+    Crypto,
+    Convert,
 } from 'symbol-sdk';
-import { Observable, of } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
 import { MetadataModelStorage } from '@/core/database/storage/MetadataModelStorage';
@@ -56,13 +58,35 @@ export class MetadataService {
         if (!address) {
             return of([]);
         }
-
         const metadataRepository = repositoryFactory.createMetadataRepository();
-        const searchCriteria: MetadataSearchCriteria = { targetAddress: address };
 
-        return metadataRepository
-            .search(searchCriteria)
-            .pipe(map((metadataListPage) => metadataListPage.data.map((metadata) => new MetadataModel(metadata))));
+        // search where user is target
+        const targetSearchCriteria: MetadataSearchCriteria = { targetAddress: address };
+        const uniquMetaArray: MetadataModel[] = [];
+        metadataRepository
+            .search(targetSearchCriteria)
+            .pipe(map((metadataListPage) => metadataListPage.data.map((metadata) => new MetadataModel(metadata))))
+            .subscribe((t) => {
+                t.map((value) => {
+                    if (!uniquMetaArray.find((o) => o.metadataId === value.metadataId)) {
+                        uniquMetaArray.push(value);
+                    }
+                });
+            });
+
+        // search where user is sender of metadata
+        const sourceSearchCriteria: MetadataSearchCriteria = { sourceAddress: address };
+        metadataRepository
+            .search(sourceSearchCriteria)
+            .pipe(map((metadataListPage) => metadataListPage.data.map((metadata) => new MetadataModel(metadata))))
+            .subscribe((t) => {
+                t.map((value) => {
+                    if (!uniquMetaArray.find((o) => o.metadataId === value.metadataId)) {
+                        uniquMetaArray.push(value);
+                    }
+                });
+            });
+        return from([uniquMetaArray]);
     }
 
     /**
@@ -75,26 +99,27 @@ export class MetadataService {
         networkType: NetworkType,
         sourceAddress: Address,
         targetAddress: Address,
-        scopedKey: string,
+        MetadataKey: string,
         value: string,
         targetId: string,
         metadataType: MetadataType,
         maxFee: UInt64,
     ): Observable<Transaction> {
-        const scopedMetadataKey = KeyGenerator.generateUInt64Key(scopedKey);
+        const scopedMetadataKey = MetadataKey ? UInt64.fromHex(MetadataKey) : KeyGenerator.generateUInt64Key(Crypto.randomBytes(8));
 
         const metadataRepository = repositoryFactory.createMetadataRepository();
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
 
         let metadataObservable: Observable<Transaction> = null;
 
+        const encodedValue = Convert.utf8ToHex(value);
         if (metadataType === MetadataType.Account) {
             metadataObservable = metadataTransactionService.createAccountMetadataTransaction(
                 deadline,
                 networkType,
                 targetAddress,
                 scopedMetadataKey,
-                value,
+                encodedValue,
                 sourceAddress,
                 maxFee,
             );
@@ -106,7 +131,7 @@ export class MetadataService {
                 targetAddress,
                 mosaicId,
                 scopedMetadataKey,
-                value,
+                encodedValue,
                 sourceAddress,
                 maxFee,
             );
@@ -118,7 +143,7 @@ export class MetadataService {
                 targetAddress,
                 namespaceId,
                 scopedMetadataKey,
-                value,
+                encodedValue,
                 sourceAddress,
                 maxFee,
             );

@@ -12,11 +12,13 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { MosaicId, MultisigAccountInfo } from 'symbol-sdk';
 import { NotificationType } from '@/core/utils/NotificationType';
+import { AccountModel } from '@/core/database/entities/AccountModel';
 
 @Component({
     computed: {
         ...mapGetters({
             networkMosaic: 'mosaic/networkMosaic',
+            currentAccount: 'account/currentAccount',
             currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
         }),
     },
@@ -35,6 +37,11 @@ export default class DisabledFormOverlay extends Vue {
     public networkMosaic: MosaicId;
 
     /**
+     * Current Account
+     * @var {AccountModel}
+     */
+    public currentAccount: AccountModel;
+    /**
      * Current account multisig info
      * @type {MultisigAccountInfo}
      */
@@ -52,9 +59,11 @@ export default class DisabledFormOverlay extends Vue {
         if (multisigFriendlyRouteNames.some((a) => this.$route.matched.map(({ name }) => name).some((b) => b === a))) {
             return false;
         }
-
         // Disable the forms to accounts with cosignatories
-        return this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.cosignatoryAddresses.length > 0;
+        return (
+            (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.cosignatoryAddresses.length > 0) ||
+            this.currentAccount.isMultisig
+        );
     }
 
     /**
@@ -70,6 +79,7 @@ export default class DisabledFormOverlay extends Vue {
             return NotificationType.NO_NETWORK_CURRENCY;
         }
         if (this.disableToMultisig) {
+            this.$emit('disableForm');
             return NotificationType.MULTISIG_ACCOUNTS_NO_TX;
         }
         return '';

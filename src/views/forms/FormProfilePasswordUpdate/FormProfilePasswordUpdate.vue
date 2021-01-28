@@ -21,6 +21,7 @@
                                     class="input-size input-style"
                                     :placeholder="$t('form_label_new_password')"
                                     type="password"
+                                    @input="onChange"
                                 />
                             </ErrorTooltip>
                         </ValidationProvider>
@@ -45,7 +46,7 @@
                                     v-model="formItems.passwordConfirm"
                                     class="input-size input-style"
                                     :placeholder="$t('form_label_new_password_confirm')"
-                                    type="password"
+                                    @input="onChange"
                                 />
                             </ErrorTooltip>
                         </ValidationProvider>
@@ -68,6 +69,7 @@
                                     v-model="formItems.passwordHint"
                                     class="input-size input-style"
                                     :placeholder="$t('form_label_new_password_hint')"
+                                    @input="onChange"
                                 />
                             </ErrorTooltip>
                         </ValidationProvider>
@@ -75,7 +77,12 @@
                 </FormRow>
 
                 <div class="form-row text-right">
-                    <button class="button-style inverted-button pl-2 pr-2" type="submit" @click="handleSubmit(onSubmit)">
+                    <button
+                        class="button-style inverted-button pl-2 pr-2"
+                        type="submit"
+                        :disabled="isConfirmButtonDisabled"
+                        @click="handleSubmit(onSubmit)"
+                    >
                         {{ $t('confirm') }}
                     </button>
                 </div>

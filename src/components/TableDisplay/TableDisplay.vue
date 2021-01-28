@@ -7,10 +7,10 @@
                         <ButtonAdd :title="$t('add_metadata')" :disabled="false" @click="$emit('on-add-metadata')" />
                     </span>
                     <Checkbox v-if="assetType !== 'metadata'" v-model="showExpired" class="table-filter-item-container">
-                        <span v-show="assetType === 'mosaic'">{{ $t('show_expired_mosaics') }}</span>
-                        <span v-show="assetType === 'namespace'">{{ $t('show_expired_namespaces') }}</span>
+                        <span v-show="assetType === 'mosaic'" style="margin-left: 0.1rem;">{{ $t('show_expired_mosaics') }}</span>
+                        <span v-show="assetType === 'namespace'" style="margin-left: 0.1rem;">{{ $t('show_expired_namespaces') }}</span>
                     </Checkbox>
-                    <div v-if="signers.length > 1">
+                    <div v-if="signers.length > 1" style="min-width: 2rem;">
                         <SignerFilter :signers="signers" @signer-change="onSignerSelectorChange" />
                     </div>
                     <span v-if="assetType !== 'metadata'" class="table-filter-item-container" @click="onRefresh">
@@ -54,6 +54,7 @@
                     @on-show-extend-namespace-duration-form="showExtendNamespaceDurationForm"
                     @on-show-mosaic-supply-change-form="showModifyMosaicSupplyForm"
                     @on-show-metadata="showMetadataValue"
+                    @on-show-edit="showModalUpdateMetadata"
                 />
             </div>
             <div v-else-if="!isLoading && (!displayedValues || displayedValues.length === 0)" class="no-data-outer-container">
@@ -123,6 +124,15 @@
             :visible="modalFormsVisibility.targetedMetadataValue"
             :metadata-list="targetedMetadataList"
             @close="closeModal('targetedMetadataValue')"
+        />
+        <ModalMetadataUpdate
+            v-if="modalFormsVisibility.targetValue"
+            :visible="modalFormsVisibility.targetValue"
+            :value="targetedMetadataList[0]"
+            :metadata-list="targetedMetadataList"
+            :edit-mode="showModalUpdateMetadata"
+            :type="$route.path.indexOf('space') == -1 ? 1 : 2"
+            @close="closeModal('targetValue')"
         />
     </div>
 </template>

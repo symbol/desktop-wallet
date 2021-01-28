@@ -13,6 +13,12 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
+import { NodeModel } from '@/core/database/entities/NodeModel';
+import { URLHelpers } from '@/core/utils/URLHelpers';
+import { HarvestingService } from '@/services/HarvestingService';
+import { PageInfo } from '@/store/Transaction';
+import { map, reduce } from 'rxjs/operators';
 import {
     AccountInfo,
     Address,
@@ -22,15 +28,12 @@ import {
     ReceiptType,
     RepositoryFactory,
     RepositoryFactoryHttp,
+    SignedTransaction,
     UInt64,
 } from 'symbol-sdk';
 import Vue from 'vue';
-import { map, reduce } from 'rxjs/operators';
 // internal dependencies
 import { AwaitLock } from './AwaitLock';
-import { PageInfo } from '@/store/Transaction';
-import { AccountModel } from '@/core/database/entities/AccountModel';
-import { URLHelpers } from '@/core/utils/URLHelpers';
 
 const Lock = AwaitLock.create();
 
@@ -59,6 +62,7 @@ interface HarvestingState {
     status: HarvestingStatus;
     harvestedBlockStats: HarvestedBlockStats;
     isFetchingHarvestedBlockStats: boolean;
+    currentSignerHarvestingModel: HarvestingModel;
 }
 
 const initialState: HarvestingState = {
@@ -72,6 +76,7 @@ const initialState: HarvestingState = {
         totalFeesEarned: UInt64.fromUint(0),
     },
     isFetchingHarvestedBlockStats: false,
+    currentSignerHarvestingModel: null,
 };
 
 export default {
@@ -85,6 +90,7 @@ export default {
         status: (state) => state.status,
         harvestedBlockStats: (state) => state.harvestedBlockStats,
         isFetchingHarvestedBlockStats: (state) => state.isFetchingHarvestedBlockStats,
+        currentSignerHarvestingModel: (state) => state.currentSignerHarvestingModel,
     },
     mutations: {
         setInitialized: (state, initialized) => {
@@ -100,6 +106,8 @@ export default {
         harvestedBlockStats: (state, harvestedBlockStats) => Vue.set(state, 'harvestedBlockStats', harvestedBlockStats),
         isFetchingHarvestedBlockStats: (state, isFetchingHarvestedBlockStats) =>
             Vue.set(state, 'isFetchingHarvestedBlockStats', isFetchingHarvestedBlockStats),
+        currentSignerHarvestingModel: (state, currentSignerHarvestingModel) =>
+            Vue.set(state, 'currentSignerHarvestingModel', currentSignerHarvestingModel),
     },
     actions: {
         async initialize({ commit, getters }) {
@@ -129,35 +137,38 @@ export default {
             if (!currentSignerAccountInfo) {
                 return;
             }
-            const currentSignerAccountModel: AccountModel = rootGetters['account/currentSignerAccountModel'];
+            const currentSignerHarvestingModel: HarvestingModel = rootGetters['harvesting/currentSignerHarvestingModel'];
+            let accountUnlocked = false;
 
-            //find the node url from currentSignerAccountModel (localStorage)
-            const remotePublicKey = currentSignerAccountInfo.supplementalPublicKeys?.linked?.publicKey;
-            const selectedNode = currentSignerAccountModel.selectedHarvestingNode;
-            const harvestingNodeUrl = selectedNode?.url;
-            let unlockedAccounts: string[] = [];
+            if (currentSignerHarvestingModel) {
+                //find the node url from currentSignerHarvestingModel (localStorage)
+                const selectedNode = currentSignerHarvestingModel.selectedHarvestingNode;
+                const harvestingNodeUrl = selectedNode?.url;
+                let unlockedAccounts: string[] = [];
 
-            if (harvestingNodeUrl) {
-                const repositoryFactory = new RepositoryFactoryHttp(URLHelpers.getNodeUrl(harvestingNodeUrl));
-                const nodeRepository = repositoryFactory.createNodeRepository();
-                try {
-                    unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
-                } catch (error) {
-                    //proceed
+                if (harvestingNodeUrl) {
+                    const repositoryFactory = new RepositoryFactoryHttp(URLHelpers.getNodeUrl(harvestingNodeUrl));
+                    const nodeRepository = repositoryFactory.createNodeRepository();
+                    try {
+                        unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
+                    } catch (error) {
+                        //proceed
+                    }
                 }
+                const remotePublicKey = currentSignerAccountInfo.supplementalPublicKeys?.linked?.publicKey;
+                accountUnlocked = unlockedAccounts?.some((publicKey) => publicKey === remotePublicKey);
             }
 
             const allKeysLinked =
                 currentSignerAccountInfo.supplementalPublicKeys?.linked &&
                 currentSignerAccountInfo.supplementalPublicKeys?.node &&
                 currentSignerAccountInfo.supplementalPublicKeys?.vrf;
-            const accountUnlocked = unlockedAccounts?.some((publicKey) => publicKey === remotePublicKey);
 
             let status: HarvestingStatus;
             if (allKeysLinked) {
                 status = accountUnlocked
                     ? HarvestingStatus.ACTIVE
-                    : currentSignerAccountModel.isPersistentDelReqSent
+                    : currentSignerHarvestingModel?.isPersistentDelReqSent
                     ? HarvestingStatus.INPROGRESS_ACTIVATION
                     : HarvestingStatus.KEYS_LINKED;
             } else {
@@ -253,6 +264,42 @@ export default {
                     },
                     complete: () => commit('isFetchingHarvestedBlockStats', false),
                 });
+        },
+        SET_CURRENT_SIGNER_HARVESTING_MODEL({ commit }, currentSignerAddress) {
+            const harvestingService = new HarvestingService();
+            let harvestingModel = harvestingService.getHarvestingModel(currentSignerAddress);
+            if (!harvestingModel) {
+                harvestingModel = { accountAddress: currentSignerAddress };
+                harvestingService.saveHarvestingModel(harvestingModel);
+            }
+            commit('currentSignerHarvestingModel', harvestingModel);
+        },
+        UPDATE_ACCOUNT_SIGNED_PERSISTENT_DEL_REQ_TXS(
+            { commit },
+            { accountAddress, signedPersistentDelReqTxs }: { accountAddress: string; signedPersistentDelReqTxs: SignedTransaction[] },
+        ) {
+            const harvestingService = new HarvestingService();
+            const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
+            harvestingService.updateSignedPersistentDelReqTxs(harvestingModel, signedPersistentDelReqTxs);
+            commit('currentSignerHarvestingModel', harvestingModel);
+        },
+        UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT(
+            { commit },
+            { accountAddress, isPersistentDelReqSent }: { accountAddress: string; isPersistentDelReqSent: boolean },
+        ) {
+            const harvestingService = new HarvestingService();
+            const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
+            harvestingService.updateIsPersistentDelReqSent(harvestingModel, isPersistentDelReqSent);
+            commit('currentSignerHarvestingModel', harvestingModel);
+        },
+        UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE(
+            { commit },
+            { accountAddress, selectedHarvestingNode }: { accountAddress: string; selectedHarvestingNode: NodeModel },
+        ) {
+            const harvestingService = new HarvestingService();
+            const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
+            harvestingService.updateSelectedHarvestingNode(harvestingModel, selectedHarvestingNode);
+            commit('currentSignerHarvestingModel', harvestingModel);
         },
         /// end-region scoped actions
     },

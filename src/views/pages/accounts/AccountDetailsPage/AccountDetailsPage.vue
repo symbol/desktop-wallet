@@ -46,66 +46,44 @@
                         </div>
                     </div>
 
-                    <div class="detail-row">
-                        <AccountMetadataDisplay :metadata-list="accountMetadataList" @on-view-metadata="showMetadataDetailModal = true" />
-                    </div>
-
-                    <div class="detail-row">
-                        <AccountAliasDisplay :account="currentAccount" />
+                    <div v-if="!!accountMetadataList.length" class="detail-row">
+                        <AccountMetadataDisplay
+                            :metadata-list="accountMetadataList"
+                            :visible="!!accountMetadataList.length"
+                            @on-view-metadata="showMetadataDetailModal = true"
+                            @on-edit-metadata="openEditModal"
+                        />
                     </div>
 
                     <div class="graph-row">
+                        <AccountAliasDisplay :account="currentAccount" />
+
                         <AccountMultisigGraph
                             v-if="currentAccount && currentAccount.isMultisig"
                             :account="currentAccount"
                             :visible="currentAccount.isMultisig"
                         />
-                    </div>
-                    <!-- TODO : Make a "CosignatoryDisplay" component -->
-                    <div class="detail-row">
-                        <div class="account-detail-row" style="display: none;">
-                            <div>
-                                <span class="title">{{ $t('cosignatory_of') }}</span>
-                            </div>
-                            <div class="account-detail-cosignatory" style="overflow-x: hidden; max-height: 1rem;">
-                                <!-- TODO : Dynamic content -->
-                                <div class="consignatory_row">
-                                    <img src="@/views/resources/img/icons/multisig.svg" class="icon-left-button" />
-                                    <div class="overflow-elipsis">
-                                        <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                    </div>
-                                </div>
-                                <div class="consignatory_row">
-                                    <img src="@/views/resources/img/icons/multisig.svg" class="icon-left-button" />
-                                    <div class="overflow-elipsis">
-                                        <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                    </div>
-                                </div>
-                                <div class="consignatory_row">
-                                    <img src="@/views/resources/img/icons/multisig.svg" class="icon-left-button" />
-                                    <div class="overflow-elipsis">
-                                        <span class="value">YUGWDYDIUQWDITo7dybuYUGWDYDIUQWDITo7dybuIUQWDITo7dybuYUu</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="detail-row" style="margin-top: 1rem;">
                         <div class="bottom-buttons-container">
+                            <span></span>
                             <button
                                 type="button"
                                 class="centered-button button-style button danger-button"
                                 :disabled="knownAccounts.length <= 1"
-                                @click="deleteAccount()"
+                                @click="deleteAccountConfirmation"
                             >
                                 {{ $t('delete_account') }}
                             </button>
-                            <button type="button" class="centered-button button-style inverted-button">{{ $t('hide_account') }}</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <ModalConfirm
+            v-model="showConfirmationModal"
+            :title="$t('delete_account_confirmation_title')"
+            :message="$t('delete_account_confirmation_message', { accountName: currentAccount.name })"
+            @confirmed="deleteAccount"
+        />
         <ModalFormProfileUnlock
             v-if="hasAccountUnlockModal"
             :visible="hasAccountUnlockModal"
@@ -118,7 +96,13 @@
             :metadata-list="accountMetadataList"
             @close="showMetadataDetailModal = false"
         />
-
+        <ModalMetadataUpdate
+            v-if="showUpdateMetadataModal && metadataEntry"
+            :visible="showUpdateMetadataModal"
+            :value="metadataEntry"
+            :edit-mode="showUpdateMetadataModal"
+            @close="showUpdateMetadataModal = false"
+        />
         <!--<div class="account-detail-inner-container">
             <div class="left-container">
                 <div class="title-row">

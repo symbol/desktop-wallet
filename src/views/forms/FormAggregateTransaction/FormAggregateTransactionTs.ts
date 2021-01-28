@@ -289,7 +289,7 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
     }
 
     /**
-     * Getter for PERSISTENT DELEGATION REQUEST transactions that will be staged
+     * Getter for Aggregate transactions that will be staged
      * @see {FormTransactionBase}
      * @return {Transaction[]}
      */

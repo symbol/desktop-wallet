@@ -72,6 +72,7 @@ export default {
         accountMosaicConfigurations: (state: MosaicState) => state.accountMosaicConfigurations,
         networkMosaicName: (state: MosaicState) => state.networkMosaicName,
         isFetchingMosaics: (state: MosaicState) => state.isFetchingMosaics,
+        networkBalanceMosaics: (state: MosaicState) => state.balanceMosaics.find((m) => m.mosaicIdHex === state.networkMosaicId.toHex()),
     },
     mutations: {
         setInitialized: (state: MosaicState, initialized: boolean) => {
