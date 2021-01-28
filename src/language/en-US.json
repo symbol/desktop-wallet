@@ -405,6 +405,10 @@
     "linked_node_public_key": "Linked Node Public Key",
     "linked_public_key": "Linked Public Key",
     "linked_vrf_public_key": "Linked Vrf Public Key",
+    "linked_remote_private_key": "Linked Remote Private Key",
+    "linked_vrf_private_key": "Linked Vrf Private Key",
+    "linked_keys_info": "Linked Keys Info:",
+    "link_keys": "Link keys",
     "loading": "Loading...",
     "locked_mosaic": "locked mosaic",
     "login": "Login",
@@ -819,5 +823,7 @@
     "welcome": "Welcome",
     "welcome_to_symbol": "Welcome to Symbol",
     "word": "Word",
-    "x_seconds": "{seconds}s."
+    "x_seconds": "{seconds}s.",
+    "activate_delegated_harvesting_message": "In order to activate harvesting, we need to the access your password to decrypt protected keys",
+    "activate_delegated_harvesting": "Activate Harvesting"
 }

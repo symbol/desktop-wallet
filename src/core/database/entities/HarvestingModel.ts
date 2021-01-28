@@ -14,12 +14,12 @@
  *
  */
 
-import { SignedTransaction } from 'symbol-sdk';
 import { NodeModel } from './NodeModel';
 
 export class HarvestingModel {
     public readonly accountAddress: string;
-    public readonly signedPersistentDelReqTxs?: SignedTransaction[];
     public readonly isPersistentDelReqSent?: boolean;
     public readonly selectedHarvestingNode?: NodeModel;
+    public readonly encRemotePrivateKey?: string;
+    public readonly encVrfPrivateKey?: string;
 }

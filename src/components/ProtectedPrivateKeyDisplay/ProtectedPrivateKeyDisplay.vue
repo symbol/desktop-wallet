@@ -1,7 +1,7 @@
 <template>
     <div class="detail-row">
         <div class="account-detail-row-3cols">
-            <span class="label">{{ $t('private_key') }}</span>
+            <span v-if="$route.fullPath !== '/delegatedHarvesting'" class="label">{{ $t('private_key') }}</span>
             <span v-if="hasPlainPrivateKey" class="value accountPublicKey">{{ plainInformation }}</span>
             <span v-if="hasPlainPrivateKey">
                 <span>
