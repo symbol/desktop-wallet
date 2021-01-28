@@ -49,7 +49,7 @@ export default class ModalConfirmTs extends Vue {
     protected isCheckboxChecked: boolean = false;
 
     get isOkClickable(): boolean {
-        return !this.showCheckbox || this.showCheckbox && this.isCheckboxChecked;
+        return !this.showCheckbox || (this.showCheckbox && this.isCheckboxChecked);
     }
     /**
      * Visibility state

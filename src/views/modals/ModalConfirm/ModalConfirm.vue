@@ -1,13 +1,6 @@
 <template>
     <div class="container">
-        <Modal 
-            v-model="show" 
-            class-name="modal-container"
-            class="modal-confirm" 
-            :title="$t(title)" 
-            :transfer="false" 
-            :footer-hide="true" 
-        >
+        <Modal v-model="show" class-name="modal-container" class="modal-confirm" :title="$t(title)" :transfer="false" :footer-hide="true">
             <div class="container">
                 <div v-if="danger" class="centered-content bottom-space">
                     <Icon type="ios-alert-outline" size="50" />
@@ -21,15 +14,12 @@
                 </div>
             </div>
             <div class="footer bottom-space">
-                <button
-                    class="ivu-btn ivu-btn-text right-space"
-                    @click="cancel"
-                >
+                <button class="ivu-btn ivu-btn-text right-space" @click="cancel">
                     {{ $t('cancel') }}
                 </button>
                 <button
                     class="ivu-btn centered-button button-style button"
-                    :class="{'danger-button': danger, 'inverted-button': !danger}"
+                    :class="{ 'danger-button': danger, 'inverted-button': !danger }"
                     :disabled="!isOkClickable"
                     @click="confirm"
                 >
