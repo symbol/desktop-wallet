@@ -62,7 +62,7 @@ import { feesConfig } from '@/config';
 import { HarvestingStatus } from '@/store/Harvesting';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
 import { Observable, of } from 'rxjs';
-import { concatMap, flatMap, map, mergeAll, switchMap, tap, toArray } from 'rxjs/operators';
+import { flatMap, map, tap } from 'rxjs/operators';
 import { BroadcastResult } from '@/core/transactions/BroadcastResult';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
