@@ -15,7 +15,7 @@
                     </div>
                 </div>
             </div>
-            <div class="footer" slot="footer">
+            <div slot="footer" class="footer">
                 <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
                 <FormProfileUnlock v-else @success="onAccountUnlocked" @error="onError" />
             </div>
