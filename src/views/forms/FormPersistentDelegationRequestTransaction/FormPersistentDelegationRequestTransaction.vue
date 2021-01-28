@@ -122,6 +122,7 @@
             v-model="showConfirmationModal"
             :title="$t('activate_delegated_harvesting')"
             :message="$t('activate_delegated_harvesting_message')"
+            @confirmed="showConfirmationModal = false"
         />
         <ModalFormProfileUnlock
             v-if="hasAccountUnlockModal"

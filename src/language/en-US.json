@@ -980,6 +980,6 @@
     "welcome_to_symbol": "Welcome to Symbol",
     "word": "Word",
     "x_seconds": "{seconds}s.",
-    "activate_delegated_harvesting_message": "In order to activate harvesting, we need to the access your password to decrypt protected keys",
+    "activate_delegated_harvesting_message": "In order to activate harvesting, we need your password to decrypt protected keys",
     "activate_delegated_harvesting": "Activate Harvesting"
 }
