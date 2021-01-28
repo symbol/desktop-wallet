@@ -438,7 +438,7 @@
     "mnemonic_phrase": "Mnemonic Passphrase",
     "mnemonic_qr_action_desc": "Click continue to set imported Mnemonic Words to the text area.",
     "modal_account_unlock_title": "Unlock your account",
-    "modal_backup_reminder_content": "Please note that the Private Key account cannot be restored from your mnemonic passphrase. Please backup your profile again after import is complete to include this account in the Paper Wallet",
+    "modal_backup_reminder_content": "Please note that the Private Key account cannot be restored from your mnemonic passphrase. Backup your profile again after import is complete to include this account in the Paper Wallet.",
     "modal_backup_reminder_title": "Warning",
     "modal_title_account_metadata": "Account metadata",
     "modal_title_backup_mnemonic_display": "Display Mnemonic Passphrase",
