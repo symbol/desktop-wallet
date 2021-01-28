@@ -18,8 +18,6 @@
 
 .import-profile-wrapper {
     width: 100%;
-    height: 100%;
-    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,6 +43,7 @@
         display: flex;
         align-items: center;
         text-align: left;
+        min-height: calc(100vh - 255px);
 
         .text-wrapper {
             display: block;
@@ -76,11 +75,10 @@
         display: flex;
         align-items: center;
         background-color: @white;
-        height: 100%;
+        min-height: calc(100vh - 255px);
 
         .steps {
             width: 25%;
-            border-right: 0.5px solid #d3d3d3;
             height: 100%;
             display: flex;
 
@@ -119,9 +117,12 @@
         }
         .form {
             flex: 1;
-            max-width: 70%;
-            padding: 10% 5%;
-            overflow: hidden;
+            padding: 0 10%;
+            width: 75%;
+            border-left: 0.5px solid #d3d3d3;
+            min-height: calc(100vh - 255px);
+            display: flex;
+            align-items: center;
         }
     }
 
