@@ -20,19 +20,21 @@ import { NamespaceMetadataTransaction } from 'symbol-sdk';
 // internal dependencies
 import { TransactionView } from './TransactionView';
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
+import { Formatters } from '../utils/Formatters';
 // eslint-disable-next-line max-len
 export class ViewNamespaceMetadataTransaction extends TransactionView<NamespaceMetadataTransaction> {
     /**
      * Displayed items
      */
     protected resolveDetailItems(): TransactionDetailItem[] {
+        const metadataValue = Formatters.hexToUtf8(this.transaction.value);
         return [
             { key: 'sender', value: this.transaction.signer.address.pretty() },
             // @ts-ignore
             { key: 'target', value: this.transaction.targetAddress.pretty() },
             { key: 'namespace', value: this.transaction.targetNamespaceId.toHex() },
             { key: 'scopedMetadataKey', value: this.transaction.scopedMetadataKey.toHex() },
-            { key: 'value', value: this.transaction.value.toString() },
+            { key: 'value', value: metadataValue },
             { key: 'valueSizeDelta', value: this.transaction.valueSizeDelta },
         ];
     }
