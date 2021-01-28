@@ -63,7 +63,7 @@
                     :disabled="!formItems.networkHash"
                     @click="handleSubmit(onSubmit)"
                 >
-                    {{ $t('confirm') }}
+                    {{ $t('add_node') }}
                 </button>
             </div>
         </ValidationObserver>
