@@ -601,18 +601,14 @@ export default {
             };
             commit('updateSubscriptions', payload);
         },
-    
+
         async GET_ACCOUNT_INFO({ rootGetters }, address: Address | null): Promise<AccountInfo | null> {
             try {
                 const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-                const acountInfo = await repositoryFactory
-                    .createAccountRepository()
-                    .getAccountInfo(address)
-                    .toPromise();
+                const acountInfo = await repositoryFactory.createAccountRepository().getAccountInfo(address).toPromise();
 
                 return acountInfo;
-            }
-            catch(e) {
+            } catch (e) {
                 return null;
             }
         },

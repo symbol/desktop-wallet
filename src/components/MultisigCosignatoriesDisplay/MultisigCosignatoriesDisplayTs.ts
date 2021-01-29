@@ -103,7 +103,7 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
         const isCosignatory = this.cosignatories.find(({ address }) => cosigAddress.plain() === address.plain());
         const isAccountExist = !!(await this.$store.dispatch('account/GET_ACCOUNT_INFO', cosigAddress));
 
-        if(!isAccountExist) {
+        if (!isAccountExist) {
             this.$store.dispatch('notification/ADD_ERROR', 'warning_unknown_account');
             return;
         } else if (isCosignatory || this.cosignatoryModifications[cosigAddress.plain()]) {
