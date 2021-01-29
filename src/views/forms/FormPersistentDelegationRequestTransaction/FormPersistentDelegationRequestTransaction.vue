@@ -13,7 +13,10 @@
                     <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
                     <NetworkNodeSelector v-model="formItems.nodeModel" />
-                    <div class="linked-keys-info">
+                    <div
+                        v-if="currentSignerHarvestingModel.encRemotePrivateKey || currentSignerHarvestingModel.encVrfPrivateKey"
+                        class="linked-keys-info"
+                    >
                         <span>
                             {{ $t('linked_keys_info') }}
                         </span>

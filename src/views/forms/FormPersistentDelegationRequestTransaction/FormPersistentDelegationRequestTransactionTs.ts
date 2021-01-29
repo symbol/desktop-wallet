@@ -354,9 +354,15 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 tap((resArr) =>
                     resArr[0].subscribe((res) => {
                         if (res.success) {
-                            if (this.vrfPrivateKeyTemp && this.remotePrivateKeyTemp) {
-                                this.saveVrfKey(accountAddress, Crypto.encrypt(this.vrfPrivateKeyTemp, this.password));
-                                this.saveRemoteKey(accountAddress, Crypto.encrypt(this.remotePrivateKeyTemp, this.password));
+                            // @ts-ignore
+                            if (!res.transaction?.innerTransactions.some((val) => val.linkAction === LinkAction.Link)) {
+                                this.saveVrfKey(accountAddress, '');
+                                this.saveRemoteKey(accountAddress, '');
+                            } else {
+                                if (this.vrfPrivateKeyTemp && this.remotePrivateKeyTemp) {
+                                    this.saveVrfKey(accountAddress, Crypto.encrypt(this.vrfPrivateKeyTemp, this.password));
+                                    this.saveRemoteKey(accountAddress, Crypto.encrypt(this.remotePrivateKeyTemp, this.password));
+                                }
                             }
                             this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
                                 accountAddress,
@@ -550,7 +556,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     private get isPersistentDelReqSent() {
         return this.currentSignerHarvestingModel?.isPersistentDelReqSent;
     }
-    public async activateAccount() {
+    public activateAccount() {
         this.hasAccountUnlockModal = true;
     }
 

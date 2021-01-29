@@ -47,10 +47,10 @@ export class HarvestingService {
     public updateSignedPersistentDelReqTxs(harvestingModel: HarvestingModel, signedPersistentDelReqTxs) {
         this.saveHarvestingModel(Object.assign(harvestingModel, { signedPersistentDelReqTxs }));
     }
-    public updateRemoteKey(harvestingModel: HarvestingModel, encRemotePrivateKey) {
+    public updateRemoteKey(harvestingModel: HarvestingModel, encRemotePrivateKey: string) {
         this.saveHarvestingModel(Object.assign(harvestingModel, { encRemotePrivateKey }));
     }
-    public updateVrfKey(harvestingModel: HarvestingModel, encVrfPrivateKey) {
+    public updateVrfKey(harvestingModel: HarvestingModel, encVrfPrivateKey: string) {
         this.saveHarvestingModel(Object.assign(harvestingModel, { encVrfPrivateKey }));
     }
 
