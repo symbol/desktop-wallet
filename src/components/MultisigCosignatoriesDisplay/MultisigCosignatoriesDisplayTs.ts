@@ -101,20 +101,25 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
      */
     protected async onAddCosignatory(cosigAddress: Address): Promise<void> {
         const isCosignatory = this.cosignatories.find(({ address }) => cosigAddress.plain() === address.plain());
+
+        if (isCosignatory || this.cosignatoryModifications[cosigAddress.plain()]) {
+            this.$store.dispatch('notification/ADD_WARNING', 'warning_already_a_cosignatory');
+            return;
+        }
+
+        if (cosigAddress.plain() === this.currentAddress) {
+            this.$store.dispatch('notification/ADD_WARNING', 'current_cosigner_matches_current_account');
+            return;
+        }
+
         const isAccountExist = !!(await this.$store.dispatch('account/GET_ACCOUNT_INFO', cosigAddress));
 
         if (!isAccountExist) {
             this.$store.dispatch('notification/ADD_ERROR', 'warning_unknown_account');
             return;
-        } else if (isCosignatory || this.cosignatoryModifications[cosigAddress.plain()]) {
-            this.$store.dispatch('notification/ADD_WARNING', 'warning_already_a_cosignatory');
-            return;
-        } else if (cosigAddress.plain() === this.currentAddress) {
-            this.$store.dispatch('notification/ADD_WARNING', 'current_cosigner_matches_current_account');
-            return;
-        } else {
-            this.$emit('add', cosigAddress);
         }
+
+        this.$emit('add', cosigAddress);
     }
 
     /**
