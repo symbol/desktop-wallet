@@ -140,7 +140,6 @@ describe('MultisigCosignatoriesDisplay', () => {
     //     wrapper.destroy();
     // });
 
-    
     // test('Should emit when removing a cosigner', () => {
     //     const wrapper = shallowMount(MultisigCosignatoriesDisplay, {
     //         i18n,
