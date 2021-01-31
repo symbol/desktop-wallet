@@ -514,7 +514,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
 
     triggerChange() {
-        if (Address.isValidRawAddress(this.formItems.recipientRaw)) {
+        if (AddressValidator.validate(this.formItems.recipientRaw)) {
             this.transactions = this.getTransactions();
             // avoid error
             if (this.transactions) {
