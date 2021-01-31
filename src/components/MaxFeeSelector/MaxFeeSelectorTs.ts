@@ -145,7 +145,7 @@ export class MaxFeeSelectorTs extends Vue {
      * @type {number}
      */
     get chosenMaxFee(): number {
-        return this.value || this.defaultFee;
+        return typeof this.value === 'number' ? this.value : this.defaultFee;
     }
 
     /**

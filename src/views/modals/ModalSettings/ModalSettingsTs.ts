@@ -99,4 +99,8 @@ export class ModalSettingsTs extends Vue {
         this.$emit('close');
         this.$router.push({ name: 'profiles.login' });
     }
+
+    public close() {
+        this.$emit('close');
+    }
 }

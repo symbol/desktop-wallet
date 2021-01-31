@@ -16,7 +16,7 @@
             </div>
 
             <div v-if="knownTabs[currentTabIndex] === 'GENERAL' && !!currentAccount">
-                <FormGeneralSettings @logout="logout" />
+                <FormGeneralSettings @logout="logout" @close="close" />
             </div>
 
             <div v-if="knownTabs[currentTabIndex] === 'PASSWORD' && !!currentAccount">
