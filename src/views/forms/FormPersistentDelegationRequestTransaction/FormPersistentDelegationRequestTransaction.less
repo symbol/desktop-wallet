@@ -91,7 +91,7 @@
 
 /deep/.key-item {
     .form-row .form-row-inner-container {
-        grid-template-columns: 3rem 6rem;
+        grid-template-columns: 3rem 6rem 1rem;
     }
     .form-row-inner-container {
         align-items: center;
@@ -119,8 +119,25 @@
     color: @purpleDark;
     font-size: 0.18rem;
     font-family: @symbolFontSemiBold;
-    // margin-left: 5%;
     margin-top: 5%;
     margin-right: 1rem;
     text-align: justify;
+}
+
+.button-icon {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+}
+
+.form-row {
+    max-width: 95%;
+    display: inline-block;
+}
+
+.linked-label {
+    padding-left: 0.15rem;
+    padding-top: auto;
+    float: left;
+    margin-top: 7px;
 }
