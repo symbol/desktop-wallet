@@ -33,6 +33,8 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
+// @ts-ignore
+import ModalBackupReminder from '@/views/modals/ModalBackupReminder/ModalBackupReminder.vue';
 // configuration
 import { appConfig } from '@/config';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
@@ -48,6 +50,7 @@ const { MAX_SEED_ACCOUNTS_NUMBER } = appConfig.constants;
         FormWrapper,
         FormRow,
         ModalFormProfileUnlock,
+        ModalBackupReminder,
     },
     computed: {
         ...mapGetters({
@@ -113,6 +116,11 @@ export class FormSubAccountCreationTs extends Vue {
     };
 
     /**
+     * Whether backup reminder is shown
+     */
+    public isModalBackupReminderShown: boolean = false;
+
+    /**
      * Type the ValidationObserver refs
      * @type {{
      *     observer: InstanceType<typeof ValidationObserver>
@@ -152,12 +160,25 @@ export class FormSubAccountCreationTs extends Vue {
      * @return {void}
      */
     public onSubmit() {
-        this.hasAccountUnlockModal = true;
+        if (this.formItems.type === 'privatekey_account') {
+            this.isModalBackupReminderShown = true;
+        } else {
+            this.hasAccountUnlockModal = true;
+        }
 
         // // resets form validation
         // this.$nextTick(() => {
         //   this.$refs.observer.reset()
         // })
+    }
+
+    /**
+     * Close backup reminder modal
+     * @return {void}
+     */
+    public closeBackupReminderModal() {
+        this.isModalBackupReminderShown = false;
+        this.hasAccountUnlockModal = true;
     }
 
     /**
