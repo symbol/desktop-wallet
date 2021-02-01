@@ -11,18 +11,46 @@
                     <li class="text list-item-with-disc">{{ $t('phishing_warning') }}</li>
                     <li class="text list-item-with-disc">{{ $t('if_you_need_to_back_up_your_mnemonics_again_you_can') }}</li>
                 </ul>
+                <div class="flex bottom-space">
+                    <Checkbox v-model="marked">
+                        <span>{{ $t('please_approve') }}</span>
+                        <a class="link" @click="displayModal('termsAndConditions')">
+                            {{ $t('terms_and_conditions') }}
+                        </a>
+                        &
+                        <a class="link" @click="displayModal('privacyAndPolicy')">
+                            {{ $t('privacy_policy') }}
+                        </a>
+                        <span>.</span>
+                    </Checkbox>
+                </div>
                 <div class="buttons clear">
                     <div class="float-right">
                         <button type="button" class="solid-button button-style fat-button create-account-style" @click="$router.back()">
                             {{ $t('back') }}
                         </button>
-                        <button type="submit" class="inverted-button button-style fat-button create-account-style" @click="submit">
-                            {{ $t('next') }}
+                        <button
+                            type="submit"
+                            class="inverted-button button-style fat-button create-account-style"
+                            :disabled="!marked"
+                            @click="submit"
+                        >
+                            {{ $t('finish') }}
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+        <ModalTermsAndConditions
+            v-if="modalVisibility.termsAndConditions"
+            :visible="modalVisibility.termsAndConditions"
+            @close="closeModal('termsAndConditions')"
+        />
+        <ModalPrivacyAndPolicy
+            v-if="modalVisibility.privacyAndPolicy"
+            :visible="modalVisibility.privacyAndPolicy"
+            @close="closeModal('privacyAndPolicy')"
+        />
     </div>
 </template>
 

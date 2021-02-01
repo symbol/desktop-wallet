@@ -23,9 +23,8 @@ import { mapGetters } from 'vuex';
         }),
     },
 })
-export class ModalTermsAndConditionsTs extends Vue {
+export class ModalPrivacyAndPolicyTs extends Vue {
     @Prop({ default: false }) visible: boolean;
-
     /**
      * Internal visibility state
      * @type {boolean}

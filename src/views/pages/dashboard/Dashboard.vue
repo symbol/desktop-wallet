@@ -12,12 +12,6 @@
                 </div>
             </div>
         </div>
-
-        <ModalTermsAndConditions
-            v-if="currentProfile"
-            :visible="currentProfile.termsAndConditionsApproved == false"
-            @close="$emit('close')"
-        />
     </div>
 </template>
 

@@ -20,9 +20,18 @@ import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 // internal dependencies
 import { AccountService } from '@/services/AccountService';
 import { NotificationType } from '@/core/utils/NotificationType';
+// @ts-ignore
+import ModalTermsAndConditions from '@/views/modals/ModalTermsAndConditions/ModalTermsAndConditions.vue';
+// @ts-ignore
+import ModalPrivacyAndPolicy from '@/views/modals/ModalPrivacyAndPolicy/ModalPrivacyAndPolicy.vue';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { ProfileService } from '@/services/ProfileService';
 
 @Component({
+    components: {
+        ModalTermsAndConditions,
+        ModalPrivacyAndPolicy,
+    },
     computed: {
         ...mapGetters({
             networkType: 'network/networkType',
@@ -33,6 +42,28 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
     },
 })
 export default class FinalizeTs extends Vue {
+    /**
+     * Controls submit button for terms and conditions
+     * @type {boolean}
+     */
+    private marked: boolean = false;
+
+    /**
+     * Modal forms visibility states
+     * @protected
+     * @type {{
+     *     termsAndConditions: boolean
+     *     privacyAndPolicy: boolean
+     *   }}
+     */
+    protected modalVisibility: {
+        termsAndConditions: boolean;
+        privacyAndPolicy: boolean;
+    } = {
+        termsAndConditions: false,
+        privacyAndPolicy: false,
+    };
+
     /**
      * Currently active networkType
      * @see {Store.Network}
@@ -68,6 +99,12 @@ export default class FinalizeTs extends Vue {
     public accountService: AccountService = new AccountService();
 
     /**
+     * Profile Service
+     * @var {ProfileService}
+     */
+    public profileService: ProfileService = new ProfileService();
+
+    /**
      * Finalize the profile creation process by adding
      * the account created from mnemonic pass phrase.
      * @return {void}
@@ -82,6 +119,7 @@ export default class FinalizeTs extends Vue {
         );
         // use repository for storage
         this.accountService.saveAccount(account);
+        this.profileService.updateProfileTermsAndConditionsStatus(this.currentProfile, true);
 
         // execute store actions
         await this.$store.dispatch('profile/ADD_ACCOUNT', account);
@@ -92,5 +130,25 @@ export default class FinalizeTs extends Vue {
 
         // flush and continue
         return this.$router.push({ name: 'dashboard' });
+    }
+
+    /**
+     * Closes a modal
+     * @protected
+     * @param {string} modalIdentifier
+     * @return {void}
+     */
+    protected displayModal(modalIdentifier: string): void {
+        Vue.set(this.modalVisibility, modalIdentifier, true);
+    }
+
+    /**
+     * Closes a modal
+     * @protected
+     * @param {string} modalIdentifier
+     * @return {void}
+     */
+    protected closeModal(modalIdentifier: string): void {
+        Vue.set(this.modalVisibility, modalIdentifier, false);
     }
 }
