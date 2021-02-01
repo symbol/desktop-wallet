@@ -698,7 +698,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             this.vrfPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encVrfPrivateKey, password.value);
             this.onSubmit();
         } catch (e) {
-            this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.');
+            this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try check all your keys are linked properly.');
             console.error(e);
         }
     }
