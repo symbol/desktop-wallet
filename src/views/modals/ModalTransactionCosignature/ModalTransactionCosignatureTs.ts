@@ -131,11 +131,29 @@ export class ModalTransactionCosignatureTs extends Vue {
 
     public get needsCosignature(): boolean {
         // Multisig account can not sign
-        if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
-            return false;
-        }
         const currentPubAccount = AccountModel.getObjects(this.currentAccount).publicAccount;
-        return !this.transaction.signedByAccount(currentPubAccount);
+        if (!this.transaction.signedByAccount(currentPubAccount)) {
+            if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
+                return false;
+            }
+
+            const cosignerAddresses = this.transaction.innerTransactions.map((t) => t.signer?.address);
+
+            const cosignRequired = cosignerAddresses.find((c) => {
+                if (c) {
+                    return (
+                        c.plain() === this.currentAccount.address ||
+                        (this.currentAccountMultisigInfo &&
+                            this.currentAccountMultisigInfo.multisigAddresses.find((m) => c.equals(m)) !== undefined)
+                    );
+                }
+                return false;
+            });
+
+            return cosignRequired !== undefined;
+        }
+
+        return false;
     }
 
     public get cosignatures(): AggregateTransactionCosignature[] {
