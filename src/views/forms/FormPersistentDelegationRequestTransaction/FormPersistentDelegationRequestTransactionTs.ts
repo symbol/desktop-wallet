@@ -152,6 +152,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     private remotePrivateKeyTemp: string;
 
     private activating = false;
+
     /**
      * Current account owned mosaics
      * @protected
@@ -175,6 +176,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     private type: string;
     private password: string;
     private linkIcon: string = officialIcons.publicChain;
+    private linking = false;
+
     /**
      * Reset the form with properties
      * @return {void}
@@ -192,7 +195,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     @Watch('currentSignerAccountInfo', { immediate: true })
     private currentSignerWatch() {
         this.formItems.signerAddress = this.signerAddress || this.currentSignerAccountInfo?.address.plain();
-
         if (this.isNodeKeyLinked) {
             this.formItems.nodeModel.nodePublicKey = this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey;
             if (this.currentSignerHarvestingModel?.selectedHarvestingNode) {
@@ -210,6 +212,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      */
     protected getSingleKeyLinkTransaction(type?: string): Observable<Transaction[]> {
         const maxFee = UInt64.fromUint(feesConfig.highest);
+
         let transaction: Transaction;
         switch (type) {
             case 'account':
@@ -260,33 +263,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
          SWAP =>  unlink(linked) + link all (new keys)
          */
 
-        if (this.isAccountKeyLinked) {
-            if (this.action !== HarvestingAction.START && this.action !== HarvestingAction.SWAP) {
-                const accountKeyUnLinkTx = this.createAccountKeyLinkTx(
-                    this.currentSignerAccountInfo.supplementalPublicKeys.linked.publicKey,
-                    LinkAction.Unlink,
-                    maxFee,
-                );
-                txs.push(accountKeyUnLinkTx);
-            }
-        }
-
-        if (this.isVrfKeyLinked) {
-            if (this.action !== HarvestingAction.START && this.action !== HarvestingAction.SWAP) {
-                const vrfKeyUnLinkTx = this.createVrfKeyLinkTx(
-                    this.currentSignerAccountInfo.supplementalPublicKeys.vrf.publicKey,
-                    LinkAction.Unlink,
-                    maxFee,
-                );
-                txs.push(vrfKeyUnLinkTx);
-            }
-        }
-
-        if (
-            this.isNodeKeyLinked &&
-            (this.action !== HarvestingAction.SWAP ||
-                this.currentSignerHarvestingModel?.selectedHarvestingNode.nodePublicKey !== this.formItems.nodeModel.nodePublicKey)
-        ) {
+        if (this.isNodeKeyLinked) {
             const nodeUnLinkTx = this.createNodeKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys.node.publicKey,
                 LinkAction.Unlink,
@@ -304,10 +281,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(vrfKeyLinkTx);
             }
-            if (
-                !this.isNodeKeyLinked ||
-                this.currentSignerHarvestingModel?.selectedHarvestingNode.nodePublicKey !== this.formItems.nodeModel.nodePublicKey
-            ) {
+
+            if (!this.isNodeKeyLinked) {
                 const nodeLinkTx = this.createNodeKeyLinkTx(this.formItems.nodeModel.nodePublicKey, LinkAction.Link, maxFee);
                 txs.push(nodeLinkTx);
             }
@@ -479,6 +454,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         // announce the keyLink txs and save the vrf and remote private keys encrypted to the storage
         return this.getKeyLinkTransactions(transactionSigner).pipe(
             flatMap((transactions) => {
+                Vue.set(this, 'linking', true);
                 const signedTransactions = transactions.map((t) => transactionSigner.signTransaction(t, this.generationHash));
                 if (!signedTransactions.length) {
                     return of([]) as Observable<Observable<BroadcastResult>[]>;
@@ -493,17 +469,19 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 resArr[0].subscribe((res) => {
                     if (res.success) {
                         // @ts-ignore
-                        if (!res.transaction?.innerTransactions.some((val) => val.linkAction === LinkAction.Link)) {
-                            this.saveVrfKey(accountAddress, null);
-                            this.saveRemoteKey(accountAddress, null);
-                        } else {
-                            if (this.vrfPrivateKeyTemp) {
-                                this.saveVrfKey(accountAddress, Crypto.encrypt(this.vrfPrivateKeyTemp, this.password));
+                        res.transaction?.innerTransactions.forEach((val) => {
+                            if (val.type === TransactionType.ACCOUNT_KEY_LINK) {
+                                val.linkAction === LinkAction.Link && this.remotePrivateKeyTemp
+                                    ? this.saveRemoteKey(accountAddress, Crypto.encrypt(this.remotePrivateKeyTemp, this.password))
+                                    : this.saveRemoteKey(accountAddress, null);
                             }
-                            if (this.remotePrivateKeyTemp) {
-                                this.saveRemoteKey(accountAddress, Crypto.encrypt(this.remotePrivateKeyTemp, this.password));
+                            if (val.type === TransactionType.VRF_KEY_LINK) {
+                                val.linkAction == LinkAction.Link && this.remotePrivateKeyTemp
+                                    ? this.saveVrfKey(accountAddress, Crypto.encrypt(this.vrfPrivateKeyTemp, this.password))
+                                    : this.saveVrfKey(accountAddress, null);
                             }
-                        }
+                        });
+
                         this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
                             accountAddress,
                             isPersistentDelReqSent: false,
@@ -513,6 +491,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                             accountAddress,
                             selectedHarvestingNode: this.formItems.nodeModel,
                         });
+                        Vue.set(this, 'linking', false);
                     }
                 }),
             ),
@@ -640,10 +619,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         this.onSubmit();
     }
 
-    public onSwap() {
-        this.action = HarvestingAction.SWAP;
-        this.onSubmit();
-    }
+    // public onSwap() {
+    //     this.action = HarvestingAction.SWAP;
+    //     this.onSubmit();
+    // }
 
     public onActivate() {
         this.hasAccountUnlockModal = true;
@@ -663,15 +642,12 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         this.onSubmit();
     }
 
-    public get swapDisabled(): boolean {
-        return (
-            this.formItems.nodeModel.nodePublicKey?.toLowerCase() ===
-            this.currentSignerAccountInfo.supplementalPublicKeys?.node?.publicKey?.toLowerCase()
-        );
-    }
-
     public onSubmit() {
-        if (!this.allKeysLinked && !this.formItems.nodeModel.nodePublicKey.length && this.type !== 'account' && this.type !== 'vrf') {
+        if (
+            !this.allKeysLinked &&
+            !this.formItems.nodeModel.nodePublicKey.length &&
+            ((this.action == HarvestingAction.SINGLE_KEY && this.type == 'node') || this.action == HarvestingAction.START)
+        ) {
             this.$store.dispatch('notification/ADD_ERROR', this.$t('invalid_node'));
             return;
         }
@@ -698,8 +674,15 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             this.vrfPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encVrfPrivateKey, password.value);
             this.onSubmit();
         } catch (e) {
-            this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try check all your keys are linked properly.');
+            if (!this.currentSignerHarvestingModel?.encRemotePrivateKey && !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
+                this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please relink your vrf and remote keys.');
+            }
+            this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.');
+
             console.error(e);
         }
+    }
+    get nodePublicKey() {
+        return !!this.formItems.nodeModel.nodePublicKey.length;
     }
 }

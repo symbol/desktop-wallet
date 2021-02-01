@@ -12,20 +12,20 @@
                     <!-- Transaction signer selector -->
                     <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
-                    <NetworkNodeSelector v-model="formItems.nodeModel" />
+                    <NetworkNodeSelector v-model="formItems.nodeModel" :disabled="harvestingStatus !== 'INACTIVE'" />
                     <div class="linked-keys-info">
                         <span>
                             {{ $t('linked_keys_info') }}
                         </span>
                     </div>
-                    <FormRow class="form-warning-row" v-if="harvestingStatus !== 'INACTIVE' && !swapDisabled">
+                    <!-- <FormRow class="form-warning-row" v-if="harvestingStatus !== 'INACTIVE'">
                         <template v-slot:inputs>
                             <div  type="warning" class="warning-node-swap">
                                 <Icon type="ios-warning-outline" />
                                 {{ $t('harvesting_warning_node_swap') }}
                             </div>
                         </template>
-                    </FormRow>
+                    </FormRow> -->
                     <div class="key-item separtate-spacing">
                         <FormRow>
                             <template v-slot:label> {{ $t('linked_node_public_key') }}: </template>
@@ -156,19 +156,20 @@
                                     v-if="harvestingStatus === 'INACTIVE'"
                                     type="submit"
                                     class="centered-button button-style submit-button inverted-button"
+                                    :disabled="linking"
                                     @click="handleSubmit(onStart())"
                                 >
-                                    {{ $t('link_keys') }}
+                                    {{ linking ? $t('linking') : $t('link_keys') }}
                                 </button>
                                 <button
                                     v-if="!isPersistentDelReqSent && harvestingStatus !== 'INACTIVE'"
                                     class="centered-button button-style submit-button inverted-button"
-                                    :disabled="activating"
+                                    :disabled="activating || linking"
                                     @click="handleSubmit(onActivate())"
                                 >
                                     {{ activating ? $t('activating') : $t('activate') }}
                                 </button>
-                                <button
+                                <!-- <button
                                     v-if="isPersistentDelReqSent && harvestingStatus !== 'INACTIVE'"
                                     type="submit"
                                     class="centered-button button-style submit-button inverted-button"
@@ -176,14 +177,15 @@
                                     @click="handleSubmit(onSwap())"
                                 >
                                     {{ $t('swap') }}
-                                </button>
+                                </button> -->
                                 <button
                                     v-if="harvestingStatus !== 'INACTIVE'"
                                     type="submit"
                                     class="centered-button button-style submit-button danger-button"
+                                    :disabled="linking || activating"
                                     @click="handleSubmit(onStop())"
                                 >
-                                    {{ $t('stop_harvesting') }}
+                                    {{ linking ? $t('stoping') : $t('stop_harvesting') }}
                                 </button>
                             </div>
                         </template>

@@ -1,6 +1,6 @@
 <template>
     <div class="detail-row">
-        <div class="account-detail-row-3cols">
+        <div :class="[$route.fullPath === '/delegatedHarvesting' ? 'account-details-harvesting' : 'account-detail-row-3cols']">
             <span v-if="$route.fullPath !== '/delegatedHarvesting'" class="label">{{ $t('private_key') }}</span>
             <span v-if="hasPlainPrivateKey" class="value accountPublicKey">{{ plainInformation }}</span>
             <span v-if="hasPlainPrivateKey">
@@ -71,6 +71,11 @@ export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDispl
 }
 
 .account-detail-row-3cols {
+    display: grid;
+    grid-template-columns: 1.4rem 5rem auto;
+}
+
+.account-detail-harvesting {
     display: grid;
     grid-template-columns: auto !important;
 }

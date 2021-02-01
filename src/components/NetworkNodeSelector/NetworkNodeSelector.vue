@@ -13,6 +13,7 @@
                     placement="bottom"
                     :clearable="true"
                     :filter-method="filterUrls"
+                    :disabled="disabled"
                     @on-select="fetchNodePublicKey"
                     @on-clear="onClear"
                 ></AutoComplete>

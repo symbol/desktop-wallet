@@ -998,5 +998,7 @@
     "label_unlink_node_account_public_key": "Unlink your node public key",
     "label_unlink_remote_account_public_key": "Unlink your remote public key",
     "label_unlink_vrf_account_public_key": "Unlink your vrf public key",
-    "please_link_your_public_key": "Please link your public key to generate your private key"
+    "please_link_your_public_key": "Please relink your public key to generate your private key",
+    "linking": "Linking...",
+    "stoping": "Stoping..."
 }
