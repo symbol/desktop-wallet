@@ -575,6 +575,16 @@
     transition: 0.5s;
 }
 
+.danger-button:disabled {
+    border: 2px solid @grayLight !important;
+    color: @grayDark;
+    cursor: not-allowed;
+}
+
+.danger-button:disabled:hover {
+    background-color: transparent;
+}
+
 /*
 .back-button:hover {
     box-shadow: 0 0 0.1rem @grayLight;
