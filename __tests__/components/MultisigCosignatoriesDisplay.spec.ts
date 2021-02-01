@@ -134,16 +134,16 @@ describe('MultisigCosignatoriesDisplay', () => {
             },
             mocks: {
                 $store: {
-                    dispatch: jest.fn(() => true)
+                    dispatch: jest.fn(() => true),
                 },
-            }
+            },
         });
 
         const component = wrapper.vm as MultisigCosignatoriesDisplay;
 
         component.onAddCosignatory(account4.address);
 
-        await wrapper.vm.$nextTick() 
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.emitted('add')).toBeTruthy();
         expect(wrapper.emitted().add[0]).toEqual([account4.address]);
