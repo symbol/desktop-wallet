@@ -26,7 +26,7 @@
                             </div>
                         </template>
                     </FormRow>
-                    <div class="key-item">
+                    <div class="key-item separtate-spacing">
                         <FormRow>
                             <template v-slot:label> {{ $t('linked_node_public_key') }}: </template>
 
@@ -91,7 +91,7 @@
                     </div>
                     <!-- link/unlink button for remote account public key -->
 
-                    <div class="key-item">
+                    <div class="key-item separtate-spacing">
                         <FormRow>
                             <template v-slot:label> {{ $t('linked_remote_private_key') }}: </template>
                             <template v-slot:inputs>
