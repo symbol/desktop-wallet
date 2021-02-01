@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, createLocalVue } from '@vue/test-utils';
+import Vuex from 'vuex';
 // @ts-ignore
 import MultisigCosignatoriesDisplay from '@/components/MultisigCosignatoriesDisplay/MultisigCosignatoriesDisplay';
 import { MultisigAccountInfo, NetworkType, PublicAccount } from 'symbol-sdk';
@@ -120,41 +121,50 @@ describe('MultisigCosignatoriesDisplay', () => {
         wrapper.destroy();
     });
 
-    // TODO: Fix - account should be known to the network
+    test('Should emit when adding a cosigner', async () => {
+        const vue = createLocalVue();
+        vue.use(Vuex);
 
-    // test('Should emit when adding a cosigner', () => {
-    //     const wrapper = shallowMount(MultisigCosignatoriesDisplay, {
-    //         i18n,
-    //         propsData: {
-    //             multisig: multisigInfo,
-    //             modifiable: true,
-    //             cosignatoryModifications: {},
-    //         },
-    //     });
+        const wrapper = shallowMount(MultisigCosignatoriesDisplay, {
+            i18n,
+            propsData: {
+                multisig: multisigInfo,
+                modifiable: true,
+                cosignatoryModifications: {},
+            },
+            mocks: {
+                $store: {
+                    dispatch: jest.fn(() => true)
+                },
+            }
+        });
 
-    //     const component = wrapper.vm as MultisigCosignatoriesDisplay;
+        const component = wrapper.vm as MultisigCosignatoriesDisplay;
 
-    //     component.onAddCosignatory(account4.address);
-    //     expect(wrapper.emitted('add')).toBeTruthy();
-    //     expect(wrapper.emitted().add[0]).toEqual([account4.address]);
-    //     wrapper.destroy();
-    // });
+        component.onAddCosignatory(account4.address);
 
-    // test('Should emit when removing a cosigner', () => {
-    //     const wrapper = shallowMount(MultisigCosignatoriesDisplay, {
-    //         i18n,
-    //         propsData: {
-    //             multisig: multisigInfo,
-    //             modifiable: true,
-    //             cosignatoryModifications: {},
-    //         },
-    //     });
+        await wrapper.vm.$nextTick() 
 
-    //     const component = wrapper.vm as MultisigCosignatoriesDisplay;
+        expect(wrapper.emitted('add')).toBeTruthy();
+        expect(wrapper.emitted().add[0]).toEqual([account4.address]);
+        wrapper.destroy();
+    });
 
-    //     component.onRemoveCosignatory(account2.address);
-    //     expect(wrapper.emitted('remove')).toBeTruthy();
-    //     expect(wrapper.emitted().remove[0]).toEqual([account2.address]);
-    //     wrapper.destroy();
-    // });
+    test('Should emit when removing a cosigner', () => {
+        const wrapper = shallowMount(MultisigCosignatoriesDisplay, {
+            i18n,
+            propsData: {
+                multisig: multisigInfo,
+                modifiable: true,
+                cosignatoryModifications: {},
+            },
+        });
+
+        const component = wrapper.vm as MultisigCosignatoriesDisplay;
+
+        component.onRemoveCosignatory(account2.address);
+        expect(wrapper.emitted('remove')).toBeTruthy();
+        expect(wrapper.emitted().remove[0]).toEqual([account2.address]);
+        wrapper.destroy();
+    });
 });
