@@ -506,7 +506,7 @@
     "harvesting_subtitle_confirmation": "Overview",
     "harvesting_subtitle_delegation": "Node selection",
     "harvesting_subtitle_overview": "Overview",
-    "harvesting_warning_node_swap": "Swapping to another node will re-link all the keys",
+    "harvesting_warning_node_swap": "Swapping to another node will re-link your node public keys",
     "hash_date": "Date",
     "hd_account_path_error": "Address path error",
     "hidden_accounts": "Hidden Accounts",
@@ -566,7 +566,7 @@
     "linked_remote_private_key": "Linked Remote Private Key",
     "linked_vrf_private_key": "Linked Vrf Private Key",
     "linked_keys_info": "Keys Info:",
-    "link_keys": "Link keys",
+    "link_keys": "Link All keys",
     "loading": "Loading...",
     "locked_mosaic": "locked mosaic",
     "login": "Login",
@@ -996,5 +996,6 @@
     "form_label_use_link_node_public_key_icon": "Use link icon to link your node public key",
     "label_unlink_node_account_public_key": "Unlink your node public key",
     "label_unlink_remote_account_public_key": "Unlink your remote public key",
-    "label_unlink_vrf_account_public_key": "Unlink your vrf public key"
+    "label_unlink_vrf_account_public_key": "Unlink your vrf public key",
+    "please_link_your_public_key": "Please link your public key to generate your private key"
 }

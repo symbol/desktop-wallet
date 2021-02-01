@@ -282,7 +282,11 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             }
         }
 
-        if (this.isNodeKeyLinked) {
+        if (
+            this.isNodeKeyLinked &&
+            (this.action !== HarvestingAction.SWAP ||
+                this.currentSignerHarvestingModel?.selectedHarvestingNode.nodePublicKey !== this.formItems.nodeModel.nodePublicKey)
+        ) {
             const nodeUnLinkTx = this.createNodeKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys.node.publicKey,
                 LinkAction.Unlink,
@@ -292,19 +296,19 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
 
         if (this.action !== HarvestingAction.STOP) {
-            let accountKeyLinkTx;
-            let vrfKeyLinkTx;
-            let nodeLinkTx;
             if (!this.isAccountKeyLinked) {
-                accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
+                const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(accountKeyLinkTx);
             }
             if (!this.isVrfKeyLinked) {
-                vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
+                const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(vrfKeyLinkTx);
             }
-            if (!this.isNodeKeyLinked || this.action === HarvestingAction.SWAP) {
-                nodeLinkTx = this.createNodeKeyLinkTx(this.formItems.nodeModel.nodePublicKey, LinkAction.Link, maxFee);
+            if (
+                !this.isNodeKeyLinked ||
+                this.currentSignerHarvestingModel?.selectedHarvestingNode.nodePublicKey !== this.formItems.nodeModel.nodePublicKey
+            ) {
+                const nodeLinkTx = this.createNodeKeyLinkTx(this.formItems.nodeModel.nodePublicKey, LinkAction.Link, maxFee);
                 txs.push(nodeLinkTx);
             }
         }
@@ -667,7 +671,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     public onSubmit() {
-        if (!this.allKeysLinked && !this.formItems.nodeModel.nodePublicKey.length) {
+        if (!this.allKeysLinked && !this.formItems.nodeModel.nodePublicKey.length && this.type !== 'account' && this.type !== 'vrf') {
             this.$store.dispatch('notification/ADD_ERROR', this.$t('invalid_node'));
             return;
         }

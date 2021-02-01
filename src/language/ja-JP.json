@@ -983,7 +983,7 @@
     "linked_remote_private_key": "Linked Remote Private Key",
     "linked_vrf_private_key": "Linked Vrf Private Key",
     "linked_keys_info": "Keys Info:",
-    "link_keys": "Link keys",
+    "link_keys": "Link All keys",
     "activate_delegated_harvesting_message": "To activate delegated harvesting, we need your password to encrypt your vrf key in persistent harvesting message.",
     "activate_delegated_harvesting": "Activate Harvesting",
     "create_persistent_message": "Generate secure persistent harvesting message",
@@ -996,5 +996,6 @@
     "form_label_use_link_node_public_key_icon": "Use link icon to link your node public key",
     "label_unlink_node_account_public_key": "Unlink your node public key",
     "label_unlink_remote_account_public_key": "Unlink your remote public key",
-    "label_unlink_vrf_account_public_key": "Unlink your vrf public key"
+    "label_unlink_vrf_account_public_key": "Unlink your vrf public key",
+    "please_link_your_public_key": "Please link your public key to generate your private key"
 }

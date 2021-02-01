@@ -151,4 +151,7 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
     public destroyed() {
         this.reset();
     }
+    public get hasPrivateKey(): boolean {
+        return !!((this.encPrivateKey && this.encPrivateKey.length > 0) || this.account);
+    }
 }
