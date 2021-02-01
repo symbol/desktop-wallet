@@ -816,7 +816,7 @@
     "version": "版",
     "view_metadata": "查看元数据",
     "warning_already_a_cosignatory": "此帐户已是联名用户！",
-    "warning_unknown_account": "該帳戶是網絡未知的。 請確保地址正確，並且帳戶至少收到一筆交易",
+    "warning_unknown_account": ">>該帳戶是網絡未知的。 請確保地址正確，並且帳戶至少收到一筆交易",
     "web_wallet_warning": "该网络钱包仅供演示使用！",
     "welcome": "Welcome",
     "welcome_to_symbol": "欢迎使用Symbol",

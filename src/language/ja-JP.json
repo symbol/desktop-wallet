@@ -815,7 +815,7 @@
     "version": "バージョン",
     "view_metadata": "メタデータを表示",
     "warning_already_a_cosignatory": "このアカウントは既に連署者です",
-    "warning_unknown_account": "このアカウントはネットワークに認識されていません。 住所が正しく、アカウントが少なくとも1回の取引を受け取っていることを確認してください",
+    "warning_unknown_account": ">>このアカウントはネットワークに認識されていません。 住所が正しく、アカウントが少なくとも1回の取引を受け取っていることを確認してください",
     "web_wallet_warning": "このウェブウォレットはデモンストレーション専用です！",
     "welcome": "ようこそ",
     "welcome_to_symbol": "ようこそ Symbol へ",
