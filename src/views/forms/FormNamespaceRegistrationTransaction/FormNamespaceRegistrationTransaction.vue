@@ -62,7 +62,7 @@
                         :duration="formItems.duration"
                     />
                     <MaxFeeAndSubmit v-if="!isAggregate" v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
-                    <div v-else class="ml-2" style="text-align: right;">
+                    <div v-else-if="!hideSave" class="ml-2" style="text-align: right;">
                         <button type="submit" class="save-button centered-button button-style inverted-button" @click="emitToAggregate">
                             {{ $t('save') }}
                         </button>

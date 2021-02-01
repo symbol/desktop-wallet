@@ -86,6 +86,11 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
         default: false,
     })
     isAggregate: boolean;
+
+    @Prop({
+        default: false,
+    })
+    hideSave: boolean;
     /**
      * Current account's owned namespaces
      */

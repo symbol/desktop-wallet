@@ -215,6 +215,7 @@
     "duration_can_not_more_than_1_years": "期間は 1 年より多くはできません",
     "duration_can_not_more_than_10_years": "期間は 10 年より多くはできません",
     "duration_permanent": "無期限",
+    "edit_object": "{objectName} 編集",
     "edit_metadata": "メタデータを編集",
     "encrypt_message": "メッセージを暗号化",
     "encrypted_message_empty_error": "暗号化メッセージのペイロードを空にすることはできません",

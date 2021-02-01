@@ -337,6 +337,11 @@ export class FormTransactionBase extends Vue {
         this.resetFormValidation();
     }
 
+    public reset(): void {
+        this.resetForm();
+        this.resetFormValidation();
+    }
+
     /**
      * Reset form validation
      * @private

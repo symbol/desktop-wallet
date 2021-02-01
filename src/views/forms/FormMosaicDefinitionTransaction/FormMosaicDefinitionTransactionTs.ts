@@ -78,6 +78,11 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
         default: false,
     })
     isAggregate: boolean;
+
+    @Prop({
+        default: false,
+    })
+    hideSave: boolean;
     /**
      * Form items
      * @var {Record<string, any>}
@@ -118,6 +123,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
         this.formItems.restrictable = false;
         this.formItems.permanent = false;
         this.formItems.duration = 10000;
+        this.formItems.divisibility = 0;
 
         // - maxFee must be absolute
         this.formItems.maxFee = this.defaultFee;
