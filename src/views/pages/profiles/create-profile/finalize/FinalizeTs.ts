@@ -20,18 +20,10 @@ import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 // internal dependencies
 import { AccountService } from '@/services/AccountService';
 import { NotificationType } from '@/core/utils/NotificationType';
-// @ts-ignore
-import ModalTermsAndConditions from '@/views/modals/ModalTermsAndConditions/ModalTermsAndConditions.vue';
-// @ts-ignore
-import ModalPrivacyAndPolicy from '@/views/modals/ModalPrivacyAndPolicy/ModalPrivacyAndPolicy.vue';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { ProfileService } from '@/services/ProfileService';
 
 @Component({
-    components: {
-        ModalTermsAndConditions,
-        ModalPrivacyAndPolicy,
-    },
     computed: {
         ...mapGetters({
             networkType: 'network/networkType',

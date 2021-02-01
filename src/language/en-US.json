@@ -755,7 +755,6 @@
     "placeholder_transaction_uri": "Enter a valid transaction URI",
     "please_accurately_copy_the_safety_backup_mnemonic": "Please accurately copy the safety backup mnemonic",
     "please_approve": "Please accept",
-    "and": "and",
     "terms": "Terms",
     "conditions": "Conditions",
     "please_backup_mnemonic_passphrase": "Make sure to create a backup copy of the mnemonic passphrase. You will need this backup when trying to recover your profile.",

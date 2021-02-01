@@ -13,32 +13,14 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Vue, Component, Prop } from 'vue-property-decorator';
-import { mapGetters } from 'vuex';
+import { Component, Vue } from 'vue-property-decorator';
 
-@Component({
-    computed: {
-        ...mapGetters({
-            currentProfile: 'profile/currentProfile',
-        }),
-    },
-})
-export class ModalPrivacyAndPolicyTs extends Vue {
-    @Prop({ default: false }) visible: boolean;
+@Component
+export default class PrivacyPolicyTs extends Vue {
     /**
-     * Internal visibility state
-     * @type {boolean}
+     * back
      */
-    protected get show(): boolean {
-        return this.visible;
-    }
-
-    /**
-     * Emits close event
-     */
-    protected set show(val) {
-        if (!val) {
-            this.$emit('close');
-        }
+    private backToLogin() {
+        window && window.history.back();
     }
 }

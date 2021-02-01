@@ -15,11 +15,11 @@
                 <div class="flex bottom-space">
                     <Checkbox v-model="marked">
                         <span>{{ $t('please_approve') }}</span>
-                        <a class="link" @click="displayModal('termsAndConditions')">
+                        <a class="link" href="#/terms">
                             {{ $t('terms_and_conditions') }}
                         </a>
                         &
-                        <a class="link" @click="displayModal('privacyAndPolicy')">
+                        <a class="link" href="#/privacy">
                             {{ $t('privacy_policy') }}
                         </a>
                         <span>.</span>
@@ -38,16 +38,6 @@
                 </div>
             </div>
         </div>
-        <ModalTermsAndConditions
-            v-if="modalVisibility.termsAndConditions"
-            :visible="modalVisibility.termsAndConditions"
-            @close="closeModal('termsAndConditions')"
-        />
-        <ModalPrivacyAndPolicy
-            v-if="modalVisibility.privacyAndPolicy"
-            :visible="modalVisibility.privacyAndPolicy"
-            @close="closeModal('privacyAndPolicy')"
-        />
     </div>
 </template>
 

@@ -15,18 +15,9 @@
  */
 import { Vue, Component } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-
-// @ts-ignore
-import ModalTermsAndConditions from '@/views/modals/ModalTermsAndConditions/ModalTermsAndConditions.vue';
-// @ts-ignore
-import ModalPrivacyAndPolicy from '@/views/modals/ModalPrivacyAndPolicy/ModalPrivacyAndPolicy.vue';
 import { ProfileService } from '@/services/ProfileService';
 
 @Component({
-    components: {
-        ModalTermsAndConditions,
-        ModalPrivacyAndPolicy,
-    },
     computed: {
         ...mapGetters({
             currentProfile: 'profile/currentProfile',

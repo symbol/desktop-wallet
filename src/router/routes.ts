@@ -438,20 +438,6 @@ export const routes: AppRoute[] = [
                 ],
             },
             {
-                path: '/privacy',
-                name: 'privacy',
-                meta: { protected: false, hideFromMenu: true },
-                // @ts-ignore
-                component: () => import('@/views/pages/privacy/PrivacyPolicy.vue'),
-            },
-            {
-                path: '/terms',
-                name: 'terms',
-                meta: { protected: false, hideFromMenu: true },
-                // @ts-ignore
-                component: () => import('@/views/pages/terms/TermsAndConditions.vue'),
-            },
-            {
                 path: '/communityPanel', //TODO: Harvesting
                 name: 'community',
                 redirect: '/information',
@@ -482,5 +468,19 @@ export const routes: AppRoute[] = [
         meta: { protected: false },
         // @ts-ignore
         component: () => import('@/views/pages/profiles/LoginPage.vue'),
+    },
+    {
+        path: '/privacy',
+        name: 'privacy',
+        meta: { protected: false, hideFromMenu: true },
+        // @ts-ignore
+        component: () => import('@/views/pages/privacy/PrivacyPolicy.vue'),
+    },
+    {
+        path: '/terms',
+        name: 'terms',
+        meta: { protected: false, hideFromMenu: true },
+        // @ts-ignore
+        component: () => import('@/views/pages/terms/TermsAndConditions.vue'),
     },
 ];
