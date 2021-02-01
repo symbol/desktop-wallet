@@ -555,7 +555,7 @@ export default {
          * Websocket API
          */
         // Subscribe to latest account transactions.
-        async SUBSCRIBE({ commit, dispatch, rootGetters }, address: Address) {
+        async SUBSCRIBE({ commit, dispatch, rootGetters, getters }, address: Address) {
             if (!address) {
                 return;
             }
@@ -564,10 +564,12 @@ export default {
 
             // use RESTService to open websocket channel subscriptions
             const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+            console.log(getters.currentAccountMultisigInfo && !!getters.currentAccountMultisigInfo.multisigAddresses.length ? true : false);
             const subscriptions: SubscriptionType = await RESTService.subscribeTransactionChannels(
                 { commit, dispatch },
                 repositoryFactory,
                 plainAddress,
+                getters.currentAccountMultisigInfo && !!getters.currentAccountMultisigInfo.multisigAddresses.length ? true : false,
             );
             const payload: { address: string; subscriptions: SubscriptionType } = { address: plainAddress, subscriptions };
             // update state of listeners & subscriptions

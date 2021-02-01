@@ -34,6 +34,7 @@ export class RESTService {
         context: { dispatch: any; commit: any },
         repositoryFactory: RepositoryFactory,
         addressStr: string,
+        isMultisig: boolean,
     ): Promise<{ listener: IListener; subscriptions: Subscription[] }> {
         if (!AddressValidator.validate(addressStr)) {
             throw new Error('Invalid address for subscribing to websocket connections');
@@ -54,7 +55,7 @@ export class RESTService {
             .subscribe((error: TransactionStatusError) => context.dispatch('notification/ADD_ERROR', error.code, { root: true }));
 
         // unconfirmed listeners
-        const unconfirmedAdded = listener.unconfirmedAdded(address).subscribe(
+        const unconfirmedAdded = listener.unconfirmedAdded(address, undefined, isMultisig).subscribe(
             (transaction) => {
                 context.dispatch('transaction/ADD_TRANSACTION', { group: TransactionGroupState.unconfirmed, transaction }, { root: true });
                 context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_UNCONFIRMED_TRANSACTION, { root: true });
@@ -62,7 +63,7 @@ export class RESTService {
             (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
         );
 
-        const unconfirmedRemoved = listener.unconfirmedRemoved(address).subscribe(
+        const unconfirmedRemoved = listener.unconfirmedRemoved(address, undefined, isMultisig).subscribe(
             (transactionHash) =>
                 context.dispatch(
                     'transaction/REMOVE_TRANSACTION',
@@ -73,7 +74,7 @@ export class RESTService {
         );
 
         // partial listeners
-        const cosignatureAdded = listener.cosignatureAdded(address).subscribe(
+        const cosignatureAdded = listener.cosignatureAdded(address, isMultisig).subscribe(
             (cosignature) => {
                 context.dispatch('transaction/ADD_COSIGNATURE', cosignature, {
                     root: true,
@@ -83,7 +84,7 @@ export class RESTService {
             (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
         );
 
-        const partialAdded = listener.aggregateBondedAdded(address).subscribe(
+        const partialAdded = listener.aggregateBondedAdded(address, undefined, isMultisig).subscribe(
             (transaction) => {
                 context.dispatch('transaction/ADD_TRANSACTION', { group: TransactionGroupState.partial, transaction }, { root: true });
                 context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_AGGREGATE_BONDED, { root: true });
@@ -91,7 +92,7 @@ export class RESTService {
             (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
         );
 
-        const partialRemoved = listener.aggregateBondedRemoved(address).subscribe(
+        const partialRemoved = listener.aggregateBondedRemoved(address, undefined, isMultisig).subscribe(
             (transactionHash) =>
                 context.dispatch(
                     'transaction/REMOVE_TRANSACTION',
@@ -102,7 +103,7 @@ export class RESTService {
         );
 
         // confirmed listener
-        const confirmed = listener.confirmed(address).subscribe(
+        const confirmed = listener.confirmed(address, undefined, isMultisig).subscribe(
             (transaction) => {
                 context.dispatch('transaction/ADD_TRANSACTION', { group: TransactionGroupState.confirmed, transaction }, { root: true });
                 context.dispatch('transaction/ON_NEW_TRANSACTION', transaction, {

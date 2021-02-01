@@ -121,8 +121,8 @@
                         :is-aggregate="true"
                         :value.sync="currentTxItems"
                         :title.sync="currentSelectedTransaction.title"
-                        @txInput="onSaveTransaction"
                         class="transaction-form-component"
+                        @txInput="onSaveTransaction"
                     ></component>
                 </div>
             </div>
