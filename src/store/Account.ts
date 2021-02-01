@@ -564,7 +564,6 @@ export default {
 
             // use RESTService to open websocket channel subscriptions
             const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-            console.log(getters.currentAccountMultisigInfo && !!getters.currentAccountMultisigInfo.multisigAddresses.length ? true : false);
             const subscriptions: SubscriptionType = await RESTService.subscribeTransactionChannels(
                 { commit, dispatch },
                 repositoryFactory,
