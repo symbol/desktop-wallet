@@ -22,6 +22,13 @@
                             {{ $t('linked_keys_info') }}
                         </span>
                     </div>
+                    <div v-if="isVrfKeyLinked && isAccountKeyLinked && !isNodeKeyLinked" class="info-text warning-node-swap">
+                        <Icon type="ios-warning-outline" />
+
+                        <span>
+                            {{ $t('remote_keys_linked') }}
+                        </span>
+                    </div>
                     <!-- <FormRow class="form-warning-row" v-if="harvestingStatus !== 'INACTIVE'">
                         <template v-slot:inputs>
                             <div  type="warning" class="warning-node-swap">
