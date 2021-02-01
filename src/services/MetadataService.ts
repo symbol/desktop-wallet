@@ -27,6 +27,7 @@ import {
     MetadataTransactionService,
     MetadataSearchCriteria,
     Crypto,
+    Convert,
 } from 'symbol-sdk';
 import { from, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -111,13 +112,14 @@ export class MetadataService {
 
         let metadataObservable: Observable<Transaction> = null;
 
+        const encodedValue = Convert.utf8ToHex(value);
         if (metadataType === MetadataType.Account) {
             metadataObservable = metadataTransactionService.createAccountMetadataTransaction(
                 deadline,
                 networkType,
                 targetAddress,
                 scopedMetadataKey,
-                value,
+                encodedValue,
                 sourceAddress,
                 maxFee,
             );
@@ -129,7 +131,7 @@ export class MetadataService {
                 targetAddress,
                 mosaicId,
                 scopedMetadataKey,
-                value,
+                encodedValue,
                 sourceAddress,
                 maxFee,
             );
@@ -141,7 +143,7 @@ export class MetadataService {
                 targetAddress,
                 namespaceId,
                 scopedMetadataKey,
-                value,
+                encodedValue,
                 sourceAddress,
                 maxFee,
             );

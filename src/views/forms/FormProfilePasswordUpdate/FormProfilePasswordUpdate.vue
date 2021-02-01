@@ -46,6 +46,7 @@
                                     v-model="formItems.passwordConfirm"
                                     class="input-size input-style"
                                     :placeholder="$t('form_label_new_password_confirm')"
+                                    type="password"
                                     @input="onChange"
                                 />
                             </ErrorTooltip>

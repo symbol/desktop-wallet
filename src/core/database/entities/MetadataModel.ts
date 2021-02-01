@@ -14,7 +14,8 @@
  *
  */
 
-import { Metadata, MetadataType } from 'symbol-sdk';
+import { Formatters } from '@/core/utils/Formatters';
+import { Convert, Metadata, MetadataType } from 'symbol-sdk';
 
 /**
  * Stored POJO that holds mosaic information.
@@ -41,5 +42,10 @@ export class MetadataModel {
         this.targetAddress = metadata.metadataEntry.targetAddress.plain();
         this.targetId = metadata.metadataEntry.targetId?.toHex();
         this.value = metadata.metadataEntry.value;
+        if (Convert.isHexString(metadata.metadataEntry.value)) {
+            this.value = Formatters.hexToUtf8(metadata.metadataEntry.value);
+        } else {
+            this.value = metadata.metadataEntry.value;
+        }
     }
 }

@@ -14,18 +14,43 @@
  *
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Checkbox } from 'view-design';
 
-@Component
+@Component({
+    components: {
+        Checkbox,
+    },
+})
 export default class ModalConfirmTs extends Vue {
     @Prop({
         default: false,
     })
     value: boolean;
 
+    @Prop({
+        default: false,
+    })
+    danger: boolean;
+
+    @Prop({
+        default: false,
+    })
+    showCheckbox: boolean;
+
+    @Prop({
+        default: '',
+    })
+    checkboxLabel: string;
+
     @Prop({ default: 'confirmation_title' }) readonly title!: string;
 
     @Prop({ default: 'confirmation_message' }) readonly message!: string;
 
+    protected isCheckboxChecked: boolean = false;
+
+    get isOkClickable(): boolean {
+        return !this.showCheckbox || (this.showCheckbox && this.isCheckboxChecked);
+    }
     /**
      * Visibility state
      * @type {boolean}
@@ -42,14 +67,26 @@ export default class ModalConfirmTs extends Vue {
             this.$emit('close');
         }
         this.$emit('input', val);
+        this.isCheckboxChecked = false;
+    }
+
+    mounted() {
+        this.isCheckboxChecked = false;
+    }
+
+    protected onCheckboxCheck(value: boolean) {
+        this.isCheckboxChecked = value;
     }
 
     public confirm() {
         this.$emit('confirmed');
+        this.isCheckboxChecked = false;
     }
 
     public cancel() {
         this.$emit('cancelled');
+        this.isCheckboxChecked = false;
+        this.show = false;
     }
 
     /**

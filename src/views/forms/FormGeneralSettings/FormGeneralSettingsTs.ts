@@ -142,6 +142,7 @@ export class FormGeneralSettingsTs extends Vue {
             // - add notification and emit
             this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS_SETTINGS_UPDATED);
             this.$emit('submit', this.formItems);
+            this.$emit('close');
         } catch (e) {
             this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.');
             console.error(e);
