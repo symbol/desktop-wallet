@@ -34,6 +34,12 @@ import { TransactionFees } from 'symbol-sdk';
             transactionFees: 'network/transactionFees',
         }),
     },
+    props: {
+        placement: {
+            type: String,
+            default: 'bottom-start',
+        },
+    },
 })
 export class MaxFeeSelectorTs extends Vue {
     @Prop({
@@ -43,6 +49,8 @@ export class MaxFeeSelectorTs extends Vue {
 
     @Prop({ default: false })
     public displayOnly!: boolean;
+
+    public placement: string;
 
     /**
      * Networks currency mosaic name

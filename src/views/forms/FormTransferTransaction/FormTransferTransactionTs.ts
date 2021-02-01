@@ -127,6 +127,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     @Prop({
         default: false,
     })
+    hideSave: boolean;
+
+    @Prop({
+        default: false,
+    })
     hideSigner: boolean;
 
     @Prop({

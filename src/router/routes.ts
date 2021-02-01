@@ -364,9 +364,9 @@ export const routes: AppRoute[] = [
                 ],
             },
             {
-                path: '/aggregate', //TODO: Aggregate
+                path: '/aggregate',
                 name: 'aggregate',
-                redirect: '/aggregateTransaction',
+                redirect: '/aggregate/simple',
                 meta: {
                     protected: true,
                     clickable: true,
@@ -377,9 +377,32 @@ export const routes: AppRoute[] = [
                 component: () => import('@/views/forms/FormAggregateTransaction/FormAggregateTransaction.vue'),
                 children: [
                     {
-                        path: '/aggregateTransaction',
-                        name: 'aggregate.index',
-                        meta: { protected: true },
+                        path: '/aggregate/simple',
+                        name: 'aggregate.simple',
+                        meta: {
+                            protected: true,
+                            title: 'simple_transaction',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/aggregate/aggregateTransaction/AggregateTransaction.vue'),
+                    },
+                    {
+                        path: '/aggregate/mosaic',
+                        name: 'aggregate.mosaic',
+                        meta: {
+                            protected: true,
+                            title: 'mosaic_transaction',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/aggregate/aggregateTransaction/AggregateTransaction.vue'),
+                    },
+                    {
+                        path: '/aggregate/namespace',
+                        name: 'aggregate.namespace',
+                        meta: {
+                            protected: true,
+                            title: 'namespace_transaction',
+                        },
                         // @ts-ignore
                         component: () => import('@/views/pages/aggregate/aggregateTransaction/AggregateTransaction.vue'),
                     },

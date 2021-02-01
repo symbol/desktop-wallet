@@ -14,6 +14,7 @@
  *
  */
 
+import _ from 'lodash';
 import { Component } from 'vue';
 
 type AggregateTransactionState = {
@@ -46,24 +47,22 @@ export default {
     },
     actions: {
         ON_SAVE_TRANSACTION({ commit, getters }, transaction: { title: string; formItems: {}; component: Component }) {
-            const transactions = getters['simpleAggregateTransaction'];
+            const transactionClone = _.cloneDeep(transaction);
+            const transactions: { title: string; formItems: {} }[] = getters['simpleAggregateTransaction'];
             let transactionIndex = getters['aggregateTransactionIndex'];
             if (transactions.length == 0) {
-                transactions.push(transaction);
+                transactions.push(transactionClone);
                 transactionIndex += 1;
                 commit('aggregateTransactionIndex', transactionIndex);
             } else {
-                transactions.forEach((tx, index) => {
-                    if (tx.title === transaction.title && transaction.formItems) {
-                        transactions[index].formItems = transaction.formItems;
-                    } else {
-                        if (!transactions.some((item) => item.title == transaction.title)) {
-                            transactions.push(transaction);
-                            transactionIndex += 1;
-                            commit('aggregateTransactionIndex', transactionIndex);
-                        }
-                    }
-                });
+                const storedTransaction = transactions.find((tx) => tx.title === transaction.title);
+                if (storedTransaction) {
+                    storedTransaction.formItems = transactionClone.formItems;
+                } else {
+                    transactions.push(transactionClone);
+                    transactionIndex += 1;
+                    commit('aggregateTransactionIndex', transactionIndex);
+                }
             }
             commit('simpleAggregateTransaction', transactions);
         },
@@ -78,8 +77,12 @@ export default {
             commit('simpleAggregateTransaction', transactions);
         },
         GET_TRANSACTION_FROM_AGGREGATE_ARRAY({ getters }, title: string) {
-            const transactions = getters['simpleAggregateTransaction'];
-            return transactions.find((item) => item.title == title);
+            const transactions: { title: string }[] = getters['simpleAggregateTransaction'];
+            const transaction = transactions.find((item) => item.title == title);
+            if (transaction) {
+                return _.cloneDeep(transaction);
+            }
+            return transaction;
         },
         CLEAR_AGGREGATE_TRANSACTIONS_LIST({ commit }) {
             commit('simpleAggregateTransaction', []);

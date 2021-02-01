@@ -5,41 +5,25 @@
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: 4.5rem auto;
+    grid-template-columns: auto 4.5rem;
     grid-template-rows: 100%;
     grid-column-gap: 0.3rem;
     grid-row-gap: 0.3rem;
 }
 
-.left-top-container {
-    display: grid;
-    height: calc(50% - 0.15rem);
-    grid-template-rows: 0.8rem auto;
+.right-container {
+    height: 100%;
     background-color: white;
     overflow: hidden;
     border-radius: @borderRadius;
-
-    .transaction-type-container {
-        overflow: auto;
-    }
-}
-
-.left-bottom-container {
     display: grid;
-    height: calc(50% - 0.15rem);
-    grid-template-rows: 0.8rem auto;
-    grid-template-columns: 100%;
-    background-color: white;
-    overflow: hidden;
-    border-radius: @borderRadius;
-    margin-top: 0.3rem;
+    grid-template-rows: auto 1fr;
 
-    /deep/.form-wrapper {
-        height: 2.4rem;
+    .form-wrapper {
         min-height: 2.4rem;
     }
 
-    .bottom-form-wrapper {
+    .transactions-form-wrapper {
         display: flex;
         height: 100%;
         flex-direction: column;
@@ -51,14 +35,13 @@
 
         .bottom-container {
             width: 100%;
-            height: 1.3rem;
             padding: 20px 0;
             text-align: right;
             /deep/.select-container {
                 margin: auto;
                 width: 90%;
                 text-align: center;
-                height: 0.5rem;
+                height: unset;
             }
             .send-button {
                 margin: auto;
@@ -72,9 +55,11 @@
     }
 }
 
-.right-container {
+.left-container {
     background-color: white;
     border-radius: @borderRadius;
+    display: grid;
+    grid-template-rows: 0.7rem 1fr;
 }
 
 .title-container {

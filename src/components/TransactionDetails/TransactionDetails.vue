@@ -13,6 +13,7 @@
                 <!-- There are more than one view if the transaction is an aggregate, -->
                 <!-- skipping the first of many views avoid rendering an aggregate wrapper in details -->
                 <DetailView v-if="!(views.length > 1 && index === 0)" :view="view" />
+                <hr v-if="index > 0 && index < views.length - 1" />
             </div>
         </div>
     </div>

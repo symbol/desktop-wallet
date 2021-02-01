@@ -6,6 +6,7 @@
             :placeholder="$t('fee')"
             class="select-size select-style"
             @input="$emit('on-change')"
+            :placement="placement"
         >
             <Option v-for="{ maxFee, label } in feesCalculated" :key="maxFee" :value="maxFee">
                 {{ label }}
