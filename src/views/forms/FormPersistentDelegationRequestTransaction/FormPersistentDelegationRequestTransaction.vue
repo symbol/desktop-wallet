@@ -18,9 +18,9 @@
                             {{ $t('linked_keys_info') }}
                         </span>
                     </div>
-                    <FormRow class="form-warning-row">
+                    <FormRow class="form-warning-row" v-if="harvestingStatus !== 'INACTIVE' && !swapDisabled">
                         <template v-slot:inputs>
-                            <div v-if="harvestingStatus !== 'INACTIVE' && !swapDisabled" type="warning" class="warning-node-swap">
+                            <div  type="warning" class="warning-node-swap">
                                 <Icon type="ios-warning-outline" />
                                 {{ $t('harvesting_warning_node_swap') }}
                             </div>
@@ -39,7 +39,7 @@
                                     v-else
                                     class="linked-label"
                                     word-wrap
-                                    placement="top-start"
+                                    placement="bottom"
                                     :content="$t('form_label_use_link_node_public_key_icon')"
                                 >
                                     <span> {{ $t('not_linked') }}:</span>
