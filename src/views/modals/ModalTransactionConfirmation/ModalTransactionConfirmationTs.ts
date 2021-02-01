@@ -15,7 +15,7 @@
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { Account, Transaction } from 'symbol-sdk';
+import { Account, Password, Transaction } from 'symbol-sdk';
 // internal dependencies
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
@@ -106,10 +106,13 @@ export class ModalTransactionConfirmationTs extends Vue {
      * the signed transaction.
      *
      */
-    public async onAccountUnlocked({ account }: { account: Account }): Promise<void> {
+    public async onAccountUnlocked({ account, password }: { account: Account; password?: Password }): Promise<void> {
         // - log about unlock success
         this.$store.dispatch('diagnostic/ADD_INFO', `Account ${account.address.plain()} unlocked successfully.`);
         // - get transaction stage config
+        if (this.$route.path === '/delegatedHarvesting') {
+            this.$emit('unlocked', password);
+        }
         return this.onSigner(new AccountTransactionSigner(account));
     }
 

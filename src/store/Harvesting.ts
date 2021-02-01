@@ -301,6 +301,24 @@ export default {
             harvestingService.updateSelectedHarvestingNode(harvestingModel, selectedHarvestingNode);
             commit('currentSignerHarvestingModel', harvestingModel);
         },
+        UPDATE_REMOTE_ACCOUNT_PRIVATE_KEY(
+            { commit },
+            { accountAddress, encRemotePrivateKey }: { accountAddress: string; encRemotePrivateKey: string },
+        ) {
+            const harvestingService = new HarvestingService();
+            const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
+            harvestingService.updateRemoteKey(harvestingModel, encRemotePrivateKey);
+            commit('currentSignerHarvestingModel', harvestingModel);
+        },
+        UPDATE_VRF_ACCOUNT_PRIVATE_KEY(
+            { commit },
+            { accountAddress, encVrfPrivateKey }: { accountAddress: string; encVrfPrivateKey: string },
+        ) {
+            const harvestingService = new HarvestingService();
+            const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
+            harvestingService.updateVrfKey(harvestingModel, encVrfPrivateKey);
+            commit('currentSignerHarvestingModel', harvestingModel);
+        },
         /// end-region scoped actions
     },
 };

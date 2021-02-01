@@ -45,7 +45,7 @@
 
 .info-text {
     color: @purpleDark;
-    font-size: @normalFont;
+    font-size: @biggerFont;
     font-family: @symbolFontLight;
     margin-left: 0.7rem;
     margin-top: 5%;
@@ -87,4 +87,62 @@
 
 .buttons-row {
     margin: 0;
+}
+
+/deep/.key-item {
+    .form-row .form-row-inner-container {
+        grid-template-columns: 3rem 6rem 1rem;
+    }
+    .form-row-inner-container {
+        align-items: center;
+    }
+
+    .account-detail-row-3cols {
+        display: grid;
+        grid-template-columns: 5rem auto;
+        align-items: center;
+    }
+    .value {
+        padding-left: 0.15rem;
+        padding-top: 0.06rem;
+    }
+    .value.accountPublicKey {
+        padding-top: auto;
+    }
+    margin-top: 15px;
+}
+
+.button-margin {
+    margin-top: 0.4rem;
+}
+
+.linked-keys-info {
+    color: @purpleDark;
+    font-size: 0.18rem;
+    font-family: @symbolFontSemiBold;
+    margin-top: 5%;
+    margin-right: 1rem;
+    text-align: justify;
+}
+
+.button-icon {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+}
+
+.form-row {
+    max-width: 95%;
+    display: inline-block;
+}
+
+.linked-label {
+    padding-left: 0.15rem;
+    padding-top: 4px;
+    float: left;
+    margin-top: 7px;
+}
+
+.separtate-spacing {
+    padding-bottom: 25px;
 }

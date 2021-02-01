@@ -30,6 +30,10 @@ export class AccountPublicKeyDisplayTs extends Vue {
     })
     account: AccountModel;
 
+    @Prop({
+        default: null,
+    })
+    publicKey: string;
     /// region computed properties getter/setter
     /// end-region computed properties getter/setter
 }

@@ -30,6 +30,11 @@ export class NetworkNodeSelectorTs extends Vue {
     @Prop()
     value: NodeModel;
 
+    @Prop({
+        default: false,
+    })
+    disabled: boolean;
+
     public peerNodes: NodeInfo[];
 
     /**
