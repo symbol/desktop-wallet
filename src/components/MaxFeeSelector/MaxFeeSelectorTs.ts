@@ -37,8 +37,8 @@ import { TransactionFees } from 'symbol-sdk';
     props: {
         placement: {
             type: String,
-            default: 'bottom-start'
-        }
+            default: 'bottom-start',
+        },
     },
 })
 export class MaxFeeSelectorTs extends Vue {
