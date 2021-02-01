@@ -43,7 +43,15 @@ export class NamespaceService {
      * @param generationHash the current network generation hash.
      * @param addresses the current addresses.
      */
-    public getNamespaces(repositoryFactory: RepositoryFactory, generationHash: string, addresses: Address[]): Observable<NamespaceModel[]> {
+    public getNamespaces(
+        repositoryFactory: RepositoryFactory,
+        generationHash: string,
+        addresses: Address[],
+        { pageSize, pageNumber }: { pageSize: number; pageNumber: number } = {
+            pageSize: 100,
+            pageNumber: 1,
+        },
+    ): Observable<NamespaceModel[]> {
         if (!addresses.length) {
             return of([]);
         }
@@ -55,7 +63,7 @@ export class NamespaceService {
             .map(
                 (address: Address): Observable<NamespaceModel[]> => {
                     return namespaceRepository
-                        .search({ ownerAddress: address })
+                        .search({ ownerAddress: address, pageSize, pageNumber })
                         .pipe(
                             flatMap((namespaceInfos) => {
                                 return namespaceRepository.getNamespacesNames(namespaceInfos.data.map((info) => info.id)).pipe(
