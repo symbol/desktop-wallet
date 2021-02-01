@@ -12,7 +12,11 @@
                     <!-- Transaction signer selector -->
                     <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
-                    <NetworkNodeSelector v-model="formItems.nodeModel" :disabled="harvestingStatus !== 'INACTIVE'" />
+                    <NetworkNodeSelector
+                        v-model="formItems.nodeModel"
+                        :disabled="harvestingStatus !== 'INACTIVE'"
+                        @input="onChangeNodePubKey"
+                    />
                     <div class="linked-keys-info">
                         <span>
                             {{ $t('linked_keys_info') }}

@@ -682,7 +682,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             console.error(e);
         }
     }
-    get nodePublicKey() {
-        return !!this.formItems.nodeModel.nodePublicKey.length;
+
+    public onChangeNodePubKey(pkeyModel) {
+        this.formItems.nodeModel = pkeyModel;
     }
 }
