@@ -159,7 +159,11 @@ export class TableDisplayTs extends Vue {
     protected onSignerSelectorChange(address: string): void {
         // clear previous account transactions
         if (address) {
-            this.$store.dispatch('account/SET_CURRENT_SIGNER', { address: Address.createFromRawAddress(address) });
+            this.$store.dispatch('account/SET_CURRENT_SIGNER', {
+                address: Address.createFromRawAddress(address),
+                reset: true,
+                unsubscribeWS: false,
+            });
         }
     }
 
