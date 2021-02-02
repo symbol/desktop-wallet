@@ -20,8 +20,10 @@ import {
     AggregateTransactionCosignature,
     CosignatureTransaction,
     MultisigAccountInfo,
+    MultisigAccountModificationTransaction,
     NetworkType,
     TransactionStatus,
+    TransactionType,
 } from 'symbol-sdk';
 import { mapGetters } from 'vuex';
 
@@ -147,9 +149,17 @@ export class ModalTransactionCosignatureTs extends Vue {
             if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
                 return false;
             }
-
             const cosignerAddresses = this.transaction.innerTransactions.map((t) => t.signer?.address);
+            const modifyMultisigAddition = [];
+            this.transaction.innerTransactions.forEach((t) => {
+                if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {
+                    modifyMultisigAddition.push(...(t as MultisigAccountModificationTransaction).addressAdditions);
+                }
+            });
 
+            if (modifyMultisigAddition.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
+                return true;
+            }
             const cosignRequired = cosignerAddresses.find((c) => {
                 if (c) {
                     return (
@@ -160,10 +170,8 @@ export class ModalTransactionCosignatureTs extends Vue {
                 }
                 return false;
             });
-
             return cosignRequired !== undefined;
         }
-
         return false;
     }
 
