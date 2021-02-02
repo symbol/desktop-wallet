@@ -1,6 +1,13 @@
 <template>
     <div>
-        <Modal v-model="show" class="modal-backup-reminder" :title="$t('modal_backup_reminder_title')" :footer-hide="true">
+        <Modal
+            v-model="show"
+            class="modal-backup-reminder"
+            :title="$t('modal_backup_reminder_title')"
+            :footer-hide="true"
+            :closable="false"
+            :mask-closable="false"
+        >
             <div class="container">
                 <div class="centered-content bottom-space">
                     <Icon type="ios-alert-outline" size="50" />

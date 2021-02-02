@@ -9,13 +9,13 @@
             <div class="body">
                 <component
                     :is="transaction.component"
+                    ref="transactionForm"
                     v-model="transaction.formItems"
                     :is-aggregate="true"
                     :hide-save="true"
                     :value.sync="transaction.formItems"
                     :title.sync="transaction.title"
                     class="transaction-form-component"
-                    ref="transactionForm"
                     @txInput="onTransactionFormSave"
                 ></component>
             </div>

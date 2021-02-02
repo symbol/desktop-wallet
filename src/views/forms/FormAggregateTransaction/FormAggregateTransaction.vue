@@ -14,12 +14,12 @@
                 <div class="transaction-form-container">
                     <component
                         :is="currentSelectedTransaction.component"
+                        ref="transactionForm"
                         v-model="currentSelectedTransaction.formItems"
                         :is-aggregate="true"
                         :title.sync="currentSelectedTransaction.title"
                         class="transaction-form-component"
                         @txInput="onSaveTransaction"
-                        ref="transactionForm"
                     ></component>
                 </div>
             </div>
@@ -62,8 +62,8 @@
                         <div class="bottom-container">
                             <MaxFeeSelector
                                 v-model="formItems.maxFee"
-                                @button-clicked="handleSubmit(onClickSendAggregate)"
                                 placement="top-start"
+                                @button-clicked="handleSubmit(onClickSendAggregate)"
                             />
                             <div class="send-button">
                                 <button

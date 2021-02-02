@@ -5,8 +5,8 @@
             v-model="chosenMaxFee"
             :placeholder="$t('fee')"
             class="select-size select-style"
-            @input="$emit('on-change')"
             :placement="placement"
+            @input="$emit('on-change')"
         >
             <Option v-for="{ maxFee, label } in feesCalculated" :key="maxFee" :value="maxFee">
                 {{ label }}
