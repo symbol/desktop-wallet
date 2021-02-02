@@ -99,7 +99,11 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
      * Hook called when a cosignatory is added
      * @param {PublicAccount} publicAccount
      */
-    protected async onAddCosignatory(cosigAddress: Address): Promise<void> {
+    protected onAddCosignatory(cosigAddress: Address): Promise<void> {
+        if (!Address.isValidRawAddress(cosigAddress.plain())) {
+            this.$store.dispatch('notification/ADD_ERROR', 'warning_unknown_account');
+            return;
+        }
         const isCosignatory = this.cosignatories.find(({ address }) => cosigAddress.plain() === address.plain());
 
         if (isCosignatory || this.cosignatoryModifications[cosigAddress.plain()]) {
@@ -109,13 +113,6 @@ export class MultisigCosignatoriesDisplayTs extends Vue {
 
         if (cosigAddress.plain() === this.currentAddress) {
             this.$store.dispatch('notification/ADD_WARNING', 'current_cosigner_matches_current_account');
-            return;
-        }
-
-        const isAccountExist = !!(await this.$store.dispatch('account/GET_ACCOUNT_INFO', cosigAddress));
-
-        if (!isAccountExist) {
-            this.$store.dispatch('notification/ADD_ERROR', 'warning_unknown_account');
             return;
         }
 
