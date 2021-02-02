@@ -57,7 +57,7 @@ export const WalletsModel2: AccountModel = {
     address: simpleWallet1.address.plain(),
     publicKey: account1.publicKey,
     encryptedPrivateKey: simpleWallet1.encryptedPrivateKey,
-    path: "m/44'/4343'/1'/0'/0'",
+    path: "m/44'/1'/1'/0'/0'",
     isMultisig: false,
 };
 

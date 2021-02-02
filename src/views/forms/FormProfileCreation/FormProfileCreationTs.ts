@@ -249,7 +249,8 @@ export class FormProfileCreationTs extends Vue {
      * @return {AccountModel}
      */
     private async importDefaultLedgerAccount(networkType: number): Promise<AccountModel> {
-        const ledgerService = new LedgerService();
+        const defaultPath = AccountService.getAccountPathByNetworkType(networkType);
+        const ledgerService = new LedgerService(networkType);
         const isAppSupported = await ledgerService.isAppSupported();
         if (!isAppSupported) {
             throw { errorCode: 'ledger_not_supported_app' };
@@ -257,7 +258,7 @@ export class FormProfileCreationTs extends Vue {
         const profileName = this.formItems.profileName;
         const accountService = new AccountService();
         this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-        const accountResult = await accountService.getLedgerPublicKeyByPath(networkType, AccountService.DEFAULT_ACCOUNT_PATH);
+        const accountResult = await accountService.getLedgerPublicKeyByPath(networkType, defaultPath);
         const publicKey = accountResult;
         const address = PublicAccount.createFromPublicKey(publicKey, networkType).address;
 
@@ -273,7 +274,7 @@ export class FormProfileCreationTs extends Vue {
             address: address.plain(),
             publicKey: publicKey.toUpperCase(),
             encryptedPrivateKey: '',
-            path: AccountService.DEFAULT_ACCOUNT_PATH,
+            path: defaultPath,
             isMultisig: false,
         };
     }

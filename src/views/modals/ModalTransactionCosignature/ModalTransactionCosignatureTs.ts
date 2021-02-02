@@ -277,7 +277,7 @@ export class ModalTransactionCosignatureTs extends Vue {
         // - sign cosignature transaction
         if (this.currentAccount.type === AccountType.LEDGER) {
             try {
-                const ledgerService = new LedgerService();
+                const ledgerService = new LedgerService(this.currentProfile.networkType);
                 const isAppSupported = await ledgerService.isAppSupported();
                 if (!isAppSupported) {
                     throw { errorCode: 'ledger_not_supported_app' };
