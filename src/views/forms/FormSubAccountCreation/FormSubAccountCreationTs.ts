@@ -139,7 +139,7 @@ export class FormSubAccountCreationTs extends Vue {
 
     public created() {
         this.accountService = new AccountService();
-        this.paths = new DerivationService();
+        this.paths = new DerivationService(this.currentProfile.networkType);
         this.formItems.type = this.isPrivateKeyAccount ? 'privatekey_account' : 'child_account';
     }
 
@@ -355,7 +355,7 @@ export class FormSubAccountCreationTs extends Vue {
 
     async importSubAccountFromLedger(childAccountName: string): Promise<AccountModel> | null {
         try {
-            const ledgerService = new LedgerService();
+            const ledgerService = new LedgerService(this.currentProfile.networkType);
             const isAppSupported = await ledgerService.isAppSupported();
             if (!isAppSupported) {
                 throw { errorCode: 'ledger_not_supported_app' };

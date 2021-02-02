@@ -16,6 +16,7 @@
 // internal dependencies
 import { DerivationPathValidator } from '@/core/validation/validators';
 import { AccountService } from '@/services/AccountService';
+import { NetworkType } from 'symbol-sdk/dist/src/model/network/NetworkType';
 
 export enum DerivationPathLevels {
     Purpose = 1,
@@ -27,12 +28,18 @@ export enum DerivationPathLevels {
 
 export class DerivationService {
     /**
+     * constructor
+     * @param networkType network type
+     */
+    constructor(public readonly networkType: NetworkType) {}
+
+    /**
      * Validate derivation path
      * @param {string} path
      * @return {boolean}
      */
     public isValidPath(path: string): boolean {
-        return DerivationPathValidator.validate(path);
+        return DerivationPathValidator.validate(path, this.networkType);
     }
 
     /**
@@ -72,7 +79,7 @@ export class DerivationService {
      * @returns {string}
      */
     public getNextAccountPath(paths: string[]): string {
-        const defaultPath = AccountService.DEFAULT_ACCOUNT_PATH;
+        const defaultPath = AccountService.getAccountPathByNetworkType(this.networkType);
 
         // return the default path if no path in the array
         if (!paths.length) {

@@ -173,7 +173,8 @@ export class ModalBackupProfileTs extends Vue {
     protected async generateAndDownloadPaperWallet(): Promise<boolean> {
         const rootAccount: Account = this.accountService.getAccountByPath(
             new MnemonicPassPhrase(this.plainMnemonic),
-            this.currentProfile.networkType,
+            this.networkType,
+            AccountService.getAccountPathByNetworkType(this.currentProfile.networkType),
         );
         const rootAccountInfo: IHDAccountInfo = {
             mnemonic: this.plainMnemonic,

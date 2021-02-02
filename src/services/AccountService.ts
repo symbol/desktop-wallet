@@ -32,7 +32,8 @@ export class AccountService {
      * Default account derivation path
      * @var {string}
      */
-    public static readonly DEFAULT_ACCOUNT_PATH = `m/44'/4343'/0'/0'/0'`;
+    private static readonly DEFAULT_ACCOUNT_PATH_MAIN_NET = `m/44'/4343'/0'/0'/0'`;
+    private static readonly DEFAULT_ACCOUNT_PATH_TEST_NET = `m/44'/1'/0'/0'/0'`;
 
     public getAccounts(): AccountModel[] {
         return Object.values(this.getAccountsById());
@@ -86,12 +87,8 @@ export class AccountService {
     /**
      * Derive \a path using \a mnemonic pass phrase
      */
-    public getAccountByPath(
-        mnemonic: MnemonicPassPhrase,
-        networkType: NetworkType,
-        path: string = AccountService.DEFAULT_ACCOUNT_PATH,
-    ): Account {
-        if (!DerivationPathValidator.validate(path)) {
+    public getAccountByPath(mnemonic: MnemonicPassPhrase, networkType: NetworkType, path: string): Account {
+        if (!DerivationPathValidator.validate(path, networkType)) {
             const errorMessage = 'Invalid derivation path: ' + path;
             console.error(errorMessage);
             throw new Error(errorMessage);
@@ -123,18 +120,19 @@ export class AccountService {
      * @return {Account[]}
      */
     public generateAccountsFromMnemonic(mnemonic: MnemonicPassPhrase, networkType: NetworkType, count: number = 10): Account[] {
-        const derivationService = new DerivationService();
+        const derivationService = new DerivationService(networkType);
 
         // create hd extended key
         const xkey = this.getExtendedKeyFromMnemonic(mnemonic);
 
+        const default_path = AccountService.getAccountPathByNetworkType(networkType);
         // increment derivation path \a count times
         const paths = [...Array(count).keys()].map((index) => {
             if (index == 0) {
-                return AccountService.DEFAULT_ACCOUNT_PATH;
+                return default_path;
             }
 
-            return derivationService.incrementPathLevel(AccountService.DEFAULT_ACCOUNT_PATH, DerivationPathLevels.Profile, index);
+            return derivationService.incrementPathLevel(default_path, DerivationPathLevels.Profile, index);
         });
 
         const wallets = paths.map((path) => new Wallet(xkey.derivePath(path)));
@@ -180,7 +178,8 @@ export class AccountService {
         password: Password,
         networkType: NetworkType,
     ): AccountModel {
-        const account = this.getAccountByPath(mnemonic, networkType, AccountService.DEFAULT_ACCOUNT_PATH);
+        const default_path = AccountService.getAccountPathByNetworkType(networkType);
+        const account = this.getAccountByPath(mnemonic, networkType, default_path);
 
         const simpleWallet = SimpleWallet.createFromPrivateKey('Seed Account 1', password, account.privateKey, networkType);
 
@@ -193,7 +192,7 @@ export class AccountService {
             address: simpleWallet.address.plain(),
             publicKey: account.publicKey,
             encryptedPrivateKey: simpleWallet.encryptedPrivateKey,
-            path: AccountService.DEFAULT_ACCOUNT_PATH,
+            path: default_path,
             isMultisig: false,
         };
     }
@@ -296,13 +295,13 @@ export class AccountService {
      * @return {Promise<string>}
      */
     public async getLedgerPublicKeyByPath(networkType: NetworkType, path: string): Promise<string> {
-        if (!DerivationPathValidator.validate(path)) {
+        if (!DerivationPathValidator.validate(path, networkType)) {
             const errorMessage = 'Invalid derivation path: ' + path;
             console.error(errorMessage);
             throw new Error(errorMessage);
         }
-        const ledgerService = new LedgerService();
-        const accountResult = await ledgerService.getAccount(path, networkType, true);
+        const ledgerService = new LedgerService(networkType);
+        const accountResult = await ledgerService.getAccount(path, true);
         const { publicKey } = accountResult;
         return publicKey;
     }
@@ -336,6 +335,18 @@ export class AccountService {
      * @return {AccountModel}
      */
     public async getDefaultLedgerAccount(currentProfile: ProfileModel, networkType: NetworkType): Promise<AccountModel> {
-        return await this.getLedgerAccountByPath(currentProfile, networkType, AccountService.DEFAULT_ACCOUNT_PATH);
+        const default_path = AccountService.getAccountPathByNetworkType(networkType);
+        return await this.getLedgerAccountByPath(currentProfile, networkType, default_path);
+    }
+
+    /**
+     * Return account path by network type
+     * @param networkType Symbol network type
+     */
+    public static getAccountPathByNetworkType(networkType: NetworkType) {
+        if (networkType === NetworkType.MAIN_NET) {
+            return AccountService.DEFAULT_ACCOUNT_PATH_MAIN_NET;
+        }
+        return AccountService.DEFAULT_ACCOUNT_PATH_TEST_NET;
     }
 }
