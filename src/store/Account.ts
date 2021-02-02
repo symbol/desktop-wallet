@@ -276,6 +276,8 @@ export default {
             // reset current signer
             await dispatch('SET_CURRENT_SIGNER', {
                 address: currentAccountAddress,
+                reset: true,
+                unsubscribeWS: true,
             });
             //reset current account alias
             await dispatch('LOAD_CURRENT_ACCOUNT_ALIASES', currentAccountAddress);
@@ -292,7 +294,10 @@ export default {
             commit('currentAccountAliases', []);
         },
 
-        async SET_CURRENT_SIGNER({ commit, dispatch, getters, rootGetters }, { address }: { address: Address }) {
+        async SET_CURRENT_SIGNER(
+            { commit, dispatch, getters, rootGetters },
+            { address, reset = true, unsubscribeWS = true }: { address: Address; reset: boolean; unsubscribeWS: boolean },
+        ) {
             if (!address) {
                 throw new Error('Address must be provided when calling account/SET_CURRENT_SIGNER!');
             }
@@ -310,8 +315,10 @@ export default {
                 root: true,
             });
 
-            dispatch('transaction/RESET_TRANSACTIONS', {}, { root: true });
-            dispatch('restriction/RESET_ACCOUNT_RESTRICTIONS', {}, { root: true });
+            if (reset) {
+                dispatch('transaction/RESET_TRANSACTIONS', {}, { root: true });
+                dispatch('restriction/RESET_ACCOUNT_RESTRICTIONS', {}, { root: true });
+            }
 
             const currentAccountAddress = Address.createFromRawAddress(currentAccount.address);
             const knownAccounts = new AccountService().getKnownAccounts(currentProfile.accounts);
@@ -329,15 +336,28 @@ export default {
             dispatch('harvesting/SET_CURRENT_SIGNER_HARVESTING_MODEL', currentSignerAddress.plain(), { root: true });
 
             // open / close websocket connections
-            if (previousSignerAddress) {
-                await dispatch('UNSUBSCRIBE', previousSignerAddress);
+
+            if (reset) {
+                await dispatch('LOAD_ACCOUNT_INFO');
+                dispatch('namespace/LOAD_NAMESPACES', {}, { root: true });
+                dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
+            } else {
+                const signerModel = knownAccounts.find((w) => w.address === currentSignerAddress.plain());
+                if (signerModel !== undefined) {
+                    commit('currentSignerPublicKey', signerModel.publicKey);
+                } else {
+                    if (getters.currentSignerAccountInfo) {
+                        commit('currentSignerPublicKey', getters.currentSignerAccountInfo.publicKey);
+                    }
+                }
             }
-            await dispatch('SUBSCRIBE', currentSignerAddress);
 
-            await dispatch('LOAD_ACCOUNT_INFO');
-
-            dispatch('namespace/LOAD_NAMESPACES', {}, { root: true });
-            dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
+            if (unsubscribeWS) {
+                if (previousSignerAddress) {
+                    await dispatch('UNSUBSCRIBE', previousSignerAddress);
+                }
+                await dispatch('SUBSCRIBE', currentSignerAddress);
+            }
         },
 
         async NETWORK_CHANGED({ dispatch }) {
@@ -592,7 +612,9 @@ export default {
                 for (const subscription of subscriptions) {
                     subscription.unsubscribe();
                 }
-                listener.close();
+                if (listener.isOpen()) {
+                    listener.close();
+                }
             }
 
             // update state of listeners & subscriptions
