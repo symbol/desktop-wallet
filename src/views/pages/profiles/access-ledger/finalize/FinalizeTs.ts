@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+import { Component, Vue } from 'vue-property-decorator';
 
-/**
- * Metadata added to Vue Router routes
- * @interface RouteMeta
- */
-export interface RouteMeta {
+@Component({})
+export default class FinalizeTs extends Vue {
     /**
-     * Authentication required
-     * @type {boolean}
+     * Finalize the profile creation process by adding
+     * just redirect to dasbroad page.
+     * @return {void}
      */
-    protected: boolean;
-    /**
-     * Localized route name shown in the view
-     * @type {string}
-     */
-    title?: string;
-    // @TODO: REVIEW
-    clickable?: boolean;
-    isLedger?: boolean;
-    icon?: unknown;
-    active?: boolean;
-    nextPage?: string;
-    hideFromMenu?: boolean;
+    public async submit() {
+        // flush and continue
+        return this.$router.push({ name: 'dashboard' });
+    }
 }

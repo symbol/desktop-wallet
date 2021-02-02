@@ -79,7 +79,7 @@ export class FormTransactionConfirmationTs extends Vue {
      */
     public get isUsingHardwareWallet(): boolean {
         // XXX should use "stagedTransaction.signer" to identify account
-        return AccountType.TREZOR === this.currentAccount.type;
+        return AccountType.TREZOR === this.currentAccount.type || AccountType.LEDGER === this.currentAccount.type;
     }
     /// end-region computed properties getter/setter
 

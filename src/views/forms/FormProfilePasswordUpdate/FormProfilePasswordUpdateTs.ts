@@ -137,7 +137,7 @@ export class FormProfilePasswordUpdateTs extends Vue {
             const newPassword = new Password(this.formItems.password);
             const oldSeed = this.currentProfile.seed;
             const plainSeed = Crypto.decrypt(oldSeed, oldPassword.value);
-            const newSeed = Crypto.encrypt(plainSeed, newPassword.value);
+            const newSeed = oldSeed == '' ? oldSeed : Crypto.encrypt(plainSeed, newPassword.value);
 
             // // - create new password hash
             const passwordHash = ProfileService.getPasswordHash(newPassword);
