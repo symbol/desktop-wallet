@@ -126,7 +126,7 @@
         "symbol-hd-wallets": "0.14.0",
         "symbol-paper-wallets": "^1.0.2",
         "symbol-qr-library": "0.14.0",
-        "symbol-sdk": "0.23.1-alpha-202101271842",
+        "symbol-sdk": "0.23.1",
         "symbol-uri-scheme": "0.6.0",
         "ts-jest": "^25.3.0",
         "ts-mockito": "^2.6.1",
