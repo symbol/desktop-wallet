@@ -981,6 +981,7 @@
     "version": "Version",
     "view_metadata": "View metadata",
     "warning_already_a_cosignatory": "This account is already a cosignatory!",
+    "warning_unknown_account": "This account is unknown to the network. Please make sure that address is correct and account received at least one transaction",
     "web_wallet_warning": "This WEB wallet is for demonstration use only!",
     "welcome": "Welcome",
     "welcome_to_symbol": "Welcome to Symbol",
