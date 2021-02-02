@@ -174,6 +174,7 @@ export class ModalBackupProfileTs extends Vue {
         const rootAccount: Account = this.accountService.getAccountByPath(
             new MnemonicPassPhrase(this.plainMnemonic),
             this.currentProfile.networkType,
+            AccountService.getAccountPathByNetworkType(this.networkType),
         );
         const rootAccountInfo: IHDAccountInfo = {
             mnemonic: this.plainMnemonic,
