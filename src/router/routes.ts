@@ -317,6 +317,41 @@ export const routes: AppRoute[] = [
                 ],
             },
             {
+                path: '/nft',
+                name: 'nft',
+                redirect: '/collections',
+                meta: {
+                    protected: true,
+                    clickable: true,
+                    title: 'sidebar_item_nft',
+                    icon: officialIcons.mosaic,
+                },
+                // @ts-ignore
+                component: () => import('@/views/pages/nft/NftDashboardPage/NftDashboardPage.vue'),
+                children: [
+                    // {
+                    //     path: '/marketplace',
+                    //     name: 'nft.marketplace',
+                    //     meta: {
+                    //         protected: true,
+                    //         title: 'page_title_marketplace',
+                    //     },
+                    //     // @ts-ignore
+                    //     component: () => import('@/views/pages/nft/NftMarketplacePage/NftMarketplacePage.vue'),
+                    // },
+                    {
+                        path: '/collections',
+                        name: 'nft.collections',
+                        meta: {
+                            protected: true,
+                            title: 'page_title_nft_collections',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/nft/CollectionsPage/CollectionsPage.vue'),
+                    },
+                ],
+            },
+            {
                 path: '/multisig',
                 name: 'multisig',
                 meta: {

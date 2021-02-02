@@ -109,7 +109,18 @@ export class AppRouter extends Router {
         }
 
         // - find requested top level route
-        const modules = ['dashboard', 'mosaics', 'multisig', 'namespaces', 'settings', 'accounts', 'community', 'harvesting', 'aggregate'];
+        const modules = [
+            'dashboard',
+            'mosaics',
+            'multisig',
+            'namespaces',
+            'nft',
+            'settings',
+            'accounts',
+            'community',
+            'harvesting',
+            'aggregate',
+        ];
 
         // - app modules
         const moduleRoutes = appRoute.children.filter(({ name }) => modules.includes(name));
