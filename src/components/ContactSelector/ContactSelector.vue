@@ -1,6 +1,6 @@
 <template>
     <div class="contact-selector">
-        <Poptip v-model="poptipVisible" placement="bottom-end" class="endpoint-poptip" @on-popper-show="onPopTipShow" :transfer="true">
+        <Poptip v-model="poptipVisible" placement="bottom-end" class="endpoint-poptip" :transfer="true" @on-popper-show="onPopTipShow">
             <div class="button-container">
                 <span class="network-text pointer">{{ $t('select_contact') }}</span>
                 <img src="@/views/resources/img/newicons/Tag.svg" class="icon-left-button" />
