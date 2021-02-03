@@ -19,8 +19,8 @@
                     <div class="detail-row">
                         <FormInputEditable
                             :model="selectedContact"
-                            :value="selectedContact.address"
-                            :new-value="selectedContact.address"
+                            :value="address"
+                            :new-value="address"
                             :editing="false"
                             :rules="validationRules.addressOrPublicKey"
                             :label="$t('contact_address')"
