@@ -1027,5 +1027,6 @@
     "please_link_your_public_key": "Please relink your public key to generate your private key",
     "linking": "Linking...",
     "stoping": "Stopping...",
-    "remote_keys_linked": "you have remote & vrf keys linked to your account, if you want to activate delegated harvesting, please select a harvesting node and link the node key. If you are harvesting already, please select your harvesting node to update your harvesting status"
+    "remote_keys_linked": "you have remote & vrf keys linked to your account, if you want to activate delegated harvesting, please select a harvesting node and link the node key. If you are harvesting already, please select your harvesting node to update your harvesting status",
+    "encrypt_ledger_keys_on_sign": "As a ledger user, we need your password to encrypt your remote account and vrf private key"
 }

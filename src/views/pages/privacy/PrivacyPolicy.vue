@@ -81,7 +81,6 @@
     </div>
 </template>
 <script>
-import { Vue } from 'vue-property-decorator';
 import PrivacyPolicyTs from './PrivacyPolicyTs';
 export default class PrivacyPolicy extends PrivacyPolicyTs {}
 </script>

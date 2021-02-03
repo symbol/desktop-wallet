@@ -2,7 +2,7 @@
     <div class="container">
         <Modal
             v-model="show"
-            :title="message ? $t('create_persistent_message') : $t('modal_account_unlock_title')"
+            :title="message ? message : $t('modal_account_unlock_title')"
             :transfer="true"
             class-name="modal-container"
         >

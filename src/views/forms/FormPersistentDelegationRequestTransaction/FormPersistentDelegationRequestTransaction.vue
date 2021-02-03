@@ -202,11 +202,18 @@
         </FormWrapper>
 
         <ModalFormProfileUnlock
-            v-if="hasAccountUnlockModal"
+            v-if="hasAccountUnlockModal || isLedger"
             :visible="hasAccountUnlockModal"
             :on-success="onAccountUnlocked"
             :message="$t('activate_delegated_harvesting_message')"
             @close="hasAccountUnlockModal = false"
+        />
+        <ModalFormProfileUnlock
+            v-if="hasLedgerAccountUnlockModal"
+            :visible="hasLedgerAccountUnlockModal"
+            :on-success="onLedgerAccountUnlocked"
+            :message="$t('encrypt_ledger_keys_on_sign')"
+            @close="hasLedgerAccountUnlockModal = false"
         />
         <ModalTransactionConfirmation
             v-if="hasConfirmationModal"

@@ -61,7 +61,6 @@
     </div>
 </template>
 <script>
-import { Vue } from 'vue-property-decorator';
 import TermsAndConditionsTs from './TermsAndConditionsTs';
 export default class TermsAndConditions extends TermsAndConditionsTs {}
 </script>
