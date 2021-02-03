@@ -16,8 +16,8 @@
                         <button type="button" class="solid-button button-style fat-button create-account-style" @click="$router.back()">
                             {{ $t('back') }}
                         </button>
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             class="inverted-button button-style fat-button create-account-style"
                             :disabled="isLoading"
                             @click="submit"
