@@ -703,7 +703,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     public get isLedger(): boolean {
-        // console.log(this.currentAccount.type)
         return this.currentAccount.type == AccountType.LEDGER;
     }
 }
