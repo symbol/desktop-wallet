@@ -30,9 +30,7 @@
                     :signer="item.value.signer"
                 />
             </span>
-            <span v-else>
-                {{ item.value }}
-            </span>
+            <span v-else>{{ item.value }}</span>
         </div>
     </div>
 </template>

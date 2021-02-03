@@ -754,7 +754,9 @@
     "placeholder_address_or_public_key": "Address or public key",
     "placeholder_transaction_uri": "Enter a valid transaction URI",
     "please_accurately_copy_the_safety_backup_mnemonic": "Please accurately copy the safety backup mnemonic",
-    "please_approve_terms_and_conditions": "Please accept terms and conditions before starting using the app.",
+    "please_approve": "Please accept",
+    "terms": "Terms",
+    "conditions": "Conditions",
     "please_backup_mnemonic_passphrase": "Make sure to create a backup copy of the mnemonic passphrase. You will need this backup when trying to recover your profile.",
     "please_backup_mnemonic_passphrase_title": "Create a backup!",
     "please_check_device_connection": "Please check your device connection!",
@@ -1024,6 +1026,6 @@
     "label_unlink_vrf_account_public_key": "Unlink your vrf public key",
     "please_link_your_public_key": "Please relink your public key to generate your private key",
     "linking": "Linking...",
-    "stoping": "Stoping...",
+    "stoping": "Stopping...",
     "remote_keys_linked": "you have remote & vrf keys linked to your account, if you want to activate delegated harvesting, please select a harvesting node and link the node key. If you are harvesting already, please select your harvesting node to update your harvesting status"
 }
