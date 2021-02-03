@@ -68,7 +68,7 @@ import { BroadcastResult } from '@/core/transactions/BroadcastResult';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
-import { AccountModel } from '@/core/database/entities/AccountModel';
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 //@ts-ignore
 import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue';
 // @ts-ignore
@@ -165,7 +165,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * @var {boolean}
      */
     public isUnlockingAccount: boolean = false;
-
+    public isUnlockingLedgerAccount: boolean = false;
     private remoteAccountPrivateKey: string;
     private vrfPrivateKey: string;
 
@@ -183,6 +183,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * @return {void}
      */
     protected resetForm() {
+        console.log(this.currentAccount.type);
         // - set default form values
         this.action = HarvestingAction.START;
         // - maxFee must be absolute
@@ -253,7 +254,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * To get all the key link transactions
      */
     protected getKeyLinkTransactions(transactionSigner = this.tempTransactionSigner): Observable<Transaction[]> {
-        const maxFee = UInt64.fromUint(feesConfig.highest); // fixed to the Highest, txs must get confirmed
+        const maxFee = UInt64.fromUint(feesConfig.fastest); // fixed to the Highest, txs must get confirmed
         const txs: Transaction[] = [];
 
         /*
@@ -353,7 +354,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public getPersistentDelegationRequestTransaction(
         transactionSigner: TransactionSigner = this.tempTransactionSigner,
     ): Observable<Transaction[]> {
-        const maxFee = UInt64.fromUint(feesConfig.highest);
+        const maxFee = UInt64.fromUint(feesConfig.fastest);
         if (this.action !== HarvestingAction.STOP) {
             const persistentDelegationReqTx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
                 Deadline.create(this.epochAdjustment, this.isMultisigMode() ? 24 : 2),
@@ -611,7 +612,11 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             this.$store.dispatch('notification/ADD_ERROR', this.$t('harvesting_account_insufficient_balance'));
             return;
         }
-        this.onSubmit();
+        if (!this.isLedger) {
+            this.onSubmit();
+        } else {
+            this.hasLedgerAccountUnlockModal = true;
+        }
     }
 
     public onStop() {
@@ -634,6 +639,14 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     public set hasAccountUnlockModal(f: boolean) {
         this.isUnlockingAccount = f;
+    }
+
+    public get hasLedgerAccountUnlockModal(): boolean {
+        return this.isUnlockingLedgerAccount;
+    }
+
+    public set hasLedgerAccountUnlockModal(f: boolean) {
+        this.isUnlockingLedgerAccount = f;
     }
 
     public onSingleKeyOperation(type: string) {
@@ -674,12 +687,22 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             this.vrfPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encVrfPrivateKey, password.value);
             this.onSubmit();
         } catch (e) {
-            if (!this.currentSignerHarvestingModel?.encRemotePrivateKey && !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
+            if (!this.currentSignerHarvestingModel?.encRemotePrivateKey || !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
                 this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please relink your vrf and remote keys.');
+            } else {
+                this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.');
             }
-            this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.');
 
             console.error(e);
         }
+    }
+
+    public async onLedgerAccountUnlocked(account: Account, password: Password) {
+        this.password = password.value;
+        this.onSubmit();
+    }
+
+    public get isLedger(): boolean {
+        return this.currentAccount.type == AccountType.LEDGER;
     }
 }
