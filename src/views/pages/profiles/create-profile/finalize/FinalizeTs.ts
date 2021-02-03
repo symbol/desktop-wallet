@@ -35,6 +35,11 @@ import { ProfileService } from '@/services/ProfileService';
 })
 export default class FinalizeTs extends Vue {
     /**
+     * Form is being submitted
+     */
+    protected isLoading: boolean = false;
+
+    /**
      * Controls submit button for terms and conditions
      * @type {boolean}
      */
@@ -103,6 +108,8 @@ export default class FinalizeTs extends Vue {
      */
     public async submit() {
         // create profile by mnemonic
+        this.isLoading = true;
+
         const account = this.accountService.getDefaultAccount(
             this.currentProfile,
             this.currentMnemonic,

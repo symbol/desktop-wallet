@@ -32,13 +32,14 @@
                         <button
                             type="submit"
                             class="inverted-button button-style fat-button create-account-style"
-                            :disabled="!marked"
+                            :disabled="isLoading || !marked"
                             @click="submit"
                         >
                             {{ $t('finish') }}
                         </button>
                     </div>
                 </div>
+                <Spin v-if="isLoading" size="large" fix class="absolute" />
             </div>
         </div>
     </div>
