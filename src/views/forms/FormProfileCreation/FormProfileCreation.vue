@@ -127,7 +127,7 @@
                             {{ $t('back') }}
                         </button>
                         <button type="submit" class="inverted-button button-style create-account-style" @click="handleSubmit(submit)">
-                            {{ $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'restore_mnemonic' : 'generating_mnemonic') }}
+                            {{ $t('next') }}
                         </button>
                     </div>
                 </form>
@@ -171,6 +171,10 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
 
 .form-wrapper {
     width: 100%;
+}
+
+.create-account-style {
+    width: 150px;
 }
 
 /deep/ .form-row {
