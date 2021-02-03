@@ -114,7 +114,7 @@ export default class FinalizeTs extends Vue {
             this.currentProfile,
             this.currentMnemonic,
             this.currentPassword,
-            this.networkType,
+            this.currentProfile.networkType,
         );
         // use repository for storage
         this.accountService.saveAccount(account);
