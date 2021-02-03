@@ -342,6 +342,10 @@ export default {
                 dispatch('namespace/LOAD_NAMESPACES', {}, { root: true });
                 dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
             } else {
+                const currentSigner = getters.signers.find((s) => s.address.equals(currentSignerAddress));
+                if (currentSigner) {
+                    commit('currentSigner', currentSigner);
+                }
                 const signerModel = knownAccounts.find((w) => w.address === currentSignerAddress.plain());
                 if (signerModel !== undefined) {
                     commit('currentSignerPublicKey', signerModel.publicKey);
