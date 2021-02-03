@@ -17,7 +17,6 @@
                     @on-select="fetchNodePublicKey"
                     @on-clear="onClear"
                 ></AutoComplete>
-                <Icon v-if="isFetchingNodeInfo" type="ios-loading" size="18" class="demo-spin-icon-load"></Icon>
             </div>
             <div v-if="showInputPublicKey" class="inputs-container publickey-input-container">
                 <input

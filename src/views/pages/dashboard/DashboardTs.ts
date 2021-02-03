@@ -24,14 +24,12 @@ import NetworkStatisticsPanel from '@/components/NetworkStatisticsPanel/NetworkS
 // @ts-ignore
 import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue';
 // @ts-ignore
-import ModalTermsAndConditions from '@/views/modals/ModalTermsAndConditions/ModalTermsAndConditions.vue';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 @Component({
     components: {
         ProfileBalancesPanel,
         NetworkStatisticsPanel,
         NavigationTabs,
-        ModalTermsAndConditions,
     },
     computed: {
         ...mapGetters({

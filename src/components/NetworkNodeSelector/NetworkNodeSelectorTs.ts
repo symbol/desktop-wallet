@@ -1,15 +1,13 @@
 // external dependencies
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
+import { NodeInfo, RoleType } from 'symbol-sdk';
 
 // internal dependencies
-import { URLHelpers } from '@/core/utils/URLHelpers';
-
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
-import { NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 
 @Component({
@@ -19,8 +17,8 @@ import { NodeModel } from '@/core/database/entities/NodeModel';
     },
     computed: {
         ...mapGetters({
-            peerNodes: 'network/peerNodes',
             repositoryFactory: 'network/repositoryFactory',
+            harvestingPeerNodes: 'network/harvestingPeerNodes',
         }),
     },
 })
@@ -35,8 +33,7 @@ export class NetworkNodeSelectorTs extends Vue {
     })
     disabled: boolean;
 
-    public peerNodes: NodeInfo[];
-
+    public harvestingPeerNodes: NodeInfo[];
     /**
      * Form items
      */
@@ -45,8 +42,6 @@ export class NetworkNodeSelectorTs extends Vue {
     protected formNodePublicKey = '';
 
     public customNodeData = [];
-
-    public isFetchingNodeInfo = false;
 
     public showInputPublicKey = false;
 
@@ -68,32 +63,9 @@ export class NetworkNodeSelectorTs extends Vue {
             this.$emit('input', nodeModel);
             return;
         }
-
-        this.isFetchingNodeInfo = true;
-        try {
-            const nodeUrl = URLHelpers.getNodeUrl(value);
-            const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
-            const nodeRepository = repositoryFactory.createNodeRepository();
-            const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
-            this.formNodeUrl = value;
-            if (nodeInfo.nodePublicKey) {
-                const nodeModel = new NodeModel(value, nodeInfo.friendlyName, false, nodeInfo.publicKey, nodeInfo.nodePublicKey);
-                Vue.set(this, 'showInputPublicKey', false);
-                this.$emit('input', nodeModel);
-            } else {
-                Vue.set(this, 'showInputPublicKey', true);
-            }
-        } catch (error) {
-            console.log(error);
-            Vue.set(this, 'showInputPublicKey', true);
-            throw new Error('Node_connection_failed');
-        } finally {
-            this.isFetchingNodeInfo = false;
-        }
     }
 
     public async created() {
-        await this.$store.dispatch('network/LOAD_PEER_NODES');
         this.customNodeData = this.filteredNodes.map((n) => n.host);
     }
 
@@ -129,9 +101,9 @@ export class NetworkNodeSelectorTs extends Vue {
 
     protected get filteredNodes() {
         if (this.includeRoles && this.includeRoles.length > 0) {
-            return this.peerNodes.filter((node) => node.roles?.some((role) => this.isIncluded(role)));
+            return this.harvestingPeerNodes.filter((node) => node.roles?.some((role) => this.isIncluded(role)));
         }
-        return this.peerNodes;
+        return this.harvestingPeerNodes;
     }
 
     private isIncluded(role: RoleType) {

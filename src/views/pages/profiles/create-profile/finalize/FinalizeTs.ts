@@ -21,6 +21,7 @@ import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 import { AccountService } from '@/services/AccountService';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { ProfileService } from '@/services/ProfileService';
 
 @Component({
     computed: {
@@ -37,6 +38,28 @@ export default class FinalizeTs extends Vue {
      * Form is being submitted
      */
     protected isLoading: boolean = false;
+
+    /**
+     * Controls submit button for terms and conditions
+     * @type {boolean}
+     */
+    private marked: boolean = false;
+
+    /**
+     * Modal forms visibility states
+     * @protected
+     * @type {{
+     *     termsAndConditions: boolean
+     *     privacyAndPolicy: boolean
+     *   }}
+     */
+    protected modalVisibility: {
+        termsAndConditions: boolean;
+        privacyAndPolicy: boolean;
+    } = {
+        termsAndConditions: false,
+        privacyAndPolicy: false,
+    };
 
     /**
      * Currently active networkType
@@ -73,6 +96,12 @@ export default class FinalizeTs extends Vue {
     public accountService: AccountService = new AccountService();
 
     /**
+     * Profile Service
+     * @var {ProfileService}
+     */
+    public profileService: ProfileService = new ProfileService();
+
+    /**
      * Finalize the profile creation process by adding
      * the account created from mnemonic pass phrase.
      * @return {void}
@@ -89,6 +118,7 @@ export default class FinalizeTs extends Vue {
         );
         // use repository for storage
         this.accountService.saveAccount(account);
+        this.profileService.updateProfileTermsAndConditionsStatus(this.currentProfile, true);
 
         // execute store actions
         await this.$store.dispatch('profile/ADD_ACCOUNT', account);
@@ -99,5 +129,25 @@ export default class FinalizeTs extends Vue {
 
         // flush and continue
         return this.$router.push({ name: 'dashboard' });
+    }
+
+    /**
+     * Closes a modal
+     * @protected
+     * @param {string} modalIdentifier
+     * @return {void}
+     */
+    protected displayModal(modalIdentifier: string): void {
+        Vue.set(this.modalVisibility, modalIdentifier, true);
+    }
+
+    /**
+     * Closes a modal
+     * @protected
+     * @param {string} modalIdentifier
+     * @return {void}
+     */
+    protected closeModal(modalIdentifier: string): void {
+        Vue.set(this.modalVisibility, modalIdentifier, false);
     }
 }
