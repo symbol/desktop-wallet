@@ -273,11 +273,11 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
 
         if (this.action !== HarvestingAction.STOP) {
-            if (!this.isAccountKeyLinked) {
+            if (!this.isAccountKeyLinked || !this.currentSignerHarvestingModel?.encRemotePrivateKey) {
                 const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(accountKeyLinkTx);
             }
-            if (!this.isVrfKeyLinked) {
+            if (!this.isVrfKeyLinked || !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
                 const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(vrfKeyLinkTx);
             }
@@ -681,9 +681,5 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
             console.error(e);
         }
-    }
-
-    public onChangeNodePubKey(pkeyModel) {
-        this.formItems.nodeModel = pkeyModel;
     }
 }

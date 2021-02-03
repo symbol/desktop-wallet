@@ -110,6 +110,7 @@ interface NetworkState {
     rentalFeeEstimation: RentalFees;
     networkIsNotMatchingProfile: boolean;
     peerNodes: NodeInfo[];
+    harvestingPeerNodes: NodeInfo[];
     selectedPeerNode: NodeInfo;
 }
 
@@ -134,6 +135,7 @@ const networkState: NetworkState = {
     epochAdjustment: networkConfig.networkConfigurationDefaults.epochAdjustment,
     networkIsNotMatchingProfile: false,
     peerNodes: [],
+    harvestingPeerNodes: [],
     selectedPeerNode: null,
 };
 
@@ -159,6 +161,7 @@ export default {
         rentalFeeEstimation: (state: NetworkState) => state.rentalFeeEstimation,
         networkIsNotMatchingProfile: (state: NetworkState) => state.networkIsNotMatchingProfile,
         peerNodes: (state: NetworkState) => state.peerNodes,
+        harvestingPeerNodes: (state: NetworkState) => state.harvestingPeerNodes,
     },
     mutations: {
         setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -226,6 +229,8 @@ export default {
             Vue.set(state, 'subscriptions', [...subscriptions, payload]);
         },
         peerNodes: (state: NetworkState, peerNodes: NodeInfo[]) => Vue.set(state, 'peerNodes', peerNodes),
+        harvestingPeerNodes: (state: NetworkState, harvestingPeerNodes: NodeInfo[]) =>
+            Vue.set(state, 'harvestingPeerNodes', harvestingPeerNodes),
     },
     actions: {
         async initialize({ commit, dispatch, getters }) {
@@ -400,13 +405,55 @@ export default {
 
             dispatch('SET_CURRENT_PEER', networkService.getDefaultUrl());
         },
-        async LOAD_PEER_NODES({ commit, rootGetters }) {
+        async LOAD_PEER_NODES({ commit, rootGetters, dispatch }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const nodeRepository = repositoryFactory.createNodeRepository();
 
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
             const allNodes = [...staticPeerNodes, ...peerNodes.sort((a, b) => a.host.localeCompare(b.host))];
             commit('peerNodes', _.uniqBy(allNodes, 'host'));
+            await dispatch('LOAD_HARVESTING_PEERS');
+        },
+        // load nodes that eligible for delegate harvesting
+        async LOAD_HARVESTING_PEERS({ commit, getters }) {
+            const peerNodes = getters.peerNodes;
+            peerNodes.forEach(async (node: NodeInfo) => {
+                await setTimeout(async () => {
+                    try {
+                        const nodeUrl = URLHelpers.getNodeUrl(node.host);
+                        const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
+                        const nodeRepository = repositoryFactory.createNodeRepository();
+                        const unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
+                        const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
+
+                        if (unlockedAccounts) {
+                            let validNodeInfo: NodeInfo;
+                            let harvestingPeers: NodeInfo[];
+                            // in case nodeInfo missing host
+                            if (!nodeInfo.host) {
+                                validNodeInfo = new NodeInfo(
+                                    nodeInfo.publicKey,
+                                    nodeInfo.networkGenerationHashSeed,
+                                    nodeInfo.port,
+                                    nodeInfo.networkIdentifier,
+                                    nodeInfo.version,
+                                    nodeInfo.roles,
+                                    node.host,
+                                    nodeInfo.friendlyName,
+                                    nodeInfo.nodePublicKey,
+                                );
+                                harvestingPeers = [validNodeInfo, ...getters.harvestingPeerNodes];
+                            } else {
+                                harvestingPeers = [nodeInfo, ...getters.harvestingPeerNodes];
+                            }
+                            // update harvesting peers
+                            commit('harvestingPeerNodes', harvestingPeers);
+                        }
+                    } catch (err) {
+                        console.error('Harvesting not enabled', err);
+                    }
+                }, 500);
+            });
         },
         /**
          * Websocket API
