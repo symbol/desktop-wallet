@@ -84,7 +84,7 @@
                                 }}</span>
                                 <span
                                     class="pointer create-profile"
-                                    v-bind:class="{ disabled: performingLogin }"
+                                    :class="{ disabled: performingLogin }"
                                     @click="
                                         if (!performingLogin) {
                                             $router.push({

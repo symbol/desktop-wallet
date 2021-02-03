@@ -8,7 +8,7 @@
                 <h5 class="centered-content bottom-space">
                     {{ $t(message) }}
                 </h5>
-                <div class="bottom-space" v-if="showCheckbox">
+                <div v-if="showCheckbox" class="bottom-space">
                     <Checkbox id="Confirmed" :value="isCheckboxChecked" @input="onCheckboxCheck" />
                     <label for="Confirmed">{{ $t(checkboxLabel) }}</label>
                 </div>
