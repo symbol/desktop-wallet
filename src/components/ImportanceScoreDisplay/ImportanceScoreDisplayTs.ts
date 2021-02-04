@@ -45,6 +45,11 @@ export class ImportanceScoreDisplayTs extends Vue {
         if (!accountInfo) {
             return '0';
         }
+
+        if (!this.networkCurrency?.divisibility || !this.networkConfiguration?.totalChainImportance) {
+            return 'N/A';
+        }
+
         const importance = accountInfo.importance.compact();
 
         const relativeImportance = importance > 0 ? importance / this.networkConfiguration.totalChainImportance : importance;
