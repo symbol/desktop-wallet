@@ -183,6 +183,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * @return {void}
      */
     protected resetForm() {
+        console.log(this.currentAccount.type);
         // - set default form values
         this.action = HarvestingAction.START;
         // - maxFee must be absolute

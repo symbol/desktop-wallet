@@ -256,7 +256,7 @@ export class FormSubAccountCreationTs extends Vue {
                         this.currentPassword,
                         this.formItems.name,
                         this.formItems.privateKey,
-                        this.networkType,
+                        this.currentProfile.networkType,
                     );
                     break;
             }
@@ -337,7 +337,7 @@ export class FormSubAccountCreationTs extends Vue {
                     this.currentPassword,
                     mnemonic,
                     nextPath,
-                    this.networkType,
+                    this.currentProfile.networkType,
                     childAccountName,
                 );
             }
@@ -363,8 +363,8 @@ export class FormSubAccountCreationTs extends Vue {
             const accountService = new AccountService();
             const nextPath = this.paths.getNextAccountPath(this.knownPaths);
             this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-            const publicKey = await accountService.getLedgerPublicKeyByPath(this.networkType, nextPath);
-            const address = PublicAccount.createFromPublicKey(publicKey, this.networkType).address;
+            const publicKey = await accountService.getLedgerPublicKeyByPath(this.currentProfile.networkType, nextPath);
+            const address = PublicAccount.createFromPublicKey(publicKey, this.currentProfile.networkType).address;
             return {
                 id: SimpleObjectStorage.generateIdentifier(),
                 name: childAccountName,
