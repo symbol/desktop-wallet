@@ -263,8 +263,23 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
          STOP =>  unlink all (linked keys)
          SWAP =>  unlink(linked) + link all (new keys)
          */
-
-        if (this.isNodeKeyLinked) {
+        if (this.isAccountKeyLinked && !this.currentSignerHarvestingModel?.encRemotePrivateKey) {
+            const accountUnlinkTx = this.createAccountKeyLinkTx(
+                this.currentSignerAccountInfo.supplementalPublicKeys.linked.publicKey,
+                LinkAction.Unlink,
+                maxFee,
+            );
+            txs.push(accountUnlinkTx);
+        }
+        if (this.isVrfKeyLinked && !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
+            const vrfUnlinkTx = this.createVrfKeyLinkTx(
+                this.currentSignerAccountInfo.supplementalPublicKeys.vrf.publicKey,
+                LinkAction.Unlink,
+                maxFee,
+            );
+            txs.push(vrfUnlinkTx);
+        }
+        if (this.isNodeKeyLinked && !this.currentSignerHarvestingModel?.selectedHarvestingNode) {
             const nodeUnLinkTx = this.createNodeKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys.node.publicKey,
                 LinkAction.Unlink,
@@ -274,6 +289,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
 
         if (this.action !== HarvestingAction.STOP) {
+            console.log('not stop');
             if (!this.isAccountKeyLinked || !this.currentSignerHarvestingModel?.encRemotePrivateKey) {
                 const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(accountKeyLinkTx);
