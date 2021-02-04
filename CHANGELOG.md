@@ -9,7 +9,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 **This version only works with the latest testnet (0.10.0.6), it is not backward compatible.**
 
-:warning: **This version resets the previous user profile and locally stored data.**
+:warning: **This version resets the previous user profile and locally stored data. Please backup your test accounts before using this version.**
 
 #### Added
 
@@ -47,6 +47,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Fixed password is displayed as plain text in updated password form.
 - Fixed duplicated seed account issue.
 - Fixed modal confirmation checkbox and text-overflow issue.
+- Fixed selected signer get reset issue in Aggregate transaction form.
 - Other UI / UX fixes.
 
 ## [0.13.8][v0.13.8] - 19-Jan-2021
