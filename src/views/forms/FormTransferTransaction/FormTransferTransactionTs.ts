@@ -697,7 +697,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
     mounted() {
         if (this.isAggregate && this.value) {
-            this.$set(this, 'formItems', this.value);
+            Object.assign(this.formItems, this.value);
         }
 
         this.isMounted = true;
