@@ -5,7 +5,7 @@
             <OptionGroup label="Multisig accounts">
                 <Option v-for="item in signers" :key="item.address.plain()" :value="item.address.plain()">
                     {{ item.multisig ? $t('label_postfix_multisig') : '' }}
-                    {{ item.label }}   
+                    {{ item.label }}
                 </Option>
             </OptionGroup>
         </Select>
