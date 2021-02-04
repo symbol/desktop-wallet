@@ -3,6 +3,52 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.14.0][v0.14.0] - 04-Feb-2021
+
+### Milestone: [catapult-server@v0.10.0.6](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.6)
+
+**This version only works with latest testnet (0.10.0.6), it is not backward compatible.**
+
+:warning: **This version reset the previous user profile and locally stored data.**
+
+#### Added
+
+- Added address validation for cosignaturies in multisig account creation.
+- Added back warning after private key account imported into the profile.
+- Added core server error message transformer.
+
+#### Changed
+
+- Changed delegated harvesting process. Support persisting linked private keys locally for remote & local harvesting (node owners) purposes.
+- Improved vuex store, optimised rest api requests.
+- Changed HD seed account gernation to use profile network type rather than node network type.
+- Language improvement in English and Japanese.
+- Removed Trezor button.
+- Balance panel UI improvement.
+- Transaction confirmation modal UI improvement.
+- Profile creation page UI improvement.
+- Aggreget transaction page UI improvement.
+
+#### Fixed
+
+- Split HD wallet path between MainNet and TestNet for seed accounts generation [**Account Profile & Localstorage Reset**].
+- Fixed cosigners cannot receive partial transaction notification issue.
+- Fixed cosigners cannot cosign partial transaction issue.
+- Fixed websocket listener not closing properly after switching accounts / nodes issue.
+- Fixed metadata value showing with different encoding issue.
+- Fixed application can be used without acceptiing T&C issue.
+- Fixed some hint texts not reable issue.
+- Fixed delegated harvesting throws Failure_Core_Past_Deadline issue.
+- Fixed the issue that send transaction button not disabled when inner transaction is empty in Aggregate transaction form.
+- Fixed aggrege transaction can be seen from differernt account issue.
+- Fixed multisig creation form accessability issue.
+- Fixed fees selector in aggregate transaction not always display issue.
+- Fixed maxFee selector warning overlaps on other warning component issue.
+- Fixed password is displayed as plain text in update password form.
+- Fixed duplicated seed account issue.
+- Fixed modal confirmation checkbox and text overflow issue.
+- Other UI / UX fixes.
+
 ## [0.13.8][v0.13.8] - 19-Jan-2021
 
 ### Milestone: [catapult-server@v0.10.0.5](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.5)
