@@ -299,7 +299,7 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
     protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
         if (
             this.isMultisigMode() ||
-            this.simpleAggregateTransaction.some((tx) => tx['formItems']['signerAddress'] !== this.currentAccount.address)
+            this.simpleAggregateTransaction.some((tx) => this.currentSignerPublicKey !== tx['formItems']['signerPublicKey'])
         ) {
             return TransactionCommandMode.MULTISIGN;
         }
