@@ -31,6 +31,9 @@ import {
     LockFundsTransaction,
     Mosaic,
     UInt64,
+    Crypto,
+    TransactionType,
+    LinkAction,
 } from 'symbol-sdk';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { ValidationObserver } from 'vee-validate';
@@ -54,7 +57,6 @@ import TransactionDetails from '@/components/TransactionDetails/TransactionDetai
 import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue';
 // @ts-ignore
 import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue';
-import { NodeModel } from '@/core/database/entities/NodeModel';
 
 @Component({
     components: {
@@ -607,7 +609,46 @@ export class ModalTransactionConfirmationTs extends Vue {
         services.announce(signedKeyUnLinkAggregateCompleteTransaction).subscribe((res) => {
             if (res.success) {
                 const accountAddress = this.command.currentSignerHarvestingModel.accountAddress;
-                this.command.saveSignedPersistentDelReqTxs(accountAddress, []);
+                // @ts-ignore
+                if (!!res.transaction?.innerTransactions) {
+                    // @ts-ignore
+                    res.transaction?.innerTransactions.forEach((val) => {
+                        if (val.type === TransactionType.ACCOUNT_KEY_LINK && this.command.remotePrivateKeyTemp) {
+                            val.linkAction === LinkAction.Link
+                                ? this.command.saveRemoteKey(
+                                      accountAddress,
+                                      Crypto.encrypt(this.command.remotePrivateKeyTemp, this.command.password),
+                                  )
+                                : this.command.saveRemoteKey(accountAddress, null);
+                        }
+                        if (val.type === TransactionType.VRF_KEY_LINK && this.command.vrfPrivateKeyTemp) {
+                            val.linkAction == LinkAction.Link
+                                ? this.command.saveVrfKey(
+                                      accountAddress,
+                                      Crypto.encrypt(this.command.vrfPrivateKeyTemp, this.command.password),
+                                  )
+                                : this.command.saveVrfKey(accountAddress, null);
+                        }
+                    });
+                } else {
+                    if (res.transaction.type === TransactionType.ACCOUNT_KEY_LINK && this.command.remotePrivateKeyTemp) {
+                        // @ts-ignore
+
+                        res.transaction.linkAction === LinkAction.Link
+                            ? this.command.saveRemoteKey(
+                                  accountAddress,
+                                  Crypto.encrypt(this.command.remotePrivateKeyTemp, this.command.password),
+                              )
+                            : this.command.saveRemoteKey(accountAddress, null);
+                    }
+                    if (res.transaction.type === TransactionType.VRF_KEY_LINK && this.command.vrfPrivateKeyTemp) {
+                        // @ts-ignore
+                        res.transaction.linkAction == LinkAction.Link
+                            ? this.command.saveVrfKey(accountAddress, Crypto.encrypt(this.command.vrfPrivateKeyTemp, this.command.password))
+                            : this.command.saveVrfKey(accountAddress, null);
+                    }
+                }
+
                 this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
                     accountAddress,
                     isPersistentDelReqSent: false,
@@ -615,7 +656,7 @@ export class ModalTransactionConfirmationTs extends Vue {
 
                 this.$store.dispatch('harvesting/UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
                     accountAddress,
-                    selectedHarvestingNode: { nodePublicKey: '' } as NodeModel,
+                    selectedHarvestingNode: this.command.formItems.nodeModel,
                 });
             }
         });
@@ -736,7 +777,7 @@ export class ModalTransactionConfirmationTs extends Vue {
                 });
                 this.$store.dispatch('harvesting/UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
                     accountAddress,
-                    selectedHarvestingNode: { nodePublicKey: '' } as NodeModel,
+                    selectedHarvestingNode: this.command.formItems.nodeModel,
                 });
             }
         });

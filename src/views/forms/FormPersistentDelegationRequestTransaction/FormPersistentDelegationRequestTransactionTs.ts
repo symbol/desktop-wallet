@@ -652,7 +652,21 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public onSingleKeyOperation(type: string) {
         this.action = HarvestingAction.SINGLE_KEY;
         this.type = type;
-        this.onSubmit();
+        if (this.type == 'node') {
+            this.onSubmit();
+        } else if (this.type == 'account') {
+            if (!this.isAccountKeyLinked && this.isLedger) {
+                this.hasLedgerAccountUnlockModal = true;
+            } else {
+                this.onSubmit();
+            }
+        } else {
+            if (!this.isVrfKeyLinked && this.isLedger) {
+                this.hasLedgerAccountUnlockModal = true;
+            } else {
+                this.onSubmit();
+            }
+        }
     }
 
     public onSubmit() {
@@ -682,6 +696,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      */
     public async onAccountUnlocked(account: Account, password: Password) {
         try {
+            this.password = password.value;
             this.action = HarvestingAction.ACTIVATE;
             this.remoteAccountPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encRemotePrivateKey, password.value);
             this.vrfPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encVrfPrivateKey, password.value);
