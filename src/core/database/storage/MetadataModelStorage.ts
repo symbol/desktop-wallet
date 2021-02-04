@@ -29,6 +29,10 @@ export class MetadataModelStorage extends VersionedNetworkBasedObjectStorage<Met
                 description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
                 migrate: () => undefined,
             },
+            {
+                description: 'Reset accounts for 0.10.0.6 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
         ]);
     }
 }

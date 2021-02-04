@@ -15,8 +15,10 @@
  */
 import { DerivationPathLevels, DerivationService } from '@/services/DerivationService';
 import { AccountService } from '@/services/AccountService';
+import { NetworkType } from 'symbol-sdk';
 
-const { DEFAULT_ACCOUNT_PATH } = AccountService;
+const networkType = NetworkType.MAIN_NET;
+const DEFAULT_ACCOUNT_PATH = AccountService.getAccountPathByNetworkType(networkType);
 
 // Standard profile paths
 const standardPaths = {
@@ -37,7 +39,7 @@ describe('services/DerivationService ==>', () => {
         test('increase standard paths as expected', () => {
             expect(
                 [...Array(9).keys()].map((index) =>
-                    new DerivationService().incrementPathLevel(DEFAULT_ACCOUNT_PATH, DerivationPathLevels.Profile, index + 1),
+                    new DerivationService(networkType).incrementPathLevel(DEFAULT_ACCOUNT_PATH, DerivationPathLevels.Profile, index + 1),
                 ),
             ).toEqual(Object.values(standardPaths));
         });
@@ -47,7 +49,7 @@ describe('services/DerivationService ==>', () => {
         test('decrease standard paths as expected', () => {
             expect(
                 [...Array(9).keys()].map((index) =>
-                    new DerivationService().decrementPathLevel(standardPaths[10], DerivationPathLevels.Profile, index + 1),
+                    new DerivationService(networkType).decrementPathLevel(standardPaths[10], DerivationPathLevels.Profile, index + 1),
                 ),
             ).toEqual([DEFAULT_ACCOUNT_PATH, ...Object.values(standardPaths).slice(0, 8)].reverse());
         });
@@ -55,27 +57,27 @@ describe('services/DerivationService ==>', () => {
 
     describe('getNextAccountPath() should', () => {
         test('return default path when provided an empty array', () => {
-            expect(new DerivationService().getNextAccountPath([])).toBe(DEFAULT_ACCOUNT_PATH);
+            expect(new DerivationService(networkType).getNextAccountPath([])).toBe(DEFAULT_ACCOUNT_PATH);
         });
 
         test('return the first missing consecutive path when it is the default one', () => {
             const paths = [standardPaths[2], standardPaths[3]];
-            expect(new DerivationService().getNextAccountPath(paths)).toBe(DEFAULT_ACCOUNT_PATH);
+            expect(new DerivationService(networkType).getNextAccountPath(paths)).toBe(DEFAULT_ACCOUNT_PATH);
         });
 
         test('return the first missing consecutive path when it is the second one', () => {
             const paths = [standardPaths[3], standardPaths[5], DEFAULT_ACCOUNT_PATH];
-            expect(new DerivationService().getNextAccountPath(paths)).toBe(standardPaths[2]);
+            expect(new DerivationService(networkType).getNextAccountPath(paths)).toBe(standardPaths[2]);
         });
 
         test('return the first missing consecutive path when it is in the middle', () => {
             const paths = [standardPaths[2], DEFAULT_ACCOUNT_PATH, standardPaths[4]];
-            expect(new DerivationService().getNextAccountPath(paths)).toBe(standardPaths[3]);
+            expect(new DerivationService(networkType).getNextAccountPath(paths)).toBe(standardPaths[3]);
         });
 
         test('return the next path when all paths are consecutive', () => {
             const paths = [standardPaths[2], standardPaths[3], DEFAULT_ACCOUNT_PATH];
-            expect(new DerivationService().getNextAccountPath(paths)).toBe(standardPaths[4]);
+            expect(new DerivationService(networkType).getNextAccountPath(paths)).toBe(standardPaths[4]);
         });
     });
 });

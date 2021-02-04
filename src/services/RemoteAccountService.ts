@@ -27,7 +27,7 @@ export class RemoteAccountService extends AccountService {
     /**
      * Derivation service
      */
-    private readonly derivationService = new DerivationService();
+    private derivationService: DerivationService;
 
     /**
      * Creates an instance of RemoteAccountService.
@@ -41,6 +41,7 @@ export class RemoteAccountService extends AccountService {
         private readonly accountRepository: AccountRepository,
     ) {
         super();
+        this.derivationService = new DerivationService(profile.networkType);
     }
 
     /**

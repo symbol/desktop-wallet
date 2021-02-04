@@ -174,13 +174,13 @@ export class AccountDetailsPageTs extends Vue {
 
     public async showAddressLedger() {
         try {
-            const ledgerService = new LedgerService();
+            const networkType = this.currentProfile.networkType;
+            const ledgerService = new LedgerService(networkType);
             const isAppSupported = await ledgerService.isAppSupported();
             if (!isAppSupported) {
                 throw { errorCode: 'ledger_not_supported_app' };
             }
             const currentPath = this.currentAccount.path;
-            const networkType = this.currentProfile.networkType;
             this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
             const currentAccount = await this.accountService.getLedgerAccountByPath(this.currentProfile, networkType, currentPath);
             const accountPublicKey = currentAccount.publicKey.toUpperCase();
