@@ -647,12 +647,18 @@ export class ModalTransactionConfirmationTs extends Vue {
                             ? this.command.saveVrfKey(accountAddress, Crypto.encrypt(this.command.vrfPrivateKeyTemp, this.command.password))
                             : this.command.saveVrfKey(accountAddress, null);
                     }
+                    if (res.transaction.type === TransactionType.TRANSFER) {
+                        this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
+                            accountAddress,
+                            isPersistentDelReqSent: true,
+                        });
+                    } else {
+                        this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
+                            accountAddress,
+                            isPersistentDelReqSent: false,
+                        });
+                    }
                 }
-
-                this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
-                    accountAddress,
-                    isPersistentDelReqSent: false,
-                });
 
                 this.$store.dispatch('harvesting/UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
                     accountAddress,
