@@ -632,8 +632,7 @@ export class ModalTransactionConfirmationTs extends Vue {
                         }
                     });
                 } else {
-
-                    if (res.transaction.type === TransactionType.ACCOUNT_KEY_LINK ) {
+                    if (res.transaction.type === TransactionType.ACCOUNT_KEY_LINK) {
                         // @ts-ignore
 
                         res.transaction.linkAction === LinkAction.Link && this.command.remotePrivateKeyTemp
@@ -643,7 +642,7 @@ export class ModalTransactionConfirmationTs extends Vue {
                               )
                             : this.command.saveRemoteKey(accountAddress, null);
                     }
-                    if (res.transaction.type === TransactionType.VRF_KEY_LINK ) {
+                    if (res.transaction.type === TransactionType.VRF_KEY_LINK) {
                         // @ts-ignore
                         res.transaction.linkAction == LinkAction.Link && this.command.vrfPrivateKeyTemp
                             ? this.command.saveVrfKey(accountAddress, Crypto.encrypt(this.command.vrfPrivateKeyTemp, this.command.password))
@@ -781,7 +780,7 @@ export class ModalTransactionConfirmationTs extends Vue {
                 if (!!res.transaction?.innerTransactions) {
                     // @ts-ignore
                     res.transaction?.innerTransactions.forEach((val) => {
-                        if (val.type === TransactionType.ACCOUNT_KEY_LINK ) {
+                        if (val.type === TransactionType.ACCOUNT_KEY_LINK) {
                             val.linkAction === LinkAction.Link && this.command.remotePrivateKeyTemp
                                 ? this.command.saveRemoteKey(
                                       accountAddress,
