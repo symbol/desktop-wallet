@@ -264,7 +264,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
          */
         if (this.isAccountKeyLinked && !this.currentSignerHarvestingModel?.encRemotePrivateKey) {
             const accountUnlinkTx = this.createAccountKeyLinkTx(
-                this.currentSignerAccountInfo.supplementalPublicKeys.linked.publicKey,
+                this.currentSignerAccountInfo.supplementalPublicKeys?.linked.publicKey,
                 LinkAction.Unlink,
                 maxFee,
             );
@@ -272,15 +272,15 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
         if (this.isVrfKeyLinked && !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
             const vrfUnlinkTx = this.createVrfKeyLinkTx(
-                this.currentSignerAccountInfo.supplementalPublicKeys.vrf.publicKey,
+                this.currentSignerAccountInfo.supplementalPublicKeys?.vrf.publicKey,
                 LinkAction.Unlink,
                 maxFee,
             );
             txs.push(vrfUnlinkTx);
         }
-        if (this.isNodeKeyLinked || !this.currentSignerHarvestingModel?.selectedHarvestingNode) {
+        if (this.isNodeKeyLinked) {
             const nodeUnLinkTx = this.createNodeKeyLinkTx(
-                this.currentSignerAccountInfo.supplementalPublicKeys.node.publicKey,
+                this.currentSignerAccountInfo.supplementalPublicKeys?.node.publicKey,
                 LinkAction.Unlink,
                 maxFee,
             );
