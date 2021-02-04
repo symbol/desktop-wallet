@@ -630,6 +630,10 @@ export class ModalTransactionConfirmationTs extends Vue {
                                   )
                                 : this.command.saveVrfKey(accountAddress, null);
                         }
+                        this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
+                            accountAddress,
+                            isPersistentDelReqSent: false,
+                        });
                     });
                 } else {
                     if (res.transaction.type === TransactionType.ACCOUNT_KEY_LINK) {
@@ -804,7 +808,6 @@ export class ModalTransactionConfirmationTs extends Vue {
                         }
                     });
                 }
-
                 if (!res.transaction?.innerTransactions.some((val) => val.type === TransactionType.TRANSFER)) {
                     this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
                         accountAddress,
