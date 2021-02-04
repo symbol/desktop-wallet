@@ -23,7 +23,7 @@ const addr = Address.createFromRawAddress('TAD5BAHLOIXCRRB6GU2H72HPXMBBVAEUQRYPH
 describe('TransactionListFilters', () => {
     test("should call the 'account/SET_CURRENT_SIGNER' with address", () => {
         vm.onSignerSelectorChange('TAD5BAHLOIXCRRB6GU2H72HPXMBBVAEUQRYPHBY');
-        expect(vm.$store.dispatch).toBeCalledWith('account/SET_CURRENT_SIGNER', { address: addr });
+        expect(vm.$store.dispatch).toBeCalledWith('account/SET_CURRENT_SIGNER', { address: addr, reset: true, unsubscribeWS: false });
     });
     test("should not call the 'account/SET_CURRENT_SIGNER' without address", () => {
         vm.onSignerSelectorChange();

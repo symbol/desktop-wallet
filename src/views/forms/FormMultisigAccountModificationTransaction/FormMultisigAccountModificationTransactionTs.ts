@@ -236,7 +236,11 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
         this.formItems.minRemovalDelta = signerIsMultisigAccount ? 0 : 1;
         this.formItems.cosignatoryModifications = {};
 
-        await this.$store.dispatch('account/SET_CURRENT_SIGNER', { address: Address.createFromRawAddress(address) });
+        await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
+            address: Address.createFromRawAddress(address),
+            reset: false,
+            unsubscribeWS: true,
+        });
     }
     /// end-region super.onChangeSigner
 
