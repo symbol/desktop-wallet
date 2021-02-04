@@ -192,7 +192,7 @@ export class FormTransactionBase extends Vue {
             await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
                 address: Address.createFromRawAddress(this.currentAccount.address),
                 reset: false,
-                unsubscribeWS: false,
+                unsubscribeWS: true,
             });
         }
     }
@@ -279,7 +279,7 @@ export class FormTransactionBase extends Vue {
         await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
             address: Address.createFromRawAddress(address),
             reset: false,
-            unsubscribeWS: false,
+            unsubscribeWS: true,
         });
     }
 

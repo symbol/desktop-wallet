@@ -354,6 +354,24 @@ export default {
                         commit('currentSignerPublicKey', getters.currentSignerAccountInfo.publicKey);
                     }
                 }
+                // we need to set the currentSignerMultisigInfo to be able to calculate the fee(based on requiredCosignatures)
+                const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+                const multisigAccountsInfo: MultisigAccountInfo[] = await repositoryFactory
+                    .createMultisigRepository()
+                    .getMultisigAccountGraphInfo(currentAccountAddress)
+                    .pipe(
+                        map((g) => {
+                            // sorted array to be represented in multisig tree
+                            commit('multisigAccountGraph', g.multisigEntries);
+                            return MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
+                        }),
+                        catchError(() => {
+                            return of([]);
+                        }),
+                    )
+                    .toPromise();
+                const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
+                commit('currentSignerMultisigInfo', currentSignerMultisigInfo);
             }
 
             if (unsubscribeWS) {
@@ -431,7 +449,16 @@ export default {
                 return;
             }
 
-            const getMultisigAccountGraphInfoPromise = repositoryFactory
+            // REMOTE CALL
+            const aliasPromise = repositoryFactory
+                .createNamespaceRepository()
+                .getAccountsNames([currentAccountAddress])
+                .toPromise()
+                .catch(() => commit('currentAccountAliases', []));
+            const aliases = await aliasPromise;
+            commit('currentAccountAliases', aliases);
+
+            const multisigAccountsInfo: MultisigAccountInfo[] = await repositoryFactory
                 .createMultisigRepository()
                 .getMultisigAccountGraphInfo(currentAccountAddress)
                 .pipe(
@@ -445,17 +472,6 @@ export default {
                     }),
                 )
                 .toPromise();
-
-            // REMOTE CALL
-            const aliasPromise = repositoryFactory
-                .createNamespaceRepository()
-                .getAccountsNames([currentAccountAddress])
-                .toPromise()
-                .catch(() => commit('currentAccountAliases', []));
-            const aliases = await aliasPromise;
-            commit('currentAccountAliases', aliases);
-
-            const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise;
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
             const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
             // update multisig flag in currentAccount

@@ -239,7 +239,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
         await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
             address: Address.createFromRawAddress(address),
             reset: false,
-            unsubscribeWS: false,
+            unsubscribeWS: true,
         });
     }
     /// end-region super.onChangeSigner
