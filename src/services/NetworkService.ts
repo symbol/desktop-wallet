@@ -174,6 +174,7 @@ export class NetworkService {
             currencyMosaicId: NetworkConfigurationHelpers.currencyMosaicId(dto),
             harvestingMosaicId: NetworkConfigurationHelpers.harvestingMosaicId(dto),
             defaultDynamicFeeMultiplier: NetworkConfigurationHelpers.defaultDynamicFeeMultiplier(dto),
+            totalChainImportance: NetworkConfigurationHelpers.totalChainImportance(dto),
         };
         return { ...fileDefaults, ...fromDto };
     }
