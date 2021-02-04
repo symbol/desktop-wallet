@@ -233,11 +233,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
         // - set default form values
         if (this.isAggregate) {
-            if(this.isMounted) {
+            if (this.isMounted) {
                 this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
             }
-        }
-        else {
+        } else {
             this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
         }
 
@@ -698,7 +697,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
     mounted() {
         if (this.isAggregate && this.value) {
-            this.$set(this, 'formItems', this.value)
+            this.$set(this, 'formItems', this.value);
         }
 
         this.isMounted = true;
