@@ -13,6 +13,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 #### Added
 
+- Ledger integration support. The integration code work has been finished, it may not work until the Ledger integration app is available and fully tested.
 - Added address validation for cosignatories in multisig account creation.
 - Added backup warning after private key account imported into the profile.
 - Added core server error message transformer.
