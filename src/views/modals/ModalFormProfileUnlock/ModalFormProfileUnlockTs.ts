@@ -44,6 +44,11 @@ export class ModalFormProfileUnlockTs extends Vue {
     message: string;
 
     @Prop({
+        default: null,
+    })
+    title: string;
+
+    @Prop({
         default: () => true,
     })
     onSuccess: (a: Account, p: Password) => boolean;

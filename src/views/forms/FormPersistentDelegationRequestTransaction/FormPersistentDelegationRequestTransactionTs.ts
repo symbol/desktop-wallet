@@ -148,8 +148,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     private tempTransactionSigner: TransactionSigner;
     private tempAccount: Account;
-    private vrfPrivateKeyTemp: string;
-    private remotePrivateKeyTemp: string;
+    public vrfPrivateKeyTemp: string;
+    public remotePrivateKeyTemp: string;
 
     private activating = false;
 
@@ -166,8 +166,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      */
     public isUnlockingAccount: boolean = false;
     public isUnlockingLedgerAccount: boolean = false;
-    private remoteAccountPrivateKey: string;
-    private vrfPrivateKey: string;
+    public remoteAccountPrivateKey: string;
+    public vrfPrivateKey: string;
 
     /**
      * signle key link transaction type
@@ -212,7 +212,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * To get singleKeyTransaction
      */
     protected getSingleKeyLinkTransaction(type?: string): Observable<Transaction[]> {
-        const maxFee = UInt64.fromUint(feesConfig.highest);
+        const maxFee = UInt64.fromUint(feesConfig.fastest);
 
         let transaction: Transaction;
         switch (type) {
@@ -477,7 +477,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                                     : this.saveRemoteKey(accountAddress, null);
                             }
                             if (val.type === TransactionType.VRF_KEY_LINK) {
-                                val.linkAction == LinkAction.Link && this.remotePrivateKeyTemp
+                                val.linkAction == LinkAction.Link && this.vrfPrivateKeyTemp
                                     ? this.saveVrfKey(accountAddress, Crypto.encrypt(this.vrfPrivateKeyTemp, this.password))
                                     : this.saveVrfKey(accountAddress, null);
                             }
@@ -552,10 +552,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return undefined;
     }
 
-    private saveVrfKey(accountAddress: string, encVrfPrivateKey: string) {
+    public saveVrfKey(accountAddress: string, encVrfPrivateKey: string) {
         this.$store.dispatch('harvesting/UPDATE_VRF_ACCOUNT_PRIVATE_KEY', { accountAddress, encVrfPrivateKey });
     }
-    private saveRemoteKey(accountAddress: string, encRemotePrivateKey: string) {
+    public saveRemoteKey(accountAddress: string, encRemotePrivateKey: string) {
         this.$store.dispatch('harvesting/UPDATE_REMOTE_ACCOUNT_PRIVATE_KEY', { accountAddress, encRemotePrivateKey });
     }
 
