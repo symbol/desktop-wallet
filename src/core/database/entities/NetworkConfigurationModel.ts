@@ -32,4 +32,5 @@ export class NetworkConfigurationModel {
     public readonly currencyMosaicId: string;
     public readonly harvestingMosaicId: string;
     public readonly defaultDynamicFeeMultiplier: number;
+    public readonly totalChainImportance: number;
 }
