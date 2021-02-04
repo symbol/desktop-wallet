@@ -187,6 +187,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     private balanceMosaics: MosaicModel[];
 
+    private isMounted: boolean = false;
+
     /**
      * Whether ModalTransactionUriImport is visible
      */
@@ -230,7 +232,15 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.formItems.attachedMosaics = [];
 
         // - set default form values
-        this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
+        if (this.isAggregate) {
+            if(this.isMounted) {
+                this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
+            }
+        }
+        else {
+            this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
+        }
+
         this.formItems.selectedMosaicHex = this.networkMosaic.toHex();
         // default currentAccount Address to recipientRaw
         if (this.$route.path.indexOf('invoice') > -1) {
@@ -688,8 +698,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
     mounted() {
         if (this.isAggregate && this.value) {
-            Object.assign(this.formItems, this.value);
+            this.$set(this, 'formItems', this.value)
         }
+
+        this.isMounted = true;
     }
     /**
      * watch title to change form items on select different transactions
