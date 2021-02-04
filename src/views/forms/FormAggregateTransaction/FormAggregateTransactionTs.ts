@@ -33,9 +33,11 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
 import { AddressValidator, AliasValidator } from '@/core/validation/validators';
-import { TransactionCommandMode } from '@/services/TransactionCommand';
+import { TransactionCommand, TransactionCommandMode } from '@/services/TransactionCommand';
 // @ts-ignore
-import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
+import ModalTransactionEdit from '@/views/modals/ModalTransactionEdit/ModalTransactionEdit.vue';
+// @ts-ignore
+import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue';
 
 @Component({
     components: {
@@ -47,7 +49,8 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
         FormRow,
         MaxFeeSelector,
         ModalTransactionConfirmation,
-        ModalFormProfileUnlock,
+        ModalTransactionEdit,
+        NavigationTabs,
     },
     computed: {
         ...mapGetters({
@@ -57,101 +60,120 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
             currentAccount: 'account/currentAccount',
         }),
     },
+    beforeRouteUpdate(to, from, next) {
+        this.beforeRouteUpdate(to, from, next);
+    },
+    watch: {
+        aggregateTransactionIndex: function () {
+            this.aggregateTransactionIndexChanged();
+        },
+    },
 })
 export class FormAggregateTransactionTs extends FormTransactionBase {
     private simpleAggregateTransaction: [];
     private aggregateTransactionIndex: number;
+
+    // called from watch
+    private aggregateTransactionIndexChanged() {
+        this.currentSelectedTransaction.title = this.getTransactionTitle(this.$route.name);
+        this.$forceUpdate();
+    }
 
     public formItems = {
         maxFee: 0,
         recipientRaw: '',
         signerPublicKey: '',
     };
-    /**
-     * currently selected tx title
-     * @var {string}
-     */
-    private txTitle = '';
-    /**
-     * Whether account is currently being unlocked
-     * @var {boolean}
-     */
-    public isUnlockingAccount: boolean = false;
 
-    /**
-     *  items to be binded to the shown form
-     * @var {object}
-     */
-    private currentTxItems = {};
+    public showTransactionEditModal: boolean = false;
 
     /**
      * current selected saved transaction
      * @var {object}
      */
-    public currentSelectedTransaction = {};
+    public currentSelectedTransaction: { title?: string; component?: any } = {};
 
-    /**
-     * object containing title and component for each newly created tx before being saved
-     * @var {object}
-     */
-    public transaction = {};
+    public toBeEditedTransaction = {};
 
     public networkType: NetworkType;
 
     public currentAccount: AccountModel;
 
-    public onClickAdd(type: number): void {
-        this.transaction = {};
-        this.currentTxItems = {};
+    public mounted(): void {
+        this.createTransaction(this.$route.name);
+    }
+
+    public beforeRouteUpdate(to, from, next) {
+        this.createTransaction(to.name);
+        next();
+    }
+
+    public createTransaction(type: string): void {
+        this.$refs['transactionForm']?.reset();
+        const transaction = {};
 
         switch (type) {
-            case 1:
-                this.transaction['title'] = `${this.$t('simple_transaction')}` + this.aggregateTransactionIndex;
-                this.transaction['component'] = FormTransferTransaction;
+            case 'aggregate.simple':
+                transaction['component'] = FormTransferTransaction;
                 break;
-            case 2:
-                this.transaction['title'] = `${this.$t('mosaic_transaction')}` + this.aggregateTransactionIndex;
-                this.transaction['component'] = FormMosaicDefinitionTransaction;
+            case 'aggregate.mosaic':
+                transaction['component'] = FormMosaicDefinitionTransaction;
                 break;
-            case 3:
-                this.transaction['title'] = `${this.$t('namespace_transaction')}` + this.aggregateTransactionIndex;
-                this.transaction['component'] = FormNamespaceRegistrationTransaction;
+            case 'aggregate.namespace':
+                transaction['component'] = FormNamespaceRegistrationTransaction;
                 break;
         }
-        this.currentSelectedTransaction = this.transaction;
+        transaction['title'] = this.getTransactionTitle(type);
+        this.currentSelectedTransaction = transaction;
+    }
+
+    private getTransactionTitle(type: string) {
+        switch (type) {
+            case 'aggregate.simple':
+                return `${this.$t('simple_transaction')}` + this.aggregateTransactionIndex;
+            case 'aggregate.mosaic':
+                return `${this.$t('mosaic_transaction')}` + this.aggregateTransactionIndex;
+            case 'aggregate.namespace':
+                return `${this.$t('namespace_transaction')}` + this.aggregateTransactionIndex;
+        }
     }
 
     // on click delete transaction
-    public onClickDelete(title: string): void {
-        // unlock account before being allowed to delete tx
-        if (this.currentAccount) {
-            this.txTitle = title;
-            this.hasAccountUnlockModal = true;
-            return;
-        }
+    public async onClickDelete(title: string): Promise<void> {
+        await this.$store.dispatch('aggregateTransaction/ON_DELETE_TRANSACTION', title);
     }
 
     // fetch form details for the selected transaction
     public onSelectTx(title: string) {
         this.$store.dispatch('aggregateTransaction/GET_TRANSACTION_FROM_AGGREGATE_ARRAY', title).then((val) => {
             if (val) {
-                this.currentSelectedTransaction = val;
-                Object.assign(this.currentTxItems, val.formItems);
+                this.toBeEditedTransaction = val;
+                this.showTransactionEditModal = true;
             }
         });
+    }
+
+    public async saveEditedTransaction(forItems) {
+        await this.$store.dispatch('aggregateTransaction/ON_SAVE_TRANSACTION', {
+            title: this.toBeEditedTransaction['title'],
+            formItems: forItems,
+            component: this.toBeEditedTransaction['component'],
+        });
+        this.toBeEditedTransaction = undefined;
+        this.showTransactionEditModal = false;
     }
 
     /**
      * on click save transaction, it should be added to the store
      */
-    onSaveTransaction(value) {
+    public async onSaveTransaction(value) {
         if (value) {
-            this.$store.dispatch('aggregateTransaction/ON_SAVE_TRANSACTION', {
+            await this.$store.dispatch('aggregateTransaction/ON_SAVE_TRANSACTION', {
                 title: this.currentSelectedTransaction['title'],
                 formItems: value,
                 component: this.currentSelectedTransaction['component'],
             });
-            this.currentSelectedTransaction = {};
+            this.createTransaction(this.$route.name);
         }
     }
     /**
@@ -277,7 +299,15 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
     protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
         if (
             this.isMultisigMode() ||
-            this.simpleAggregateTransaction.some((tx) => tx['formItems']['signerAddress'] !== this.currentAccount.address)
+            this.simpleAggregateTransaction.some((tx) => {
+                if (tx['formItems']['signerAddress']) {
+                    return tx['formItems']['signerAddress'] !== this.currentAccount.address;
+                }
+                if (tx['formItems']['signerPublicKey']) {
+                    return this.currentSignerPublicKey !== tx['formItems']['signerPublicKey'];
+                }
+                return false;
+            })
         ) {
             return TransactionCommandMode.MULTISIGN;
         }
@@ -314,30 +344,11 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
         return aggregateTransactions;
     }
 
-    public get hasAccountUnlockModal(): boolean {
-        return this.isUnlockingAccount;
-    }
-
-    public set hasAccountUnlockModal(f: boolean) {
-        this.isUnlockingAccount = f;
-    }
-    /**
-     * When account is unlocked, the sub account can be created
-     */
-    public async onAccountUnlocked() {
-        try {
-            await this.$store.dispatch('aggregateTransaction/ON_DELETE_TRANSACTION', this.txTitle);
-            this.currentSelectedTransaction = {};
-            this.txTitle = '';
-        } catch (e) {
-            this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please try again.');
-            console.error(e);
-        }
-    }
-
-    onSubmit() {
+    public onSubmit(): TransactionCommand {
         this.command = this.createTransactionCommand();
         this.onShowConfirmationModal();
         return this.command;
     }
+
+    public parentRouteName = 'aggregate';
 }

@@ -34,6 +34,12 @@ import { TransactionFees } from 'symbol-sdk';
             transactionFees: 'network/transactionFees',
         }),
     },
+    props: {
+        placement: {
+            type: String,
+            default: 'bottom-start',
+        },
+    },
 })
 export class MaxFeeSelectorTs extends Vue {
     @Prop({
@@ -43,6 +49,8 @@ export class MaxFeeSelectorTs extends Vue {
 
     @Prop({ default: false })
     public displayOnly!: boolean;
+
+    public placement: string;
 
     /**
      * Networks currency mosaic name
@@ -72,6 +80,11 @@ export class MaxFeeSelectorTs extends Vue {
      * Dynamically calculated highest fee
      */
     @Prop({ default: 0 }) calculatedHighestFee: number;
+
+    /**
+     * Show low fee warning
+     */
+    @Prop({ default: false }) showLowFeeWarning: boolean;
 
     /**
      * The fees to be displayed in the dropw down.
@@ -140,7 +153,7 @@ export class MaxFeeSelectorTs extends Vue {
      * @type {number}
      */
     get chosenMaxFee(): number {
-        return this.value || this.defaultFee;
+        return typeof this.value === 'number' ? this.value : this.defaultFee;
     }
 
     /**

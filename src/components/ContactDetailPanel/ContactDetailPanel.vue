@@ -19,8 +19,8 @@
                     <div class="detail-row">
                         <FormInputEditable
                             :model="selectedContact"
-                            :value="selectedContact.address"
-                            :new-value="selectedContact.address"
+                            :value="address"
+                            :new-value="address"
                             :editing="false"
                             :rules="validationRules.addressOrPublicKey"
                             :label="$t('contact_address')"
@@ -60,7 +60,7 @@
                             :on-edit="saveProperty('notes')"
                         />
                     </div>
-                    <div class="detail-row" style="margin-top: 1rem;">
+                    <div class="detail-row">
                         <div class="bottom-buttons-container">
                             <div></div>
                             <button type="button" class="centered-button button-style button danger-button" @click="showDeleteModal = true">

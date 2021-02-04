@@ -71,6 +71,22 @@ export default class GenerateMnemonicTs extends Vue {
     private percent: number = 0;
 
     /**
+     * Hook called when the layout is mounted
+     * @return {void}
+     */
+    public mounted(): void {
+        document.addEventListener('mouseover', this.handleMousemove);
+    }
+
+    /**
+     * Hook called when the component is destroyed
+     * @return {void}
+     */
+    public destroyed(): void {
+        document.removeEventListener('mouseover', this.handleMousemove);
+    }
+
+    /**
      * Track and handle mouse move event
      * @param {Vue.Event} event
      * @return {void}

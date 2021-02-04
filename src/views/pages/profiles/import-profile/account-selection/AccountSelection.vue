@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="button-container flex-container">
-            <button class="button-style back-create-button button" @click="previous">
+            <button class="solid-button button-style back-create-button button" @click="previous">
                 {{ $t('back') }}
             </button>
             <button class="button-style validation-create-button button" @click="submit">

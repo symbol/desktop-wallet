@@ -31,6 +31,7 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { AddressBook } from 'symbol-address-book/AddressBook';
+import { Address } from 'symbol-sdk';
 
 @Component({
     components: {
@@ -88,8 +89,9 @@ export class FormContactCreationTs extends Vue {
      * @return {void}
      */
     public onSubmit() {
+        const address = Address.createFromRawAddress(this.formItems.address);
         const contacts = this.addressBook.getAllContacts();
-        const isSameAddress = contacts.some((contact) => contact.address === this.formItems.address);
+        const isSameAddress = contacts.some((contact) => contact.address === address.plain());
 
         if (isSameAddress) {
             this.$store.dispatch('notification/ADD_ERROR', this.$t('error_contact_already_exists'));
@@ -99,7 +101,7 @@ export class FormContactCreationTs extends Vue {
 
         this.$store.dispatch('addressBook/ADD_CONTACT', {
             name: this.formItems.name,
-            address: this.formItems.address,
+            address: address.plain(),
         });
         this.$emit('submit');
     }

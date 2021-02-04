@@ -31,6 +31,7 @@ import {
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
+import { AccountType } from '@/core/database/entities/AccountModel';
 import { Formatters } from '@/core/utils/Formatters';
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
 import { AddressValidator, AliasValidator } from '@/core/validation/validators';
@@ -127,6 +128,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     @Prop({
         default: false,
     })
+    hideSave: boolean;
+
+    @Prop({
+        default: false,
+    })
     hideSigner: boolean;
 
     @Prop({
@@ -181,6 +187,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     private balanceMosaics: MosaicModel[];
 
+    private isMounted: boolean = false;
+
     /**
      * Whether ModalTransactionUriImport is visible
      */
@@ -224,7 +232,14 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.formItems.attachedMosaics = [];
 
         // - set default form values
-        this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
+        if (this.isAggregate) {
+            if (this.isMounted) {
+                this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
+            }
+        } else {
+            this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
+        }
+
         this.formItems.selectedMosaicHex = this.networkMosaic.toHex();
         // default currentAccount Address to recipientRaw
         if (this.$route.path.indexOf('invoice') > -1) {
@@ -371,6 +386,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         }
     }
 
+    protected get isLedger(): boolean {
+        return this.currentAccount.type == AccountType.LEDGER;
+    }
+
     protected get hasAccountUnlockModal(): boolean {
         return this.showUnlockAccountModal;
     }
@@ -514,7 +533,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
 
     triggerChange() {
-        if (Address.isValidRawAddress(this.formItems.recipientRaw)) {
+        if (AddressValidator.validate(this.formItems.recipientRaw)) {
             this.transactions = this.getTransactions();
             // avoid error
             if (this.transactions) {
@@ -680,6 +699,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         if (this.isAggregate && this.value) {
             Object.assign(this.formItems, this.value);
         }
+
+        this.isMounted = true;
     }
     /**
      * watch title to change form items on select different transactions

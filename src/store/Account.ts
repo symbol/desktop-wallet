@@ -276,6 +276,8 @@ export default {
             // reset current signer
             await dispatch('SET_CURRENT_SIGNER', {
                 address: currentAccountAddress,
+                reset: true,
+                unsubscribeWS: true,
             });
             //reset current account alias
             await dispatch('LOAD_CURRENT_ACCOUNT_ALIASES', currentAccountAddress);
@@ -292,7 +294,10 @@ export default {
             commit('currentAccountAliases', []);
         },
 
-        async SET_CURRENT_SIGNER({ commit, dispatch, getters, rootGetters }, { address }: { address: Address }) {
+        async SET_CURRENT_SIGNER(
+            { commit, dispatch, getters, rootGetters },
+            { address, reset = true, unsubscribeWS = true }: { address: Address; reset: boolean; unsubscribeWS: boolean },
+        ) {
             if (!address) {
                 throw new Error('Address must be provided when calling account/SET_CURRENT_SIGNER!');
             }
@@ -310,8 +315,10 @@ export default {
                 root: true,
             });
 
-            dispatch('transaction/RESET_TRANSACTIONS', {}, { root: true });
-            dispatch('restriction/RESET_ACCOUNT_RESTRICTIONS', {}, { root: true });
+            if (reset) {
+                dispatch('transaction/RESET_TRANSACTIONS', {}, { root: true });
+                dispatch('restriction/RESET_ACCOUNT_RESTRICTIONS', {}, { root: true });
+            }
 
             const currentAccountAddress = Address.createFromRawAddress(currentAccount.address);
             const knownAccounts = new AccountService().getKnownAccounts(currentProfile.accounts);
@@ -329,15 +336,50 @@ export default {
             dispatch('harvesting/SET_CURRENT_SIGNER_HARVESTING_MODEL', currentSignerAddress.plain(), { root: true });
 
             // open / close websocket connections
-            if (previousSignerAddress) {
-                await dispatch('UNSUBSCRIBE', previousSignerAddress);
+
+            if (reset) {
+                await dispatch('LOAD_ACCOUNT_INFO');
+                dispatch('namespace/LOAD_NAMESPACES', {}, { root: true });
+                dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
+            } else {
+                const currentSigner = getters.signers.find((s) => s.address.equals(currentSignerAddress));
+                if (currentSigner) {
+                    commit('currentSigner', currentSigner);
+                }
+                const signerModel = knownAccounts.find((w) => w.address === currentSignerAddress.plain());
+                if (signerModel !== undefined) {
+                    commit('currentSignerPublicKey', signerModel.publicKey);
+                } else {
+                    if (getters.currentSignerAccountInfo) {
+                        commit('currentSignerPublicKey', getters.currentSignerAccountInfo.publicKey);
+                    }
+                }
+                // we need to set the currentSignerMultisigInfo to be able to calculate the fee(based on requiredCosignatures)
+                const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+                const multisigAccountsInfo: MultisigAccountInfo[] = await repositoryFactory
+                    .createMultisigRepository()
+                    .getMultisigAccountGraphInfo(currentAccountAddress)
+                    .pipe(
+                        map((g) => {
+                            // sorted array to be represented in multisig tree
+                            commit('multisigAccountGraph', g.multisigEntries);
+                            return MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
+                        }),
+                        catchError(() => {
+                            return of([]);
+                        }),
+                    )
+                    .toPromise();
+                const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
+                commit('currentSignerMultisigInfo', currentSignerMultisigInfo);
             }
-            await dispatch('SUBSCRIBE', currentSignerAddress);
 
-            await dispatch('LOAD_ACCOUNT_INFO');
-
-            dispatch('namespace/LOAD_NAMESPACES', {}, { root: true });
-            dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
+            if (unsubscribeWS) {
+                if (previousSignerAddress) {
+                    await dispatch('UNSUBSCRIBE', previousSignerAddress);
+                }
+                await dispatch('SUBSCRIBE', currentSignerAddress);
+            }
         },
 
         async NETWORK_CHANGED({ dispatch }) {
@@ -407,7 +449,16 @@ export default {
                 return;
             }
 
-            const getMultisigAccountGraphInfoPromise = repositoryFactory
+            // REMOTE CALL
+            const aliasPromise = repositoryFactory
+                .createNamespaceRepository()
+                .getAccountsNames([currentAccountAddress])
+                .toPromise()
+                .catch(() => commit('currentAccountAliases', []));
+            const aliases = await aliasPromise;
+            commit('currentAccountAliases', aliases);
+
+            const multisigAccountsInfo: MultisigAccountInfo[] = await repositoryFactory
                 .createMultisigRepository()
                 .getMultisigAccountGraphInfo(currentAccountAddress)
                 .pipe(
@@ -421,17 +472,6 @@ export default {
                     }),
                 )
                 .toPromise();
-
-            // REMOTE CALL
-            const aliasPromise = repositoryFactory
-                .createNamespaceRepository()
-                .getAccountsNames([currentAccountAddress])
-                .toPromise()
-                .catch(() => commit('currentAccountAliases', []));
-            const aliases = await aliasPromise;
-            commit('currentAccountAliases', aliases);
-
-            const multisigAccountsInfo: MultisigAccountInfo[] = await getMultisigAccountGraphInfoPromise;
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
             const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
             // update multisig flag in currentAccount
@@ -555,7 +595,7 @@ export default {
          * Websocket API
          */
         // Subscribe to latest account transactions.
-        async SUBSCRIBE({ commit, dispatch, rootGetters }, address: Address) {
+        async SUBSCRIBE({ commit, dispatch, rootGetters, getters }, address: Address) {
             if (!address) {
                 return;
             }
@@ -568,6 +608,7 @@ export default {
                 { commit, dispatch },
                 repositoryFactory,
                 plainAddress,
+                getters.currentAccountMultisigInfo && !!getters.currentAccountMultisigInfo.multisigAddresses.length ? true : false,
             );
             const payload: { address: string; subscriptions: SubscriptionType } = { address: plainAddress, subscriptions };
             // update state of listeners & subscriptions
@@ -591,7 +632,9 @@ export default {
                 for (const subscription of subscriptions) {
                     subscription.unsubscribe();
                 }
-                listener.close();
+                if (listener.isOpen()) {
+                    listener.close();
+                }
             }
 
             // update state of listeners & subscriptions
@@ -600,6 +643,17 @@ export default {
                 subscriptions: null,
             };
             commit('updateSubscriptions', payload);
+        },
+
+        async GET_ACCOUNT_INFO({ rootGetters }, address: Address | null): Promise<AccountInfo | null> {
+            try {
+                const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+                const acountInfo = await repositoryFactory.createAccountRepository().getAccountInfo(address).toPromise();
+
+                return acountInfo;
+            } catch (e) {
+                return null;
+            }
         },
     },
 };

@@ -1,6 +1,35 @@
 @import '../../resources/css/variables.less';
 @import '../../resources/css/forms.less';
 
+.modal-confirm {
+    /deep/.ivu-modal {
+        width: 7rem !important;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: break-word;
+        hyphens: auto;
+    }
+
+    /deep/.footer {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    /deep/.centered-content {
+        width: 100%;
+        text-align: center;
+    }
+
+    /deep/.top-space {
+        margin-top: 30px;
+    }
+
+    /deep/.bottom-space {
+        margin-bottom: 30px;
+    }
+}
+
 /deep/ .ivu-modal-body {
     font-size: @bigFont !important;
     margin-left: 1rem;

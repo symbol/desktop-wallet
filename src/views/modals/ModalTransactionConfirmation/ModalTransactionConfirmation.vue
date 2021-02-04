@@ -5,7 +5,6 @@
             class-name="modal-transaction-confirmation"
             :title="$t('modal_title_transaction_confirmation')"
             :transfer="false"
-            :footer-hide="true"
         >
             <div class="transactionConfirmationBody">
                 <div v-if="!!stagedTransactions" class="stepItem1">
@@ -14,10 +13,11 @@
                             <TransactionDetails :transaction="transaction" />
                         </div>
                     </div>
-
-                    <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
-                    <FormProfileUnlock v-else @success="onAccountUnlocked" @error="onError" />
                 </div>
+            </div>
+            <div slot="footer" class="footer">
+                <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
+                <FormProfileUnlock v-else @success="onAccountUnlocked" @error="onError" />
             </div>
         </Modal>
     </div>
@@ -31,11 +31,6 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
 <style lang="less" scoped>
 @import '../../resources/css/variables.less';
 
-.info_container {
-    height: 5rem;
-    overflow-y: scroll;
-}
-
 .float-right {
     float: right;
 }
@@ -43,5 +38,14 @@ export default class ModalTransactionConfirmation extends ModalTransactionConfir
 .clear-staged-transactions {
     font-size: @smallFont;
     cursor: pointer;
+}
+
+.footer {
+    width: 100%;
+}
+
+/deep/ .ivu-modal-footer {
+    height: unset;
+    padding-top: 0;
 }
 </style>

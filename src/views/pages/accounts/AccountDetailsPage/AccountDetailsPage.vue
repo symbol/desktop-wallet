@@ -22,7 +22,7 @@
                         <AccountPublicKeyDisplay :account="currentAccount" />
                     </div>
 
-                    <div class="detail-row">
+                    <div v-if="!isLedger" class="detail-row">
                         <ProtectedPrivateKeyDisplay :account="currentAccount" />
                     </div>
 
@@ -63,11 +63,21 @@
                             :account="currentAccount"
                             :visible="currentAccount.isMultisig"
                         />
+                    </div>
+
+                    <div class="graph-row">
                         <div class="bottom-buttons-container">
-                            <span></span>
+                            <button
+                                v-if="isLedger"
+                                type="button"
+                                class="centered-button button-style button solid-button buttonA"
+                                @click="showAddressLedger"
+                            >
+                                {{ $t('show_on_ledger') }}
+                            </button>
                             <button
                                 type="button"
-                                class="centered-button button-style button danger-button"
+                                class="centered-button button-style button danger-button buttonD"
                                 :disabled="knownAccounts.length <= 1"
                                 @click="deleteAccountConfirmation"
                             >
@@ -82,6 +92,9 @@
             v-model="showConfirmationModal"
             :title="$t('delete_account_confirmation_title')"
             :message="$t('delete_account_confirmation_message', { accountName: currentAccount.name })"
+            :danger="true"
+            :show-checkbox="true"
+            :checkbox-label="$t('delete_account_confirmation_checkbox')"
             @confirmed="deleteAccount"
         />
         <ModalFormProfileUnlock
@@ -131,12 +144,22 @@ export default class AccountDetailsPage extends AccountDetailsPageTs {}
 .bottom-buttons-container {
     margin-left: auto;
     margin-right: 1em;
-    width: 50%;
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-areas: 'a b c d';
 }
 .bottom-buttons-container button {
     margin: 0 0.5em;
+}
+
+.bottom-buttons-container .buttonA {
+    margin-left: 0;
+    margin-right: 1em;
+    grid-area: a;
+}
+
+.bottom-buttons-container .buttonD {
+    grid-area: d;
 }
 
 .overflow-elipsis {

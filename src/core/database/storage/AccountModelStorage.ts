@@ -78,20 +78,23 @@ export class AccountModelStorage extends VersionedObjectStorage<Record<string, A
                     accounts.map((name: string) => {
                         const {
                             address,
-                            signedPersistentDelReqTxs,
                             isPersistentDelReqSent,
                             selectedHarvestingNode,
+                            encRemotePrivateKey,
+                            encVrfPrivateKey,
                             ...nonHarvesting
                         } = modified[name];
 
                         try {
                             harvestingService.saveHarvestingModel({
                                 accountAddress: address,
-                                signedPersistentDelReqTxs,
                                 isPersistentDelReqSent,
                                 selectedHarvestingNode,
+                                encRemotePrivateKey,
+                                encVrfPrivateKey,
+                                ...nonHarvesting,
                             });
-                            modified[name] = { address, ...nonHarvesting };
+                            modified[name] = { address, encRemotePrivateKey, encVrfPrivateKey, ...nonHarvesting };
                         } catch (error) {
                             console.log(error);
                         }
@@ -102,6 +105,10 @@ export class AccountModelStorage extends VersionedObjectStorage<Record<string, A
             },
             {
                 description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
+            {
+                description: 'Reset accounts for 0.10.0.6 network (non backwards compatible)',
                 migrate: () => undefined,
             },
         ]);

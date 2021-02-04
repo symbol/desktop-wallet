@@ -270,4 +270,15 @@ export class NetworkConfigurationHelpers {
             this.defaults.defaultDynamicFeeMultiplier
         );
     }
+
+    public static totalChainImportance(
+        networkConfiguration: NetworkConfiguration | undefined,
+        defaultValue: number | undefined = undefined,
+    ): number {
+        return (
+            (networkConfiguration?.chain && Formatters.configurationNumberAsNumber(networkConfiguration.chain.totalChainImportance)) ||
+            defaultValue ||
+            this.defaults.totalChainImportance
+        );
+    }
 }

@@ -14,7 +14,7 @@
  *
  */
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import { Account } from 'symbol-sdk';
+import { Account, Crypto, Password } from 'symbol-sdk';
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel';
 // child components
@@ -35,6 +35,11 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
         default: null,
     })
     account: AccountModel | Account;
+
+    @Prop({
+        default: null,
+    })
+    encPrivateKey: string;
 
     /**
      * Whether account is currently being unlocked
@@ -128,10 +133,14 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
      * @param {Account} account
      * @return {boolean}
      */
-    public onAccountUnlocked(account: Account): boolean {
+    public onAccountUnlocked(account: Account, password?: Password): boolean {
         this.hasPlainPrivateKey = true;
         this.hasAccountUnlockModal = false;
-        this.plainInformation = account.privateKey;
+        if (this.$route.fullPath === '/delegatedHarvesting') {
+            this.plainInformation = Crypto.decrypt(this.encPrivateKey, password.value);
+        } else {
+            this.plainInformation = account.privateKey;
+        }
         return true;
     }
 
@@ -141,5 +150,8 @@ export class ProtectedPrivateKeyDisplayTs extends Vue {
     }
     public destroyed() {
         this.reset();
+    }
+    public get hasPrivateKey(): boolean {
+        return !!((this.encPrivateKey && this.encPrivateKey.length > 0) || this.account);
     }
 }

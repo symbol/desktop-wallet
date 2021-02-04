@@ -1,10 +1,8 @@
 @import '../../views/resources/css/variables.less';
 
 .transaction-details-main-container {
-    max-height: 5rem;
     margin-left: 0.5rem;
     margin-right: 0.2rem;
-    overflow: auto;
 }
 
 .transaction-details-detail-section-title-container {
@@ -28,8 +26,6 @@
 }
 
 .transaction-details-item-inner-container {
-    display: grid;
-    grid-row-gap: 0.03rem;
     margin-bottom: 0.2rem;
 }
 
@@ -62,7 +58,10 @@
         font-family: @symbolFontLight;
         overflow: hidden;
         word-break: break-word;
-        display: grid;
         align-items: center;
     }
+}
+
+hr {
+    margin-bottom: 0.2rem;
 }

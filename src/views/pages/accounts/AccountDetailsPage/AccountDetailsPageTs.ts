@@ -16,6 +16,8 @@
 // external dependencies
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
+import { LedgerService } from '@/services/LedgerService';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 // child components
 // @ts-ignore
 import AccountNameDisplay from '@/components/AccountNameDisplay/AccountNameDisplay.vue';
@@ -40,7 +42,7 @@ import AccountMetadataDisplay from '@/components/AccountMetadataDisplay/AccountM
 // @ts-ignore
 import AccountMultisigGraph from '@/components/AccountMultisigGraph/AccountMultisigGraph.vue';
 
-import { AccountModel } from '@/core/database/entities/AccountModel';
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 
 import { AccountService } from '@/services/AccountService';
 // @ts-ignore
@@ -76,6 +78,7 @@ import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
             currentAccount: 'account/currentAccount',
             knownAccounts: 'account/knownAccounts',
             accountMetadataList: 'metadata/accountMetadataList',
+            currentProfile: 'profile/currentProfile',
         }),
     },
 })
@@ -86,6 +89,8 @@ export class AccountDetailsPageTs extends Vue {
      * @var {string}
      */
     public defaultAccount: string;
+
+    public currentProfile: ProfileModel;
 
     public metadataEntry: MetadataModel;
     /**
@@ -130,6 +135,65 @@ export class AccountDetailsPageTs extends Vue {
         this.showConfirmationModal = true;
     }
 
+    /**
+     * Error notification handler
+     */
+    private errorNotificationHandler(error: any) {
+        if (error.errorCode) {
+            switch (error.errorCode) {
+                case 'NoDevice':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_no_device');
+                    return;
+                case 'ledger_not_supported_app':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_supported_app');
+                    return;
+                case 'ledger_not_correct_account':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_correct_account');
+                    return;
+                case 26628:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_device_locked');
+                    return;
+                case 27904:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_opened_app');
+                    return;
+                case 27264:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_using_xym_app');
+                    return;
+                case 27013:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_user_reject_request');
+                    return;
+            }
+        } else if (error.name) {
+            switch (error.name) {
+                case 'TransportOpenUserCancelled':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_no_device_selected');
+                    return;
+            }
+        }
+    }
+
+    public async showAddressLedger() {
+        try {
+            const networkType = this.currentProfile.networkType;
+            const ledgerService = new LedgerService(networkType);
+            const isAppSupported = await ledgerService.isAppSupported();
+            if (!isAppSupported) {
+                throw { errorCode: 'ledger_not_supported_app' };
+            }
+            const currentPath = this.currentAccount.path;
+            this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
+            const currentAccount = await this.accountService.getLedgerAccountByPath(this.currentProfile, networkType, currentPath);
+            const accountPublicKey = currentAccount.publicKey.toUpperCase();
+            if (accountPublicKey === this.currentAccount.publicKey) {
+                this.$store.dispatch('notification/ADD_SUCCESS', 'ledger_correct_account');
+            } else {
+                throw { errorCode: 'ledger_not_correct_account' };
+            }
+        } catch (error) {
+            this.errorNotificationHandler(error);
+        }
+    }
+
     public async deleteAccount() {
         this.showConfirmationModal = false;
         if (this.currentAccount) {
@@ -145,6 +209,11 @@ export class AccountDetailsPageTs extends Vue {
     public set hasAccountUnlockModal(f: boolean) {
         this.isUnlockingAccount = f;
     }
+
+    public get isLedger(): boolean {
+        return this.currentAccount.type == AccountType.LEDGER;
+    }
+
     /**
      * When account is unlocked, the sub account can be created
      */

@@ -19,10 +19,17 @@ import { Account, Password } from 'symbol-sdk';
 // child components
 // @ts-ignore
 import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue';
+import { mapGetters } from 'vuex';
+import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
 
 @Component({
     components: {
         FormProfileUnlock,
+    },
+    computed: {
+        ...mapGetters({
+            currentSignerHarvestingModel: 'harvesting/currentSignerHarvestingModel',
+        }),
     },
 })
 export class ModalFormProfileUnlockTs extends Vue {
@@ -32,9 +39,20 @@ export class ModalFormProfileUnlockTs extends Vue {
     visible: boolean;
 
     @Prop({
+        default: null,
+    })
+    message: string;
+
+    @Prop({
+        default: null,
+    })
+    title: string;
+
+    @Prop({
         default: () => true,
     })
     onSuccess: (a: Account, p: Password) => boolean;
+    private currentSignerHarvestingModel: HarvestingModel;
 
     /**
      * Visibility state

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Account, Address, NetworkType, Password, SimpleWallet, Crypto } from 'symbol-sdk';
+import { Account, PublicAccount, Address, NetworkType, Password, SimpleWallet, Crypto } from 'symbol-sdk';
 import { ExtendedKey, MnemonicPassPhrase, Wallet } from 'symbol-hd-wallets';
 // internal dependencies
 import { DerivationPathLevels, DerivationService } from './DerivationService';
@@ -22,6 +22,7 @@ import { AccountModel, AccountType } from '@/core/database/entities/AccountModel
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
 import { AccountModelStorage } from '@/core/database/storage/AccountModelStorage';
+import { LedgerService } from '@/services/LedgerService';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 
 export class AccountService {
@@ -31,7 +32,8 @@ export class AccountService {
      * Default account derivation path
      * @var {string}
      */
-    public static readonly DEFAULT_ACCOUNT_PATH = `m/44'/4343'/0'/0'/0'`;
+    private static readonly DEFAULT_ACCOUNT_PATH_MAIN_NET = `m/44'/4343'/0'/0'/0'`;
+    private static readonly DEFAULT_ACCOUNT_PATH_TEST_NET = `m/44'/1'/0'/0'/0'`;
 
     public getAccounts(): AccountModel[] {
         return Object.values(this.getAccountsById());
@@ -85,12 +87,8 @@ export class AccountService {
     /**
      * Derive \a path using \a mnemonic pass phrase
      */
-    public getAccountByPath(
-        mnemonic: MnemonicPassPhrase,
-        networkType: NetworkType,
-        path: string = AccountService.DEFAULT_ACCOUNT_PATH,
-    ): Account {
-        if (false === DerivationPathValidator.validate(path)) {
+    public getAccountByPath(mnemonic: MnemonicPassPhrase, networkType: NetworkType, path: string): Account {
+        if (!DerivationPathValidator.validate(path, networkType)) {
             const errorMessage = 'Invalid derivation path: ' + path;
             console.error(errorMessage);
             throw new Error(errorMessage);
@@ -122,18 +120,19 @@ export class AccountService {
      * @return {Account[]}
      */
     public generateAccountsFromMnemonic(mnemonic: MnemonicPassPhrase, networkType: NetworkType, count: number = 10): Account[] {
-        const derivationService = new DerivationService();
+        const derivationService = new DerivationService(networkType);
 
         // create hd extended key
         const xkey = this.getExtendedKeyFromMnemonic(mnemonic);
 
+        const default_path = AccountService.getAccountPathByNetworkType(networkType);
         // increment derivation path \a count times
         const paths = [...Array(count).keys()].map((index) => {
             if (index == 0) {
-                return AccountService.DEFAULT_ACCOUNT_PATH;
+                return default_path;
             }
 
-            return derivationService.incrementPathLevel(AccountService.DEFAULT_ACCOUNT_PATH, DerivationPathLevels.Profile, index);
+            return derivationService.incrementPathLevel(default_path, DerivationPathLevels.Profile, index);
         });
 
         const wallets = paths.map((path) => new Wallet(xkey.derivePath(path)));
@@ -179,7 +178,8 @@ export class AccountService {
         password: Password,
         networkType: NetworkType,
     ): AccountModel {
-        const account = this.getAccountByPath(mnemonic, networkType, AccountService.DEFAULT_ACCOUNT_PATH);
+        const default_path = AccountService.getAccountPathByNetworkType(networkType);
+        const account = this.getAccountByPath(mnemonic, networkType, default_path);
 
         const simpleWallet = SimpleWallet.createFromPrivateKey('Seed Account 1', password, account.privateKey, networkType);
 
@@ -192,7 +192,7 @@ export class AccountService {
             address: simpleWallet.address.plain(),
             publicKey: account.publicKey,
             encryptedPrivateKey: simpleWallet.encryptedPrivateKey,
-            path: AccountService.DEFAULT_ACCOUNT_PATH,
+            path: default_path,
             isMultisig: false,
         };
     }
@@ -268,9 +268,8 @@ export class AccountService {
      * @param {Password} newPassword
      */
     public updateWalletPassword(account: AccountModel, oldPassword: Password, newPassword: Password): AccountModel {
-        // Password modification is not allowed for hardware wallets
         if (account.type !== AccountType.SEED && account.type !== AccountType.PRIVATE_KEY) {
-            throw new Error('Hardware account password cannot be changed');
+            return account;
         }
 
         const privateKey = Crypto.decrypt(account.encryptedPrivateKey, oldPassword.value);
@@ -287,5 +286,67 @@ export class AccountService {
             ...account,
             encryptedPrivateKey: newSimpleWallet.encryptedPrivateKey,
         };
+    }
+
+    /**
+     * Derive an public key from ledger using a path
+     * @param {NetworkType} networkType
+     * @param {string} paths
+     * @return {Promise<string>}
+     */
+    public async getLedgerPublicKeyByPath(networkType: NetworkType, path: string): Promise<string> {
+        if (!DerivationPathValidator.validate(path, networkType)) {
+            const errorMessage = 'Invalid derivation path: ' + path;
+            console.error(errorMessage);
+            throw new Error(errorMessage);
+        }
+        const ledgerService = new LedgerService(networkType);
+        const accountResult = await ledgerService.getAccount(path, true);
+        const { publicKey } = accountResult;
+        return publicKey;
+    }
+
+    /**
+     * Derive an account instance of ledger using a path
+     * @param {ProfileModel} currentProfile
+     * @param {NetworkType} networkType
+     * @param {string} paths
+     * @return {Promise<AccountModel>}
+     */
+    public async getLedgerAccountByPath(currentProfile: ProfileModel, networkType: NetworkType, path: string): Promise<AccountModel> {
+        const publicKey = await this.getLedgerPublicKeyByPath(networkType, path);
+        const address = PublicAccount.createFromPublicKey(publicKey, networkType).address;
+        return {
+            id: SimpleObjectStorage.generateIdentifier(),
+            profileName: currentProfile.profileName,
+            name: currentProfile.profileName,
+            node: '',
+            type: AccountType.LEDGER,
+            address: address.plain(),
+            publicKey: publicKey.toUpperCase(),
+            encryptedPrivateKey: '',
+            path: path,
+            isMultisig: false,
+        };
+    }
+
+    /**
+     * Create a account instance of Ledger from default path
+     * @return {AccountModel}
+     */
+    public async getDefaultLedgerAccount(currentProfile: ProfileModel, networkType: NetworkType): Promise<AccountModel> {
+        const default_path = AccountService.getAccountPathByNetworkType(networkType);
+        return await this.getLedgerAccountByPath(currentProfile, networkType, default_path);
+    }
+
+    /**
+     * Return account path by network type
+     * @param networkType Symbol network type
+     */
+    public static getAccountPathByNetworkType(networkType: NetworkType) {
+        if (networkType === NetworkType.MAIN_NET) {
+            return AccountService.DEFAULT_ACCOUNT_PATH_MAIN_NET;
+        }
+        return AccountService.DEFAULT_ACCOUNT_PATH_TEST_NET;
     }
 }

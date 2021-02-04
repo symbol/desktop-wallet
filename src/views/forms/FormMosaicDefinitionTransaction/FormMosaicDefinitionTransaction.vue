@@ -36,7 +36,7 @@
                 </FormRow>
                 <RentalFee :rental-type="'mosaic'"></RentalFee>
                 <MaxFeeAndSubmit v-if="!isAggregate" v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
-                <div v-else class="ml-2" style="text-align: right;">
+                <div v-else-if="!hideSave" class="ml-2" style="text-align: right;">
                     <button type="submit" class="save-button centered-button button-style inverted-button" @click="emitToAggregate">
                         {{ $t('save') }}
                     </button>
@@ -65,8 +65,10 @@ export default class FormMosaicDefinitionTransaction extends FormMosaicDefinitio
 .checkboxes {
     display: grid;
     grid-auto-flow: column;
+    grid-column-gap: 0.3rem;
     align-items: baseline;
     color: #44004e;
+    width: max-content;
 }
 
 /deep/ .form-row {

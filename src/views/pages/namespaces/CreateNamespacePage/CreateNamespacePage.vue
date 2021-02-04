@@ -50,3 +50,9 @@ import FormNamespaceRegistrationTransaction from '@/views/forms/FormNamespaceReg
 })
 export default class CreateNamespacePage extends Vue {}
 </script>
+
+<style lang="less" scoped>
+/deep/ .namespace-transaction-form-wrapper {
+    max-width: 14rem;
+}
+</style>

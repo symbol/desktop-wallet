@@ -20,11 +20,14 @@ import {
     AggregateTransactionCosignature,
     CosignatureTransaction,
     MultisigAccountInfo,
+    MultisigAccountModificationTransaction,
     NetworkType,
     TransactionStatus,
+    TransactionType,
 } from 'symbol-sdk';
 import { mapGetters } from 'vuex';
 
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
 // child components
@@ -37,6 +40,8 @@ import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/
 import { CosignatureQR } from 'symbol-qr-library';
 // @ts-ignore
 import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue';
+import { AccountService } from '@/services/AccountService';
+import { LedgerService } from '@/services/LedgerService';
 
 @Component({
     components: {
@@ -48,6 +53,7 @@ import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue';
     computed: {
         ...mapGetters({
             currentAccount: 'account/currentAccount',
+            currentProfile: 'profile/currentProfile',
             networkType: 'network/networkType',
             generationHash: 'network/generationHash',
             currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
@@ -83,6 +89,13 @@ export class ModalTransactionCosignatureTs extends Vue {
      * @var {NetworkType}
      */
     public networkType: NetworkType;
+
+    /**
+     * Currently active profile
+     * @see {Store.Profile}
+     * @var {string}
+     */
+    public currentProfile: ProfileModel;
 
     /**
      * Current generationHash
@@ -126,16 +139,40 @@ export class ModalTransactionCosignatureTs extends Vue {
      */
     public get isUsingHardwareWallet(): boolean {
         // XXX should use "stagedTransaction.signer" to identify account
-        return AccountType.TREZOR === this.currentAccount.type;
+        return AccountType.TREZOR === this.currentAccount.type || AccountType.LEDGER === this.currentAccount.type;
     }
 
     public get needsCosignature(): boolean {
         // Multisig account can not sign
-        if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
-            return false;
-        }
         const currentPubAccount = AccountModel.getObjects(this.currentAccount).publicAccount;
-        return !this.transaction.signedByAccount(currentPubAccount);
+        if (!this.transaction.signedByAccount(currentPubAccount)) {
+            if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
+                return false;
+            }
+            const cosignerAddresses = this.transaction.innerTransactions.map((t) => t.signer?.address);
+            const modifyMultisigAddition = [];
+            this.transaction.innerTransactions.forEach((t) => {
+                if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {
+                    modifyMultisigAddition.push(...(t as MultisigAccountModificationTransaction).addressAdditions);
+                }
+            });
+
+            if (modifyMultisigAddition.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
+                return true;
+            }
+            const cosignRequired = cosignerAddresses.find((c) => {
+                if (c) {
+                    return (
+                        c.plain() === this.currentAccount.address ||
+                        (this.currentAccountMultisigInfo &&
+                            this.currentAccountMultisigInfo.multisigAddresses.find((m) => c.equals(m)) !== undefined)
+                    );
+                }
+                return false;
+            });
+            return cosignRequired !== undefined;
+        }
+        return false;
     }
 
     public get cosignatures(): AggregateTransactionCosignature[] {
@@ -154,6 +191,47 @@ export class ModalTransactionCosignatureTs extends Vue {
     public get cosignatureQrCode(): CosignatureQR {
         // @ts-ignore
         return new CosignatureQR(this.transaction, this.networkType, this.generationHash);
+    }
+
+    /**
+     * Error notification handler
+     */
+    private errorNotificationHandler(error: any) {
+        if (error.errorCode) {
+            switch (error.errorCode) {
+                case 'NoDevice':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_no_device');
+                    return;
+                case 'ledger_not_supported_app':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_supported_app');
+                    return;
+                case 'ledger_not_correct_account':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_correct_account');
+                    return;
+                case 26628:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_device_locked');
+                    return;
+                case 27904:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_opened_app');
+                    return;
+                case 27264:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_using_xym_app');
+                    return;
+                case 27013:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_user_reject_request');
+                    return;
+                case 26368:
+                    this.$store.dispatch('notification/ADD_ERROR', 'transaction_too_long');
+                    return;
+            }
+        } else if (error.name) {
+            switch (error.name) {
+                case 'TransportOpenUserCancelled':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_no_device_selected');
+                    return;
+            }
+        }
+        this.$store.dispatch('notification/ADD_ERROR', this.$t('sign_transaction_failed', { reason: error.message || error }));
     }
 
     @Watch('transactionHash', { immediate: true })
@@ -197,16 +275,56 @@ export class ModalTransactionCosignatureTs extends Vue {
 
     public async onSigner(transactionSigner: TransactionSigner) {
         // - sign cosignature transaction
-        const cosignature = CosignatureTransaction.create(this.transaction);
-        const signCosignatureTransaction = await transactionSigner.signCosignatureTransaction(cosignature).toPromise();
-        const res = await new TransactionAnnouncerService(this.$store)
-            .announceAggregateBondedCosignature(signCosignatureTransaction)
-            .toPromise();
-        if (res.success) {
-            this.$emit('success');
-            this.show = false;
+        if (this.currentAccount.type === AccountType.LEDGER) {
+            try {
+                const ledgerService = new LedgerService(this.currentProfile.networkType);
+                const isAppSupported = await ledgerService.isAppSupported();
+                if (!isAppSupported) {
+                    throw { errorCode: 'ledger_not_supported_app' };
+                }
+                const currentPath = this.currentAccount.path;
+                const addr = this.currentAccount.address;
+                const networkType = this.currentProfile.networkType;
+                const accountService = new AccountService();
+                this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
+                const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath);
+                if (signerPublicKey === this.currentAccount.publicKey.toLowerCase()) {
+                    const signature = await ledgerService.signCosignatureTransaction(currentPath, this.transaction, signerPublicKey);
+                    this.$store.dispatch(
+                        'diagnostic/ADD_DEBUG',
+                        `Co-signed transaction with account ${addr} and result: ${JSON.stringify({
+                            parentHash: signature.parentHash,
+                            signature: signature.signature,
+                        })}`,
+                    );
+                    const res = await new TransactionAnnouncerService(this.$store)
+                        .announceAggregateBondedCosignature(signature)
+                        .toPromise();
+                    if (res.success) {
+                        this.$emit('success');
+                        this.$emit('close');
+                    } else {
+                        this.errorNotificationHandler(res.error);
+                    }
+                } else {
+                    throw { errorCode: 'ledger_not_correct_account' };
+                }
+            } catch (error) {
+                this.show = false;
+                this.errorNotificationHandler(error);
+            }
         } else {
-            this.$store.dispatch('notification/ADD_ERROR', res.error, { root: true });
+            const cosignature = CosignatureTransaction.create(this.transaction);
+            const signCosignatureTransaction = await transactionSigner.signCosignatureTransaction(cosignature).toPromise();
+            const res = await new TransactionAnnouncerService(this.$store)
+                .announceAggregateBondedCosignature(signCosignatureTransaction)
+                .toPromise();
+            if (res.success) {
+                this.$emit('success');
+                this.show = false;
+            } else {
+                this.$store.dispatch('notification/ADD_ERROR', res.error, { root: true });
+            }
         }
     }
 

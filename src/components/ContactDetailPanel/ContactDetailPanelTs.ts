@@ -31,6 +31,7 @@ import FormInputEditable from '@/components/FormInputEditable/FormInputEditable.
 import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
 import { AddressBook, IContact } from 'symbol-address-book';
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
+import { Address } from 'symbol-sdk';
 
 @Component({
     components: {
@@ -46,6 +47,9 @@ import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
             addressBook: 'addressBook/getAddressBook',
             selectedContact: 'addressBook/getSelectedContact',
         }),
+        address: function () {
+            return Address.createFromRawAddress(this.selectedContact.address).pretty();
+        },
     },
 })
 export class ContactDetailPanelTs extends Vue {
@@ -62,7 +66,13 @@ export class ContactDetailPanelTs extends Vue {
 
     public saveProperty(propName: string) {
         return (newVal: string) => {
-            this.selectedContact[propName] = newVal;
+            if (propName === 'address') {
+                const plainAddress = Address.createFromRawAddress(this.selectedContact.address).plain();
+                this.selectedContact[propName] = plainAddress;
+                this.$forceUpdate();
+            } else {
+                this.selectedContact[propName] = newVal;
+            }
             this.$store.dispatch('addressBook/UPDATE_CONTACT', { id: this.selectedContact.id, contact: this.selectedContact });
         };
     }

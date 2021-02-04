@@ -57,11 +57,12 @@
         <ul class="un-list">
             <li class="list-item"><b>By email:</b> contact@nem.io</li>
         </ul>
+        <button class="link" @click="backToLogin">{{ $t('back') }}</button>
     </div>
 </template>
 <script>
-import { Vue } from 'vue-property-decorator';
-export default class TermsAndConditions extends Vue {}
+import TermsAndConditionsTs from './TermsAndConditionsTs';
+export default class TermsAndConditions extends TermsAndConditionsTs {}
 </script>
 
 <style lang="less" scoped>

@@ -24,7 +24,7 @@
             <a href="mailto:contact@nemn.io">
                 <b>contact@nemn.io</b>
             </a>
-            or mailing us at: NEM Group Limited. 57 Mohamed Sultan Rd., #01-05, Sultan-Link, Singapore 238997.
+            or mailing us at: NEM Group Limited. Suite 7, Hadfield House Library Street, Gibraltar.
         </p>
         <h2 class="second-sub-title">Section 3 - Disclosure</h2>
         <p class="paragraph">
@@ -75,13 +75,14 @@
             <a href="mailto:support@nem.group">
                 <b class="link">support@nem.group</b>
             </a>
-            or by mail at NEM Group Limited. 57 Mohamed Sultan Rd., #01-05, Sultan-Link, Singapore 238997.
+            or by mail at NEM Group Limited. NEM Group Limited. Suite 7, Hadfield House Library Street, Gibraltar.
         </p>
+        <button class="link" @click="backToLogin">{{ $t('back') }}</button>
     </div>
 </template>
 <script>
-import { Vue } from 'vue-property-decorator';
-export default class PrivacyPolicy extends Vue {}
+import PrivacyPolicyTs from './PrivacyPolicyTs';
+export default class PrivacyPolicy extends PrivacyPolicyTs {}
 </script>
 
 <style lang="less" scoped>

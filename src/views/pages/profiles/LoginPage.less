@@ -189,13 +189,21 @@
                 font-size: 0.18rem;
                 margin: 0 auto;
                 margin-top: 0.5rem;
-                line-height: 0.4rem;
+                height: 0.4rem;
                 border-radius: 0.05rem;
                 text-align: center;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 background: linear-gradient(315.55deg, #44004e -1.68%, #5200c6 110.7%);
+
+                /deep/ i {
+                    margin-right: 0.07rem;
+                }
+            }
+
+            .button:hover {
+                background: linear-gradient(315.55deg, lighten(#44004e, 10%) -1.68%, lighten(#5200c6, 10%) 110.7%);
             }
         }
     }
@@ -343,4 +351,8 @@
         background-color: transparent !important;
         font-size: @smallerFont;
     }
+}
+
+.disabled {
+    cursor: default !important;
 }

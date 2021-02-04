@@ -118,19 +118,17 @@
                         </template>
                     </FormRow>
 
-                    <div class="form-line-container form-row">
-                        <div class="float-right mt-3">
-                            <button
-                                type="button"
-                                class="solid-button button-style create-account-stylebutton create-account-style"
-                                @click="$router.push({ name: 'profiles.importProfile.importStrategy' })"
-                            >
-                                {{ $t('back') }}
-                            </button>
-                            <button type="submit" class="inverted-button button-style create-account-style" @click="handleSubmit(submit)">
-                                {{ $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'restore_mnemonic' : 'generating_mnemonic') }}
-                            </button>
-                        </div>
+                    <div class="form-line-container form-row buttons-row mt-3">
+                        <button
+                            type="button"
+                            class="solid-button button-style create-account-stylebutton create-account-style"
+                            @click="$router.push({ name: 'profiles.importProfile.importStrategy' })"
+                        >
+                            {{ $t('back') }}
+                        </button>
+                        <button type="submit" class="inverted-button button-style create-account-style" @click="handleSubmit(submit)">
+                            {{ $t('next') }}
+                        </button>
                     </div>
                 </form>
             </ValidationObserver>
@@ -146,6 +144,11 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
 <style lang="less" scoped>
 @import '../../resources/css/variables.less';
 
+.buttons-row {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .right-hints-section {
     display: block;
     width: 5rem;
@@ -154,7 +157,8 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
 
 .form-account-creation-container {
     width: 100%;
-    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .restore-button {
@@ -165,9 +169,30 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
     padding: 0 0.1rem;
 }
 
+.form-wrapper {
+    width: 100%;
+}
+
+.create-account-style {
+    width: 150px;
+}
+
 /deep/ .form-row {
     .form-row-inner-container {
         grid-template-columns: 3rem auto;
     }
+}
+
+/deep/ .form-create-headline {
+    padding-left: 0;
+}
+
+/deep/ .form-label {
+    padding-left: 0;
+}
+
+/deep/ .inputs-create-container {
+    margin: 0 !important;
+    width: unset !important;
 }
 </style>

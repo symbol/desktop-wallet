@@ -3,15 +3,13 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
 // internal dependencies
-import { URLHelpers } from '@/core/utils/URLHelpers';
-
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
-import { NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
 import { NodeModel } from '@/core/database/entities/NodeModel';
-
+import { URLHelpers } from '@/core/utils/URLHelpers';
+import { NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
 @Component({
     components: {
         FormWrapper,
@@ -19,8 +17,8 @@ import { NodeModel } from '@/core/database/entities/NodeModel';
     },
     computed: {
         ...mapGetters({
-            peerNodes: 'network/peerNodes',
             repositoryFactory: 'network/repositoryFactory',
+            peerNodes: 'network/peerNodes',
         }),
     },
 })
@@ -30,8 +28,13 @@ export class NetworkNodeSelectorTs extends Vue {
     @Prop()
     value: NodeModel;
 
-    public peerNodes: NodeInfo[];
+    @Prop({
+        default: false,
+    })
+    disabled: boolean;
 
+    public peerNodes: NodeInfo[];
+    public isFetchingNodeInfo = false;
     /**
      * Form items
      */
@@ -40,8 +43,6 @@ export class NetworkNodeSelectorTs extends Vue {
     protected formNodePublicKey = '';
 
     public customNodeData = [];
-
-    public isFetchingNodeInfo = false;
 
     public showInputPublicKey = false;
 
@@ -63,7 +64,6 @@ export class NetworkNodeSelectorTs extends Vue {
             this.$emit('input', nodeModel);
             return;
         }
-
         this.isFetchingNodeInfo = true;
         try {
             const nodeUrl = URLHelpers.getNodeUrl(value);
@@ -124,7 +124,14 @@ export class NetworkNodeSelectorTs extends Vue {
 
     protected get filteredNodes() {
         if (this.includeRoles && this.includeRoles.length > 0) {
-            return this.peerNodes.filter((node) => node.roles?.some((role) => this.isIncluded(role)));
+            // exclude ngl nodes that doesn't support harvesting
+            return this.peerNodes.filter(
+                (node) =>
+                    node.roles?.some((role) => this.isIncluded(role)) &&
+                    !node.host?.includes('ap-southeast-1.testnet') &&
+                    !node.host.includes('us-east-1.testnet') &&
+                    !node.host.includes('eu-central-1.testnet'),
+            );
         }
         return this.peerNodes;
     }

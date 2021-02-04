@@ -48,7 +48,7 @@
 
                     <!-- Transfer message input field -->
                     <MessageInput v-model="formItems.messagePlain" @input="onChangeMessage" />
-                    <FormRow v-if="!selectedSigner.multisig && !isAggregate">
+                    <FormRow v-if="!selectedSigner.multisig && !isAggregate && !isLedger">
                         <template v-slot:inputs>
                             <div class="inputs-container checkboxes">
                                 <Checkbox v-model="formItems.encryptMessage" @input="onEncryptionChange">
@@ -68,7 +68,7 @@
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
                     />
-                    <div v-else class="ml-2" style="text-align: right;">
+                    <div v-else-if="!hideSave" class="ml-2" style="text-align: right;">
                         <button type="submit" class="save-button centered-button button-style inverted-button" @click="emitToAggregate">
                             {{ $t('save') }}
                         </button>

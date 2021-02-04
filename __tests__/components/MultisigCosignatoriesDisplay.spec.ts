@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, createLocalVue } from '@vue/test-utils';
+import Vuex from 'vuex';
 // @ts-ignore
 import MultisigCosignatoriesDisplay from '@/components/MultisigCosignatoriesDisplay/MultisigCosignatoriesDisplay';
 import { MultisigAccountInfo, NetworkType, PublicAccount } from 'symbol-sdk';
@@ -120,7 +121,10 @@ describe('MultisigCosignatoriesDisplay', () => {
         wrapper.destroy();
     });
 
-    test('Should emit when adding a cosigner', () => {
+    test('Should emit when adding a cosigner', async () => {
+        const vue = createLocalVue();
+        vue.use(Vuex);
+
         const wrapper = shallowMount(MultisigCosignatoriesDisplay, {
             i18n,
             propsData: {
@@ -128,11 +132,19 @@ describe('MultisigCosignatoriesDisplay', () => {
                 modifiable: true,
                 cosignatoryModifications: {},
             },
+            mocks: {
+                $store: {
+                    dispatch: jest.fn(() => true),
+                },
+            },
         });
 
         const component = wrapper.vm as MultisigCosignatoriesDisplay;
 
         component.onAddCosignatory(account4.address);
+
+        await wrapper.vm.$nextTick();
+
         expect(wrapper.emitted('add')).toBeTruthy();
         expect(wrapper.emitted().add[0]).toEqual([account4.address]);
         wrapper.destroy();

@@ -108,7 +108,11 @@ export default class ShowMnemonicTs extends Vue {
     public async downloadPaperWallet() {
         const accountService = new AccountService();
         const mnemonicObj = new MnemonicPassPhrase(this.currentMnemonic.plain);
-        const account = accountService.getAccountByPath(mnemonicObj, this.currentProfile.networkType);
+        const account = accountService.getAccountByPath(
+            mnemonicObj,
+            this.currentProfile.networkType,
+            AccountService.getAccountPathByNetworkType(this.currentProfile.networkType),
+        );
         const rootAccountInfo: IHDAccountInfo = {
             mnemonic: this.currentMnemonic.plain,
             rootAccountPublicKey: account.publicKey,

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <FormWrapper>
+        <FormWrapper class="namespace-transaction-form-wrapper">
             <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
                 <form onsubmit="event.preventDefault()" class="form-container mt-3 create-namespace-form">
                     <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
@@ -62,7 +62,7 @@
                         :duration="formItems.duration"
                     />
                     <MaxFeeAndSubmit v-if="!isAggregate" v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
-                    <div v-else class="ml-2" style="text-align: right;">
+                    <div v-else-if="!hideSave" class="ml-2" style="text-align: right;">
                         <button type="submit" class="save-button centered-button button-style inverted-button" @click="emitToAggregate">
                             {{ $t('save') }}
                         </button>
@@ -94,9 +94,6 @@ export default class FormNamespaceRegistrationTransaction extends FormNamespaceR
     .form-row-inner-container {
         grid-template-columns: 3rem calc(100% - 3rem);
     }
-}
-/deep/ .form-wrapper {
-    max-width: 12rem;
 }
 
 .save-button {
