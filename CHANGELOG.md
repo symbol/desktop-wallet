@@ -9,12 +9,12 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 **This version only works with the latest testnet (0.10.0.6), it is not backward compatible.**
 
-:warning: **This version reset the previous user profile and locally stored data.**
+:warning: **This version resets the previous user profile and locally stored data.**
 
 #### Added
 
 - Added address validation for cosignatories in multisig account creation.
-- Added back warning after private key account imported into the profile.
+- Added backup warning after private key account imported into the profile.
 - Added core server error message transformer.
 
 #### Changed
