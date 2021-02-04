@@ -360,7 +360,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     }
 
     private async getLedgerAccountOnSignerValues() {
-        const ledgerService = new LedgerService();
+        const ledgerService = new LedgerService(this.currentProfile.networkType);
         const isAppSupported = await ledgerService.isAppSupported();
         if (!isAppSupported) {
             throw { errorCode: 'ledger_not_supported_app' };
@@ -520,7 +520,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     }
 
     private async getLedgerAccDelHarvestOnSignerValues() {
-        const ledgerService = new LedgerService();
+        const ledgerService = new LedgerService(this.currentProfile.networkType);
         const isAppSupported = await ledgerService.isAppSupported();
         if (!isAppSupported) {
             throw { errorCode: 'ledger_not_supported_app' };

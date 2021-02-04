@@ -15,6 +15,7 @@
  */
 // internal dependencies
 import { Validator, staticImplements } from './Validator';
+import { NetworkType } from 'symbol-sdk';
 
 @staticImplements<Validator>()
 export class DerivationPathValidator {
@@ -22,13 +23,19 @@ export class DerivationPathValidator {
      * Executes the validator
      * @static
      * @param {string} value
+     * @param {NetworkType} networkType
      * @returns {({valid: boolean|string})}
      */
-    public static validate(value: any): boolean {
-        if (value.match(/^m\/44'\/4343'\/[0-9]+'\/[0-9]+'\/[0-9]+'/)) {
-            return value;
+    public static validate(value: any, networkType: NetworkType): boolean {
+        if (networkType === NetworkType.MAIN_NET) {
+            if (value.match(/^m\/44'\/4343'\/[0-9]+'\/[0-9]+'\/[0-9]+'/)) {
+                return value;
+            }
+        } else {
+            if (value.match(/^m\/44'\/1'\/[0-9]+'\/[0-9]+'\/[0-9]+'/)) {
+                return value;
+            }
         }
-
         return false;
     }
 }
