@@ -183,7 +183,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * @return {void}
      */
     protected resetForm() {
-        console.log(this.currentAccount.type);
         // - set default form values
         this.action = HarvestingAction.START;
         // - maxFee must be absolute
@@ -263,8 +262,23 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
          STOP =>  unlink all (linked keys)
          SWAP =>  unlink(linked) + link all (new keys)
          */
-
-        if (this.isNodeKeyLinked) {
+        if (this.isAccountKeyLinked && !this.currentSignerHarvestingModel?.encRemotePrivateKey) {
+            const accountUnlinkTx = this.createAccountKeyLinkTx(
+                this.currentSignerAccountInfo.supplementalPublicKeys.linked.publicKey,
+                LinkAction.Unlink,
+                maxFee,
+            );
+            txs.push(accountUnlinkTx);
+        }
+        if (this.isVrfKeyLinked && !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
+            const vrfUnlinkTx = this.createVrfKeyLinkTx(
+                this.currentSignerAccountInfo.supplementalPublicKeys.vrf.publicKey,
+                LinkAction.Unlink,
+                maxFee,
+            );
+            txs.push(vrfUnlinkTx);
+        }
+        if (this.isNodeKeyLinked || !this.currentSignerHarvestingModel?.selectedHarvestingNode) {
             const nodeUnLinkTx = this.createNodeKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys.node.publicKey,
                 LinkAction.Unlink,
@@ -652,7 +666,21 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public onSingleKeyOperation(type: string) {
         this.action = HarvestingAction.SINGLE_KEY;
         this.type = type;
-        this.onSubmit();
+        if (this.type == 'node') {
+            this.onSubmit();
+        } else if (this.type == 'account') {
+            if (!this.isAccountKeyLinked && this.isLedger) {
+                this.hasLedgerAccountUnlockModal = true;
+            } else {
+                this.onSubmit();
+            }
+        } else {
+            if (!this.isVrfKeyLinked && this.isLedger) {
+                this.hasLedgerAccountUnlockModal = true;
+            } else {
+                this.onSubmit();
+            }
+        }
     }
 
     public onSubmit() {
@@ -682,6 +710,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      */
     public async onAccountUnlocked(account: Account, password: Password) {
         try {
+            this.password = password.value;
             this.action = HarvestingAction.ACTIVATE;
             this.remoteAccountPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encRemotePrivateKey, password.value);
             this.vrfPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encVrfPrivateKey, password.value);
