@@ -129,7 +129,8 @@ export class NetworkNodeSelectorTs extends Vue {
                 (node) =>
                     node.roles?.some((role) => this.isIncluded(role)) &&
                     !node.host?.includes('ap-southeast-1.testnet') &&
-                    !node.host.includes('us-east-1.testnet'),
+                    !node.host.includes('us-east-1.testnet') &&
+                    !node.host.includes('eu-central-1.testnet'),
             );
         }
         return this.peerNodes;
