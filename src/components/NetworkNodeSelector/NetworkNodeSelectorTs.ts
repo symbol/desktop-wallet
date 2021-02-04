@@ -1,7 +1,6 @@
 // external dependencies
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { NodeInfo, RoleType } from 'symbol-sdk';
 
 // internal dependencies
 // @ts-ignore
@@ -9,7 +8,8 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
 import { NodeModel } from '@/core/database/entities/NodeModel';
-
+import { URLHelpers } from '@/core/utils/URLHelpers';
+import { NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
 @Component({
     components: {
         FormWrapper,
@@ -18,7 +18,7 @@ import { NodeModel } from '@/core/database/entities/NodeModel';
     computed: {
         ...mapGetters({
             repositoryFactory: 'network/repositoryFactory',
-            harvestingPeerNodes: 'network/harvestingPeerNodes',
+            peerNodes: 'network/peerNodes',
         }),
     },
 })
@@ -33,7 +33,8 @@ export class NetworkNodeSelectorTs extends Vue {
     })
     disabled: boolean;
 
-    public harvestingPeerNodes: NodeInfo[];
+    public peerNodes: NodeInfo[];
+    public isFetchingNodeInfo = false;
     /**
      * Form items
      */
@@ -63,9 +64,31 @@ export class NetworkNodeSelectorTs extends Vue {
             this.$emit('input', nodeModel);
             return;
         }
+        this.isFetchingNodeInfo = true;
+        try {
+            const nodeUrl = URLHelpers.getNodeUrl(value);
+            const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
+            const nodeRepository = repositoryFactory.createNodeRepository();
+            const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
+            this.formNodeUrl = value;
+            if (nodeInfo.nodePublicKey) {
+                const nodeModel = new NodeModel(value, nodeInfo.friendlyName, false, nodeInfo.publicKey, nodeInfo.nodePublicKey);
+                Vue.set(this, 'showInputPublicKey', false);
+                this.$emit('input', nodeModel);
+            } else {
+                Vue.set(this, 'showInputPublicKey', true);
+            }
+        } catch (error) {
+            console.log(error);
+            Vue.set(this, 'showInputPublicKey', true);
+            throw new Error('Node_connection_failed');
+        } finally {
+            this.isFetchingNodeInfo = false;
+        }
     }
 
     public async created() {
+        await this.$store.dispatch('network/LOAD_PEER_NODES');
         this.customNodeData = this.filteredNodes.map((n) => n.host);
     }
 
@@ -101,9 +124,15 @@ export class NetworkNodeSelectorTs extends Vue {
 
     protected get filteredNodes() {
         if (this.includeRoles && this.includeRoles.length > 0) {
-            return this.harvestingPeerNodes.filter((node) => node.roles?.some((role) => this.isIncluded(role)));
+            // exclude ngl nodes that doesn't support harvesting
+            return this.peerNodes.filter(
+                (node) =>
+                    node.roles?.some((role) => this.isIncluded(role)) &&
+                    !node.host?.includes('ap-southeast-1.testnet') &&
+                    !node.host.includes('us-east-1.testnet'),
+            );
         }
-        return this.harvestingPeerNodes;
+        return this.peerNodes;
     }
 
     private isIncluded(role: RoleType) {

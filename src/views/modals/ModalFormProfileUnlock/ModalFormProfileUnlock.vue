@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <Modal v-model="show" :title="message ? message : $t('modal_account_unlock_title')" :transfer="true" class-name="modal-container">
+        <Modal v-model="show" :title="title ? title : $t('modal_account_unlock_title')" :transfer="true" class-name="modal-container">
             <span v-if="message" class="text">{{ message }} </span>
             <FormProfileUnlock @success="onAccountUnlocked" @error="onError" />
             <div slot="footer" class="modal-footer">

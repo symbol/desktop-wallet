@@ -405,56 +405,56 @@ export default {
 
             dispatch('SET_CURRENT_PEER', networkService.getDefaultUrl());
         },
-        async LOAD_PEER_NODES({ commit, rootGetters, dispatch }) {
+        async LOAD_PEER_NODES({ commit, rootGetters }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const nodeRepository = repositoryFactory.createNodeRepository();
 
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
             const allNodes = [...staticPeerNodes, ...peerNodes.sort((a, b) => a.host.localeCompare(b.host))];
             commit('peerNodes', _.uniqBy(allNodes, 'host'));
-            await dispatch('LOAD_HARVESTING_PEERS');
         },
+        // TODO :: re-apply that behavior if red screen issue fixed
         // load nodes that eligible for delegate harvesting
-        async LOAD_HARVESTING_PEERS({ commit, getters }) {
-            const peerNodes = getters.peerNodes;
-            peerNodes.forEach(async (node: NodeInfo) => {
-                await setTimeout(async () => {
-                    try {
-                        const nodeUrl = URLHelpers.getNodeUrl(node.host);
-                        const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
-                        const nodeRepository = repositoryFactory.createNodeRepository();
-                        const unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
-                        const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
+        // async LOAD_HARVESTING_PEERS({ commit, getters }) {
+        //     const peerNodes = getters.peerNodes;
+        //     peerNodes.forEach(async (node: NodeInfo) => {
+        //         await setTimeout(async () => {
+        //             try {
+        //                 const nodeUrl = URLHelpers.getNodeUrl(node.host);
+        //                 const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
+        //                 const nodeRepository = repositoryFactory.createNodeRepository();
+        //                 const unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
+        //                 const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
 
-                        if (unlockedAccounts) {
-                            let validNodeInfo: NodeInfo;
-                            let harvestingPeers: NodeInfo[];
-                            // in case nodeInfo missing host
-                            if (!nodeInfo.host) {
-                                validNodeInfo = new NodeInfo(
-                                    nodeInfo.publicKey,
-                                    nodeInfo.networkGenerationHashSeed,
-                                    nodeInfo.port,
-                                    nodeInfo.networkIdentifier,
-                                    nodeInfo.version,
-                                    nodeInfo.roles,
-                                    node.host,
-                                    nodeInfo.friendlyName,
-                                    nodeInfo.nodePublicKey,
-                                );
-                                harvestingPeers = [validNodeInfo, ...getters.harvestingPeerNodes];
-                            } else {
-                                harvestingPeers = [nodeInfo, ...getters.harvestingPeerNodes];
-                            }
-                            // update harvesting peers
-                            commit('harvestingPeerNodes', harvestingPeers);
-                        }
-                    } catch (err) {
-                        console.error('Harvesting not enabled', err);
-                    }
-                }, 500);
-            });
-        },
+        //                 if (unlockedAccounts) {
+        //                     let validNodeInfo: NodeInfo;
+        //                     let harvestingPeers: NodeInfo[];
+        //                     // in case nodeInfo missing host
+        //                     if (!nodeInfo.host) {
+        //                         validNodeInfo = new NodeInfo(
+        //                             nodeInfo.publicKey,
+        //                             nodeInfo.networkGenerationHashSeed,
+        //                             nodeInfo.port,
+        //                             nodeInfo.networkIdentifier,
+        //                             nodeInfo.version,
+        //                             nodeInfo.roles,
+        //                             node.host,
+        //                             nodeInfo.friendlyName,
+        //                             nodeInfo.nodePublicKey,
+        //                         );
+        //                         harvestingPeers = [validNodeInfo, ...getters.harvestingPeerNodes];
+        //                     } else {
+        //                         harvestingPeers = [nodeInfo, ...getters.harvestingPeerNodes];
+        //                     }
+        //                     // update harvesting peers
+        //                     commit('harvestingPeerNodes', _.uniqBy(harvestingPeers, 'host'));
+        //                 }
+        //             } catch (err) {
+        //                 console.error('Harvesting not enabled', err);
+        //             }
+        //         }, 500);
+        //     });
+        // },
         /**
          * Websocket API
          */

@@ -250,7 +250,6 @@ export default class LoginPageTs extends Vue {
             // LOGIN SUCCESS: update app state
             await this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile);
             this.$store.dispatch('network/CONNECT');
-            this.$store.dispatch('network/LOAD_PEER_NODES');
             this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', profile.accounts);
             await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', defaultAccount);
             this.$store.dispatch('diagnostic/ADD_DEBUG', 'Profile login successful with currentProfileName: ' + currentProfileName);
