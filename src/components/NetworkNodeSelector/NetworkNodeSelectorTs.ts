@@ -80,8 +80,8 @@ export class NetworkNodeSelectorTs extends Vue {
                 Vue.set(this, 'showInputPublicKey', true);
             }
         } catch (error) {
-            console.log(error);
             this.$store.dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE);
+            console.log(error);
             Vue.set(this, 'showInputPublicKey', true);
             throw new Error('Node_connection_failed');
         } finally {
