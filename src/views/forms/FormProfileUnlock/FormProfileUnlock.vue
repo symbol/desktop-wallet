@@ -59,4 +59,13 @@ export default class FormProfileUnlock extends FormProfileUnlockTs {}
 /deep/ .form-row-inner-container {
     grid-template-columns: 18% 60% !important;
 }
+
+.ivu-btn:hover, .ivu-btn:active {
+    color: white;
+    border-color: white;
+}
+
+.ivu-btn:focus {
+    box-shadow: none;
+}
 </style>
