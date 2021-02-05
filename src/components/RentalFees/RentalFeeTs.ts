@@ -24,18 +24,21 @@ export class RentalFeeTs extends Vue {
     /**
      * @description: return effectiveFee according to prop 'rentalType'
      */
+    public async created() {
+        await this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES');
+    }
     get rentalFeeAmount(): number {
         let feeAmountRaw: number = 0;
         if (this.rentalEstimation) {
             switch (this.rentalType) {
                 case 'mosaic':
-                    feeAmountRaw = this.rentalEstimation['effectiveMosaicRentalFee'].compact();
+                    feeAmountRaw = this.rentalEstimation?.effectiveMosaicRentalFee.compact();
                     break;
                 case 'root-namespace':
-                    feeAmountRaw = this.rentalEstimation['effectiveRootNamespaceRentalFeePerBlock'].compact() * this.duration;
+                    feeAmountRaw = this.rentalEstimation?.effectiveRootNamespaceRentalFeePerBlock.compact() * this.duration;
                     break;
                 case 'child-namespace':
-                    feeAmountRaw = this.rentalEstimation['effectiveChildNamespaceRentalFee'].compact();
+                    feeAmountRaw = this.rentalEstimation?.effectiveChildNamespaceRentalFee.compact();
                     break;
                 default:
                     feeAmountRaw = 0;
