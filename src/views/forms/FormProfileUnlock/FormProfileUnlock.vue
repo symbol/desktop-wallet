@@ -60,7 +60,8 @@ export default class FormProfileUnlock extends FormProfileUnlockTs {}
     grid-template-columns: 18% 60% !important;
 }
 
-.ivu-btn:hover, .ivu-btn:active {
+.ivu-btn:hover,
+.ivu-btn:active {
     color: white;
     border-color: white;
 }
