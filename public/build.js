@@ -17,6 +17,7 @@ const loadUrlPath = process.platform === 'darwin' ? './dist/index.html' : `file:
 
 let mainWindow = null
 
+// context menu
 contextMenu({
 	prepend: (defaultActions, params, browserWindow) => [
 		{
