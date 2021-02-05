@@ -6,6 +6,8 @@ const { app, BrowserWindow, shell, globalShortcut, Menu, ipcMain } = require('el
 const electron = require('electron')
 const name = electron.app.getName()
 const electronLocalshortcut = require('electron-localshortcut');
+const contextMenu = require('electron-context-menu');
+contextMenu({});
 
 // Set the path of the folder where the persisted data is stored
 electron.app.setPath('userData', path.join(electron.app.getPath('home'), '.symbol-desktop-wallet'))

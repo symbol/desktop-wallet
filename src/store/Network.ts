@@ -237,7 +237,6 @@ export default {
             const callback = async () => {
                 // commit('knowNodes', new NodeService().getKnowNodesOnly())
                 await dispatch('CONNECT');
-                dispatch('REST_NETWORK_RENTAL_FEES');
                 // update store
                 commit('setInitialized', true);
             };
@@ -362,18 +361,11 @@ export default {
             }
         },
 
-        REST_NETWORK_RENTAL_FEES({ rootGetters, dispatch }) {
+        async REST_NETWORK_RENTAL_FEES({ rootGetters, commit }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
-            repositoryFactory
-                .createNetworkRepository()
-                .getRentalFees()
-                .subscribe((rentalFee: RentalFees) => {
-                    dispatch('SET_RENTAL_FEE_ESTIMATE', rentalFee);
-                });
-        },
-
-        SET_RENTAL_FEE_ESTIMATE({ commit }, rentalFee) {
-            commit('rentalFeeEstimation', rentalFee);
+            const getRentalFeesPromise = repositoryFactory.createNetworkRepository().getRentalFees().toPromise();
+            const rentalFees = await getRentalFeesPromise;
+            commit('rentalFeeEstimation', rentalFees);
         },
         SET_NETWORK_IS_NOT_MATCHING_PROFILE({ commit }, networkIsNotMatchingProfile) {
             commit('networkIsNotMatchingProfile', networkIsNotMatchingProfile);
