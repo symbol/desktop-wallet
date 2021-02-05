@@ -76,9 +76,10 @@ export default class ProtectedPrivateKeyDisplay extends ProtectedPrivateKeyDispl
 }
 
 .account-detail-harvesting {
-display: grid;
+    display: grid;
     grid-template-columns: 5rem auto;
 }
+
 .not-linked-input {
     padding-left: 0.15rem;
     padding-top: 4px;
