@@ -6,6 +6,7 @@ const { app, BrowserWindow, shell, globalShortcut, Menu, ipcMain } = require('el
 const electron = require('electron')
 const name = electron.app.getName()
 const electronLocalshortcut = require('electron-localshortcut');
+const contextMenu = require('electron-context-menu');
 
 // Set the path of the folder where the persisted data is stored
 electron.app.setPath('userData', path.join(electron.app.getPath('home'), '.symbol-desktop-wallet'))
@@ -16,6 +17,15 @@ const loadUrlPath = process.platform === 'darwin' ? './dist/index.html' : `file:
 
 let mainWindow = null
 
+contextMenu({
+	prepend: (defaultActions, params, browserWindow) => [
+		{
+			label: 'Rainbow',
+			// Only show it when right-clicking images
+			visible: params.mediaType === 'image'
+		}
+	]
+});
 const template = [
   {
     label: 'Window',
@@ -227,7 +237,7 @@ function initialize() {
         webPreferences: {
           nodeIntegration: false,
           enableRemoteModule: false,
-          preload: path.resolve(__dirname, 'preload.js')
+          preload: path.resolve(__dirname, 'preload.js'),
         }
       })
     } else {
@@ -240,7 +250,7 @@ function initialize() {
         webPreferences: {
           nodeIntegration: false,
           enableRemoteModule: false,
-          preload: path.resolve(__dirname, 'preload.js')
+          preload: path.resolve(__dirname, 'preload.js'),
         }
       })
     }
@@ -274,7 +284,7 @@ function initialize() {
       webPreferences: {
         nodeIntegration: false,
         enableRemoteModule: false,
-        preload: path.resolve(__dirname, 'preload.js')
+        preload: path.resolve(__dirname, 'preload.js'),
       },
       resizable: true,
     }
