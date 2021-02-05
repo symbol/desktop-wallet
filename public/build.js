@@ -20,7 +20,7 @@ let mainWindow = null
 contextMenu({
 	prepend: (defaultActions, params, browserWindow) => [
 		{
-			label: 'Rainbow',
+			label: 'menu',
 			// Only show it when right-clicking images
 			visible: params.mediaType === 'image'
 		}
