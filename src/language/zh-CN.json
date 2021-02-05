@@ -127,7 +127,7 @@
     "backup_mnemonic_phrase": "备份助记词",
     "backup_mnemonic_words": "备份好助记词",
     "backup_profile": "备份个人资料",
-    "backup_profile_explanation_desc": "下载您的个人资料的纸本（pdf）副本。\n您在此配置文件中的所有帐户都将列在下载的文件中。\n当您需要在其他设备或同一设备上还原所有帐户时，此备份文件将使您能够使用。\n请保存在安全的地方，不要与第三方共享，因为它存储了高度敏感的信息。",
+    "backup_profile_explanation_desc": "下载您的个人资料的纸本（PDF）副本。您在此配置文件中的所有帐户都将列在下载的文件中。当您需要在其他设备或同一设备上还原所有帐户时，此备份文件将使您能够使用。<br><br>请保存在安全的地方，不要与第三方共享，因为它存储了高度敏感的信息。",
     "backup_profile_explanation_title": "将您的个人资料备份为纸钱包",
     "balance": "余额",
     "block": "块",

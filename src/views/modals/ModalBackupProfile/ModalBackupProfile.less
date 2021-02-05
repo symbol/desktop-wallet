@@ -16,11 +16,11 @@
 @import '../../resources/css/variables.less';
 
 .body {
-    width: 50%;
+    width: 85%;
     margin: 0 auto;
     .explain {
-        padding: 0.3rem;
-        padding-left: 0.4rem;
+        padding-top: 0.2rem;
+        padding-bottom: 0.2rem;
         font-size: @normalFont;
 
         .subtitle {
@@ -37,4 +37,47 @@
             text-align: justify;
         }
     }
+}
+
+/deep/.ivu-modal {
+    width: 11rem !important;
+}
+
+.modal-footer {
+    width: 100%;
+    text-align: center;
+}
+
+/deep/.ivu-modal-footer {
+    height: max-content;
+    padding-bottom: 0.5rem;
+}
+
+.download-button {
+    height: max-content !important;
+    padding: 0.1rem 0.21rem 0.1rem 0.2rem;
+    display: inline-flex;
+
+    /deep/.ivu-load-loop {
+        margin-right: 0.06rem;
+    }
+
+    /deep/span {
+        display: flex;
+        align-items: center;
+        i {
+            padding-right: 0.08rem;
+            font-size: 0.17rem !important;
+        }
+    }
+}
+
+.download-button:hover,
+.download-button:active {
+    color: white;
+    border-color: white;
+}
+
+.download-button:focus {
+    box-shadow: none;
 }
