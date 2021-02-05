@@ -50,7 +50,10 @@
         "bip32-path": "^0.4.2",
         "call-bind": "^1.0.2",
         "decamelize": "^5.0.0",
+<<<<<<< HEAD
         "electron-context-menu": "^2.4.0",
+=======
+>>>>>>> 843d54dfd9720fc0386b5aaff3fb1c845d0bf696
         "electron-localshortcut": "^3.2.1",
         "file-saver": "^2.0.2",
         "json2csv": "^5.0.1",
