@@ -29,6 +29,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Transaction confirmation modal UI improvement.
 - Profile creation page UI improvement.
 - Aggregate transaction page UI improvement.
+- Changed importance score to show in a percentage format
 
 #### Fixed
 
