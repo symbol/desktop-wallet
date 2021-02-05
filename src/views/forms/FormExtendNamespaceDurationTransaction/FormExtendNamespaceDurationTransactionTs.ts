@@ -35,7 +35,7 @@ import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
     components: { ErrorTooltip, ModalTransactionConfirmation, RentalFee },
     computed: {
         ...mapGetters({
-            namespaces: 'namespace/namespaces',
+            namespaces: 'namespace/ownedNamespaces',
         }),
     },
 })

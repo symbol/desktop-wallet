@@ -35,7 +35,7 @@ export class ViewNamespaceRegistrationTransaction extends TransactionView<Namesp
             subNamespaceName = transaction.namespaceName;
             // - try to identify root namespace by id
             const parentId = transaction.parentId;
-            const namespaces: NamespaceModel[] = this.$store.getters['namespace/namespaces'];
+            const namespaces: NamespaceModel[] = this.$store.getters['namespace/ownedNamespaces'];
             const parent = namespaces.find((n) => n.namespaceIdHex === parentId.toHex() && n.name);
             if (parent) {
                 rootNamespaceName = parent.name;
