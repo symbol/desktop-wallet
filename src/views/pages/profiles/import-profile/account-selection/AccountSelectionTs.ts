@@ -179,7 +179,6 @@ export default class AccountSelectionTs extends Vue {
 
             // execute store actions
             this.$store.dispatch('temporary/RESET_STATE');
-            this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS);
             return this.$router.push({ name: 'profiles.importProfile.finalize' });
         } catch (error) {
             return this.$store.dispatch('notification/ADD_ERROR', error);
