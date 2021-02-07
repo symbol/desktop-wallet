@@ -548,6 +548,7 @@
     "input_mnemonic_tips": "ニーモニックパス語群の 12 または 24 単語をスペース区切りで入力します。ニーモニックパス語群はランダムに選択された 12 または 24 個の単語で構成されます。単語を設定するとアセットが復元されます。",
     "input_namespace_name": "ネームスペース名を入力",
     "invalid_address_book": "アドレス帳が無効です",
+    "invalid_mnemonic_input": "入力されたニーモニックパスフレーズは無効です",
     "invalid_namespace_or_mosaic_id": "モザイクIDまたは名前が無効です",
     "invalid_node": "無効なノード",
     "keep_it_in_a_safe_place_on_the_isolated_network_mnemonics": "安全な場所に保管してください。ニーモニックをメール、フォトアルバム、ソーシャルアプリケーションなどの共有またはリモート環境で共有や保存をしないでください。",
