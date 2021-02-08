@@ -228,7 +228,7 @@
     "enter_your_private_key": "Enter your private key",
     "error_account_name_already_exists": "This account name already exists. Please, enter a unique account name.",
     "error_contact_already_exists": "This contact already exists.",
-    "error_delete_all_peers": "You can not delete all the nodes",
+    "error_delete_all_peers": "You cannot delete all the nodes",
     "error_incorrect_field": "The {_field_} field is incorrect.",
     "error_incorrect_url": "This is not a valid URL",
     "error_invalid_password": "This password is invalid",
@@ -1028,7 +1028,7 @@
     "please_link_your_public_key": "Please relink your public key to generate your private key",
     "linking": "Linking...",
     "stoping": "Stopping...",
-    "remote_keys_linked": "you have remote & vrf keys linked to your account, if you want to activate delegated harvesting, please select a harvesting node and link the node key. If you are harvesting already, please select your harvesting node to update your harvesting status",
-    "encrypt_ledger_keys_on_sign": "As a Ledger user, we need your password to encrypt your remote account and vrf private key",
-    "harvesting_status_not_detected": "We can not detect you harvesting status, please select the node you are harvesting on"
+    "remote_keys_linked": "You have remote & vrf keys linked to your account, if you want to activate delegated harvesting, please select a harvesting node and link the node key. If you are harvesting already, please select your harvesting node to update your harvesting status.",
+    "encrypt_ledger_keys_on_sign": "As a Ledger user, your password is needed to encrypt your remote account and vrf private keys",
+    "harvesting_status_not_detected": "Harvesting status cannot be detected. Please select the node you are harvesting on."
 }
