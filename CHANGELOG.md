@@ -3,13 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.14.0][v0.14.0] - 04-Feb-2021
+## [0.14.0][v0.14.0] - 08-Feb-2021
 
 ### Milestone: [catapult-server@v0.10.0.6](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.6)
 
 **This version only works with the latest testnet (0.10.0.6), it is not backward compatible.**
 
-:warning: **This version resets the previous user profile and locally stored data. Please backup your test accounts before using this version.**
+##
+:warning: **This version(0.14.0) resets the previous user profile and locally stored data. The new HD path will generate different keys and addresses from an existing testnet mnemonic phrases. It is highly recommended to backup your test account profiles before using this version, especially the private keys of your seed(HD) accounts. Old testnet private keys can still be restored / re-imported as privateKey accounts in this new version.**
+##
 
 #### Added
 
@@ -38,8 +40,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Fixed cosigners cannot cosign partial transaction issue.
 - Fixed WebSocket listener not closing properly after switching accounts/nodes issue.
 - Fixed metadata value showing with different encoding issues.
-- Fixed application can be used without accepting T&C issue.
-- Fixed some hint texts not readble issue.
+- Fixed an issue that the application can be used without accepting T&C.
+- Fixed none readable hint texts issue.
 - Fixed delegated harvesting throws Failure_Core_Past_Deadline issue.
 - Fixed the issue that sends transaction button not disabled when the inner transaction is empty in the Aggregate transaction form.
 - Fixed aggrege transaction can be seen from different account issue.
@@ -49,7 +51,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Fixed password is displayed as plain text in updated password form.
 - Fixed duplicated seed account issue.
 - Fixed modal confirmation checkbox and text-overflow issue.
-- Fixed selected signer get reset issue in Aggregate transaction form.
+- Fixed selected signer gets reset issue in Aggregate transaction form.
+- Fixed mosaic fractional part display issue.
 - Other UI / UX fixes.
 
 ## [0.13.8][v0.13.8] - 19-Jan-2021

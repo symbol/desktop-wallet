@@ -548,6 +548,7 @@
     "input_mnemonic_tips": "Enter the 12 or 24 words of your mnemonic passphrase separated by space. The mnemonic passphrase is composed of 12 or 24 randomly chosen words. After setting the words, your assets will be restored.",
     "input_namespace_name": "Enter a namespace name",
     "invalid_address_book": "Invalid address book",
+    "invalid_mnemonic_input": "The entered mnemonic passphrase is invalid",
     "invalid_namespace_or_mosaic_id": "The mosaic id or name is invalid",
     "invalid_node": "Invalid node",
     "keep_it_in_a_safe_place_on_the_isolated_network_mnemonics": "Keep it in a safe place. Do not share and store mnemonics in any shared or remote environment, such as emails, photo albums, social applications, etc.",
