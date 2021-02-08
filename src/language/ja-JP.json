@@ -758,7 +758,7 @@
     "placeholder_address_or_public_key": "アドレスまたは公開鍵",
     "placeholder_transaction_uri": "有効なトランザクション URI を入力してください",
     "please_accurately_copy_the_safety_backup_mnemonic": "正確にコピーして、ニーモニックを安全にバックアップしてください",
-    "please_approve": "承認してください",
+    "i_accept": "受け入れる",
     "terms": "規約",
     "conditions": "条件",
     "please_backup_mnemonic_passphrase": "必ずニーモニックパス語群のバックアップコピーを作成してください。プロファイルを復元するときは、このバックアップが必要になります。",

@@ -754,7 +754,7 @@
     "placeholder_address_or_public_key": "地址或公钥",
     "placeholder_transaction_uri": "输入有效的交易URI",
     "please_accurately_copy_the_safety_backup_mnemonic": "请准确抄写安全备份助记词",
-    "please_approve": "在开始使用该应用之前，请先批",
+    "i_accept": "我接受",
     "terms": "条款",
     "conditions": "条件",
     "please_backup_mnemonic_passphrase": "请将你的记助词离线写在纸上并做多份保存，或者离线的加密磁盘和存储介质等",

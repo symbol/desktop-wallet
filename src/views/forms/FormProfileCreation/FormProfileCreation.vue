@@ -121,7 +121,7 @@
                     <div class="form-line-container form-row buttons-row mt-3">
                         <button
                             type="button"
-                            class="solid-button button-style create-account-stylebutton create-account-style"
+                            class="solid-button button-style create-account-style"
                             @click="$router.push({ name: 'profiles.importProfile.importStrategy' })"
                         >
                             {{ $t('back') }}
@@ -171,10 +171,6 @@ export default class FormProfileCreation extends FormProfileCreationTs {}
 
 .form-wrapper {
     width: 100%;
-}
-
-.create-account-style {
-    width: 150px;
 }
 
 /deep/ .form-row {

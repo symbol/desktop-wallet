@@ -21,10 +21,10 @@
         </div>
         <div class="buttons clear">
             <div class="float-right mt-3">
-                <button type="button" class="solid-button button-style fat-button create-account-style" @click="$emit('cancelled')">
-                    {{ $t('previous') }}
+                <button type="button" class="solid-button button-style create-account-style" @click="$emit('cancelled')">
+                    {{ $t('back') }}
                 </button>
-                <button type="submit" class="inverted-button button-style fat-button create-account-style" @click="processVerification()">
+                <button type="submit" class="inverted-button button-style create-account-style" @click="processVerification()">
                     {{ $t('next') }}
                 </button>
             </div>
