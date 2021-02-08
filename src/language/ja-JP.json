@@ -1028,5 +1028,6 @@
     "linking": "リンク中...",
     "stoping": "停止中...",
     "remote_keys_linked": "アカウントにリモートキーと VRF キーがリンクされていて、デリゲートハーベスティングを有効化する場合は、ハーベスティングノードを選択してノードキーをリンクしてください。すでにハーベスティングしている場合は、ハーベスティングノードを選択してハーベスティングステータスを更新してください",
-    "encrypt_ledger_keys_on_sign": "Ledger ユーザとして、リモートアカウントと VRF 秘密鍵を暗号化するためのパスワードが必要です"
+    "encrypt_ledger_keys_on_sign": "Ledger ユーザとして、リモートアカウントと VRF 秘密鍵を暗号化するためのパスワードが必要です",
+    "harvesting_status_not_detected": "We can not detect you harvesting status, please select the node you are harvesting on"
 }
