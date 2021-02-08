@@ -214,8 +214,6 @@ export class FormProfileCreationTs extends Vue {
         this.$store.dispatch('profile/SET_CURRENT_PROFILE', account);
         this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password);
         if (!this.isLedger) {
-            this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS);
-
             // flush and continue
             this.$router.push({ name: this.nextPage });
         } else {
