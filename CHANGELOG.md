@@ -9,7 +9,9 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 **This version only works with the latest testnet (0.10.0.6), it is not backward compatible.**
 
-:warning: **This version resets the previous user profile and locally stored data. The new HD path will generate different public keys and addresses from an existing testnet mnemonic phrases. It is highly recommended to backup your test accounts before using this version, especially the private keys of your seed(HD) accounts which can be restored / re-imported as privateKey accounts in this new version**
+##
+:warning: **This version(0.14.0) resets the previous user profile and locally stored data. The new HD path will generate different keys and addresses from an existing testnet mnemonic phrases. It is highly recommended to backup your test account profiles before using this version, especially the private keys of your seed(HD) accounts. Old testnet private keys can still be restored / re-imported as privateKey accounts in this new version.**
+##
 
 #### Added
 
