@@ -82,8 +82,24 @@ export class FormProfileUnlockTs extends Vue {
      */
     @Prop({ default: false }) hideSubmit: boolean;
 
+    /**
+     * Whether to focus password input when mounted
+     */
+    @Prop({ default: true }) focus: boolean;
+
+    /**
+     * Whether to show a loading animation on confirm button and disable input
+     */
+    @Prop({ default: false }) isLoading: boolean;
+
     /// region computed properties getter/setter
     /// end-region computed properties getter/setter
+
+    public mounted(): void {
+        if (this.focus) {
+            this.$nextTick().then(() => (this.$refs['passwordInput'] as any).focus());
+        }
+    }
 
     /**
      * Attempt decryption of private key to unlock
