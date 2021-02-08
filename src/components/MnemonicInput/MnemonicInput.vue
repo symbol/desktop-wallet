@@ -11,7 +11,7 @@
                 maxlength="50"
                 @paste.prevent="handlePaste($event)"
                 @keyup.space="addWord"
-                @keyup.delete="deleteWord"
+                @keydown.delete="deleteWord"
             />
         </div>
         <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" />
