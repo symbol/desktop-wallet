@@ -16,9 +16,7 @@
                         <div class="address">{{ currentSignerAddress.pretty() }}</div>
                     </div>
                     <div class="copy-button">
-                        <ButtonCopyToClipboard :value="currentSignerAddress.plain()">
-                            <img class="pointer" src="@/views/resources/img/account/cloneIcon_white.svg" />
-                        </ButtonCopyToClipboard>
+                        <ButtonCopyToClipboard :value="currentSignerAddress.plain()" type="icon-white" />
                     </div>
                 </div>
                 <div v-if="networkCurrency" class="XEM_amount overflow_ellipsis">

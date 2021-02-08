@@ -18,7 +18,7 @@
                             <div class="mnemonic-list">
                                 <span v-for="(m, index) in mnemonicWordsList" :key="index">{{ m }}</span>
                             </div>
-                            <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" />
+                            <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" type="icon-black" />
                         </div>
                     </div>
                 </MnemonicDisplay>
