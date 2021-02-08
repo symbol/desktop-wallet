@@ -613,7 +613,7 @@
     "mnemonic_copy": "Copy",
     "mnemonic_generation_error": "Something went wrong when generating your profile seed.",
     "mnemonic_inconsistency": "Mnemonic is not correct",
-    "mnemonic_input_error": "Mnemonic input error",
+    "mnemonic_correct": "Mnemonic is correct",
     "mnemonic_not_found": "Cannot find mnemonics!",
     "mnemonic_phrase": "Mnemonic Passphrase",
     "mnemonic_qr_action_desc": "Click continue to set imported Mnemonic Words to the text area.",

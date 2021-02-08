@@ -1,5 +1,5 @@
 <template>
-    <div class="mnemonic_container" @keyup.enter="processVerification()">
+    <div class="mnemonic_container" @keyup.enter="next()">
         <div class="mnemonicWordDiv clear scroll">
             <draggable v-model="selectedWordIndexes" ghost-class="ghost" @end="drag = false">
                 <span v-for="index in selectedWordIndexes" :key="index">
@@ -24,7 +24,12 @@
                 <button type="button" class="solid-button button-style create-account-style" @click="$emit('cancelled')">
                     {{ $t('back') }}
                 </button>
-                <button type="submit" class="inverted-button button-style create-account-style" @click="processVerification()">
+                <button
+                    type="submit"
+                    class="inverted-button button-style create-account-style"
+                    :disabled="!correctWordsAreSelected()"
+                    @click="next()"
+                >
                     {{ $t('next') }}
                 </button>
             </div>

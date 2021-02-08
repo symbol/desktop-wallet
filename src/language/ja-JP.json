@@ -613,7 +613,7 @@
     "mnemonic_copy": "コピー",
     "mnemonic_generation_error": "プロファイルシードの生成に問題が発生しました。",
     "mnemonic_inconsistency": "ニーモニックが正しくありません",
-    "mnemonic_input_error": "ニーモニックの入力エラー",
+    "mnemonic_correct": "ニーモニックは正しい",
     "mnemonic_not_found": "ニーモニックが見つかりません！",
     "mnemonic_phrase": "ニーモニックパス語群",
     "mnemonic_qr_action_desc": "続行 をクリックして、インポートされたニーモニック語群をテキストエリアに設定します。",
