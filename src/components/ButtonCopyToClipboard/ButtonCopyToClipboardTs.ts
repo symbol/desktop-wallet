@@ -6,7 +6,7 @@ import { NotificationType } from '@/core/utils/NotificationType';
 export class ButtonCopyToClipboardTs extends Vue {
     @Prop({ default: null }) value: string;
 
-    @Prop({ default: 'button' }) type: 'button' | 'image' | 'icon';
+    @Prop({ default: 'button' }) type: 'button' | 'icon-black' | 'icon-white' | 'icon-gray';
 
     @Prop({ default: 'mnemonic_copy' }) readonly tooltipText!: string;
 

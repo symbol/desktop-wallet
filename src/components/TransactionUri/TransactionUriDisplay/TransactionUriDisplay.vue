@@ -15,7 +15,7 @@
 
         <LongTextDisplay :text="transactionURI" :pop-tip-title="$t('transaction_uri')" pop-tip-width="600" right-part-size="10" />
 
-        <ButtonCopyToClipboard :value="transactionURI" type="icon" />
+        <ButtonCopyToClipboard :value="transactionURI" type="icon-gray" />
     </div>
 </template>
 
