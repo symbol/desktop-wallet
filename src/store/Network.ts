@@ -255,15 +255,18 @@ export default {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const networkService = new NetworkService();
             const nodeService = new NodeService();
+            if (!newCandidate) {
+                newCandidate = networkConfig.nodes[Math.floor(Math.random() * networkConfig.nodes.length)].url;
+            }
             const networkModelResult = await networkService
                 .getNetworkModel(newCandidate, (currentProfile && currentProfile.generationHash) || undefined)
                 .toPromise();
             if (!networkModelResult) {
-                throw new Error('Connect error, active peer cannot be found');
+                await dispatch('CONNECT');
             }
             const { networkModel, repositoryFactory, fallback } = networkModelResult;
             if (fallback) {
-                throw new Error('Connection Error.');
+                await dispatch('CONNECT');
             }
             const oldGenerationHash = getters['generationHash'];
             const getNodesPromise = nodeService.getNodes(repositoryFactory, networkModel.url).toPromise();
