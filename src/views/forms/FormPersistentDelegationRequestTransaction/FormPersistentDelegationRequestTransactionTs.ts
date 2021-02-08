@@ -734,4 +734,14 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public get isLedger(): boolean {
         return this.currentAccount.type == AccountType.LEDGER;
     }
+
+    public get isPublicAndPrivateKeysLinked(): boolean {
+        if (
+            (this.isAccountKeyLinked && !this.currentSignerHarvestingModel?.encRemotePrivateKey) ||
+            (this.isVrfKeyLinked && !this.currentSignerHarvestingModel?.encVrfPrivateKey)
+        ) {
+            return false;
+        }
+        return true;
+    }
 }
