@@ -548,6 +548,7 @@
     "input_mnemonic_tips": "请在输入单词之间用空格隔开，助记词数量为12或24个的英文单词。助记词是遵循HD-WALLET协议的种子文件，由12或24个随机单词成，导入本文件后，将会恢复你种子下的所有资产。导入记助词后，将会被你上一步设置的密码保存在你的本地设备中，使用中请注意网络安全！",
     "input_namespace_name": "请输入名称空间名称",
     "invalid_address_book": "通讯录无效",
+    "invalid_mnemonic_input": "输入的助记词口令无效",
     "invalid_namespace_or_mosaic_id": "这不是合法的马赛克哈希或命名空间",
     "invalid_node": "节点连接失败",
     "keep_it_in_a_safe_place_on_the_isolated_network_mnemonics": "妥善保管至隔离网络的安全地方,请勿将助记词在联网环境下分享和存储,比如邮件、相册、社交应用等",
