@@ -225,7 +225,6 @@ export class FormProfileCreationTs extends Vue {
                     this.$store.dispatch('account/SET_CURRENT_ACCOUNT', res);
                     this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', [res.id]);
                     this.$store.dispatch('temporary/RESET_STATE');
-                    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS);
                     this.$router.push({ name: 'profiles.accessLedger.finalize' });
                 })
                 .catch((error) => {
