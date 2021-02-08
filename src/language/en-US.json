@@ -127,7 +127,7 @@
     "backup_mnemonic_phrase": "Backup Phrase",
     "backup_mnemonic_words": "Backup mnemonic words",
     "backup_profile": "Back up Profile",
-    "backup_profile_explanation_desc": "Download a paper(pdf) copy of your profile. All of your accounts inside this profile will be listed in the downloaded file. This backup file will enable you when you want to restore all of your accounts in other devices or in the same device when you need to. Please keep them in a safe place and do not share with third parties since it stores highly sensitive information.",
+    "backup_profile_explanation_desc": "Download a paper (PDF) copy of your profile. All of your accounts inside this profile will be listed in the downloaded file. This backup file will enable you to restore all of your accounts. <br><br> Please keep them in a safe place and do not share with third parties since it stores highly sensitive information.",
     "backup_profile_explanation_title": "Back up Your Profile as Paper Wallet",
     "balance": "Balance",
     "block": "Block",
