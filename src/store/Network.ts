@@ -291,7 +291,6 @@ export default {
                 if (fallback) {
                     throw new Error('Connection Error.');
                 }
-                return;
             }
         },
         async CONNECT_TO_A_VALID_NODE({ getters, commit, dispatch, rootGetters }, networkModelResult: any) {
