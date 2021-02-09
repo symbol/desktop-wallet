@@ -43,6 +43,7 @@ import { URLInfo } from '@/core/utils/URLInfo';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { networkConfig } from '@/config';
+import { NotificationType } from '@/core/utils/NotificationType';
 const Lock = AwaitLock.create();
 
 /// region custom types
@@ -251,23 +252,38 @@ export default {
             await Lock.uninitialize(callback, { getters });
         },
 
-        async CONNECT({ commit, dispatch, getters, rootGetters }, newCandidate: string | undefined) {
+        async CONNECT({ dispatch, rootGetters }, newCandidate: string | undefined) {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const networkService = new NetworkService();
-            const nodeService = new NodeService();
-            if (!newCandidate) {
-                newCandidate = networkConfig.nodes[Math.floor(Math.random() * networkConfig.nodes.length)].url;
-            }
-            const networkModelResult = await networkService
+            let nodeNetworkModelResult: any;
+            nodeNetworkModelResult = await networkService
                 .getNetworkModel(newCandidate, (currentProfile && currentProfile.generationHash) || undefined)
                 .toPromise();
-            if (!networkModelResult) {
-                await dispatch('CONNECT');
+            if (!nodeNetworkModelResult) {
+                const nodesList = networkConfig.nodes;
+                nodesList.forEach(async (node) => {
+                    nodeNetworkModelResult = await networkService
+                        .getNetworkModel(node.url, (currentProfile && currentProfile.generationHash) || undefined)
+                        .toPromise();
+                    if (nodeNetworkModelResult) {
+                        await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
+                    } else {
+                        return;
+                    }
+                });
+                throw new Error('Connect error, active peer cannot be found');
+            } else {
+                await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
             }
+        },
+        async CONNECT_TO_A_VALID_NODE({ getters, commit, dispatch, rootGetters }, networkModelResult: any) {
+            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const { networkModel, repositoryFactory, fallback } = networkModelResult;
+            console.log(networkModel.nodeInfo.friendlyName);
             if (fallback) {
-                await dispatch('CONNECT');
+                throw new Error('Connection Error.');
             }
+            const nodeService = new NodeService();
             const oldGenerationHash = getters['generationHash'];
             const getNodesPromise = nodeService.getNodes(repositoryFactory, networkModel.url).toPromise();
             const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getChainInfo().toPromise();
@@ -322,7 +338,8 @@ export default {
 
         async SET_CURRENT_PEER({ dispatch }, currentPeerUrl) {
             if (!UrlValidator.validate(currentPeerUrl)) {
-                throw Error('Cannot change node. URL is not valid: ' + currentPeerUrl);
+                console.log('Cannot change node. URL is not valid: ' + currentPeerUrl);
+                return await dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE, { root: true });
             }
 
             // - show loading overlay
