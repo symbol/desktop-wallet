@@ -13,7 +13,12 @@
                     <SignerSelector v-if="!hideSigner" v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
                     <!-- Transfer recipient input field -->
-                    <RecipientInput v-model="formItems.recipientRaw" style="margin-bottom: 0.5rem;" @input="onChangeRecipient" />
+                    <RecipientInput
+                        v-model="formItems.recipientRaw"
+                        style="margin-bottom: 0.5rem;"
+                        :disabled="currentAccount.isMultisig"
+                        @input="onChangeRecipient"
+                    />
 
                     <!-- Mosaics attachments input fields -->
                     <div v-for="(attachedMosaic, index) in formItems.attachedMosaics" :key="index">
@@ -65,6 +70,7 @@
                         :hide-submit="hideSubmit"
                         :calculated-recommended-fee="calculatedRecommendedFee"
                         :calculated-highest-fee="calculatedHighestFee"
+                        :disable-submit="currentAccount.isMultisig"
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
                     />
