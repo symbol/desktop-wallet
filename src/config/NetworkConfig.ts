@@ -54,7 +54,7 @@ const defaultNetworkConfig: NetworkConfig = {
     explorerUrl: 'http://explorer.testnet.symboldev.network/',
     faucetUrl: 'http://faucet.testnet.symboldev.network/',
     defaultNetworkType: 152,
-    defaultNodeUrl: 'http://api-01.eu-west-1.testnet.symboldev.network:3000',
+    defaultNodeUrl: '',
     networkConfigurationDefaults: {
         maxMosaicDivisibility: 6,
         namespaceGracePeriodDuration: 2592000,
@@ -83,7 +83,7 @@ const defaultNetworkConfig: NetworkConfig = {
         { friendlyName: 'API US West 1', roles: 2, url: 'http://api-01.us-west-1.testnet.symboldev.network:3000' },
     ],
 };
-
+defaultNetworkConfig.defaultNodeUrl = defaultNetworkConfig.nodes[Math.floor(Math.random() * defaultNetworkConfig.nodes.length)].url;
 const resolvedNetworkConfig: NetworkConfig = window['networkConfig'] || defaultNetworkConfig;
 console.log('networkConfig resolved!', resolvedNetworkConfig);
 export const networkConfig = resolvedNetworkConfig;

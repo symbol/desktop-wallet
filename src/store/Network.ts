@@ -256,33 +256,47 @@ export default {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const networkService = new NetworkService();
             let nodeNetworkModelResult: any;
-            nodeNetworkModelResult = await networkService
-                .getNetworkModel(newCandidate, (currentProfile && currentProfile.generationHash) || undefined)
-                .toPromise();
-            if (!nodeNetworkModelResult) {
-                const nodesList = networkConfig.nodes;
-                nodesList.forEach(async (node) => {
-                    nodeNetworkModelResult = await networkService
-                        .getNetworkModel(node.url, (currentProfile && currentProfile.generationHash) || undefined)
-                        .toPromise();
-                    if (nodeNetworkModelResult) {
-                        await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
-                    } else {
-                        return;
-                    }
-                });
-                throw new Error('Connect error, active peer cannot be found');
+            if (newCandidate) {
+                nodeNetworkModelResult = await networkService
+                    .getNetworkModel(newCandidate, (currentProfile && currentProfile.generationHash) || undefined)
+                    .toPromise();
+                if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel) {
+                    await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
+                } else {
+                    return await this.$store.dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE, { root: true });
+                }
+                return;
             } else {
-                await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
+                let nodesList = networkConfig.nodes;
+                let notFound = true;
+                let inx = 0;
+                while (notFound) {
+                    inx = Math.floor(Math.random() * nodesList.length);
+                    nodeNetworkModelResult = await networkService
+                        .getNetworkModel(nodesList[inx].url, (currentProfile && currentProfile.generationHash) || undefined)
+                        .toPromise();
+                    if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel && nodeNetworkModelResult.repositoryFactory) {
+                        await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
+                        notFound = false;
+                        return;
+                    } else {
+                        nodesList = nodesList.splice(inx, 1);
+                        continue;
+                    }
+                }
+                if (notFound) {
+                    throw new Error('Connect error, active peer cannot be found');
+                }
+                const { fallback } = nodeNetworkModelResult;
+                if (fallback) {
+                    throw new Error('Connection Error.');
+                }
+                return;
             }
         },
         async CONNECT_TO_A_VALID_NODE({ getters, commit, dispatch, rootGetters }, networkModelResult: any) {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
-            const { networkModel, repositoryFactory, fallback } = networkModelResult;
-            console.log(networkModel.nodeInfo.friendlyName);
-            if (fallback) {
-                throw new Error('Connection Error.');
-            }
+            const { networkModel, repositoryFactory } = networkModelResult;
             const nodeService = new NodeService();
             const oldGenerationHash = getters['generationHash'];
             const getNodesPromise = nodeService.getNodes(repositoryFactory, networkModel.url).toPromise();
