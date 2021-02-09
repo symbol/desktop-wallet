@@ -275,16 +275,16 @@ export default {
                     nodeNetworkModelResult = await networkService
                         .getNetworkModel(nodesList[inx].url, (currentProfile && currentProfile.generationHash) || undefined)
                         .toPromise();
-                    if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel && nodeNetworkModelResult.repositoryFactory) {
+                    if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         notFound = false;
-                        return;
+                        break;
                     } else {
                         nodesList = nodesList.splice(inx, 1);
                         continue;
                     }
                 }
-                if (notFound) {
+                if (!nodeNetworkModelResult.networkModel) {
                     throw new Error('Connect error, active peer cannot be found');
                 }
                 const { fallback } = nodeNetworkModelResult;
