@@ -139,6 +139,9 @@ export class AccountDetailsPageTs extends Vue {
      * Error notification handler
      */
     private errorNotificationHandler(error: any) {
+        if (error.message && error.message.includes('cannot open device with path')) {
+            error.errorCode = 'ledger_connected_other_app';
+        }
         if (error.errorCode) {
             switch (error.errorCode) {
                 case 'NoDevice':
@@ -146,6 +149,9 @@ export class AccountDetailsPageTs extends Vue {
                     return;
                 case 'ledger_not_supported_app':
                     this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_supported_app');
+                    return;
+                case 'ledger_connected_other_app':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_connected_other_app');
                     return;
                 case 'ledger_not_correct_account':
                     this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_correct_account');
