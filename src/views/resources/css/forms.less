@@ -355,34 +355,10 @@
     overflow-y: hidden;
 }
 
-.select-style {
-    height: @formFieldHeight;
-    line-height: @formFieldHeight;
-    display: block;
-    font-size: @smallFont !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding-left: 0.08rem;
-    padding-right: 0.24rem;
-    border-radius: 0.04rem;
-    background: @grayLightest;
-    border-radius: 3.42857px;
-
-    .ivu-select-selection {
-        box-shadow: unset;
-        border: unset;
-        background: @grayLightest;
-        border-radius: 3.4px;
-    }
-
-    .ivu-select-selected-value {
-        font-size: @smallFont !important;
-        padding-left: 0;
-        height: @formFieldHeight;
-        line-height: @formFieldHeight;
-        color: @purpleDark;
-    }
+.ivu-select-dropdown {
+    background-color: @grayLightest;
+    margin: 0 !important;
+    padding: 0 !important;
 
     .ivu-select-item-selected {
         color: @primary;
@@ -391,26 +367,43 @@
     .ivu-select-item:hover {
         background-color: @white;
     }
+}
 
-    .ivu-select-dropdown {
-        min-width: unset !important;
-        left: 0px !important;
-        width: 100%;
-        background-color: @grayLightest;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
+.ivu-select-placeholder {
+    font-size: @smallFont;
+    padding-left: 0;
+    height: @formFieldHeight;
+    line-height: @formFieldHeight;
+    color: #c1b4b4 !important;
+}
 
-    .ivu-select-arrow {
-    }
+.ivu-select-selection {
+    box-shadow: unset !important;
+    border: unset;
+    background: @grayLightest;
+    border-radius: 3.4px;
+}
 
-    .ivu-select-placeholder {
-        font-size: @smallFont;
-        padding-left: 0;
-        height: @formFieldHeight;
-        line-height: @formFieldHeight;
-        color: #c1b4b4 !important;
-    }
+.ivu-select-selected-value {
+    font-size: @smallFont !important;
+    padding-left: 0.16rem !important;
+    height: @formFieldHeight;
+    line-height: @formFieldHeight;
+    color: @purpleDark;
+}
+
+.select-style {
+    height: @formFieldHeight;
+    line-height: @formFieldHeight;
+    display: block;
+    font-size: @smallFont !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 0.24rem;
+    border-radius: 0.04rem;
+    background: @grayLightest;
+    border-radius: 3.42857px;
 }
 
 .ivu-checkbox-inner {
