@@ -206,6 +206,7 @@ export class FormProfileCreationTs extends Vue {
             networkType: this.formItems.networkType,
             generationHash: this.generationHash,
             termsAndConditionsApproved: false,
+            selectedNodeToConnect: '',
         };
         // use repository for storage
         this.accountService.saveProfile(account);

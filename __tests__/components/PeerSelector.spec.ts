@@ -33,7 +33,7 @@ beforeEach(() => {
             },
             isConnected: () => true,
             networkType: () => null,
-            repositoryFactory: () => NetworkService.createRepositoryFactory(networkConfig.defaultNodeUrl),
+            repositoryFactory: () => NetworkService.createRepositoryFactory(networkConfig.randomNodeUrl),
             generationHash: () => 123,
             knowNodes: () => [
                 { url: 'http://api-01.us-west-1.0941-v1.symboldev.network:3000', friendlyName: '614084b4', isDefault: true },
