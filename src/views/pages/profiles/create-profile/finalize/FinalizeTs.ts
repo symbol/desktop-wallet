@@ -19,7 +19,6 @@ import { NetworkType, Password } from 'symbol-sdk';
 import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 // internal dependencies
 import { AccountService } from '@/services/AccountService';
-import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { ProfileService } from '@/services/ProfileService';
 
