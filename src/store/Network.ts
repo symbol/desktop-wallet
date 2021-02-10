@@ -43,6 +43,8 @@ import { URLInfo } from '@/core/utils/URLInfo';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { networkConfig } from '@/config';
+import { NotificationType } from '@/core/utils/NotificationType';
+import { ProfileService } from '@/services/ProfileService';
 const Lock = AwaitLock.create();
 
 /// region custom types
@@ -114,7 +116,7 @@ interface NetworkState {
     selectedPeerNode: NodeInfo;
 }
 
-const defaultPeer = URLHelpers.formatUrl(networkConfig.defaultNodeUrl);
+const defaultPeer = URLHelpers.formatUrl(networkConfig.randomNodeUrl);
 
 const networkState: NetworkState = {
     initialized: false,
@@ -124,7 +126,7 @@ const networkState: NetworkState = {
     generationHash: undefined,
     networkModel: undefined,
     networkConfiguration: networkConfig.networkConfigurationDefaults,
-    repositoryFactory: NetworkService.createRepositoryFactory(networkConfig.defaultNodeUrl),
+    repositoryFactory: NetworkService.createRepositoryFactory(networkConfig.randomNodeUrl),
     listener: undefined,
     transactionFees: undefined,
     isConnected: false,
@@ -237,7 +239,6 @@ export default {
             const callback = async () => {
                 // commit('knowNodes', new NodeService().getKnowNodesOnly())
                 await dispatch('CONNECT');
-                dispatch('REST_NETWORK_RENTAL_FEES');
                 // update store
                 commit('setInitialized', true);
             };
@@ -252,20 +253,56 @@ export default {
             await Lock.uninitialize(callback, { getters });
         },
 
-        async CONNECT({ commit, dispatch, getters, rootGetters }, newCandidate: string | undefined) {
+        async CONNECT({ dispatch, rootGetters }, newCandidate: string | undefined) {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const networkService = new NetworkService();
+            let nodeNetworkModelResult: any;
+            if (newCandidate) {
+                nodeNetworkModelResult = await networkService
+                    .getNetworkModel(newCandidate, (currentProfile && currentProfile.generationHash) || undefined)
+                    .toPromise();
+                if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel) {
+                    await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
+                } else {
+                    return await this.$store.dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE, { root: true });
+                }
+                return;
+            } else {
+                let nodesList = networkConfig.nodes;
+                let notFound = true;
+                let inx = 0;
+                while (notFound) {
+                    inx = Math.floor(Math.random() * nodesList.length);
+                    nodeNetworkModelResult = await networkService
+                        .getNetworkModel(
+                            currentProfile && currentProfile.selectedNodeToConnect
+                                ? currentProfile.selectedNodeToConnect
+                                : nodesList[inx].url,
+                            (currentProfile && currentProfile.generationHash) || undefined,
+                        )
+                        .toPromise();
+                    if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
+                        await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
+                        notFound = false;
+                        break;
+                    } else {
+                        nodesList = nodesList.splice(inx, 1);
+                        continue;
+                    }
+                }
+                if (!nodeNetworkModelResult.networkModel) {
+                    throw new Error('Connect error, active peer cannot be found');
+                }
+                const { fallback } = nodeNetworkModelResult;
+                if (fallback) {
+                    throw new Error('Connection Error.');
+                }
+            }
+        },
+        async CONNECT_TO_A_VALID_NODE({ getters, commit, dispatch, rootGetters }, networkModelResult: any) {
+            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
+            const { networkModel, repositoryFactory } = networkModelResult;
             const nodeService = new NodeService();
-            const networkModelResult = await networkService
-                .getNetworkModel(newCandidate, (currentProfile && currentProfile.generationHash) || undefined)
-                .toPromise();
-            if (!networkModelResult) {
-                throw new Error('Connect error, active peer cannot be found');
-            }
-            const { networkModel, repositoryFactory, fallback } = networkModelResult;
-            if (fallback) {
-                throw new Error('Connection Error.');
-            }
             const oldGenerationHash = getters['generationHash'];
             const getNodesPromise = nodeService.getNodes(repositoryFactory, networkModel.url).toPromise();
             const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getChainInfo().toPromise();
@@ -275,6 +312,10 @@ export default {
 
             const currentPeer = URLHelpers.getNodeUrl(networkModel.url);
             commit('currentPeer', currentPeer);
+            if (currentProfile) {
+                const profileService: ProfileService = new ProfileService();
+                profileService.updateSelectedNode(currentProfile, currentPeer);
+            }
             commit('networkModel', networkModel);
             commit('networkConfiguration', networkModel.networkConfiguration);
             commit('transactionFees', networkModel.transactionFees);
@@ -320,7 +361,8 @@ export default {
 
         async SET_CURRENT_PEER({ dispatch }, currentPeerUrl) {
             if (!UrlValidator.validate(currentPeerUrl)) {
-                throw Error('Cannot change node. URL is not valid: ' + currentPeerUrl);
+                console.log('Cannot change node. URL is not valid: ' + currentPeerUrl);
+                return await dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE, { root: true });
             }
 
             // - show loading overlay
@@ -362,18 +404,11 @@ export default {
             }
         },
 
-        REST_NETWORK_RENTAL_FEES({ rootGetters, dispatch }) {
+        async REST_NETWORK_RENTAL_FEES({ rootGetters, commit }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
-            repositoryFactory
-                .createNetworkRepository()
-                .getRentalFees()
-                .subscribe((rentalFee: RentalFees) => {
-                    dispatch('SET_RENTAL_FEE_ESTIMATE', rentalFee);
-                });
-        },
-
-        SET_RENTAL_FEE_ESTIMATE({ commit }, rentalFee) {
-            commit('rentalFeeEstimation', rentalFee);
+            const getRentalFeesPromise = repositoryFactory.createNetworkRepository().getRentalFees().toPromise();
+            const rentalFees = await getRentalFeesPromise;
+            commit('rentalFeeEstimation', rentalFees);
         },
         SET_NETWORK_IS_NOT_MATCHING_PROFILE({ commit }, networkIsNotMatchingProfile) {
             commit('networkIsNotMatchingProfile', networkIsNotMatchingProfile);

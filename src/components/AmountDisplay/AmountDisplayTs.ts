@@ -52,7 +52,7 @@ export class AmountDisplayTs extends Vue {
         }
         const decimals = this.decimals === undefined ? this.networkConfiguration.maxMosaicDivisibility || 6 : this.decimals;
         // remove leftmost-0 and rightmost-0
-        return Number(rest.toFixed(decimals)).toLocaleString().replace(/^0/, '');
+        return rest.toFixed(decimals).toLocaleString().replace(/^0/, '');
     }
 
     /**

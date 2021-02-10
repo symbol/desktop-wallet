@@ -140,6 +140,9 @@ export class FormProfileCreationTs extends Vue {
      * Error notification handler
      */
     private errorNotificationHandler(error: any) {
+        if (error.message && error.message.includes('cannot open device with path')) {
+            error.errorCode = 'ledger_connected_other_app';
+        }
         if (error.errorCode) {
             switch (error.errorCode) {
                 case 'NoDevice':
@@ -147,6 +150,9 @@ export class FormProfileCreationTs extends Vue {
                     return;
                 case 'ledger_not_supported_app':
                     this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_supported_app');
+                    return;
+                case 'ledger_connected_other_app':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_connected_other_app');
                     return;
                 case 26628:
                     this.$store.dispatch('notification/ADD_ERROR', 'ledger_device_locked');
@@ -206,6 +212,7 @@ export class FormProfileCreationTs extends Vue {
             networkType: this.formItems.networkType,
             generationHash: this.generationHash,
             termsAndConditionsApproved: false,
+            selectedNodeToConnect: '',
         };
         // use repository for storage
         this.accountService.saveProfile(account);
@@ -214,8 +221,6 @@ export class FormProfileCreationTs extends Vue {
         this.$store.dispatch('profile/SET_CURRENT_PROFILE', account);
         this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password);
         if (!this.isLedger) {
-            this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS);
-
             // flush and continue
             this.$router.push({ name: this.nextPage });
         } else {

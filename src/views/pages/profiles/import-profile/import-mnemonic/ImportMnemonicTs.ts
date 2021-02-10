@@ -126,7 +126,6 @@ export default class ImportMnemonicTs extends Vue {
             this.profileService.updateSeed(this.currentProfile, encSeed);
 
             // update state
-            this.$store.dispatch('notification/ADD_SUCCESS', this.$t('generate_entropy_increase_success'));
             this.$store.dispatch('temporary/SET_MNEMONIC', mnemonic.plain);
 
             // redirect

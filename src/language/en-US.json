@@ -127,7 +127,7 @@
     "backup_mnemonic_phrase": "Backup Phrase",
     "backup_mnemonic_words": "Backup mnemonic words",
     "backup_profile": "Back up Profile",
-    "backup_profile_explanation_desc": "Download a paper(pdf) copy of your profile. All of your accounts inside this profile will be listed in the downloaded file. This backup file will enable you when you want to restore all of your accounts in other devices or in the same device when you need to. Please keep them in a safe place and do not share with third parties since it stores highly sensitive information.",
+    "backup_profile_explanation_desc": "Download a paper (PDF) copy of your profile. All of your accounts inside this profile will be listed in the downloaded file. This backup file will enable you to restore all of your accounts. <br><br> Please keep them in a safe place and do not share with third parties since it stores highly sensitive information.",
     "backup_profile_explanation_title": "Back up Your Profile as Paper Wallet",
     "balance": "Balance",
     "block": "Block",
@@ -228,7 +228,7 @@
     "enter_your_private_key": "Enter your private key",
     "error_account_name_already_exists": "This account name already exists. Please, enter a unique account name.",
     "error_contact_already_exists": "This contact already exists.",
-    "error_delete_all_peers": "You can not delete all the nodes",
+    "error_delete_all_peers": "You cannot delete all the nodes",
     "error_incorrect_field": "The {_field_} field is incorrect.",
     "error_incorrect_url": "This is not a valid URL",
     "error_invalid_password": "This password is invalid",
@@ -548,6 +548,7 @@
     "input_mnemonic_tips": "Enter the 12 or 24 words of your mnemonic passphrase separated by space. The mnemonic passphrase is composed of 12 or 24 randomly chosen words. After setting the words, your assets will be restored.",
     "input_namespace_name": "Enter a namespace name",
     "invalid_address_book": "Invalid address book",
+    "invalid_mnemonic_input": "The entered mnemonic passphrase is invalid",
     "invalid_namespace_or_mosaic_id": "The mosaic id or name is invalid",
     "invalid_node": "Invalid node",
     "keep_it_in_a_safe_place_on_the_isolated_network_mnemonics": "Keep it in a safe place. Do not share and store mnemonics in any shared or remote environment, such as emails, photo albums, social applications, etc.",
@@ -562,6 +563,7 @@
     "label_postfix_multisig": "(Multisig)",
     "label_signed_by": "Signed by co-signatory=>",
     "latest_news_articles": "Latest news and articles",
+    "ledger_connected_other_app": "Another app is already connected to your Ledger device. Please close it then try again.",
     "ledger_correct_account": "You are using the correct Symbol Ledger account",
     "ledger_description": "Import a wallet from a Ledger device",
     "ledger_device_locked": "Please unlock your Ledger device",
@@ -1027,6 +1029,7 @@
     "please_link_your_public_key": "Please relink your public key to generate your private key",
     "linking": "Linking...",
     "stoping": "Stopping...",
-    "remote_keys_linked": "you have remote & vrf keys linked to your account, if you want to activate delegated harvesting, please select a harvesting node and link the node key. If you are harvesting already, please select your harvesting node to update your harvesting status",
-    "encrypt_ledger_keys_on_sign": "As a Ledger user, we need your password to encrypt your remote account and vrf private key"
+    "remote_keys_linked": "You have remote & vrf keys linked to your account, if you want to activate delegated harvesting, please select a harvesting node and link the node key. If you are harvesting already, please select your harvesting node to update your harvesting status.",
+    "encrypt_ledger_keys_on_sign": "As a Ledger user, your password is needed to encrypt your remote account and vrf private keys",
+    "harvesting_status_not_detected": "Harvesting status cannot be detected. Please select the node you are harvesting on."
 }

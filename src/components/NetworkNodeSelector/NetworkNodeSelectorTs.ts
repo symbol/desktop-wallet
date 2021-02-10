@@ -10,6 +10,8 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import { NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
+import { NotificationType } from '@/core/utils/NotificationType';
+
 @Component({
     components: {
         FormWrapper,
@@ -79,6 +81,7 @@ export class NetworkNodeSelectorTs extends Vue {
                 Vue.set(this, 'showInputPublicKey', true);
             }
         } catch (error) {
+            this.$store.dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE);
             console.log(error);
             Vue.set(this, 'showInputPublicKey', true);
             throw new Error('Node_connection_failed');

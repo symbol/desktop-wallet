@@ -127,7 +127,7 @@
     "backup_mnemonic_phrase": "ニーモニック語群をバックアップ",
     "backup_mnemonic_words": "ニーモニック単語のバックアップ",
     "backup_profile": "プロファイルをバックアップ",
-    "backup_profile_explanation_desc": "プロファイルのコピーとしてペーパー (pdf) をダウンロードします。このプロファイル内の全アカウントは、ダウンロードしたファイルに一覧表示されます。このバックアップファイルを使用すると、必要なときに他のデバイスまたは同じデバイスにすべてのアカウントを復元できます。機密性の高い情報が保存されているため、安全な場所に保管して、第三者と共有しないでください。",
+    "backup_profile_explanation_desc": "プロファイルのコピーとしてペーパー (PDF) をダウンロードします。このプロファイル内の全アカウントは、ダウンロードしたファイルに一覧表示されます。このバックアップファイルを使用すると、必要なときに他のデバイスまたは同じデバイスにすべてのアカウントを復元できます。<br><br>機密性の高い情報が保存されているため、安全な場所に保管して、第三者と共有しないでください。",
     "backup_profile_explanation_title": "プロファイルをペーパーウォレットへバックアップ",
     "balance": "残高",
     "block": "ブロック",
@@ -548,6 +548,7 @@
     "input_mnemonic_tips": "ニーモニックパス語群の 12 または 24 単語をスペース区切りで入力します。ニーモニックパス語群はランダムに選択された 12 または 24 個の単語で構成されます。単語を設定するとアセットが復元されます。",
     "input_namespace_name": "ネームスペース名を入力",
     "invalid_address_book": "アドレス帳が無効です",
+    "invalid_mnemonic_input": "入力されたニーモニックパスフレーズは無効です",
     "invalid_namespace_or_mosaic_id": "モザイクIDまたは名前が無効です",
     "invalid_node": "無効なノード",
     "keep_it_in_a_safe_place_on_the_isolated_network_mnemonics": "安全な場所に保管してください。ニーモニックをメール、フォトアルバム、ソーシャルアプリケーションなどの共有またはリモート環境で共有や保存をしないでください。",
@@ -562,6 +563,7 @@
     "label_postfix_multisig": "(マルチシグ)",
     "label_signed_by": "連署者の署名 =>",
     "latest_news_articles": "最新ニュース",
+    "ledger_connected_other_app": "Another app is already connected to your Ledger device. Please close it then try again.",
     "ledger_correct_account": "正しい Symbol Ledger アカウントを使用中です",
     "ledger_description": "Ledger デバイスからウォレットをインポートします",
     "ledger_device_locked": "Ledger デバイスをアンロックしてください",
@@ -1028,5 +1030,6 @@
     "linking": "リンク中...",
     "stoping": "停止中...",
     "remote_keys_linked": "アカウントにリモートキーと VRF キーがリンクされていて、デリゲートハーベスティングを有効化する場合は、ハーベスティングノードを選択してノードキーをリンクしてください。すでにハーベスティングしている場合は、ハーベスティングノードを選択してハーベスティングステータスを更新してください",
-    "encrypt_ledger_keys_on_sign": "Ledger ユーザとして、リモートアカウントと VRF 秘密鍵を暗号化するためのパスワードが必要です"
+    "encrypt_ledger_keys_on_sign": "Ledger ユーザとして、リモートアカウントと VRF 秘密鍵を暗号化するためのパスワードが必要です",
+    "harvesting_status_not_detected": "We can not detect you harvesting status, please select the node you are harvesting on"
 }
