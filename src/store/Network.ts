@@ -44,6 +44,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { networkConfig } from '@/config';
 import { NotificationType } from '@/core/utils/NotificationType';
+import { ProfileService } from '@/services/ProfileService';
 const Lock = AwaitLock.create();
 
 /// region custom types
@@ -115,7 +116,7 @@ interface NetworkState {
     selectedPeerNode: NodeInfo;
 }
 
-const defaultPeer = URLHelpers.formatUrl(networkConfig.defaultNodeUrl);
+const defaultPeer = URLHelpers.formatUrl(networkConfig.randomNodeUrl);
 
 const networkState: NetworkState = {
     initialized: false,
@@ -125,7 +126,7 @@ const networkState: NetworkState = {
     generationHash: undefined,
     networkModel: undefined,
     networkConfiguration: networkConfig.networkConfigurationDefaults,
-    repositoryFactory: NetworkService.createRepositoryFactory(networkConfig.defaultNodeUrl),
+    repositoryFactory: NetworkService.createRepositoryFactory(networkConfig.randomNodeUrl),
     listener: undefined,
     transactionFees: undefined,
     isConnected: false,
@@ -273,7 +274,12 @@ export default {
                 while (notFound) {
                     inx = Math.floor(Math.random() * nodesList.length);
                     nodeNetworkModelResult = await networkService
-                        .getNetworkModel(nodesList[inx].url, (currentProfile && currentProfile.generationHash) || undefined)
+                        .getNetworkModel(
+                            currentProfile && currentProfile.selectedNodeToConnect
+                                ? currentProfile.selectedNodeToConnect
+                                : nodesList[inx].url,
+                            (currentProfile && currentProfile.generationHash) || undefined,
+                        )
                         .toPromise();
                     if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
@@ -306,6 +312,10 @@ export default {
 
             const currentPeer = URLHelpers.getNodeUrl(networkModel.url);
             commit('currentPeer', currentPeer);
+            if (currentProfile) {
+                const profileService: ProfileService = new ProfileService();
+                profileService.updateSelectedNode(currentProfile, currentPeer);
+            }
             commit('networkModel', networkModel);
             commit('networkConfiguration', networkModel.networkConfiguration);
             commit('transactionFees', networkModel.transactionFees);

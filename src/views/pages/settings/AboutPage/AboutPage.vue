@@ -26,7 +26,7 @@
                     {{ $t('about_default_node') }}
                 </div>
                 <div class="value">
-                    <a :href="nodeLink" target="_blank">{{ configs.network.defaultNodeUrl }}</a>
+                    <a :href="nodeLink" target="_blank">{{ configs.network.randomNodeUrl }}</a>
                 </div>
             </div>
 
@@ -141,7 +141,7 @@ export default class AboutPage extends Vue {
     }
 
     public get nodeLink(): string {
-        return `${this.configs.network.defaultNodeUrl}/node/info`;
+        return `${this.configs.network.randomNodeUrl}/node/info`;
     }
 }
 </script>

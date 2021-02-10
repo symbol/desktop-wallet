@@ -43,7 +43,7 @@ export class NetworkService {
      */
     public getDefaultUrl(): string {
         const storedNetworkModel = this.storage.getLatest();
-        return URLHelpers.formatUrl((storedNetworkModel && storedNetworkModel.url) || networkConfig.defaultNodeUrl).url;
+        return URLHelpers.formatUrl((storedNetworkModel && storedNetworkModel.url) || networkConfig.randomNodeUrl).url;
     }
 
     /**
@@ -185,7 +185,7 @@ export class NetworkService {
             [
                 newUrl,
                 storedNetworkModel && storedNetworkModel.url,
-                networkConfig.defaultNodeUrl,
+                networkConfig.randomNodeUrl,
                 ...networkConfig.nodes.map((n) => n.url),
             ].filter((p) => p !== undefined && p.length),
         );
