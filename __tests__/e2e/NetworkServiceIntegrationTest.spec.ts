@@ -20,7 +20,7 @@ const networkService = new NetworkService();
 describe.skip('services/NetworkService', () => {
     test('getNetworkModel when default', async () => {
         const data = await networkService.getNetworkModel(undefined).toPromise();
-        expect(data.networkModel.url).toBe(networkConfig.defaultNodeUrl);
+        expect(data.networkModel.url).toBe(networkConfig.randomNodeUrl);
         expect(data.fallback).toBe(false);
     });
 
@@ -35,7 +35,7 @@ describe.skip('services/NetworkService', () => {
         const candidate = 'http://localhost:3000';
 
         const data = await networkService.getNetworkModel(candidate).toPromise();
-        expect(data.networkModel.url).toBe(networkConfig.defaultNodeUrl);
+        expect(data.networkModel.url).toBe(networkConfig.randomNodeUrl);
         expect(data.fallback).toBe(true);
     });
 });
