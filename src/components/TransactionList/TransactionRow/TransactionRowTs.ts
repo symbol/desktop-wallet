@@ -166,7 +166,7 @@ export class TransactionRowTs extends Vue {
     public getHeight(): string {
         const transactionStatus = TransactionView.getTransactionStatus(this.transaction);
         if (transactionStatus == TransactionStatus.confirmed) {
-            return this.view.info?.height.compact().toLocaleString();
+            return this.view.info?.height.compact().toString();
         } else {
             return this.$t(`transaction_status_${transactionStatus}`).toString();
         }
