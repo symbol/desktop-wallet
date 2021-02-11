@@ -61,7 +61,7 @@
                         <span class="subtitle">{{ $t('transaction_expired') }}</span>
                     </div>
                 </div>
-                <div v-else>
+                <div v-else-if="!isLoading">
                     <div class="explain">
                         <span class="subtitle">{{ $t('transaction_received_cosignature_explain') }}</span>
                     </div>
