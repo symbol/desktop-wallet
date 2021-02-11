@@ -61,7 +61,7 @@
                     {{ $t('about_sdk_version') }}
                 </div>
                 <div class="value">
-                    {{ configs.package.dependencies['symbol-sdk'] }}
+                    {{ configs.packageLock.dependencies['symbol-sdk'].version }}
                 </div>
             </div>
 
@@ -70,7 +70,7 @@
                     {{ $t('about_typescript_version') }}
                 </div>
                 <div class="value">
-                    {{ configs.package.dependencies['typescript'] }}
+                    {{ configs.packageLock.dependencies['typescript'].version }}
                 </div>
             </div>
 
@@ -79,7 +79,7 @@
                     {{ $t('about_rxjs_version') }}
                 </div>
                 <div class="value">
-                    {{ configs.package.dependencies['rxjs'] }}
+                    {{ configs.packageLock.dependencies['rxjs'].version }}
                 </div>
             </div>
 
@@ -88,7 +88,7 @@
                     {{ $t('about_vue_version') }}
                 </div>
                 <div class="value">
-                    {{ configs.package.dependencies['vue'] }}
+                    {{ configs.packageLock.dependencies['vue'].version }}
                 </div>
             </div>
             <!-- <div class="form-row"></div> -->
@@ -107,6 +107,7 @@ import { appConfig } from '@/config';
 import { feesConfig } from '@/config';
 import { networkConfig } from '@/config';
 import packageConfig from '@/../package.json';
+import packageLockConfig from '@/../package-lock.json';
 import { mapGetters } from 'vuex';
 import { NetworkModel } from '@/core/database/entities/NetworkModel';
 
@@ -126,6 +127,7 @@ export default class AboutPage extends Vue {
 
     public configs = {
         package: packageConfig,
+        packageLock: packageLockConfig,
         app: appConfig,
         fees: feesConfig,
         network: networkConfig,
