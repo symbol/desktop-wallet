@@ -202,7 +202,8 @@ export const routes: AppRoute[] = [
                         name: 'dashboard.index',
                         meta: {
                             protected: true,
-                            title: 'page_title_dashboard',
+                            title: 'page_title_history',
+                            icon: officialIcons.history,
                         },
                         // @ts-ignore
                         component: () => import('@/views/pages/dashboard/home/DashboardHomePage.vue'),
@@ -212,7 +213,8 @@ export const routes: AppRoute[] = [
                         name: 'dashboard.transfer',
                         meta: {
                             protected: true,
-                            title: 'page_title_transfer',
+                            title: 'page_title_send',
+                            icon: officialIcons.send2
                         },
                         // @ts-ignore
                         component: () => import('@/views/pages/dashboard/transfer/DashboardTransferPage.vue'),
@@ -224,6 +226,7 @@ export const routes: AppRoute[] = [
                         meta: {
                             protected: true,
                             title: 'page_title_invoice',
+                            icon: officialIcons.receive2
                         },
                         // @ts-ignore
                         component: () => import('@/views/pages/dashboard/invoice/DashboardInvoicePage.vue'),

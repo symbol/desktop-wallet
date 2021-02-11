@@ -139,6 +139,8 @@ import fingerprint from '@/views/resources/img/icons/fingerprint.png';
 // @ts-ignore
 import harvest from '@/views/resources/img/icons/harvest.svg';
 // @ts-ignore
+import history from '@/views/resources/img/icons/history.png';
+// @ts-ignore
 import incoming from '@/views/resources/img/icons/incoming.png';
 // @ts-ignore
 import lock from '@/views/resources/img/icons/lock.png';
@@ -187,7 +189,11 @@ import qr from '@/views/resources/img/icons/qr.png';
 // @ts-ignore
 import receive from '@/views/resources/img/icons/receive.png';
 // @ts-ignore
+import receive2 from '@/views/resources/img/icons/receive2.png';
+// @ts-ignore
 import send from '@/views/resources/img/icons/send.png';
+// @ts-ignore
+import send2 from '@/views/resources/img/icons/send2.png';
 // @ts-ignore
 import sent from '@/views/resources/img/icons/sent.png';
 // @ts-ignore
@@ -297,6 +303,7 @@ export const officialIcons = {
     explorer,
     fingerprint,
     harvest,
+    history,
     incoming,
     lock,
     message,
@@ -321,7 +328,9 @@ export const officialIcons = {
     publicPrivateKey,
     qr,
     receive,
+    receive2,
     send,
+    send2,
     sent,
     settings,
     signatureRequired,
