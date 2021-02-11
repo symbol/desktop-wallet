@@ -1,7 +1,13 @@
 <template>
     <AssetListPageWrap>
         <template v-slot:table-section>
-            <TableDisplay asset-type="namespace" class="table-section" @on-add-metadata="showMetadataModal = true">
+            <TableDisplay
+                asset-type="namespace"
+                class="table-section"
+                :pagination-type="'scroll'"
+                :page-size="20"
+                @on-add-metadata="showMetadataModal = true"
+            >
                 <template v-slot:table-title>
                     <h1 class="section-title">
                         {{ $t('namespace_and_sub_namespace') }}

@@ -940,7 +940,7 @@
     "transaction_descriptor_16724": "転送",
     "transaction_descriptor_16725": "マルチシグアカウントの変更",
     "transaction_descriptor_16961": "アグリゲートボンデッド",
-    "transaction_descriptor_16963": "キーリンクを確認",
+    "transaction_descriptor_16963": "VRF キーリンク",
     "transaction_descriptor_16964": "モザイクメタデータ",
     "transaction_descriptor_16972": "リンクノードキー",
     "transaction_descriptor_16973": "モザイク供給変更",

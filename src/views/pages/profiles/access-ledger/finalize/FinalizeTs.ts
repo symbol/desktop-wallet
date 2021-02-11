@@ -13,17 +13,34 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { ProfileService } from '@/services/ProfileService';
 import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 
-@Component({})
+@Component({
+    computed: {
+        ...mapGetters({
+            currentProfile: 'profile/currentProfile',
+        }),
+    },
+})
 export default class FinalizeTs extends Vue {
     /**
      * Finalize the profile creation process by adding
      * just redirect to dasbroad page.
      * @return {void}
      */
+    /**
+     * Profile Service
+     * @var {ProfileService}
+     */
+    public profileService: ProfileService = new ProfileService();
+    public marked: boolean = false;
+    public currentProfile: ProfileModel;
     public async submit() {
         // flush and continue
+        this.profileService.updateProfileTermsAndConditionsStatus(this.currentProfile, true);
         return this.$router.push({ name: 'dashboard' });
     }
 }

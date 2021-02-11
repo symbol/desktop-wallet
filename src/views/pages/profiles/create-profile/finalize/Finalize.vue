@@ -13,7 +13,7 @@
                 </ul>
                 <div class="flex bottom-space">
                     <Checkbox v-model="marked">
-                        <span>{{ $t('please_approve') }}</span>
+                        <span class="link">{{ $t('please_approve') }}</span>
                         <a class="link" href="#/terms">
                             {{ $t('terms_and_conditions') }}
                         </a>

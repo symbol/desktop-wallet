@@ -135,7 +135,7 @@ export default {
             Vue.set(
                 state,
                 'holdMosaics',
-                holdMosaics.filter((m) => m.ownerRawPlain === currentSignerAddress.plain() || m.balance > 0),
+                holdMosaics.filter((m) => m.ownerRawPlain === currentSignerAddress.plain() || m.balance >= 0),
             );
         },
         accountMosaicConfigurations: (state: MosaicState, accountMosaicConfigurations: Record<string, MosaicConfigurationModel>) =>
