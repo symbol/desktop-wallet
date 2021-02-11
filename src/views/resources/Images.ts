@@ -91,7 +91,7 @@ import addAggregate from '@/views/resources/img/icons/add-aggregate.png';
 // @ts-ignore
 import aggregate from '@/views/resources/img/icons/aggregate.svg';
 // @ts-ignore
-import aggregateTransaction from '@/views/resources/img/icons/aggregate.svg';
+import aggregateTransaction from '@/views/resources/img/icons/aggregate-transaction.png';
 // @ts-ignore
 import alias from '@/views/resources/img/icons/alias.png';
 // @ts-ignore
@@ -151,6 +151,8 @@ import metadata from '@/views/resources/img/icons/metadata.png';
 // @ts-ignore
 import mosaic from '@/views/resources/img/icons/mosaic.svg';
 // @ts-ignore
+import mosaicTransaction from '@/views/resources/img/icons/mosaic.png';
+// @ts-ignore
 import mosaicRestriction from '@/views/resources/img/icons/mosaic-restriction.png';
 // @ts-ignore
 import multipleParties from '@/views/resources/img/icons/multiple-parties.png';
@@ -158,6 +160,8 @@ import multipleParties from '@/views/resources/img/icons/multiple-parties.png';
 import multisig from '@/views/resources/img/icons/multisig.svg';
 // @ts-ignore
 import namespace from '@/views/resources/img/icons/namespace.svg';
+// @ts-ignore
+import namespaceTransaction from '@/views/resources/img/icons/namespace.png';
 // @ts-ignore
 import nem2Cli from '@/views/resources/img/icons/nem2-cli.png';
 // @ts-ignore
@@ -310,9 +314,11 @@ export const officialIcons = {
     metadata,
     mosaic,
     mosaicRestriction,
+    mosaicTransaction,
     multipleParties,
     multisig,
     namespace,
+    namespaceTransaction,
     nem2Cli,
     nem2Sdk,
     news,
@@ -348,11 +354,11 @@ export const officialIcons = {
 };
 
 export const transactionTypeToIcon = {
-    [TransactionType.NAMESPACE_REGISTRATION]: officialIcons.namespace,
+    [TransactionType.NAMESPACE_REGISTRATION]: officialIcons.namespaceTransaction,
     [TransactionType.ADDRESS_ALIAS]: officialIcons.alias,
-    [TransactionType.MOSAIC_ALIAS]: officialIcons.namespace,
-    [TransactionType.MOSAIC_DEFINITION]: officialIcons.mosaic,
-    [TransactionType.MOSAIC_SUPPLY_CHANGE]: officialIcons.mosaic,
+    [TransactionType.MOSAIC_ALIAS]: officialIcons.namespaceTransaction,
+    [TransactionType.MOSAIC_DEFINITION]: officialIcons.mosaicTransaction,
+    [TransactionType.MOSAIC_SUPPLY_CHANGE]: officialIcons.mosaicTransaction,
     [TransactionType.MULTISIG_ACCOUNT_MODIFICATION]: officialIcons.multipleParties,
     [TransactionType.AGGREGATE_COMPLETE]: officialIcons.aggregateTransaction,
     [TransactionType.AGGREGATE_BONDED]: officialIcons.aggregateTransaction,
@@ -362,15 +368,15 @@ export const transactionTypeToIcon = {
     [TransactionType.ACCOUNT_ADDRESS_RESTRICTION]: officialIcons.accountRestriction,
     [TransactionType.ACCOUNT_MOSAIC_RESTRICTION]: officialIcons.mosaicRestriction,
     [TransactionType.ACCOUNT_OPERATION_RESTRICTION]: officialIcons.accountRestrictionAlt,
-    [TransactionType.ACCOUNT_KEY_LINK]: officialIcons.publicChain,
+    [TransactionType.ACCOUNT_KEY_LINK]: officialIcons.publicKey,
     [TransactionType.MOSAIC_ADDRESS_RESTRICTION]: officialIcons.mosaicRestriction,
     [TransactionType.MOSAIC_GLOBAL_RESTRICTION]: officialIcons.mosaicRestriction,
     [TransactionType.ACCOUNT_METADATA]: officialIcons.metadata,
     [TransactionType.MOSAIC_METADATA]: officialIcons.metadata,
     [TransactionType.NAMESPACE_METADATA]: officialIcons.metadata,
-    [TransactionType.VOTING_KEY_LINK]: officialIcons.voting,
-    [TransactionType.VRF_KEY_LINK]: officialIcons.privateKey,
-    [TransactionType.NODE_KEY_LINK]: officialIcons.privateKey,
+    [TransactionType.VOTING_KEY_LINK]: officialIcons.publicKey,
+    [TransactionType.VRF_KEY_LINK]: officialIcons.publicKey,
+    [TransactionType.NODE_KEY_LINK]: officialIcons.publicKey,
 };
 
 /// end-region exported image objects
