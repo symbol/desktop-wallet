@@ -127,10 +127,7 @@ export abstract class TransactionView<T extends Transaction> {
             this.getFeeDetailItem(),
             {
                 key: 'block_height',
-                value:
-                    this.info && this.info.height && this.info.height.compact()
-                        ? `${i18n.t('block')} #${this.info.height.compact()}`
-                        : undefined,
+                value: this.info && this.info.height && this.info.height.compact() ? this.info.height.compact().toString() : undefined,
             },
             {
                 key: 'deadline',
