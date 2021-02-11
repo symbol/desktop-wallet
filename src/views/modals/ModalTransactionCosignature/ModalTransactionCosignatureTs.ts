@@ -77,6 +77,11 @@ export class ModalTransactionCosignatureTs extends Vue {
     transaction: AggregateTransaction = null;
 
     /**
+     * Data is loading
+     */
+    protected isLoading: boolean = false;
+
+    /**
      * Currently active account
      * @see {Store.Account}
      * @var {AccountModel}
@@ -242,6 +247,8 @@ export class ModalTransactionCosignatureTs extends Vue {
 
     @Watch('transactionHash', { immediate: true })
     public async fetchTransaction() {
+        this.isLoading = true;
+
         try {
             // first get the last status
             const transactionStatus: TransactionStatus = (await this.$store.dispatch('transaction/FETCH_TRANSACTION_STATUS', {
@@ -260,6 +267,8 @@ export class ModalTransactionCosignatureTs extends Vue {
         } catch (error) {
             console.log(error);
         }
+
+        this.isLoading = false;
     }
 
     /**
