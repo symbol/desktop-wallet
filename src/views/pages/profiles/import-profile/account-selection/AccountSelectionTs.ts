@@ -133,6 +133,8 @@ export default class AccountSelectionTs extends Vue {
         this.derivation = new DerivationService(this.currentProfile.networkType);
         this.accountService = new AccountService();
 
+        console.log(this.addressesList);
+        console.log(this.currentMnemonic);
         Vue.nextTick().then(() => {
             setTimeout(() => this.initAccounts(), 200);
         });
@@ -178,7 +180,6 @@ export default class AccountSelectionTs extends Vue {
             this.profileService.updateAccounts(this.currentProfile, accountIdentifiers);
 
             // execute store actions
-            this.$store.dispatch('temporary/RESET_STATE');
             return this.$router.push({ name: 'profiles.importProfile.finalize' });
         } catch (error) {
             return this.$store.dispatch('notification/ADD_ERROR', error);

@@ -44,10 +44,10 @@
         <div class="table-body-container">
             <Spin v-if="isLoading || isFetchingMore" size="large" fix class="absolute" />
             <div
+                v-show="displayedValues.length"
                 v-infinite-scroll="loadMore"
                 infinite-scroll-disabled="infiniteScrollDisabled"
                 infinite-scroll-distance="5"
-                v-show="displayedValues.length"
                 class="table-rows-outer-container"
             >
                 <div class="table-rows-container">

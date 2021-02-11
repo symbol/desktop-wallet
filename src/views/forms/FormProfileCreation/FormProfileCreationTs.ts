@@ -18,7 +18,6 @@ import { mapGetters } from 'vuex';
 import { Password, PublicAccount } from 'symbol-sdk';
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
-import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileService } from '@/services/ProfileService';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 // child components
