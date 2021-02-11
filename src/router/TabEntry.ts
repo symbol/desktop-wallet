@@ -45,9 +45,5 @@ export class TabEntry {
      * @param {string} route
      * @param {string} icon
      */
-    private constructor(
-        public readonly title: string, 
-        public readonly route: string, 
-        public readonly icon?: string
-    ) {}
+    private constructor(public readonly title: string, public readonly route: string, public readonly icon?: string) {}
 }
