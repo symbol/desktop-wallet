@@ -14,7 +14,7 @@
  *
  */
 // external dependencies
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { Address, AliasAction, MosaicId, NamespaceId } from 'symbol-sdk';
 // internal dependencies
@@ -56,6 +56,7 @@ import SignerFilter from '@/components/SignerFilter/SignerFilter.vue';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
 // @ts-ignore
 import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadataUpdate.vue';
+import { PageInfo } from '@/store/Transaction';
 @Component({
     components: {
         TableRow,
@@ -74,6 +75,7 @@ import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadat
             currentAccount: 'account/currentAccount',
             holdMosaics: 'mosaic/holdMosaics',
             ownedNamespaces: 'namespace/ownedNamespaces',
+            currentConfirmedPage: 'namespace/currentConfirmedPage',
             attachedMetadataList: 'metadata/accountMetadataList',
             networkConfiguration: 'network/networkConfiguration',
             signers: 'account/signers',
@@ -92,6 +94,9 @@ export class TableDisplayTs extends Vue {
         default: TableAssetType.Mosaic,
     })
     assetType: TableAssetType;
+
+    @Prop({ default: 'pagination' })
+    public paginationType!: 'pagination' | 'scroll';
 
     /**
      * Current account owned mosaics
@@ -136,6 +141,12 @@ export class TableDisplayTs extends Vue {
     public isFetchingMosaics: boolean;
 
     public isFetchingMetadata: boolean;
+
+    /**
+     * Current confirmed page info
+     * @var {PageInfo}
+     */
+    public currentConfirmedPage: PageInfo;
 
     /**
      * Loading state of the data to be shown in the table
@@ -303,7 +314,9 @@ export class TableDisplayTs extends Vue {
      * @return {TableRowValues[]}
      */
     get currentPageRows(): any[] {
-        return this.displayedValues.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
+        return this.paginationType === 'pagination'
+            ? this.displayedValues.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
+            : this.displayedValues;
     }
 
     /**
@@ -508,6 +521,14 @@ export class TableDisplayTs extends Vue {
      */
     public isRefreshing: boolean = false;
 
+    public loadMore() {
+        if (this.currentConfirmedPage && !this.currentConfirmedPage.isLastPage) {
+            if (this.assetType === TableAssetType.Namespace) {
+                this.$store.dispatch('namespace/LOAD_NAMESPACES', { pageSize: this.pageSize, pageNumber: ++this.currentPage });
+            }
+        }
+    }
+
     protected async onRefresh() {
         if (!this.isRefreshing) {
             this.isRefreshing = true;
@@ -525,5 +546,31 @@ export class TableDisplayTs extends Vue {
     protected showModalUpdateMetadata(metadataList: MetadataModel[]) {
         this.targetedMetadataList = metadataList;
         Vue.set(this.modalFormsVisibility, 'targetValue', true);
+    }
+
+    /**
+     * Watching if refreshed triggered
+     * @param newVal
+     */
+    @Watch('currentConfirmedPage')
+    public watchRefresh(newVal: PageInfo) {
+        // if page refresh is triggered then reset page info
+        if (newVal && newVal.pageNumber === 1) {
+            this.currentPage = 1;
+        }
+    }
+
+    /**
+     * Whether infinite scroll is currently disabled
+     */
+    protected get infiniteScrollDisabled() {
+        return this.paginationType !== 'scroll' || this.isLoading;
+    }
+
+    /**
+     * Whether it is currently fetching more transactions from repository
+     */
+    protected get isFetchingMore(): boolean {
+        return this.isLoading && this.currentConfirmedPage && this.currentConfirmedPage.pageNumber > 1;
     }
 }

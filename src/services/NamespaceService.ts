@@ -45,49 +45,43 @@ export class NamespaceService {
      */
     public getNamespaces(
         repositoryFactory: RepositoryFactory,
-        generationHash: string,
-        addresses: Address[],
+        address: Address,
         { pageSize, pageNumber }: { pageSize: number; pageNumber: number } = {
-            pageSize: 100,
+            pageSize: 20,
             pageNumber: 1,
         },
-    ): Observable<NamespaceModel[]> {
-        if (!addresses.length) {
-            return of([]);
+    ): Observable<{ models: NamespaceModel[]; pageInfo: { pageNumber: number; isLastPage: boolean } }> {
+        if (!address) {
+            return of({ models: [], pageInfo: { pageNumber: 1, isLastPage: true } });
         }
 
-        const namespaceModelList = this.namespaceModelStorage.get(generationHash) || [];
         const namespaceRepository = repositoryFactory.createNamespaceRepository();
 
-        return addresses
-            .map(
-                (address: Address): Observable<NamespaceModel[]> => {
-                    return namespaceRepository
-                        .search({ ownerAddress: address, pageSize, pageNumber })
-                        .pipe(
-                            flatMap((namespaceInfos) => {
-                                return namespaceRepository.getNamespacesNames(namespaceInfos.data.map((info) => info.id)).pipe(
-                                    map((names) => {
-                                        return namespaceInfos.data.map((namespaceInfo) => {
-                                            const reference = _.first(
-                                                names.filter((n) => n.namespaceId.toHex() === namespaceInfo.id.toHex()),
-                                            );
-                                            return new NamespaceModel(
-                                                namespaceInfo,
-                                                NamespaceService.getFullNameFromNamespaceNames(reference, names),
-                                            );
-                                        });
-                                    }),
-                                );
-                            }),
-                        )
-                        .pipe(
-                            tap((d: NamespaceModel[]) => this.namespaceModelStorage.set(generationHash, d)),
-                            ObservableHelpers.defaultFirst(namespaceModelList),
-                        );
-                },
-            )
-            .reduce((previous) => previous.pipe(combineAll()));
+        return namespaceRepository.search({ ownerAddress: address, pageSize, pageNumber }).pipe(
+            flatMap((namespaceInfos) => {
+                return namespaceRepository
+                    .getNamespacesNames(namespaceInfos.data.map((info) => info.id))
+                    .pipe(
+                        map((names) => {
+                            return namespaceInfos.data.map((namespaceInfo) => {
+                                const reference = _.first(names.filter((n) => n.namespaceId.toHex() === namespaceInfo.id.toHex()));
+                                return new NamespaceModel(namespaceInfo, NamespaceService.getFullNameFromNamespaceNames(reference, names));
+                            });
+                        }),
+                    )
+                    .pipe(
+                        map((models) => {
+                            return {
+                                models,
+                                pageInfo: {
+                                    pageNumber: namespaceInfos.pageNumber,
+                                    isLastPage: namespaceInfos.isLastPage,
+                                },
+                            };
+                        }),
+                    );
+            }),
+        );
     }
 
     public static getExpiration(
