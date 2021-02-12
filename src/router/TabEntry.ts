@@ -27,7 +27,7 @@ export class TabEntry {
      * @returns {TabEntry[]}
      */
     public static getFromRoutes(routes: AppRoute[]): TabEntry[] {
-        return routes.map(({ meta, name }) => new TabEntry(meta?.title, name, meta?.icon));
+        return routes.map(({ meta, name }) => new TabEntry(meta?.title, name, meta?.icon as string));
     }
 
     /**
@@ -45,5 +45,5 @@ export class TabEntry {
      * @param {string} route
      * @param {string} icon
      */
-    private constructor(public readonly title: string, public readonly route: string, public readonly icon?: string) {}
+    private constructor(public readonly title: string, public readonly route: string, public readonly icon: string | undefined) {}
 }
