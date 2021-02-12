@@ -133,8 +133,6 @@ export default class AccountSelectionTs extends Vue {
         this.derivation = new DerivationService(this.currentProfile.networkType);
         this.accountService = new AccountService();
 
-        console.log(this.addressesList);
-        console.log(this.currentMnemonic);
         Vue.nextTick().then(() => {
             setTimeout(() => this.initAccounts(), 200);
         });
