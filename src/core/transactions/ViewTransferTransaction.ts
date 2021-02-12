@@ -47,8 +47,8 @@ export class ViewTransferTransaction extends TransactionView<TransferTransaction
     private get availableMosaics(): MosaicModel[] {
         const currentHeight = this.$store.getters['network/currentHeight'];
         const networkConfiguration = this.$store.getters['network/networkConfiguration'];
-        const balanceMosaics = this.$store.getters['mosaic/balanceMosaics'];
-        return balanceMosaics.filter((entry) => {
+        const holdMosaics = this.$store.getters['mosaic/holdMosaics'];
+        return holdMosaics.filter((entry) => {
             const expiration = MosaicService.getExpiration(entry, currentHeight, networkConfiguration.blockGenerationTargetTime);
             return expiration !== 'expired';
         });
