@@ -609,7 +609,7 @@
     "mnemonic_copy": "复制",
     "mnemonic_generation_error": "生成钱包种子失败",
     "mnemonic_inconsistency": "助记词不一致",
-    "mnemonic_correct": "记忆法是正确的",
+    "mnemonic_correct": "助记词正确",
     "mnemonic_not_found": "找不到助记符！",
     "mnemonic_phrase": "助记词",
     "mnemonic_qr_action_desc": "单击继续以将导入的助记词设置为文本区域。",
