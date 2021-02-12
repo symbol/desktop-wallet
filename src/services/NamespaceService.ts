@@ -17,8 +17,7 @@
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel';
 import { Address, NamespaceName, RepositoryFactory } from 'symbol-sdk';
 import { Observable, of } from 'rxjs';
-import { flatMap, map, tap, combineAll } from 'rxjs/operators';
-import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
+import { flatMap, map } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { TimeHelpers } from '@/core/utils/TimeHelpers';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
