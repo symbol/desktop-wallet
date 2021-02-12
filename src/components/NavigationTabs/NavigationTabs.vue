@@ -6,7 +6,10 @@
             :class="['tab-item', tabEntry.isActive($route) ? 'active' : '']"
             @click="tabEntry.isActive($route) ? '' : $router.push({ name: tabEntry.route }).catch((err) => {})"
         >
-            {{ $t(tabEntry.title) }}
+            <img v-if="tabEntry.icon" class="tab-icon" :src="tabEntry.icon" />
+            <div class="tab-title">
+                {{ $t(tabEntry.title) }}
+            </div>
         </span>
     </div>
 </template>

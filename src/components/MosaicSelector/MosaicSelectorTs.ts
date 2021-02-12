@@ -35,7 +35,7 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
         ...mapGetters({
             networkMosaic: 'mosaic/networkMosaic',
             networkMosaicName: 'mosaic/networkMosaicName',
-            mosaics: 'mosaic/mosaics',
+            balanceMosaics: 'mosaic/balanceMosaics',
         }),
     },
 })
@@ -69,8 +69,8 @@ export class MosaicSelectorTs extends Vue {
     /**
      * All the known mosaics.
      */
-    public mosaics: MosaicModel[];
 
+    public balanceMosaics: MosaicModel[];
     /// region computed properties getter/setter
 
     /**
@@ -79,7 +79,7 @@ export class MosaicSelectorTs extends Vue {
      * @protected
      */
     protected get displayedMosaics(): MosaicModel[] {
-        return this.mosaicHexIds.map((mosaicIdHex) => this.mosaics.find((m) => m.mosaicIdHex === mosaicIdHex)).filter((x) => x);
+        return this.mosaicHexIds.map((mosaicIdHex) => this.balanceMosaics.find((m) => m.mosaicIdHex === mosaicIdHex)).filter((x) => x);
     }
 
     /**
