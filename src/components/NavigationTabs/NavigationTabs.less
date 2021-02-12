@@ -29,6 +29,9 @@
     background-color: transparent;
 
     .tab-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         font-size: @bigFont;
         position: relative;
         font-weight: 500;
@@ -39,12 +42,18 @@
         margin: 0.2rem 0;
         line-height: 0.2rem;
         text-align: center;
-        color: @grayLight;
+        color: @purpleDark;
+        opacity: 0.5;
+
         img {
-            height: 0.2rem;
-            width: 0.2rem;
-            margin-top: 0.02rem;
+            height: 0.15rem;
+            width: 0.15rem;
             display: inline-block;
+        }
+
+        .tab-icon {
+            margin: auto;
+            margin-right: 1em;
         }
     }
     .tab-item:not(:first-child) {
@@ -53,8 +62,9 @@
 
     .active {
         color: @purpleDark;
+        opacity: 1;
         font-weight: 600;
-        cursor: not-allowed !important;
+        cursor: default !important;
     }
 
     .active:after {

@@ -31,11 +31,11 @@
     grid-template-columns: 100%;
     grid-template-rows: @headerHeight calc(100% - @headerHeight);
     .transaction-table-columns {
-        grid-template-columns: 4% 35% 19% 17% 19% auto;
+        grid-template-columns: 4% 35% 19% 17% 19%;
     }
 
     .transaction-row-columns {
-        grid-template-columns: 4% 34% 19% 17% 19% auto;
+        grid-template-columns: 4% 35% 19% 17% 19%;
     }
 
     .transaction-rows-outer-container {
@@ -43,7 +43,7 @@
         position: relative;
         width: 100%;
         max-height: 100%;
-        overflow-y: auto;
+        overflow-y: overlay;
     }
 
     .transaction-rows-inner-container {
@@ -70,8 +70,7 @@
         padding-left: 3%;
 
         > div {
-            height: 48px;
-            margin: auto;
+            margin: auto 0;
         }
 
         .icon-cell {
@@ -81,8 +80,8 @@
 
             .icon-cell-image {
                 color: @purpleDark;
-                width: 0.28rem;
-                height: 0.28rem;
+                width: 0.2rem;
+                height: 0.2rem;
                 margin: auto;
                 display: block;
                 position: relative;
@@ -92,6 +91,7 @@
         .address-cell {
             width: 100%;
             overflow: hidden;
+            margin-left: 0.5em;
         }
 
         .amount-cell {
