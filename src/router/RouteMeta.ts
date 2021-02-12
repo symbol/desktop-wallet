@@ -32,7 +32,7 @@ export interface RouteMeta {
     // @TODO: REVIEW
     clickable?: boolean;
     isLedger?: boolean;
-    icon?: unknown;
+    icon?: string;
     active?: boolean;
     nextPage?: string;
     hideFromMenu?: boolean;
