@@ -43,14 +43,14 @@
                                         <span class="address-id">{{ $t('id') }}</span>
                                         <span class="address-value">{{ $t('address') }}</span>
                                     </div>
-                                    <div v-if="!!addressesList.length" class="scrollable radius">
+                                    <div v-if="!!addressesList.length" class="address-list-body">
                                         <div
                                             v-for="index in selectedAccounts"
                                             :key="index"
                                             class="table-item pointer"
                                             @click="onRemoveAddress(index)"
                                         >
-                                            <div class="row flex-start address-item">
+                                            <div class="address-item">
                                                 <span class="address-id"> {{ index + 1 }} </span>
                                                 <div class="table-item-content">
                                                     <div class="row">
@@ -58,7 +58,7 @@
                                                             formatters.miniAddress(addressesList[index])
                                                         }}</span>
                                                     </div>
-                                                    <div class="row">
+                                                    <div class="row balance-row">
                                                         <div class="row">
                                                             <span class="address-balance">{{ $t('balance') }}: </span>
                                                             <span
