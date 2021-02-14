@@ -214,3 +214,19 @@
 .transaction-form-component {
     margin-bottom: 0.1rem;
 }
+
+.right-container {
+    /deep/.form-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        .transactions-form-wrapper {
+            flex-grow: 1;
+        }
+    }
+
+    /deep/.multisig_ban_container {
+        padding-left: 0.4rem;
+        padding-right: 0.4rem;
+    }
+}
