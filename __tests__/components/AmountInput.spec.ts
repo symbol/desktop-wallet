@@ -10,15 +10,22 @@ import VueI18n, { Values } from 'vue-i18n';
 import i18n from '@/language/index';
 import { StandardValidationRules } from '@/core/validation/StandardValidationRules';
 import { MaxDecimalsValidator } from '@/core/validation/validators';
+import { appConfig } from '@/config';
+import { PositiveDecimalNumberValidator } from '@/core/validation/validators/PositiveDecimalNumberValidator';
 
 StandardValidationRules.register();
+appConfig.constants.DECIMAL_SEPARATOR = '.';
 extend('maxDecimals', {
     validate: (value, args: any) => {
         const { maxDecimalNumber } = args;
         return MaxDecimalsValidator.validate(value, maxDecimalNumber);
     },
-    message: (fieldName: string, values: Values) => `${i18n.t('max_decimal_number_error', values)}`,
+    message: (_fieldName: string, values: Values) => `${i18n.t('max_decimal_number_error', values)}`,
     params: ['maxDecimalNumber'],
+});
+extend('positiveDecimal', {
+    validate: (value) => PositiveDecimalNumberValidator.validate(value),
+    message: () => i18n.t('positive_decimal_error', { decimalSeparator: appConfig.constants.DECIMAL_SEPARATOR }).toString(),
 });
 const localVue = createLocalVue();
 localVue.component('ValidationProvider', ValidationProvider);
@@ -88,7 +95,7 @@ describe('AmountInput', () => {
         const rightResult = await validate('10.123456', rule);
         expect(rightResult.valid).toBeTruthy();
     });
-    test("divisibility of the mosaic '534CD11F6D984B4B' is 5 ", async () => {
+    test("divisibility of the mosaic '534CD11F6D984B4B' is 5", async () => {
         wrapper2.setProps({
             mosaicHex: '534CD11F6D984B4B',
         });
