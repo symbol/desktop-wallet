@@ -43,7 +43,7 @@ export class ImportanceScoreDisplayTs extends Vue {
     get score(): string {
         const accountInfo = this.accountsInfo.find((k) => k.address.plain() === this.address);
         if (!accountInfo) {
-            return '0';
+            return '0 %';
         }
 
         if (!this.networkCurrency?.divisibility || !this.networkConfiguration?.totalChainImportance) {
@@ -57,7 +57,6 @@ export class ImportanceScoreDisplayTs extends Vue {
         const divisibility = this.networkCurrency.divisibility;
         const formatOptions: Intl.NumberFormatOptions = {
             maximumFractionDigits: divisibility,
-            minimumFractionDigits: divisibility,
             style: 'percent',
         };
         return relativeImportance.toLocaleString(undefined, formatOptions);
