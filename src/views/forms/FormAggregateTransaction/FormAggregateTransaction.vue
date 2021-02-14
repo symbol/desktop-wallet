@@ -63,6 +63,7 @@
                             <MaxFeeSelector
                                 v-model="formItems.maxFee"
                                 placement="top-start"
+                                :show-fee-label="true"
                                 @button-clicked="handleSubmit(onClickSendAggregate)"
                             />
                             <div class="send-button">

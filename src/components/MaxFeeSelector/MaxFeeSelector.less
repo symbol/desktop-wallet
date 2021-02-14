@@ -13,11 +13,18 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-.fee {
-    padding-top: 21px;
-    text-align: left;
+@import '../../views/resources/css/variables.less';
 
-    .uint {
-        margin-right: 19px;
-    }
+.label-and-select {
+    display: flex;
+    align-items: center;
+}
+
+.fee-label {
+    font-weight: 500;
+    font-size: 0.18rem;
+    font-family: 'noto-sans-regular';
+    margin-right: 0.1rem;
+    color: @primary;
+    min-width: max-content;
 }
