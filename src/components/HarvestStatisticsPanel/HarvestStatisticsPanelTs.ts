@@ -70,8 +70,15 @@ export class HarvestStatisticsPanelTs extends Vue {
         }
     }
 
-    public get totalFeesEarned() {
-        return this.harvestedBlockStats.totalFeesEarned.compact() / Math.pow(10, this.networkCurrency.divisibility);
+    public get totalFeesEarned(): string {
+        const relativeAmount = this.harvestedBlockStats.totalFeesEarned.compact() / Math.pow(10, this.networkCurrency.divisibility);
+        if (relativeAmount === 0) {
+            return '0';
+        }
+        return relativeAmount.toLocaleString(undefined, {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: this.networkCurrency.divisibility,
+        });
     }
 
     @Watch('currentSignerAccountInfo')
