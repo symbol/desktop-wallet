@@ -119,6 +119,12 @@ export default class FormMultisigAccountModificationTransaction extends FormMult
     }
 }
 
-/deep/ .form-row-emphasis {
+/deep/.multisig_ban_container {
+    padding-left: 0.7rem;
+    width: 11.35rem;
+
+    .is_multisig {
+        width: 11.35rem;
+    }
 }
 </style>

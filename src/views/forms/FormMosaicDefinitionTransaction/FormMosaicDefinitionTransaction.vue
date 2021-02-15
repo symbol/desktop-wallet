@@ -81,4 +81,8 @@ export default class FormMosaicDefinitionTransaction extends FormMosaicDefinitio
     text-align: center;
     width: 120px;
 }
+
+/deep/.multisig_ban_container {
+    padding-left: 0.7rem;
+}
 </style>
