@@ -10,7 +10,7 @@
                     <span class="address-value">{{ $t('address') }}</span>
                     <span class="address-balance">{{ $t('balance') }}</span>
                 </div>
-                <div class="scrollable">
+                <div class="table-body">
                     <div v-for="(a, index) in addressesList" :key="index" @click="onAddAddress(index)">
                         <div v-if="!selectedAccounts.includes(index)" class="table-item pointer">
                             <span class="address-id">{{ index + 1 }}</span>
@@ -27,10 +27,10 @@
             </div>
         </div>
         <div class="button-container flex-container">
-            <button class="solid-button button-style back-create-button button" @click="previous">
+            <button class="solid-button button-style create-account-style" @click="previous">
                 {{ $t('back') }}
             </button>
-            <button class="button-style validation-create-button button" @click="submit">
+            <button class="solid-button button-style create-account-style inverted-button" @click="submit">
                 {{ $t('next') }}
             </button>
         </div>
