@@ -2,7 +2,7 @@
     "name": "symbol-desktop-wallet",
     "description": "Symbol Wallet",
     "homepage": "https://github.com/nemgrouplimited/symbol-desktop-wallet",
-    "version": "0.14.0",
+    "version": "0.14.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/nemgrouplimited/symbol-desktop-wallet.git"
@@ -128,7 +128,7 @@
         "symbol-hd-wallets": "0.14.0",
         "symbol-paper-wallets": "^1.0.2",
         "symbol-qr-library": "0.14.0",
-        "symbol-sdk": "0.23.2-alpha-202102121455",
+        "symbol-sdk": "0.23.2",
         "symbol-uri-scheme": "0.6.0",
         "ts-jest": "^25.3.0",
         "ts-mockito": "^2.6.1",

@@ -3,6 +3,42 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.14.1][v0.14.1] - 18-Feb-2021
+
+### Milestone: [catapult-server@v0.10.0.7](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.7)
+
+#### Added
+
+- Allow use of the wallet without a running node.
+- Added T&C to Ledger integration.
+- Added fees label in Aggregated transaction form.
+
+#### Changed
+
+- Removed default nodes on wallet initialization. Changed to randomly sync to working nodes.
+- Split reserved nodes by network types.
+- Removed unnecessary notifications.
+- Changed Node Key Link description.
+- UX improvement on profile creation.
+- Localized amount display.
+- Various UI improvements.
+- Language improvement.
+
+#### Fixed
+
+- Fixed fee selector in metadata transaction from.
+- Fixed Mosaic supply amount decimal part issue.
+- Fixed Mosaic shows as expired when the balance is 0 issue.
+- Fixed transfer tab becomes inactive after toggling from multisig account issue.
+- Fixed Ledger notification issue on MacOS.
+- Fixed cosignature transaction modal issue.
+- Fixed versions in Settings.
+- Fixed profile creation wizard issue.
+- Fixed estimated rental fees on transaction history list issue.
+- Fixed metadata cosign with single accounts issue.
+- Fixed Aggregated transaction save button malfunction issue.
+- Fixed alias validation issue.
+
 ## [0.14.0][v0.14.0] - 08-Feb-2021
 
 ### Milestone: [catapult-server@v0.10.0.6](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.6)
