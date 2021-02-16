@@ -18,6 +18,7 @@ import { appConfig } from '@/config';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 import { networkConfig } from '@/config';
+import { NetworkType } from 'symbol-sdk';
 
 const { MIN_PASSWORD_LENGTH } = appConfig.constants;
 
@@ -32,7 +33,7 @@ export const createValidationRuleSet = ({
         address: 'required|address|addressNetworkType:currentProfile',
         profilePassword: 'required|profilePassword',
         addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentProfile',
-        amount: `excluded:""|min_value:0|maxDecimals:${maxMosaicDivisibility}|max_value:${maxMosaicAtomicUnits}`,
+        amount: `positiveDecimal|maxDecimals:${maxMosaicDivisibility}`,
         confirmPassword: 'required|confirmPassword:@newPassword',
         divisibility: 'required|min_value:0|max_value:6|integer',
         duration: `required|min_value:0|max_value:${maxMosaicDuration}`,
@@ -69,4 +70,4 @@ export const createValidationRuleSet = ({
 
 // TODO ValidationRuleset needs to be created when the network configuration is resolved, UI needs
 // to use the resolved ValidationResulset ATM rules are using the hardocded ones
-export const ValidationRuleset = createValidationRuleSet(networkConfig.networkConfigurationDefaults);
+export const ValidationRuleset = createValidationRuleSet(networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults);

@@ -13,36 +13,39 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import Vue from 'vue';
+import { networkConfig } from '@/config';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
+import { NetworkModel } from '@/core/database/entities/NetworkModel';
+import { NodeModel } from '@/core/database/entities/NodeModel';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { CommonHelpers } from '@/core/utils/CommonHelpers';
+import { NotificationType } from '@/core/utils/NotificationType';
+import { URLHelpers } from '@/core/utils/URLHelpers';
+import { URLInfo } from '@/core/utils/URLInfo';
+// configuration
+import { UrlValidator } from '@/core/validation/validators';
+import app from '@/main';
+import { NetworkService } from '@/services/NetworkService';
+import { NodeService } from '@/services/NodeService';
+import { ProfileService } from '@/services/ProfileService';
+import _ from 'lodash';
+import { Subscription } from 'rxjs';
 import {
     BlockInfo,
     IListener,
     Listener,
     NetworkType,
-    RepositoryFactory,
-    TransactionFees,
-    RentalFees,
-    RepositoryFactoryHttp,
     NodeInfo,
+    RentalFees,
+    RepositoryFactory,
+    RepositoryFactoryHttp,
     RoleType,
+    TransactionFees,
 } from 'symbol-sdk';
-import { Subscription } from 'rxjs';
-import _ from 'lodash';
+import Vue from 'vue';
 // internal dependencies
 import { $eventBus } from '../events';
-import { URLHelpers } from '@/core/utils/URLHelpers';
-import app from '@/main';
 import { AwaitLock } from './AwaitLock';
-// configuration
-import { UrlValidator } from '@/core/validation/validators';
-import { NetworkModel } from '@/core/database/entities/NetworkModel';
-import { NetworkService } from '@/services/NetworkService';
-import { NodeService } from '@/services/NodeService';
-import { NodeModel } from '@/core/database/entities/NodeModel';
-import { URLInfo } from '@/core/utils/URLInfo';
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
-import { ProfileModel } from '@/core/database/entities/ProfileModel';
-import { networkConfig } from '@/config';
 const Lock = AwaitLock.create();
 
 /// region custom types
@@ -91,6 +94,14 @@ const staticPeerNodes: NodeInfo[] = [
     },
 ] as NodeInfo[];
 
+export interface ConnectingToNodeInfo {
+    isTryingToConnect: boolean;
+    tryingToConnectNodeUrl?: string;
+    progressCurrentNodeIndex?: number;
+    progressTotalNumOfNodes?: number;
+    attemps?: number;
+}
+
 interface NetworkState {
     initialized: boolean;
     currentPeer: URLInfo;
@@ -111,20 +122,18 @@ interface NetworkState {
     networkIsNotMatchingProfile: boolean;
     peerNodes: NodeInfo[];
     harvestingPeerNodes: NodeInfo[];
-    selectedPeerNode: NodeInfo;
+    connectingToNodeInfo: ConnectingToNodeInfo;
 }
-
-const defaultPeer = URLHelpers.formatUrl(networkConfig.defaultNodeUrl);
 
 const networkState: NetworkState = {
     initialized: false,
-    currentPeer: defaultPeer,
-    currentPeerInfo: new NodeModel(defaultPeer.url, defaultPeer.url, true),
-    networkType: networkConfig.defaultNetworkType,
+    currentPeer: undefined,
+    currentPeerInfo: undefined,
+    networkType: undefined,
     generationHash: undefined,
     networkModel: undefined,
-    networkConfiguration: networkConfig.networkConfigurationDefaults,
-    repositoryFactory: NetworkService.createRepositoryFactory(networkConfig.defaultNodeUrl),
+    networkConfiguration: undefined,
+    repositoryFactory: undefined,
     listener: undefined,
     transactionFees: undefined,
     isConnected: false,
@@ -132,11 +141,11 @@ const networkState: NetworkState = {
     currentHeight: 0,
     subscriptions: [],
     rentalFeeEstimation: undefined,
-    epochAdjustment: networkConfig.networkConfigurationDefaults.epochAdjustment,
+    epochAdjustment: undefined,
     networkIsNotMatchingProfile: false,
     peerNodes: [],
     harvestingPeerNodes: [],
-    selectedPeerNode: null,
+    connectingToNodeInfo: undefined,
 };
 
 export default {
@@ -162,6 +171,7 @@ export default {
         networkIsNotMatchingProfile: (state: NetworkState) => state.networkIsNotMatchingProfile,
         peerNodes: (state: NetworkState) => state.peerNodes,
         harvestingPeerNodes: (state: NetworkState) => state.harvestingPeerNodes,
+        connectingToNodeInfo: (state: NetworkState) => state.connectingToNodeInfo,
     },
     mutations: {
         setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -231,12 +241,14 @@ export default {
         peerNodes: (state: NetworkState, peerNodes: NodeInfo[]) => Vue.set(state, 'peerNodes', peerNodes),
         harvestingPeerNodes: (state: NetworkState, harvestingPeerNodes: NodeInfo[]) =>
             Vue.set(state, 'harvestingPeerNodes', harvestingPeerNodes),
+        connectingToNodeInfo: (state: NetworkState, connectingToNodeInfo: ConnectingToNodeInfo) =>
+            Vue.set(state, 'connectingToNodeInfo', connectingToNodeInfo),
     },
     actions: {
-        async initialize({ commit, dispatch, getters }) {
+        async initialize({ commit, getters }) {
             const callback = async () => {
                 // commit('knowNodes', new NodeService().getKnowNodesOnly())
-                await dispatch('CONNECT');
+                //await dispatch('CONNECT');
                 // update store
                 commit('setInitialized', true);
             };
@@ -251,22 +263,100 @@ export default {
             await Lock.uninitialize(callback, { getters });
         },
 
-        async CONNECT({ commit, dispatch, getters, rootGetters }, newCandidate: string | undefined) {
+        async CONNECT(
+            { dispatch, commit, rootGetters },
+            {
+                newCandidateUrl,
+                networkType,
+                waitBetweenTrials = false,
+            }: { newCandidateUrl?: string | undefined; networkType?: NetworkType; waitBetweenTrials: boolean },
+        ) {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const networkService = new NetworkService();
+            let nodeNetworkModelResult: any;
+            // if network not specified set to profile's network
+            if (!networkType && currentProfile && currentProfile.networkType) {
+                networkType = currentProfile.networkType;
+            }
+            if (newCandidateUrl) {
+                commit('connectingToNodeInfo', {
+                    isTryingToConnect: true,
+                    tryingToConnectNodeUrl: newCandidateUrl,
+                    progressCurrentNodeIndex: 1,
+                    progressTotalNumOfNodes: 1,
+                });
+                nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType).toPromise();
+                if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel) {
+                    await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
+                } else {
+                    return await dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE, { root: true });
+                }
+                return;
+            } else {
+                let nodesList = [...networkConfig[networkType].nodes];
+                let nodeFound = false,
+                    progressCurrentNodeInx = 0;
+                const numOfNodes = nodesList.length;
+
+                // trying already saved one
+                if (currentProfile && currentProfile.selectedNodeUrlToConnect) {
+                    commit('connectingToNodeInfo', {
+                        isTryingToConnect: true,
+                        tryingToConnectNodeUrl: currentProfile.selectedNodeUrlToConnect,
+                        progressCurrentNodeIndex: ++progressCurrentNodeInx,
+                        progressTotalNumOfNodes: numOfNodes,
+                    });
+                    nodeNetworkModelResult = await networkService
+                        .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType)
+                        .toPromise();
+                    if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
+                        await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
+                        nodeFound = true;
+                    } else {
+                        // selectedNodeUrlToConnect didn't work, let's remove it from the nodeList
+                        nodesList = nodesList.filter((n) => n.url !== currentProfile.selectedNodeUrlToConnect);
+                    }
+                }
+
+                // try other nodes randomly if not found yet
+                while (!nodeFound && nodesList.length) {
+                    const inx = Math.floor(Math.random() * nodesList.length);
+                    const nodeUrl = nodesList[inx].url;
+                    commit('connectingToNodeInfo', {
+                        isTryingToConnect: true,
+                        tryingToConnectNodeUrl: nodeUrl,
+                        progressCurrentNodeIndex: ++progressCurrentNodeInx,
+                        progressTotalNumOfNodes: numOfNodes,
+                    });
+                    nodeNetworkModelResult = await networkService.getNetworkModel(nodeUrl, networkType).toPromise();
+                    if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
+                        await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
+                        nodeFound = true;
+                    } else {
+                        nodesList.splice(inx, 1);
+                        if (waitBetweenTrials) {
+                            await CommonHelpers.sleep(1000); // labor illusion
+                        }
+                    }
+                }
+
+                if (!nodeFound) {
+                    commit('connectingToNodeInfo', {
+                        isTryingToConnect: false,
+                        progressCurrentNodeIndex: numOfNodes,
+                        progressTotalNumOfNodes: numOfNodes,
+                    });
+                    await dispatch('notification/ADD_ERROR', NotificationType.NODE_CONNECTION_ERROR, { root: true });
+                }
+            }
+        },
+        async CONNECT_TO_A_VALID_NODE({ getters, commit, dispatch, rootGetters }, networkModelResult: any) {
+            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
+            const { networkModel, repositoryFactory } = networkModelResult;
             const nodeService = new NodeService();
-            const networkModelResult = await networkService
-                .getNetworkModel(newCandidate, (currentProfile && currentProfile.generationHash) || undefined)
-                .toPromise();
-            if (!networkModelResult) {
-                throw new Error('Connect error, active peer cannot be found');
-            }
-            const { networkModel, repositoryFactory, fallback } = networkModelResult;
-            if (fallback) {
-                throw new Error('Connection Error.');
-            }
             const oldGenerationHash = getters['generationHash'];
-            const getNodesPromise = nodeService.getNodes(repositoryFactory, networkModel.url).toPromise();
+            const networkType = networkModel.networkType;
+            const getNodesPromise = nodeService.getNodes(repositoryFactory, networkModel.url, networkType).toPromise();
             const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getChainInfo().toPromise();
             const nodes = await getNodesPromise;
             const currentHeight = (await getBlockchainHeightPromise).height.compact();
@@ -274,10 +364,14 @@ export default {
 
             const currentPeer = URLHelpers.getNodeUrl(networkModel.url);
             commit('currentPeer', currentPeer);
+            if (currentProfile) {
+                const profileService: ProfileService = new ProfileService();
+                profileService.updateSelectedNode(currentProfile, currentPeer);
+            }
             commit('networkModel', networkModel);
             commit('networkConfiguration', networkModel.networkConfiguration);
             commit('transactionFees', networkModel.transactionFees);
-            commit('networkType', networkModel.networkType);
+            commit('networkType', networkType);
             commit('epochAdjustment', networkModel.networkConfiguration.epochAdjustment);
             commit('generationHash', networkModel.generationHash);
             commit('repositoryFactory', repositoryFactory);
@@ -289,6 +383,9 @@ export default {
                 nodes.find((n) => n.url === networkModel.url),
             );
             commit('setConnected', true);
+            commit('connectingToNodeInfo', {
+                isTryingToConnect: false,
+            });
             $eventBus.$emit('newConnection', currentPeer);
             // subscribe to updates
 
@@ -308,18 +405,23 @@ export default {
                 }
             }
             const currentSignerAddress = rootGetters['account/currentSignerAddress'];
-            // close websocket subscription for old node
-            await dispatch('UNSUBSCRIBE');
-            await dispatch('account/UNSUBSCRIBE', currentSignerAddress, { root: true });
-            // subscribe to the newly selected node websocket
-            await listener.open();
-            await dispatch('SUBSCRIBE');
-            await dispatch('account/SUBSCRIBE', currentSignerAddress, { root: true });
+            if (currentSignerAddress) {
+                // close websocket subscription for old node
+                await dispatch('UNSUBSCRIBE');
+                await dispatch('account/UNSUBSCRIBE', currentSignerAddress, { root: true });
+                // subscribe to the newly selected node websocket
+                await listener.open();
+                await dispatch('SUBSCRIBE');
+                await dispatch('account/SUBSCRIBE', currentSignerAddress, { root: true });
+            }
         },
-
+        SET_NETWORK_TYPE({ commit }, networkType: NetworkType) {
+            commit('networkType', networkType);
+        },
         async SET_CURRENT_PEER({ dispatch }, currentPeerUrl) {
             if (!UrlValidator.validate(currentPeerUrl)) {
-                throw Error('Cannot change node. URL is not valid: ' + currentPeerUrl);
+                console.log('Cannot change node. URL is not valid: ' + currentPeerUrl);
+                return await dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE, { root: true });
             }
 
             // - show loading overlay
@@ -342,7 +444,7 @@ export default {
             try {
                 // - disconnect from previous node
 
-                await dispatch('CONNECT', currentPeerUrl);
+                await dispatch('CONNECT', { newCandidateUrl: currentPeerUrl });
             } catch (e) {
                 console.log(e);
                 await dispatch(
@@ -363,6 +465,9 @@ export default {
 
         async REST_NETWORK_RENTAL_FEES({ rootGetters, commit }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
+            if (!repositoryFactory) {
+                return;
+            }
             const getRentalFeesPromise = repositoryFactory.createNetworkRepository().getRentalFees().toPromise();
             const rentalFees = await getRentalFeesPromise;
             commit('rentalFeeEstimation', rentalFees);
@@ -380,11 +485,12 @@ export default {
             commit('removePeer', peerUrl);
         },
 
-        async UPDATE_PEER({ commit }, peerUrl) {
+        async UPDATE_PEER({ commit, rootGetters }, peerUrl) {
             const repositoryFactory = new RepositoryFactoryHttp(peerUrl);
             const nodeService = new NodeService();
+            const networkType = rootGetters['network/networkType'];
 
-            const knownNodes = await nodeService.getNodes(repositoryFactory, peerUrl).toPromise();
+            const knownNodes = await nodeService.getNodes(repositoryFactory, peerUrl, networkType).toPromise();
             commit('knowNodes', knownNodes);
         },
 

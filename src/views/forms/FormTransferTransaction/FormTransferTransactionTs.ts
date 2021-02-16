@@ -72,12 +72,13 @@ import { MosaicService } from '@/services/MosaicService';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { TransactionCommand } from '@/services/TransactionCommand';
-import { feesConfig } from '@/config';
+import { feesConfig, appConfig } from '@/config';
 import { NotificationType } from '@/core/utils/NotificationType';
+const { DECIMAL_SEPARATOR } = appConfig.constants;
 
 export interface MosaicAttachment {
     mosaicHex: string;
-    amount: number; // Relative amount
+    amount: string; // Relative amount
     id?: MosaicId;
     name?: string;
     uid?: number;
@@ -169,7 +170,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     public formItems = {
         signerAddress: '',
-        attachedMosaics: [],
+        attachedMosaics: new Array<MosaicAttachment>(),
         recipientRaw: '',
         recipient: null,
         selectedMosaicHex: '',
@@ -223,6 +224,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     private showUnlockAccountModal = false;
 
+    private importTransaction = false;
+
+    private plainMessage: string;
+
     /**
      * Reset the form with properties
      * @return {void}
@@ -257,7 +262,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                 id: new MosaicId(this.networkCurrency.mosaicIdHex),
                 mosaicHex: this.networkCurrency.mosaicIdHex,
                 name: this.networkCurrency.namespaceIdFullname,
-                amount: 0,
+                amount: '0',
                 uid: Math.floor(Math.random() * 10e6), // used to index dynamic inputs
             },
         ];
@@ -272,7 +277,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.mosaicInputsManager = MosaicInputsManager.initialize(currentMosaics);
 
         // transaction details passed via router
-        if (this.$route.params.transaction || this.importedTransaction) {
+        this.importTransaction = this.$route.params.transaction || this.importedTransaction ? true : false;
+        if (this.importTransaction) {
             // @ts-ignore
             this.setTransactions([!!this.importedTransaction ? this.importedTransaction : this.$route.params.transaction]);
             Vue.nextTick(() => {
@@ -321,13 +327,14 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     protected getTransactions(): TransferTransaction[] {
         const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[];
         const mosaics = this.formItems.attachedMosaics
-            .filter(({ uid }) => uid) // filter out null values
+            .filter((attachment) => attachment.uid) // filter out null values
             .map(
-                (spec: MosaicAttachment): Mosaic => {
-                    const info = mosaicsInfo.find((i) => i.mosaicIdHex === spec.mosaicHex);
+                (attachment): Mosaic => {
+                    const amount = Number(attachment.amount.trim().replace(DECIMAL_SEPARATOR, '.'));
+                    const info = mosaicsInfo.find((i) => i.mosaicIdHex === attachment.mosaicHex);
                     const div = info ? info.divisibility : 0;
                     // - format amount to absolute
-                    return new Mosaic(new MosaicId(RawUInt64.fromHex(spec.mosaicHex)), UInt64.fromUint(spec.amount * Math.pow(10, div)));
+                    return new Mosaic(new MosaicId(RawUInt64.fromHex(attachment.mosaicHex)), UInt64.fromUint(amount * Math.pow(10, div)));
                 },
             );
         return [
@@ -362,7 +369,12 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.formItems.attachedMosaics = this.mosaicsToAttachments(transaction.mosaics);
 
         // - populate message
-        this.formItems.messagePlain = transaction.message.payload;
+        const encryptedMessage = transaction.message instanceof EncryptedMessage;
+        this.formItems.encryptMessage = encryptedMessage;
+        this.formItems.messagePlain = transaction.message?.payload;
+        if (encryptedMessage) {
+            this.encyptedMessage = transaction.message;
+        }
 
         // - populate maxFee
         this.formItems.maxFee = transaction.maxFee.compact();
@@ -467,7 +479,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                     id: new MosaicId(info.mosaicIdHex), // XXX resolve mosaicId from namespaceId
                     mosaicHex: info.mosaicIdHex, // XXX resolve mosaicId from namespaceId
                     name: info.name,
-                    amount: mosaic.amount.compact() / Math.pow(10, info.divisibility),
+                    amount: (mosaic.amount.compact() / Math.pow(10, info.divisibility)).toLocaleString(undefined, {
+                        maximumFractionDigits: info.divisibility,
+                    }),
                     uid: Math.floor(Math.random() * 10e6), // used to index dynamic inputs
                 };
             })
@@ -491,7 +505,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.mosaicInputsManager.setSlot(mosaicToAffectToNewInput, uid);
         this.formItems.attachedMosaics.push({
             mosaicHex: mosaicToAffectToNewInput,
-            amount: 0,
+            amount: '0',
             uid,
         });
 
@@ -587,24 +601,50 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * Encrypt message checkbox click
      */
     onEncryptionChange() {
-        if (this.formItems.encryptMessage) {
-            if (!this.currentRecipient?.publicKey) {
-                this.$store
-                    .dispatch('notification/ADD_ERROR', this.$t(NotificationType.RECIPIENT_PUBLIC_KEY_INVALID_ERROR))
-                    .then(() => (this.formItems.encryptMessage = false));
-            } else if (!this.formItems.messagePlain) {
-                this.$store
-                    .dispatch('notification/ADD_ERROR', this.$t(NotificationType.ENCRYPTED_MESSAGE_EMPTY_ERROR))
-                    .then(() => (this.formItems.encryptMessage = false));
-            } else {
-                this.hasAccountUnlockModal = true;
-            }
+        const importedTransactionMessage = this.getImportedTransactionMessage();
+        const isEncrypted = importedTransactionMessage instanceof EncryptedMessage;
+        if (!this.currentRecipient?.publicKey) {
+            this.$store
+                .dispatch('notification/ADD_ERROR', this.$t(NotificationType.RECIPIENT_PUBLIC_KEY_INVALID_ERROR))
+                .then(() => (this.formItems.encryptMessage = isEncrypted));
+        } else if (!this.formItems.messagePlain) {
+            this.$store
+                .dispatch('notification/ADD_ERROR', this.$t(NotificationType.ENCRYPTED_MESSAGE_EMPTY_ERROR))
+                .then(() => (this.formItems.encryptMessage = isEncrypted));
         } else {
-            this.encyptedMessage = null;
-            this.hasAccountUnlockModal = false;
+            if (this.formItems.encryptMessage) {
+                // to encrypt message
+                if (this.importTransaction) {
+                    if (isEncrypted) {
+                        this.formItems.messagePlain = importedTransactionMessage.payload;
+                    } else {
+                        this.hasAccountUnlockModal = true;
+                    }
+                } else {
+                    this.hasAccountUnlockModal = true;
+                }
+            } else {
+                // to decrypt message
+                if (this.importTransaction) {
+                    const isEncrypted = importedTransactionMessage instanceof EncryptedMessage;
+                    if (isEncrypted) {
+                        this.hasAccountUnlockModal = true;
+                    } else {
+                        this.formItems.messagePlain = importedTransactionMessage.payload;
+                    }
+                } else {
+                    this.formItems.messagePlain = this.plainMessage;
+                    this.encyptedMessage = undefined;
+                }
+            }
         }
+    }
 
-        this.triggerChange();
+    private getImportedTransactionMessage(): Message {
+        const importTransaction = (!!this.importedTransaction
+            ? this.importedTransaction
+            : this.$route.params.transaction) as TransferTransaction;
+        return importTransaction?.message;
     }
 
     /**
@@ -614,16 +654,28 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     onAccountUnlocked(account: Account): boolean {
         this.hasAccountUnlockModal = false;
-        this.encyptedMessage = this.formItems.messagePlain
-            ? EncryptedMessage.create(this.formItems.messagePlain, this.currentRecipient, account.privateKey)
-            : PlainMessage.create('');
-        this.formItems.encryptMessage = true;
-        this.triggerChange();
+        this.plainMessage = this.formItems.messagePlain;
+        if (!this.formItems.encryptMessage && this.importTransaction) {
+            const importedTransactionMessage = this.getImportedTransactionMessage();
+            if (importedTransactionMessage instanceof EncryptedMessage) {
+                const message: PlainMessage = EncryptedMessage.decrypt(
+                    importedTransactionMessage,
+                    account.privateKey,
+                    this.currentRecipient,
+                );
+                this.formItems.messagePlain = message?.payload;
+            }
+        } else {
+            this.encyptedMessage = this.formItems.messagePlain
+                ? EncryptedMessage.create(this.formItems.messagePlain, this.currentRecipient, account.privateKey)
+                : PlainMessage.create('');
+            this.formItems.encryptMessage = true;
+            this.formItems.messagePlain = this.encyptedMessage.payload;
+        }
         return true;
     }
 
     closeAccountUnlockModal() {
-        this.formItems.encryptMessage = false;
         this.hasAccountUnlockModal = false;
     }
 

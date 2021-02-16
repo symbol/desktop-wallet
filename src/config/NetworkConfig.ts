@@ -39,10 +39,10 @@ export interface NetworkConfigurationDefaults {
     maxMessageSize: number;
     epochAdjustment: number;
     totalChainImportance: number;
+    generationHash: string;
 }
 
 export interface NetworkConfig {
-    defaultNodeUrl: string;
     faucetUrl: string;
     nodes: NodeConfig[];
     defaultNetworkType: number;
@@ -50,11 +50,10 @@ export interface NetworkConfig {
     networkConfigurationDefaults: NetworkConfigurationDefaults;
 }
 
-const defaultNetworkConfig: NetworkConfig = {
+const defaultTestnetNetworkConfig: NetworkConfig = {
     explorerUrl: 'http://explorer.testnet.symboldev.network/',
     faucetUrl: 'http://faucet.testnet.symboldev.network/',
     defaultNetworkType: 152,
-    defaultNodeUrl: 'http://api-01.eu-west-1.testnet.symboldev.network:3000',
     networkConfigurationDefaults: {
         maxMosaicDivisibility: 6,
         namespaceGracePeriodDuration: 2592000,
@@ -74,6 +73,7 @@ const defaultNetworkConfig: NetworkConfig = {
         defaultDynamicFeeMultiplier: 1000,
         epochAdjustment: 1573430400,
         totalChainImportance: undefined,
+        generationHash: '45FBCF2F0EA36EFA7923C9BC923D6503169651F7FA4EFC46A8EAF5AE09057EBD',
     },
     nodes: [
         { friendlyName: 'API North East 1', roles: 2, url: 'http://api-01.ap-northeast-1.testnet.symboldev.network:3000' },
@@ -82,6 +82,45 @@ const defaultNetworkConfig: NetworkConfig = {
         { friendlyName: 'API EU West 1', roles: 2, url: 'http://api-01.eu-west-1.testnet.symboldev.network:3000' },
         { friendlyName: 'API US West 1', roles: 2, url: 'http://api-01.us-west-1.testnet.symboldev.network:3000' },
     ],
+};
+
+const defaultMainnetNetworkConfig: NetworkConfig = {
+    explorerUrl: 'http://explorer.mainnet.symboldev.network/',
+    faucetUrl: 'http://faucet.mainnet.symboldev.network/',
+    defaultNetworkType: 104,
+    networkConfigurationDefaults: {
+        maxMosaicDivisibility: 6,
+        namespaceGracePeriodDuration: 2592000,
+        lockedFundsPerAggregate: '10000000',
+        maxCosignatoriesPerAccount: 25,
+        blockGenerationTargetTime: 15,
+        maxNamespaceDepth: 3,
+        maxMosaicDuration: 21024000,
+        minNamespaceDuration: 172800,
+        maxNamespaceDuration: 2102400,
+        maxTransactionsPerAggregate: 1000,
+        maxCosignedAccountsPerAccount: 25,
+        maxMessageSize: 1024,
+        maxMosaicAtomicUnits: 9000000000000000,
+        currencyMosaicId: '5F160D7851F3CB30',
+        harvestingMosaicId: '5F160D7851F3CB30',
+        defaultDynamicFeeMultiplier: 1000,
+        epochAdjustment: 1573430400,
+        totalChainImportance: undefined,
+        generationHash: 'TO_BE_DEFINED_BEFORE_MAINNET_LAUNCH',
+    },
+    nodes: [
+        { friendlyName: 'API North East 1', roles: 2, url: 'http://api-01.ap-northeast-1.mainnet.symboldev.network:3000' },
+        { friendlyName: 'API South West 1', roles: 2, url: 'http://api-01.ap-southeast-1.mainnet.symboldev.network:3000' },
+        { friendlyName: 'API EU Central 1', roles: 2, url: 'http://api-01.eu-central-1.mainnet.symboldev.network:3000' },
+        { friendlyName: 'API EU West 1', roles: 2, url: 'http://api-01.eu-west-1.mainnet.symboldev.network:3000' },
+        { friendlyName: 'API US West 1', roles: 2, url: 'http://api-01.us-west-1.mainnet.symboldev.network:3000' },
+    ],
+};
+
+const defaultNetworkConfig: Record<number, NetworkConfig> = {
+    152: defaultTestnetNetworkConfig,
+    104: defaultMainnetNetworkConfig,
 };
 
 const resolvedNetworkConfig: NetworkConfig = window['networkConfig'] || defaultNetworkConfig;

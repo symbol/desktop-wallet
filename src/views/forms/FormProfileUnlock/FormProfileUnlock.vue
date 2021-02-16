@@ -14,22 +14,24 @@
                         >
                             <ErrorTooltip :errors="errors">
                                 <input
+                                    ref="passwordInput"
                                     v-model="formItems.password"
-                                    v-focus
                                     type="password"
                                     class="input-size input-style"
+                                    :disabled="isLoading"
                                     :placeholder="$t('please_enter_your_account_password')"
                                 />
                             </ErrorTooltip>
                         </ValidationProvider>
-                        <button
+                        <Button
                             v-if="!hideSubmit"
                             class="button-style inverted-button right-side-button"
-                            type="submit"
+                            html-type="submit"
+                            :loading="isLoading"
                             @click="processVerification"
                         >
                             {{ $t(buttonText) }}
-                        </button>
+                        </Button>
                     </div>
                 </template>
             </FormRow>
@@ -56,5 +58,15 @@ export default class FormProfileUnlock extends FormProfileUnlockTs {}
 
 /deep/ .form-row-inner-container {
     grid-template-columns: 18% 60% !important;
+}
+
+.ivu-btn:hover,
+.ivu-btn:active {
+    color: white;
+    border-color: white;
+}
+
+.ivu-btn:focus {
+    box-shadow: none;
 }
 </style>

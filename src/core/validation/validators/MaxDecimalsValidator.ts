@@ -14,6 +14,8 @@
  *
  */
 import { Validator, staticImplements } from './Validator';
+import { appConfig } from '@/config';
+const { DECIMAL_SEPARATOR } = appConfig.constants;
 
 @staticImplements<Validator>()
 export class MaxDecimalsValidator {
@@ -28,7 +30,17 @@ export class MaxDecimalsValidator {
         if (Math.floor(value) == value) {
             return true;
         }
-        const decimalNumber = value.toString().split('.')[1].length || 0;
+        const split: string[] = value.toString().split(DECIMAL_SEPARATOR);
+
+        if (split.length <= 1) {
+            return true;
+        }
+
+        if (split.length !== 2) {
+            return false;
+        }
+
+        const decimalNumber = split[1].length || 0;
         return decimalNumber <= maxDecimalNumber;
     }
 }

@@ -18,7 +18,6 @@ import { mapGetters } from 'vuex';
 import { Password, PublicAccount } from 'symbol-sdk';
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
-import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileService } from '@/services/ProfileService';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 // child components
@@ -35,7 +34,7 @@ import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorag
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountService } from '@/services/AccountService';
 import { LedgerService } from '@/services/LedgerService';
-
+import { networkConfig } from '@/config';
 /// end-region custom types
 
 @Component({
@@ -140,6 +139,9 @@ export class FormProfileCreationTs extends Vue {
      * Error notification handler
      */
     private errorNotificationHandler(error: any) {
+        if (error.message && error.message.includes('cannot open device with path')) {
+            error.errorCode = 'ledger_connected_other_app';
+        }
         if (error.errorCode) {
             switch (error.errorCode) {
                 case 'NoDevice':
@@ -147,6 +149,9 @@ export class FormProfileCreationTs extends Vue {
                     return;
                 case 'ledger_not_supported_app':
                     this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_supported_app');
+                    return;
+                case 'ledger_connected_other_app':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_connected_other_app');
                     return;
                 case 26628:
                     this.$store.dispatch('notification/ADD_ERROR', 'ledger_device_locked');
@@ -169,6 +174,10 @@ export class FormProfileCreationTs extends Vue {
             }
         }
         this.$store.dispatch('notification/ADD_ERROR', this.$t('create_profile_failed', { reason: error.message || error }));
+    }
+
+    public onNetworkTypeChange(newNetworkType) {
+        this.$store.dispatch('network/CONNECT', { networkType: newNetworkType });
     }
 
     /**
@@ -196,7 +205,7 @@ export class FormProfileCreationTs extends Vue {
     private persistAccountAndContinue() {
         // -  password stored as hash (never plain.)
         const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password));
-
+        const genHash = this.generationHash || networkConfig[this.formItems.networkType].networkConfigurationDefaults.generationHash;
         const account: ProfileModel = {
             profileName: this.formItems.profileName,
             accounts: [],
@@ -204,8 +213,9 @@ export class FormProfileCreationTs extends Vue {
             password: passwordHash,
             hint: this.formItems.hint,
             networkType: this.formItems.networkType,
-            generationHash: this.generationHash,
+            generationHash: genHash,
             termsAndConditionsApproved: false,
+            selectedNodeUrlToConnect: '',
         };
         // use repository for storage
         this.accountService.saveProfile(account);
@@ -214,8 +224,6 @@ export class FormProfileCreationTs extends Vue {
         this.$store.dispatch('profile/SET_CURRENT_PROFILE', account);
         this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password);
         if (!this.isLedger) {
-            this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS);
-
             // flush and continue
             this.$router.push({ name: this.nextPage });
         } else {
@@ -227,7 +235,6 @@ export class FormProfileCreationTs extends Vue {
                     this.$store.dispatch('account/SET_CURRENT_ACCOUNT', res);
                     this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', [res.id]);
                     this.$store.dispatch('temporary/RESET_STATE');
-                    this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS);
                     this.$router.push({ name: 'profiles.accessLedger.finalize' });
                 })
                 .catch((error) => {

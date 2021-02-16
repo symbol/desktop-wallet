@@ -44,7 +44,7 @@ export class MosaicAttachmentInputTs extends Vue {
         default: { mosaicHex: '', amount: 0 },
         required: true,
     })
-    mosaicAttachment: { mosaicHex: string; amount: number };
+    mosaicAttachment: { mosaicHex: string; amount: string };
 
     /**
      * Unique Id assigned to this component
@@ -77,7 +77,7 @@ export class MosaicAttachmentInputTs extends Vue {
      * @protected
      * @type {{mosaicHex: string, amount: number}}
      */
-    protected get chosenValue(): { mosaicHex: string; amount: number } {
+    protected get chosenValue(): { mosaicHex: string; amount: string } {
         return this.mosaicAttachment;
     }
 
@@ -117,7 +117,7 @@ export class MosaicAttachmentInputTs extends Vue {
      */
     public formItems = {
         selectedMosaicHex: '',
-        relativeAmount: this.chosenValue?.amount | 0,
+        relativeAmount: this.chosenValue?.amount || '0',
     };
 
     get selectedMosaic(): string {
@@ -128,11 +128,11 @@ export class MosaicAttachmentInputTs extends Vue {
         this.formItems.selectedMosaicHex = hex;
     }
 
-    get relativeAmount(): number {
+    get relativeAmount(): string {
         return this.formItems.relativeAmount;
     }
 
-    set relativeAmount(amount: number) {
+    set relativeAmount(amount: string) {
         this.formItems.relativeAmount = amount;
     }
 
@@ -150,7 +150,7 @@ export class MosaicAttachmentInputTs extends Vue {
     }
 
     @Watch('mosaicAttachment')
-    public onMosaicAttachmentChange(mosaicAttachment: { mosaicHex: string; amount: number }) {
+    public onMosaicAttachmentChange(mosaicAttachment: { mosaicHex: string; amount: string }) {
         this.relativeAmount = mosaicAttachment.amount;
     }
 }

@@ -5,7 +5,6 @@ import Vuex from 'vuex';
 import i18n from '@/language';
 import VueI18n from 'vue-i18n';
 import { NetworkService } from '@/services/NetworkService';
-import { networkConfig } from '@/config';
 // configuration
 let wrapper;
 let vm;
@@ -33,7 +32,7 @@ beforeEach(() => {
             },
             isConnected: () => true,
             networkType: () => null,
-            repositoryFactory: () => NetworkService.createRepositoryFactory(networkConfig.defaultNodeUrl),
+            repositoryFactory: () => NetworkService.createRepositoryFactory(''),
             generationHash: () => 123,
             knowNodes: () => [
                 { url: 'http://api-01.us-west-1.0941-v1.symboldev.network:3000', friendlyName: '614084b4', isDefault: true },

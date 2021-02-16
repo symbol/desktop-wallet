@@ -1,19 +1,23 @@
 <template>
     <div class="select-container">
-        <Select
-            v-if="!displayOnly"
-            v-model="chosenMaxFee"
-            :placeholder="$t('fee')"
-            class="select-size select-style"
-            :placement="placement"
-            @input="$emit('on-change')"
-        >
-            <Option v-for="{ maxFee, label } in feesCalculated" :key="maxFee" :value="maxFee">
-                {{ label }}
-            </Option>
-        </Select>
-        <div v-else>
-            {{ fees.find((i) => i.maxFee == chosenMaxFee).label }}
+        <div class="label-and-select">
+            <div v-if="showFeeLabel" class="fee-label">{{ $t('fee') }}:</div>
+            <Select
+                v-if="!displayOnly"
+                v-model="chosenMaxFee"
+                :placeholder="$t('fee')"
+                class="select-size select-style"
+                :placement="placement"
+                :transfer="true"
+                @input="$emit('on-change')"
+            >
+                <Option v-for="{ maxFee, label } in feesCalculated" :key="maxFee" :value="maxFee">
+                    {{ label }}
+                </Option>
+            </Select>
+            <div v-else>
+                {{ fees.find((i) => i.maxFee == chosenMaxFee).label }}
+            </div>
         </div>
         <span v-if="showLowFeeWarning" style="color: red;">
             <Icon type="ios-warning-outline" />
@@ -30,3 +34,7 @@
 import { MaxFeeSelectorTs } from './MaxFeeSelectorTs';
 export default class MaxFeeSelector extends MaxFeeSelectorTs {}
 </script>
+
+<style lang="less" scoped>
+@import './MaxFeeSelector.less';
+</style>

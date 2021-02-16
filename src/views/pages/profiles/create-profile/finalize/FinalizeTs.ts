@@ -19,7 +19,6 @@ import { NetworkType, Password } from 'symbol-sdk';
 import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 // internal dependencies
 import { AccountService } from '@/services/AccountService';
-import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { ProfileService } from '@/services/ProfileService';
 
@@ -125,7 +124,6 @@ export default class FinalizeTs extends Vue {
         await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account);
         await this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', [account.id]);
         await this.$store.dispatch('temporary/RESET_STATE');
-        await this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.OPERATION_SUCCESS);
 
         // flush and continue
         return this.$router.push({ name: 'dashboard' });

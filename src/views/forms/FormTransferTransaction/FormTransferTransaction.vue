@@ -65,11 +65,17 @@
                         :hide-submit="hideSubmit"
                         :calculated-recommended-fee="calculatedRecommendedFee"
                         :calculated-highest-fee="calculatedHighestFee"
+                        :disable-submit="currentAccount.isMultisig"
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
                     />
                     <div v-else-if="!hideSave" class="ml-2" style="text-align: right;">
-                        <button type="submit" class="save-button centered-button button-style inverted-button" @click="emitToAggregate">
+                        <button
+                            type="submit"
+                            class="save-button centered-button button-style inverted-button"
+                            :disabled="currentAccount.isMultisig"
+                            @click="emitToAggregate"
+                        >
                             {{ $t('save') }}
                         </button>
                     </div>
@@ -121,5 +127,9 @@ export default class FormTransferTransaction extends FormTransferTransactionTs {
 .save-button {
     text-align: center;
     width: 120px;
+}
+
+/deep/.multisig_ban_container {
+    padding-left: 0.7rem;
 }
 </style>

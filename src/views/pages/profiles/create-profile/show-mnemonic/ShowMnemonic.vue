@@ -9,7 +9,7 @@
                 <MnemonicDisplay :words="mnemonicWordsList">
                     <div slot class="mnemonic-container">
                         <div v-if="!showMnemonic" class="show-mnemonic">
-                            <img src="@/views/resources/img/icons/View.svg" style="margin-top: 10px;" />
+                            <img src="@/views/resources/img/icons/View.svg" />
                             <button class="inverted-button button-style fat-button create-account-style" @click="showMnemonic = true">
                                 {{ $t('display_mnemonic') }}
                             </button>
@@ -18,7 +18,7 @@
                             <div class="mnemonic-list">
                                 <span v-for="(m, index) in mnemonicWordsList" :key="index">{{ m }}</span>
                             </div>
-                            <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" />
+                            <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" type="icon-black" />
                         </div>
                     </div>
                 </MnemonicDisplay>
@@ -26,21 +26,17 @@
                     <div class="float-right mt-3">
                         <button
                             type="button"
-                            class="solid-button button-style fat-button create-account-style"
+                            class="solid-button button-style create-account-style"
                             @click="$router.push({ name: 'profiles.createProfile.info' })"
                         >
                             {{ $t('back') }}
                         </button>
-                        <button
-                            type="button"
-                            class="solid-button button-style fat-button create-account-style"
-                            @click="downloadPaperWallet"
-                        >
+                        <button type="button" class="solid-button button-style create-account-style" @click="downloadPaperWallet">
                             {{ $t('button_download_qr') }}
                         </button>
                         <button
                             type="submit"
-                            class="inverted-button button-style fat-button create-account-style"
+                            class="solid-button button-style create-account-style inverted-button"
                             @click="$router.push({ name: 'profiles.createProfile.verifyMnemonic' })"
                         >
                             {{ $t('verify_backup_mnemonics') }}

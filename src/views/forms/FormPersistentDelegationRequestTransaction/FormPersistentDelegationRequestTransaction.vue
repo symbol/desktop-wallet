@@ -12,7 +12,10 @@
                     <!-- Transaction signer selector -->
                     <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
-                    <NetworkNodeSelector v-model="formItems.nodeModel" :disabled="harvestingStatus !== 'INACTIVE'" />
+                    <NetworkNodeSelector
+                        v-model="formItems.nodeModel"
+                        :disabled="harvestingStatus !== 'INACTIVE' && isPublicAndPrivateKeysLinked"
+                    />
                     <div class="linked-keys-info">
                         <span>
                             {{ $t('linked_keys_info') }}
@@ -23,6 +26,13 @@
 
                         <span>
                             {{ $t('remote_keys_linked') }}
+                        </span>
+                    </div>
+                    <div v-if="!isPublicAndPrivateKeysLinked" class="info-text keys-warning">
+                        <Icon type="ios-warning-outline" />
+
+                        <span>
+                            {{ $t('harvesting_status_not_detected') }}
                         </span>
                     </div>
                     <!-- <FormRow class="form-warning-row" v-if="harvestingStatus !== 'INACTIVE'">
@@ -171,7 +181,7 @@
                                 <button
                                     v-if="!isPersistentDelReqSent && harvestingStatus !== 'INACTIVE'"
                                     class="centered-button button-style submit-button inverted-button"
-                                    :disabled="activating || linking"
+                                    :disabled="activating || linking || !isPublicAndPrivateKeysLinked"
                                     @click="handleSubmit(onActivate())"
                                 >
                                     {{ activating ? $t('activating') : $t('activate') }}

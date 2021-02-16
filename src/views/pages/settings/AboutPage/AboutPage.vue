@@ -26,7 +26,7 @@
                     {{ $t('about_default_node') }}
                 </div>
                 <div class="value">
-                    <a :href="nodeLink" target="_blank">{{ configs.network.defaultNodeUrl }}</a>
+                    <a :href="nodeLink + '/node/info'" target="_blank">{{ nodeLink }}</a>
                 </div>
             </div>
 
@@ -61,7 +61,7 @@
                     {{ $t('about_sdk_version') }}
                 </div>
                 <div class="value">
-                    {{ configs.package.dependencies['symbol-sdk'] }}
+                    {{ configs.packageLock.dependencies['symbol-sdk'].version }}
                 </div>
             </div>
 
@@ -70,7 +70,7 @@
                     {{ $t('about_typescript_version') }}
                 </div>
                 <div class="value">
-                    {{ configs.package.dependencies['typescript'] }}
+                    {{ configs.packageLock.dependencies['typescript'].version }}
                 </div>
             </div>
 
@@ -79,7 +79,7 @@
                     {{ $t('about_rxjs_version') }}
                 </div>
                 <div class="value">
-                    {{ configs.package.dependencies['rxjs'] }}
+                    {{ configs.packageLock.dependencies['rxjs'].version }}
                 </div>
             </div>
 
@@ -88,7 +88,7 @@
                     {{ $t('about_vue_version') }}
                 </div>
                 <div class="value">
-                    {{ configs.package.dependencies['vue'] }}
+                    {{ configs.packageLock.dependencies['vue'].version }}
                 </div>
             </div>
             <!-- <div class="form-row"></div> -->
@@ -107,8 +107,10 @@ import { appConfig } from '@/config';
 import { feesConfig } from '@/config';
 import { networkConfig } from '@/config';
 import packageConfig from '@/../package.json';
+import packageLockConfig from '@/../package-lock.json';
 import { mapGetters } from 'vuex';
 import { NetworkModel } from '@/core/database/entities/NetworkModel';
+import { URLInfo } from '@/core/utils/URLInfo';
 
 @Component({
     components: {
@@ -118,22 +120,28 @@ import { NetworkModel } from '@/core/database/entities/NetworkModel';
     computed: {
         ...mapGetters({
             networkModel: 'network/networkModel',
+            networkType: 'network/networkType',
+            currentPeer: 'network/currentPeer',
         }),
     },
 })
 export default class AboutPage extends Vue {
     private networkModel: NetworkModel;
 
+    public currentPeer: URLInfo;
+
     public configs = {
         package: packageConfig,
+        packageLock: packageLockConfig,
         app: appConfig,
         fees: feesConfig,
         network: networkConfig,
     };
     public types = NetworkType;
+    public networkType: NetworkType;
 
     public isNetworkType(type): boolean {
-        return networkConfig.defaultNetworkType === type;
+        return networkConfig[this.networkType].defaultNetworkType === type;
     }
 
     public get generationHash(): string {
@@ -141,7 +149,7 @@ export default class AboutPage extends Vue {
     }
 
     public get nodeLink(): string {
-        return `${this.configs.network.defaultNodeUrl}/node/info`;
+        return `${this.currentPeer}`;
     }
 }
 </script>

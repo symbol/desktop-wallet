@@ -7,19 +7,19 @@ import { ProfileService } from '@/services/ProfileService';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { AppStore } from '@/app/AppStore';
 // configuration
-import { networkConfig } from '@/config';
-import { appConfig } from '@/config';
+import { networkConfig, appConfig } from '@/config';
 import { AddressValidator, AliasValidator, MaxDecimalsValidator, PublicKeyValidator, UrlValidator } from './validators';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { Values } from 'vue-i18n';
+import { PositiveDecimalNumberValidator } from './validators/PositiveDecimalNumberValidator';
 
 // TODO CustomValidationRules needs to be created when the network configuration is resolved, UI
 // needs to use the resolved CustomValidationRules
 // ATM rules are using the hardcoded file
-const currentNetwork: NetworkConfigurationModel = networkConfig.networkConfigurationDefaults;
-const { MIN_PASSWORD_LENGTH } = appConfig.constants;
+const currentNetwork: NetworkConfigurationModel = networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults;
+const { MIN_PASSWORD_LENGTH, DECIMAL_SEPARATOR } = appConfig.constants;
 
 export class CustomValidationRules {
     /**
@@ -31,7 +31,7 @@ export class CustomValidationRules {
             validate: (value) => {
                 return AddressValidator.validate(value);
             },
-            message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.ADDRESS_INVALID, values)}`,
+            message: (_fieldName: string, values: Values) => `${i18n.t(NotificationType.ADDRESS_INVALID, values)}`,
         });
 
         extend('maxDecimals', {
@@ -39,29 +39,29 @@ export class CustomValidationRules {
                 const { maxDecimalNumber } = args;
                 return MaxDecimalsValidator.validate(value, maxDecimalNumber);
             },
-            message: (fieldName: string, values: Values) => `${i18n.t('max_decimal_number_error', values)}`,
+            message: (_fieldName: string, values: Values) => `${i18n.t('max_decimal_number_error', values)}`,
             params: ['maxDecimalNumber'],
         });
 
+        extend('positiveDecimal', {
+            validate: (value) => PositiveDecimalNumberValidator.validate(value),
+            message: () => i18n.t('positive_decimal_error', { decimalSeparator: DECIMAL_SEPARATOR }).toString(),
+        });
+
         extend('addressOrAlias', {
-            validate: (value) => {
+            validate: async (value) => {
                 const isValidAddress = AddressValidator.validate(value);
                 const isValidAlias = AliasValidator.validate(value);
                 if (isValidAddress) {
                     return true;
                 }
                 if (isValidAlias) {
-                    AppStore.dispatch('namespace/GET_LINKED_ADDRESS', new NamespaceId(value))
-                        .then((val) => {
-                            val ? true : false;
-                        })
-                        .catch(() => {
-                            return false;
-                        });
+                    await AppStore.dispatch('namespace/GET_LINKED_ADDRESS', new NamespaceId(value));
+                    return !!AppStore.getters['namespace/linkedAddress'];
                 }
                 return false;
             },
-            message: (fieldName: string, values: Values) => `${i18n.t('error_incorrect_field', values)}`,
+            message: (_fieldName: string, values: Values) => `${i18n.t('error_incorrect_field', values)}`,
         });
 
         extend('addressOrAliasNetworkType', {
@@ -72,7 +72,7 @@ export class CustomValidationRules {
                 }
                 return Address.createFromRawAddress(value).networkType == networkType;
             },
-            message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.NETWORK_TYPE_INVALID, values)}`,
+            message: (_fieldName: string, values: Values) => `${i18n.t(NotificationType.NETWORK_TYPE_INVALID, values)}`,
             params: ['networkType'],
         });
 
@@ -80,7 +80,7 @@ export class CustomValidationRules {
             validate: (value) => {
                 return UrlValidator.validate(value);
             },
-            message: (fieldName: string, values: Values) => `${i18n.t('error_incorrect_url', values)}`,
+            message: (_fieldName: string, values: Values) => `${i18n.t('error_incorrect_url', values)}`,
         });
 
         extend('confirmPassword', {
@@ -88,7 +88,7 @@ export class CustomValidationRules {
                 const { target } = args;
                 return value === target;
             },
-            message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.PASSWORDS_NOT_MATCHING, values)}`,
+            message: (_fieldName: string, values: Values) => `${i18n.t(NotificationType.PASSWORDS_NOT_MATCHING, values)}`,
             params: ['target'],
         });
 
@@ -97,7 +97,7 @@ export class CustomValidationRules {
                 const currentProfile = new ProfileService().getProfileByName(value);
                 return !(currentProfile && currentProfile.accounts.length > 0);
             },
-            message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.PROFILE_NAME_EXISTS_ERROR, values)}`,
+            message: (_fieldName: string, values: Values) => `${i18n.t(NotificationType.PROFILE_NAME_EXISTS_ERROR, values)}`,
         });
 
         extend('profilePassword', {
@@ -111,7 +111,7 @@ export class CustomValidationRules {
                 const inputHash = ProfileService.getPasswordHash(new Password(value));
                 return inputHash === currentHash;
             },
-            message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.WRONG_PASSWORD_ERROR, values)}`,
+            message: (_fieldName: string, values: Values) => `${i18n.t(NotificationType.WRONG_PASSWORD_ERROR, values)}`,
         });
 
         extend('profileAccountName', {
@@ -123,7 +123,7 @@ export class CustomValidationRules {
                 const knownAccounts = Object.values(accountService.getKnownAccounts(currentProfile.accounts));
                 return undefined === knownAccounts.find((w) => value === w.name);
             },
-            message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.ERROR_ACCOUNT_NAME_ALREADY_EXISTS, values)}`,
+            message: (_fieldName: string, values: Values) => `${i18n.t(NotificationType.ERROR_ACCOUNT_NAME_ALREADY_EXISTS, values)}`,
         });
 
         extend('privateKey', {
@@ -135,7 +135,7 @@ export class CustomValidationRules {
                     return false;
                 }
             },
-            message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.PROFILE_NAME_EXISTS_ERROR, values)}`,
+            message: (_fieldName: string, values: Values) => `${i18n.t(NotificationType.PROFILE_NAME_EXISTS_ERROR, values)}`,
         });
 
         extend('addressOrPublicKey', {
@@ -147,14 +147,14 @@ export class CustomValidationRules {
                 }
                 return false;
             },
-            message: (fieldName: string, values: Values) => `${i18n.t('error_incorrect_field', values)}`,
+            message: (_fieldName: string, values: Values) => `${i18n.t('error_incorrect_field', values)}`,
         });
 
         extend('maxNamespaceDuration', {
             validate: (value) => {
                 return value <= currentNetwork.maxNamespaceDuration;
             },
-            message: (fieldName: string, values: Values) => {
+            message: (_fieldName: string, values: Values) => {
                 return `${i18n.t('error_incorrect_field', { ...values, maxValue: currentNetwork.maxNamespaceDuration })}`;
             },
         });
@@ -172,7 +172,7 @@ export class CustomValidationRules {
                     }
                     return array.includes(value);
                 },
-                message: (fieldName: string, values: Values) => `${i18n.t('error_not_exist', values)}`,
+                message: (_fieldName: string, values: Values) => `${i18n.t('error_not_exist', values)}`,
             });
     }
 }

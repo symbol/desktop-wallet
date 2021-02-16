@@ -42,22 +42,30 @@
             <div>&nbsp;</div>
         </div>
         <div class="table-body-container">
-            <Spin v-if="isLoading" size="large" fix class="absolute" />
-            <div v-if="displayedValues.length" class="table-rows-container">
-                <TableRow
-                    v-for="(rowValues, index) in currentPageRows"
-                    :key="index"
-                    :row-values="rowValues"
-                    :asset-type="assetType"
-                    :owned-asset-hex-ids="ownedAssetHexIds"
-                    @on-show-alias-form="showAliasForm"
-                    @on-show-extend-namespace-duration-form="showExtendNamespaceDurationForm"
-                    @on-show-mosaic-supply-change-form="showModifyMosaicSupplyForm"
-                    @on-show-metadata="showMetadataValue"
-                    @on-show-edit="showModalUpdateMetadata"
-                />
+            <Spin v-if="isLoading || isFetchingMore" size="large" fix class="absolute" />
+            <div
+                v-show="displayedValues.length"
+                v-infinite-scroll="loadMore"
+                infinite-scroll-disabled="infiniteScrollDisabled"
+                infinite-scroll-distance="5"
+                class="table-rows-outer-container"
+            >
+                <div class="table-rows-container">
+                    <TableRow
+                        v-for="(rowValues, index) in currentPageRows"
+                        :key="index"
+                        :row-values="rowValues"
+                        :asset-type="assetType"
+                        :owned-asset-hex-ids="ownedAssetHexIds"
+                        @on-show-alias-form="showAliasForm"
+                        @on-show-extend-namespace-duration-form="showExtendNamespaceDurationForm"
+                        @on-show-mosaic-supply-change-form="showModifyMosaicSupplyForm"
+                        @on-show-metadata="showMetadataValue"
+                        @on-show-edit="showModalUpdateMetadata"
+                    />
+                </div>
             </div>
-            <div v-else-if="!isLoading && (!displayedValues || displayedValues.length === 0)" class="no-data-outer-container">
+            <div v-if="!isLoading && (!displayedValues || displayedValues.length === 0)" class="no-data-outer-container">
                 <!--<div class="no-data-message-container">
                     <div>
                         {{ assetType === 'mosaic' ? $t('no_data_mosaics') : $t('no_data_namespaces') }}
@@ -71,7 +79,7 @@
             </div>
         </div>
 
-        <div class="table-footer-container">
+        <div v-if="paginationType === 'pagination'" class="table-footer-container">
             <Page class="page" :total="displayedValues.length" :page-size="pageSize" @on-change="handlePageChange" />
         </div>
         <ModalFormWrap

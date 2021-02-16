@@ -26,12 +26,18 @@ import { MetadataService } from '@/services/MetadataService';
 
 const Lock = AwaitLock.create();
 
+export interface PageInfo {
+    pageNumber: number;
+    isLastPage: boolean;
+}
+
 interface NamespaceState {
     initialized: boolean;
     namespaces: NamespaceModel[];
     ownedNamespaces: NamespaceModel[];
     isFetchingNamespaces: boolean;
     linkedAddress: Address | null;
+    currentConfirmedPage: PageInfo;
 }
 
 const namespaceState: NamespaceState = {
@@ -40,6 +46,7 @@ const namespaceState: NamespaceState = {
     ownedNamespaces: [],
     isFetchingNamespaces: false,
     linkedAddress: null,
+    currentConfirmedPage: { pageNumber: 1, isLastPage: false },
 };
 
 export default {
@@ -49,6 +56,7 @@ export default {
         getInitialized: (state: NamespaceState) => state.initialized,
         namespaces: (state: NamespaceState) => state.namespaces,
         ownedNamespaces: (state: NamespaceState) => state.ownedNamespaces,
+        currentConfirmedPage: (state: NamespaceState) => state.currentConfirmedPage,
         isFetchingNamespaces: (state: NamespaceState) => state.isFetchingNamespaces,
         linkedAddress: (state: NamespaceState) => state.linkedAddress,
     },
@@ -60,20 +68,19 @@ export default {
             state: NamespaceState,
             {
                 namespaces,
-                currentSignerAddress,
-                namespaceMetadataList,
-            }: { namespaces: NamespaceModel[]; currentSignerAddress: Address; namespaceMetadataList: MetadataModel[] },
+                metadatas,
+                refresh,
+                pageInfo,
+            }: { namespaces: NamespaceModel[]; metadatas: MetadataModel[]; refresh: boolean; pageInfo: PageInfo },
         ) => {
             const uniqueNamespaces = _.uniqBy(namespaces, (n) => n.namespaceIdHex).map((namespace) => {
-                namespace.metadataList = MetadataService.getMosaicMetadataByTargetId(namespaceMetadataList, namespace.namespaceIdHex);
+                namespace.metadataList = MetadataService.getMosaicMetadataByTargetId(metadatas, namespace.namespaceIdHex);
                 return namespace;
             });
-            Vue.set(state, 'namespaces', uniqueNamespaces);
-            Vue.set(
-                state,
-                'ownedNamespaces',
-                uniqueNamespaces.filter((n) => n.ownerAddressRawPlain === currentSignerAddress.plain()),
-            );
+
+            // if it's a refresh request then refresh the list, else concat the new items to the list
+            state.ownedNamespaces = refresh ? uniqueNamespaces : state.ownedNamespaces.concat(uniqueNamespaces);
+            state.currentConfirmedPage = pageInfo;
         },
         isFetchingNamespaces: (state: NamespaceState, isFetchingNamespaces: boolean) =>
             Vue.set(state, 'isFetchingNamespaces', isFetchingNamespaces),
@@ -96,20 +103,33 @@ export default {
             await Lock.uninitialize(callback, { getters });
         },
 
-        LOAD_NAMESPACES({ commit, rootGetters }) {
+        LOAD_NAMESPACES(
+            { commit, rootGetters },
+            { pageNumber, pageSize }: { pageSize: number; pageNumber: number } = {
+                pageSize: 20,
+                pageNumber: 1,
+            },
+        ) {
             const repositoryFactory = rootGetters['network/repositoryFactory'];
-            const generationHash = rootGetters['network/generationHash'];
             const namespaceService = new NamespaceService();
             const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
             const namespaceMetadataList: MetadataModel[] = rootGetters['metadata/namespaceMetadataList'];
             if (!currentSignerAddress) {
                 return;
             }
+            if (!repositoryFactory) {
+                return;
+            }
             commit('isFetchingNamespaces', true);
             namespaceService
-                .getNamespaces(repositoryFactory, generationHash, [currentSignerAddress])
-                .subscribe((namespaces) => {
-                    commit('namespaces', { namespaces, currentSignerAddress, namespaceMetadataList });
+                .getNamespaces(repositoryFactory, currentSignerAddress, { pageSize, pageNumber })
+                .subscribe(({ models, pageInfo }) => {
+                    commit('namespaces', {
+                        namespaces: models || [],
+                        metadatas: namespaceMetadataList,
+                        refresh: pageInfo.pageNumber === 1,
+                        pageInfo,
+                    });
                 })
                 .add(() => commit('isFetchingNamespaces', false));
         },

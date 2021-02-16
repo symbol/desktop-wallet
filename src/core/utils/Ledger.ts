@@ -120,6 +120,9 @@ export class SymbolLedger {
         };
 
         const publicKeyLength = response[0];
+        if (publicKeyLength !== 32) {
+            throw { statusCode: 27264 };
+        }
         result.publicKey = response.slice(1, 1 + publicKeyLength).toString('hex');
         return result;
     }

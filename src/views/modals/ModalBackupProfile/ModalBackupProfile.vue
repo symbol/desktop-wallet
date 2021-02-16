@@ -7,19 +7,19 @@
             <div v-if="accountUnlocked" class="body">
                 <div class="explain">
                     <span class="subtitle">{{ $t('backup_profile_explanation_title') }}</span>
-                    <p>{{ $t('backup_profile_explanation_desc') }}</p>
+                    <p v-html="$t('backup_profile_explanation_desc')"></p>
                 </div>
-
-                <button class="button-style solid-button fat-button" :loading="downloadInProgress" @click="onDownload">
-                    <span> <Icon :type="'md-download'" size="12" /> {{ $t('button_download') }}</span>
-                </button>
-                <br />
-                <p class="temp_notif">
-                    <span v-if="downloadInProgress">{{ $t('progress') }}</span>
-                </p>
             </div>
-
-            <div slot="footer" class="modal-footer"></div>
+            <div slot="footer" class="modal-footer">
+                <Button
+                    v-if="accountUnlocked"
+                    class="button-style solid-button fat-button inverted-button download-button"
+                    :loading="downloadInProgress"
+                    @click="onDownload"
+                >
+                    <Icon :type="'md-download'" size="17" /> {{ $t('button_download') }}
+                </Button>
+            </div>
         </Modal>
     </div>
 </template>
@@ -32,9 +32,4 @@ export default class ModalBackupProfile extends ModalBackupProfileTs {}
 
 <style lang="less" scoped>
 @import './ModalBackupProfile.less';
-
-.temp_notif {
-    margin-top: 0.5em;
-    color: @primary;
-}
 </style>

@@ -27,164 +27,6 @@ export const routes: AppRoute[] = [
         /// region PageLayout children
         children: [
             {
-                path: '/profiles',
-                name: 'profiles',
-                // @ts-ignore
-                component: () => import('@/views/layout/RouterPage.vue'),
-                meta: {
-                    protected: false,
-                    hideFromMenu: true,
-                },
-                children: [
-                    {
-                        path: 'create',
-                        name: 'profiles.importProfile.importStrategy',
-                        meta: { protected: false },
-                        // @ts-ignore
-                        component: () => import('@/views/pages/profiles/import-profile/import-strategy/ImportStrategy.vue'),
-                    },
-                    {
-                        path: 'create',
-                        name: 'profiles.createProfile',
-                        meta: { protected: false },
-                        // @ts-ignore
-                        component: () => import('@/views/pages/profiles/create-profile/CreateProfile.vue'),
-                        children: [
-                            {
-                                path: 'info',
-                                name: 'profiles.createProfile.info',
-                                meta: {
-                                    protected: false,
-                                    icon: createStepImage.createStepImage1,
-                                    nextPage: 'profiles.createProfile.generateMnemonic',
-                                },
-                                // @ts-ignore
-                                component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
-                            },
-                            {
-                                path: 'generateMnemonic',
-                                name: 'profiles.createProfile.generateMnemonic',
-                                meta: {
-                                    protected: false,
-                                    icon: createStepImage.createStepImage2,
-                                },
-                                // @ts-ignore
-                                component: () => import('@/views/pages/profiles/create-profile/generate-mnemonic/GenerateMnemonic.vue'),
-                            },
-                            {
-                                path: 'showMnemonic',
-                                name: 'profiles.createProfile.showMnemonic',
-                                meta: {
-                                    protected: false,
-                                    icon: createStepImage.createStepImage3,
-                                },
-                                // @ts-ignore
-                                component: () => import('@/views/pages/profiles/create-profile/show-mnemonic/ShowMnemonic.vue'),
-                            },
-                            {
-                                path: 'verifyMnemonic',
-                                name: 'profiles.createProfile.verifyMnemonic',
-                                meta: {
-                                    protected: false,
-                                    icon: createStepImage.createStepImage4,
-                                },
-                                // @ts-ignore
-                                component: () => import('@/views/pages/profiles/create-profile/verify-mnemonic/VerifyMnemonic.vue'),
-                            },
-                            {
-                                path: 'finishCreate',
-                                name: 'profiles.createProfile.finalize',
-                                meta: {
-                                    protected: false,
-                                    icon: createStepImage.createStepImage5,
-                                },
-                                // @ts-ignore
-                                component: () => import('@/views/pages/profiles/create-profile/finalize/Finalize.vue'),
-                            },
-                        ],
-                    },
-                    {
-                        path: 'import',
-                        name: 'profiles.importProfile',
-                        meta: { protected: false },
-                        // @ts-ignore
-                        component: () => import('@/views/pages/profiles/import-profile/ImportProfile.vue'),
-                        children: [
-                            {
-                                path: 'inputAccountInfo',
-                                name: 'profiles.importProfile.info',
-                                meta: {
-                                    protected: false,
-                                    icon: importStepImage.importStepImage1,
-                                    nextPage: 'profiles.importProfile.importMnemonic',
-                                },
-                                // @ts-ignore
-                                component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
-                            },
-                            {
-                                path: 'importMnemonic',
-                                name: 'profiles.importProfile.importMnemonic',
-                                meta: {
-                                    protected: false,
-                                    icon: importStepImage.importStepImage2,
-                                },
-                                // @ts-ignore
-                                component: () => import('@/views/pages/profiles/import-profile/import-mnemonic/ImportMnemonic.vue'),
-                            },
-                            {
-                                path: 'walletChoose',
-                                name: 'profiles.importProfile.walletSelection',
-                                meta: {
-                                    protected: false,
-                                    icon: importStepImage.importStepImage3,
-                                },
-                                // @ts-ignore
-                                component: () => import('@/views/pages/profiles/import-profile/account-selection/AccountSelection.vue'),
-                            },
-                            {
-                                path: 'finishImport',
-                                name: 'profiles.importProfile.finalize',
-                                meta: {
-                                    protected: false,
-                                    icon: importStepImage.importStepImage4,
-                                },
-                                // @ts-ignore
-                                component: () => import('@/views/pages/profiles/import-profile/finalize/Finalize.vue'),
-                            },
-                        ],
-                    },
-                    {
-                        path: 'accessLedger',
-                        name: 'profiles.accessLedger',
-                        meta: { protected: false },
-                        // @ts-ignore
-                        component: () => import('@/views/pages/profiles/access-ledger/AccessLedger.vue'),
-                        children: [
-                            {
-                                path: 'info',
-                                name: 'profiles.accessLedger.info',
-                                meta: {
-                                    protected: false,
-                                    isLedger: true,
-                                },
-                                // @ts-ignore
-                                component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
-                            },
-                            {
-                                path: 'finishCreate',
-                                name: 'profiles.accessLedger.finalize',
-                                meta: {
-                                    protected: false,
-                                    isLedger: true,
-                                },
-                                // @ts-ignore
-                                component: () => import('@/views/pages/profiles/access-ledger/finalize/Finalize.vue'),
-                            },
-                        ],
-                    },
-                ],
-            },
-            {
                 path: '/dashboard',
                 name: 'dashboard',
                 meta: {
@@ -202,7 +44,8 @@ export const routes: AppRoute[] = [
                         name: 'dashboard.index',
                         meta: {
                             protected: true,
-                            title: 'page_title_dashboard',
+                            title: 'page_title_history',
+                            icon: officialIcons.history,
                         },
                         // @ts-ignore
                         component: () => import('@/views/pages/dashboard/home/DashboardHomePage.vue'),
@@ -212,7 +55,8 @@ export const routes: AppRoute[] = [
                         name: 'dashboard.transfer',
                         meta: {
                             protected: true,
-                            title: 'page_title_transfer',
+                            title: 'page_title_send',
+                            icon: officialIcons.send2,
                         },
                         // @ts-ignore
                         component: () => import('@/views/pages/dashboard/transfer/DashboardTransferPage.vue'),
@@ -224,6 +68,7 @@ export const routes: AppRoute[] = [
                         meta: {
                             protected: true,
                             title: 'page_title_invoice',
+                            icon: officialIcons.receive2,
                         },
                         // @ts-ignore
                         component: () => import('@/views/pages/dashboard/invoice/DashboardInvoicePage.vue'),
@@ -461,6 +306,164 @@ export const routes: AppRoute[] = [
             },
         ],
         /// end-region PageLayout children
+    },
+    {
+        path: '/profiles',
+        name: 'profiles',
+        // @ts-ignore
+        component: () => import('@/views/layout/RouterPage.vue'),
+        meta: {
+            protected: false,
+            hideFromMenu: true,
+        },
+        children: [
+            {
+                path: 'create',
+                name: 'profiles.importProfile.importStrategy',
+                meta: { protected: false },
+                // @ts-ignore
+                component: () => import('@/views/pages/profiles/import-profile/import-strategy/ImportStrategy.vue'),
+            },
+            {
+                path: 'create',
+                name: 'profiles.createProfile',
+                meta: { protected: false },
+                // @ts-ignore
+                component: () => import('@/views/pages/profiles/create-profile/CreateProfile.vue'),
+                children: [
+                    {
+                        path: 'info',
+                        name: 'profiles.createProfile.info',
+                        meta: {
+                            protected: false,
+                            icon: createStepImage.createStepImage1,
+                            nextPage: 'profiles.createProfile.generateMnemonic',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
+                    },
+                    {
+                        path: 'generateMnemonic',
+                        name: 'profiles.createProfile.generateMnemonic',
+                        meta: {
+                            protected: false,
+                            icon: createStepImage.createStepImage2,
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/profiles/create-profile/generate-mnemonic/GenerateMnemonic.vue'),
+                    },
+                    {
+                        path: 'showMnemonic',
+                        name: 'profiles.createProfile.showMnemonic',
+                        meta: {
+                            protected: false,
+                            icon: createStepImage.createStepImage3,
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/profiles/create-profile/show-mnemonic/ShowMnemonic.vue'),
+                    },
+                    {
+                        path: 'verifyMnemonic',
+                        name: 'profiles.createProfile.verifyMnemonic',
+                        meta: {
+                            protected: false,
+                            icon: createStepImage.createStepImage4,
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/profiles/create-profile/verify-mnemonic/VerifyMnemonic.vue'),
+                    },
+                    {
+                        path: 'finishCreate',
+                        name: 'profiles.createProfile.finalize',
+                        meta: {
+                            protected: false,
+                            icon: createStepImage.createStepImage5,
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/profiles/create-profile/finalize/Finalize.vue'),
+                    },
+                ],
+            },
+            {
+                path: 'import',
+                name: 'profiles.importProfile',
+                meta: { protected: false },
+                // @ts-ignore
+                component: () => import('@/views/pages/profiles/import-profile/ImportProfile.vue'),
+                children: [
+                    {
+                        path: 'inputAccountInfo',
+                        name: 'profiles.importProfile.info',
+                        meta: {
+                            protected: false,
+                            icon: importStepImage.importStepImage1,
+                            nextPage: 'profiles.importProfile.importMnemonic',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
+                    },
+                    {
+                        path: 'importMnemonic',
+                        name: 'profiles.importProfile.importMnemonic',
+                        meta: {
+                            protected: false,
+                            icon: importStepImage.importStepImage2,
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/profiles/import-profile/import-mnemonic/ImportMnemonic.vue'),
+                    },
+                    {
+                        path: 'walletChoose',
+                        name: 'profiles.importProfile.walletSelection',
+                        meta: {
+                            protected: false,
+                            icon: importStepImage.importStepImage3,
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/profiles/import-profile/account-selection/AccountSelection.vue'),
+                    },
+                    {
+                        path: 'finishImport',
+                        name: 'profiles.importProfile.finalize',
+                        meta: {
+                            protected: false,
+                            icon: importStepImage.importStepImage4,
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/profiles/import-profile/finalize/Finalize.vue'),
+                    },
+                ],
+            },
+            {
+                path: 'accessLedger',
+                name: 'profiles.accessLedger',
+                meta: { protected: false },
+                // @ts-ignore
+                component: () => import('@/views/pages/profiles/access-ledger/AccessLedger.vue'),
+                children: [
+                    {
+                        path: 'info',
+                        name: 'profiles.accessLedger.info',
+                        meta: {
+                            protected: false,
+                            isLedger: true,
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
+                    },
+                    {
+                        path: 'finishCreate',
+                        name: 'profiles.accessLedger.finalize',
+                        meta: {
+                            protected: false,
+                            isLedger: true,
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/profiles/access-ledger/finalize/Finalize.vue'),
+                    },
+                ],
+            },
+        ],
     },
     {
         path: '/login',

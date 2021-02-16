@@ -16,6 +16,7 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import {
     Account,
+    AccountAddressRestrictionTransaction,
     AggregateTransaction,
     AggregateTransactionCosignature,
     CosignatureTransaction,
@@ -42,6 +43,7 @@ import { CosignatureQR } from 'symbol-qr-library';
 import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue';
 import { AccountService } from '@/services/AccountService';
 import { LedgerService } from '@/services/LedgerService';
+import { AccountMetadataTransaction } from 'symbol-sdk';
 
 @Component({
     components: {
@@ -75,6 +77,11 @@ export class ModalTransactionCosignatureTs extends Vue {
      * Aggregate transaction fetched by transactionHash
      */
     transaction: AggregateTransaction = null;
+
+    /**
+     * Data is loading
+     */
+    protected isLoading: boolean = false;
 
     /**
      * Currently active account
@@ -150,14 +157,18 @@ export class ModalTransactionCosignatureTs extends Vue {
                 return false;
             }
             const cosignerAddresses = this.transaction.innerTransactions.map((t) => t.signer?.address);
-            const modifyMultisigAddition = [];
+            const cosignList = [];
             this.transaction.innerTransactions.forEach((t) => {
                 if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {
-                    modifyMultisigAddition.push(...(t as MultisigAccountModificationTransaction).addressAdditions);
+                    cosignList.push(...(t as MultisigAccountModificationTransaction).addressAdditions);
+                } else if (t.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf()) {
+                    cosignList.push(...(t as AccountAddressRestrictionTransaction).restrictionAdditions);
+                } else if (t.type === TransactionType.ACCOUNT_METADATA) {
+                    cosignList.push((t as AccountMetadataTransaction).targetAddress);
                 }
             });
 
-            if (modifyMultisigAddition.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
+            if (cosignList.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
                 return true;
             }
             const cosignRequired = cosignerAddresses.find((c) => {
@@ -197,6 +208,9 @@ export class ModalTransactionCosignatureTs extends Vue {
      * Error notification handler
      */
     private errorNotificationHandler(error: any) {
+        if (error.message && error.message.includes('cannot open device with path')) {
+            error.errorCode = 'ledger_connected_other_app';
+        }
         if (error.errorCode) {
             switch (error.errorCode) {
                 case 'NoDevice':
@@ -204,6 +218,9 @@ export class ModalTransactionCosignatureTs extends Vue {
                     return;
                 case 'ledger_not_supported_app':
                     this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_supported_app');
+                    return;
+                case 'ledger_connected_other_app':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_connected_other_app');
                     return;
                 case 'ledger_not_correct_account':
                     this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_correct_account');
@@ -236,6 +253,8 @@ export class ModalTransactionCosignatureTs extends Vue {
 
     @Watch('transactionHash', { immediate: true })
     public async fetchTransaction() {
+        this.isLoading = true;
+
         try {
             // first get the last status
             const transactionStatus: TransactionStatus = (await this.$store.dispatch('transaction/FETCH_TRANSACTION_STATUS', {
@@ -254,6 +273,8 @@ export class ModalTransactionCosignatureTs extends Vue {
         } catch (error) {
             console.log(error);
         }
+
+        this.isLoading = false;
     }
 
     /**

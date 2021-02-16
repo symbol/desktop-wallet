@@ -15,8 +15,6 @@
  */
 import { Address } from 'symbol-sdk';
 import { decode } from 'utf8';
-// configuration
-import { networkConfig } from '@/config';
 
 export class Formatters {
     public static formatNumber = (number: number): string => {
@@ -37,9 +35,6 @@ export class Formatters {
             return;
         }
         return Address.createFromRawAddress(address).pretty();
-    };
-    public static formatExplorerUrl = (transactionHash) => {
-        return networkConfig.explorerUrl + transactionHash;
     };
 
     public static miniAddress = (address: Address): string => {

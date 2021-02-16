@@ -355,34 +355,10 @@
     overflow-y: hidden;
 }
 
-.select-style {
-    height: @formFieldHeight;
-    line-height: @formFieldHeight;
-    display: block;
-    font-size: @smallFont !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding-left: 0.08rem;
-    padding-right: 0.24rem;
-    border-radius: 0.04rem;
-    background: @grayLightest;
-    border-radius: 3.42857px;
-
-    .ivu-select-selection {
-        box-shadow: unset;
-        border: unset;
-        background: @grayLightest;
-        border-radius: 3.4px;
-    }
-
-    .ivu-select-selected-value {
-        font-size: @smallFont !important;
-        padding-left: 0;
-        height: @formFieldHeight;
-        line-height: @formFieldHeight;
-        color: @purpleDark;
-    }
+.ivu-select-dropdown {
+    background-color: @grayLightest;
+    margin: 0 !important;
+    padding: 0 !important;
 
     .ivu-select-item-selected {
         color: @primary;
@@ -391,33 +367,53 @@
     .ivu-select-item:hover {
         background-color: @white;
     }
+}
 
-    .ivu-select-dropdown {
-        min-width: unset !important;
-        left: 0px !important;
-        width: 100%;
-        background-color: @grayLightest;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
+.ivu-select-placeholder {
+    font-size: @smallFont;
+    padding-left: 0;
+    height: @formFieldHeight;
+    line-height: @formFieldHeight;
+    color: #c1b4b4 !important;
+}
 
-    .ivu-select-arrow {
-    }
+.ivu-select-selection {
+    box-shadow: unset !important;
+    border: unset;
+    background: @grayLightest;
+    border-radius: 3.4px;
+}
 
-    .ivu-select-placeholder {
-        font-size: @smallFont;
-        padding-left: 0;
-        height: @formFieldHeight;
-        line-height: @formFieldHeight;
-        color: #c1b4b4 !important;
-    }
+.ivu-select-selected-value {
+    font-size: @smallFont !important;
+    padding-left: 0.16rem !important;
+    height: @formFieldHeight;
+    line-height: @formFieldHeight;
+    color: @purpleDark;
+}
+
+.select-style {
+    height: @formFieldHeight;
+    line-height: @formFieldHeight;
+    display: block;
+    font-size: @smallFont !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 0.24rem;
+    border-radius: 0.04rem;
+    background: @grayLightest;
+    border-radius: 3.42857px;
+}
+
+.ivu-checkbox {
+    line-height: unset;
 }
 
 .ivu-checkbox-inner {
     background: @grayLightest;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
     border-radius: 2px;
-    border: none;
 }
 
 .ivu-checkbox-checked {
@@ -529,10 +525,9 @@
 }
 
 .fat-button {
-    padding-top: 0.6em;
     padding-left: 1em;
     padding-right: 1em;
-    padding-bottom: 2em;
+    height: 0.47rem !important;
 }
 
 .full-width-centered-button {
@@ -544,7 +539,6 @@
 }
 
 .inverted-button:disabled {
-    border: 2px solid @grayLight;
     background: @grayLight;
     color: @grayDark;
 }
@@ -821,12 +815,9 @@
 }
 
 .create-account-style {
-    // width: auto !important;
-    font-size: @bigFont;
-    font-family: @symbolFontSemiBold;
-    border-radius: @buttonBorderRadius;
-    width: 2rem;
-    margin-left: 0.2rem;
+    margin-left: 0.15rem;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
 }
 
 .back-create-button {
