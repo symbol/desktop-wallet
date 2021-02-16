@@ -146,7 +146,7 @@
 
 .accounts-container {
     background: @white;
-    min-height: 400px;
+    height: 5rem;
     padding: 0.3rem;
 
     .accounts-container-title {
@@ -158,7 +158,6 @@
     .address-list-container {
         position: relative;
         width: 100%;
-        height: 100%;
         padding: 10px 0 5px 0;
         font-size: 13px;
         color: rgba(51, 51, 51);
@@ -175,19 +174,14 @@
         font-weight: bolder;
     }
 
-    .remove-icon {
-        width: 50px;
-
-        img {
-            width: 21px;
-            height: 21px;
-        }
+    .remove-icon img {
+        width: 21px;
+        height: 21px;
     }
 }
 
 .address-list {
-    font-size: 16px;
-    min-height: 300px;
+    font-size: 0.16rem;
 
     .scroll {
         max-height: 520px;
@@ -215,10 +209,6 @@
     .table-item {
         padding: 5px 0;
         border-bottom: 1px solid #e0dfe5;
-
-        .table-item-content {
-            width: 89%;
-        }
     }
 
     .table-item:hover {
@@ -231,10 +221,8 @@
     }
 
     .address-id {
-        min-width: 30px !important;
-        width: 30px !important;
+        width: 20px !important;
         position: relative;
-        font-size: 20px;
 
         img {
             width: 20px;
@@ -244,18 +232,25 @@
         }
     }
 
-    .address-value {
-        width: 450px;
-        font-size: 20px;
+    .address-balance {
+        width: 120px;
     }
 
-    .address-balance {
-        font-size: 20px;
-        width: 120px;
+    .amount-display-container {
+        font-size: 0.12rem;
     }
 
     .address-item {
         width: 100%;
+        display: grid;
+        grid-template-columns: auto 1fr;
+    }
+
+    .address-list-body {
+        overflow-y: auto;
+        margin-right: -0.3rem;
+        padding-right: 0.3rem;
+        max-height: 3.93rem;
     }
 }
 
@@ -289,11 +284,6 @@
 
 /deep/.form-row {
     width: 100%;
-}
-
-.scrollable {
-    max-height: 300px;
-    overflow-y: auto;
 }
 
 .row {
