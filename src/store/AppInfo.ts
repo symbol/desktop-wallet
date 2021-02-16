@@ -51,7 +51,7 @@ const appInfoState: AppInfoState = {
     loadingDisableCloseButton: false,
     hasControlsDisabled: false,
     controlsDisabledMessage: '',
-    faucetUrl: networkConfig[NetworkType.TEST_NET].faucetUrl,
+    faucetUrl: undefined,
     settings: settingService.getProfileSettings(ANON_PROFILE_NAME, NetworkType.TEST_NET), // TODO how to fix here? why static?
 };
 
@@ -87,6 +87,9 @@ export default {
         toggleLoadingOverlay: (state: AppInfoState, display: boolean) => Vue.set(state, 'hasLoadingOverlay', display),
         setLoadingOverlayMessage: (state: AppInfoState, message: string) => Vue.set(state, 'loadingOverlayMessage', message),
         setLoadingDisableCloseButton: (state: AppInfoState, bool: boolean) => Vue.set(state, 'loadingDisableCloseButton', bool),
+        faucetUrl: (state: AppInfoState, faucetUrl) => {
+            Vue.set(state, 'faucetUrl', faucetUrl || networkConfig[NetworkType.TEST_NET].faucetUrl);
+        },
     },
     actions: {
         async initialize({ commit, getters }) {
@@ -132,6 +135,7 @@ export default {
             const currentProfile = rootGetters['profile/currentProfile'];
             const profileName = (currentProfile && currentProfile.profileName) || ANON_PROFILE_NAME;
             commit('settings', settingService.changeProfileSettings(profileName, settingsModel, currentProfile.networkType));
+            commit('faucetUrl', networkConfig[currentProfile.networkType].faucetUrl);
         },
 
         SET_EXPLORER_URL({ dispatch }, explorerUrl: string) {

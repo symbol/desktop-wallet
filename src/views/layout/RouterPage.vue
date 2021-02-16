@@ -14,7 +14,7 @@
                     </div>
                 </transition>
                 <div class="footer">
-                    <span class="footer-phrase">Powered by <b>NEM Technology.</b></span>
+                    <span class="footer-phrase">{{ $t('copyright') }}</span>
                 </div>
             </div>
         </div>

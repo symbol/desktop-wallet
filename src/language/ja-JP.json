@@ -775,7 +775,6 @@
     "please_set_your_account_password": "アカウントパスワードを設定",
     "please_update_symbol_bolos_app": "Symbol BOLOS アプリを更新してください！",
     "point_null_error": "ノード NULL エラー",
-    "powered_by": "Powered by NEM テクノロジー",
     "preview_and_action": "プレビュー＆アクション",
     "previous": "戻る",
     "privacy_policy": "プライバシーポリシー",
@@ -1036,5 +1035,6 @@
     "harvesting_status_not_detected": "ハーベスティング状態を検出できませんでした。ハーベスティングしているノードを選択してください。",
     "click_to_retry": "クリックして再試行",
     "current_node_is_not_available": "現在のノードは利用できません。\nノードに接続しようとしています",
-    "nodes_unavailable_check_network_and": "ノード（{0} / {1}）は現在利用できません。\nネットワーク接続、設定を確認してください"
+    "nodes_unavailable_check_network_and": "ノード（{0} / {1}）は現在利用できません。\nネットワーク接続、設定を確認してください",
+    "copyright": "Copyright©2021NEM Software"
 }
