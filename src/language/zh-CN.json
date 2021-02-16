@@ -590,6 +590,7 @@
     "low_fee_warning_message": "费用少于建议的交易可能不会被接受，最终",
     "max_approval_amount_more_than_10": "最小删除账户审批数不可大于10",
     "max_decimal_number_error": "{_field_} 字段最多 {maxDecimalNumber} 位小数或更少。",
+    "positive_decimal_error": "只允许使用数字和\"{decimalSeparator}\"",
     "max_fee": "最大费用",
     "max_removal_amount_more_than_10": "最小删除账户审批数不可大于10",
     "message": "消息",

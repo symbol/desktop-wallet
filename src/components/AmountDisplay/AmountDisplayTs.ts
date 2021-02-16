@@ -47,15 +47,12 @@ export class AmountDisplayTs extends Vue {
 
     get fractionalPart(): string {
         const rest = this.value - Math.floor(this.value);
-        if (rest === 0) {
-            return '';
-        }
         const decimals = this.decimals === undefined ? this.networkConfiguration.maxMosaicDivisibility || 6 : this.decimals;
         const formatOptions = {
-            minimumFractionDigits: decimals,
+            minimumFractionDigits: 1,
             maximumFractionDigits: decimals,
         };
-        // remove leftmost-0 and rightmost-0a
+        // remove leftmost 0 and rightmost 0s
         return rest.toLocaleString(undefined, formatOptions).replace(/^0/, '');
     }
 

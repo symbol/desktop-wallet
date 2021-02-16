@@ -62,7 +62,10 @@ export default class HarvestedBlocksListTs extends Vue {
         return !!this.harvestedBlocks
             ? this.harvestedBlocks.map((i) => ({
                   blockNo: i.blockNo?.compact(),
-                  fee: i.fee?.compact() / Math.pow(10, this.networkCurrency.divisibility),
+                  fee: (i.fee?.compact() / Math.pow(10, this.networkCurrency.divisibility)).toLocaleString(undefined, {
+                      minimumFractionDigits: 1,
+                      maximumFractionDigits: this.networkCurrency.divisibility,
+                  }),
               }))
             : [];
     }

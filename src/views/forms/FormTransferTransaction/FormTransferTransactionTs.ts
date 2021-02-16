@@ -72,12 +72,13 @@ import { MosaicService } from '@/services/MosaicService';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { TransactionCommand } from '@/services/TransactionCommand';
-import { feesConfig } from '@/config';
+import { feesConfig, appConfig } from '@/config';
 import { NotificationType } from '@/core/utils/NotificationType';
+const { DECIMAL_SEPARATOR } = appConfig.constants;
 
 export interface MosaicAttachment {
     mosaicHex: string;
-    amount: number; // Relative amount
+    amount: string; // Relative amount
     id?: MosaicId;
     name?: string;
     uid?: number;
@@ -169,7 +170,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     public formItems = {
         signerAddress: '',
-        attachedMosaics: [],
+        attachedMosaics: new Array<MosaicAttachment>(),
         recipientRaw: '',
         recipient: null,
         selectedMosaicHex: '',
@@ -261,7 +262,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                 id: new MosaicId(this.networkCurrency.mosaicIdHex),
                 mosaicHex: this.networkCurrency.mosaicIdHex,
                 name: this.networkCurrency.namespaceIdFullname,
-                amount: 0,
+                amount: '0',
                 uid: Math.floor(Math.random() * 10e6), // used to index dynamic inputs
             },
         ];
@@ -326,13 +327,14 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     protected getTransactions(): TransferTransaction[] {
         const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[];
         const mosaics = this.formItems.attachedMosaics
-            .filter(({ uid }) => uid) // filter out null values
+            .filter((attachment) => attachment.uid) // filter out null values
             .map(
-                (spec: MosaicAttachment): Mosaic => {
-                    const info = mosaicsInfo.find((i) => i.mosaicIdHex === spec.mosaicHex);
+                (attachment): Mosaic => {
+                    const amount = Number(attachment.amount.trim().replace(DECIMAL_SEPARATOR, '.'));
+                    const info = mosaicsInfo.find((i) => i.mosaicIdHex === attachment.mosaicHex);
                     const div = info ? info.divisibility : 0;
                     // - format amount to absolute
-                    return new Mosaic(new MosaicId(RawUInt64.fromHex(spec.mosaicHex)), UInt64.fromUint(spec.amount * Math.pow(10, div)));
+                    return new Mosaic(new MosaicId(RawUInt64.fromHex(attachment.mosaicHex)), UInt64.fromUint(amount * Math.pow(10, div)));
                 },
             );
         return [
@@ -477,7 +479,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                     id: new MosaicId(info.mosaicIdHex), // XXX resolve mosaicId from namespaceId
                     mosaicHex: info.mosaicIdHex, // XXX resolve mosaicId from namespaceId
                     name: info.name,
-                    amount: mosaic.amount.compact() / Math.pow(10, info.divisibility),
+                    amount: (mosaic.amount.compact() / Math.pow(10, info.divisibility)).toLocaleString(undefined, {
+                        maximumFractionDigits: info.divisibility,
+                    }),
                     uid: Math.floor(Math.random() * 10e6), // used to index dynamic inputs
                 };
             })
@@ -501,7 +505,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.mosaicInputsManager.setSlot(mosaicToAffectToNewInput, uid);
         this.formItems.attachedMosaics.push({
             mosaicHex: mosaicToAffectToNewInput,
-            amount: 0,
+            amount: '0',
             uid,
         });
 

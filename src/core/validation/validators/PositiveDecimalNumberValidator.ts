@@ -18,29 +18,16 @@ import { appConfig } from '@/config';
 const { DECIMAL_SEPARATOR } = appConfig.constants;
 
 @staticImplements<Validator>()
-export class MaxDecimalsValidator {
+export class PositiveDecimalNumberValidator {
+    private static regex = new RegExp(`^\\s*\\d+(\\${DECIMAL_SEPARATOR}\\d*)?\\s*$`);
+
     /**
-     * Validates the max number of decimals in a number
+     * Validates the value is a valid decimal number
      * @static
      * @param {*} value
-     * @param {number} maxDecimalNumber
      * @returns {boolean}
      */
-    public static validate(value: any, maxDecimalNumber: number): boolean {
-        if (Math.floor(value) == value) {
-            return true;
-        }
-        const split: string[] = value.toString().split(DECIMAL_SEPARATOR);
-
-        if (split.length <= 1) {
-            return true;
-        }
-
-        if (split.length !== 2) {
-            return false;
-        }
-
-        const decimalNumber = split[1].length || 0;
-        return decimalNumber <= maxDecimalNumber;
+    public static validate(value: any): boolean {
+        return this.regex.test(value.toString());
     }
 }
