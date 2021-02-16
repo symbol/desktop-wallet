@@ -9,6 +9,13 @@
         <div class="button-refresh-container">
             <ButtonRefresh @click="refresh" />
         </div>
+        <div class="button-download-container">
+            <Tooltip :content="$t('export_transactions')" placement="top" :transfer="true">
+                <a class="button-download" @click="downloadTransactions">
+                    <font-awesome-icon icon="file-csv" />
+                </a>
+            </Tooltip>
+        </div>
     </div>
 </template>
 

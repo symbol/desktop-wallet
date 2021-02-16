@@ -244,6 +244,7 @@
     "expires_in": "有効期限",
     "explorer_url": "エクスプローラ URL",
     "export_mnemonic": "ニーモニックのエクスポート",
+    "export_transactions": "トランザクションのエクスポート",
     "fee": "手数料",
     "fee_can_not_be_less_than_0": "手数料は 0 未満にできません",
     "fee_speed_fast": "早い",

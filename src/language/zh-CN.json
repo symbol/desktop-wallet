@@ -243,6 +243,7 @@
     "expires_in": "有效期限",
     "explorer_url": "浏览器 URL",
     "export_mnemonic": "导出助记词",
+    "export_transactions": "出口交易",
     "fee": "费用",
     "fee_can_not_be_less_than_0": "费用不可小于0",
     "fee_speed_fast": "快",
