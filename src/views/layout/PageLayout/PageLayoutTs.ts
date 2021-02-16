@@ -14,7 +14,7 @@
  *
  */
 import { NetworkType } from 'symbol-sdk';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
@@ -46,6 +46,9 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
 //@ts-ignore
 import AccountLinks from '@/components/AccountLinks/AccountLinks.vue';
 import { officialIcons } from '@/views/resources/Images';
+import { ConnectingToNodeInfo } from '@/store/Network';
+
+import i18n from '@/language';
 
 @Component({
     components: {
@@ -72,6 +75,7 @@ import { officialIcons } from '@/views/resources/Images';
             currentAccount: 'account/currentAccount',
             explorerBaseUrl: 'app/explorerUrl',
             faucetBaseUrl: 'app/faucetUrl',
+            connectingToNodeInfo: 'network/connectingToNodeInfo',
         }),
     },
 })
@@ -141,16 +145,34 @@ export class PageLayoutTs extends Vue {
      */
     public faucetBaseUrl: string;
 
+    public connectingToNodeInfo: ConnectingToNodeInfo;
+
     /// region computed properties getter/setter
     /**
      * Holds alert message
      * @var {Object}
      */
-    get alert(): { show: boolean; message: string } {
+    get alert(): { show: boolean; message: string; showRetry?: boolean } {
         if (!this.currentPeer || !this.isConnected) {
+            let message = '';
+            let showRetry = false;
+            if (this.connectingToNodeInfo.isTryingToConnect) {
+                message = i18n.t('current_node_is_not_available', [
+                    this.connectingToNodeInfo.progressCurrentNodeIndex,
+                    this.connectingToNodeInfo.progressTotalNumOfNodes,
+                ]) as string;
+            } else {
+                message = i18n.t('nodes_unavailable_check_network_and', [
+                    this.connectingToNodeInfo.progressCurrentNodeIndex,
+                    this.connectingToNodeInfo.progressTotalNumOfNodes,
+                ]) as string;
+                showRetry = true;
+            }
+
             return {
                 show: true,
-                message: 'node_not_available_please_check_your_node_or_network_settings',
+                message,
+                showRetry,
             };
         }
 
@@ -222,5 +244,17 @@ export class PageLayoutTs extends Vue {
         }
 
         await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account);
+    }
+
+    @Watch('isConnected', { immediate: true })
+    private watchIsConnected() {
+        // should we check already tried and max attemps is not exceeded, maybe later?
+        if (!this.isConnected) {
+            this.reconnect();
+        }
+    }
+
+    public reconnect() {
+        this.$store.dispatch('network/CONNECT', { waitBetweenTrials: true });
     }
 }

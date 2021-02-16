@@ -14,19 +14,16 @@
  *
  */
 
-import { NetworkModel } from '@/core/database/entities/NetworkModel';
-import { NetworkConfiguration, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk';
-import { URLHelpers } from '@/core/utils/URLHelpers';
-import { combineLatest, defer, EMPTY, from, Observable } from 'rxjs';
-import { catchError, concatMap, flatMap, map, take, tap, isEmpty } from 'rxjs/operators';
-import * as _ from 'lodash';
-
-import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
-
 import { networkConfig } from '@/config';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
-import { NetworkConfigurationHelpers } from '@/core/utils/NetworkConfigurationHelpers';
+import { NetworkModel } from '@/core/database/entities/NetworkModel';
 import { NetworkModelStorage } from '@/core/database/storage/NetworkModelStorage';
+import { NetworkConfigurationHelpers } from '@/core/utils/NetworkConfigurationHelpers';
+import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
+import { URLHelpers } from '@/core/utils/URLHelpers';
+import { combineLatest, defer, EMPTY, from, Observable } from 'rxjs';
+import { catchError, flatMap, map, tap } from 'rxjs/operators';
+import { NetworkConfiguration, NetworkType, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk';
 
 /**
  * The service in charge of loading and caching anything related to Network from Rest.
@@ -39,11 +36,11 @@ export class NetworkService {
     private readonly storage = NetworkModelStorage.INSTANCE;
 
     /**
-     * The best default Url. It uses the stored condiguration if possible.
+     * The best default Url. It uses the stored configuration if possible.
      */
     public getDefaultUrl(): string {
         const storedNetworkModel = this.storage.getLatest();
-        return URLHelpers.formatUrl((storedNetworkModel && storedNetworkModel.url) || networkConfig.randomNodeUrl).url;
+        return URLHelpers.formatUrl(storedNetworkModel && storedNetworkModel.url).url;
     }
 
     /**
@@ -54,58 +51,29 @@ export class NetworkService {
      * @param generationHash of the current profile
      */
     public getNetworkModel(
-        candidateUrl: string | undefined,
-        generationHash?: string | undefined,
+        nodeUrl: string,
+        defaultNetworkType: NetworkType = NetworkType.TEST_NET,
     ): Observable<{
-        fallback: boolean;
         networkModel: NetworkModel;
         repositoryFactory: RepositoryFactory;
-        isCandidateUrlAvailable: boolean;
     }> {
-        const possibleUrls = this.resolveCandidates(candidateUrl, this.storage.get(generationHash) || this.storage.getLatest());
-        let isCandidateUrlAvailable: boolean = true;
-        const repositoryFactoryObservable = from(possibleUrls)
-            .pipe(
-                concatMap((url) => {
-                    if (url === candidateUrl) {
-                        this.createRepositoryFactory(url)
-                            .pipe(isEmpty())
-                            .subscribe((isEmpty) => (isCandidateUrlAvailable = !isEmpty));
-                    }
-                    return this.createRepositoryFactory(url);
-                }),
-            )
-            .pipe(take(1));
-        return repositoryFactoryObservable.pipe(
+        return from(this.createRepositoryFactory(nodeUrl)).pipe(
             flatMap(({ url, repositoryFactory }) => {
                 return repositoryFactory.getGenerationHash().pipe(
                     flatMap((generationHash) => {
-                        const storedNetworkModel = this.storage.get(generationHash);
                         const networkRepository = repositoryFactory.createNetworkRepository();
                         const nodeRepository = repositoryFactory.createNodeRepository();
                         const networkTypeObservable = repositoryFactory
                             .getNetworkType()
-                            .pipe(
-                                ObservableHelpers.defaultLast(
-                                    (storedNetworkModel && storedNetworkModel.networkType) || networkConfig.defaultNetworkType,
-                                ),
-                            );
-                        const generationHashObservable = repositoryFactory
-                            .getGenerationHash()
-                            .pipe(ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.generationHash));
+                            .pipe(ObservableHelpers.defaultLast(defaultNetworkType));
+                        const generationHashObservable = repositoryFactory.getGenerationHash();
 
-                        const networkPropertiesObservable = networkRepository.getNetworkProperties().pipe(
-                            map((d) => this.toNetworkConfigurationModel(d)),
-                            ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.networkConfiguration),
-                        );
-                        const nodeInfoObservable = nodeRepository
-                            .getNodeInfo()
-                            .pipe(ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.nodeInfo));
+                        const networkPropertiesObservable = networkRepository
+                            .getNetworkProperties()
+                            .pipe(map((d) => this.toNetworkConfigurationModel(d, defaultNetworkType)));
+                        const nodeInfoObservable = nodeRepository.getNodeInfo();
 
-                        const transactionFeesObservable = repositoryFactory
-                            .createNetworkRepository()
-                            .getTransactionFees()
-                            .pipe(ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.transactionFees));
+                        const transactionFeesObservable = repositoryFactory.createNetworkRepository().getTransactionFees();
 
                         return combineLatest([
                             networkTypeObservable,
@@ -116,7 +84,6 @@ export class NetworkService {
                         ]).pipe(
                             map(([networkType, generationHash, networkProperties, nodeInfo, transactionFees]) => {
                                 return {
-                                    fallback: !!candidateUrl && candidateUrl !== url,
                                     networkModel: new NetworkModel(
                                         url,
                                         networkType,
@@ -126,7 +93,6 @@ export class NetworkService {
                                         nodeInfo,
                                     ),
                                     repositoryFactory,
-                                    isCandidateUrlAvailable,
                                 };
                             }),
                             tap((p) => this.storage.set(generationHash, p.networkModel)),
@@ -154,8 +120,8 @@ export class NetworkService {
         );
     }
 
-    private toNetworkConfigurationModel(dto: NetworkConfiguration): NetworkConfigurationModel {
-        const fileDefaults: NetworkConfigurationModel = networkConfig.networkConfigurationDefaults;
+    private toNetworkConfigurationModel(dto: NetworkConfiguration, networkType: NetworkType): NetworkConfigurationModel {
+        const fileDefaults: NetworkConfigurationModel = networkConfig[networkType].networkConfigurationDefaults;
         const fromDto: NetworkConfigurationModel = {
             epochAdjustment: NetworkConfigurationHelpers.epochAdjustment(dto),
             maxMosaicDivisibility: NetworkConfigurationHelpers.maxMosaicDivisibility(dto),
@@ -177,18 +143,6 @@ export class NetworkService {
             totalChainImportance: NetworkConfigurationHelpers.totalChainImportance(dto),
         };
         return { ...fileDefaults, ...fromDto };
-    }
-
-    private resolveCandidates(newUrl: string | undefined, storedNetworkModel: NetworkModel | undefined): string[] {
-        // Should we load cached candidates in the node tables?
-        return _.uniq(
-            [
-                newUrl,
-                storedNetworkModel && storedNetworkModel.url,
-                networkConfig.randomNodeUrl,
-                ...networkConfig.nodes.map((n) => n.url),
-            ].filter((p) => p !== undefined && p.length),
-        );
     }
 
     public reset(generationHash: string) {

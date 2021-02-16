@@ -34,7 +34,7 @@ import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorag
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountService } from '@/services/AccountService';
 import { LedgerService } from '@/services/LedgerService';
-
+import { networkConfig } from '@/config';
 /// end-region custom types
 
 @Component({
@@ -176,6 +176,10 @@ export class FormProfileCreationTs extends Vue {
         this.$store.dispatch('notification/ADD_ERROR', this.$t('create_profile_failed', { reason: error.message || error }));
     }
 
+    public onNetworkTypeChange(newNetworkType) {
+        this.$store.dispatch('network/CONNECT', { networkType: newNetworkType });
+    }
+
     /**
      * Submit action, validates form and creates account in storage
      * @return {void}
@@ -201,7 +205,7 @@ export class FormProfileCreationTs extends Vue {
     private persistAccountAndContinue() {
         // -  password stored as hash (never plain.)
         const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password));
-
+        const genHash = this.generationHash || networkConfig[this.formItems.networkType].networkConfigurationDefaults.generationHash;
         const account: ProfileModel = {
             profileName: this.formItems.profileName,
             accounts: [],
@@ -209,9 +213,9 @@ export class FormProfileCreationTs extends Vue {
             password: passwordHash,
             hint: this.formItems.hint,
             networkType: this.formItems.networkType,
-            generationHash: this.generationHash,
+            generationHash: genHash,
             termsAndConditionsApproved: false,
-            selectedNodeToConnect: '',
+            selectedNodeUrlToConnect: '',
         };
         // use repository for storage
         this.accountService.saveProfile(account);

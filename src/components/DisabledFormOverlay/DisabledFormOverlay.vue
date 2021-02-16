@@ -79,7 +79,6 @@ export default class DisabledFormOverlay extends Vue {
             return NotificationType.NO_NETWORK_CURRENCY;
         }
         if (this.disableToMultisig) {
-            this.$emit('disableForm');
             return NotificationType.MULTISIG_ACCOUNTS_NO_TX;
         }
         return '';

@@ -74,7 +74,12 @@
                         @input="onChangeMaxFee"
                     />
                     <div v-else-if="!hideSave" class="ml-2" style="text-align: right;">
-                        <button type="submit" class="save-button centered-button button-style inverted-button" @click="emitToAggregate">
+                        <button
+                            type="submit"
+                            class="save-button centered-button button-style inverted-button"
+                            :disabled="currentAccount.isMultisig"
+                            @click="emitToAggregate"
+                        >
                             {{ $t('save') }}
                         </button>
                     </div>
