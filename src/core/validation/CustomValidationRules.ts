@@ -44,15 +44,15 @@ export class CustomValidationRules {
         });
 
         extend('addressOrAlias', {
-            validate: (value) => {
+            validate: async (value) => {
                 const isValidAddress = AddressValidator.validate(value);
                 const isValidAlias = AliasValidator.validate(value);
                 if (isValidAddress) {
                     return true;
                 }
                 if (isValidAlias) {
-                    AppStore.dispatch('namespace/GET_LINKED_ADDRESS', new NamespaceId(value))
-                    return !!AppStore.getters['namespace/linkedAddress']
+                    await AppStore.dispatch('namespace/GET_LINKED_ADDRESS', new NamespaceId(value));
+                    return !!AppStore.getters['namespace/linkedAddress'];
                 }
                 return false;
             },
