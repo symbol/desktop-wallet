@@ -35,9 +35,19 @@
                     </template>
                 </FormRow>
                 <RentalFee :rental-type="'mosaic'"></RentalFee>
-                <MaxFeeAndSubmit v-if="!isAggregate" v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
+                <MaxFeeAndSubmit
+                    v-if="!isAggregate"
+                    v-model="formItems.maxFee"
+                    :disable-submit="currentAccount.isMultisig"
+                    @button-clicked="handleSubmit(onSubmit)"
+                />
                 <div v-else-if="!hideSave" class="ml-2" style="text-align: right;">
-                    <button type="submit" class="save-button centered-button button-style inverted-button" @click="emitToAggregate">
+                    <button
+                        type="submit"
+                        class="save-button centered-button button-style inverted-button"
+                        :disabled="currentAccount.isMultisig"
+                        @click="emitToAggregate"
+                    >
                         {{ $t('save') }}
                     </button>
                 </div>
