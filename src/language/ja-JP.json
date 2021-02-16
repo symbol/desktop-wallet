@@ -563,7 +563,7 @@
     "label_postfix_multisig": "(マルチシグ)",
     "label_signed_by": "連署者の署名 =>",
     "latest_news_articles": "最新ニュース",
-    "ledger_connected_other_app": "他のアプリケーションが Ledger に接続中です。切断してから再度お試しください。",
+    "ledger_connected_other_app": "Ledger device cannot access the path, please use your ledger to verify your address or close any other opened apps then try again.",
     "ledger_correct_account": "正しい Symbol Ledger アカウントを使用中です",
     "ledger_description": "Ledger デバイスからウォレットをインポートします",
     "ledger_device_locked": "Ledger デバイスをアンロックしてください",

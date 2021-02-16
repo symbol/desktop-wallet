@@ -563,7 +563,7 @@
     "label_postfix_multisig": "(多重)",
     "label_signed_by": "由联署人签署:",
     "latest_news_articles": "最新资讯",
-    "ledger_connected_other_app": "Another app is already connected to your Ledger device. Please close it then try again.",
+    "ledger_connected_other_app": "Ledger device cannot access the path, please use your ledger to verify your address or close any other opened apps then try again.",
     "ledger_correct_account": "You are using the correct Symbol Ledger account",
     "ledger_description": "Import a wallet from a Ledger device",
     "ledger_device_locked": "Please unlock your Ledger device",
