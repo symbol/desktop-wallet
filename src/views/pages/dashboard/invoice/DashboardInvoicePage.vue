@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <FormTransferTransaction :hide-signer="true" :hide-submit="false" @onTransactionsChange="onInvoiceChange" />
+            <FormTransferTransaction :hide-signer="true" :hide-submit="true" @onTransactionsChange="onInvoiceChange" />
         </div>
     </div>
 </template>

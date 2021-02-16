@@ -245,7 +245,7 @@ export default {
             Vue.set(state, 'connectingToNodeInfo', connectingToNodeInfo),
     },
     actions: {
-        async initialize({ commit, dispatch, getters }) {
+        async initialize({ commit, getters }) {
             const callback = async () => {
                 // commit('knowNodes', new NodeService().getKnowNodesOnly())
                 //await dispatch('CONNECT');
