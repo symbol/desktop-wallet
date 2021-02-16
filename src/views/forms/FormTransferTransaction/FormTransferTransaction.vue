@@ -16,7 +16,6 @@
                     <RecipientInput
                         v-model="formItems.recipientRaw"
                         style="margin-bottom: 0.5rem;"
-                        :disabled="currentAccount.isMultisig"
                         @input="onChangeRecipient"
                     />
 
