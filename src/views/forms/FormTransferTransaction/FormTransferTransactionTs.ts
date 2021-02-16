@@ -638,8 +638,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                 }
             }
         }
-
-        this.triggerChange();
     }
 
     private getImportedTransactionMessage(): Message {
@@ -674,7 +672,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             this.formItems.encryptMessage = true;
             this.formItems.messagePlain = this.encyptedMessage.payload;
         }
-        this.triggerChange();
         return true;
     }
 
