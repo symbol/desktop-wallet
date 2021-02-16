@@ -356,6 +356,9 @@ export default {
                 }
                 // we need to set the currentSignerMultisigInfo to be able to calculate the fee(based on requiredCosignatures)
                 const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+                if (!repositoryFactory) {
+                    return;
+                }
                 const multisigAccountsInfo: MultisigAccountInfo[] = await repositoryFactory
                     .createMultisigRepository()
                     .getMultisigAccountGraphInfo(currentAccountAddress)
@@ -405,6 +408,9 @@ export default {
                     commit('currentRecipient', AccountModel.getObjects(knownRecipient).publicAccount);
                 } else {
                     const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+                    if (!repositoryFactory) {
+                        return;
+                    }
                     const getAccountsInfoPromise = repositoryFactory
                         .createAccountRepository()
                         .getAccountInfo(recipientAddress)
@@ -421,6 +427,9 @@ export default {
 
         async LOAD_CURRENT_ACCOUNT_ALIASES({ commit, rootGetters }, currentAccountAddress: Address) {
             const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+            if (!repositoryFactory) {
+                return;
+            }
             const aliasPromise = repositoryFactory
                 .createNamespaceRepository()
                 .getAccountsNames([currentAccountAddress])
@@ -450,6 +459,9 @@ export default {
             }
 
             // REMOTE CALL
+            if (!repositoryFactory) {
+                return;
+            }
             const aliasPromise = repositoryFactory
                 .createNamespaceRepository()
                 .getAccountsNames([currentAccountAddress])
@@ -604,6 +616,9 @@ export default {
 
             // use RESTService to open websocket channel subscriptions
             const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+            if (!repositoryFactory) {
+                return;
+            }
             const subscriptions: SubscriptionType = await RESTService.subscribeTransactionChannels(
                 { commit, dispatch },
                 repositoryFactory,
@@ -648,6 +663,9 @@ export default {
         async GET_ACCOUNT_INFO({ rootGetters }, address: Address | null): Promise<AccountInfo | null> {
             try {
                 const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+                if (!repositoryFactory) {
+                    return;
+                }
                 const acountInfo = await repositoryFactory.createAccountRepository().getAccountInfo(address).toPromise();
 
                 return acountInfo;

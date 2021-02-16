@@ -20,6 +20,7 @@ import { appConfig } from '@/config';
 import { networkConfig } from '@/config';
 import i18n from '@/language';
 import { SettingsModelStorage } from '@/core/database/storage/SettingsModelStorage';
+import { NetworkType } from 'symbol-sdk';
 
 /**
  * Service in charge of loading and storing the SettingsModel from local storage.
@@ -30,27 +31,27 @@ export class SettingService {
      */
     private readonly storage = SettingsModelStorage.INSTANCE;
 
-    public getProfileSettings(profileName: string): SettingsModel {
+    public getProfileSettings(profileName: string, networkType: NetworkType): SettingsModel {
         const storedData = this.storage.get() || {};
         return {
-            ...this.createDefaultSettingsModel(profileName),
+            ...this.createDefaultSettingsModel(profileName, networkType),
             ...(storedData[profileName] || {}),
         };
     }
 
-    public changeProfileSettings(profileName: string, newConfigs: any): SettingsModel {
+    public changeProfileSettings(profileName: string, newConfigs: any, networkType: NetworkType): SettingsModel {
         const storedData = this.storage.get() || {};
         storedData[profileName] = {
-            ...this.getProfileSettings(profileName),
+            ...this.getProfileSettings(profileName, networkType),
             ...newConfigs,
         };
         this.storage.set(storedData);
         return storedData[profileName];
     }
 
-    public createDefaultSettingsModel(profileName: string): SettingsModel {
+    public createDefaultSettingsModel(profileName: string, networkType: NetworkType): SettingsModel {
         const browserLocale = i18n.locale;
         const language = appConfig.languages.find((l) => l.value == browserLocale) ? browserLocale : appConfig.languages[0].value;
-        return new SettingsModel(profileName, language, feesConfig.median, '', networkConfig.explorerUrl);
+        return new SettingsModel(profileName, language, feesConfig.median, '', networkConfig[networkType].explorerUrl);
     }
 }

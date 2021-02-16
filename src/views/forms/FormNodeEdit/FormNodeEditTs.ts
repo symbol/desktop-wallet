@@ -91,8 +91,8 @@ export class FormNodeEditTs extends Vue {
         const networkService = new NetworkService();
         this.isGettingNodeInfo = true;
         try {
-            const { networkModel, isCandidateUrlAvailable } = await networkService.getNetworkModel(url).toPromise();
-            if (!isCandidateUrlAvailable) {
+            const { networkModel } = await networkService.getNetworkModel(url).toPromise();
+            if (!networkModel || !networkModel.nodeInfo) {
                 return this.$store.dispatch('notification/ADD_WARNING', this.$t(NotificationType.INVALID_NODE));
             }
             if (NetworkType[this.currentProfile.networkType] !== NetworkType[networkModel.networkType]) {

@@ -4,6 +4,7 @@
             <Alert class="alert warning_alert" type="error">
                 <Icon type="ios-warning-outline" />
                 {{ $t(`${alert.message}`) }}
+                <a v-if="alert.showRetry" @click="reconnect">{{ $t('click_to_retry') }}</a>
             </Alert>
         </div>
         <div v-else-if="info.show">
@@ -51,7 +52,7 @@
                     </div>
                 </transition>
                 <div class="footer">
-                    <span class="footer-phrase">Powered by <b>NEM Technology.</b></span>
+                    <span class="footer-phrase">{{ $t('copyright') }}</span>
                 </div>
             </div>
         </div>
