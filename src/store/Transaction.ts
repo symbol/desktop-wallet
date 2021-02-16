@@ -258,6 +258,9 @@ export default {
                 return;
             }
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
+            if (!repositoryFactory) {
+                return;
+            }
             const transactionRepository = repositoryFactory.createTransactionRepository();
             const subscribeTransactions = (
                 group: TransactionGroupState,

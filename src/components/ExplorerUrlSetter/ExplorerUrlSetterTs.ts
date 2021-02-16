@@ -28,6 +28,7 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 
 // configuration
 import { networkConfig } from '@/config';
+import { NetworkType } from 'symbol-sdk';
 
 @Component({
     components: {
@@ -39,6 +40,7 @@ import { networkConfig } from '@/config';
     computed: {
         ...mapGetters({
             explorerUrl: 'app/explorerUrl',
+            networkType: 'network/networkType',
         }),
     },
 })
@@ -65,6 +67,8 @@ export class ExplorerUrlSetterTs extends Vue {
      */
     public explorerUrl: string;
 
+    public networkType: NetworkType;
+
     /**
      * Default explorer link list
      * @readonly
@@ -72,7 +76,7 @@ export class ExplorerUrlSetterTs extends Vue {
      */
     get defaultExplorerLinkList(): string[] {
         // @TODO
-        return [networkConfig.explorerUrl];
+        return [networkConfig[this.networkType].explorerUrl];
     }
 
     /**

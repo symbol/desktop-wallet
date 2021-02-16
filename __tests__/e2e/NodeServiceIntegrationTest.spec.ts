@@ -47,7 +47,7 @@ const repositoryFactory = instance(mockRepoFactory);
 
 describe('services/NodeService', () => {
     test('getNodes', async () => {
-        const peers = await nodeService.getNodes(repositoryFactory, realUrl).pipe(toArray()).toPromise();
+        const peers = await nodeService.getNodes(repositoryFactory, realUrl, NetworkType.TEST_NET).pipe(toArray()).toPromise();
         console.log(JSON.stringify(peers, null, 2));
     });
 });

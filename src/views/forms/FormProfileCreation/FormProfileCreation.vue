@@ -15,7 +15,7 @@
                             <ValidationProvider
                                 v-slot="{ errors }"
                                 vid="newAccountName"
-                                :name="$t('newProfileName')"
+                                :name="$t('profile_name')"
                                 :rules="validationRules.newAccountName"
                                 tag="div"
                                 class="inputs-create-container items-container"
@@ -36,17 +36,29 @@
                     <FormRow vertical="true">
                         <template v-slot:label> {{ $t('set_network_type') }} </template>
                         <template v-slot:inputs>
-                            <div class="inputs-create-container select-container">
-                                <Select
-                                    v-model="formItems.networkType"
-                                    :placeholder="$t('choose_network')"
-                                    class="select-size select-style"
-                                >
-                                    <Option v-for="(item, index) in networkTypeList" :key="index" :value="item.value">
-                                        {{ item.label }}
-                                    </Option>
-                                </Select>
-                            </div>
+                            <ValidationProvider
+                                v-slot="{ errors }"
+                                vid="selectedMosaic"
+                                :name="$t('network_type')"
+                                :rules="'required'"
+                                tag="div"
+                                class="select-container"
+                            >
+                                <ErrorTooltip :errors="errors">
+                                    <div class="inputs-create-container select-container">
+                                        <Select
+                                            v-model="formItems.networkType"
+                                            :placeholder="$t('choose_network')"
+                                            class="select-size select-style"
+                                            @on-change="onNetworkTypeChange"
+                                        >
+                                            <Option v-for="(item, index) in networkTypeList" :key="index" :value="item.value">
+                                                {{ item.label }}
+                                            </Option>
+                                        </Select>
+                                    </div>
+                                </ErrorTooltip>
+                            </ValidationProvider>
                         </template>
                     </FormRow>
 

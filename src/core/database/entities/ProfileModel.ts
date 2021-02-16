@@ -33,5 +33,5 @@ export class ProfileModel {
     public readonly seed: string;
     public readonly accounts: string[];
     public readonly termsAndConditionsApproved: boolean;
-    public readonly selectedNodeToConnect: string;
+    public readonly selectedNodeUrlToConnect: string;
 }
