@@ -52,12 +52,7 @@ export class CustomValidationRules {
                 }
                 if (isValidAlias) {
                     AppStore.dispatch('namespace/GET_LINKED_ADDRESS', new NamespaceId(value))
-                        .then((val) => {
-                            val ? true : false;
-                        })
-                        .catch(() => {
-                            return false;
-                        });
+                    return !!AppStore.getters['namespace/linkedAddress']
                 }
                 return false;
             },
