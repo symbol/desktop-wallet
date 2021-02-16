@@ -18,7 +18,7 @@ import { Values } from 'vue-i18n';
 // TODO CustomValidationRules needs to be created when the network configuration is resolved, UI
 // needs to use the resolved CustomValidationRules
 // ATM rules are using the hardcoded file
-const currentNetwork: NetworkConfigurationModel = networkConfig.networkConfigurationDefaults;
+const currentNetwork: NetworkConfigurationModel = networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults;
 const { MIN_PASSWORD_LENGTH } = appConfig.constants;
 
 export class CustomValidationRules {

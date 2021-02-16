@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { NetworkService } from '@/services/NetworkService';
 
-const networkService = new NetworkService();
-describe.skip('services/NetworkService', () => {
-    test('getNetworkModel when custom', async () => {
-        const candidate = 'http://api-01.eu-central-1.symboldev.network:3000';
-        const data = await networkService.getNetworkModel(candidate).toPromise();
-        expect(data.networkModel.url).toBe(candidate);
-    });
-});
+export class CommonHelpers {
+    /**
+     * Helper method to sleep for ms miliseconds
+     * @param {string} text
+     * @return {boolean}
+     */
+    public static sleep(ms: number): Promise<void> {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, ms);
+        });
+    }
+}

@@ -117,6 +117,9 @@ export default {
             if (!currentSignerAddress) {
                 return;
             }
+            if (!repositoryFactory) {
+                return;
+            }
             commit('isFetchingNamespaces', true);
             namespaceService
                 .getNamespaces(repositoryFactory, currentSignerAddress, { pageSize, pageNumber })

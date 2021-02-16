@@ -14,7 +14,7 @@
  *
  */
 
-import { NodeInfo, RepositoryFactory } from 'symbol-sdk';
+import { NetworkType, NodeInfo, RepositoryFactory } from 'symbol-sdk';
 import { Observable } from 'rxjs';
 import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { map, tap } from 'rxjs/operators';
@@ -33,32 +33,33 @@ export class NodeService {
      */
     private readonly storage = NodeModelStorage.INSTANCE;
 
-    public getKnowNodesOnly(): NodeModel[] {
-        return _.uniqBy(this.loadNodes().concat(this.loadStaticNodes()), 'url');
+    public getKnowNodesOnly(networkType: NetworkType): NodeModel[] {
+        return _.uniqBy(this.loadNodes().concat(this.loadStaticNodes(networkType)), 'url');
     }
 
-    public getNodes(repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string): Observable<NodeModel[]> {
-        const storedNodes = this.getKnowNodesOnly();
+    public getNodes(repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string, networkType: NetworkType): Observable<NodeModel[]> {
+        const storedNodes = this.getKnowNodesOnly(networkType);
         const nodeRepository = repositoryFactory.createNodeRepository();
 
         return nodeRepository.getNodeInfo().pipe(
             map((dto: NodeInfo) =>
-                this.createNodeModel(repositoryFactoryUrl, dto.friendlyName, undefined, dto.publicKey, dto.nodePublicKey),
+                this.createNodeModel(repositoryFactoryUrl, networkType, dto.friendlyName, undefined, dto.publicKey, dto.nodePublicKey),
             ),
-            ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl)),
+            ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl, networkType)),
             map((currentNode) => _.uniqBy([currentNode, ...storedNodes], 'url')),
             tap((p) => this.saveNodes(p)),
         );
     }
 
-    private loadStaticNodes(): NodeModel[] {
-        return networkConfig.nodes.map((n) => {
-            return this.createNodeModel(n.url, n.friendlyName, true);
+    private loadStaticNodes(networkType: NetworkType): NodeModel[] {
+        return networkConfig[networkType].nodes.map((n) => {
+            return this.createNodeModel(n.url, networkType, n.friendlyName, true);
         });
     }
 
     private createNodeModel(
         url: string,
+        networkType: NetworkType,
         friendlyName: string | undefined = undefined,
         isDefault: boolean | undefined = undefined,
         publicKey?: string,
@@ -67,7 +68,7 @@ export class NodeService {
         return new NodeModel(
             url,
             friendlyName || '',
-            isDefault || !!networkConfig.nodes.find((n) => n.url === url),
+            isDefault || !!networkConfig[networkType].nodes.find((n) => n.url === url),
             publicKey,
             nodePublicKey,
         );

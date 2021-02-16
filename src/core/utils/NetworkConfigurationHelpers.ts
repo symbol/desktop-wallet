@@ -14,7 +14,7 @@
  *
  */
 
-import { NetworkConfiguration } from 'symbol-sdk';
+import { NetworkConfiguration, NetworkType } from 'symbol-sdk';
 import { Formatters } from '@/core/utils/Formatters';
 import { TimeHelpers } from '@/core/utils/TimeHelpers';
 
@@ -36,7 +36,7 @@ export class NetworkConfigurationHelpers {
      * This are the absolute defaults if the network is down and the configuration hasn't been cached
      * in the local storage.
      */
-    private static defaults = networkConfig.networkConfigurationDefaults;
+    private static defaults = networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults;
 
     public static maxMosaicDivisibility(
         networkConfiguration: NetworkConfiguration | undefined,

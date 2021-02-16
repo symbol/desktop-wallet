@@ -25,6 +25,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 import { mapGetters } from 'vuex';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { networkConfig } from '@/config';
+import { NetworkType } from 'symbol-sdk';
 
 @Component({
     components: {
@@ -34,6 +35,7 @@ import { networkConfig } from '@/config';
     computed: {
         ...mapGetters({
             mosaics: 'mosaic/mosaics',
+            networkType: 'network/networkType',
         }),
     },
 })
@@ -52,10 +54,12 @@ export class AmountInputTs extends Vue {
      */
     public validationRules;
 
+    public networkType: NetworkType;
+
     created() {
         // update validation rule to reflect correct mosaic divisibility
         const chosenMosaic = this.mosaics.find((mosaic) => this.mosaicHex === mosaic.mosaicIdHex);
-        const networkConfigurationDefaults = networkConfig.networkConfigurationDefaults;
+        const networkConfigurationDefaults = networkConfig[this.networkType | NetworkType.TEST_NET].networkConfigurationDefaults;
         networkConfigurationDefaults.maxMosaicDivisibility = chosenMosaic ? chosenMosaic.divisibility : 6;
 
         // set validation rules for this field

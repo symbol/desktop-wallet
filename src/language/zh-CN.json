@@ -1033,5 +1033,8 @@
     "stoping": "停止中...",
     "remote_keys_linked": "您的远程私钥和vrf私钥已链接到您的帐户，如果您想要开启委托收获，请选择一个远程节点，并链接节点密钥。如果您已经在收获，请选择您的收货节点以更新您的收获状态",
     "encrypt_ledger_keys_on_sign": "作为Ledger用户，我们需要您的密码来加密远程账户和vrf私钥。",
-    "harvesting_status_not_detected": "We can not detect you harvesting status, please select the node you are harvesting on"
+    "harvesting_status_not_detected": "We can not detect you harvesting status, please select the node you are harvesting on",
+    "click_to_retry": "点击重试",
+    "current_node_is_not_available": "当前节点不可用。\n尝试连接到节点",
+    "nodes_unavailable_check_network_and": "节点（{0} / {1}）当前不可用。\n请检查您的网络连接，设置和"
 }

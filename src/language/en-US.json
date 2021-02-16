@@ -1033,5 +1033,8 @@
     "stoping": "Stopping...",
     "remote_keys_linked": "You have remote & vrf keys linked to your account, if you want to activate delegated harvesting, please select a harvesting node and link the node key. If you are harvesting already, please select your harvesting node to update your harvesting status.",
     "encrypt_ledger_keys_on_sign": "As a Ledger user, your password is needed to encrypt your remote account and vrf private keys",
-    "harvesting_status_not_detected": "Harvesting status cannot be detected. Please select the node you are harvesting on."
+    "harvesting_status_not_detected": "Harvesting status cannot be detected. Please select the node you are harvesting on.",
+    "click_to_retry": "click to retry",
+    "current_node_is_not_available": "Current node is not available. Trying to connect to node #{0}/{1}",
+    "nodes_unavailable_check_network_and": "Nodes({0}/{1}) are currently unavailable. Please check your network connection, settings and "
 }
