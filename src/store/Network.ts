@@ -465,6 +465,9 @@ export default {
 
         async REST_NETWORK_RENTAL_FEES({ rootGetters, commit }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
+            if(!repositoryFactory){
+                return;
+            }
             const getRentalFeesPromise = repositoryFactory.createNetworkRepository().getRentalFees().toPromise();
             const rentalFees = await getRentalFeesPromise;
             commit('rentalFeeEstimation', rentalFees);
