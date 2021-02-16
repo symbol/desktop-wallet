@@ -26,7 +26,7 @@
                     {{ $t('about_default_node') }}
                 </div>
                 <div class="value">
-                    <a :href="nodeLink" target="_blank">{{ configs.network.randomNodeUrl }}</a>
+                    <a :href="nodeLink + '/node/info'" target="_blank">{{ nodeLink }}</a>
                 </div>
             </div>
 
@@ -110,6 +110,7 @@ import packageConfig from '@/../package.json';
 import packageLockConfig from '@/../package-lock.json';
 import { mapGetters } from 'vuex';
 import { NetworkModel } from '@/core/database/entities/NetworkModel';
+import { URLInfo } from '@/core/utils/URLInfo';
 
 @Component({
     components: {
@@ -119,11 +120,15 @@ import { NetworkModel } from '@/core/database/entities/NetworkModel';
     computed: {
         ...mapGetters({
             networkModel: 'network/networkModel',
+            networkType: 'network/networkType',
+            currentPeer: 'network/currentPeer',
         }),
     },
 })
 export default class AboutPage extends Vue {
     private networkModel: NetworkModel;
+
+    public currentPeer: URLInfo;
 
     public configs = {
         package: packageConfig,
@@ -133,9 +138,10 @@ export default class AboutPage extends Vue {
         network: networkConfig,
     };
     public types = NetworkType;
+    public networkType: NetworkType;
 
     public isNetworkType(type): boolean {
-        return networkConfig.defaultNetworkType === type;
+        return networkConfig[this.networkType].defaultNetworkType === type;
     }
 
     public get generationHash(): string {
@@ -143,7 +149,7 @@ export default class AboutPage extends Vue {
     }
 
     public get nodeLink(): string {
-        return `${this.configs.network.randomNodeUrl}/node/info`;
+        return `${this.currentPeer}`;
     }
 }
 </script>

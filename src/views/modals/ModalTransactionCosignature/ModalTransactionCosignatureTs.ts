@@ -16,6 +16,7 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import {
     Account,
+    AccountAddressRestrictionTransaction,
     AggregateTransaction,
     AggregateTransactionCosignature,
     CosignatureTransaction,
@@ -42,6 +43,7 @@ import { CosignatureQR } from 'symbol-qr-library';
 import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue';
 import { AccountService } from '@/services/AccountService';
 import { LedgerService } from '@/services/LedgerService';
+import { AccountMetadataTransaction } from 'symbol-sdk';
 
 @Component({
     components: {
@@ -155,14 +157,18 @@ export class ModalTransactionCosignatureTs extends Vue {
                 return false;
             }
             const cosignerAddresses = this.transaction.innerTransactions.map((t) => t.signer?.address);
-            const modifyMultisigAddition = [];
+            const cosignList = [];
             this.transaction.innerTransactions.forEach((t) => {
                 if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {
-                    modifyMultisigAddition.push(...(t as MultisigAccountModificationTransaction).addressAdditions);
+                    cosignList.push(...(t as MultisigAccountModificationTransaction).addressAdditions);
+                } else if (t.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf()) {
+                    cosignList.push(...(t as AccountAddressRestrictionTransaction).restrictionAdditions);
+                } else if (t.type === TransactionType.ACCOUNT_METADATA) {
+                    cosignList.push((t as AccountMetadataTransaction).targetAddress);
                 }
             });
 
-            if (modifyMultisigAddition.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
+            if (cosignList.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
                 return true;
             }
             const cosignRequired = cosignerAddresses.find((c) => {

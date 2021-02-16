@@ -224,6 +224,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     private showUnlockAccountModal = false;
 
+    private importTransaction = false;
+
+    private plainMessage: string;
+
     /**
      * Reset the form with properties
      * @return {void}
@@ -273,7 +277,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.mosaicInputsManager = MosaicInputsManager.initialize(currentMosaics);
 
         // transaction details passed via router
-        if (this.$route.params.transaction || this.importedTransaction) {
+        this.importTransaction = this.$route.params.transaction || this.importedTransaction ? true : false;
+        if (this.importTransaction) {
             // @ts-ignore
             this.setTransactions([!!this.importedTransaction ? this.importedTransaction : this.$route.params.transaction]);
             Vue.nextTick(() => {
@@ -364,7 +369,12 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.formItems.attachedMosaics = this.mosaicsToAttachments(transaction.mosaics);
 
         // - populate message
-        this.formItems.messagePlain = transaction.message.payload;
+        const encryptedMessage = transaction.message instanceof EncryptedMessage;
+        this.formItems.encryptMessage = encryptedMessage;
+        this.formItems.messagePlain = transaction.message?.payload;
+        if (encryptedMessage) {
+            this.encyptedMessage = transaction.message;
+        }
 
         // - populate maxFee
         this.formItems.maxFee = transaction.maxFee.compact();
@@ -591,24 +601,52 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * Encrypt message checkbox click
      */
     onEncryptionChange() {
-        if (this.formItems.encryptMessage) {
-            if (!this.currentRecipient?.publicKey) {
-                this.$store
-                    .dispatch('notification/ADD_ERROR', this.$t(NotificationType.RECIPIENT_PUBLIC_KEY_INVALID_ERROR))
-                    .then(() => (this.formItems.encryptMessage = false));
-            } else if (!this.formItems.messagePlain) {
-                this.$store
-                    .dispatch('notification/ADD_ERROR', this.$t(NotificationType.ENCRYPTED_MESSAGE_EMPTY_ERROR))
-                    .then(() => (this.formItems.encryptMessage = false));
-            } else {
-                this.hasAccountUnlockModal = true;
-            }
+        const importedTransactionMessage = this.getImportedTransactionMessage();
+        const isEncrypted = importedTransactionMessage instanceof EncryptedMessage;
+        if (!this.currentRecipient?.publicKey) {
+            this.$store
+                .dispatch('notification/ADD_ERROR', this.$t(NotificationType.RECIPIENT_PUBLIC_KEY_INVALID_ERROR))
+                .then(() => (this.formItems.encryptMessage = isEncrypted));
+        } else if (!this.formItems.messagePlain) {
+            this.$store
+                .dispatch('notification/ADD_ERROR', this.$t(NotificationType.ENCRYPTED_MESSAGE_EMPTY_ERROR))
+                .then(() => (this.formItems.encryptMessage = isEncrypted));
         } else {
-            this.encyptedMessage = null;
-            this.hasAccountUnlockModal = false;
+            if (this.formItems.encryptMessage) {
+                // to encrypt message
+                if (this.importTransaction) {
+                    if (isEncrypted) {
+                        this.formItems.messagePlain = importedTransactionMessage.payload;
+                    } else {
+                        this.hasAccountUnlockModal = true;
+                    }
+                } else {
+                    this.hasAccountUnlockModal = true;
+                }
+            } else {
+                // to decrypt message
+                if (this.importTransaction) {
+                    const isEncrypted = importedTransactionMessage instanceof EncryptedMessage;
+                    if (isEncrypted) {
+                        this.hasAccountUnlockModal = true;
+                    } else {
+                        this.formItems.messagePlain = importedTransactionMessage.payload;
+                    }
+                } else {
+                    this.formItems.messagePlain = this.plainMessage;
+                    this.encyptedMessage = undefined;
+                }
+            }
         }
 
         this.triggerChange();
+    }
+
+    private getImportedTransactionMessage(): Message {
+        const importTransaction = (!!this.importedTransaction
+            ? this.importedTransaction
+            : this.$route.params.transaction) as TransferTransaction;
+        return importTransaction?.message;
     }
 
     /**
@@ -618,16 +656,29 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     onAccountUnlocked(account: Account): boolean {
         this.hasAccountUnlockModal = false;
-        this.encyptedMessage = this.formItems.messagePlain
-            ? EncryptedMessage.create(this.formItems.messagePlain, this.currentRecipient, account.privateKey)
-            : PlainMessage.create('');
-        this.formItems.encryptMessage = true;
+        this.plainMessage = this.formItems.messagePlain;
+        if (!this.formItems.encryptMessage && this.importTransaction) {
+            const importedTransactionMessage = this.getImportedTransactionMessage();
+            if (importedTransactionMessage instanceof EncryptedMessage) {
+                const message: PlainMessage = EncryptedMessage.decrypt(
+                    importedTransactionMessage,
+                    account.privateKey,
+                    this.currentRecipient,
+                );
+                this.formItems.messagePlain = message?.payload;
+            }
+        } else {
+            this.encyptedMessage = this.formItems.messagePlain
+                ? EncryptedMessage.create(this.formItems.messagePlain, this.currentRecipient, account.privateKey)
+                : PlainMessage.create('');
+            this.formItems.encryptMessage = true;
+            this.formItems.messagePlain = this.encyptedMessage.payload;
+        }
         this.triggerChange();
         return true;
     }
 
     closeAccountUnlockModal() {
-        this.formItems.encryptMessage = false;
         this.hasAccountUnlockModal = false;
     }
 

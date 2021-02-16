@@ -58,6 +58,9 @@ export class MetadataService {
         if (!address) {
             return of([]);
         }
+        if (!repositoryFactory) {
+            return of([]);
+        }
         const metadataRepository = repositoryFactory.createMetadataRepository();
 
         // search where user is target

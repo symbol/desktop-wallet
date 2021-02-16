@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-@import '../../views/resources/css/variables.less';
 
-.label-and-select {
-    display: flex;
-    align-items: center;
-}
-
-.fee-label {
-    font-weight: 500;
-    font-size: 0.18rem;
-    font-family: 'noto-sans-regular';
-    margin-right: 0.1rem;
-    color: @primary;
-    min-width: max-content;
+export class CommonHelpers {
+    /**
+     * Helper method to sleep for ms miliseconds
+     * @param {string} text
+     * @return {boolean}
+     */
+    public static sleep(ms: number): Promise<void> {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, ms);
+        });
+    }
 }

@@ -180,6 +180,9 @@ export default {
             const generationHash = rootGetters['network/generationHash'];
             const mosaicMetadataList: MetadataModel[] = rootGetters['metadata/mosaicMetadataList'];
 
+            if (!repositoryFactory) {
+                return;
+            }
             commit('isFetchingMosaics', true);
 
             new MosaicService()

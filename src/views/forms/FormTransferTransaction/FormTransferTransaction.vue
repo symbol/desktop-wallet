@@ -13,12 +13,7 @@
                     <SignerSelector v-if="!hideSigner" v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
                     <!-- Transfer recipient input field -->
-                    <RecipientInput
-                        v-model="formItems.recipientRaw"
-                        style="margin-bottom: 0.5rem;"
-                        :disabled="currentAccount.isMultisig"
-                        @input="onChangeRecipient"
-                    />
+                    <RecipientInput v-model="formItems.recipientRaw" style="margin-bottom: 0.5rem;" @input="onChangeRecipient" />
 
                     <!-- Mosaics attachments input fields -->
                     <div v-for="(attachedMosaic, index) in formItems.attachedMosaics" :key="index">
@@ -75,7 +70,12 @@
                         @input="onChangeMaxFee"
                     />
                     <div v-else-if="!hideSave" class="ml-2" style="text-align: right;">
-                        <button type="submit" class="save-button centered-button button-style inverted-button" @click="emitToAggregate">
+                        <button
+                            type="submit"
+                            class="save-button centered-button button-style inverted-button"
+                            :disabled="currentAccount.isMultisig"
+                            @click="emitToAggregate"
+                        >
                             {{ $t('save') }}
                         </button>
                     </div>
@@ -127,5 +127,9 @@ export default class FormTransferTransaction extends FormTransferTransactionTs {
 .save-button {
     text-align: center;
     width: 120px;
+}
+
+/deep/.multisig_ban_container {
+    padding-left: 0.7rem;
 }
 </style>

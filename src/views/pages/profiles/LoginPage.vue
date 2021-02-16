@@ -114,7 +114,7 @@
                 </form>
             </ValidationObserver>
             <span class="version-panel">{{ $t('version') }}: {{ packageVersion }}</span>
-            <span class="powered_by_label">{{ $t('powered_by') }}</span>
+            <span class="copyright_label">{{ $t('copyright') }}</span>
         </VideoBackground>
     </div>
 </template>

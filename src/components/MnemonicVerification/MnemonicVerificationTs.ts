@@ -77,38 +77,31 @@ export class MnemonicVerificationTs extends Vue {
         this.selectedWordIndexes = [...this.selectedWordIndexes].filter((sel) => sel !== index);
     }
 
-    /**
-     * Process verification of mnemonic
-     * @return {boolean}
-     */
-    public processVerification(): boolean {
+    public next(): void {
+        if (this.correctWordsAreSelected()) {
+            this.$emit('success');
+        }
+    }
+
+    public correctWordsAreSelected(): boolean {
         const origin = this.words.join(' ');
         const rebuilt = this.selectedWordIndexes.map((i) => this.shuffledWords[i]).join(' ');
-        const result = this.mnemonicCheckerNotification(origin, rebuilt);
-        // - origin words list does not match
-        if (!result || origin !== rebuilt) {
-            return false;
-        }
-        this.$emit('success');
-        return true;
+        return origin === rebuilt;
     }
 
     /**
      * Show Notification based on the entered mnemonic validity
      */
     private mnemonicCheckerNotification(origin: string, rebuilt: string): boolean {
-        if (!origin.includes(rebuilt)) {
-            const errorMsg =
-                this.selectedWordIndexes.length < 1
-                    ? NotificationType.PLEASE_ENTER_MNEMONIC_INFO
-                    : NotificationType.MNEMONIC_INCONSISTENCY_ERROR;
+        if (!origin.startsWith(rebuilt)) {
+            const errorMsg = NotificationType.MNEMONIC_INCONSISTENCY_ERROR;
             this.$store.dispatch('notification/ADD_WARNING', errorMsg);
             this.$emit('error', errorMsg);
             return false;
         } else {
             // watch mnemonic validity only if mnemonic input is full
             if (this.selectedWordIndexes.length === 24) {
-                this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.SUCCESS);
+                this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.MNEMONIC_CORRECT);
             }
             return true;
         }

@@ -18,7 +18,7 @@ import { PositiveDecimalNumberValidator } from './validators/PositiveDecimalNumb
 // TODO CustomValidationRules needs to be created when the network configuration is resolved, UI
 // needs to use the resolved CustomValidationRules
 // ATM rules are using the hardcoded file
-const currentNetwork: NetworkConfigurationModel = networkConfig.networkConfigurationDefaults;
+const currentNetwork: NetworkConfigurationModel = networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults;
 const { MIN_PASSWORD_LENGTH, DECIMAL_SEPARATOR } = appConfig.constants;
 
 export class CustomValidationRules {
@@ -49,20 +49,15 @@ export class CustomValidationRules {
         });
 
         extend('addressOrAlias', {
-            validate: (value) => {
+            validate: async (value) => {
                 const isValidAddress = AddressValidator.validate(value);
                 const isValidAlias = AliasValidator.validate(value);
                 if (isValidAddress) {
                     return true;
                 }
                 if (isValidAlias) {
-                    AppStore.dispatch('namespace/GET_LINKED_ADDRESS', new NamespaceId(value))
-                        .then((val) => {
-                            val ? true : false;
-                        })
-                        .catch(() => {
-                            return false;
-                        });
+                    await AppStore.dispatch('namespace/GET_LINKED_ADDRESS', new NamespaceId(value));
+                    return !!AppStore.getters['namespace/linkedAddress'];
                 }
                 return false;
             },
