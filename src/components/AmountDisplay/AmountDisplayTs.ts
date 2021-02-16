@@ -49,7 +49,7 @@ export class AmountDisplayTs extends Vue {
         const rest = this.value - Math.floor(this.value);
         const decimals = this.decimals === undefined ? this.networkConfiguration.maxMosaicDivisibility || 6 : this.decimals;
         const formatOptions = {
-            minimumFractionDigits: 1,
+            minimumFractionDigits: 0,
             maximumFractionDigits: decimals,
         };
         // remove leftmost 0 and rightmost 0s
