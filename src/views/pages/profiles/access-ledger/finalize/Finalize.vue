@@ -7,7 +7,7 @@
                 </p>
                 <div class="flex bottom-space term">
                     <Checkbox v-model="marked">
-                        <span class="link">{{ $t('please_approve') }}</span>
+                        <span class="link">{{ $t('i_accept') }}</span>
                         <a class="link" href="#/terms">
                             {{ $t('terms_and_conditions') }}
                         </a>
