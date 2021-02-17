@@ -46,78 +46,90 @@ export class RESTService {
 
         // open websocket connection
         const address = Address.createFromRawAddress(addressStr);
-        if (listener && !listener.isOpen()) {
-            await listener.open();
+        if (listener) {
+            if (listener && !listener.isOpen()) {
+                await listener.open();
+            }
+
+            // error listener
+            const status = listener
+                .status(address)
+                .subscribe((error: TransactionStatusError) => context.dispatch('notification/ADD_ERROR', error.code, { root: true }));
+
+            // unconfirmed listeners
+            const unconfirmedAdded = listener.unconfirmedAdded(address, undefined, isMultisig).subscribe(
+                (transaction) => {
+                    context.dispatch(
+                        'transaction/ADD_TRANSACTION',
+                        { group: TransactionGroupState.unconfirmed, transaction },
+                        { root: true },
+                    );
+                    context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_UNCONFIRMED_TRANSACTION, { root: true });
+                },
+                (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
+            );
+
+            const unconfirmedRemoved = listener.unconfirmedRemoved(address, undefined, isMultisig).subscribe(
+                (transactionHash) =>
+                    context.dispatch(
+                        'transaction/REMOVE_TRANSACTION',
+                        { group: TransactionGroupState.unconfirmed, transactionHash },
+                        { root: true },
+                    ),
+                (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
+            );
+
+            // partial listeners
+            const cosignatureAdded = listener.cosignatureAdded(address, isMultisig).subscribe(
+                (cosignature) => {
+                    context.dispatch('transaction/ADD_COSIGNATURE', cosignature, {
+                        root: true,
+                    });
+                    context.dispatch('notification/ADD_SUCCESS', NotificationType.COSIGNATURE_ADDED, { root: true });
+                },
+                (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
+            );
+
+            const partialAdded = listener.aggregateBondedAdded(address, undefined, isMultisig).subscribe(
+                (transaction) => {
+                    context.dispatch('transaction/ADD_TRANSACTION', { group: TransactionGroupState.partial, transaction }, { root: true });
+                    context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_AGGREGATE_BONDED, { root: true });
+                },
+                (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
+            );
+
+            const partialRemoved = listener.aggregateBondedRemoved(address, undefined, isMultisig).subscribe(
+                (transactionHash) =>
+                    context.dispatch(
+                        'transaction/REMOVE_TRANSACTION',
+                        { group: TransactionGroupState.partial, transactionHash },
+                        { root: true },
+                    ),
+                (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
+            );
+
+            // confirmed listener
+            const confirmed = listener.confirmed(address, undefined, isMultisig).subscribe(
+                (transaction) => {
+                    context.dispatch(
+                        'transaction/ADD_TRANSACTION',
+                        { group: TransactionGroupState.confirmed, transaction },
+                        { root: true },
+                    );
+                    context.dispatch('transaction/ON_NEW_TRANSACTION', transaction, {
+                        root: true,
+                    });
+                    context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_CONFIRMED_TRANSACTION, { root: true });
+                },
+                (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
+            );
+
+            return {
+                listener,
+                subscriptions: [status, unconfirmedAdded, unconfirmedRemoved, cosignatureAdded, partialAdded, partialRemoved, confirmed],
+            };
+        } else {
+            return;
         }
-
-        // error listener
-        const status = listener
-            .status(address)
-            .subscribe((error: TransactionStatusError) => context.dispatch('notification/ADD_ERROR', error.code, { root: true }));
-
-        // unconfirmed listeners
-        const unconfirmedAdded = listener.unconfirmedAdded(address, undefined, isMultisig).subscribe(
-            (transaction) => {
-                context.dispatch('transaction/ADD_TRANSACTION', { group: TransactionGroupState.unconfirmed, transaction }, { root: true });
-                context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_UNCONFIRMED_TRANSACTION, { root: true });
-            },
-            (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
-        );
-
-        const unconfirmedRemoved = listener.unconfirmedRemoved(address, undefined, isMultisig).subscribe(
-            (transactionHash) =>
-                context.dispatch(
-                    'transaction/REMOVE_TRANSACTION',
-                    { group: TransactionGroupState.unconfirmed, transactionHash },
-                    { root: true },
-                ),
-            (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
-        );
-
-        // partial listeners
-        const cosignatureAdded = listener.cosignatureAdded(address, isMultisig).subscribe(
-            (cosignature) => {
-                context.dispatch('transaction/ADD_COSIGNATURE', cosignature, {
-                    root: true,
-                });
-                context.dispatch('notification/ADD_SUCCESS', NotificationType.COSIGNATURE_ADDED, { root: true });
-            },
-            (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
-        );
-
-        const partialAdded = listener.aggregateBondedAdded(address, undefined, isMultisig).subscribe(
-            (transaction) => {
-                context.dispatch('transaction/ADD_TRANSACTION', { group: TransactionGroupState.partial, transaction }, { root: true });
-                context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_AGGREGATE_BONDED, { root: true });
-            },
-            (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
-        );
-
-        const partialRemoved = listener.aggregateBondedRemoved(address, undefined, isMultisig).subscribe(
-            (transactionHash) =>
-                context.dispatch(
-                    'transaction/REMOVE_TRANSACTION',
-                    { group: TransactionGroupState.partial, transactionHash },
-                    { root: true },
-                ),
-            (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
-        );
-
-        // confirmed listener
-        const confirmed = listener.confirmed(address, undefined, isMultisig).subscribe(
-            (transaction) => {
-                context.dispatch('transaction/ADD_TRANSACTION', { group: TransactionGroupState.confirmed, transaction }, { root: true });
-                context.dispatch('transaction/ON_NEW_TRANSACTION', transaction, {
-                    root: true,
-                });
-                context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_CONFIRMED_TRANSACTION, { root: true });
-            },
-            (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
-        );
-
-        return {
-            listener,
-            subscriptions: [status, unconfirmedAdded, unconfirmedRemoved, cosignatureAdded, partialAdded, partialRemoved, confirmed],
-        };
     }
 }
