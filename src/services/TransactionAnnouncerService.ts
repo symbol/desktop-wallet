@@ -78,7 +78,7 @@ export class TransactionAnnouncerService {
     }
 
     public announce(signedTransaction: SignedTransaction): Observable<BroadcastResult> {
-        if (this.networkType === NetworkType.TEST_NET) {
+        if (this.networkType === NetworkType.MAIN_NET) {
             return this.ByPassAnnouncement();
         } else {
             const listener: IListener = this.$store.getters['network/listener'];
@@ -114,7 +114,7 @@ export class TransactionAnnouncerService {
         signedHashLockTransaction: SignedTransaction,
         signedAggregateTransaction: SignedTransaction,
     ): Observable<BroadcastResult> {
-        if (this.networkType === NetworkType.TEST_NET) {
+        if (this.networkType === NetworkType.MAIN_NET) {
             return this.ByPassAnnouncement();
         } else {
             const listener: IListener = this.$store.getters['network/listener'];
@@ -136,7 +136,7 @@ export class TransactionAnnouncerService {
     }
 
     public announceChainedBinary(first: SignedTransaction, second: SignedTransaction): Observable<BroadcastResult> {
-        if (this.networkType === NetworkType.TEST_NET) {
+        if (this.networkType === NetworkType.MAIN_NET) {
             return this.ByPassAnnouncement();
         } else {
             const listener: IListener = this.$store.getters['network/listener'];
@@ -152,7 +152,7 @@ export class TransactionAnnouncerService {
     }
 
     public announceAggregateBondedCosignature(singedTransaction: CosignatureSignedTransaction): Observable<BroadcastResult> {
-        if (this.networkType === NetworkType.TEST_NET) {
+        if (this.networkType === NetworkType.MAIN_NET) {
             return this.ByPassAnnouncement();
         } else {
             const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
