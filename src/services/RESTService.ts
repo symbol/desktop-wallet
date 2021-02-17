@@ -46,7 +46,7 @@ export class RESTService {
 
         // open websocket connection
         const address = Address.createFromRawAddress(addressStr);
-        if (!listener.isOpen()) {
+        if (listener && !listener.isOpen()) {
             await listener.open();
         }
 

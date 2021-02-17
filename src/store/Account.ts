@@ -617,7 +617,7 @@ export default {
 
             // use RESTService to open websocket channel subscriptions
             const listener = rootGetters['network/listener'] as Listener;
-            if (!listener.isOpen()) {
+            if (listener && !listener.isOpen()) {
                 await listener.open();
             }
             const subscriptions: SubscriptionType = await RESTService.subscribeTransactionChannels(
