@@ -409,8 +409,6 @@ export class ModalTransactionConfirmationTs extends Vue {
                 .signTransaction(currentPath, transaction, this.generationHash, ledgerAccount.publicKey)
                 .then((res: any) => {
                     // - notify about successful transaction announce
-                    this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed');
-                    this.$emit('success');
                     this.onConfirmationSuccess();
                     const services = new TransactionAnnouncerService(this.$store);
                     services.announce(res);
@@ -438,8 +436,6 @@ export class ModalTransactionConfirmationTs extends Vue {
             .signTransaction(currentPath, aggregate, this.generationHash, ledgerAccount.publicKey)
             .then((res) => {
                 // - notify about successful transaction announce
-                this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed');
-                this.$emit('success');
                 this.onConfirmationSuccess();
                 const services = new TransactionAnnouncerService(this.$store);
                 services.announce(res);
@@ -484,8 +480,6 @@ export class ModalTransactionConfirmationTs extends Vue {
             });
         const signedTransactions: Observable<SignedTransaction>[] = [of(signedHashLock), of(signedAggregateTransaction)];
         // - notify about successful transaction announce
-        this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed');
-        this.$emit('success');
         this.onConfirmationSuccess();
         const service = new TransactionAnnouncerService(this.$store);
         const announcements = await of(this.command.announceHashAndAggregateBonded(service, signedTransactions));
@@ -576,8 +570,6 @@ export class ModalTransactionConfirmationTs extends Vue {
         );
         // Announce 1, after success, storage 2
         // - notify about successful transaction announce
-        this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed');
-        this.$emit('success');
         this.onConfirmationSuccess();
         const services = new TransactionAnnouncerService(this.$store);
         services.announce(signedKeyLinkAggregateCompleteTransaction).subscribe((res) => {
@@ -609,8 +601,6 @@ export class ModalTransactionConfirmationTs extends Vue {
             ledgerAccount.publicKey,
         );
         // - notify about successful transaction announce
-        this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed');
-        this.$emit('success');
         this.onConfirmationSuccess();
         const services = new TransactionAnnouncerService(this.$store);
         services.announce(signedKeyUnLinkAggregateCompleteTransaction).subscribe((res) => {
@@ -732,8 +722,6 @@ export class ModalTransactionConfirmationTs extends Vue {
             of(signedKeyLinkAggregateBondedTransaction),
         ];
         // - notify about successful transaction announce
-        this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed');
-        this.$emit('success');
         this.onConfirmationSuccess();
         const service = new TransactionAnnouncerService(this.$store);
         this.command.announceHashAndAggregateBonded(service, signedKeyLinkTransactions).subscribe((res) => {
@@ -780,8 +768,6 @@ export class ModalTransactionConfirmationTs extends Vue {
             of(signedKeyUnLinkAggregateBondedTransaction),
         ];
         // - notify about successful transaction announce
-        this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed');
-        this.$emit('success');
         this.onConfirmationSuccess();
         const service = new TransactionAnnouncerService(this.$store);
         this.command.announceHashAndAggregateBonded(service, signedKeyLinkTransactions).subscribe((res) => {
