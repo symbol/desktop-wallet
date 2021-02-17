@@ -20,6 +20,7 @@ import { NodeModel } from '@/core/database/entities/NodeModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { CommonHelpers } from '@/core/utils/CommonHelpers';
 import { NotificationType } from '@/core/utils/NotificationType';
+import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import { URLInfo } from '@/core/utils/URLInfo';
 // configuration
@@ -595,7 +596,11 @@ export default {
         LOAD_TRANSACTION_FEES({ commit, rootGetters }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const networkRepository = repositoryFactory.createNetworkRepository();
-            networkRepository.getTransactionFees().subscribe((fees: TransactionFees) => commit('transactionFees', fees));
+            networkRepository
+                .getTransactionFees()
+                // TODO: Remove for Mainnet launch
+                .pipe(ObservableHelpers.defaultLast(new TransactionFees(1000, 1000, 1000, 1000, 100)))
+                .subscribe((fees: TransactionFees) => commit('transactionFees', fees));
         },
     },
 };
