@@ -376,6 +376,10 @@ export default {
             commit('generationHash', networkModel.generationHash);
             commit('repositoryFactory', repositoryFactory);
             commit('knowNodes', nodes);
+            const currentListener: IListener = getters['listener'];
+            if (currentListener && currentListener.isOpen()) {
+                currentListener.close();
+            }
             commit('listener', listener);
             commit('currentHeight', currentHeight);
             commit(

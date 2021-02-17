@@ -21,6 +21,7 @@ import { SettingService } from '@/services/SettingService';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { ProfileService } from '@/services/ProfileService';
+import { IListener } from 'symbol-sdk';
 
 /// region globals
 const Lock = AwaitLock.create();
@@ -91,6 +92,10 @@ export default {
             await dispatch('account/RESET_CURRENT_ACCOUNT', undefined, {
                 root: true,
             });
+            const currentListener: IListener = rootGetters['network/listener'];
+            if (currentListener && currentListener.isOpen()) {
+                currentListener.close();
+            }
             await dispatch('RESET_STATE');
         },
         async SET_CURRENT_PROFILE({ commit, dispatch }, currentProfile: ProfileModel) {
