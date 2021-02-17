@@ -19,6 +19,7 @@ import {
     AccountNames,
     Address,
     IListener,
+    Listener,
     MultisigAccountInfo,
     NetworkType,
     PublicAccount,
@@ -615,13 +616,13 @@ export default {
             const plainAddress = address.plain();
 
             // use RESTService to open websocket channel subscriptions
-            const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-            if (!repositoryFactory) {
-                return;
+            const listener = rootGetters['network/listener'] as Listener;
+            if (!listener.isOpen()) {
+                await listener.open();
             }
             const subscriptions: SubscriptionType = await RESTService.subscribeTransactionChannels(
                 { commit, dispatch },
-                repositoryFactory,
+                listener,
                 plainAddress,
                 getters.currentAccountMultisigInfo && !!getters.currentAccountMultisigInfo.multisigAddresses.length ? true : false,
             );
@@ -643,12 +644,9 @@ export default {
 
             // close subscriptions
             for (const subscriptionType of subscriptionTypes) {
-                const { listener, subscriptions } = subscriptionType;
+                const { subscriptions } = subscriptionType;
                 for (const subscription of subscriptions) {
                     subscription.unsubscribe();
-                }
-                if (listener.isOpen()) {
-                    listener.close();
                 }
             }
 

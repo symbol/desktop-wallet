@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Address, IListener, RepositoryFactory, TransactionStatusError } from 'symbol-sdk';
+import { Address, IListener, Listener, RepositoryFactory, TransactionStatusError } from 'symbol-sdk';
 import { Subscription } from 'rxjs';
 // internal dependencies
 import { AddressValidator } from '@/core/validation/validators';
@@ -27,15 +27,15 @@ export class RESTService {
     /**
      * Subscribe to transactions websocket channels
      * @param {Context} dispatch context the context
-     * @param {RepositoryFactory} repositoryFactory the factory used to create the listener.
+     * @param {listener} listener the listener.
      * @param {Address} address the listened account.
      */
     public static async subscribeTransactionChannels(
         context: { dispatch: any; commit: any },
-        repositoryFactory: RepositoryFactory,
+        listener: Listener,
         addressStr: string,
         isMultisig: boolean,
-    ): Promise<{ listener: IListener; subscriptions: Subscription[] }> {
+    ): Promise<{ listener: Listener; subscriptions: Subscription[] }> {
         if (!AddressValidator.validate(addressStr)) {
             throw new Error('Invalid address for subscribing to websocket connections');
         }
@@ -46,8 +46,9 @@ export class RESTService {
 
         // open websocket connection
         const address = Address.createFromRawAddress(addressStr);
-        const listener = repositoryFactory.createListener();
-        await listener.open();
+        if (!listener.isOpen()) {
+            await listener.open();
+        }
 
         // error listener
         const status = listener
