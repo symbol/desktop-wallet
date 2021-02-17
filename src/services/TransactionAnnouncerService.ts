@@ -107,6 +107,8 @@ export class TransactionAnnouncerService {
         signedAggregateTransaction: SignedTransaction,
     ): Observable<BroadcastResult> {
         const listener: IListener = this.$store.getters['network/listener'];
+        console.log('listener', listener);
+        console.log('listener Open', listener.isOpen());
         const service = this.createService();
         return service
             .announce(signedHashLockTransaction, listener)

@@ -410,7 +410,9 @@ export default {
                 await dispatch('UNSUBSCRIBE');
                 await dispatch('account/UNSUBSCRIBE', currentSignerAddress, { root: true });
                 // subscribe to the newly selected node websocket
-                await listener.open();
+                if (!listener.isOpen()) {
+                    await listener.open();
+                }
                 await dispatch('SUBSCRIBE');
                 await dispatch('account/SUBSCRIBE', currentSignerAddress, { root: true });
             }
