@@ -644,13 +644,10 @@ export default {
 
             // close subscriptions
             for (const subscriptionType of subscriptionTypes) {
-                const { listener, subscriptions } = subscriptionType;
+                const { subscriptions } = subscriptionType;
                 for (const subscription of subscriptions) {
                     subscription.unsubscribe();
                 }
-                // if (listener.isOpen()) {
-                //     await listener.close();
-                // }
             }
 
             // update state of listeners & subscriptions
