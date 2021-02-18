@@ -9,7 +9,7 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 import FormRow from '@/components/FormRow/FormRow.vue';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import { URLHelpers } from '@/core/utils/URLHelpers';
-import { NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
+import { NetworkType, NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
 import { NotificationType } from '@/core/utils/NotificationType';
 
 @Component({
@@ -21,6 +21,7 @@ import { NotificationType } from '@/core/utils/NotificationType';
         ...mapGetters({
             repositoryFactory: 'network/repositoryFactory',
             peerNodes: 'network/peerNodes',
+            networkType: 'network/networkType',
         }),
     },
 })
@@ -37,6 +38,7 @@ export class NetworkNodeSelectorTs extends Vue {
 
     public peerNodes: NodeInfo[];
     public isFetchingNodeInfo = false;
+    public networkType: NetworkType;
     /**
      * Form items
      */
@@ -133,7 +135,8 @@ export class NetworkNodeSelectorTs extends Vue {
                     node.roles?.some((role) => this.isIncluded(role)) &&
                     !node.host?.includes('ap-southeast-1.testnet') &&
                     !node.host.includes('us-east-1.testnet') &&
-                    !node.host.includes('eu-central-1.testnet'),
+                    !node.host.includes('eu-central-1.testnet') &&
+                    node.networkIdentifier === this.networkType.valueOf(),
             );
         }
         return this.peerNodes;
