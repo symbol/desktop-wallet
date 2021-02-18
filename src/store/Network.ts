@@ -20,7 +20,6 @@ import { NodeModel } from '@/core/database/entities/NodeModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { CommonHelpers } from '@/core/utils/CommonHelpers';
 import { NotificationType } from '@/core/utils/NotificationType';
-import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import { URLInfo } from '@/core/utils/URLInfo';
 // configuration
