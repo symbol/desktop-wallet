@@ -20,6 +20,7 @@ import { NodeModel } from '@/core/database/entities/NodeModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { CommonHelpers } from '@/core/utils/CommonHelpers';
 import { NotificationType } from '@/core/utils/NotificationType';
+import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import { URLInfo } from '@/core/utils/URLInfo';
 // configuration
@@ -414,7 +415,7 @@ export default {
                 await dispatch('UNSUBSCRIBE');
                 await dispatch('account/UNSUBSCRIBE', currentSignerAddress, { root: true });
                 // subscribe to the newly selected node websocket
-                if (!listener.isOpen()) {
+                if (listener && !listener.isOpen()) {
                     await listener.open();
                 }
                 await dispatch('SUBSCRIBE');
@@ -595,7 +596,11 @@ export default {
         LOAD_TRANSACTION_FEES({ commit, rootGetters }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const networkRepository = repositoryFactory.createNetworkRepository();
-            networkRepository.getTransactionFees().subscribe((fees: TransactionFees) => commit('transactionFees', fees));
+            networkRepository
+                .getTransactionFees()
+                // TODO: Remove for Mainnet launch
+                .pipe(ObservableHelpers.defaultLast(new TransactionFees(0, 0, 0, 0, 100)))
+                .subscribe((fees: TransactionFees) => commit('transactionFees', fees));
         },
     },
 };

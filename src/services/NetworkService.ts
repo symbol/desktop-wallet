@@ -23,7 +23,7 @@ import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import { combineLatest, defer, EMPTY, from, Observable } from 'rxjs';
 import { catchError, flatMap, map, tap } from 'rxjs/operators';
-import { NetworkConfiguration, NetworkType, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk';
+import { NetworkConfiguration, NetworkType, RepositoryFactory, RepositoryFactoryHttp, TransactionFees } from 'symbol-sdk';
 
 /**
  * The service in charge of loading and caching anything related to Network from Rest.
@@ -73,7 +73,11 @@ export class NetworkService {
                             .pipe(map((d) => this.toNetworkConfigurationModel(d, defaultNetworkType)));
                         const nodeInfoObservable = nodeRepository.getNodeInfo();
 
-                        const transactionFeesObservable = repositoryFactory.createNetworkRepository().getTransactionFees();
+                        const transactionFeesObservable = repositoryFactory
+                            .createNetworkRepository()
+                            .getTransactionFees()
+                            //TODO: Remove for mainnet launch
+                            .pipe(ObservableHelpers.defaultLast(new TransactionFees(0, 0, 0, 0, 100)));
 
                         return combineLatest([
                             networkTypeObservable,
