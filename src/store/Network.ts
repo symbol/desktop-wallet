@@ -599,7 +599,7 @@ export default {
             networkRepository
                 .getTransactionFees()
                 // TODO: Remove for Mainnet launch
-                .pipe(ObservableHelpers.defaultLast(new TransactionFees(1000, 1000, 1000, 1000, 100)))
+                .pipe(ObservableHelpers.defaultLast(new TransactionFees(0, 0, 0, 0, 100)))
                 .subscribe((fees: TransactionFees) => commit('transactionFees', fees));
         },
     },

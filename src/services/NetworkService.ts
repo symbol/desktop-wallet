@@ -77,7 +77,7 @@ export class NetworkService {
                             .createNetworkRepository()
                             .getTransactionFees()
                             //TODO: Remove for mainnet launch
-                            .pipe(ObservableHelpers.defaultLast(new TransactionFees(1000, 1000, 1000, 1000, 100)));
+                            .pipe(ObservableHelpers.defaultLast(new TransactionFees(0, 0, 0, 0, 100)));
 
                         return combineLatest([
                             networkTypeObservable,
