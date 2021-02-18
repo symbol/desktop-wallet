@@ -375,7 +375,7 @@ export class ModalTransactionConfirmationTs extends Vue {
         const networkType = this.currentProfile.networkType;
         const accountService = new AccountService();
         this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-        const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath);
+        const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath, true);
         if (signerPublicKey === this.currentAccount.publicKey.toLowerCase()) {
             const publicKey = signerPublicKey;
             const ledgerAccount = PublicAccount.createFromPublicKey(publicKey.toUpperCase(), networkType);
@@ -529,7 +529,7 @@ export class ModalTransactionConfirmationTs extends Vue {
         const networkType = this.currentProfile.networkType;
         const accountService = new AccountService();
         this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-        const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath);
+        const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath, true);
         if (signerPublicKey === this.currentAccount.publicKey.toLowerCase()) {
             const ledgerAccount = PublicAccount.createFromPublicKey(signerPublicKey.toUpperCase(), networkType);
             // - open signature modal
