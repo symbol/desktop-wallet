@@ -136,7 +136,7 @@ export class TableRowTs extends Vue {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { hiddenData, ...visible } = this.rowValues;
         if (this.$route.fullPath === '/mosaicList') {
-            visible.supply = (visible.supply.replaceAll(',', '') / Math.pow(10, visible.divisibility))
+            visible.supply = (visible.supply.replace(/\D/g, "") / Math.pow(10, visible.divisibility))
                 .toString()
                 .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         }
