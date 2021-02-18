@@ -856,8 +856,7 @@ export class ModalTransactionConfirmationTs extends Vue {
                 });
             });
             // - notify about successful transaction announce
-            this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_signed');
-            this.$emit('success');
+            this.onConfirmationSuccess();
             this.show = false;
         } else {
             try {
