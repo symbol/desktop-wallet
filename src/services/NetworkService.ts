@@ -73,11 +73,7 @@ export class NetworkService {
                             .pipe(map((d) => this.toNetworkConfigurationModel(d, defaultNetworkType)));
                         const nodeInfoObservable = nodeRepository.getNodeInfo();
 
-                        const transactionFeesObservable = repositoryFactory
-                            .createNetworkRepository()
-                            .getTransactionFees()
-                            //TODO: Remove for mainnet launch
-                            .pipe(ObservableHelpers.defaultLast(new TransactionFees(0, 0, 0, 0, 100)));
+                        const transactionFeesObservable = repositoryFactory.createNetworkRepository().getTransactionFees();
 
                         return combineLatest([
                             networkTypeObservable,
