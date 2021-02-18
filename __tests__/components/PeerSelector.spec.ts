@@ -103,6 +103,6 @@ describe('PeerSelector should', () => {
         expect(vm.networkTypeText).toBe('Loading...');
     });
     it("correctly get value of 'peersList'", () => {
-        expect(vm.peersList.length).toBe(7);
+        expect(vm.peersList.length).toBe(8);
     });
 });
