@@ -596,11 +596,7 @@ export default {
         LOAD_TRANSACTION_FEES({ commit, rootGetters }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const networkRepository = repositoryFactory.createNetworkRepository();
-            networkRepository
-                .getTransactionFees()
-                // TODO: Remove for Mainnet launch
-                .pipe(ObservableHelpers.defaultLast(new TransactionFees(0, 0, 0, 0, 100)))
-                .subscribe((fees: TransactionFees) => commit('transactionFees', fees));
+            networkRepository.getTransactionFees().subscribe((fees: TransactionFees) => commit('transactionFees', fees));
         },
     },
 };
