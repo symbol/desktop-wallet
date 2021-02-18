@@ -19,7 +19,7 @@ import { appConfig } from '@/config';
 import { BroadcastResult } from '@/core/transactions/BroadcastResult';
 import i18n from '@/language';
 import { from, Observable, of, OperatorFunction, throwError } from 'rxjs';
-import { catchError, delay, flatMap, map, switchMap, tap, timeoutWith } from 'rxjs/operators';
+import { catchError, flatMap, map, switchMap, tap, timeoutWith } from 'rxjs/operators';
 import {
     Account,
     CosignatureSignedTransaction,
@@ -116,29 +116,28 @@ export class TransactionAnnouncerService {
         if (this.networkType === NetworkType.MAIN_NET) {
             return this.ByPassAnnouncement();
         } else {
-            const listener: IListener = this.$store.getters['account/listener'];
-
             const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
             const hashLockListener: IListener = repositoryFactory.createListener();
             return from(hashLockListener.open()).pipe(
                 switchMap(() => {
+                    hashLockListener.unconfirmedAdded(this.$store.getters['account/currentAccountAddress']);
                     const service = this.createService();
                     return service
-                        .announce(signedHashLockTransaction, hashLockListener)
+                        .announceHashLockAggregateBonded(signedHashLockTransaction, signedAggregateTransaction, hashLockListener)
                         .pipe(this.timeout(this.timeoutMessage(signedHashLockTransaction.type)))
                         .pipe(
-                            flatMap(() =>
-                                service.announceAggregateBonded(signedAggregateTransaction, listener).pipe(
-                                    this.timeout(this.timeoutMessage(signedAggregateTransaction.type)),
-                                    tap(() => {
-                                        hashLockListener.close();
-                                        console.log('hashAndAggregateBonded listener is closed!');
-                                    }),
-                                ),
-                            ),
+                            tap(() => {
+                                hashLockListener.close();
+                                console.log('hashAndAggregateBonded listener is closed!');
+                            }),
                         )
-
-                        .pipe(catchError((e) => of(e as Error)))
+                        .pipe(
+                            catchError((e) => {
+                                hashLockListener.close();
+                                console.log('hashAndAggregateBonded listener is closed due to error!');
+                                return of(e as Error);
+                            }),
+                        )
                         .pipe(map((t) => this.createBroadcastResult(signedAggregateTransaction, t)));
                 }),
             );
