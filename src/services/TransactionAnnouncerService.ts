@@ -81,7 +81,7 @@ export class TransactionAnnouncerService {
         if (this.networkType === NetworkType.MAIN_NET) {
             return this.ByPassAnnouncement();
         } else {
-            const listener: IListener = this.$store.getters['network/listener'];
+            const listener: IListener = this.$store.getters['account/listener'];
             const service = this.createService();
             return service
                 .announce(signedTransaction, listener)
@@ -117,7 +117,7 @@ export class TransactionAnnouncerService {
         if (this.networkType === NetworkType.MAIN_NET) {
             return this.ByPassAnnouncement();
         } else {
-            const listener: IListener = this.$store.getters['network/listener'];
+            const listener: IListener = this.$store.getters['account/listener'];
             const service = this.createService();
             return service
                 .announce(signedHashLockTransaction, listener)
@@ -139,7 +139,7 @@ export class TransactionAnnouncerService {
         if (this.networkType === NetworkType.MAIN_NET) {
             return this.ByPassAnnouncement();
         } else {
-            const listener: IListener = this.$store.getters['network/listener'];
+            const listener: IListener = this.$store.getters['account/listener'];
             const service = this.createService();
             return service
                 .announce(first, listener)
