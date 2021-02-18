@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+
+import { NetworkType } from 'symbol-sdk';
+
 /**
  * Stored POJO that holds node information.
  *
@@ -26,6 +29,7 @@ export class NodeModel {
         public readonly url: string,
         public readonly friendlyName: string,
         public readonly isDefault: boolean,
+        public readonly networkType: NetworkType,
         public readonly publicKey?: string,
         public nodePublicKey?: string,
     ) {}

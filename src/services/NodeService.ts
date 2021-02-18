@@ -34,7 +34,7 @@ export class NodeService {
     private readonly storage = NodeModelStorage.INSTANCE;
 
     public getKnowNodesOnly(networkType: NetworkType): NodeModel[] {
-        return _.uniqBy(this.loadNodes().concat(this.loadStaticNodes(networkType)), 'url');
+        return _.uniqBy(this.loadNodes().concat(this.loadStaticNodes(networkType)), 'url').filter((n) => n.networkType === networkType);
     }
 
     public getNodes(repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string, networkType: NetworkType): Observable<NodeModel[]> {
@@ -69,6 +69,7 @@ export class NodeService {
             url,
             friendlyName || '',
             isDefault || !!networkConfig[networkType].nodes.find((n) => n.url === url),
+            networkType,
             publicKey,
             nodePublicKey,
         );
