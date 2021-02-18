@@ -361,7 +361,7 @@ export default {
             const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getChainInfo().toPromise();
             const nodes = await getNodesPromise;
             const currentHeight = (await getBlockchainHeightPromise).height.compact();
-            const listener = repositoryFactory.createListener();
+            const networkListener = repositoryFactory.createListener();
 
             const currentPeer = URLHelpers.getNodeUrl(networkModel.url);
             commit('currentPeer', currentPeer);
@@ -377,11 +377,11 @@ export default {
             commit('generationHash', networkModel.generationHash);
             commit('repositoryFactory', repositoryFactory);
             commit('knowNodes', nodes);
-            const currentListener: IListener = getters['listener'];
-            if (currentListener && currentListener.isOpen()) {
-                currentListener.close();
+            const currentNetworkListener: IListener = getters['listener'];
+            if (currentNetworkListener && currentNetworkListener.isOpen()) {
+                currentNetworkListener.close();
             }
-            commit('listener', listener);
+            commit('listener', networkListener);
             commit('currentHeight', currentHeight);
             commit(
                 'currentPeerInfo',
@@ -415,8 +415,8 @@ export default {
                 await dispatch('UNSUBSCRIBE');
                 await dispatch('account/UNSUBSCRIBE', currentSignerAddress, { root: true });
                 // subscribe to the newly selected node websocket
-                if (listener && !listener.isOpen()) {
-                    await listener.open();
+                if (networkListener && !networkListener.isOpen()) {
+                    await networkListener.open();
                 }
                 await dispatch('SUBSCRIBE');
                 await dispatch('account/SUBSCRIBE', currentSignerAddress, { root: true });
@@ -582,7 +582,7 @@ export default {
             const subscriptions: Subscription[] = getters.subscriptions;
             subscriptions.forEach((s) => s.unsubscribe());
             const listener: Listener = getters.listener;
-            if (listener) {
+            if (listener && listener.isOpen()) {
                 await listener.close();
             }
             // update state

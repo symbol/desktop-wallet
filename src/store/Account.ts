@@ -13,30 +13,29 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import Vue from 'vue';
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { AccountService } from '@/services/AccountService';
+import { MultisigService } from '@/services/MultisigService';
+import { ProfileService } from '@/services/ProfileService';
+import { RESTService } from '@/services/RESTService';
+import * as _ from 'lodash';
+import { of, Subscription } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import {
     AccountInfo,
     AccountNames,
     Address,
     IListener,
-    Listener,
     MultisigAccountInfo,
     NetworkType,
     PublicAccount,
     RepositoryFactory,
 } from 'symbol-sdk';
-import { of, Subscription } from 'rxjs';
+import Vue from 'vue';
 // internal dependencies
 import { $eventBus } from '../events';
-import { RESTService } from '@/services/RESTService';
 import { AwaitLock } from './AwaitLock';
-import { AccountModel } from '@/core/database/entities/AccountModel';
-import { MultisigService } from '@/services/MultisigService';
-import * as _ from 'lodash';
-import { ProfileModel } from '@/core/database/entities/ProfileModel';
-import { AccountService } from '@/services/AccountService';
-import { catchError, map } from 'rxjs/operators';
-import { ProfileService } from '@/services/ProfileService';
 /// region globals
 const Lock = AwaitLock.create();
 /// end-region globals
@@ -80,6 +79,7 @@ interface AccountState {
     currentAccountAliases: AccountNames[];
     selectedAddressesToInteract: number[];
     currentSignerAccountModel: AccountModel;
+    listener: IListener;
 }
 
 // account state initial definition
@@ -104,6 +104,7 @@ const accountState: AccountState = {
     multisigAccountGraph: null,
     selectedAddressesToInteract: [],
     currentSignerAccountModel: null,
+    listener: undefined,
 };
 
 /**
@@ -142,6 +143,7 @@ export default {
         selectedAddressesToInteract: (state: AccountState) => state.selectedAddressesToInteract,
         currentSignerAccountModel: (state: AccountState) =>
             state.knownAccounts.find((a) => a.address === state.currentSignerAddress.plain()),
+        listener: (state: AccountState) => state.listener,
     },
     mutations: {
         setInitialized: (state: AccountState, initialized: boolean) => {
@@ -227,6 +229,7 @@ export default {
             selectedAccounts.splice(indexToDelete, 1);
             state.selectedAddressesToInteract = selectedAccounts;
         },
+        listener: (state: AccountState, listener: IListener) => Vue.set(state, 'listener', listener),
     },
     actions: {
         /**
@@ -608,7 +611,7 @@ export default {
          * Websocket API
          */
         // Subscribe to latest account transactions.
-        async SUBSCRIBE({ commit, dispatch, rootGetters, getters }, address: Address) {
+        async SUBSCRIBE({ commit, dispatch, getters, rootGetters }, address: Address) {
             if (!address) {
                 return;
             }
@@ -616,10 +619,17 @@ export default {
             const plainAddress = address.plain();
 
             // use RESTService to open websocket channel subscriptions
-            const listener = rootGetters['network/listener'] as Listener;
-            if (listener && !listener.isOpen()) {
-                await listener.open();
+            let listener = getters['listener'];
+            if (listener && listener.isOpen()) {
+                await listener.close();
             }
+            const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+            if (!repositoryFactory) {
+                return;
+            }
+            listener = repositoryFactory.createListener();
+            commit('listener', listener);
+
             const subscriptions: SubscriptionType = await RESTService.subscribeTransactionChannels(
                 { commit, dispatch },
                 listener,
@@ -644,9 +654,12 @@ export default {
 
             // close subscriptions
             for (const subscriptionType of subscriptionTypes) {
-                const { subscriptions } = subscriptionType;
+                const { subscriptions, listener } = subscriptionType;
                 for (const subscription of subscriptions) {
                     subscription.unsubscribe();
+                }
+                if (listener && listener.isOpen()) {
+                    await listener.close();
                 }
             }
 
