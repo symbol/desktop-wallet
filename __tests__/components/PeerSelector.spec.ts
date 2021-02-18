@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 import i18n from '@/language';
 import VueI18n from 'vue-i18n';
 import { NetworkService } from '@/services/NetworkService';
+import { NetworkType } from 'symbol-sdk';
 // configuration
 let wrapper;
 let vm;
@@ -40,19 +41,43 @@ beforeEach(() => {
                     url: 'http://api-01.ap-southeast-1.0941-v1.symboldev.network:3000',
                     friendlyName: '08b0274c',
                     isDefault: true,
+                    networkType: NetworkType.TEST_NET,
                 },
-                { url: 'http://api-01.eu-west-1.0941-v1.symboldev.network:3000', friendlyName: 'c44a95bd', isDefault: true },
-                { url: 'http://api-02.eu-central-1.0941-v1.symboldev.network:3000', friendlyName: '7a26944a', isDefault: true },
+                {
+                    url: 'http://api-01.eu-west-1.0941-v1.symboldev.network:3000',
+                    friendlyName: 'c44a95bd',
+                    isDefault: true,
+                    networkType: NetworkType.TEST_NET,
+                },
+                {
+                    url: 'http://api-02.eu-central-1.0941-v1.symboldev.network:3000',
+                    friendlyName: '7a26944a',
+                    isDefault: true,
+                    networkType: NetworkType.TEST_NET,
+                },
                 {
                     url: 'http://api-02.ap-northeast-1.0941-v1.symboldev.network:3000',
                     friendlyName: '4d08a4d9',
                     isDefault: true,
+                    networkType: NetworkType.TEST_NET,
                 },
-                { url: 'http://api-01.eu-central-1.0941-v1.symboldev.network:3000', friendlyName: 'a08950e0', isDefault: true },
+                {
+                    url: 'http://api-01.eu-central-1.0941-v1.symboldev.network:3000',
+                    friendlyName: 'a08950e0',
+                    isDefault: true,
+                    networkType: NetworkType.TEST_NET,
+                },
                 {
                     url: 'http://api-01.ap-northeast-1.0941-v1.symboldev.network:3000',
                     friendlyName: 'API AP North-East 1',
                     isDefault: true,
+                    networkType: NetworkType.TEST_NET,
+                },
+                {
+                    url: 'http://api.experimental.symboldev.network:3000',
+                    friendlyName: 'Main Net Opt In Experimental',
+                    isDefault: true,
+                    networkType: NetworkType.MAIN_NET,
                 },
             ],
         },

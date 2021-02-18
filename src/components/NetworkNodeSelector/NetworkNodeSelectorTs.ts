@@ -63,7 +63,14 @@ export class NetworkNodeSelectorTs extends Vue {
         // first check it in peer nodes
         const peerNode = this.filteredNodes.find((p) => p.host === value);
         if (peerNode && peerNode?.nodePublicKey) {
-            const nodeModel = new NodeModel(value, peerNode.friendlyName, false, peerNode.publicKey, peerNode.nodePublicKey);
+            const nodeModel = new NodeModel(
+                value,
+                peerNode.friendlyName,
+                false,
+                this.networkType,
+                peerNode.publicKey,
+                peerNode.nodePublicKey,
+            );
             Vue.set(this, 'showInputPublicKey', false);
             this.$emit('input', nodeModel);
             return;
@@ -76,7 +83,14 @@ export class NetworkNodeSelectorTs extends Vue {
             const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
             this.formNodeUrl = value;
             if (nodeInfo.nodePublicKey) {
-                const nodeModel = new NodeModel(value, nodeInfo.friendlyName, false, nodeInfo.publicKey, nodeInfo.nodePublicKey);
+                const nodeModel = new NodeModel(
+                    value,
+                    nodeInfo.friendlyName,
+                    false,
+                    this.networkType,
+                    nodeInfo.publicKey,
+                    nodeInfo.nodePublicKey,
+                );
                 Vue.set(this, 'showInputPublicKey', false);
                 this.$emit('input', nodeModel);
             } else {
@@ -136,7 +150,7 @@ export class NetworkNodeSelectorTs extends Vue {
                     !node.host?.includes('ap-southeast-1.testnet') &&
                     !node.host.includes('us-east-1.testnet') &&
                     !node.host.includes('eu-central-1.testnet') &&
-                    node.networkIdentifier === this.networkType.valueOf(),
+                    node.networkIdentifier === this.networkType,
             );
         }
         return this.peerNodes;
