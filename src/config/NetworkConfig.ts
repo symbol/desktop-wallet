@@ -102,20 +102,14 @@ const defaultMainnetNetworkConfig: NetworkConfig = {
         maxCosignedAccountsPerAccount: 25,
         maxMessageSize: 1024,
         maxMosaicAtomicUnits: 9000000000000000,
-        currencyMosaicId: '5F160D7851F3CB30',
-        harvestingMosaicId: '5F160D7851F3CB30',
+        currencyMosaicId: '4F8E3FB75C77C83E',
+        harvestingMosaicId: '4F8E3FB75C77C83E',
         defaultDynamicFeeMultiplier: 1000,
         epochAdjustment: 1573430400,
         totalChainImportance: undefined,
-        generationHash: 'TO_BE_DEFINED_BEFORE_MAINNET_LAUNCH',
+        generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
     },
-    nodes: [
-        { friendlyName: 'API North East 1', roles: 2, url: 'http://api-01.ap-northeast-1.mainnet.symboldev.network:3000' },
-        { friendlyName: 'API South West 1', roles: 2, url: 'http://api-01.ap-southeast-1.mainnet.symboldev.network:3000' },
-        { friendlyName: 'API EU Central 1', roles: 2, url: 'http://api-01.eu-central-1.mainnet.symboldev.network:3000' },
-        { friendlyName: 'API EU West 1', roles: 2, url: 'http://api-01.eu-west-1.mainnet.symboldev.network:3000' },
-        { friendlyName: 'API US West 1', roles: 2, url: 'http://api-01.us-west-1.mainnet.symboldev.network:3000' },
-    ],
+    nodes: [{ friendlyName: 'Experimental Main', roles: 2, url: 'http://api.experimental.symboldev.network:3000' }],
 };
 
 const defaultNetworkConfig: Record<number, NetworkConfig> = {
