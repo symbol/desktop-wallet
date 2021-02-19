@@ -174,7 +174,7 @@
             "NSCameraUsageDescription": "This app requires camera access to scan qrcodes.",
             "NSAppTransportSecurity": {
                 "NSAllowsArbitraryLoads": true
-              }
+            }
         }
     },
     "dmg": {
