@@ -244,6 +244,7 @@
     "expires_in": "Expires in",
     "explorer_url": "Explorer URL",
     "export_mnemonic": "Export mnemonic",
+    "export_transactions": "Export Transactions",
     "fee": "Fee",
     "fee_can_not_be_less_than_0": "Fee cannot be less than 0",
     "fee_speed_fast": "Fast",

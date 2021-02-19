@@ -71,62 +71,54 @@
     position: relative;
     height: 100%;
 
-    .transaction-list-inner-container {
-        position: relative;
-        display: grid;
-        height: 100%;
+    .transaction-list-tabs-container {
         width: 100%;
-        grid-template-rows: calc(100% - 0.6rem) 0.6rem;
-        grid-template-columns: 100%;
+        height: 100%;
+        display: block;
+    }
 
-        .transaction-list-tabs-container {
-            width: 100%;
-            display: block;
+    .transaction-list-pagination-container {
+        font-size: @normalFont;
+        text-align: right;
+        width: 100%;
+        display: block;
+        .download-transaction {
+            margin-top: 0.08rem;
+            margin-left: 0.3rem;
+            text-transform: uppercase;
+            color: @purpleLightest;
+        }
+        .ivu-page-item {
+            min-width: 0.31rem;
+            height: 0.3rem;
+            border: none;
+            background: @white;
+            box-shadow: 0 0 0.06rem @boxShadow;
+            color: @grayDark;
+            user-select: none;
+            border: 0.01rem solid @border;
+            transition: all 0.2s ease-in-out;
         }
 
-        .transaction-list-pagination-container {
-            font-size: @normalFont;
-            text-align: right;
-            width: 100%;
-            display: block;
-            .download-transaction {
-                margin-top: 0.08rem;
-                margin-left: 0.3rem;
-                text-transform: uppercase;
-                color: @purpleLightest;
-            }
-            .ivu-page-item {
-                min-width: 0.31rem;
-                height: 0.3rem;
-                border: none;
-                background: @white;
-                box-shadow: 0 0 0.06rem @boxShadow;
-                color: @grayDark;
-                user-select: none;
-                border: 0.01rem solid @border;
-                transition: all 0.2s ease-in-out;
-            }
+        .ivu-page-item-active a,
+        .ivu-page-item-active:hover a {
+            color: @primary !important;
+        }
 
-            .ivu-page-item-active a,
-            .ivu-page-item-active:hover a {
-                color: @primary !important;
-            }
+        .ivu-icon {
+            border: none;
+        }
 
-            .ivu-icon {
-                border: none;
-            }
-
-            span {
-                vertical-align: middle;
-            }
-            .page_total {
-                padding-right: 0.1rem;
-            }
-            .page_content {
-                display: inline-block;
-                vertical-align: middle;
-                padding: 0.1rem 0.45rem;
-            }
+        span {
+            vertical-align: middle;
+        }
+        .page_total {
+            padding-right: 0.1rem;
+        }
+        .page_content {
+            display: inline-block;
+            vertical-align: middle;
+            padding: 0.1rem 0.45rem;
         }
     }
 }
