@@ -20,7 +20,6 @@ import { NodeModel } from '@/core/database/entities/NodeModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { CommonHelpers } from '@/core/utils/CommonHelpers';
 import { NotificationType } from '@/core/utils/NotificationType';
-import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import { URLInfo } from '@/core/utils/URLInfo';
 // configuration
@@ -130,7 +129,7 @@ interface NetworkState {
     connectingToNodeInfo: ConnectingToNodeInfo;
 }
 
-const networkState: NetworkState = {
+const initialNetworkState: NetworkState = {
     initialized: false,
     currentPeer: undefined,
     currentPeerInfo: undefined,
@@ -155,7 +154,7 @@ const networkState: NetworkState = {
 
 export default {
     namespaced: true,
-    state: networkState,
+    state: initialNetworkState,
     getters: {
         getInitialized: (state: NetworkState) => state.initialized,
         subscriptions: (state: NetworkState) => state.subscriptions,
@@ -260,12 +259,27 @@ export default {
             // acquire async lock until initialized
             await Lock.initialize(callback, { getters });
         },
-        async uninitialize({ commit, dispatch, getters }) {
+        async uninitialize({ dispatch, getters }) {
             const callback = async () => {
                 dispatch('UNSUBSCRIBE');
-                commit('setInitialized', false);
+                dispatch('RESET_STATE');
             };
             await Lock.uninitialize(callback, { getters });
+        },
+        RESET_STATE({ commit }) {
+            commit('repositoryFactory', undefined);
+            commit('currentPeer', undefined);
+            commit('networkModel', undefined);
+            commit('networkConfiguration', undefined);
+            commit('transactionFees', undefined);
+            commit('networkType', undefined);
+            commit('generationHash', undefined);
+            commit('knowNodes', []);
+            commit('listener', undefined);
+            commit('currentHeight', undefined);
+            commit('currentPeerInfo', undefined);
+            commit('setConnected', false);
+            commit('connectingToNodeInfo', undefined);
         },
 
         async CONNECT(

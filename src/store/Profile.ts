@@ -92,6 +92,9 @@ export default {
             await dispatch('account/RESET_CURRENT_ACCOUNT', undefined, {
                 root: true,
             });
+            await dispatch('network/RESET_STATE', undefined, {
+                root: true,
+            });
             const currentListener: IListener = rootGetters['network/listener'];
             if (currentListener && currentListener.isOpen()) {
                 currentListener.close();
