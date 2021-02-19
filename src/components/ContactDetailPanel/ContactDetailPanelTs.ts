@@ -87,5 +87,6 @@ export class ContactDetailPanelTs extends Vue {
 
     public removeContact() {
         this.$store.dispatch('addressBook/REMOVE_CONTACT', this.selectedContact.id);
+        this.showDeleteConfirmModal = false;
     }
 }
