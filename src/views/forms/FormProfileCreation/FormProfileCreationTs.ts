@@ -15,7 +15,7 @@
  */
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { Password, PublicAccount } from 'symbol-sdk';
+import { NetworkType, Password, PublicAccount } from 'symbol-sdk';
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 import { ProfileService } from '@/services/ProfileService';
@@ -71,6 +71,7 @@ export class FormProfileCreationTs extends Vue {
 
     created() {
         this.profileService = new ProfileService();
+        this.formItems.networkType = NetworkType.TEST_NET;
         const { isLedger } = this.$route.meta;
         this.isLedger = isLedger;
     }

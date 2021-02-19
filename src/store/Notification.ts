@@ -63,7 +63,7 @@ export default {
             Vue.set(state, 'history', history);
 
             /// region trigger notice UI
-            app.$toast(app.$t(message), { type: level as TYPE, timeout: level === 'error' ? 0 : undefined });
+            app.$toast(app.$t(message), { type: level as TYPE, timeout: level === 'error' ? 6000 : undefined });
             /// end-region trigger notice UI
         },
     },

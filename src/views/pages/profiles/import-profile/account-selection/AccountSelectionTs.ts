@@ -150,7 +150,7 @@ export default class AccountSelectionTs extends Vue {
     public submit() {
         // cannot submit without selecting at least one account
         if (!this.selectedAccounts.length) {
-            return this.$store.dispatch('notification/ADD_ERROR', NotificationType.INPUT_EMPTY_ERROR);
+            return this.$store.dispatch('notification/ADD_ERROR', NotificationType.IMPORT_EMPTY_ACCOUNT_LIST);
         }
 
         try {
