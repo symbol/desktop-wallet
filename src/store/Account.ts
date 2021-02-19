@@ -308,7 +308,6 @@ export default {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const currentAccount: AccountModel = getters.currentAccount;
             const previousSignerAddress: Address = getters.currentSignerAddress;
-            const previousSignerMultisigInfo: MultisigAccountInfo = getters.currentSignerMultisigInfo;
 
             const currentSignerAddress: Address = address;
 
@@ -381,11 +380,8 @@ export default {
                 const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
                 commit('currentSignerMultisigInfo', currentSignerMultisigInfo);
             }
-            const cosignerMultisigToggle =
-                previousSignerMultisigInfo &&
-                previousSignerMultisigInfo.multisigAddresses.find((p) => p.equals(currentSignerAddress)) !== undefined;
 
-            if (unsubscribeWS && !cosignerMultisigToggle) {
+            if (unsubscribeWS) {
                 if (previousSignerAddress) {
                     await dispatch('UNSUBSCRIBE', previousSignerAddress);
                 }
