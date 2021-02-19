@@ -142,6 +142,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     showTransactionActions: boolean;
 
     @Prop({
+        default: false,
+    })
+    hideEncryption: boolean;
+
+    @Prop({
         default: () => ({}),
     })
     value: any;
