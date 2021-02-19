@@ -13,7 +13,13 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Store } from 'vuex';
+// configuration
+import { appConfig } from '@/config';
+// internal dependencies
+import { BroadcastResult } from '@/core/transactions/BroadcastResult';
+import i18n from '@/language';
+import { from, Observable, of, OperatorFunction, throwError } from 'rxjs';
+import { catchError, flatMap, map, switchMap, tap, timeoutWith } from 'rxjs/operators';
 import {
     Account,
     CosignatureSignedTransaction,
@@ -26,15 +32,8 @@ import {
     TransactionService,
     TransactionType,
 } from 'symbol-sdk';
-// internal dependencies
-import { BroadcastResult } from '@/core/transactions/BroadcastResult';
-import { Observable, of, OperatorFunction, throwError } from 'rxjs';
-import { catchError, flatMap, map } from 'rxjs/operators';
 import { TransactionAnnounceResponse } from 'symbol-sdk/dist/src/model/transaction/TransactionAnnounceResponse';
-// configuration
-import { appConfig } from '@/config';
-import i18n from '@/language';
-import { timeoutWith } from 'rxjs/operators';
+import { Store } from 'vuex';
 
 const { ANNOUNCE_TRANSACTION_TIMEOUT } = appConfig.constants;
 
@@ -81,7 +80,7 @@ export class TransactionAnnouncerService {
         if (this.networkType === NetworkType.MAIN_NET) {
             return this.ByPassAnnouncement();
         } else {
-            const listener: IListener = this.$store.getters['network/listener'];
+            const listener: IListener = this.$store.getters['account/listener'];
             const service = this.createService();
             return service
                 .announce(signedTransaction, listener)
@@ -117,21 +116,31 @@ export class TransactionAnnouncerService {
         if (this.networkType === NetworkType.MAIN_NET) {
             return this.ByPassAnnouncement();
         } else {
-            const listener: IListener = this.$store.getters['network/listener'];
-            const service = this.createService();
-            return service
-                .announce(signedHashLockTransaction, listener)
-                .pipe(this.timeout(this.timeoutMessage(signedHashLockTransaction.type)))
-                .pipe(
-                    flatMap(() =>
-                        service
-                            .announceAggregateBonded(signedAggregateTransaction, listener)
-                            .pipe(this.timeout(this.timeoutMessage(signedAggregateTransaction.type))),
-                    ),
-                )
-
-                .pipe(catchError((e) => of(e as Error)))
-                .pipe(map((t) => this.createBroadcastResult(signedAggregateTransaction, t)));
+            const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+            const hashLockListener: IListener = repositoryFactory.createListener();
+            return from(hashLockListener.open()).pipe(
+                switchMap(() => {
+                    hashLockListener.unconfirmedAdded(this.$store.getters['account/currentAccountAddress']);
+                    const service = this.createService();
+                    return service
+                        .announceHashLockAggregateBonded(signedHashLockTransaction, signedAggregateTransaction, hashLockListener)
+                        .pipe(this.timeout(this.timeoutMessage(signedHashLockTransaction.type)))
+                        .pipe(
+                            tap(() => {
+                                hashLockListener.close();
+                                console.log('hashAndAggregateBonded listener is closed!');
+                            }),
+                        )
+                        .pipe(
+                            catchError((e) => {
+                                hashLockListener.close();
+                                console.log('hashAndAggregateBonded listener is closed due to error!');
+                                return of(e as Error);
+                            }),
+                        )
+                        .pipe(map((t) => this.createBroadcastResult(signedAggregateTransaction, t)));
+                }),
+            );
         }
     }
 
@@ -139,7 +148,7 @@ export class TransactionAnnouncerService {
         if (this.networkType === NetworkType.MAIN_NET) {
             return this.ByPassAnnouncement();
         } else {
-            const listener: IListener = this.$store.getters['network/listener'];
+            const listener: IListener = this.$store.getters['account/listener'];
             const service = this.createService();
             return service
                 .announce(first, listener)
