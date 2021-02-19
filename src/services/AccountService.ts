@@ -292,16 +292,17 @@ export class AccountService {
      * Derive an public key from ledger using a path
      * @param {NetworkType} networkType
      * @param {string} paths
+     * @param {boolean} ledgerDisplay
      * @return {Promise<string>}
      */
-    public async getLedgerPublicKeyByPath(networkType: NetworkType, path: string): Promise<string> {
+    public async getLedgerPublicKeyByPath(networkType: NetworkType, path: string, ledgerDisplay: boolean): Promise<string> {
         if (!DerivationPathValidator.validate(path, networkType)) {
             const errorMessage = 'Invalid derivation path: ' + path;
             console.error(errorMessage);
             throw new Error(errorMessage);
         }
         const ledgerService = new LedgerService(networkType);
-        const accountResult = await ledgerService.getAccount(path, true);
+        const accountResult = await ledgerService.getAccount(path, ledgerDisplay);
         const { publicKey } = accountResult;
         return publicKey;
     }
@@ -311,10 +312,16 @@ export class AccountService {
      * @param {ProfileModel} currentProfile
      * @param {NetworkType} networkType
      * @param {string} paths
+     * @param {boolean} ledgerDisplay
      * @return {Promise<AccountModel>}
      */
-    public async getLedgerAccountByPath(currentProfile: ProfileModel, networkType: NetworkType, path: string): Promise<AccountModel> {
-        const publicKey = await this.getLedgerPublicKeyByPath(networkType, path);
+    public async getLedgerAccountByPath(
+        currentProfile: ProfileModel,
+        networkType: NetworkType,
+        path: string,
+        ledgerDisplay: boolean,
+    ): Promise<AccountModel> {
+        const publicKey = await this.getLedgerPublicKeyByPath(networkType, path, ledgerDisplay);
         const address = PublicAccount.createFromPublicKey(publicKey, networkType).address;
         return {
             id: SimpleObjectStorage.generateIdentifier(),
@@ -336,7 +343,7 @@ export class AccountService {
      */
     public async getDefaultLedgerAccount(currentProfile: ProfileModel, networkType: NetworkType): Promise<AccountModel> {
         const default_path = AccountService.getAccountPathByNetworkType(networkType);
-        return await this.getLedgerAccountByPath(currentProfile, networkType, default_path);
+        return await this.getLedgerAccountByPath(currentProfile, networkType, default_path, false);
     }
 
     /**

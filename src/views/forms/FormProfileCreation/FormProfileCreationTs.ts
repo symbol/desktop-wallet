@@ -266,7 +266,7 @@ export class FormProfileCreationTs extends Vue {
         const profileName = this.formItems.profileName;
         const accountService = new AccountService();
         this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-        const accountResult = await accountService.getLedgerPublicKeyByPath(networkType, defaultPath);
+        const accountResult = await accountService.getLedgerPublicKeyByPath(networkType, defaultPath, false);
         const publicKey = accountResult;
         const address = PublicAccount.createFromPublicKey(publicKey, networkType).address;
 

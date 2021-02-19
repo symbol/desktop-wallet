@@ -188,7 +188,7 @@ export class AccountDetailsPageTs extends Vue {
             }
             const currentPath = this.currentAccount.path;
             this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-            const currentAccount = await this.accountService.getLedgerAccountByPath(this.currentProfile, networkType, currentPath);
+            const currentAccount = await this.accountService.getLedgerAccountByPath(this.currentProfile, networkType, currentPath, true);
             const accountPublicKey = currentAccount.publicKey.toUpperCase();
             if (accountPublicKey === this.currentAccount.publicKey) {
                 this.$store.dispatch('notification/ADD_SUCCESS', 'ledger_correct_account');
