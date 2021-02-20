@@ -330,17 +330,14 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * @return {TransferTransaction[]}
      */
     protected getTransactions(): TransferTransaction[] {
-        const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[];
         const mosaics = this.formItems.attachedMosaics
             .filter((attachment) => attachment.uid) // filter out null values
             .map(
-                (attachment): Mosaic => {
-                    const amount = Number(attachment.amount.trim().replace(DECIMAL_SEPARATOR, '.'));
-                    const info = mosaicsInfo.find((i) => i.mosaicIdHex === attachment.mosaicHex);
-                    const div = info ? info.divisibility : 0;
-                    // - format amount to absolute
-                    return new Mosaic(new MosaicId(RawUInt64.fromHex(attachment.mosaicHex)), UInt64.fromUint(amount * Math.pow(10, div)));
-                },
+                (attachment): Mosaic =>
+                    new Mosaic(
+                        new MosaicId(RawUInt64.fromHex(attachment.mosaicHex)),
+                        UInt64.fromNumericString(attachment.amount.trim().replace(DECIMAL_SEPARATOR, '.')),
+                    ),
             );
         return [
             TransferTransaction.create(
@@ -484,7 +481,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                     id: new MosaicId(info.mosaicIdHex), // XXX resolve mosaicId from namespaceId
                     mosaicHex: info.mosaicIdHex, // XXX resolve mosaicId from namespaceId
                     name: info.name,
-                    amount: (mosaic.amount.compact() / Math.pow(10, info.divisibility)).toLocaleString(undefined, {
+                    amount: mosaic.amount.compact().toLocaleString(undefined, {
                         maximumFractionDigits: info.divisibility,
                     }),
                     uid: Math.floor(Math.random() * 10e6), // used to index dynamic inputs
@@ -703,9 +700,19 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * @param {number} maxFee
      */
     private createTransactionCommandForFee(maxFee: number): TransactionCommand {
+        const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[];
         const transactions = this.getTransactions().map((t) => {
             //@ts-ignore
             t.maxFee = UInt64.fromUint(maxFee);
+
+            if (t.mosaics.length) {
+                t.mosaics.map((m) => {
+                    const info = mosaicsInfo.find((i) => i.mosaicIdHex === m.id.toHex());
+                    const div = info ? info.divisibility : 0;
+                    const amount = m.amount.compact() / Math.pow(10, div);
+                    return new Mosaic(m.id, UInt64.fromUint(amount));
+                });
+            }
             return t;
         });
 
