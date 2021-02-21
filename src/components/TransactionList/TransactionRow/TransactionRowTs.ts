@@ -120,7 +120,11 @@ export class TransactionRowTs extends Vue {
         if (this.transaction.type === TransactionType.TRANSFER) {
             // We may prefer XYM over other mosaic if XYM is 2nd+
             const transferTransaction = this.transaction as TransferTransaction;
-            return (transferTransaction.mosaics.length && transferTransaction.mosaics[0].amount.compact()) || 0;
+            const amount = (transferTransaction.mosaics.length && transferTransaction.mosaics[0].amount.compact()) || 0;
+            if (!this.isIncomingTransaction()) {
+                return -amount;
+            }
+            return amount;
         }
         return undefined;
     }
