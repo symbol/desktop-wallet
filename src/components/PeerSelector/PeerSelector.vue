@@ -48,7 +48,7 @@
                         <Icon type="ios-help-circle-outline" />
                         <i18n path="peer_tip">
                             <template v-slot:setting>
-                                <a @click="goSettings()">{{ $t('sidebar_item_settings') }}</a>
+                                <a @click="goSettings()">{{ $t('settings') }}</a>
                             </template>
                         </i18n>
                     </div>

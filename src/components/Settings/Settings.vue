@@ -1,6 +1,9 @@
 <template>
     <div class="settings-container">
-        <img :src="settingsIcon" class="setting-menu-icon" @click="toggleSettings" />
+        <a @click="toggleSettings" class="settings-link">
+            <img :src="settingsIcon" class="setting-menu-icon" />
+            <span>{{ $t('settings') }}</span>
+        </a>
         <ModalSettings v-if="isSettingsVisible" :visible="isSettingsVisible" @close="toggleSettings" />
     </div>
 </template>
