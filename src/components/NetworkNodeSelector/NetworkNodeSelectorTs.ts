@@ -11,6 +11,7 @@ import { NodeModel } from '@/core/database/entities/NodeModel';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import { NetworkType, NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
 import { NotificationType } from '@/core/utils/NotificationType';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 
 @Component({
     components: {
@@ -22,6 +23,7 @@ import { NotificationType } from '@/core/utils/NotificationType';
             repositoryFactory: 'network/repositoryFactory',
             peerNodes: 'network/peerNodes',
             networkType: 'network/networkType',
+            currentProfile: 'profile/currentProfile',
         }),
     },
 })
@@ -50,6 +52,7 @@ export class NetworkNodeSelectorTs extends Vue {
 
     public showInputPublicKey = false;
 
+    public currentProfile: ProfileModel;
     /**
      * Checks if the given node is eligible for harvesting
      * @protected
@@ -109,6 +112,10 @@ export class NetworkNodeSelectorTs extends Vue {
     public async created() {
         await this.$store.dispatch('network/LOAD_PEER_NODES');
         this.customNodeData = this.filteredNodes.map((n) => n.host);
+        const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect.replace(/http:|:3000|\//g, '');
+        if (this.customNodeData.includes(currentNodeUrl) && !this.value.url) {
+            this.fetchNodePublicKey(currentNodeUrl);
+        }
     }
 
     @Watch('value', { immediate: true })

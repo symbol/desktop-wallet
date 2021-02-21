@@ -35,8 +35,11 @@ import { VeeValidateSetup } from '@/core/validation/VeeValidateSetup';
 import App from '@/app/App.vue';
 import clickOutsideDirective from '@/directives/clickOutside';
 import { PluginOptions } from 'vue-toastification/dist/types/src/types';
+// @ts-ignore
 import { library } from '@fortawesome/fontawesome-svg-core';
+// @ts-ignore
 import { faFileCsv } from '@fortawesome/free-solid-svg-icons';
+// @ts-ignore
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 /// region UI plugins
