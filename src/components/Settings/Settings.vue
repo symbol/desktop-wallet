@@ -1,6 +1,6 @@
 <template>
     <div class="settings-container">
-        <a @click="toggleSettings" class="settings-link">
+        <a class="settings-link" @click="toggleSettings">
             <img :src="settingsIcon" class="setting-menu-icon" />
             <span>{{ $t('settings') }}</span>
         </a>
