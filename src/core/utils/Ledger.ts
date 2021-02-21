@@ -41,7 +41,7 @@ export class SymbolLedger {
         );
     }
     /**
-     * Return true if app version is above the supported Symbol BOLOS app version
+     * Return true if app version is above the supported Symbol app version
      * @return {boolean}
      */
     public async isAppSupported() {
@@ -58,9 +58,9 @@ export class SymbolLedger {
     }
 
     /**
-     * Get Symbol BOLOS app version
-     *
-     * @return an object contain major, minor, patch version of the Symbol BOLOS app
+     * Get Symbol app version on Ledger device
+
+     * @return an object contain major, minor, patch version of the Symbol app on Ledger device
      */
     private async getAppVersion() {
         // APDU fields configuration
