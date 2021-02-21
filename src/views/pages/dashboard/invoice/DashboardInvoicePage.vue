@@ -30,7 +30,9 @@
 
                     <div class="top-qr-text">
                         <span class="top-qr-text-title">{{ $t('message') }}:</span>
-                        <span>{{ currentTransaction && currentTransaction.message ? currentTransaction.message.payload : '' }}</span>
+                        <span class="message">{{
+                            currentTransaction && currentTransaction.message ? currentTransaction.message.payload : ''
+                        }}</span>
                     </div>
                 </div>
             </div>
