@@ -82,8 +82,8 @@
     "accounts_view_multisig": "Multi-signature",
     "accounts_view_open_faucet": "Open the faucet",
     "action": "Action",
-    "action_label_alias_link": "Link",
-    "action_label_alias_unlink": "Unlink",
+    "action_label_alias_link": "Link Alias",
+    "action_label_alias_unlink": "Unlink Alias",
     "action_label_extend_duration": "Extend duration",
     "action_label_modify_supply": "Modify supply",
     "activate": "Activate",
@@ -648,6 +648,7 @@
     "mosaic_name_can_not_be_null": "Mosaic name cannot be null/empty",
     "mosaic_not_set": "Select a mosaic",
     "mosaic_transaction": "Mosaic Transaction ",
+    "mosaic_supply_transaction": "Supply Change Transaction ",
     "mosaic_transfer_type": "Mosaic transactions",
     "mosaics_list": "Mosaics List",
     "move_your_mouse": "Please move your mouse to improve randomness when generating the mnemonic passphrase",
@@ -1039,5 +1040,5 @@
     "current_node_is_not_available": "Current node is not available. Trying to connect to node #{0}/{1}",
     "nodes_unavailable_check_network_and": "Nodes({0}/{1}) are currently unavailable. Please check your network connection, settings and ",
     "copyright": "Copyright © 2021 NEM Software",
-    "address_list_cannot_be_empty": "Please, select 1 or more accounts from the list."
+    "address_list_cannot_be_empty": "Please select at least one account from the list."
 }

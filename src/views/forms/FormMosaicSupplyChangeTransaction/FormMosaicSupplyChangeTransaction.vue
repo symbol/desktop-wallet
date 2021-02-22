@@ -2,18 +2,53 @@
     <FormWrapper>
         <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
             <form onsubmit="event.preventDefault()" class="form-container">
+                <FormRow v-if="isAggregate">
+                    <template v-slot:label> {{ $t('mosaic') }}: </template>
+
+                    <template v-slot:inputs>
+                        <ValidationProvider
+                            v-slot="{ errors }"
+                            vid="newDuration"
+                            :name="$t('mosaic')"
+                            rules="required"
+                            :immediate="true"
+                            slim
+                        >
+                            <ErrorTooltip :errors="errors">
+                                <MosaicSelector
+                                    v-model="formItems.mosaicHexId"
+                                    :mosaic-hex-ids="ownedTargetHexIds"
+                                    default-mosaic="firstInList"
+                                    required
+                                />
+                            </ErrorTooltip>
+                        </ValidationProvider>
+                    </template>
+                </FormRow>
                 <FormRow>
                     <template v-slot:label> {{ $t('form_label_supply_direction') }}: </template>
                     <template v-slot:inputs>
                         <div class="inputs-container select-container">
-                            <Select v-model="formItems.action" class="select-size select-style">
-                                <Option :value="MosaicSupplyChangeAction.Increase">
-                                    {{ $t('increase') }}
-                                </Option>
-                                <Option :value="MosaicSupplyChangeAction.Decrease">
-                                    {{ $t('decrease') }}
-                                </Option>
-                            </Select>
+                            <!-- <template v-slot:inputs> -->
+                            <ValidationProvider
+                                v-slot="{ errors }"
+                                vid="newDuration"
+                                :name="$t('direction')"
+                                rules="required"
+                                :immediate="true"
+                                slim
+                            >
+                                <ErrorTooltip :errors="errors">
+                                    <Select v-model="formItems.action" class="select-size select-style">
+                                        <Option :value="MosaicSupplyChangeAction.Increase">
+                                            {{ $t('increase') }}
+                                        </Option>
+                                        <Option :value="MosaicSupplyChangeAction.Decrease">
+                                            {{ $t('decrease') }}
+                                        </Option>
+                                    </Select>
+                                </ErrorTooltip>
+                            </ValidationProvider>
                         </div>
                     </template>
                 </FormRow>
@@ -24,7 +59,7 @@
                     <template v-slot:label> {{ $t('form_label_current_supply') }}: </template>
                     <template v-slot:inputs>
                         <div class="row-left-message">
-                            <span class="pl-2">
+                            <span v-if="currentMosaicInfo" class="pl-2">
                                 {{ $t('relative') }}: {{ currentMosaicRelativeSupply }} ({{ $t('absolute') }}:
                                 {{ currentMosaicInfo.supply.toLocaleString() }})
                             </span>
@@ -56,7 +91,17 @@
                     </template>
                 </FormRow>
 
-                <MaxFeeAndSubmit v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
+                <MaxFeeAndSubmit v-if="!isAggregate" v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
+                <div v-else-if="!hideSave" class="ml-2" style="text-align: right;">
+                    <button
+                        type="submit"
+                        class="save-button centered-button button-style inverted-button"
+                        :disabled="currentAccount.isMultisig || !formItems.mosaicHexId || formItems.action == null"
+                        @click="emitToAggregate"
+                    >
+                        {{ $t('save') }}
+                    </button>
+                </div>
             </form>
         </ValidationObserver>
         <ModalTransactionConfirmation
