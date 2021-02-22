@@ -82,8 +82,8 @@
     "accounts_view_multisig": "多重签名",
     "accounts_view_open_faucet": "开启收益开关",
     "action": "行为",
-    "action_label_alias_link": "绑定",
-    "action_label_alias_unlink": "解绑",
+    "action_label_alias_link": "Link Alias",
+    "action_label_alias_unlink": "Unlink Alias",
     "action_label_extend_duration": "延时",
     "action_label_modify_supply": "修改供应量",
     "activate": "启用",
@@ -847,6 +847,7 @@
     "set_explorer_link": "默认区块浏览器",
     "set_network_type": "设置网络类型",
     "SET_UP": "节点选择",
+    "settings": "设置",
     "settings_tab_about": "关于",
     "settings_tab_general": "首选项设置",
     "settings_tab_network": "网络设置",
@@ -864,7 +865,6 @@
     "sidebar_item_mosaics": "马赛克",
     "sidebar_item_multisig": "多签",
     "sidebar_item_namespaces": "命名空间",
-    "sidebar_item_settings": "设置",
     "sign_transaction_failed": "签署交易失败，原因: {reason}",
     "signature": "签名",
     "signer_public_key": "签名者公钥",
@@ -1039,5 +1039,5 @@
     "current_node_is_not_available": "当前节点不可用。\n尝试连接到节点",
     "nodes_unavailable_check_network_and": "节点（{0} / {1}）当前不可用。\n请检查您的网络连接，设置和",
     "copyright": "版权所有©2021 NEM软件",
-    "address_list_cannot_be_empty": "Please select at least one account from the list."
+    "address_list_cannot_be_empty": "Please, select 1 or more accounts from the list."
 }
