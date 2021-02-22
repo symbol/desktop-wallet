@@ -519,7 +519,7 @@
     "hidden_accounts": "非表示にしたアカウント",
     "hide_account": "アカウントを非表示",
     "id": "#",
-    "if_you_need_to_back_up_your_mnemonics_again_you_can": "ニーモニックを再バックアップするには - 'プロファイルマネジメント - プロファイル詳細 - ニーモニックのエクスポート' で行います",
+    "if_you_need_to_back_up_your_mnemonics_again_you_can": "ニーモニックを再バックアップするには - 'アカウント - マイアカウント - プロファイルをバックアップ'",
     "illegal_public_key_error": "公開鍵は無効です",
     "illegal_publicKey": "指定したアカウントの公開鍵は無効です",
     "import": "インポート",

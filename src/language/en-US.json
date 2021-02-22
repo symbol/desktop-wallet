@@ -519,7 +519,7 @@
     "hidden_accounts": "Hidden Accounts",
     "hide_account": "Hide Account",
     "id": "#",
-    "if_you_need_to_back_up_your_mnemonics_again_you_can": "If you need to back up your mnemonics again, you can find them in 'Profile Management - Profile Details - Export Mnemonics'.",
+    "if_you_need_to_back_up_your_mnemonics_again_you_can": "If you need to back up your mnemonics again, you can find them in 'Accounts - My Accounts - Back up Profile'.",
     "illegal_public_key_error": "This public key is invalid",
     "illegal_publicKey": "The account public key you provided is invalid",
     "import": "Import",
