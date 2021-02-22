@@ -59,11 +59,14 @@ export class ViewTransferTransaction extends TransactionView<TransferTransaction
      */
     protected resolveDetailItems(): TransactionDetailItem[] {
         const transaction = this.transaction;
+        const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[];
         const attachedMosaics = transaction.mosaics.map((transactionMosaic) => {
+            const info = mosaicsInfo.find((i) => i.mosaicIdHex === transactionMosaic.id.toHex());
+            const div = info ? info.divisibility : 0;
             return {
                 id: transactionMosaic.id,
                 mosaicHex: transactionMosaic.id.toHex(),
-                amount: transactionMosaic.amount.compact(),
+                amount: transactionMosaic.amount.compact() * Math.pow(10, div),
             } as AttachedMosaic;
         });
         const message = this.transaction.message;
