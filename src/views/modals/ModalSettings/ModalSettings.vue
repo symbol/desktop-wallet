@@ -3,7 +3,7 @@
         <Modal v-model="show" class="settings-modal-container" :footer-hide="true">
             <div class="nav-links-wrapper">
                 <div class="header-container">
-                    <span class="title-style">{{ $t('sidebar_item_settings') }}</span>
+                    <span class="title-style">{{ $t('settings') }}</span>
                 </div>
                 <div class="nav-wrapper">
                     <NavigationLinks

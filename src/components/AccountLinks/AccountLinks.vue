@@ -1,9 +1,9 @@
 <template>
     <div>
         <slot name="trigger">
-            <img class="navbar-icon" :src="icon" />
             <a class="trigger-accountlink pointer" :href="link" target="_blank">
-                {{ title }}
+                <img class="navbar-icon" :src="icon" />
+                <span>{{ title }}</span>
             </a>
         </slot>
     </div>
