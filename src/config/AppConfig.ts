@@ -29,7 +29,6 @@ export interface AppConfig {
         ANNOUNCE_TRANSACTION_TIMEOUT: number;
         MAX_LISTENER_RECONNECT_TRIES: number;
         MAX_PASSWORD_LENGTH: number;
-        MAX_SEED_ACCOUNTS_NUMBER: number;
         MIN_PASSWORD_LENGTH: number;
         DECIMAL_SEPARATOR: string;
     };
@@ -44,7 +43,6 @@ const defaultAppConfig: AppConfig = {
         MAX_LISTENER_RECONNECT_TRIES: 20,
         MAX_PASSWORD_LENGTH: 64,
         MAX_REMOTE_ACCOUNT_CHECKS: 10,
-        MAX_SEED_ACCOUNTS_NUMBER: 10,
         MIN_PASSWORD_LENGTH: 8,
         SEED_ACCOUNT_NAME_PREFIX: 'SeedWallet-',
         ANNOUNCE_TRANSACTION_TIMEOUT: 240000,

@@ -92,6 +92,7 @@ export class FormProfileUnlockTs extends Vue {
      */
     @Prop({ default: false }) isLoading: boolean;
 
+    @Prop({ default: false }) disabled: boolean;
     /// region computed properties getter/setter
     /// end-region computed properties getter/setter
 

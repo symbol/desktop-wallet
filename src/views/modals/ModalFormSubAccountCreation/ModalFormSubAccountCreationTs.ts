@@ -30,7 +30,6 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { NotificationType } from '@/core/utils/NotificationType';
-import { appConfig } from '@/config';
 import { Crypto, NetworkType, Password, PublicAccount } from 'symbol-sdk';
 import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
@@ -40,8 +39,7 @@ import { LedgerService } from '@/services/LedgerService';
 import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import { AccountService } from '@/services/AccountService';
-
-const { MAX_SEED_ACCOUNTS_NUMBER } = appConfig.constants;
+import { NewAccountNameValidator } from '@/core/validation/validators';
 
 @Component({
     components: {
@@ -324,14 +322,6 @@ export class ModalFormSubAccountCreationTs extends Vue {
      */
     private deriveNextChildAccount(childAccountName: string): AccountModel | null {
         try {
-            // - don't allow creating more than 10 accounts
-            if (this.knownPaths.length >= MAX_SEED_ACCOUNTS_NUMBER) {
-                this.$store.dispatch(
-                    'notification/ADD_ERROR',
-                    this.$t(NotificationType.TOO_MANY_SEED_ACCOUNTS_ERROR, { maxSeedAccountsNumber: MAX_SEED_ACCOUNTS_NUMBER }),
-                );
-                return null;
-            }
             if (this.isLedger) {
                 this.importSubAccountFromLedger(childAccountName)
                     .then((res) => {
@@ -410,5 +400,8 @@ export class ModalFormSubAccountCreationTs extends Vue {
             });
             throw error;
         }
+    }
+    public get isValidName(): boolean {
+        return NewAccountNameValidator.validate(this.formItems.name);
     }
 }
