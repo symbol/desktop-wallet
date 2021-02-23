@@ -473,6 +473,22 @@ export const routes: AppRoute[] = [
         component: () => import('@/views/pages/profiles/LoginPage.vue'),
     },
     {
+        path: '/offline',
+        name: 'offline',
+        meta: { protected: false },
+        // @ts-ignore
+        component: () => import('@/views/layout/RouterPage.vue'),
+        children: [
+            {
+                path: 'create',
+                name: 'offline.create',
+                meta: { protected: false },
+                // @ts-ignore
+                component: () => import('@/views/pages/offline/OfflineTransaction.vue'),
+            },
+        ]
+    },
+    {
         path: '/privacy',
         name: 'privacy',
         meta: { protected: false, hideFromMenu: true },

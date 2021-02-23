@@ -5,6 +5,7 @@
                 <form onsubmit="event.preventDefault()">
                     <div class="switch-language-container">
                         <LanguageSelector />
+                        <button @click="$router.push({ name: 'offline.create' })">Go to offline transaction</button>
                     </div>
                     <div class="welcome-box">
                         <div class="banner-image">
