@@ -4,7 +4,9 @@
         <img :src="qrCodeBase64$" :alt="$t(alt)" @click="copyAsText" />
         <span v-if="showDownload" class="qrcode-display-footer">
             <slot name="download">
-                <a :href="qrCodeBase64$" :download="downloadName">{{ $t('button_download_qr') }}</a>
+                <a :href="qrCodeBase64$" :download="downloadName"
+                    ><Icon :type="'md-download'" size="17" /> {{ $t('button_download_qr') }}</a
+                >
             </slot>
         </span>
     </div>
