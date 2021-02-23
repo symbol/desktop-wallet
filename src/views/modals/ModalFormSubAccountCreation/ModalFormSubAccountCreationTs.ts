@@ -39,7 +39,6 @@ import { LedgerService } from '@/services/LedgerService';
 import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import { AccountService } from '@/services/AccountService';
-import { NewAccountNameValidator } from '@/core/validation/validators';
 
 @Component({
     components: {
@@ -402,6 +401,11 @@ export class ModalFormSubAccountCreationTs extends Vue {
         }
     }
     public get isValidName(): boolean {
-        return NewAccountNameValidator.validate(this.formItems.name);
+        if (!this.formItems.name) {
+            return false;
+        } else {
+            const knownAccounts = Object.values(this.accountService.getKnownAccounts(this.currentProfile.accounts));
+            return undefined === knownAccounts.find((w) => this.formItems.name.toUpperCase() === w.name.toUpperCase());
+        }
     }
 }

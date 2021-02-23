@@ -6,5 +6,4 @@ export * from './MosaicIdValidator';
 export * from './NamespaceIdValidator';
 export * from './PublicKeyValidator';
 export * from './UrlValidator';
-export * from './NewAccountNameValidator';
 export * from './Validator';
