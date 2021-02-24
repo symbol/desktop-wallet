@@ -175,6 +175,13 @@ export class PageLayoutTs extends Vue {
                 showRetry,
             };
         }
+        // TODO :: Remove after mainnet launch
+        if (this.currentProfile && this.currentProfile.networkType === NetworkType.MAIN_NET) {
+            return {
+                show: true,
+                message: 'launching_mainnet_soon',
+            };
+        }
 
         if (this.currentProfile && this.currentProfile.networkType !== this.networkType) {
             this.$store.dispatch('network/SET_NETWORK_IS_NOT_MATCHING_PROFILE', true);
