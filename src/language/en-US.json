@@ -595,6 +595,7 @@
     "low_fee_warning_message": "Transactions with less than the recommended fee might not get accepted and eventually expire",
     "max_approval_amount_more_than_10": "The maximum number of co-signatories needed for approval cannot exceed 10",
     "max_decimal_number_error": "The {_field_} field must have {maxDecimalNumber} decimals or less.",
+    "max_message_length_error": "The {_field_} may not be greater than {maxMessageNumber} characters.",
     "positive_decimal_error": "Only digits and \"{decimalSeparator}\" allowed",
     "max_fee": "Max Fee",
     "max_removal_amount_more_than_10": "The maximum number of co-signatories needed for removal cannot exceed 10",
