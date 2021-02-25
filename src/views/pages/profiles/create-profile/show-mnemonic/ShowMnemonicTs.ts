@@ -81,6 +81,11 @@ export default class ShowMnemonicTs extends Vue {
     public exportMnemonicQR: MnemonicQR;
 
     /**
+     * Mnemonic download processing
+     */
+    public downloadInProgress: boolean = false;
+
+    /**
      * Hook called when the component is mounted
      */
     public created() {
@@ -105,7 +110,7 @@ export default class ShowMnemonicTs extends Vue {
         return Formatters.splitArrayByDelimiter(this.mnemonicWordsList);
     }
 
-    public async downloadPaperWallet() {
+    public async processDownload() {
         const accountService = new AccountService();
         const mnemonicObj = new MnemonicPassPhrase(this.currentMnemonic.plain);
         const account = accountService.getAccountByPath(
@@ -123,5 +128,21 @@ export default class ShowMnemonicTs extends Vue {
         const pdfArray: Uint8Array = await paperWallet.toPdf();
         return UIHelpers.downloadBytesAsFile(pdfArray, `paper-wallet-${this.currentProfile.profileName}`, 'application/pdf');
     }
+
+    /**
+     * handle process mnemonic pass pharase
+     */
+    public async downloadPassPharses() {
+        if (this.downloadInProgress) {
+            return;
+        }
+
+        Vue.set(this, 'downloadInProgress', true);
+        setTimeout(async () => {
+            await this.processDownload();
+            Vue.set(this, 'downloadInProgress', false);
+        }, 800);
+    }
+
     /// end-region computed properties getter/setter
 }
