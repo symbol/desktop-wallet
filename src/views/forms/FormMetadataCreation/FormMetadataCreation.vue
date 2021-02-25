@@ -53,7 +53,12 @@
                     <FormRow v-if="type === MetadataType.Mosaic">
                         <template v-slot:label> {{ $t(targetLabel) }}: </template>
                         <template v-slot:inputs>
-                            <MosaicSelector v-model="formItems.targetId" :mosaic-hex-ids="ownedTargetHexIds" default-mosaic="firstInList" />
+                            <MosaicSelector
+                                v-model="formItems.targetId"
+                                :mosaic-hex-ids="ownedTargetHexIds"
+                                default-mosaic="firstInList"
+                                :disabled="editMode"
+                            />
                         </template>
                     </FormRow>
                     <div v-if="type === MetadataType.Namespace">

@@ -14,7 +14,9 @@
  *
  */
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { AccountModel } from '@/core/database/entities/AccountModel';
 import { ProfileService } from '@/services/ProfileService';
+import { AccountService } from '@/services/AccountService';
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
@@ -22,6 +24,7 @@ import { mapGetters } from 'vuex';
     computed: {
         ...mapGetters({
             currentProfile: 'profile/currentProfile',
+            currentAccount: 'account/currentAccount',
         }),
     },
 })
@@ -36,11 +39,19 @@ export default class FinalizeTs extends Vue {
      * @var {ProfileService}
      */
     public profileService: ProfileService = new ProfileService();
+    public ledgerAccountService: AccountService = new AccountService();
     public marked: boolean = false;
     public currentProfile: ProfileModel;
+    public currentAccount: AccountModel;
     public async submit() {
-        // flush and continue
+        // use repository for storage
+        this.ledgerAccountService.saveAccount(this.currentAccount);
         this.profileService.updateProfileTermsAndConditionsStatus(this.currentProfile, true);
+
+        // execute store actions
+        await this.$store.dispatch('profile/ADD_ACCOUNT', this.currentAccount);
+
+        // flush and continue
         return this.$router.push({ name: 'dashboard' });
     }
 }

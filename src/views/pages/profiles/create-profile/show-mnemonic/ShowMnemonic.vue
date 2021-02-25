@@ -2,7 +2,7 @@
     <div class="create-mnemonic-sec" @keyup.enter="$router.push({ name: 'profiles.createProfile.verifyMnemonic' })">
         <p class="set-title-create">
             {{ $t('backup_mnemonic_words') }}
-            <img src="@/views/resources/img/icons/arrow-down.svg" class="clipboard-icon" />
+            <img src="@/views/resources/img/icons/Incoming.svg" class="clipboard-icon" />
         </p>
         <div class="create-mnemonic-col">
             <div class="create-mnemonic-left">
@@ -31,9 +31,13 @@
                         >
                             {{ $t('back') }}
                         </button>
-                        <button type="button" class="solid-button button-style create-account-style" @click="downloadPaperWallet">
+                        <Button
+                            class="solid-button button-style create-account-style download-button"
+                            :loading="downloadInProgress"
+                            @click="downloadPassPharses"
+                        >
                             {{ $t('button_download_qr') }}
-                        </button>
+                        </Button>
                         <button
                             type="submit"
                             class="solid-button button-style create-account-style inverted-button"

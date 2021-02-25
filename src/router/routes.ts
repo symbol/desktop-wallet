@@ -56,7 +56,7 @@ export const routes: AppRoute[] = [
                         meta: {
                             protected: true,
                             title: 'page_title_send',
-                            icon: officialIcons.outgoing,
+                            icon: officialIcons.send2,
                         },
                         // @ts-ignore
                         component: () => import('@/views/pages/dashboard/transfer/DashboardTransferPage.vue'),
@@ -68,7 +68,7 @@ export const routes: AppRoute[] = [
                         meta: {
                             protected: true,
                             title: 'page_title_invoice',
-                            icon: officialIcons.incoming,
+                            icon: officialIcons.receive2,
                         },
                         // @ts-ignore
                         component: () => import('@/views/pages/dashboard/invoice/DashboardInvoicePage.vue'),

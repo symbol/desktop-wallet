@@ -138,7 +138,7 @@
             :visible="modalFormsVisibility.targetValue"
             :value="targetedMetadataList[0]"
             :metadata-list="targetedMetadataList"
-            :edit-mode="showModalUpdateMetadata"
+            :edit-mode="modalFormsVisibility.targetValue"
             :type="$route.path.indexOf('space') == -1 ? 1 : 2"
             @close="closeModal('targetValue')"
         />

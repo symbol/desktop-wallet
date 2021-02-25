@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
-    <path fill="none" stroke="green" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" d="M166.77,184.615"/>
-    <path fill="none" stroke="green" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" d="M470.08,287.23v156.153c0,24.642-23.96,44.616-53.519,44.616H95.439c-29.558,0-53.52-19.975-53.52-44.616V287.23"/>
-    <path fill="green" stroke="green" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" d="M181.766,281.151l74.232,89.23l74.231-89.23H181.766z"/>
-    <path fill="none" stroke="green" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" d="M256,366.25V38"/>
-</svg>
