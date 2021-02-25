@@ -66,7 +66,7 @@
                             </p>
                             <ValidationProvider
                                 v-slot="{ errors }"
-                                mode="lazy"
+                                mode="passive"
                                 vid="password"
                                 :name="$t('password')"
                                 rules="required|min:8"
