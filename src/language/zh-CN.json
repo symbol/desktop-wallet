@@ -1039,6 +1039,6 @@
     "current_node_is_not_available": "当前节点不可用。\n尝试连接到节点",
     "nodes_unavailable_check_network_and": "节点（{0} / {1}）当前不可用。\n请检查您的网络连接，设置和",
     "copyright": "版权所有©2021 NEM软件",
-    "address_list_cannot_be_empty": "Please, select 1 or more accounts from the list.",
-    "launching_mainnet_soon": "Please note this is an expiremental node as the mainnet network didn't launch yet."
+    "address_list_cannot_be_empty": ">>请从列表中选择1个或多个帐户。",
+    "launching_mainnet_soon": ">>请注意，这是一个实验性节点，因为主网尚未启动。"
 }

@@ -1040,5 +1040,5 @@
     "nodes_unavailable_check_network_and": "Nodes({0}/{1}) are currently unavailable. Please check your network connection, settings and ",
     "copyright": "Copyright © 2021 NEM Software",
     "address_list_cannot_be_empty": "Please, select 1 or more accounts from the list.",
-    "launching_mainnet_soon": "Please note this is an expiremental node as the mainnet network didn't launch yet."
+    "launching_mainnet_soon": "Please note that this is an experimental node as the mainnet network has not been launched yet."
 }
