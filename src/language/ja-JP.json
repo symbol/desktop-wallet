@@ -236,6 +236,7 @@
     "error_new_password_format": "パスワードは 1 つ以上の文字と数字を含めなければなりません",
     "error_peer_connection_went_wrong": "ノード {peerUrl} への接続がタイムアウトしました",
     "error_peer_unreachable": "到達不可能ノードです",
+    "error_profile_does_not_exist": "プロフィールが存在しない",
     "error_too_many_seed_accounts": "{maxSeedAccountsNumber} 以上の子アカウントを作ることはできません",
     "estimated_period_of_validity": "有効期間の見積もり",
     "estimated_rental_fee": "推定レンタル手数料",
