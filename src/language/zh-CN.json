@@ -235,6 +235,7 @@
     "error_new_password_format": "密码至少应该包含一个字母和一个数字",
     "error_peer_connection_went_wrong": "连接到节点{peerUrl}时发生错误超时",
     "error_peer_unreachable": "此节点暂不可用",
+    "error_profile_does_not_exist": "钱包不存在",
     "error_too_many_seed_accounts": "子帐户数量不能超过{maxSeedAccountsNumber}个",
     "estimated_period_of_validity": "预估有效期",
     "estimated_rental_fee": "预估租金",
