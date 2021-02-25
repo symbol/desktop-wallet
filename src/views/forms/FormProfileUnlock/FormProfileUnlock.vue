@@ -28,6 +28,7 @@
                             class="button-style inverted-button right-side-button"
                             html-type="submit"
                             :loading="isLoading"
+                            :disabled="disabled"
                             @click="processVerification"
                         >
                             {{ $t(buttonText) }}

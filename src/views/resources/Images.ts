@@ -18,7 +18,7 @@ import { TransactionType } from 'symbol-sdk';
 // @ts-ignore
 import createImg from '@/views/resources/img/icons/Read.svg';
 // @ts-ignore
-import seedImg from '@/views/resources/img/icons/arrow-down.svg';
+import seedImg from '@/views/resources/img/icons/Incoming.svg';
 // @ts-ignore
 import trezorImg from '@/views/resources/img/login/trezor.png';
 // @ts-ignore
@@ -139,9 +139,9 @@ import fingerprint from '@/views/resources/img/icons/fingerprint.png';
 // @ts-ignore
 import harvest from '@/views/resources/img/icons/harvest.svg';
 // @ts-ignore
-import history from '@/views/resources/img/icons/history.svg';
+import history from '@/views/resources/img/icons/history.png';
 // @ts-ignore
-import incoming from '@/views/resources/img/icons/incoming.svg';
+import incoming from '@/views/resources/img/icons/incoming.png';
 // @ts-ignore
 import lock from '@/views/resources/img/icons/lock.png';
 // @ts-ignore
@@ -175,7 +175,7 @@ import nodes from '@/views/resources/img/icons/nodes.png';
 // @ts-ignore
 import notMultisig from '@/views/resources/img/icons/not-multisig.png';
 // @ts-ignore
-import outgoing from '@/views/resources/img/icons/outgoing.svg';
+import outgoing from '@/views/resources/img/icons/outgoing.png';
 // @ts-ignore
 import pending from '@/views/resources/img/icons/pending.png';
 // @ts-ignore
@@ -190,6 +190,14 @@ import publicKey from '@/views/resources/img/icons/public-key.png';
 import publicPrivateKey from '@/views/resources/img/icons/public-private-key.png';
 // @ts-ignore
 import qr from '@/views/resources/img/icons/qr.png';
+// @ts-ignore
+import receive from '@/views/resources/img/icons/receive.png';
+// @ts-ignore
+import receive2 from '@/views/resources/img/icons/receive2.png';
+// @ts-ignore
+import send from '@/views/resources/img/icons/send.png';
+// @ts-ignore
+import send2 from '@/views/resources/img/icons/send2.png';
 // @ts-ignore
 import sent from '@/views/resources/img/icons/sent.png';
 // @ts-ignore
@@ -325,6 +333,10 @@ export const officialIcons = {
     publicKey,
     publicPrivateKey,
     qr,
+    receive,
+    receive2,
+    send,
+    send2,
     sent,
     settings,
     signatureRequired,
