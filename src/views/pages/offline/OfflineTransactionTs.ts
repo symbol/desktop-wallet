@@ -16,22 +16,40 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {mapGetters} from "vuex";
+
+// @ts-ignore
 import FormOfflineTransferTransaction from "@/views/forms/FormOfflineTransferTransaction/FormOfflineTransferTransaction.vue";
-import {Account, Address, NetworkType} from "symbol-sdk";
+// @ts-ignore
+import QRCodeDisplay from "@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue";
+
+import {Account, Address, NetworkType, SignedTransaction} from "symbol-sdk";
+import {QRCode, SignedTransactionQR} from "symbol-qr-library";
 
 @Component({
     components: {
         FormOfflineTransferTransaction,
+        QRCodeDisplay,
     },
     computed: {
         ...mapGetters({
-            currentAccount: 'account/currentAccount',
+            networkType: 'network/networkType',
+            generationHash: 'network/generationHash',
         }),
     },
 })
 export default class OfflineTransactionTs extends Vue {
 
-    get recipient(): Address {
-        return Account.generateNewAccount(NetworkType.TEST_NET).address;
+    public networkType: NetworkType;
+
+    public generationHash: string;
+
+    public qrCode: SignedTransactionQR = null;
+
+    /**
+     * Hook called when the child component ModalTransactionConfirmation triggers
+     * the event 'signed'
+     */
+    public onSignedOfflineTransaction(signedTransaction: SignedTransaction) {
+        this.qrCode = new SignedTransactionQR(signedTransaction, this.networkType, this.generationHash);
     }
 }

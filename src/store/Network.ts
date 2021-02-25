@@ -127,6 +127,7 @@ interface NetworkState {
     peerNodes: NodeInfo[];
     harvestingPeerNodes: NodeInfo[];
     connectingToNodeInfo: ConnectingToNodeInfo;
+    isOfflineMode: boolean;
 }
 
 const initialNetworkState: NetworkState = {
@@ -150,6 +151,7 @@ const initialNetworkState: NetworkState = {
     peerNodes: [],
     harvestingPeerNodes: [],
     connectingToNodeInfo: undefined,
+    isOfflineMode: false,
 };
 
 export default {
@@ -176,6 +178,7 @@ export default {
         peerNodes: (state: NetworkState) => state.peerNodes,
         harvestingPeerNodes: (state: NetworkState) => state.harvestingPeerNodes,
         connectingToNodeInfo: (state: NetworkState) => state.connectingToNodeInfo,
+        isOfflineMode: (state: NetworkState) => state.isOfflineMode,
     },
     mutations: {
         setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -183,6 +186,9 @@ export default {
         },
         setConnected: (state: NetworkState, connected: boolean) => {
             state.isConnected = connected;
+        },
+        setOfflineMode: (state: NetworkState, isOfflineMode: boolean) => {
+            state.isOfflineMode = isOfflineMode;
         },
         currentHeight: (state: NetworkState, currentHeight: number) => Vue.set(state, 'currentHeight', currentHeight),
         currentPeerInfo: (state: NetworkState, currentPeerInfo: NodeModel) => Vue.set(state, 'currentPeerInfo', currentPeerInfo),
@@ -288,7 +294,8 @@ export default {
                 newCandidateUrl,
                 networkType,
                 waitBetweenTrials = false,
-            }: { newCandidateUrl?: string | undefined; networkType?: NetworkType; waitBetweenTrials: boolean },
+                isOffline = false,
+            }: { newCandidateUrl?: string | undefined; networkType?: NetworkType; waitBetweenTrials: boolean; isOffline: boolean },
         ) {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const networkService = new NetworkService();
@@ -297,6 +304,7 @@ export default {
             if (!networkType && currentProfile && currentProfile.networkType) {
                 networkType = currentProfile.networkType;
             }
+            commit('setOfflineMode', isOffline);
             if (newCandidateUrl) {
                 commit('connectingToNodeInfo', {
                     isTryingToConnect: true,
@@ -304,7 +312,7 @@ export default {
                     progressCurrentNodeIndex: 1,
                     progressTotalNumOfNodes: 1,
                 });
-                nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType).toPromise();
+                nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType, isOffline).toPromise();
                 if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel) {
                     await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                 } else {
@@ -326,7 +334,7 @@ export default {
                         progressTotalNumOfNodes: numOfNodes,
                     });
                     nodeNetworkModelResult = await networkService
-                        .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType)
+                        .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline)
                         .toPromise();
                     if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
@@ -347,7 +355,7 @@ export default {
                         progressCurrentNodeIndex: ++progressCurrentNodeInx,
                         progressTotalNumOfNodes: numOfNodes,
                     });
-                    nodeNetworkModelResult = await networkService.getNetworkModel(nodeUrl, networkType).toPromise();
+                    nodeNetworkModelResult = await networkService.getNetworkModel(nodeUrl, networkType, isOffline).toPromise();
                     if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
@@ -411,7 +419,6 @@ export default {
             });
             $eventBus.$emit('newConnection', currentPeer);
             // subscribe to updates
-
             if (oldGenerationHash != networkModel.generationHash) {
                 await dispatch('account/NETWORK_CHANGED', {}, { root: true });
                 await dispatch('statistics/LOAD', {}, { root: true });

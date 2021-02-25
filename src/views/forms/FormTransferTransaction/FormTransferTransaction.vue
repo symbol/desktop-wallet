@@ -10,7 +10,8 @@
                     </div>
 
                     <!-- Transaction signer selector -->
-                    <SignerSelector v-if="!hideSigner" v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
+                    <SignerSelector v-if="!hideSigner && !isOfflineMode" v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
+                    <AccountSignerSelector v-if="!hideSigner && isOfflineMode" />
 
                     <!-- Transfer recipient input field -->
                     <RecipientInput v-model="formItems.recipientRaw" style="margin-bottom: 0.5rem;" @input="onChangeRecipient" />
@@ -93,6 +94,7 @@
                 v-if="hasConfirmationModal"
                 :command="command"
                 :visible="hasConfirmationModal"
+                @transaction-signed="onSignedOfflineTransaction"
                 @success="onConfirmationSuccess"
                 @error="onConfirmationError"
                 @close="onConfirmationCancel"

@@ -26,12 +26,12 @@ import {
     TransferTransaction,
     UInt64,
     Account,
-    PublicAccount, NetworkType,
+    PublicAccount, NetworkType, Password, SignedTransaction,
 } from 'symbol-sdk';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
-import { AccountType } from '@/core/database/entities/AccountModel';
+import {AccountModel, AccountType} from '@/core/database/entities/AccountModel';
 import { Formatters } from '@/core/utils/Formatters';
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
 import { AddressValidator, AliasValidator } from '@/core/validation/validators';
@@ -81,6 +81,11 @@ import {NetworkTypeHelper} from "@/core/utils/NetworkTypeHelper";
 import {NotificationType} from "@/core/utils/NotificationType";
 import {Signer} from "@/store/Account";
 import {MultisigService} from "@/services/MultisigService";
+import {$eventBus} from "@/events";
+import {SettingsModel} from "@/core/database/entities/SettingsModel";
+import {SettingService} from "@/services/SettingService";
+import FormTransferTransaction from "@/views/forms/FormTransferTransaction/FormTransferTransaction.vue";
+import _ from "lodash";
 const { DECIMAL_SEPARATOR } = appConfig.constants;
 
 export interface MosaicAttachment {
@@ -103,6 +108,7 @@ export interface MosaicAttachment {
         RecipientInput,
         FormRow,
         MaxFeeAndSubmit,
+        FormTransferTransaction,
     },
     computed: {
         ...mapGetters({
@@ -166,6 +172,9 @@ export class FormOfflineTransferTransactionTs extends Vue {
         maxFee: 0,
     };
 
+    public previousProfileName: string;
+    public loaded: boolean = false;
+
     /**
      * All known profiles names
      */
@@ -197,6 +206,7 @@ export class FormOfflineTransferTransactionTs extends Vue {
         }
         // accounts available, iterate to first profiles
         this.formItems.currentProfileName = this.profiles[0].profileName;
+        this.onProfileNameChange2();
     }
 
     /**
@@ -230,18 +240,46 @@ export class FormOfflineTransferTransactionTs extends Vue {
         return;
     }
 
-    public onProfileNameChange() {
-        try {
-            const currentProfileName = this.formItems.currentProfileName;
-            const profile = this.profileService.getProfileByName(currentProfileName);
-            const accounts = profile.accounts.map(id => this.accountService.getAccount(id));
-            if (accounts.length > 0) {
-                this.signers = new MultisigService().getSigners(profile.networkType, accounts, accounts[0], undefined, undefined);
-                //console.log(accounts);
-            }
-        } catch (e) {
-            this.signers = [];
+    public async onProfileNameChange2() {
+        this.loaded = false;
+        const currentProfileName = this.formItems.currentProfileName;
+        const profile = this.profileService.getProfileByName(currentProfileName);
+        if (!profile) return;
+
+        const settingService = new SettingService();
+
+        const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.networkType);
+
+        const knownAccounts: AccountModel[] = this.accountService.getKnownAccounts(profile.accounts);
+
+        if (knownAccounts.length == 0) {
+            throw new Error('knownAccounts is empty');
         }
+
+        const defaultAccountId = settings.defaultAccount ? settings.defaultAccount : knownAccounts[0].id;
+        if (!defaultAccountId) {
+            throw new Error('defaultAccountId could not be resolved');
+        }
+        const defaultAccount = knownAccounts.find((w) => w.id == defaultAccountId);
+        if (!defaultAccount) {
+            throw new Error(`defaultAccount could not be resolved from id ${defaultAccountId}`);
+        }
+
+        await this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile);
+        await this.$store.dispatch('network/CONNECT', { networkType: profile.networkType, isOffline: true });
+        this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', profile.accounts);
+        await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', defaultAccount);
+        this.$store.dispatch('diagnostic/ADD_DEBUG', 'Profile login successful with currentProfileName: ' + currentProfileName);
+        await this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES');
+        const signers = knownAccounts.map(account => ({
+            address: Address.createFromRawAddress(account.address),
+            label: account.name,
+            multisig: account.isMultisig,
+            requiredCosignatures: 0,
+        }));
+        this.$store.commit('account/signers', signers);
+
+        this.loaded = true;
     }
 
     isLedgerProfile(): boolean {
@@ -257,5 +295,13 @@ export class FormOfflineTransferTransactionTs extends Vue {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Hook called when the child component ModalTransactionConfirmation triggers
+     * the event 'signed'
+     */
+    public onSignedOfflineTransaction(signedTransaction: SignedTransaction) {
+        this.$emit('transactionSigned', signedTransaction);
     }
 }

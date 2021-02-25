@@ -2,7 +2,10 @@
     <div>
         <button @click="$router.push({ name: 'profiles.login' })">Go to login</button>
         Content
-        <FormOfflineTransferTransaction :recipient="recipient" :show-transaction-actions="false" />
+        <FormOfflineTransferTransaction :show-transaction-actions="false" @transactionSigned="onSignedOfflineTransaction" />
+        <div v-if="qrCode" class="image-container">
+            <QRCodeDisplay :qr-code="qrCode" alt="singed_transaction_qr_code" show-download="true" :download-name="'signedTransaction'" />
+        </div>
     </div>
 </template>
 

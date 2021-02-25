@@ -13,7 +13,16 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { MosaicId, MultisigAccountInfo, NetworkType, PublicAccount, Transaction, TransactionFees, Address, Deadline } from 'symbol-sdk';
+import {
+    MosaicId,
+    MultisigAccountInfo,
+    NetworkType,
+    PublicAccount,
+    Transaction,
+    TransactionFees,
+    Address,
+    Deadline, SignedTransaction
+} from 'symbol-sdk';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
@@ -23,6 +32,7 @@ import { Signer } from '@/store/Account';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 import { TransactionCommand, TransactionCommandMode } from '@/services/TransactionCommand';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
+import {AccountService} from "@/services/AccountService";
 
 @Component({
     computed: {
@@ -43,6 +53,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
             signers: 'account/signers',
             networkConfiguration: 'network/networkConfiguration',
             transactionFees: 'network/transactionFees',
+            isOfflineMode: 'network/isOfflineMode',
         }),
     },
 })
@@ -134,6 +145,8 @@ export class FormTransactionBase extends Vue {
     public command: TransactionCommand;
 
     protected transactionFees: TransactionFees;
+
+    protected isOfflineMode: boolean;
 
     /**
      * Type the ValidationObserver refs

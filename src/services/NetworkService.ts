@@ -24,6 +24,7 @@ import { URLHelpers } from '@/core/utils/URLHelpers';
 import { combineLatest, defer, EMPTY, from, Observable } from 'rxjs';
 import { catchError, flatMap, map, tap } from 'rxjs/operators';
 import { NetworkConfiguration, NetworkType, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk';
+import {OfflineRepositoryFactory} from "@/services/offline/OfflineRepositoryFactory";
 
 /**
  * The service in charge of loading and caching anything related to Network from Rest.
@@ -47,17 +48,19 @@ export class NetworkService {
      * This method get the network data from the provided URL. If the server in the candidateUrl is down,
      * the next available url will be used.
      *
-     * @param candidateUrl the new url.
-     * @param generationHash of the current profile
+     * @param nodeUrl
+     * @param defaultNetworkType
+     * @param isOffline
      */
     public getNetworkModel(
         nodeUrl: string,
         defaultNetworkType: NetworkType = NetworkType.TEST_NET,
+        isOffline = false,
     ): Observable<{
         networkModel: NetworkModel;
         repositoryFactory: RepositoryFactory;
     }> {
-        return from(this.createRepositoryFactory(nodeUrl)).pipe(
+        return from(this.createRepositoryFactory(nodeUrl, isOffline)).pipe(
             flatMap(({ url, repositoryFactory }) => {
                 return repositoryFactory.getGenerationHash().pipe(
                     flatMap((generationHash) => {
@@ -103,14 +106,14 @@ export class NetworkService {
         );
     }
 
-    private createRepositoryFactory(url: string): Observable<{ url: string; repositoryFactory: RepositoryFactory }> {
-        console.log(`Testing ${url}`);
-        const repositoryFactory = NetworkService.createRepositoryFactory(url);
+    private createRepositoryFactory(url: string, isOffline = false): Observable<{ url: string; repositoryFactory: RepositoryFactory }> {
+        // console.log(`Testing ${url}`);
+        const repositoryFactory = NetworkService.createRepositoryFactory(url, isOffline);
         return defer(() => {
             return repositoryFactory.getGenerationHash();
         }).pipe(
             map(() => {
-                console.log(`Peer ${url} seems OK`);
+                // console.log(`Peer ${url} seems OK`);
                 return { url, repositoryFactory };
             }),
             catchError((e) => {
@@ -153,10 +156,12 @@ export class NetworkService {
      * It creates the RepositoryFactory used to build the http repository/clients and listeners.
      * @param url the url.
      */
-    public static createRepositoryFactory(url: string): RepositoryFactory {
-        return new RepositoryFactoryHttp(url, {
-            websocketUrl: URLHelpers.httpToWsUrl(url) + '/ws',
-            websocketInjected: WebSocket,
-        });
+    public static createRepositoryFactory(url: string, isOffline: boolean = false): RepositoryFactory {
+        return isOffline ?
+            new OfflineRepositoryFactory() :
+            new RepositoryFactoryHttp(url, {
+                websocketUrl: URLHelpers.httpToWsUrl(url) + '/ws',
+                websocketInjected: WebSocket,
+            });
     }
 }

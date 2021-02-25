@@ -26,7 +26,7 @@ import {
     TransferTransaction,
     UInt64,
     Account,
-    PublicAccount,
+    PublicAccount, SignedTransaction,
 } from 'symbol-sdk';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
@@ -65,6 +65,8 @@ import TransactionUriDisplay from '@/components/TransactionUri/TransactionUriDis
 import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/ProtectedPrivateKeyDisplay.vue';
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
+// @ts-ignore
+import AccountSignerSelector from "@/components/AccountSignerSelector/AccountSignerSelector.vue";
 
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
@@ -101,6 +103,7 @@ export interface MosaicAttachment {
         TransactionUriDisplay,
         ProtectedPrivateKeyDisplay,
         ModalFormProfileUnlock,
+        AccountSignerSelector,
     },
     computed: {
         ...mapGetters({
@@ -767,5 +770,13 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         if (this.isAggregate && this.value) {
             Object.assign(this.formItems, this.value);
         }
+    }
+
+    /**
+     * Hook called when the child component ModalTransactionConfirmation triggers
+     * the event 'signed'
+     */
+    public onSignedOfflineTransaction(signedTransaction: SignedTransaction) {
+        this.$emit('txSigned', signedTransaction);
     }
 }

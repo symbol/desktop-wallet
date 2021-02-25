@@ -130,7 +130,7 @@
         "symbol-address-book": "^1.0.0",
         "symbol-hd-wallets": "0.14.0",
         "symbol-paper-wallets": "^1.0.2",
-        "symbol-qr-library": "0.14.0",
+        "symbol-qr-library": "git+ssh://git@github.com-peersyst/Peersyst/symbol-qr-library.git#signed_transactions_qr",
         "symbol-sdk": "0.23.3-alpha-202102191256",
         "symbol-uri-scheme": "0.6.0",
         "ts-jest": "^25.3.0",
