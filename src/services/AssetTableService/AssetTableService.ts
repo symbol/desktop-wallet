@@ -59,7 +59,8 @@ export type TableFilteringOptions = {
 };
 
 export abstract class AssetTableService {
-    protected constructor(public readonly currentHeight: number) {}
+    protected constructor(public readonly currentHeight: number) {
+    }
 
     /**
      * Return table fields to be displayed in a table header
@@ -85,7 +86,7 @@ export abstract class AssetTableService {
         }
 
         if (filter.fieldName === 'expiration') {
-            return values.filter(({ expiration }) => expiration !== 'expired');
+            return values.filter(({expiration}) => expiration !== 'expired');
         }
 
         if (filter.fieldName === 'expired') {
@@ -104,7 +105,7 @@ export abstract class AssetTableService {
     public sort(valuesToSort: any[], options: TableSortingOptions): any[] {
         const values = [...valuesToSort];
 
-        function sortingMethodChooser (sortedValues) {
+        function sortingMethodChooser(sortedValues) {
             if (options.direction === 'asc') {
                 return sortedValues
             } else if (options.direction === 'desc') {
