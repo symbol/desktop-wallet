@@ -20,9 +20,9 @@ export const OfflineUrl = 'http://mock:3000';
 export const OfflineGenerationHash = '45FBCF2F0EA36EFA7923C9BC923D6503169651F7FA4EFC46A8EAF5AE09057EBD';
 
 export const OfflineTransactionFees = new TransactionFees(
-    0,
-    0,
-    0,
+    84587,
+    100,
+    1136363,
     0,
     0,
 );
@@ -113,9 +113,9 @@ export const OfflineStorageInfo = new StorageInfo(
 );
 
 export const OfflineRentalFees = new RentalFees(
-    UInt64.fromUint(0),
-    UInt64.fromUint(0),
-    UInt64.fromUint(0),
+    UInt64.fromUint(1000),
+    UInt64.fromUint(100000),
+    UInt64.fromUint(500000),
 );
 
 export const OfflineAccountNames = (address: Address) => new AccountNames(address, []);
