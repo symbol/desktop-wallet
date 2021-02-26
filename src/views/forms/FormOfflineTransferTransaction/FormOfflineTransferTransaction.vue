@@ -1,50 +1,31 @@
 <template>
     <div class="FormTransferTransaction">
-        <button @click="onProfileNameChange2">Check</button>
-        <FormRow>
+        <FormRow class-name="emphasis">
             <template v-slot:label>
-                <span>{{ $t('profile_name') }}:</span>
+                <div>{{ $t('profile_name') }}:</div>
             </template>
             <template v-slot:inputs>
-                <ValidationProvider v-slot="{ errors }" :name="$t('profile_name')" :rules="`in:${profileNames}`" slim>
-                    <ErrorTooltip field-name="profile_name" :errors="errors">
-                        <input v-show="false" v-model="formItems.currentProfileName" />
-
-                        <AutoComplete
-                                v-model="formItems.currentProfileName"
-                                placeholder=" "
-                                :class="['select-account', !profilesClassifiedByNetworkType ? 'un_click' : 'profile-name-input']"
-                                :disabled="performingLogin"
-                                @on-select="onProfileNameChange2"
+                <div class="inputs-container select-container">
+                    <Select
+                        v-model="formItems.currentProfileName"
+                        :placeholder="$t('address')"
+                        class="select-size select-style"
+                        @on-change="onProfileNameChange"
+                    >
+                        <OptionGroup
+                            v-for="pair in profilesClassifiedByNetworkType"
+                            :key="pair.networkType"
+                            :label="getNetworkTypeLabel(pair.networkType)"
                         >
-                            <div class="auto-complete-sub-container scroll">
-                                <div class="tips-in-sub-container">
-                                    {{ $t(profilesClassifiedByNetworkType ? 'select_a_profile' : 'no_profiles_in_database') }}
-                                </div>
-                                <div v-if="profilesClassifiedByNetworkType">
-                                    <div v-for="pair in profilesClassifiedByNetworkType" :key="pair.networkType">
-                                        <div v-if="pair.profiles.length">
-                                                        <span class="network-type-head-title">{{
-                                                            getNetworkTypeLabel(pair.networkType)
-                                                        }}</span>
-                                        </div>
-                                        <Option
-                                                v-for="(profile, index) in pair.profiles"
-                                                :key="`${profile.profileName}${index}`"
-                                                :value="profile.profileName"
-                                                :label="profile.profileName"
-                                        >
-                                            <span>{{ profile.profileName }}</span>
-                                        </Option>
-                                    </div>
-                                </div>
-                            </div>
-                        </AutoComplete>
-                    </ErrorTooltip>
-                </ValidationProvider>
+                            <Option v-for="profile in pair.profiles" :key="profile.profileName" :value="profile.profileName">
+                                {{ profile.profileName }}
+                            </Option>
+                        </OptionGroup>
+                    </Select>
+                </div>
             </template>
         </FormRow>
-        <FormTransferTransaction v-if="loaded" @txSigned="onSignedOfflineTransaction" />
+        <FormTransferTransaction v-if="loaded" :hide-encryption="true" submit-button-text="sign" @txSigned="onSignedOfflineTransaction" />
 
         <!-- force mosaic list reactivity -->
     </div>

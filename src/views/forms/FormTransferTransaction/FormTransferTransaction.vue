@@ -32,7 +32,7 @@
                     </div>
 
                     <!-- Add mosaic button -->
-                    <div class="form-row align-right action-link" style="margin-top: -0.1rem;">
+                    <div class="form-row align-right action-link" v-if="mosaicInputsManager.hasFreeSlots()" style="margin-top: -0.1rem;">
                         <a
                             v-if="mosaicInputsManager.hasFreeSlots()"
                             style="color: #44004e; margin-right: 0.1rem; font-size: 0.14rem;"
@@ -64,6 +64,7 @@
                         v-if="!isAggregate"
                         v-model="formItems.maxFee"
                         :hide-submit="hideSubmit"
+                        :submit-button-text="submitButtonText"
                         :calculated-recommended-fee="calculatedRecommendedFee"
                         :calculated-highest-fee="calculatedHighestFee"
                         :disable-submit="currentAccount.isMultisig"

@@ -4,8 +4,11 @@
             <ValidationObserver v-slot="{ handleSubmit }" slim>
                 <form onsubmit="event.preventDefault()">
                     <div class="switch-language-container">
+                        <button class="trigger-accountlink pointer" @click="$router.push('offlineTransaction')">
+                            <img class="navbar-icon white" :src="offlineIcon" />
+                            <span class="color white">{{ $t('go_to_offline_transactions') }}</span>
+                        </button>
                         <LanguageSelector />
-                        <button @click="$router.push({ name: 'offline.create' })">Go to offline transaction</button>
                     </div>
                     <div class="welcome-box">
                         <div class="banner-image">

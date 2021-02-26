@@ -37,6 +37,8 @@ import { SettingService } from '@/services/SettingService';
 import { SettingsModel } from '@/core/database/entities/SettingsModel';
 import { AccountService } from '@/services/AccountService';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
+import {officialIcons} from "@/views/resources/Images";
+import AccountLinks from "@/components/AccountLinks/AccountLinks.vue";
 
 @Component({
     computed: {
@@ -51,6 +53,7 @@ import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
         ValidationObserver,
         LanguageSelector,
         VideoBackground,
+        AccountLinks,
     },
 })
 export default class LoginPageTs extends Vue {
@@ -260,5 +263,9 @@ export default class LoginPageTs extends Vue {
             console.log('Unknown error trying to login', JSON.stringify(e));
             return this.$store.dispatch('notification/ADD_ERROR', `Unknown error trying to login: ${JSON.stringify(e)}`);
         }
+    }
+
+    public get offlineIcon() {
+        return officialIcons.sent;
     }
 }

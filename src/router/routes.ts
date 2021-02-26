@@ -475,16 +475,30 @@ export const routes: AppRoute[] = [
     {
         path: '/offline',
         name: 'offline',
+        redirect: '/offline/transaction/simple',
         meta: { protected: false },
         // @ts-ignore
         component: () => import('@/views/layout/RouterPage.vue'),
         children: [
             {
-                path: 'create',
-                name: 'offline.create',
+                path: '/offlineTransaction',
+                name: 'offlineTransaction',
+                redirect: '/offlineTransaction/simple',
                 meta: { protected: false },
                 // @ts-ignore
                 component: () => import('@/views/pages/offline/OfflineTransaction.vue'),
+                children: [
+                    {
+                        path: '/offlineTransaction/simple',
+                        name: 'offlineTransaction.simple',
+                        meta: {
+                            protected: false,
+                            title: 'simple_transaction',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/offline/offlineTransferTransaction/OfflineTransferTransaction.vue'),
+                    },
+                ]
             },
         ]
     },

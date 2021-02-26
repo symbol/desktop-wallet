@@ -21,19 +21,14 @@ import {mapGetters} from "vuex";
 import FormOfflineTransferTransaction from "@/views/forms/FormOfflineTransferTransaction/FormOfflineTransferTransaction.vue";
 // @ts-ignore
 import QRCodeDisplay from "@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue";
-// @ts-ignore
-import NavigationTabs from "@/components/NavigationTabs/NavigationTabs.vue";
 
-import {Account, Address, NetworkType, SignedTransaction} from "symbol-sdk";
-import {QRCode, SignedTransactionQR} from "symbol-qr-library";
-import {TabEntry} from "@/router/TabEntry";
-import {officialIcons} from "@/views/resources/Images";
+import {NetworkType, SignedTransaction} from "symbol-sdk";
+import {SignedTransactionQR} from "symbol-qr-library";
 
 @Component({
     components: {
         FormOfflineTransferTransaction,
         QRCodeDisplay,
-        NavigationTabs,
     },
     computed: {
         ...mapGetters({
@@ -42,7 +37,7 @@ import {officialIcons} from "@/views/resources/Images";
         }),
     },
 })
-export default class OfflineTransactionTs extends Vue {
+export default class OfflineTransferTransactionTs extends Vue {
 
     public networkType: NetworkType;
 
@@ -50,22 +45,18 @@ export default class OfflineTransactionTs extends Vue {
 
     public qrCode: SignedTransactionQR = null;
 
+    public step: number = 0;
+
     /**
      * Hook called when the child component ModalTransactionConfirmation triggers
      * the event 'signed'
      */
     public onSignedOfflineTransaction(signedTransaction: SignedTransaction) {
         this.qrCode = new SignedTransactionQR(signedTransaction, this.networkType, this.generationHash);
+        this.step = 1;
     }
 
-    get customTabEntries(): TabEntry {
-        // @ts-ignore
-        return TabEntry.getFromRoutes(this.$router.routes[3].children[0].children);
+    public getStepClassName(index: number) {
+        return this.step == index ? 'active' : this.step > index ? 'done' : '';
     }
-
-    get loginIcon() {
-        return officialIcons.signCosign;
-    }
-
-    public parentRouteName = 'offlineTransaction';
 }

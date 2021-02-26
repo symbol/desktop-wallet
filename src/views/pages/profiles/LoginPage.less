@@ -209,9 +209,10 @@
     }
 
     .switch-language-container {
-        width: 1rem;
         float: right;
+        z-index: 10000;
         margin: 0.2rem;
+        display: flex;
     }
 
     /deep/.ivu-select-selection {
@@ -355,4 +356,30 @@
 
 .disabled {
     cursor: default !important;
+}
+
+
+.trigger-accountlink {
+    font-size: @normalFont !important;
+    color: @purpleDark;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    z-index: 100000;
+
+    .white {
+        color: @white;
+    }
+}
+
+.navbar-icon {
+    display: inline;
+    margin-right: 10px;
+    width: 0.15rem;
+    height: 0.15rem;
+
+    &.white {
+        filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(174deg) brightness(103%) contrast(102%);
+    }
 }

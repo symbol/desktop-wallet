@@ -164,6 +164,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     })
     isAggregate: boolean;
 
+    @Prop({
+        default: undefined,
+    })
+    submitButtonText: string;
+
     /// end-region component properties
 
     /**

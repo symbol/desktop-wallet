@@ -206,7 +206,7 @@ export class FormOfflineTransferTransactionTs extends Vue {
         }
         // accounts available, iterate to first profiles
         this.formItems.currentProfileName = this.profiles[0].profileName;
-        this.onProfileNameChange2();
+        this.onProfileNameChange();
     }
 
     /**
@@ -240,7 +240,7 @@ export class FormOfflineTransferTransactionTs extends Vue {
         return;
     }
 
-    public async onProfileNameChange2() {
+    public async onProfileNameChange() {
         this.loaded = false;
         const currentProfileName = this.formItems.currentProfileName;
         const profile = this.profileService.getProfileByName(currentProfileName);
