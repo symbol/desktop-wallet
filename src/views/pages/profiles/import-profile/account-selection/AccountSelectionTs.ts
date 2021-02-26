@@ -30,6 +30,7 @@ import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyMo
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { ProfileService } from '@/services/ProfileService';
 import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
+import _ from 'lodash';
 
 @Component({
     computed: {
@@ -110,7 +111,7 @@ export default class AccountSelectionTs extends Vue {
      * Balances map
      * @var {any}
      */
-    public addressMosaicMap = {};
+    public addressBalanceMap: { [address: string]: number } = {};
 
     /**
      * Map of selected accounts
@@ -221,8 +222,8 @@ export default class AccountSelectionTs extends Vue {
             return;
         }
         // map balances
-        this.addressMosaicMap = {
-            ...this.addressMosaicMap,
+        this.addressBalanceMap = {
+            ...this.addressBalanceMap,
             ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic),
         };
     }
@@ -254,33 +255,18 @@ export default class AccountSelectionTs extends Vue {
         const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
 
         // map balances
-        this.addressMosaicMap = {
-            ...this.addressMosaicMap,
+        this.addressBalanceMap = {
+            ...this.addressBalanceMap,
             ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic),
         };
     }
 
-    public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaic: MosaicId): Record<string, number> {
-        return accountsInfo
-            .map(({ mosaics, address }) => {
-                // - check balance
-                const hasNetworkMosaic = mosaics.find((mosaicOwned) => mosaicOwned.id.equals(mosaic));
-
-                // - account doesn't hold network mosaic so the balance is zero
-                if (hasNetworkMosaic === undefined) {
-                    return {
-                        address: address.plain(),
-                        balance: 0,
-                    };
-                }
-                // - map balance to address
-                const balance = hasNetworkMosaic.amount.compact();
-                return {
-                    address: address.plain(),
-                    balance: balance,
-                };
-            })
-            .reduce((acc, { address, balance }) => ({ ...acc, [address]: balance }), {});
+    public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaicId: MosaicId): { [address: string]: number } {
+        const addressToAccountInfo = _.keyBy(accountsInfo, (a) => a.address.plain());
+        return _.chain(this.addressesList)
+            .keyBy((a) => a.plain())
+            .mapValues((a) => addressToAccountInfo[a.plain()]?.mosaics.find((m) => m.id.equals(mosaicId))?.amount.compact() ?? 0)
+            .value();
     }
 
     /**
