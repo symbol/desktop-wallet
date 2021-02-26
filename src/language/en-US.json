@@ -815,6 +815,7 @@
     "qrcode_detail_item_type_cosignatureqr": "Request Cosignature",
     "qrcode_detail_item_type_mnemonicqr": "Import Mnemonic",
     "qrcode_detail_item_type_transactionqr": "Invoice",
+    "qrcode_detail_item_type_signedqr": "Signed transaction",
     "qrcode_password_info": "Uploaded QR Code is password protected. Please enter your password at the time this QR Code was generated.",
     "recipient": "Recipient",
     "recipient_linked_address_invalid": "The recipient's alias name does not have a linked address",
@@ -961,6 +962,7 @@
     "transaction_needs_cosignature_explain": "This multisignature transaction needs multiple parties to sign it before it is approved. Please enter your password and confirm to add your signature.",
     "transaction_needs_cosignature_explain_signed": "This transaction needs multiple parties to approve by sending co-signature. You have already sent a co-signature for this transaction. Please, wait until other co-signatories approve. You can download the QR Code and send to other co-signatories for them to sign their part easily.",
     "transaction_qr_action_desc": "Click continue to open the transfer page with these details.",
+    "transaction_qr_signed_action_desc": "Click continue to broadcast the transaction with these details.",
     "transaction_qr_code": "Transaction QR Code",
     "transaction_received_cosignature_explain": "Received the minimum required co-signatories",
     "transaction_status_confirmed": "Confirmed",
@@ -1052,5 +1054,6 @@
     "signed_transaction_qr": "Signed Transaction QR",
     "go_to_offline_transactions": "Go to offline transactions",
     "go_to_login_offline": "Go to login",
-    "sign": "Sign"
+    "sign": "Sign",
+    "hash": "Hash"
 }

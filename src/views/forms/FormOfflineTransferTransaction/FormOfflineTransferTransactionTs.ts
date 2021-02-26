@@ -71,7 +71,9 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { TransactionCommand } from '@/services/TransactionCommand';
 import { appConfig } from '@/config';
+// @ts-ignore
 import ErrorTooltip from "@/components/ErrorTooltip/ErrorTooltip.vue";
+// @ts-ignore
 import LanguageSelector from "@/components/LanguageSelector/LanguageSelector.vue";
 import {ProfileModel} from "@/core/database/entities/ProfileModel";
 import {ProfileService} from "@/services/ProfileService";
@@ -84,6 +86,7 @@ import {MultisigService} from "@/services/MultisigService";
 import {$eventBus} from "@/events";
 import {SettingsModel} from "@/core/database/entities/SettingsModel";
 import {SettingService} from "@/services/SettingService";
+// @ts-ignore
 import FormTransferTransaction from "@/views/forms/FormTransferTransaction/FormTransferTransaction.vue";
 import _ from "lodash";
 const { DECIMAL_SEPARATOR } = appConfig.constants;

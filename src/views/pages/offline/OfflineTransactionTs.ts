@@ -64,7 +64,7 @@ export default class OfflineTransactionTs extends Vue {
     }
 
     get loginIcon() {
-        return officialIcons.signCosign;
+        return officialIcons.customerAlice;
     }
 
     public parentRouteName = 'offlineTransaction';

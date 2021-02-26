@@ -26,7 +26,7 @@
                     <!--<WindowControls />-->
 
                     <div class="level-right">
-                        <ImportQRButton v-if="!!currentAccount" class="level-item navbar-item" valid-qr-types="[1, 3, 4]" />
+                        <ImportQRButton v-if="!!currentAccount" class="level-item navbar-item" valid-qr-types="[1, 3, 4, 8]" />
                         <AccountLinks
                             v-if="isTestnet"
                             :account="currentAccount"

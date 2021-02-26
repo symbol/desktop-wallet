@@ -38,7 +38,6 @@ import { SettingsModel } from '@/core/database/entities/SettingsModel';
 import { AccountService } from '@/services/AccountService';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
 import {officialIcons} from "@/views/resources/Images";
-import AccountLinks from "@/components/AccountLinks/AccountLinks.vue";
 
 @Component({
     computed: {
@@ -53,7 +52,6 @@ import AccountLinks from "@/components/AccountLinks/AccountLinks.vue";
         ValidationObserver,
         LanguageSelector,
         VideoBackground,
-        AccountLinks,
     },
 })
 export default class LoginPageTs extends Vue {
