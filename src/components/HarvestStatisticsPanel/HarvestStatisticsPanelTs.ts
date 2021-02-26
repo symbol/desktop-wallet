@@ -40,12 +40,12 @@ export class HarvestStatisticsPanelTs extends Vue {
     private isFetchingUnlocked: any;
     private isFetchingBlocks: any;
 
-    async created() {
-        await this.refresh();
+    created() {
+        this.refresh();
     }
 
-    public async refresh() {
-        await this.refreshHarvestingStatus();
+    public refresh() {
+        this.refreshHarvestingStatus();
         this.refreshHarvestingStats();
     }
 
@@ -53,8 +53,8 @@ export class HarvestStatisticsPanelTs extends Vue {
         this.$store.dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS');
     }
 
-    public async refreshHarvestingStatus() {
-        await this.$store.dispatch('harvesting/FETCH_STATUS');
+    public refreshHarvestingStatus() {
+        this.$store.dispatch('harvesting/FETCH_STATUS');
     }
 
     public get harvestingStatusIndicator() {
@@ -75,17 +75,17 @@ export class HarvestStatisticsPanelTs extends Vue {
     }
 
     private checkUnLockedAccounts(): void {
-        this.$nextTick(async () => {
-            this.isFetchingUnlocked = setInterval(async () => {
-                await this.refreshHarvestingStatus();
+        this.$nextTick(() => {
+            this.isFetchingUnlocked = setInterval(() => {
+                this.refreshHarvestingStatus();
             }, 45000);
         });
     }
 
     private refreshStatusBlocks(): void {
-        this.$nextTick(async () => {
-            this.isFetchingBlocks = setInterval(async () => {
-                await this.refresh();
+        this.$nextTick(() => {
+            this.isFetchingBlocks = setInterval(() => {
+                this.refreshHarvestingStats();
             }, 30000);
         });
     }
