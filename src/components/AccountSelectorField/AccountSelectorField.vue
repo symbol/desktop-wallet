@@ -2,7 +2,7 @@
     <div v-if="currentAccounts.length" class="switch_account">
         <Select
             v-model="currentAccountIdentifier"
-            :class="{ 'select-size select-style': defaultFormStyle }"
+            :class="{ 'select-size select-style': defaultFormStyle, 'min-width': enableMinWidth }"
             style="max-height: 2rem;"
             @input="$emit('on-change')"
         >
