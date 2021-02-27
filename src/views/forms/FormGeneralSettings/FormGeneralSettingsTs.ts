@@ -148,8 +148,4 @@ export class FormGeneralSettingsTs extends Vue {
             console.error(e);
         }
     }
-
-    public async logout() {
-        this.$emit('logout');
-    }
 }

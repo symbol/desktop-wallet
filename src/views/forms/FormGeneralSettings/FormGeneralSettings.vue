@@ -54,11 +54,6 @@
                         <button class="button-style button danger-button pl-2 pr-2 confirm-reset" type="reset" @click.prevent="resetForm">
                             {{ $t('reset') }}
                         </button>
-                        <div style="width: 100%; text-align: left; margin-left: 0.7rem;">
-                            <button class="button-style button danger-button pl-2 pr-2" style="margin-right: 0.4rem;" @click="logout">
-                                {{ $t('logout') }}
-                            </button>
-                        </div>
                     </div>
                 </form>
             </ValidationObserver>
@@ -91,11 +86,16 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
 .form-submit {
     display: flex;
     padding-top: 5%;
-    padding-right: 17%;
+    padding-right: 1.7rem;
     flex-flow: row-reverse;
 
     button[type='reset'] {
-        margin-right: 35px;
+        margin-right: 0.35rem;
+    }
+
+    button {
+        width: max-content;
+        padding: 0 0.35rem;
     }
 }
 .confirm-reset {
