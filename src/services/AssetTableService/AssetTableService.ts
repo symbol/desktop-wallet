@@ -99,18 +99,17 @@ export abstract class AssetTableService {
     /**
      * Sorts array values according to sorting options
      * @param {TableRowValues[]} valuesToSort
-     * @param {TableSortingOptions} sortBy
+     * @param options: {TableSortingOptions} sortBy
      * @returns {TableRowValues[]}
      */
     public sort(valuesToSort: any[], options: TableSortingOptions): any[] {
         const values = [...valuesToSort];
 
         function sortingMethodChooser(sortedValues) {
-            if (options.direction === 'asc') {
-                return sortedValues
-            } else if (options.direction === 'desc') {
+            if (options.direction === 'desc') {
                 return sortedValues.reverse()
             }
+            return sortedValues
         }
 
         if (!values.length) {
@@ -134,13 +133,13 @@ export abstract class AssetTableService {
                         ignorePunctuation: true,
                     });
             });
-            return sortingMethodChooser(sortedValues)
+            return sortingMethodChooser(sortedValues);
 
         } else if ('boolean' === typeof sampleValue) {
             const sortedValues = [...values].sort((a, b) => {
                 return a[options.fieldName] === b[options.fieldName] ? 0 : a[options.fieldName] ? -1 : 1;
             });
-            return sortingMethodChooser(sortedValues)
+            return sortingMethodChooser(sortedValues);
 
         } else if ('number' === typeof sampleValue) {
             const sortedValues = values.sort((a, b) => {
@@ -149,7 +148,7 @@ export abstract class AssetTableService {
                 }
                 return b[options.fieldName] - a[options.fieldName];
             });
-            return sortingMethodChooser(sortedValues)
+            return sortingMethodChooser(sortedValues);
         }
 
         throw new Error(`sorting the data type ${typeof sampleValue} is not supported`);
