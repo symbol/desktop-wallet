@@ -125,30 +125,27 @@ export abstract class AssetTableService {
 
         // - sorting method depends on type
         if ('string' === typeof sampleValue) {
-            const sortedValues = [...values].sort((a, b) => {
+            return sortingMethodChooser([...values].sort((a, b) => {
                 return a[options.fieldName]
                     .toLowerCase()
                     .localeCompare(b[options.fieldName].toLowerCase(), navigator.languages[0] || navigator.language, {
                         numeric: true,
                         ignorePunctuation: true,
                     });
-            });
-            return sortingMethodChooser(sortedValues);
+            }));
 
         } else if ('boolean' === typeof sampleValue) {
-            const sortedValues = [...values].sort((a, b) => {
+            return sortingMethodChooser([...values].sort((a, b) => {
                 return a[options.fieldName] === b[options.fieldName] ? 0 : a[options.fieldName] ? -1 : 1;
-            });
-            return sortingMethodChooser(sortedValues);
+            }));
 
         } else if ('number' === typeof sampleValue) {
-            const sortedValues = values.sort((a, b) => {
+            return sortingMethodChooser(values.sort((a, b) => {
                 if (!b[options.fieldName] || !a[options.fieldName]) {
                     return 1;
                 }
                 return b[options.fieldName] - a[options.fieldName];
-            });
-            return sortingMethodChooser(sortedValues);
+            }));
         }
 
         throw new Error(`sorting the data type ${typeof sampleValue} is not supported`);
