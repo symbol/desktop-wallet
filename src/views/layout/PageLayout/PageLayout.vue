@@ -44,6 +44,7 @@
                         />
                         <AccountSelectorField class="level-item navbar-item" :enable-min-width="true" @input="onChangeAccount" />
                         <Settings class="level-item navbar-item" />
+                        <LogoutButton />
                     </div>
                 </div>
                 <transition name="fade" mode="out-in">
