@@ -37,6 +37,8 @@ export class HarvestStatisticsPanelTs extends Vue {
     public harvestedBlockStats: HarvestedBlockStats;
     public isFetchingHarvestedBlockStats: boolean;
     public networkCurrency: NetworkCurrencyModel;
+    private isFetchingUnlocked: any;
+    private isFetchingBlocks: any;
 
     created() {
         this.refresh();
@@ -58,18 +60,40 @@ export class HarvestStatisticsPanelTs extends Vue {
     public get harvestingStatusIndicator() {
         switch (this.harvestingStatus) {
             case HarvestingStatus.ACTIVE:
+                this.refreshStatusBlocks();
                 return { cls: 'status-indicator green', text: this.$t('harvesting_status_active') };
             case HarvestingStatus.INACTIVE:
                 return { cls: 'status-indicator red', text: this.$t('harvesting_status_inactive') };
             case HarvestingStatus.KEYS_LINKED:
                 return { cls: 'status-indicator amber', text: this.$t('harvesting_status_keys_linked') };
             case HarvestingStatus.INPROGRESS_ACTIVATION:
+                this.checkUnLockedAccounts();
                 return { cls: 'status-indicator amber', text: this.$t('harvesting_status_inprogress_activation') };
             case HarvestingStatus.INPROGRESS_DEACTIVATION:
                 return { cls: 'status-indicator amber', text: this.$t('harvesting_status_inprogress_deactivation') };
         }
     }
 
+    private checkUnLockedAccounts(): void {
+        this.$nextTick(() => {
+            this.isFetchingUnlocked = setInterval(() => {
+                this.refreshHarvestingStatus();
+            }, 45000);
+        });
+    }
+
+    private refreshStatusBlocks(): void {
+        this.$nextTick(() => {
+            this.isFetchingBlocks = setInterval(() => {
+                this.refreshHarvestingStats();
+            }, 30000);
+        });
+    }
+
+    private destroyed() {
+        clearTimeout(this.isFetchingUnlocked);
+        clearTimeout(this.isFetchingBlocks);
+    }
     public get totalFeesEarned(): string {
         const relativeAmount = this.harvestedBlockStats.totalFeesEarned.compact() / Math.pow(10, this.networkCurrency.divisibility);
         if (relativeAmount === 0) {
