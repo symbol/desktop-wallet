@@ -59,8 +59,7 @@ export type TableFilteringOptions = {
 };
 
 export abstract class AssetTableService {
-    protected constructor(public readonly currentHeight: number) {
-    }
+    protected constructor(public readonly currentHeight: number) {}
 
     /**
      * Return table fields to be displayed in a table header
@@ -86,7 +85,7 @@ export abstract class AssetTableService {
         }
 
         if (filter.fieldName === 'expiration') {
-            return values.filter(({expiration}) => expiration !== 'expired');
+            return values.filter(({ expiration }) => expiration !== 'expired');
         }
 
         if (filter.fieldName === 'expired') {
@@ -99,7 +98,7 @@ export abstract class AssetTableService {
     /**
      * Sorts array values according to sorting options
      * @param {TableRowValues[]} valuesToSort
-     * @param options: {TableSortingOptions} sortBy
+     * @param {TableSortingOptions} sortBy
      * @returns {TableRowValues[]}
      */
     public sort(valuesToSort: any[], options: TableSortingOptions): any[] {
@@ -107,9 +106,9 @@ export abstract class AssetTableService {
 
         function sortingMethodChooser(sortedValues) {
             if (options.direction === 'desc') {
-                return sortedValues.reverse()
+                return sortedValues.reverse();
             }
-            return sortedValues
+            return sortedValues;
         }
 
         if (!values.length) {
@@ -125,27 +124,31 @@ export abstract class AssetTableService {
 
         // - sorting method depends on type
         if ('string' === typeof sampleValue) {
-            return sortingMethodChooser([...values].sort((a, b) => {
-                return a[options.fieldName]
-                    .toLowerCase()
-                    .localeCompare(b[options.fieldName].toLowerCase(), navigator.languages[0] || navigator.language, {
-                        numeric: true,
-                        ignorePunctuation: true,
-                    });
-            }));
-
+            return sortingMethodChooser(
+                [...values].sort((a, b) => {
+                    return a[options.fieldName]
+                        .toLowerCase()
+                        .localeCompare(b[options.fieldName].toLowerCase(), navigator.languages[0] || navigator.language, {
+                            numeric: true,
+                            ignorePunctuation: true,
+                        });
+                }),
+            );
         } else if ('boolean' === typeof sampleValue) {
-            return sortingMethodChooser([...values].sort((a, b) => {
-                return a[options.fieldName] === b[options.fieldName] ? 0 : a[options.fieldName] ? -1 : 1;
-            }));
-
+            return sortingMethodChooser(
+                [...values].sort((a, b) => {
+                    return a[options.fieldName] === b[options.fieldName] ? 0 : a[options.fieldName] ? -1 : 1;
+                }),
+            );
         } else if ('number' === typeof sampleValue) {
-            return sortingMethodChooser(values.sort((a, b) => {
-                if (!b[options.fieldName] || !a[options.fieldName]) {
-                    return 1;
-                }
-                return b[options.fieldName] - a[options.fieldName];
-            }));
+            return sortingMethodChooser(
+                values.sort((a, b) => {
+                    if (!b[options.fieldName] || !a[options.fieldName]) {
+                        return 1;
+                    }
+                    return b[options.fieldName] - a[options.fieldName];
+                }),
+            );
         }
 
         throw new Error(`sorting the data type ${typeof sampleValue} is not supported`);
