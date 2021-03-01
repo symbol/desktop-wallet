@@ -63,6 +63,28 @@ export class ModalMetadataUpdateTs extends Vue {
     protected type: MetadataType;
 
     /**
+     * Modal title from modal type
+     * @type {string}
+     */
+    get modalTitle(): string {
+        let title: string = '';
+        switch (this.type) {
+            case MetadataType.Mosaic:
+                title = 'modal_title_mosaic_metadata';
+                break;
+
+            case MetadataType.Namespace:
+                title = 'modal_title_namespace_metadata';
+                break;
+
+            default:
+                title = 'modal_title_account_metadata';
+                break;
+        }
+        return title;
+    }
+
+    /**
      * Visibility state
      * @type {boolean}
      */
