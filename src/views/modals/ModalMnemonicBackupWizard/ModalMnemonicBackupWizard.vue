@@ -33,6 +33,10 @@
                                 v-model.lazy="password"
                                 v-focus
                                 v-validate="validation.previousPassword"
+                                onselectstart="return false"
+                                onpaste="return false;"
+                                onCopy="return false"
+                                onCut="return false"
                                 type="password"
                                 data-vv-name="password"
                                 :data-vv-as="$t('password')"

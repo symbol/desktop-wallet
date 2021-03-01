@@ -16,6 +16,10 @@
                                 <input
                                     ref="passwordInput"
                                     v-model="formItems.password"
+                                    onselectstart="return false"
+                                    onpaste="return false;"
+                                    onCopy="return false"
+                                    onCut="return false"
                                     type="password"
                                     class="input-size input-style"
                                     :disabled="isLoading"
