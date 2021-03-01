@@ -195,11 +195,7 @@ export default class AccountSelectionTs extends Vue {
             this.currentProfile.networkType,
             10,
         );
-        let repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-        if (!repositoryFactory) {
-            await this.$store.dispatch('network/CONNECT', { networkType: this.currentProfile.networkType });
-            repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-        }
+        const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
         // fetch accounts info
         const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
         if (!accountsInfo) {
