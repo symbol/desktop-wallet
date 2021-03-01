@@ -75,6 +75,10 @@
                                     <input
                                         v-model="formItems.password"
                                         v-focus
+                                        onselectstart="return false"
+                                        onpaste="return false;"
+                                        onCopy="return false"
+                                        onCut="return false"
                                         :class="[!profilesClassifiedByNetworkType ? 'un_click' : '']"
                                         :placeholder="$t('please_enter_your_account_password')"
                                         type="password"

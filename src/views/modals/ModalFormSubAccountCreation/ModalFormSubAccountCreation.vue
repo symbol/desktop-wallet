@@ -67,6 +67,10 @@
                                     <ErrorTooltip :errors="errors">
                                         <input
                                             v-model="formItems.privateKey"
+                                            onselectstart="return false"
+                                            onpaste="return false;"
+                                            onCopy="return false"
+                                            onCut="return false"
                                             type="password"
                                             name="privateKey"
                                             class="input-size input-style"
