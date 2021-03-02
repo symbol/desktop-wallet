@@ -121,7 +121,7 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
         registrationType: NamespaceRegistrationType.RootNamespace,
         newNamespaceName: '',
         parentNamespaceName: '',
-        duration: 172800,
+        duration: 86400,
         maxFee: 0,
     };
 
@@ -144,7 +144,8 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
         this.formItems.registrationType = this.registrationType || NamespaceRegistrationType.RootNamespace;
         this.formItems.newNamespaceName = this.namespaceId ? this.namespaceId.fullName : '';
         this.formItems.parentNamespaceName = this.parentNamespaceId ? this.parentNamespaceId.fullName : '';
-        this.formItems.duration = this.duration || 172800;
+        this.formItems.duration =
+            this.duration || this.networkConfiguration.minNamespaceDuration / this.networkConfiguration.blockGenerationTargetTime || 86400;
         // - maxFee must be absolute
         this.formItems.maxFee = this.defaultFee;
     }
