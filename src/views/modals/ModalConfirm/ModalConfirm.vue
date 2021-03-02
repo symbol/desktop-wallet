@@ -8,13 +8,14 @@
                 <h5 class="centered-content bottom-space">
                     {{ $t(message) }}
                 </h5>
-                <div v-if="showCheckbox" class="bottom-space">
-                    <Checkbox id="Confirmed" :value="isCheckboxChecked" @input="onCheckboxCheck" />
-                    <label for="Confirmed">{{ $t(checkboxLabel) }}</label>
+                <div v-if="showCheckbox" class="checkbox-container bottom-space">
+                    <Checkbox id="Confirmed" :value="isCheckboxChecked" @input="onCheckboxCheck">
+                        {{ $t(checkboxLabel) }}
+                    </Checkbox>
                 </div>
             </div>
             <div class="footer bottom-space">
-                <button class="ivu-btn ivu-btn-text right-space" @click="cancel">
+                <button class="secondary-outline-button" @click="cancel">
                     {{ $t('cancel') }}
                 </button>
                 <button

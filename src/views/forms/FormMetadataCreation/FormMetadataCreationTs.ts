@@ -250,28 +250,6 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     }
 
     /**
-     * Modal title from modal type
-     * @type {string}
-     */
-    get modalTitle(): string {
-        let title: string = '';
-        switch (this.type) {
-            case MetadataType.Mosaic:
-                title = 'modal_title_mosaic_metadata';
-                break;
-
-            case MetadataType.Namespace:
-                title = 'modal_title_namespace_metadata';
-                break;
-
-            default:
-                title = 'modal_title_account_metadata';
-                break;
-        }
-        return title;
-    }
-
-    /**
      * Target account or public key label depends on MetadataType
      * @param {void}
      * @returns {string}

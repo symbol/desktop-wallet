@@ -195,10 +195,14 @@
     "delete_account": "删除帐户",
     "delete_account_confirmation_message": "您确定要删除“ {accountName}”吗？\n您可能需要先备份，然后再继续。",
     "delete_account_confirmation_title": "删除帐户？",
+    "delete_profile_confirmation_title": "删除档案",
+    "delete_profile_confirmation_message": "Deleting a profile is not recommended without a backup. Loss of funds may occur. Are you sure you would like to delete \"{profileName}\"?",
+    "delete_profile_confirmation_checkbox": "Yes, I would like to delete this profile.",
     "delete_confirmation_message": "您确定要删除吗？",
     "delete_contact": "删除联络人",
     "delete_contact_confirmation_message": "您确定要删除“ {contactName}”吗？",
     "delete_contact_confirmation_title": "删除联系人？",
+    "delete_profile": "删除档案",
     "delta": "绝对值",
     "description": "描述",
     "direction": "方向",
@@ -1040,5 +1044,6 @@
     "current_node_is_not_available": "当前节点不可用。\n尝试连接到节点",
     "nodes_unavailable_check_network_and": "节点（{0} / {1}）当前不可用。\n请检查您的网络连接，设置和",
     "copyright": "版权所有©2021 NEM软件",
-    "address_list_cannot_be_empty": "Please, select 1 or more accounts from the list."
+    "address_list_cannot_be_empty": ">>请从列表中选择1个或多个帐户。",
+    "launching_mainnet_soon": ">>请注意，这是一个实验性节点，因为主网尚未启动。"
 }
