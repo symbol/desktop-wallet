@@ -271,6 +271,16 @@ export const routes: AppRoute[] = [
                         component: () => import('@/views/pages/aggregate/aggregateTransaction/AggregateTransaction.vue'),
                     },
                     {
+                        path: '/aggregate/supply',
+                        name: 'aggregate.supply',
+                        meta: {
+                            protected: true,
+                            title: 'mosaic_supply_transaction',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/aggregate/aggregateTransaction/AggregateTransaction.vue'),
+                    },
+                    {
                         path: '/aggregate/namespace',
                         name: 'aggregate.namespace',
                         meta: {

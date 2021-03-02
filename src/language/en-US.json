@@ -653,6 +653,7 @@
     "mosaic_name_can_not_be_null": "Mosaic name cannot be null/empty",
     "mosaic_not_set": "Select a mosaic",
     "mosaic_transaction": "Mosaic Transaction ",
+    "mosaic_supply_transaction": "Supply Change Transaction ",
     "mosaic_transfer_type": "Mosaic transactions",
     "mosaics_list": "Mosaics List",
     "move_your_mouse": "Please move your mouse to improve randomness when generating the mnemonic passphrase",
