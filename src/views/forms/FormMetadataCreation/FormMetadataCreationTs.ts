@@ -68,7 +68,6 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
             ownedNamespaces: 'namespace/ownedNamespaces',
             repositoryFactory: 'network/repositoryFactory',
             metadataTransactions: 'metadata/transactions',
-            // currentSignerAddress: 'account/currentSignerAddress',
         }),
     },
 })
