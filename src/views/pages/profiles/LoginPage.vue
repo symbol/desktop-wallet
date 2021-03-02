@@ -101,7 +101,7 @@
                                     {{ $t('create_a_new_account') }}?
                                 </span>
                             </div>
-                            <div v-if="formItems.hasHint" class="hint">{{ $t('password_hint') }}: {{ getPasswordHint() }}</div>
+                            <div v-if="formItems.hasHint && !!getPasswordHint().length" class="hint">{{ $t('password_hint') }}: {{ getPasswordHint() }}</div>
                             <Button
                                 v-if="profilesClassifiedByNetworkType"
                                 class="pointer button"
