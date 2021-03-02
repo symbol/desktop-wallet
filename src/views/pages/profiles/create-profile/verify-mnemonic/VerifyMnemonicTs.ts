@@ -21,6 +21,8 @@ import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 // @ts-ignore
 import MnemonicVerification from '@/components/MnemonicVerification/MnemonicVerification.vue';
 import { NotificationType } from '@/core/utils/NotificationType';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { NetworkType } from 'symbol-sdk';
 
 @Component({
     components: {
@@ -29,6 +31,7 @@ import { NotificationType } from '@/core/utils/NotificationType';
     computed: {
         ...mapGetters({
             currentMnemonic: 'temporary/mnemonic',
+            currentProfile: 'profile/currentProfile',
         }),
     },
 })
@@ -38,7 +41,8 @@ export default class VerifyMnemonicTs extends Vue {
      * @var {MnemonicPassPhrase}
      */
     public currentMnemonic: MnemonicPassPhrase;
-
+    public currentProfile: ProfileModel;
+    public networkType = NetworkType;
     /// region computed properties getter/setter
     get mnemonicWordsList(): string[] {
         if (this.currentMnemonic) {

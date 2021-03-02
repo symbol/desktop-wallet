@@ -25,7 +25,7 @@
                             <Checkbox v-model="formItems.transferable">
                                 {{ $t('transmittable') }}
                             </Checkbox>
-                            <Checkbox v-model="formItems.supplyMutable">
+                            <Checkbox v-if="!isAggregate" v-model="formItems.supplyMutable">
                                 {{ $t('variable_supply') }}
                             </Checkbox>
                             <Checkbox v-model="formItems.restrictable">
