@@ -43,20 +43,22 @@
                     </FormRow>
 
                     <div class="form-row form-submit">
-                        <button
-                            class="button-style inverted-button pl-2 pr-2 confirm-reset"
-                            type="submit"
-                            :disabled="isConfirmButtonDisabled"
-                            @click="handleSubmit(onSubmit)"
-                        >
-                            {{ $t('confirm') }}
-                        </button>
-                        <button class="button-style button danger-button pl-2 pr-2 confirm-reset" type="reset" @click.prevent="resetForm">
-                            {{ $t('reset') }}
-                        </button>
-                        <div style="width: 100%; text-align: left; margin-left: 0.7rem;">
-                            <button class="button-style button danger-button pl-2 pr-2" style="margin-right: 0.4rem;" @click="logout">
-                                {{ $t('logout') }}
+                        <DeleteProfileButton @logout="logout" />
+                        <div>
+                            <button
+                                class="button-style button danger-button pl-2 pr-2 confirm-reset"
+                                type="reset"
+                                @click.prevent="resetForm"
+                            >
+                                {{ $t('reset') }}
+                            </button>
+                            <button
+                                class="button-style inverted-button pl-2 pr-2 confirm-reset"
+                                type="submit"
+                                :disabled="isConfirmButtonDisabled"
+                                @click="handleSubmit(onSubmit)"
+                            >
+                                {{ $t('confirm') }}
                             </button>
                         </div>
                     </div>
@@ -91,11 +93,18 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
 .form-submit {
     display: flex;
     padding-top: 5%;
-    padding-right: 17%;
-    flex-flow: row-reverse;
+    padding-left: 0.7rem;
+    padding-right: 1.7rem;
+    flex-flow: row;
+    justify-content: space-between;
 
     button[type='reset'] {
-        margin-right: 35px;
+        margin-right: 0.35rem;
+    }
+
+    button {
+        width: max-content;
+        padding: 0 0.35rem;
     }
 }
 .confirm-reset {

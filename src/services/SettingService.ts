@@ -54,4 +54,13 @@ export class SettingService {
         const language = appConfig.languages.find((l) => l.value == browserLocale) ? browserLocale : appConfig.languages[0].value;
         return new SettingsModel(profileName, language, feesConfig.median, '', networkConfig[networkType].explorerUrl);
     }
+
+    public deleteProfileSettings(profileName: string): void {
+        const storedData = this.storage.get();
+        if (!storedData) {
+            return;
+        }
+        delete storedData[profileName];
+        this.storage.set(storedData);
+    }
 }
