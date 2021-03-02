@@ -68,6 +68,7 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
             ownedNamespaces: 'namespace/ownedNamespaces',
             repositoryFactory: 'network/repositoryFactory',
             metadataTransactions: 'metadata/transactions',
+            // currentSignerAddress: 'account/currentSignerAddress',
         }),
     },
 })
@@ -280,7 +281,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         return this.type === MetadataType.Namespace
             ? this.ownedNamespaces.map(({ namespaceIdHex }) => namespaceIdHex)
             : this.ownedMosaics
-                  .filter(({ ownerRawPlain }) => ownerRawPlain === this.currentAccount.address)
+                  .filter(({ ownerRawPlain }) => ownerRawPlain === this.currentSignerAddress.plain())
                   .map(({ mosaicIdHex }) => mosaicIdHex);
     }
 
