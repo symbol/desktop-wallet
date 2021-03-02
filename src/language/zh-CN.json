@@ -649,6 +649,7 @@
     "mosaic_name_can_not_be_null": "马赛克名称不能为空",
     "mosaic_not_set": "请选择马赛克",
     "mosaic_transaction": "马赛克交易 ",
+    "mosaic_supply_transaction": ">> 供应变更交易 ",
     "mosaic_transfer_type": "镶嵌交易",
     "mosaics_list": "马赛克列表",
     "move_your_mouse": "请移动你的鼠标，产生墒增，帮助产生随机助记词",

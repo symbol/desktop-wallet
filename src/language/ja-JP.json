@@ -653,6 +653,7 @@
     "mosaic_name_can_not_be_null": "モザイク名は空にできません",
     "mosaic_not_set": "モザイクを選択してください",
     "mosaic_transaction": "モザイクトランザクション",
+    "mosaic_supply_transaction": ">>供給変更トランザクション",
     "mosaic_transfer_type": "モザイクトランザクション",
     "mosaics_list": "モザイクリスト",
     "move_your_mouse": "より複雑さでランダムなニーモニックパス語群を生成するためにマウスを動かしてください。",
