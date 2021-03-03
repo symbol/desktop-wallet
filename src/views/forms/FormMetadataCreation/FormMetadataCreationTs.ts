@@ -47,6 +47,7 @@ import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import { Component, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
+import { MosaicService } from '@/services/MosaicService';
 @Component({
     components: {
         ValidationObserver,
@@ -68,6 +69,7 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
             ownedNamespaces: 'namespace/ownedNamespaces',
             repositoryFactory: 'network/repositoryFactory',
             metadataTransactions: 'metadata/transactions',
+            currentHeight: 'network/currentHeight',
         }),
     },
 })
@@ -126,6 +128,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      */
     protected metadataTransactions: Transaction[];
 
+    private currentHeight: number;
     /**
      * Form fields
      * @var {Object}
@@ -275,11 +278,18 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     get targetIdValidatorName(): string {
         return this.isMosaic() ? 'mosaic_id' : 'namespace_id';
     }
+    
+    private get availableMosaics(): MosaicModel[] {
+        return this.ownedMosaics.filter((entry) => {
+            const expiration = MosaicService.getExpiration(entry, this.currentHeight, this.networkConfiguration.blockGenerationTargetTime);
+            return expiration !== 'expired';
+        });
+    }
 
     get ownedTargetHexIds(): string[] {
         return this.type === MetadataType.Namespace
             ? this.ownedNamespaces.map(({ namespaceIdHex }) => namespaceIdHex)
-            : this.ownedMosaics
+            : this.availableMosaics
                   .filter(({ ownerRawPlain }) => ownerRawPlain === this.currentSignerAddress.plain())
                   .map(({ mosaicIdHex }) => mosaicIdHex);
     }
