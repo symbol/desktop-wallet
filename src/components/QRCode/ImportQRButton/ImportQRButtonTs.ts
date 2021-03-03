@@ -23,7 +23,7 @@ import ModalImportQR from '@/views/modals/ModalImportQR/ModalImportQR.vue';
     components: { ModalImportQR },
 })
 export default class ImportQRButtonTs extends Vue {
-    @Prop({ default: [QRCodeType.AddContact, QRCodeType.RequestTransaction, QRCodeType.SignedTransaction] })
+    @Prop({ default: [QRCodeType.AddContact, QRCodeType.RequestTransaction, QRCodeType.SignedTransaction, QRCodeType.CosignatureSignedTransaction] })
     readonly validQrTypes!: QRCodeType[];
 
     /**

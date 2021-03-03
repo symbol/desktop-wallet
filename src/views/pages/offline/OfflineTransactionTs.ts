@@ -67,5 +67,10 @@ export default class OfflineTransactionTs extends Vue {
         return officialIcons.customerAlice;
     }
 
+    public async onLoginClick() {
+        await this.$store.dispatch('profile/LOG_OUT');
+        this.$router.push('/login')
+    }
+
     public parentRouteName = 'offlineTransaction';
 }

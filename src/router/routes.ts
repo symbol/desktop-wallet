@@ -498,6 +498,16 @@ export const routes: AppRoute[] = [
                         // @ts-ignore
                         component: () => import('@/views/pages/offline/offlineTransferTransaction/OfflineTransferTransaction.vue'),
                     },
+                    {
+                        path: '/offlineTransaction/cosign',
+                        name: 'offlineTransaction.cosign',
+                        meta: {
+                            protected: false,
+                            title: 'cosign_transaction',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/offline/offlineCosignTransaction/OfflineCosignTransaction.vue'),
+                    },
                 ]
             },
         ]

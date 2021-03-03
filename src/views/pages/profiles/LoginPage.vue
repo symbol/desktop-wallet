@@ -1,15 +1,15 @@
 <template>
     <div class="login-profile-wrapper">
         <VideoBackground class="video-background-section" :src="require('@/views/resources/videos/symbol_3d_rotate.mp4')">
+            <div class="switch-language-container">
+                <button class="trigger-accountlink" @click="$router.push('offlineTransaction')">
+                    <Icon type="ios-cloud-upload-outline" class="navbar-icon white" />
+                    <span class="color white">{{ $t('go_to_offline_transactions') }}</span>
+                </button>
+                <LanguageSelector />
+            </div>
             <ValidationObserver v-slot="{ handleSubmit }" slim>
                 <form onsubmit="event.preventDefault()">
-                    <div class="switch-language-container">
-                        <button class="trigger-accountlink pointer" @click="$router.push('offlineTransaction')">
-                            <img class="navbar-icon white" :src="offlineIcon" />
-                            <span class="color white">{{ $t('go_to_offline_transactions') }}</span>
-                        </button>
-                        <LanguageSelector />
-                    </div>
                     <div class="welcome-box">
                         <div class="banner-image">
                             <span class="top-welcome-text">{{ $t('welcome_to_symbol') }}</span>

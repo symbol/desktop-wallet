@@ -360,13 +360,15 @@
 
 
 .trigger-accountlink {
-    font-size: @normalFont !important;
+    font-size: @smallFont !important;
     color: @purpleDark;
     display: flex;
     align-items: center;
     background-color: transparent;
     border: none;
     z-index: 100000;
+    cursor: pointer;
+    padding-bottom: 2px;
 
     .white {
         color: @white;
@@ -374,12 +376,7 @@
 }
 
 .navbar-icon {
-    display: inline;
     margin-right: 10px;
-    width: 0.15rem;
-    height: 0.15rem;
-
-    &.white {
-        filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(174deg) brightness(103%) contrast(102%);
-    }
+    font-size: 25px;
+    color: white;
 }

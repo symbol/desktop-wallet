@@ -28,9 +28,11 @@ import TransactionQRAction from '@/components/QRCode/QRCodeActions/TransactionQR
 import CosignatureQRAction from '@/components/QRCode/QRCodeActions/CosignatureQRAction/CosignatureQRAction.vue';
 // @ts-ignore
 import SignedTransactionQRAction from '@/components/QRCode/QRCodeActions/SignedTransactionQRAction/SignedTransactionQRAction.vue';
+// @ts-ignore
+import CosignatureSignedTransactionQRAction from '@/components/QRCode/QRCodeActions/CosignatureSignedTransactionQRAction/CosignatureSignedTransactionQRAction.vue';
 
 @Component({
-    components: { QRCodeDisplay, ContactQRAction, MnemonicQRAction, TransactionQRAction, CosignatureQRAction, SignedTransactionQRAction },
+    components: { QRCodeDisplay, ContactQRAction, MnemonicQRAction, TransactionQRAction, CosignatureQRAction, SignedTransactionQRAction, CosignatureSignedTransactionQRAction },
 })
 export default class QRCodeActionsTs extends Vue {
     @Prop({ default: null }) readonly qrCode: QRCode;
@@ -38,4 +40,8 @@ export default class QRCodeActionsTs extends Vue {
     @Prop({ default: true }) readonly showPreview: boolean;
 
     @Prop({ default: null }) readonly onSuccess: () => void;
+
+    @Prop() readonly confirmAction?: (qrCode: QRCode) => void;
+
+    @Prop() readonly confirmText?: string;
 }

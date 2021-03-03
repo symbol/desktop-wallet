@@ -1,7 +1,7 @@
 <template>
     <div class="main-container">
         <div class="login-button">
-            <button class="trigger-accountlink pointer" @click="$router.push('/login')">
+            <button class="trigger-accountlink pointer" @click="onLoginClick">
                 <img class="navbar-icon" :src="loginIcon" />
                 <span class="color">{{ $t('go_to_login_offline') }}</span>
             </button>
@@ -10,7 +10,7 @@
             <div class="title-container">
                 <div class="wrapper">
                     <div class="title">
-                        {{ $t('offline_transactions_title') }}
+                        <Icon type="ios-cloud-upload-outline" /> {{ $t('offline_transactions_title') }}
                     </div>
                     <div class="description-text">
                         <p class="mt">{{ $t('offline_transactions_text1') }}</p>

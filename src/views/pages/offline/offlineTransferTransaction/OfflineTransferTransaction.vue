@@ -28,6 +28,9 @@
                             :download-name="'signedTransaction'"
                         />
                     </div>
+                    <div class="raw-json">
+                        {{ qrCodeJson }}
+                    </div>
                     <div class="description-text">
                         {{ $t('offline_transactions_success_text') }}
                     </div>

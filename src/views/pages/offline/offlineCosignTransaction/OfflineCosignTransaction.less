@@ -32,6 +32,7 @@
     grid-template-rows: auto 0.5rem;
     background-color: @white;
     border-radius: 0.04rem;
+    overflow: hidden;
 
     .account-detail-inner-container {
         width: 100%;
@@ -198,13 +199,31 @@
     }
 }
 
+.payload-input {
+    width: 75%;
+    margin-top: 25px;
+    border: 1px solid @purple;
+    overflow: hidden;
+    display: flex;
+    border-radius: @borderRadius;
+    height: 140px;
+
+    textarea {
+        padding: 12px;
+    }
+
+    button {
+        width: fit-content !important;
+        height: 100% !important;
+    }
+}
+
 .raw-json {
     width: 80%;
     text-align: center;
     word-break: break-all;
     font-size: @smallerFont;
 }
-
 
 /deep/.qrcode-display {
     img {

@@ -45,6 +45,8 @@ export default class OfflineTransferTransactionTs extends Vue {
 
     public qrCode: SignedTransactionQR = null;
 
+    public qrCodeJson: string = '';
+
     public step: number = 0;
 
     /**
@@ -53,6 +55,7 @@ export default class OfflineTransferTransactionTs extends Vue {
      */
     public onSignedOfflineTransaction(signedTransaction: SignedTransaction) {
         this.qrCode = new SignedTransactionQR(signedTransaction, this.networkType, this.generationHash);
+        this.qrCodeJson = this.qrCode.singedTransaction.toDTO();
         this.step = 1;
     }
 

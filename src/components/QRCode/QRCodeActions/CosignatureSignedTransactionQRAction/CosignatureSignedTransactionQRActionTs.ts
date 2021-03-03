@@ -14,8 +14,15 @@
  *
  */
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { CosignatureQR } from 'symbol-qr-library';
-import { NetworkType } from 'symbol-sdk';
+import { CosignatureSignedTransactionQR } from 'symbol-qr-library';
+import {
+    NetworkType,
+    TransferTransaction,
+    Address,
+    SignedTransaction,
+    CosignatureSignedTransaction,
+    PublicAccount
+} from 'symbol-sdk';
 
 import { QRCodeDetailItem } from '@/components/QRCode/QRCodeActions/TemplateQRAction/TemplateQRActionTs';
 // @ts-ignore
@@ -24,21 +31,20 @@ import TemplateQRAction from '@/components/QRCode/QRCodeActions/TemplateQRAction
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue';
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
-// @ts-ignore
-import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
-import {QRCode} from "symbol-qr-library/index";
-
+import {TransactionCommand} from "@/services/TransactionCommand";
+import {TransactionAnnouncerService} from "@/services/TransactionAnnouncerService";
 @Component({
-    components: { TemplateQRAction, MosaicAmountDisplay, MaxFeeSelector, TransactionDetails },
+    components: { TemplateQRAction, MosaicAmountDisplay, MaxFeeSelector },
 })
-export default class CosignatureQRActionTs extends Vue {
-    @Prop({ default: null }) readonly qrCode!: CosignatureQR;
+export default class CosignatureSignedTransactionQRActionTs extends Vue {
+    @Prop({ default: null }) readonly qrCode!: CosignatureSignedTransactionQR;
 
     @Prop({ default: null }) readonly onSuccess: () => void;
 
-    @Prop() readonly confirmAction?: (qrCode: QRCode) => void;
-
-    @Prop() readonly confirmText?: string;
+    /**
+     * SignedTransaction read from QR
+     */
+    tran: CosignatureSignedTransaction;
 
     /**
      * Get QR Code detail items
@@ -50,25 +56,20 @@ export default class CosignatureQRActionTs extends Vue {
         items.push(
             new QRCodeDetailItem(
                 this.$t('qrcode_detail_item_type').toString(),
-                this.$t('qrcode_detail_item_type_cosignatureqr').toString(),
+                this.$t('qrcode_detail_item_type_signedqr').toString(),
                 true,
             ),
         );
         items.push(new QRCodeDetailItem(this.$t('qrcode_detail_item_network_type').toString(), NetworkType[this.qrCode.networkType], true));
-
+        this.tran = (this.qrCode.singedTransaction as unknown) as CosignatureSignedTransaction;
+        items.push(new QRCodeDetailItem(this.$t('from').toString(), PublicAccount.createFromPublicKey(this.tran.signerPublicKey, this.qrCode.networkType).address.plain(), true));
+        items.push(new QRCodeDetailItem(this.$t('hash').toString(), this.tran.parentHash, true));
         return items;
     }
 
-    public onSubmit() {
+    public async onSubmit() {
+        const transactionAnnouncerService = new TransactionAnnouncerService(this.$store);
+        transactionAnnouncerService.announceAggregateBondedCosignature(this.tran);
         this.onSuccess();
-        if (this.confirmAction) {
-            this.confirmAction(this.qrCode);
-        } else {
-            this.$router.push({
-                name: 'dashboard.index',
-                // @ts-ignore
-                params: {transaction: this.qrCode.transaction, action: 'transaction-details'},
-            });
-        }
     }
 }
