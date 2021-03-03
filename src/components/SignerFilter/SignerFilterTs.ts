@@ -24,7 +24,12 @@ export class SignerFilterTs extends Vue {
 
     created() {
         if (this.signers?.length > 0) {
-            this.selectedSigner = this.signers[0].address.plain();
+            const signer: Signer[] = this.signers.filter((s) => s.address.plain() === this.currentSigner.address.plain());
+            if (signer.length) {
+                this.selectedSigner = signer[0].address.plain();
+            } else {
+                this.selectedSigner = this.signers[0].address.plain();
+            }
         }
     }
     /**
