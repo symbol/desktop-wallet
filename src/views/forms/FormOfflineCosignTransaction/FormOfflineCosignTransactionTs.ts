@@ -99,6 +99,7 @@ import {
     TransactionSigner
 } from "@/services/TransactionAnnouncerService";
 import {LedgerService} from "@/services/LedgerService";
+// @ts-ignore
 import AccountSignerSelector from "@/components/AccountSignerSelector/AccountSignerSelector.vue";
 
 const { DECIMAL_SEPARATOR } = appConfig.constants;
@@ -309,22 +310,7 @@ export class FormOfflineCosignTransactionTs extends FormTransactionBase {
                 const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath, true);
                 if (signerPublicKey === this.currentAccount.publicKey.toLowerCase()) {
                     const signature = await ledgerService.signCosignatureTransaction(currentPath, this.transaction, signerPublicKey);
-                    this.$store.dispatch(
-                        'diagnostic/ADD_DEBUG',
-                        `Co-signed transaction with account ${addr} and result: ${JSON.stringify({
-                            parentHash: signature.parentHash,
-                            signature: signature.signature,
-                        })}`,
-                    );
-                    const res = await new TransactionAnnouncerService(this.$store)
-                        .announceAggregateBondedCosignature(signature)
-                        .toPromise();
-                    if (res.success) {
-                        this.$emit('success');
-                        this.$emit('close');
-                    } else {
-                        this.errorNotificationHandler(res.error);
-                    }
+                    this.$emit('signedCosignature', signature);
                 } else {
                     throw { errorCode: 'ledger_not_correct_account' };
                 }

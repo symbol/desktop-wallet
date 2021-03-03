@@ -411,11 +411,15 @@ export class ModalTransactionConfirmationTs extends Vue {
             ledgerService
                 .signTransaction(currentPath, transaction, this.generationHash, ledgerAccount.publicKey)
                 .then((res: any) => {
-                    // - notify about successful transaction announce
-                    this.onConfirmationSuccess();
-                    const services = new TransactionAnnouncerService(this.$store);
-                    services.announce(res);
-                    this.show = false;
+                    if (this.isOfflineMode) {
+                        this.$emit('transaction-signed', res);
+                    } else {
+                        // - notify about successful transaction announce
+                        this.onConfirmationSuccess();
+                        const services = new TransactionAnnouncerService(this.$store);
+                        services.announce(res);
+                        this.show = false;
+                    }
                 })
                 .catch((error) => {
                     this.show = false;
@@ -438,11 +442,15 @@ export class ModalTransactionConfirmationTs extends Vue {
         ledgerService
             .signTransaction(currentPath, aggregate, this.generationHash, ledgerAccount.publicKey)
             .then((res) => {
-                // - notify about successful transaction announce
-                this.onConfirmationSuccess();
-                const services = new TransactionAnnouncerService(this.$store);
-                services.announce(res);
-                this.show = false;
+                if (this.isOfflineMode) {
+                    this.$emit('transaction-signed', res);
+                } else {
+                    // - notify about successful transaction announce
+                    this.onConfirmationSuccess();
+                    const services = new TransactionAnnouncerService(this.$store);
+                    services.announce(res);
+                    this.show = false;
+                }
             })
             .catch((error) => {
                 this.show = false;

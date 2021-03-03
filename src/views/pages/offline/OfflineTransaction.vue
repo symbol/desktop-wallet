@@ -10,7 +10,7 @@
             <div class="title-container">
                 <div class="wrapper">
                     <div class="title">
-                        <Icon type="ios-cloud-upload-outline" /> {{ $t('offline_transactions_title') }}
+                        <Icon type="ios-cloud-download-outline" /> {{ $t('offline_transactions_title') }}
                     </div>
                     <div class="description-text">
                         <p class="mt">{{ $t('offline_transactions_text1') }}</p>
