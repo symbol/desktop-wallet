@@ -278,7 +278,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     get targetIdValidatorName(): string {
         return this.isMosaic() ? 'mosaic_id' : 'namespace_id';
     }
-    
+
     private get availableMosaics(): MosaicModel[] {
         return this.ownedMosaics.filter((entry) => {
             const expiration = MosaicService.getExpiration(entry, this.currentHeight, this.networkConfiguration.blockGenerationTargetTime);
