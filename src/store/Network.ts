@@ -408,6 +408,11 @@ export default {
                 currentNetworkListener.close();
             }
             commit('listener', networkListener);
+            if (networkListener && !networkListener.isOpen()) {
+                await networkListener.open();
+                await dispatch('SUBSCRIBE');
+            }
+
             commit('currentHeight', currentHeight);
             commit(
                 'currentPeerInfo',

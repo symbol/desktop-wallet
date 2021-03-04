@@ -25,7 +25,12 @@
                             <p class="profile-name">
                                 {{ $t('profile_name') }}
                             </p>
-                            <ValidationProvider v-slot="{ errors }" :name="$t('profile_name')" :rules="`in:${profileNames}`" slim>
+                            <ValidationProvider
+                                v-slot="{ errors }"
+                                :name="$t('profile_name')"
+                                :rules="`profileExists:${profileNames}`"
+                                slim
+                            >
                                 <ErrorTooltip field-name="profile_name" :errors="errors">
                                     <input v-show="false" v-model="formItems.currentProfileName" />
 

@@ -1,7 +1,7 @@
 <template>
     <ValidationProvider v-slot="{ errors }" vid="selectedMosaic" :name="$t(label)" :rules="'required'" tag="div" class="select-container">
         <ErrorTooltip :errors="errors">
-            <Select v-model="selectedMosaic" v-focus class="select-size select-style">
+            <Select v-model="selectedMosaic" v-focus :disabled="disabled" class="select-size select-style">
                 <Option v-for="m in displayedMosaics" :key="m.mosaicIdHex" :value="m.mosaicIdHex">
                     {{ m.name || m.mosaicIdHex }}
                 </Option>

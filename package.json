@@ -33,11 +33,11 @@
         "node-hid:prebuild-install:lin": "export npm_config_platform=linux && npm run node-hid:prebuild-install",
         "version": "echo $npm_package_version"
     },
-    "author": "Greg Saive <greg.saive@nem.software>",
+    "author": "NEM Group <support@nem.group>",
     "contributors": [
         {
-            "name": "Greg Saive",
-            "email": "greg.saive@nem.software"
+            "name": "NEM Group",
+            "email": "support@nem.group"
         }
     ],
     "dependencies": {

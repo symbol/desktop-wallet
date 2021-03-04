@@ -1,34 +1,19 @@
 @import '../../resources/css/variables.less';
 
 .update-metadata-modal-conatiner {
-    padding: 0.3rem 0.4rem;
+    padding-bottom: 0.5rem;
     overflow: hidden;
-
-    .modal-title {
-        font-size: @subtitleFont;
-        color: @purple;
-        font-weight: bolder;
-    }
 
     .form-wrapper {
         display: grid;
     }
 
-    /deep/.form-row-inner-container {
+    /deep/ .form-row-inner-container {
         align-items: self-start;
-
-        .label-container {
-            .form-label-container {
-                .form-label {
-                    padding-left: 0;
-                }
-            }
-        }
 
         .inputs-container {
             height: auto;
             position: relative;
-            padding-left: 0;
             .form-row-inner-container-value-only {
                 display: flex;
             }
@@ -65,18 +50,22 @@
             }
             .input-container {
                 height: 0.3rem;
-                background-color: #f3f4f8;
+                background-color: #f5f5f5;
 
                 .input-style {
-                    background-color: #f3f4f8 !important;
+                    background-color: #f5f5f5 !important;
                 }
             }
             .value-container {
                 .metadata-value-input {
                     height: 1.9rem;
-                    background-color: #f3f4f8;
+                    background-color: #f5f5f5;
                     border-radius: 0.05rem;
                     padding: 0.16rem;
+
+                    &::placeholder {
+                        color: @grayDark;
+                    }
                 }
             }
         }

@@ -42,8 +42,9 @@
                             :title="$t('accounts_links_explorer')"
                             class="level-item navbar-item"
                         />
-                        <AccountSelectorField class="level-item navbar-item" @input="onChangeAccount" />
+                        <AccountSelectorField class="level-item navbar-item" :enable-min-width="true" @input="onChangeAccount" />
                         <Settings class="level-item navbar-item" />
+                        <LogoutButton />
                     </div>
                 </div>
                 <transition name="fade" mode="out-in">

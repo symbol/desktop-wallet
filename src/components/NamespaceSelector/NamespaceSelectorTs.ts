@@ -74,6 +74,11 @@ export class NamespaceSelectorTs extends Vue {
     @Prop({ default: false }) nonParentNamespace: boolean;
 
     /**
+     * Disabled namespace selector
+     */
+    @Prop({ default: false }) disabled: boolean;
+
+    /**
      * Namespaces names
      * @type {[h: string]: string}
      */
