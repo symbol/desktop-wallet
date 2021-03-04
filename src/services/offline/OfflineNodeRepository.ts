@@ -16,12 +16,14 @@ import {
 
 
 export class OfflineNodeRepository implements NodeRepository {
+    constructor(private readonly networkType: NetworkType) {}
+
     getNodeHealth(): Observable<NodeHealth> {
         throw new Error(`OfflineNodeRepository: getNodeHealth not implemented`);
     }
 
     getNodeInfo(): Observable<NodeInfo> {
-        return of(OfflineNodeInfo);
+        return of(OfflineNodeInfo(this.networkType));
     }
 
     getNodePeers(): Observable<NodeInfo[]> {

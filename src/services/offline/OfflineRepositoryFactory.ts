@@ -52,6 +52,8 @@ import {OfflineMosaicRepository} from "@/services/offline/OfflineMosaicRepositor
 import {OfflineMultisigRepository} from "@/services/offline/OfflineMultisigRepository";
 
 export class OfflineRepositoryFactory implements RepositoryFactory {
+    constructor(private readonly networkType: NetworkType) {}
+
     createAccountRepository(): AccountRepository {
         return new OfflineAccountRepository();
     }
@@ -96,11 +98,11 @@ export class OfflineRepositoryFactory implements RepositoryFactory {
     }
 
     createNetworkRepository(): NetworkRepository {
-        return new OfflineNetworkRepository();
+        return new OfflineNetworkRepository(this.networkType);
     }
 
     createNodeRepository(): NodeRepository {
-        return new OfflineNodeRepository();
+        return new OfflineNodeRepository(this.networkType);
     }
 
     createReceiptRepository(): ReceiptRepository {
@@ -142,11 +144,11 @@ export class OfflineRepositoryFactory implements RepositoryFactory {
     }
 
     getGenerationHash(): Observable<string> {
-        return of(OfflineGenerationHash);
+        return of(OfflineGenerationHash[this.networkType]);
     }
 
     getNetworkType(): Observable<NetworkType> {
-        return of(NetworkType.TEST_NET);
+        return of(this.networkType);
     }
 
     getNodePublicKey(): Observable<string | undefined> {

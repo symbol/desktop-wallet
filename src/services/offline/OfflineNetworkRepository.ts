@@ -12,16 +12,18 @@ import {OfflineNetworkProperties, OfflineRentalFees, OfflineTransactionFees} fro
 
 export class
 OfflineNetworkRepository implements NetworkRepository {
+    constructor(private readonly networkType: NetworkType) {}
+
     getNetworkName(): Observable<NetworkName> {
         throw new Error(`OfflineNetworkRepository: getNetworkName not implemented`);
     }
 
     getNetworkProperties(): Observable<NetworkConfiguration> {
-        return of(OfflineNetworkProperties);
+        return of(OfflineNetworkProperties[this.networkType]);
     }
 
     getNetworkType(): Observable<NetworkType> {
-        return of(NetworkType.TEST_NET);
+        return of(this.networkType);
     }
 
     getRentalFees(): Observable<RentalFees> {

@@ -120,7 +120,7 @@ export default class OfflineCosignTransactionTs extends Vue {
         if (transaction) {
             const hash = Transaction.createTransactionHash(
                 transaction.serialize(),
-                Array.from(Convert.hexToUint8(OfflineGenerationHash)),
+                Array.from(Convert.hexToUint8(OfflineGenerationHash[transaction.networkType])),
             );
             // @ts-ignore
             transaction.transactionInfo = { hash: hash };
@@ -138,6 +138,9 @@ export default class OfflineCosignTransactionTs extends Vue {
 
     public onImportPayloadClick() {
         if (!this.aggregateTransaction) this.$store.dispatch('notification/ADD_ERROR', 'payload_not_valid');
-        else this.step = 1;
+        else {
+            this.$store.dispatch('network/CONNECT', { networkType: this.aggregateTransaction.networkType, isOffline: true });
+            this.step = 1;
+        }
     }
 }

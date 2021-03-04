@@ -60,7 +60,7 @@ export class NetworkService {
         networkModel: NetworkModel;
         repositoryFactory: RepositoryFactory;
     }> {
-        return from(this.createRepositoryFactory(nodeUrl, isOffline)).pipe(
+        return from(this.createRepositoryFactory(nodeUrl, isOffline, defaultNetworkType)).pipe(
             flatMap(({ url, repositoryFactory }) => {
                 return repositoryFactory.getGenerationHash().pipe(
                     flatMap((generationHash) => {
@@ -106,9 +106,9 @@ export class NetworkService {
         );
     }
 
-    private createRepositoryFactory(url: string, isOffline = false): Observable<{ url: string; repositoryFactory: RepositoryFactory }> {
+    private createRepositoryFactory(url: string, isOffline = false, networkType = NetworkType.TEST_NET): Observable<{ url: string; repositoryFactory: RepositoryFactory }> {
         // console.log(`Testing ${url}`);
-        const repositoryFactory = NetworkService.createRepositoryFactory(url, isOffline);
+        const repositoryFactory = NetworkService.createRepositoryFactory(url, isOffline, networkType);
         return defer(() => {
             return repositoryFactory.getGenerationHash();
         }).pipe(
@@ -156,9 +156,9 @@ export class NetworkService {
      * It creates the RepositoryFactory used to build the http repository/clients and listeners.
      * @param url the url.
      */
-    public static createRepositoryFactory(url: string, isOffline: boolean = false): RepositoryFactory {
+    public static createRepositoryFactory(url: string, isOffline: boolean = false, networkType = NetworkType.TEST_NET): RepositoryFactory {
         return isOffline ?
-            new OfflineRepositoryFactory() :
+            new OfflineRepositoryFactory(networkType) :
             new RepositoryFactoryHttp(url, {
                 websocketUrl: URLHelpers.httpToWsUrl(url) + '/ws',
                 websocketInjected: WebSocket,
