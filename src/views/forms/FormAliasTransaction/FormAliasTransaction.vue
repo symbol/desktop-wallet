@@ -66,7 +66,6 @@
                                     v-model="formItems.aliasTarget"
                                     :mosaic-hex-ids="linkableMosaics"
                                     default-mosaic="firstInList"
-                                    label="form_label_link_mosaic"
                                 />
                             </template>
                         </FormRow>

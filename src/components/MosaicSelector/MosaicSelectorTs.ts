@@ -54,7 +54,7 @@ export class MosaicSelectorTs extends Vue {
     /**
      * Field label hidden by default
      */
-    @Prop({ default: null }) label: string;
+    @Prop({ default: 'mosaic' }) label: string;
 
     /**
      * Disable mosaic selector
