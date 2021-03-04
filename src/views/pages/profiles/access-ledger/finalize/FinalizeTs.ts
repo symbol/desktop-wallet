@@ -50,6 +50,9 @@ export default class FinalizeTs extends Vue {
 
         // execute store actions
         await this.$store.dispatch('profile/ADD_ACCOUNT', this.currentAccount);
+        await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', this.currentAccount);
+        await this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', [this.currentAccount.id]);
+        await this.$store.dispatch('temporary/RESET_STATE');
 
         // flush and continue
         return this.$router.push({ name: 'dashboard' });
