@@ -24,7 +24,7 @@ import { URLHelpers } from '@/core/utils/URLHelpers';
 import { combineLatest, defer, EMPTY, from, Observable } from 'rxjs';
 import { catchError, flatMap, map, tap } from 'rxjs/operators';
 import { NetworkConfiguration, NetworkType, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk';
-import {OfflineRepositoryFactory} from "@/services/offline/OfflineRepositoryFactory";
+import { OfflineRepositoryFactory } from '@/services/offline/OfflineRepositoryFactory';
 
 /**
  * The service in charge of loading and caching anything related to Network from Rest.
@@ -106,7 +106,11 @@ export class NetworkService {
         );
     }
 
-    private createRepositoryFactory(url: string, isOffline = false, networkType = NetworkType.TEST_NET): Observable<{ url: string; repositoryFactory: RepositoryFactory }> {
+    private createRepositoryFactory(
+        url: string,
+        isOffline = false,
+        networkType = NetworkType.TEST_NET,
+    ): Observable<{ url: string; repositoryFactory: RepositoryFactory }> {
         // console.log(`Testing ${url}`);
         const repositoryFactory = NetworkService.createRepositoryFactory(url, isOffline, networkType);
         return defer(() => {
@@ -157,11 +161,11 @@ export class NetworkService {
      * @param url the url.
      */
     public static createRepositoryFactory(url: string, isOffline: boolean = false, networkType = NetworkType.TEST_NET): RepositoryFactory {
-        return isOffline ?
-            new OfflineRepositoryFactory(networkType) :
-            new RepositoryFactoryHttp(url, {
-                websocketUrl: URLHelpers.httpToWsUrl(url) + '/ws',
-                websocketInjected: WebSocket,
-            });
+        return isOffline
+            ? new OfflineRepositoryFactory(networkType)
+            : new RepositoryFactoryHttp(url, {
+                  websocketUrl: URLHelpers.httpToWsUrl(url) + '/ws',
+                  websocketInjected: WebSocket,
+              });
     }
 }

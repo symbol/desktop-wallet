@@ -1,20 +1,8 @@
-import {
-    MerkleStateInfo,
-    Metadata,
-    MetadataRepository, MetadataSearchCriteria,
-    NetworkConfiguration,
-    NetworkName,
-    NetworkRepository,
-    NetworkType, NodeHealth, NodeInfo, NodeRepository, NodeTime, Page, PaginationStreamer,
-    RentalFees, ServerInfo, StorageInfo, Transaction,
-    TransactionFees
-} from "symbol-sdk";
-import {Observable, of} from "rxjs";
-import {OfflineNetworkProperties, OfflineNodeInfo, OfflineTransactionFees} from "@/services/offline/MockModels";
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { MerkleStateInfo, Metadata, MetadataRepository, MetadataSearchCriteria, Page, PaginationStreamer } from 'symbol-sdk';
+import { Observable, of } from 'rxjs';
 
 export class OfflineMetadataRepository implements MetadataRepository {
-
     getMetadata(compositeHash: string): Observable<Metadata> {
         throw new Error(`OfflineMetadataRepository: getMetadata not implemented`);
     }
@@ -30,5 +18,4 @@ export class OfflineMetadataRepository implements MetadataRepository {
     streamer(): PaginationStreamer<Metadata, MetadataSearchCriteria> {
         throw new Error(`OfflineMetadataRepository: streamer not implemented`);
     }
-
 }

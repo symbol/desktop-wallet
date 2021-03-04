@@ -1,35 +1,39 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-    Address, AggregateTransaction,
-    ChainInfo,
-    ChainRepository, CosignatureSignedTransaction, FinalizedBlock, IListener, NamespaceId,
-    NetworkConfiguration,
-    NetworkName,
-    NetworkRepository,
-    NetworkType, NewBlock, NodeHealth, NodeInfo, NodeRepository, NodeTime,
-    RentalFees, ServerInfo, StorageInfo, Transaction,
-    TransactionFees, TransactionStatusError
-} from "symbol-sdk";
-import {Observable, of} from "rxjs";
-import {
-    OfflineChainInfo,
-    OfflineNetworkProperties,
-    OfflineNodeInfo,
-    OfflineTransactionFees
-} from "@/services/offline/MockModels";
-
+    Address,
+    AggregateTransaction,
+    CosignatureSignedTransaction,
+    FinalizedBlock,
+    IListener,
+    NamespaceId,
+    NewBlock,
+    Transaction,
+    TransactionStatusError,
+} from 'symbol-sdk';
+import { Observable } from 'rxjs';
 
 export class OfflineListener implements IListener {
     url = 'mock';
 
-    aggregateBondedAdded(unresolvedAddress: Address | NamespaceId, transactionHash?: string, subscribeMultisig?: boolean): Observable<AggregateTransaction> {
+    aggregateBondedAdded(
+        unresolvedAddress: Address | NamespaceId,
+        transactionHash?: string,
+        subscribeMultisig?: boolean,
+    ): Observable<AggregateTransaction> {
         return new Observable();
     }
 
-    aggregateBondedRemoved(unresolvedAddress: Address | NamespaceId, transactionHash?: string, subscribeMultisig?: boolean): Observable<string> {
+    aggregateBondedRemoved(
+        unresolvedAddress: Address | NamespaceId,
+        transactionHash?: string,
+        subscribeMultisig?: boolean,
+    ): Observable<string> {
         return new Observable();
     }
 
-    close(): void {}
+    close(): void {
+        return;
+    }
 
     confirmed(unresolvedAddress: Address | NamespaceId, transactionHash?: string, subscribeMultisig?: boolean): Observable<Transaction> {
         return new Observable();
@@ -59,12 +63,19 @@ export class OfflineListener implements IListener {
         return new Observable();
     }
 
-    unconfirmedAdded(unresolvedAddress: Address | NamespaceId, transactionHash?: string, subscribeMultisig?: boolean): Observable<Transaction> {
+    unconfirmedAdded(
+        unresolvedAddress: Address | NamespaceId,
+        transactionHash?: string,
+        subscribeMultisig?: boolean,
+    ): Observable<Transaction> {
         return new Observable();
     }
 
-    unconfirmedRemoved(unresolvedAddress: Address | NamespaceId, transactionHash?: string, subscribeMultisig?: boolean): Observable<string> {
+    unconfirmedRemoved(
+        unresolvedAddress: Address | NamespaceId,
+        transactionHash?: string,
+        subscribeMultisig?: boolean,
+    ): Observable<string> {
         return new Observable();
     }
-
 }

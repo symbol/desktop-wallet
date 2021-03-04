@@ -1,22 +1,6 @@
-import {
-    MerkleStateInfo,
-    MosaicId, MosaicInfo,
-    MosaicRepository, MosaicSearchCriteria,
-    NetworkConfiguration,
-    NetworkName,
-    NetworkRepository,
-    NetworkType, NodeHealth, NodeInfo, NodeRepository, NodeTime, Page, PaginationStreamer,
-    RentalFees, ServerInfo, StorageInfo, Transaction,
-    TransactionFees
-} from "symbol-sdk";
-import {Observable, of} from "rxjs";
-import {
-    OfflineNetworkProperties,
-    OfflineNodeInfo,
-    OfflineStorageInfo,
-    OfflineTransactionFees
-} from "@/services/offline/MockModels";
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { MerkleStateInfo, MosaicId, MosaicInfo, MosaicRepository, MosaicSearchCriteria, Page, PaginationStreamer } from 'symbol-sdk';
+import { Observable, of } from 'rxjs';
 
 export class OfflineMosaicRepository implements MosaicRepository {
     getMosaic(mosaicId: MosaicId): Observable<MosaicInfo> {
@@ -38,5 +22,4 @@ export class OfflineMosaicRepository implements MosaicRepository {
     streamer(): PaginationStreamer<MosaicInfo, MosaicSearchCriteria> {
         throw new Error(`OfflineMosaicRepository: streamer not implemented`);
     }
-
 }

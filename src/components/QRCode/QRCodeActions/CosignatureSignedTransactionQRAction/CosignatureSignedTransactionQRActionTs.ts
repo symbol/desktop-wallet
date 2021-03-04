@@ -15,14 +15,7 @@
  */
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { CosignatureSignedTransactionQR } from 'symbol-qr-library';
-import {
-    NetworkType,
-    TransferTransaction,
-    Address,
-    SignedTransaction,
-    CosignatureSignedTransaction,
-    PublicAccount
-} from 'symbol-sdk';
+import { NetworkType, CosignatureSignedTransaction, PublicAccount } from 'symbol-sdk';
 
 import { QRCodeDetailItem } from '@/components/QRCode/QRCodeActions/TemplateQRAction/TemplateQRActionTs';
 // @ts-ignore
@@ -31,8 +24,8 @@ import TemplateQRAction from '@/components/QRCode/QRCodeActions/TemplateQRAction
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue';
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
-import {TransactionCommand} from "@/services/TransactionCommand";
-import {TransactionAnnouncerService} from "@/services/TransactionAnnouncerService";
+import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerService';
+
 @Component({
     components: { TemplateQRAction, MosaicAmountDisplay, MaxFeeSelector },
 })
@@ -62,7 +55,13 @@ export default class CosignatureSignedTransactionQRActionTs extends Vue {
         );
         items.push(new QRCodeDetailItem(this.$t('qrcode_detail_item_network_type').toString(), NetworkType[this.qrCode.networkType], true));
         this.tran = (this.qrCode.singedTransaction as unknown) as CosignatureSignedTransaction;
-        items.push(new QRCodeDetailItem(this.$t('from').toString(), PublicAccount.createFromPublicKey(this.tran.signerPublicKey, this.qrCode.networkType).address.plain(), true));
+        items.push(
+            new QRCodeDetailItem(
+                this.$t('from').toString(),
+                PublicAccount.createFromPublicKey(this.tran.signerPublicKey, this.qrCode.networkType).address.plain(),
+                true,
+            ),
+        );
         items.push(new QRCodeDetailItem(this.$t('hash').toString(), this.tran.parentHash, true));
         return items;
     }

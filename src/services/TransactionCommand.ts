@@ -66,7 +66,7 @@ export class TransactionCommand {
         return this.resolveTransactions(account).pipe(
             flatMap((transactions) => {
                 return of(transactions.map((t) => account.signTransaction(t, this.generationHash)));
-            })
+            }),
         );
     }
 

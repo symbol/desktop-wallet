@@ -1,6 +1,11 @@
 <template>
     <div>
-        <TemplateQRAction :qr-code="qrCode" :detail-items="detailItems" action-desc="transaction_qr_signed_action_desc" :on-submit="onSubmit">
+        <TemplateQRAction
+            :qr-code="qrCode"
+            :detail-items="detailItems"
+            action-desc="transaction_qr_signed_action_desc"
+            :on-submit="onSubmit"
+        >
             <template v-slot:detailItem="slotProps">
                 <div class="qrcode-details-row-inner">
                     <div class="qrcode-details-row-label">{{ slotProps.item.label }}:</div>

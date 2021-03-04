@@ -859,14 +859,18 @@ export class ModalTransactionConfirmationTs extends Vue {
             AccountType.KEYSTORE === this.currentAccount.type
         ) {
             if (this.isOfflineMode) {
-                const signedTransactions = await this.command.sign(new TransactionAnnouncerService(this.$store), transactionSigner).toPromise();
+                const signedTransactions = await this.command
+                    .sign(new TransactionAnnouncerService(this.$store), transactionSigner)
+                    .toPromise();
                 signedTransactions.forEach((signedTransactionObs) => {
-                    signedTransactionObs.subscribe(signedTransaction => {
+                    signedTransactionObs.subscribe((signedTransaction) => {
                         this.$emit('transaction-signed', signedTransaction);
-                    })
-                })
+                    });
+                });
             } else {
-                const announcements = await this.command.announce(new TransactionAnnouncerService(this.$store), transactionSigner).toPromise();
+                const announcements = await this.command
+                    .announce(new TransactionAnnouncerService(this.$store), transactionSigner)
+                    .toPromise();
                 announcements.forEach((announcement) => {
                     announcement.subscribe((res) => {
                         if (!res.success) {

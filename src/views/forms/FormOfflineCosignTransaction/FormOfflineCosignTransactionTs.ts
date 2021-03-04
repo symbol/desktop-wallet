@@ -13,43 +13,18 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {
-    Address,
-    EncryptedMessage,
-    Message,
-    Mosaic,
-    MosaicId,
-    NamespaceId,
-    PlainMessage,
-    RawUInt64,
-    Transaction,
-    TransferTransaction,
-    UInt64,
-    Account,
-    PublicAccount, NetworkType, Password, SignedTransaction, CosignatureTransaction, AggregateTransaction,
-} from 'symbol-sdk';
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Address, Account, NetworkType, CosignatureTransaction, AggregateTransaction } from 'symbol-sdk';
+import { Component, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
-import {AccountModel, AccountType} from '@/core/database/entities/AccountModel';
-import { Formatters } from '@/core/utils/Formatters';
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
-import { AddressValidator, AliasValidator } from '@/core/validation/validators';
-import { ITransactionEntry } from '@/views/pages/dashboard/invoice/DashboardInvoicePageTs';
 // child components
-import {ValidationObserver, ValidationProvider} from 'vee-validate';
-// @ts-ignore
-import AmountInput from '@/components/AmountInput/AmountInput.vue';
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 // @ts-ignore
 import MessageInput from '@/components/MessageInput/MessageInput.vue';
-// @ts-ignore
-import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
-// @ts-ignore
-import MosaicAttachmentInput from '@/components/MosaicAttachmentInput/MosaicAttachmentInput.vue';
-// @ts-ignore
-import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue';
 // @ts-ignore
 import RecipientInput from '@/components/RecipientInput/RecipientInput.vue';
 // @ts-ignore
@@ -57,60 +32,29 @@ import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
 // @ts-ignore
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
 // @ts-ignore
-import ModalTransactionUriImport from '@/views/modals/ModalTransactionUriImport/ModalTransactionUriImport.vue';
-// @ts-ignore
-import TransactionUriDisplay from '@/components/TransactionUri/TransactionUriDisplay/TransactionUriDisplay.vue';
-// @ts-ignore
-import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/ProtectedPrivateKeyDisplay.vue';
-// @ts-ignore
-import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
-
-// @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
-import { MosaicModel } from '@/core/database/entities/MosaicModel';
-import { FilterHelpers } from '@/core/utils/FilterHelpers';
-import { TransactionCommand } from '@/services/TransactionCommand';
-import { appConfig } from '@/config';
 // @ts-ignore
-import ErrorTooltip from "@/components/ErrorTooltip/ErrorTooltip.vue";
+import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
-import LanguageSelector from "@/components/LanguageSelector/LanguageSelector.vue";
-import {ProfileModel} from "@/core/database/entities/ProfileModel";
-import {ProfileService} from "@/services/ProfileService";
-import {AccountService} from "@/services/AccountService";
-import {ValidationRuleset} from "@/core/validation/ValidationRuleset";
-import {NetworkTypeHelper} from "@/core/utils/NetworkTypeHelper";
-import {NotificationType} from "@/core/utils/NotificationType";
-import {Signer} from "@/store/Account";
-import {MultisigService} from "@/services/MultisigService";
-import {$eventBus} from "@/events";
-import {SettingsModel} from "@/core/database/entities/SettingsModel";
-import {SettingService} from "@/services/SettingService";
+import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { ProfileService } from '@/services/ProfileService';
+import { AccountService } from '@/services/AccountService';
+import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
+import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
+import { SettingsModel } from '@/core/database/entities/SettingsModel';
+import { SettingService } from '@/services/SettingService';
 // @ts-ignore
-import FormTransferTransaction from "@/views/forms/FormTransferTransaction/FormTransferTransaction.vue";
+import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue';
 // @ts-ignore
-import HardwareConfirmationButton from "@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue";
+import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue';
 // @ts-ignore
-import FormProfileUnlock from "@/views/forms/FormProfileUnlock/FormProfileUnlock.vue";
+import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue';
 
-import {
-    AccountTransactionSigner,
-    TransactionAnnouncerService,
-    TransactionSigner
-} from "@/services/TransactionAnnouncerService";
-import {LedgerService} from "@/services/LedgerService";
+import { AccountTransactionSigner, TransactionSigner } from '@/services/TransactionAnnouncerService';
+import { LedgerService } from '@/services/LedgerService';
 // @ts-ignore
-import AccountSignerSelector from "@/components/AccountSignerSelector/AccountSignerSelector.vue";
-
-const { DECIMAL_SEPARATOR } = appConfig.constants;
-
-export interface MosaicAttachment {
-    mosaicHex: string;
-    amount: string; // Relative amount
-    id?: MosaicId;
-    name?: string;
-    uid?: number;
-}
+import AccountSignerSelector from '@/components/AccountSignerSelector/AccountSignerSelector.vue';
 
 @Component({
     components: {
@@ -223,13 +167,15 @@ export class FormOfflineCosignTransactionTs extends FormTransactionBase {
         this.loaded = false;
         const currentProfileName = this.formItems.currentProfileName;
         const profile = this.profileService.getProfileByName(currentProfileName);
-        if (!profile) return;
+        if (!profile) {
+            return;
+        }
 
         const settingService = new SettingService();
 
         const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.networkType);
 
-        let knownAccounts: AccountModel[] = this.accountService.getKnownAccounts(profile.accounts);
+        const knownAccounts: AccountModel[] = this.accountService.getKnownAccounts(profile.accounts);
 
         if (knownAccounts.length == 0) {
             throw new Error('knownAccounts is empty');
@@ -252,7 +198,7 @@ export class FormOfflineCosignTransactionTs extends FormTransactionBase {
         await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', defaultAccount);
         this.$store.dispatch('diagnostic/ADD_DEBUG', 'Profile login successful with currentProfileName: ' + currentProfileName);
         await this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES');
-        const signers = knownAccounts.map(account => ({
+        const signers = knownAccounts.map((account) => ({
             address: Address.createFromRawAddress(account.address),
             label: account.name,
             multisig: account.isMultisig,
@@ -303,7 +249,6 @@ export class FormOfflineCosignTransactionTs extends FormTransactionBase {
                     throw { errorCode: 'ledger_not_supported_app' };
                 }
                 const currentPath = this.currentAccount.path;
-                const addr = this.currentAccount.address;
                 const networkType = this.currentProfile.networkType;
                 const accountService = new AccountService();
                 this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
@@ -371,5 +316,7 @@ export class FormOfflineCosignTransactionTs extends FormTransactionBase {
         this.$store.dispatch('notification/ADD_ERROR', this.$t('sign_transaction_failed', { reason: error.message || error }));
     }
 
-    protected resetForm() {}
+    protected resetForm() {
+        return;
+    }
 }

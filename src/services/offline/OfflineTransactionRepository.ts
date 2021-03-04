@@ -1,18 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     CosignatureSignedTransaction,
-    NetworkConfiguration,
-    NetworkName,
-    NetworkRepository,
-    NetworkType, NodeHealth, NodeInfo, NodeRepository, NodeTime, Page, PaginationStreamer,
-    RentalFees, ServerInfo, SignedTransaction, StorageInfo, Transaction, TransactionAnnounceResponse,
-    TransactionFees, TransactionGroup, TransactionRepository, TransactionSearchCriteria
-} from "symbol-sdk";
-import {Observable, of} from "rxjs";
-import {OfflineNetworkProperties, OfflineNodeInfo, OfflineTransactionFees} from "@/services/offline/MockModels";
-
+    Page,
+    PaginationStreamer,
+    SignedTransaction,
+    Transaction,
+    TransactionAnnounceResponse,
+    TransactionGroup,
+    TransactionRepository,
+    TransactionSearchCriteria,
+} from 'symbol-sdk';
+import { Observable, of } from 'rxjs';
 
 export class OfflineTransactionRepository implements TransactionRepository {
-
     announce(signedTransaction: SignedTransaction): Observable<TransactionAnnounceResponse> {
         throw new Error(`OfflineNetworkRepository: announce not implemented`);
     }
@@ -21,7 +21,9 @@ export class OfflineTransactionRepository implements TransactionRepository {
         throw new Error(`OfflineNetworkRepository: announceAggregateBonded not implemented`);
     }
 
-    announceAggregateBondedCosignature(cosignatureSignedTransaction: CosignatureSignedTransaction): Observable<TransactionAnnounceResponse> {
+    announceAggregateBondedCosignature(
+        cosignatureSignedTransaction: CosignatureSignedTransaction,
+    ): Observable<TransactionAnnounceResponse> {
         throw new Error(`OfflineNetworkRepository: announceAggregateBondedCosignature not implemented`);
     }
 
@@ -44,5 +46,4 @@ export class OfflineTransactionRepository implements TransactionRepository {
     streamer(): PaginationStreamer<Transaction, TransactionSearchCriteria> {
         throw new Error(`OfflineNetworkRepository: streamer not implemented`);
     }
-
 }

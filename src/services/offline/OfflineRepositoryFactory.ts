@@ -1,28 +1,20 @@
 import {
-    AccountHttp,
     AccountRepository,
     BlockHttp,
     BlockRepository,
-    ChainHttp,
     ChainRepository,
     FinalizationHttp,
     FinalizationRepository,
     HashLockHttp,
     HashLockRepository,
     IListener,
-    MetadataHttp,
     MetadataRepository,
-    MosaicHttp,
     MosaicRepository,
-    MultisigHttp,
     MultisigRepository,
-    NamespaceHttp,
     NamespaceRepository,
     NetworkCurrencies,
-    NetworkHttp,
     NetworkRepository,
     NetworkType,
-    NodeHttp,
     NodeRepository,
     ReceiptHttp,
     ReceiptRepository,
@@ -33,23 +25,22 @@ import {
     RestrictionMosaicRepository,
     SecretLockHttp,
     SecretLockRepository,
-    TransactionHttp,
     TransactionRepository,
     TransactionStatusHttp,
-    TransactionStatusRepository
-} from "symbol-sdk";
-import {Observable, of} from "rxjs";
-import {OfflineGenerationHash, OfflineUrl} from "@/services/offline/MockModels";
-import {OfflineNetworkRepository} from "@/services/offline/OfflineNetworkRepository";
-import {OfflineNodeRepository} from "@/services/offline/OfflineNodeRepository";
-import {OfflineChainRepository} from "@/services/offline/OfflineChainRepository";
-import {OfflineListener} from "@/services/offline/OfflineListener";
-import {OfflineTransactionRepository} from "@/services/offline/OfflineTransactionRepository";
-import {OfflineMetadataRepository} from "@/services/offline/OfflineMetadataRepository";
-import {OfflineAccountRepository} from "@/services/offline/OfflineAccountRepository";
-import {OfflineNamespaceRepository} from "@/services/offline/OfflineNamespaceRepository";
-import {OfflineMosaicRepository} from "@/services/offline/OfflineMosaicRepository";
-import {OfflineMultisigRepository} from "@/services/offline/OfflineMultisigRepository";
+    TransactionStatusRepository,
+} from 'symbol-sdk';
+import { Observable, of } from 'rxjs';
+import { OfflineGenerationHash, OfflineUrl } from '@/services/offline/MockModels';
+import { OfflineNetworkRepository } from '@/services/offline/OfflineNetworkRepository';
+import { OfflineNodeRepository } from '@/services/offline/OfflineNodeRepository';
+import { OfflineChainRepository } from '@/services/offline/OfflineChainRepository';
+import { OfflineListener } from '@/services/offline/OfflineListener';
+import { OfflineTransactionRepository } from '@/services/offline/OfflineTransactionRepository';
+import { OfflineMetadataRepository } from '@/services/offline/OfflineMetadataRepository';
+import { OfflineAccountRepository } from '@/services/offline/OfflineAccountRepository';
+import { OfflineNamespaceRepository } from '@/services/offline/OfflineNamespaceRepository';
+import { OfflineMosaicRepository } from '@/services/offline/OfflineMosaicRepository';
+import { OfflineMultisigRepository } from '@/services/offline/OfflineMultisigRepository';
 
 export class OfflineRepositoryFactory implements RepositoryFactory {
     constructor(private readonly networkType: NetworkType) {}
@@ -155,5 +146,4 @@ export class OfflineRepositoryFactory implements RepositoryFactory {
         console.log(`Requesting offline node public key and it's not implemented`);
         return undefined;
     }
-
 }

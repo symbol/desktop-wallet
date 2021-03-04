@@ -30,7 +30,11 @@
                         {{ $t('import_payload_text') }}
                     </div>
                     <div class="payload-input">
-                        <textarea v-model="importedPayload" :placeholder="$t('form_label_import_placeholder')" @change="calculateAggregateTransaction" />
+                        <textarea
+                            v-model="importedPayload"
+                            :placeholder="$t('form_label_import_placeholder')"
+                            @change="calculateAggregateTransaction"
+                        />
                         <button
                             type="button"
                             class="centered-button button-style submit-button inverted-button fat-button"

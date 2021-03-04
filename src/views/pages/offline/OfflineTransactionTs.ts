@@ -15,19 +15,19 @@
  */
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {mapGetters} from "vuex";
+import { mapGetters } from 'vuex';
 
 // @ts-ignore
-import FormOfflineTransferTransaction from "@/views/forms/FormOfflineTransferTransaction/FormOfflineTransferTransaction.vue";
+import FormOfflineTransferTransaction from '@/views/forms/FormOfflineTransferTransaction/FormOfflineTransferTransaction.vue';
 // @ts-ignore
-import QRCodeDisplay from "@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue";
+import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue';
 // @ts-ignore
-import NavigationTabs from "@/components/NavigationTabs/NavigationTabs.vue";
+import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue';
 
-import {Account, Address, NetworkType, SignedTransaction} from "symbol-sdk";
-import {QRCode, SignedTransactionQR} from "symbol-qr-library";
-import {TabEntry} from "@/router/TabEntry";
-import {officialIcons} from "@/views/resources/Images";
+import { NetworkType, SignedTransaction } from 'symbol-sdk';
+import { SignedTransactionQR } from 'symbol-qr-library';
+import { TabEntry } from '@/router/TabEntry';
+import { officialIcons } from '@/views/resources/Images';
 
 @Component({
     components: {
@@ -43,7 +43,6 @@ import {officialIcons} from "@/views/resources/Images";
     },
 })
 export default class OfflineTransactionTs extends Vue {
-
     public networkType: NetworkType;
 
     public generationHash: string;
@@ -69,7 +68,7 @@ export default class OfflineTransactionTs extends Vue {
 
     public async onLoginClick() {
         await this.$store.dispatch('profile/LOG_OUT');
-        this.$router.push('/login')
+        this.$router.push('/login');
     }
 
     public parentRouteName = 'offlineTransaction';

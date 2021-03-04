@@ -32,7 +32,15 @@ import SignedTransactionQRAction from '@/components/QRCode/QRCodeActions/SignedT
 import CosignatureSignedTransactionQRAction from '@/components/QRCode/QRCodeActions/CosignatureSignedTransactionQRAction/CosignatureSignedTransactionQRAction.vue';
 
 @Component({
-    components: { QRCodeDisplay, ContactQRAction, MnemonicQRAction, TransactionQRAction, CosignatureQRAction, SignedTransactionQRAction, CosignatureSignedTransactionQRAction },
+    components: {
+        QRCodeDisplay,
+        ContactQRAction,
+        MnemonicQRAction,
+        TransactionQRAction,
+        CosignatureQRAction,
+        SignedTransactionQRAction,
+        CosignatureSignedTransactionQRAction,
+    },
 })
 export default class QRCodeActionsTs extends Vue {
     @Prop({ default: null }) readonly qrCode: QRCode;

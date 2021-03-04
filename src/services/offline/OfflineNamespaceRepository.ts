@@ -1,29 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     AccountNames,
     Address,
-    MerkleStateInfo, MosaicId, MosaicNames,
+    MerkleStateInfo,
+    MosaicId,
+    MosaicNames,
     NamespaceId,
-    NamespaceInfo, NamespaceName,
-    NamespaceRepository, NamespaceSearchCriteria,
-    NetworkConfiguration,
-    NetworkName,
-    NetworkRepository,
-    NetworkType, NodeHealth, NodeInfo, NodeRepository, NodeTime, Page, PaginationStreamer,
-    RentalFees, ServerInfo, StorageInfo, Transaction,
-    TransactionFees
-} from "symbol-sdk";
-import {Observable, of} from "rxjs";
-import {
-    OfflineAccountNames, OfflineNamespaceNames,
-    OfflineNetworkProperties,
-    OfflineNodeInfo,
-    OfflineStorageInfo,
-    OfflineTransactionFees
-} from "@/services/offline/MockModels";
-
+    NamespaceInfo,
+    NamespaceName,
+    NamespaceRepository,
+    NamespaceSearchCriteria,
+    Page,
+    PaginationStreamer,
+} from 'symbol-sdk';
+import { Observable, of } from 'rxjs';
+import { OfflineAccountNames, OfflineNamespaceNames } from '@/services/offline/MockModels';
 
 export class OfflineNamespaceRepository implements NamespaceRepository {
-
     getAccountsNames(accountIds: Address[]): Observable<AccountNames[]> {
         return of(accountIds.map(OfflineAccountNames));
     }
@@ -63,5 +56,4 @@ export class OfflineNamespaceRepository implements NamespaceRepository {
     streamer(): PaginationStreamer<NamespaceInfo, NamespaceSearchCriteria> {
         throw new Error(`OfflineNamespaceRepository: streamer not implemented`);
     }
-
 }

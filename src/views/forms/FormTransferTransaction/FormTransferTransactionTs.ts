@@ -26,7 +26,8 @@ import {
     TransferTransaction,
     UInt64,
     Account,
-    PublicAccount, SignedTransaction,
+    PublicAccount,
+    SignedTransaction,
 } from 'symbol-sdk';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
@@ -66,7 +67,7 @@ import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 // @ts-ignore
-import AccountSignerSelector from "@/components/AccountSignerSelector/AccountSignerSelector.vue";
+import AccountSignerSelector from '@/components/AccountSignerSelector/AccountSignerSelector.vue';
 
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';

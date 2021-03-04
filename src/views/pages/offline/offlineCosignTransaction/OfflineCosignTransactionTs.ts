@@ -15,28 +15,20 @@
  */
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {mapGetters} from "vuex";
+import { mapGetters } from 'vuex';
 
 // @ts-ignore
-import FormOfflineTransferTransaction from "@/views/forms/FormOfflineTransferTransaction/FormOfflineTransferTransaction.vue";
+import FormOfflineTransferTransaction from '@/views/forms/FormOfflineTransferTransaction/FormOfflineTransferTransaction.vue';
 // @ts-ignore
-import QRCodeDisplay from "@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue";
+import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue';
 // @ts-ignore
-import ModalImportQR from "@/views/modals/ModalImportQR/ModalImportQR.vue";
+import ModalImportQR from '@/views/modals/ModalImportQR/ModalImportQR.vue';
 // @ts-ignore
-import FormOfflineCosignTransaction from "@/views/forms/FormOfflineCosignTransaction/FormOfflineCosignTransaction.vue";
+import FormOfflineCosignTransaction from '@/views/forms/FormOfflineCosignTransaction/FormOfflineCosignTransaction.vue';
 
-import {
-    Account,
-    Address,
-    AggregateTransaction, Convert, CosignatureSignedTransaction,
-    CosignatureTransaction,
-    NetworkType,
-    SignedTransaction, Transaction, TransactionMapping
-} from "symbol-sdk";
+import { AggregateTransaction, Convert, CosignatureSignedTransaction, NetworkType, Transaction, TransactionMapping } from 'symbol-sdk';
 import { QRCode, CosignatureQR, CosignatureSignedTransactionQR } from 'symbol-qr-library';
-import {OfflineGenerationHash} from "@/services/offline/MockModels";
-import {Watch} from "vue-property-decorator";
+import { OfflineGenerationHash } from '@/services/offline/MockModels';
 
 @Component({
     components: {
@@ -49,11 +41,10 @@ import {Watch} from "vue-property-decorator";
         ...mapGetters({
             networkType: 'network/networkType',
             generationHash: 'network/generationHash',
-        })
+        }),
     },
 })
 export default class OfflineCosignTransactionTs extends Vue {
-
     public networkType: NetworkType;
 
     public generationHash: string;
@@ -91,15 +82,18 @@ export default class OfflineCosignTransactionTs extends Vue {
     public onQRCodeGenerated(json: string) {
         try {
             const obj = JSON.parse(json);
-            if (!obj.network_id) return;
-            else {
+            if (!obj.network_id) {
+                return;
+            } else {
                 this.$store.dispatch('network/CONNECT', { networkType: obj.network_id, isOffline: true });
             }
-        } catch (e) {}
+        } catch (e) {
+            return;
+        }
     }
 
     public onConfirmImport(qrCode: QRCode) {
-        this.importedQrCode = <CosignatureQR>qrCode;
+        this.importedQrCode = qrCode as CosignatureQR;
         this.calculateAggregateTransaction();
         this.step = 1;
     }
@@ -107,11 +101,10 @@ export default class OfflineCosignTransactionTs extends Vue {
     public calculateAggregateTransaction() {
         let transaction: AggregateTransaction;
         if (this.importedQrCode) {
-            transaction = <AggregateTransaction> this.importedQrCode.transaction;
-        }
-        else if (this.importedPayload) {
+            transaction = this.importedQrCode.transaction as AggregateTransaction;
+        } else if (this.importedPayload) {
             try {
-                transaction = <AggregateTransaction> TransactionMapping.createFromPayload(this.importedPayload);
+                transaction = TransactionMapping.createFromPayload(this.importedPayload) as AggregateTransaction;
             } catch (e) {
                 this.validTx = false;
                 this.aggregateTransaction = undefined;
@@ -137,8 +130,9 @@ export default class OfflineCosignTransactionTs extends Vue {
     }
 
     public onImportPayloadClick() {
-        if (!this.aggregateTransaction) this.$store.dispatch('notification/ADD_ERROR', 'payload_not_valid');
-        else {
+        if (!this.aggregateTransaction) {
+            this.$store.dispatch('notification/ADD_ERROR', 'payload_not_valid');
+        } else {
             this.$store.dispatch('network/CONNECT', { networkType: this.aggregateTransaction.networkType, isOffline: true });
             this.step = 1;
         }

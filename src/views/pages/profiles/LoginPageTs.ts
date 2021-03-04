@@ -37,7 +37,7 @@ import { SettingService } from '@/services/SettingService';
 import { SettingsModel } from '@/core/database/entities/SettingsModel';
 import { AccountService } from '@/services/AccountService';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
-import {officialIcons} from "@/views/resources/Images";
+import { officialIcons } from '@/views/resources/Images';
 
 @Component({
     computed: {

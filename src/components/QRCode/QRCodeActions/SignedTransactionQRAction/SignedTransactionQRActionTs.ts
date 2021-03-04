@@ -15,7 +15,7 @@
  */
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { SignedTransactionQR } from 'symbol-qr-library';
-import {NetworkType, TransferTransaction, Address, SignedTransaction} from 'symbol-sdk';
+import { NetworkType, Address, SignedTransaction } from 'symbol-sdk';
 
 import { QRCodeDetailItem } from '@/components/QRCode/QRCodeActions/TemplateQRAction/TemplateQRActionTs';
 // @ts-ignore
@@ -24,8 +24,7 @@ import TemplateQRAction from '@/components/QRCode/QRCodeActions/TemplateQRAction
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue';
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
-import {TransactionCommand} from "@/services/TransactionCommand";
-import {TransactionAnnouncerService} from "@/services/TransactionAnnouncerService";
+import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerService';
 @Component({
     components: { TemplateQRAction, MosaicAmountDisplay, MaxFeeSelector },
 })

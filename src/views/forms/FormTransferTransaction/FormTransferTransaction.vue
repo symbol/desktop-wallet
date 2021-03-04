@@ -10,7 +10,12 @@
                     </div>
 
                     <!-- Transaction signer selector -->
-                    <SignerSelector v-if="!hideSigner && !isOfflineMode" v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
+                    <SignerSelector
+                        v-if="!hideSigner && !isOfflineMode"
+                        v-model="formItems.signerAddress"
+                        :signers="signers"
+                        @input="onChangeSigner"
+                    />
                     <AccountSignerSelector v-if="!hideSigner && isOfflineMode" />
 
                     <!-- Transfer recipient input field -->
@@ -32,7 +37,7 @@
                     </div>
 
                     <!-- Add mosaic button -->
-                    <div class="form-row align-right action-link" v-if="mosaicInputsManager.hasFreeSlots()" style="margin-top: -0.1rem;">
+                    <div v-if="mosaicInputsManager.hasFreeSlots()" class="form-row align-right action-link" style="margin-top: -0.1rem;">
                         <a
                             v-if="mosaicInputsManager.hasFreeSlots()"
                             style="color: #44004e; margin-right: 0.1rem; font-size: 0.14rem;"

@@ -15,15 +15,15 @@
  */
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {mapGetters} from "vuex";
+import { mapGetters } from 'vuex';
 
 // @ts-ignore
-import FormOfflineTransferTransaction from "@/views/forms/FormOfflineTransferTransaction/FormOfflineTransferTransaction.vue";
+import FormOfflineTransferTransaction from '@/views/forms/FormOfflineTransferTransaction/FormOfflineTransferTransaction.vue';
 // @ts-ignore
-import QRCodeDisplay from "@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue";
+import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue';
 
-import {NetworkType, SignedTransaction} from "symbol-sdk";
-import {SignedTransactionQR} from "symbol-qr-library";
+import { NetworkType, SignedTransaction } from 'symbol-sdk';
+import { SignedTransactionQR } from 'symbol-qr-library';
 
 @Component({
     components: {
@@ -38,7 +38,6 @@ import {SignedTransactionQR} from "symbol-qr-library";
     },
 })
 export default class OfflineTransferTransactionTs extends Vue {
-
     public networkType: NetworkType;
 
     public generationHash: string;

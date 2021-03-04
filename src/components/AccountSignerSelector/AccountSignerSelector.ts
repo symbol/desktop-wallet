@@ -17,9 +17,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 // child components
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
-import {AccountModel} from "@/core/database/entities/AccountModel";
-import {mapGetters} from "vuex";
-import {AccountService} from "@/services/AccountService";
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { mapGetters } from 'vuex';
+import { AccountService } from '@/services/AccountService';
 
 @Component({
     components: { FormRow },
@@ -47,7 +47,6 @@ export class AccountSignerSelectorTs extends Vue {
         default: false,
     })
     disabled: boolean;
-
 
     /**
      * Currently active account
@@ -80,13 +79,6 @@ export class AccountSignerSelectorTs extends Vue {
         if (!this.currentAccount || account.id !== this.currentAccount.id) {
             await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account);
         }
-    }
-
-    /**
-     * Change account
-     */
-    set chosenAccount(id: string) {
-        this.onChangeCurrentAccount(id).then();
     }
 
     /// end-region computed properties getter/setter

@@ -1,19 +1,6 @@
-import {
-    NetworkConfiguration,
-    NetworkName,
-    NetworkRepository,
-    NetworkType, NodeHealth, NodeInfo, NodeRepository, NodeTime,
-    RentalFees, ServerInfo, StorageInfo,
-    TransactionFees
-} from "symbol-sdk";
-import {Observable, of} from "rxjs";
-import {
-    OfflineNetworkProperties,
-    OfflineNodeInfo,
-    OfflineStorageInfo,
-    OfflineTransactionFees
-} from "@/services/offline/MockModels";
-
+import { NetworkType, NodeHealth, NodeInfo, NodeRepository, NodeTime, ServerInfo, StorageInfo } from 'symbol-sdk';
+import { Observable, of } from 'rxjs';
+import { OfflineNodeInfo, OfflineStorageInfo } from '@/services/offline/MockModels';
 
 export class OfflineNodeRepository implements NodeRepository {
     constructor(private readonly networkType: NetworkType) {}
@@ -45,5 +32,4 @@ export class OfflineNodeRepository implements NodeRepository {
     getUnlockedAccount(): Observable<string[]> {
         throw new Error(`OfflineNodeRepository: getUnlockedAccount not implemented`);
     }
-
 }

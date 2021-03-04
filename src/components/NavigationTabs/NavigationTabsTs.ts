@@ -37,7 +37,9 @@ export class NavigationTabsTs extends Vue {
     @Prop() customTabEntries: TabEntry[];
 
     public get tabEntries(): TabEntry[] {
-        if (this.customTabEntries && this.customTabEntries.length > 0) return this.customTabEntries;
+        if (this.customTabEntries && this.customTabEntries.length > 0) {
+            return this.customTabEntries;
+        }
 
         // @ts-ignore
         const getTabEntries = this.$router.getTabEntries(this.parentRouteName);

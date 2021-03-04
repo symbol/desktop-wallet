@@ -508,9 +508,9 @@ export const routes: AppRoute[] = [
                         // @ts-ignore
                         component: () => import('@/views/pages/offline/offlineCosignTransaction/OfflineCosignTransaction.vue'),
                     },
-                ]
+                ],
             },
-        ]
+        ],
     },
     {
         path: '/privacy',

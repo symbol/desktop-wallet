@@ -1,26 +1,9 @@
-import {
-    Address, MerkleStateInfo,
-    MultisigAccountGraphInfo, MultisigAccountInfo,
-    MultisigRepository,
-    NetworkConfiguration,
-    NetworkName,
-    NetworkRepository,
-    NetworkType, NodeHealth, NodeInfo, NodeRepository, NodeTime,
-    RentalFees, ServerInfo, StorageInfo,
-    TransactionFees
-} from "symbol-sdk";
-import {Observable, of} from "rxjs";
-import {
-    OfflineMultisigAccountGraphInfo,
-    OfflineNetworkProperties,
-    OfflineNodeInfo,
-    OfflineStorageInfo,
-    OfflineTransactionFees
-} from "@/services/offline/MockModels";
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Address, MerkleStateInfo, MultisigAccountGraphInfo, MultisigAccountInfo, MultisigRepository } from 'symbol-sdk';
+import { Observable, of } from 'rxjs';
+import { OfflineMultisigAccountGraphInfo } from '@/services/offline/MockModels';
 
 export class OfflineMultisigRepository implements MultisigRepository {
-
     getMultisigAccountGraphInfo(address: Address): Observable<MultisigAccountGraphInfo> {
         return of(OfflineMultisigAccountGraphInfo);
     }
@@ -32,5 +15,4 @@ export class OfflineMultisigRepository implements MultisigRepository {
     getMultisigAccountInfoMerkle(address: Address): Observable<MerkleStateInfo> {
         throw new Error(`OfflineMultisigRepository: getMultisigAccountInfoMerkle not implemented`);
     }
-
 }

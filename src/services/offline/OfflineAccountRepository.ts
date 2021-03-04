@@ -1,24 +1,9 @@
-import {
-    AccountInfo,
-    AccountRepository, AccountSearchCriteria, Address, MerkleStateInfo,
-    NetworkConfiguration,
-    NetworkName,
-    NetworkRepository,
-    NetworkType, NodeHealth, NodeInfo, NodeRepository, NodeTime, Page, PaginationStreamer,
-    RentalFees, ServerInfo, StorageInfo,
-    TransactionFees
-} from "symbol-sdk";
-import {Observable, of} from "rxjs";
-import {
-    OfflineAccountInfo,
-    OfflineNetworkProperties,
-    OfflineNodeInfo,
-    OfflineTransactionFees
-} from "@/services/offline/MockModels";
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { AccountInfo, AccountRepository, AccountSearchCriteria, Address, MerkleStateInfo, Page, PaginationStreamer } from 'symbol-sdk';
+import { Observable, of } from 'rxjs';
+import { OfflineAccountInfo } from '@/services/offline/MockModels';
 
 export class OfflineAccountRepository implements AccountRepository {
-
     getAccountInfo(address: Address): Observable<AccountInfo> {
         return of(OfflineAccountInfo(address));
     }
@@ -38,5 +23,4 @@ export class OfflineAccountRepository implements AccountRepository {
     streamer(): PaginationStreamer<AccountInfo, AccountSearchCriteria> {
         throw new Error(`OfflineAccountRepository: streamer not implemented`);
     }
-
 }
