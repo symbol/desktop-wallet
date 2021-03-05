@@ -250,28 +250,6 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     }
 
     /**
-     * Modal title from modal type
-     * @type {string}
-     */
-    get modalTitle(): string {
-        let title: string = '';
-        switch (this.type) {
-            case MetadataType.Mosaic:
-                title = 'modal_title_mosaic_metadata';
-                break;
-
-            case MetadataType.Namespace:
-                title = 'modal_title_namespace_metadata';
-                break;
-
-            default:
-                title = 'modal_title_account_metadata';
-                break;
-        }
-        return title;
-    }
-
-    /**
      * Target account or public key label depends on MetadataType
      * @param {void}
      * @returns {string}
@@ -352,27 +330,46 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         );
     }
 
+    /**
+     * Get targeted mosaic or namespace name
+     */
+    public targetNameById(targetId: string): string {
+        if (!targetId) {
+            return '';
+        }
+
+        if (this.isMosaic()) {
+            const targetMosaic = this.ownedMosaics.find((mosaic) => mosaic.mosaicIdHex === targetId);
+            return targetMosaic?.name;
+        } else {
+            const targetNamespace = this.ownedNamespaces.find((namespace) => namespace.namespaceIdHex === targetId);
+            return targetNamespace?.name;
+        }
+    }
+
     set chosenValue(newValue: string) {
         this.chosenKeyValue = newValue;
         const currentItem = this.metadataList.find((item) => item.metadataId === this.chosenKeyValue);
-        this.formItems.signerAddress = currentItem.sourceAddress;
-        this.formItems.targetAccount = currentItem.targetAddress;
-        this.formItems.targetId = currentItem.targetId;
-        this.formItems.metadataValue = currentItem.value;
-        this.formItems.scopedKey = currentItem.scopedMetadataKey;
+        this.updateFormItems(currentItem);
     }
 
     get chosenValue(): string {
         return this.chosenKeyValue;
     }
 
+    private updateFormItems(selectedItem: MetadataModel) {
+        if (selectedItem) {
+            this.formItems.signerAddress = selectedItem.sourceAddress;
+            this.formItems.targetAccount = selectedItem.targetAddress;
+            this.formItems.targetId = this.targetNameById(selectedItem.targetId);
+            this.formItems.metadataValue = selectedItem.value;
+            this.formItems.scopedKey = selectedItem.scopedMetadataKey;
+        }
+    }
+
     mounted() {
-        if (this.editMode && this.value && this.type == MetadataType.Account) {
-            this.formItems.signerAddress = this.value.sourceAddress;
-            this.formItems.targetAccount = this.value.targetAddress;
-            this.formItems.targetId = this.value.targetId;
-            this.formItems.metadataValue = this.value.value;
-            this.formItems.scopedKey = this.value.scopedMetadataKey;
+        if (this.editMode && this.value) {
+            this.updateFormItems(this.value);
         }
     }
 }

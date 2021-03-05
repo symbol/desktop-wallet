@@ -2,7 +2,7 @@
     <FormRow>
         <template v-slot:label> {{ $t('fee') }}: </template>
         <template v-slot:inputs>
-            <div class="inputs-container" :class="{ 'row-75-25': !hideSubmit }">
+            <div :class="{ 'row-75-25': !hideSubmit }">
                 <MaxFeeSelector
                     v-model="maxFee"
                     :calculated-recommended-fee="calculatedRecommendedFee"

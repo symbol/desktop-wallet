@@ -131,7 +131,7 @@
             /deep/input {
                 width: 100%;
                 height: 0.37rem;
-                background: @white;
+                background: #f2f2f2;
                 border: none;
                 padding-left: 0.11rem;
                 font-size: @normalFont;
@@ -212,6 +212,13 @@
         width: 1rem;
         float: right;
         margin: 0.2rem;
+        display: flex;
+        align-items: center;
+
+        > img {
+            width: 24px;
+            height: 24px;
+        }
     }
 
     /deep/.ivu-select-selection {
@@ -316,9 +323,6 @@
 
     .select-account {
         position: relative;
-        /deep/input {
-            border: none;
-        }
     }
 
     .tips-in-sub-container {

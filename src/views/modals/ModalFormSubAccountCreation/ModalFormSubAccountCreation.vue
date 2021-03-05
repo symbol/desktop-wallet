@@ -84,7 +84,7 @@
             <ModalBackupReminder :visible="isModalBackupReminderShown" @close="closeBackupReminderModal" />
 
             <div slot="footer" class="modal-footer">
-                <FormProfileUnlock :focus="false" :is-loading="isCreatingAccount" @success="onAccountUnlocked" />
+                <FormProfileUnlock :focus="false" :is-loading="isCreatingAccount" :disabled="!isValidName" @success="onAccountUnlocked" />
             </div>
         </Modal>
     </div>

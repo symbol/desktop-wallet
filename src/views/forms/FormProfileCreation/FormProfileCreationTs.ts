@@ -230,9 +230,7 @@ export class FormProfileCreationTs extends Vue {
         } else {
             this.importDefaultLedgerAccount(this.formItems.networkType)
                 .then((res) => {
-                    this.ledgerAccountService.saveAccount(res);
-                    // - update app state
-                    this.$store.dispatch('profile/ADD_ACCOUNT', res);
+                    // execute store actions
                     this.$store.dispatch('account/SET_CURRENT_ACCOUNT', res);
                     this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', [res.id]);
                     this.$store.dispatch('temporary/RESET_STATE');
@@ -265,7 +263,6 @@ export class FormProfileCreationTs extends Vue {
         }
         const profileName = this.formItems.profileName;
         const accountService = new AccountService();
-        this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
         const accountResult = await accountService.getLedgerPublicKeyByPath(networkType, defaultPath, false);
         const publicKey = accountResult;
         const address = PublicAccount.createFromPublicKey(publicKey, networkType).address;

@@ -40,3 +40,21 @@
 /deep/.ivu-btn-primary {
     .inverted-button();
 }
+
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    #Confirmed {
+        /deep/ span {
+            margin-right: 0.03rem;
+        }
+
+        font-size: @bigFont;
+    }
+
+    .checkbox-container {
+        width: max-content;
+    }
+}

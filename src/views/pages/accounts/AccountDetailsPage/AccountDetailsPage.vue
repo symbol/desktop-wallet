@@ -63,14 +63,11 @@
                             :account="currentAccount"
                             :visible="currentAccount.isMultisig"
                         />
-                    </div>
-
-                    <div class="graph-row">
                         <div class="bottom-buttons-container">
                             <button
                                 v-if="isLedger"
                                 type="button"
-                                class="centered-button button-style button solid-button buttonA"
+                                class="centered-button button-style button solid-button buttonC"
                                 @click="showAddressLedger"
                             >
                                 {{ $t('show_on_ledger') }}
@@ -152,10 +149,10 @@ export default class AccountDetailsPage extends AccountDetailsPageTs {}
     margin: 0 0.5em;
 }
 
-.bottom-buttons-container .buttonA {
+.bottom-buttons-container .buttonC {
     margin-left: 0;
     margin-right: 1em;
-    grid-area: a;
+    grid-area: c;
 }
 
 .bottom-buttons-container .buttonD {

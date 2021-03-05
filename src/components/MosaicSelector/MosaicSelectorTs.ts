@@ -36,6 +36,7 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
             networkMosaic: 'mosaic/networkMosaic',
             networkMosaicName: 'mosaic/networkMosaicName',
             balanceMosaics: 'mosaic/balanceMosaics',
+            holdMosaics: 'mosaic/holdMosaics',
         }),
     },
 })
@@ -55,6 +56,11 @@ export class MosaicSelectorTs extends Vue {
      */
     @Prop({ default: null }) label: string;
 
+    /**
+     * Disable mosaic selector
+     */
+    @Prop({ default: false }) disabled: boolean;
+
     @Prop({ default: 'networkMosaic' }) defaultMosaic: 'networkMosaic' | 'firstInList';
     /**
      * Networks currency mosaic
@@ -71,6 +77,8 @@ export class MosaicSelectorTs extends Vue {
      */
 
     public balanceMosaics: MosaicModel[];
+    public holdMosaics: MosaicModel[];
+
     /// region computed properties getter/setter
 
     /**
@@ -79,6 +87,9 @@ export class MosaicSelectorTs extends Vue {
      * @protected
      */
     protected get displayedMosaics(): MosaicModel[] {
+        if (this.$route.fullPath === '/aggregate/supply') {
+            return this.mosaicHexIds.map((mosaicIdHex) => this.holdMosaics.find((m) => m.mosaicIdHex === mosaicIdHex)).filter((x) => x);
+        }
         return this.mosaicHexIds.map((mosaicIdHex) => this.balanceMosaics.find((m) => m.mosaicIdHex === mosaicIdHex)).filter((x) => x);
     }
 

@@ -54,9 +54,17 @@ export class AccountService {
         return account;
     }
 
-    public deleteAccount(account: AccountModel) {
+    public deleteAccount(account: AccountModel): void {
         const accounts = this.getAccountsById();
         delete accounts[account.id];
+        this.storage.set(accounts);
+    }
+
+    public deleteAccounts(profileName: string): void {
+        const accounts = this.getAccountsById();
+        Object.values(accounts)
+            .filter((account) => account.profileName === profileName)
+            .forEach((account) => delete accounts[account.id]);
         this.storage.set(accounts);
     }
 

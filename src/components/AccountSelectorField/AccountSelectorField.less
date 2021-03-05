@@ -41,9 +41,14 @@
     height: 0.15rem;
 }
 
+.min-width {
+    /deep/.ivu-select-dropdown {
+        min-width: 1.6rem !important;
+    }
+}
+
 /deep/.ivu-select-dropdown {
     background-color: @grayLightest !important;
-    min-width: 1.6rem !important;
     left: auto !important;
 
     .ivu-select-item-selected {
