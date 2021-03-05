@@ -226,6 +226,7 @@
     "edit_object": "Edit {objectName}",
     "edit_metadata": "Edit metadata",
     "encrypt_message": "Encrypt message",
+    "encrypted_message": "Encrypted message",
     "encrypted_message_empty_error": "Message payload cannot be empty for encrypted message",
     "end_finalization_epoch": "End Finalization Epoch",
     "endpoint": "Node",

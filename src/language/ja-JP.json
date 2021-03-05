@@ -226,6 +226,7 @@
     "edit_object": "{objectName} 編集",
     "edit_metadata": "メタデータを編集",
     "encrypt_message": "メッセージを暗号化",
+    "encrypted_message": "暗号化されたメッセージ",
     "encrypted_message_empty_error": "暗号化メッセージのペイロードを空にすることはできません",
     "end_finalization_epoch": "ファイナライズエポックの終了",
     "endpoint": "ノード",

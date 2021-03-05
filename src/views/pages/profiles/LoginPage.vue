@@ -4,6 +4,7 @@
             <ValidationObserver v-slot="{ handleSubmit }" slim>
                 <form onsubmit="event.preventDefault()">
                     <div class="switch-language-container">
+                        <img class="language_icon" :src="require('@/views/resources/img/login/language.svg')" alt="" />
                         <LanguageSelector />
                     </div>
                     <div class="welcome-box">
