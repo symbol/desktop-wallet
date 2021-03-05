@@ -377,7 +377,12 @@ export class ModalFormSubAccountCreationTs extends Vue {
             }
             const accountService = new AccountService();
             const nextPath = this.paths.getNextAccountPath(this.knownPaths);
-            const publicKey = await accountService.getLedgerPublicKeyByPath(this.currentProfile.networkType, nextPath, false);
+            const publicKey = await accountService.getLedgerPublicKeyByPath(
+                this.currentProfile.networkType,
+                nextPath,
+                false,
+                this.currentProfile.ledgerProfileType,
+            );
             const address = PublicAccount.createFromPublicKey(publicKey, this.currentProfile.networkType).address;
             return {
                 id: SimpleObjectStorage.generateIdentifier(),

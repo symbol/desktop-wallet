@@ -304,13 +304,19 @@ export class ModalTransactionCosignatureTs extends Vue {
                     throw { errorCode: 'ledger_not_supported_app' };
                 }
                 const currentPath = this.currentAccount.path;
+                const ledgerProfileType = this.currentProfile.ledgerProfileType;
                 const addr = this.currentAccount.address;
                 const networkType = this.currentProfile.networkType;
                 const accountService = new AccountService();
                 this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-                const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath, true);
+                const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath, true, ledgerProfileType);
                 if (signerPublicKey === this.currentAccount.publicKey.toLowerCase()) {
-                    const signature = await ledgerService.signCosignatureTransaction(currentPath, this.transaction, signerPublicKey);
+                    const signature = await ledgerService.signCosignatureTransaction(
+                        currentPath,
+                        this.transaction,
+                        signerPublicKey,
+                        ledgerProfileType,
+                    );
                     this.$store.dispatch(
                         'diagnostic/ADD_DEBUG',
                         `Co-signed transaction with account ${addr} and result: ${JSON.stringify({

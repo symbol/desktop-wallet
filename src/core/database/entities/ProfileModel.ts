@@ -15,6 +15,7 @@
  */
 
 import { NetworkType } from 'symbol-sdk';
+import { LedgerProfileType } from '@/core/utils/ProfileTypeHelper';
 
 /**
  * Stored POJO that holds profile information.
@@ -29,6 +30,7 @@ export class ProfileModel {
     public readonly generationHash: string;
     public readonly hint: string;
     public readonly networkType: NetworkType;
+    public readonly ledgerProfileType: LedgerProfileType;
     public readonly password: string;
     public readonly seed: string;
     public readonly accounts: string[];

@@ -62,6 +62,35 @@
                         </template>
                     </FormRow>
 
+                    <FormRow v-if="isLedger" vertical="true">
+                        <template v-slot:label> {{ $t('set_ledger_profile_type') }} </template>
+                        <template v-slot:inputs>
+                            <ValidationProvider
+                                v-slot="{ errors }"
+                                vid="selectedMosaic"
+                                :name="$t('ledger_profile_type')"
+                                :rules="'required'"
+                                tag="div"
+                                class="select-container"
+                            >
+                                <ErrorTooltip :errors="errors">
+                                    <div class="inputs-create-container select-container">
+                                        <Select
+                                            v-model="formItems.profileType"
+                                            :placeholder="$t('choose_ledger_profile')"
+                                            class="select-size select-style"
+                                            @on-change="onProfileTypeChange"
+                                        >
+                                            <Option v-for="(item, index) in ledgerProfileType" :key="index" :value="item.value">
+                                                {{ $t(item.label) }}
+                                            </Option>
+                                        </Select>
+                                    </div>
+                                </ErrorTooltip>
+                            </ValidationProvider>
+                        </template>
+                    </FormRow>
+
                     <!-- @TODO: Place hint(should contain at least 8 characters, 1 letter and 1 number) -->
                     <FormRow vertical="true">
                         <template v-slot:label> {{ $t('new_password_label') }} </template>

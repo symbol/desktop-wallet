@@ -34,6 +34,7 @@ import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorag
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountService } from '@/services/AccountService';
 import { LedgerService } from '@/services/LedgerService';
+import { ProfileTypeHelper, LedgerProfileType } from '@/core/utils/ProfileTypeHelper';
 import { networkConfig } from '@/config';
 /// end-region custom types
 
@@ -73,6 +74,7 @@ export class FormProfileCreationTs extends Vue {
     created() {
         this.profileService = new ProfileService();
         this.formItems.networkType = NetworkType.TEST_NET;
+        this.formItems.profileType = LedgerProfileType.NORMAL;
         const { isLedger } = this.$route.meta;
         this.isLedger = isLedger;
     }
@@ -112,6 +114,7 @@ export class FormProfileCreationTs extends Vue {
         passwordAgain: '',
         hint: '',
         networkType: this.$store.getters['network/networkType'],
+        profileType: this.$store.getters['profile/profileType'],
     };
 
     /**
@@ -119,6 +122,12 @@ export class FormProfileCreationTs extends Vue {
      * @var {NetworkNodeEntry[]}
      */
     public networkTypeList = NetworkTypeHelper.networkTypeList;
+
+    /**
+     * Ledger profile types
+     * @var {LedgerProfileType[]}
+     */
+    public ledgerProfileType = ProfileTypeHelper.profileTypeList;
 
     /**
      * Type the ValidationObserver refs
@@ -185,6 +194,10 @@ export class FormProfileCreationTs extends Vue {
         this.$store.dispatch('network/CONNECT', { networkType: newNetworkType });
     }
 
+    public onProfileTypeChange(newProfileType) {
+        this.$store.dispatch('profile/LEDGER_PROFILE', { profileType: newProfileType });
+    }
+
     /**
      * Submit action, validates form and creates account in storage
      * @return {void}
@@ -218,6 +231,7 @@ export class FormProfileCreationTs extends Vue {
             password: passwordHash,
             hint: this.formItems.hint,
             networkType: this.formItems.networkType,
+            ledgerProfileType: this.formItems.profileType,
             generationHash: genHash,
             termsAndConditionsApproved: false,
             selectedNodeUrlToConnect: '',
@@ -232,7 +246,7 @@ export class FormProfileCreationTs extends Vue {
             // flush and continue
             this.$router.push({ name: this.nextPage });
         } else {
-            this.importDefaultLedgerAccount(this.formItems.networkType)
+            this.importDefaultLedgerAccount(this.formItems.networkType, this.formItems.profileType)
                 .then((res) => {
                     // execute store actions
                     this.$store.dispatch('account/SET_CURRENT_ACCOUNT', res);
@@ -256,9 +270,11 @@ export class FormProfileCreationTs extends Vue {
 
     /**
      * Get a account instance of Ledger from default path
+     * @param {number} networkType
+     * @param {number} profileType
      * @return {AccountModel}
      */
-    private async importDefaultLedgerAccount(networkType: number): Promise<AccountModel> {
+    private async importDefaultLedgerAccount(networkType: number, profileType: number): Promise<AccountModel> {
         const defaultPath = AccountService.getAccountPathByNetworkType(networkType);
         const ledgerService = new LedgerService(networkType);
         const isAppSupported = await ledgerService.isAppSupported();
@@ -267,7 +283,7 @@ export class FormProfileCreationTs extends Vue {
         }
         const profileName = this.formItems.profileName;
         const accountService = new AccountService();
-        const accountResult = await accountService.getLedgerPublicKeyByPath(networkType, defaultPath, false);
+        const accountResult = await accountService.getLedgerPublicKeyByPath(networkType, defaultPath, false, profileType);
         const publicKey = accountResult;
         const address = PublicAccount.createFromPublicKey(publicKey, networkType).address;
 

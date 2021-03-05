@@ -187,8 +187,15 @@ export class AccountDetailsPageTs extends Vue {
                 throw { errorCode: 'ledger_not_supported_app' };
             }
             const currentPath = this.currentAccount.path;
+            const ledgerProfileType = this.currentProfile.ledgerProfileType;
             this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-            const currentAccount = await this.accountService.getLedgerAccountByPath(this.currentProfile, networkType, currentPath, true);
+            const currentAccount = await this.accountService.getLedgerAccountByPath(
+                this.currentProfile,
+                networkType,
+                currentPath,
+                true,
+                ledgerProfileType,
+            );
             const accountPublicKey = currentAccount.publicKey.toUpperCase();
             if (accountPublicKey === this.currentAccount.publicKey) {
                 this.$store.dispatch('notification/ADD_SUCCESS', 'ledger_correct_account');
