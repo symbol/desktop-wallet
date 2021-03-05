@@ -195,6 +195,7 @@ export default class AccountSelectionTs extends Vue {
 
             this.profileService.updateAccounts(this.currentProfile, accountIdentifiers);
 
+            this.$store.dispatch('temporary/RESET_STATE');
             // execute store actions
             return this.$router.push({ name: 'profiles.importProfile.finalize' });
         } catch (error) {
