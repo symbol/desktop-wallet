@@ -80,11 +80,15 @@ export default class ModalConfirmTs extends Vue {
 
     public confirm() {
         this.$emit('confirmed');
-        this.isCheckboxChecked = false;
+        this.closeModal();
     }
 
     public cancel() {
         this.$emit('cancelled');
+        this.closeModal();
+    }
+
+    private closeModal() {
         this.isCheckboxChecked = false;
         this.show = false;
     }
