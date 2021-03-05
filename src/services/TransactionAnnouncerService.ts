@@ -84,10 +84,7 @@ export class TransactionAnnouncerService {
             const service = this.createService();
             return service
                 .announce(signedTransaction, listener)
-                .pipe(
-                    this.timeout(this.timeoutMessage(signedTransaction.type)),
-                    catchError((e) => of(e as Error)),
-                )
+                .pipe(this.timeout(this.timeoutMessage(signedTransaction.type)))
                 .pipe(map((t) => this.createBroadcastResult(signedTransaction, t)));
         }
     }
