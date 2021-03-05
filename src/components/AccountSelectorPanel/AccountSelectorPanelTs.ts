@@ -19,7 +19,7 @@ import { MosaicId, NetworkType } from 'symbol-sdk';
 import { ValidationProvider } from 'vee-validate';
 // internal dependencies
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
-import {AccountModel, AccountType} from '@/core/database/entities/AccountModel';
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountService } from '@/services/AccountService';
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 // child components

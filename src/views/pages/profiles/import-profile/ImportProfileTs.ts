@@ -16,8 +16,8 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Formatters } from '@/core/utils/Formatters';
 import { mapGetters } from 'vuex';
-import {MnemonicPassPhrase, Network} from 'symbol-hd-wallets';
-import {AccountInfo, Address, MosaicId, NetworkType, RepositoryFactory} from 'symbol-sdk';
+import { MnemonicPassPhrase, Network } from 'symbol-hd-wallets';
+import { AccountInfo, Address, MosaicId, NetworkType, RepositoryFactory } from 'symbol-sdk';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 // @ts-ignore
@@ -164,25 +164,26 @@ export default class ImportProfileTs extends Vue {
      */
     @Watch('optInSelectedAccounts')
     private async initOptInAccounts() {
-        if (this.optInInitialized) return;
+        if (this.optInInitialized) {
+            return;
+        }
 
         // - generate addresses
         const possibleOptInAccounts = this.accountService.generateAccountsFromMnemonic(
             new MnemonicPassPhrase(this.currentMnemonic),
             this.currentProfile.networkType,
             10,
-            Network.BITCOIN
+            Network.BITCOIN,
         );
-        console.log(possibleOptInAccounts);
 
         // whitelist opt in accounts
         const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'MAINNET' : 'TESTNET';
         const whitelisted = process.env[`VUE_APP_${key}_WHITELIST`] ? process.env[`VUE_APP_${key}_WHITELIST`].split(',') : [];
-        const optInAccounts = possibleOptInAccounts.filter( account => whitelisted.indexOf(account.publicKey) >= 0);
-        console.log(optInAccounts);
-        if (optInAccounts.length === 0) return ;
-        this.optInAddressesList = optInAccounts.map( account => account.address);
-        console.log(this.optInAddressesList);
+        const optInAccounts = possibleOptInAccounts.filter((account) => whitelisted.indexOf(account.publicKey) >= 0);
+        if (optInAccounts.length === 0) {
+            return;
+        }
+        this.optInAddressesList = optInAccounts.map((account) => account.address);
 
         // fetch accounts info
         const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
@@ -191,7 +192,7 @@ export default class ImportProfileTs extends Vue {
         // map balances
         this.addressMosaicMap = {
             ...this.addressMosaicMap,
-            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic)
+            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic),
         };
 
         this.optInInitialized = true;

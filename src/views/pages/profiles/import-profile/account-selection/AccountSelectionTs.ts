@@ -16,7 +16,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { AccountInfo, Address, MosaicId, NetworkType, Password, RepositoryFactory, SimpleWallet } from 'symbol-sdk';
-import {MnemonicPassPhrase, Network} from 'symbol-hd-wallets';
+import { MnemonicPassPhrase, Network } from 'symbol-hd-wallets';
 // internal dependencies
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { DerivationPathLevels, DerivationService } from '@/services/DerivationService';
@@ -222,7 +222,7 @@ export default class AccountSelectionTs extends Vue {
         // map balances
         this.addressMosaicMap = {
             ...this.addressMosaicMap,
-            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic)
+            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic),
         };
     }
 
@@ -236,15 +236,17 @@ export default class AccountSelectionTs extends Vue {
             new MnemonicPassPhrase(this.currentMnemonic),
             this.currentProfile.networkType,
             10,
-            Network.BITCOIN
+            Network.BITCOIN,
         );
 
         // whitelist opt in accounts
         const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'MAINNET' : 'TESTNET';
         const whitelisted = process.env[`VUE_APP_${key}_WHITELIST`] ? process.env[`VUE_APP_${key}_WHITELIST`].split(',') : [];
-        const optInAccounts = possibleOptInAccounts.filter( account => whitelisted.indexOf(account.publicKey) >= 0);
-        if (optInAccounts.length === 0) return ;
-        this.optInAddressesList = optInAccounts.map( account => account.address);
+        const optInAccounts = possibleOptInAccounts.filter((account) => whitelisted.indexOf(account.publicKey) >= 0);
+        if (optInAccounts.length === 0) {
+            return;
+        }
+        this.optInAddressesList = optInAccounts.map((account) => account.address);
 
         // fetch accounts info
         const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
@@ -253,7 +255,7 @@ export default class AccountSelectionTs extends Vue {
         // map balances
         this.addressMosaicMap = {
             ...this.addressMosaicMap,
-            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic)
+            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic),
         };
     }
 
@@ -343,7 +345,7 @@ export default class AccountSelectionTs extends Vue {
             new MnemonicPassPhrase(this.currentMnemonic),
             this.currentProfile.networkType,
             paths,
-            Network.BITCOIN
+            Network.BITCOIN,
         );
 
         const simpleWallets = accounts.map((account, i) =>

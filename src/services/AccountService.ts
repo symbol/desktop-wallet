@@ -14,7 +14,7 @@
  *
  */
 import { Account, PublicAccount, Address, NetworkType, Password, SimpleWallet, Crypto } from 'symbol-sdk';
-import {ExtendedKey, MnemonicPassPhrase, Network, Wallet} from 'symbol-hd-wallets';
+import { ExtendedKey, MnemonicPassPhrase, Network, Wallet } from 'symbol-hd-wallets';
 // internal dependencies
 import { DerivationPathLevels, DerivationService } from './DerivationService';
 import { DerivationPathValidator } from '@/core/validation/validators';
@@ -128,7 +128,12 @@ export class AccountService {
      * @param curve
      * @return {Account[]}
      */
-    public generateAccountsFromMnemonic(mnemonic: MnemonicPassPhrase, networkType: NetworkType, count: number = 10, curve = Network.SYMBOL): Account[] {
+    public generateAccountsFromMnemonic(
+        mnemonic: MnemonicPassPhrase,
+        networkType: NetworkType,
+        count: number = 10,
+        curve = Network.SYMBOL,
+    ): Account[] {
         const derivationService = new DerivationService(networkType);
 
         // create hd extended key
@@ -156,7 +161,12 @@ export class AccountService {
      * @param curve
      * @returns {Account[]}
      */
-    public generateAccountsFromPaths(mnemonic: MnemonicPassPhrase, networkType: NetworkType, paths: string[], curve = Network.SYMBOL): Account[] {
+    public generateAccountsFromPaths(
+        mnemonic: MnemonicPassPhrase,
+        networkType: NetworkType,
+        paths: string[],
+        curve = Network.SYMBOL,
+    ): Account[] {
         // create hd extended key
         const xkey = this.getExtendedKeyFromMnemonic(mnemonic, curve);
         const wallets = paths.map((path) => new Wallet(xkey.derivePath(path)));
@@ -168,8 +178,13 @@ export class AccountService {
      * Get list of addresses using \a mnemonic
      * @return {Address[]}
      */
-    public getAddressesFromMnemonic(mnemonic: MnemonicPassPhrase, networkType: NetworkType, count: number = 10, curve = Network.SYMBOL): Address[] {
-        const accounts = this.generateAccountsFromMnemonic(mnemonic, networkType, count);
+    public getAddressesFromMnemonic(
+        mnemonic: MnemonicPassPhrase,
+        networkType: NetworkType,
+        count: number = 10,
+        curve = Network.SYMBOL,
+    ): Address[] {
+        const accounts = this.generateAccountsFromMnemonic(mnemonic, networkType, count, curve);
         return accounts.map((acct) => acct.address);
     }
 
