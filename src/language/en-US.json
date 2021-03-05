@@ -849,6 +849,7 @@
     "select_a_namespace": "Select a namespace",
     "select_a_profile": "Select a profile",
     "select_accounts": "Selected Accounts",
+    "select_opt_in_accounts": "Selected Opt In Accounts",
     "select_all": "Check all",
     "select_contact": "Select contact",
     "send": "Send",
@@ -1047,5 +1048,6 @@
     "nodes_unavailable_check_network_and": "Nodes({0}/{1}) are currently unavailable. Please check your network connection, settings and ",
     "copyright": "Copyright © 2021 NEM Software",
     "address_list_cannot_be_empty": "Please, select 1 or more accounts from the list.",
-    "launching_mainnet_soon": "Please note that this is an experimental node as the mainnet network has not been launched yet."
+    "launching_mainnet_soon": "Please note that this is an experimental node as the mainnet network has not been launched yet.",
+    "opt_in_account_notification": "This account is obtained by an older derivation. It is recommended that you move the funds to a Seed Account"
 }

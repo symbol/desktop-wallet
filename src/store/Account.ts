@@ -78,6 +78,7 @@ interface AccountState {
     currentRecipient: PublicAccount;
     currentAccountAliases: AccountNames[];
     selectedAddressesToInteract: number[];
+    selectedAddressesOptInToInteract: number[];
     currentSignerAccountModel: AccountModel;
     listener: IListener;
 }
@@ -103,6 +104,7 @@ const accountState: AccountState = {
     currentRecipient: null,
     multisigAccountGraph: null,
     selectedAddressesToInteract: [],
+    selectedAddressesOptInToInteract: [],
     currentSignerAccountModel: null,
     listener: undefined,
 };
@@ -141,6 +143,7 @@ export default {
         currentAccountAliases: (state: AccountState) => state.currentAccountAliases,
         multisigAccountGraph: (state: AccountState) => state.multisigAccountGraph,
         selectedAddressesToInteract: (state: AccountState) => state.selectedAddressesToInteract,
+        selectedAddressesOptInToInteract: (state: AccountState) => state.selectedAddressesOptInToInteract,
         currentSignerAccountModel: (state: AccountState) =>
             state.knownAccounts.find((a) => a.address === state.currentSignerAddress.plain()),
         listener: (state: AccountState) => state.listener,
@@ -223,11 +226,22 @@ export default {
             selectedAccounts.push(pathNumber);
             state.selectedAddressesToInteract = selectedAccounts;
         },
+        addToSelectedAddressesOptInToInteract: (state: AccountState, pathNumber: number) => {
+            const selectedAccounts = [...state.selectedAddressesOptInToInteract];
+            selectedAccounts.push(pathNumber);
+            state.selectedAddressesOptInToInteract = selectedAccounts;
+        },
         removeFromSelectedAddressesToInteract: (state: AccountState, pathNumber: number) => {
             const selectedAccounts = [...state.selectedAddressesToInteract];
             const indexToDelete = selectedAccounts.indexOf(pathNumber);
             selectedAccounts.splice(indexToDelete, 1);
             state.selectedAddressesToInteract = selectedAccounts;
+        },
+        removeFromSelectedAddressesOptInToInteract: (state: AccountState, pathNumber: number) => {
+            const selectedAccounts = [...state.selectedAddressesOptInToInteract];
+            const indexToDelete = selectedAccounts.indexOf(pathNumber);
+            selectedAccounts.splice(indexToDelete, 1);
+            state.selectedAddressesOptInToInteract = selectedAccounts;
         },
         listener: (state: AccountState, listener: IListener) => Vue.set(state, 'listener', listener),
     },
