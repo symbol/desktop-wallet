@@ -225,6 +225,7 @@
     "edit_object": "编辑 {objectName}",
     "edit_metadata": "编辑元数据",
     "encrypt_message": "加密消息",
+    "encrypted_message": "加密的消息",
     "encrypted_message_empty_error": "加密消息内容不可为空",
     "end_finalization_epoch": "结束敲定时代",
     "endpoint": "节点",
