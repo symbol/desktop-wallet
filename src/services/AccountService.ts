@@ -293,7 +293,7 @@ export class AccountService {
      * @param {Password} newPassword
      */
     public updateWalletPassword(account: AccountModel, oldPassword: Password, newPassword: Password): AccountModel {
-        if (account.type !== AccountType.SEED && account.type !== AccountType.PRIVATE_KEY) {
+        if (account.type !== AccountType.SEED && account.type !== AccountType.PRIVATE_KEY && account.type !== AccountType.OPT_IN) {
             return account;
         }
 

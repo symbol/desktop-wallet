@@ -1,5 +1,5 @@
 <template>
-    <div v-show="currentAccount">
+    <div v-show="currentAccount" class="main-wrapper">
         <div v-if="currentAccount.type === 6" class="alert_container">
             <Alert type="error">
                 {{ $t('opt_in_account_notification') }}
@@ -175,5 +175,9 @@ export default class AccountDetailsPage extends AccountDetailsPageTs {}
 
 .alert_container {
     margin: 0 1rem;
+}
+
+.main-wrapper {
+    height: 100%;
 }
 </style>
