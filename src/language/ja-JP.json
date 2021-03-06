@@ -525,7 +525,7 @@
     "hidden_accounts": "非表示にしたアカウント",
     "hide_account": "アカウントを非表示",
     "id": "#",
-    "if_you_need_to_backup_your_mnemonics_again_you_can": "ニーモニックを再バックアップするには - 'アカウント - マイアカウント - プロファイルをバックアップ'",
+    "if_you_need_to_backup_your_mnemonics_again_you_can": "'アカウント - マイアカウント - プロファイルをバックアップ' からニーモニックを再バックアップできます。",
     "illegal_public_key_error": "公開鍵は無効です",
     "illegal_publicKey": "指定したアカウントの公開鍵は無効です",
     "import": "インポート",
@@ -655,6 +655,7 @@
     "mosaic_name_can_not_be_null": "モザイク名は空にできません",
     "mosaic_not_set": "モザイクを選択してください",
     "mosaic_transaction": "モザイクトランザクション",
+    "mosaic_supply_transaction": "供給量変更トランザクション",
     "mosaic_transfer_type": "モザイクトランザクション",
     "mosaics_list": "モザイクリスト",
     "move_your_mouse": "より複雑さでランダムなニーモニックパス語群を生成するためにマウスを動かしてください。",
@@ -849,6 +850,7 @@
     "select_a_namespace": "ネームスペースの選択",
     "select_a_profile": "プロファイルを選択",
     "select_accounts": "選択済みアカウント",
+    "select_opt_in_accounts": "選択したオプトイン済みアカウント",
     "select_all": "すべて選択",
     "select_contact": "連絡先を選択",
     "send": "送信",
@@ -1047,5 +1049,6 @@
     "nodes_unavailable_check_network_and": "ノード (#{0}/{1}) は現在無効です。ネットワーク接続や設定を確認してください。",
     "copyright": "Copyright © 2021 NEM Software",
     "address_list_cannot_be_empty": "リストから1つ以上のアカウントを選択してください。",
-    "launching_mainnet_soon": "メインネットネットワークはまだ起動されていません。これは実験的なノードであることに注意してください。"
+    "launching_mainnet_soon": "メインネットネットワークはまだ起動されていません。これは実験的なノードであることに注意してください。",
+    "opt_in_account_notification": "このアカウントは古い派生によって取得されています。資産をシードアカウントへ移動することを推奨します。"
 }
