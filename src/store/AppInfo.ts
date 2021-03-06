@@ -24,6 +24,7 @@ import { networkConfig } from '@/config';
 import { SettingsModel } from '@/core/database/entities/SettingsModel';
 import { SettingService } from '@/services/SettingService';
 import { NetworkType } from 'symbol-sdk';
+import _ from 'lodash';
 
 const Lock = AwaitLock.create();
 const settingService = new SettingService();
@@ -131,6 +132,10 @@ export default {
             if (settingsModel.language) {
                 i18n.locale = settingsModel.language;
                 window.localStorage.setItem('locale', settingsModel.language);
+                // check if user changing language from login page
+                if (_.keys(settingsModel).length === 1) {
+                    return;
+                }
             }
             const currentProfile = rootGetters['profile/currentProfile'];
             const profileName = (currentProfile && currentProfile.profileName) || ANON_PROFILE_NAME;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
 @Component({
@@ -46,7 +46,7 @@ export class LanguageSelectorTs extends Vue {
      * @var {string}
      */
     public currentLanguage: string;
-
+    private language: string = '';
     /**
      * List of available languages
      * @see {Store.AppInfo}
@@ -54,21 +54,14 @@ export class LanguageSelectorTs extends Vue {
      */
     public languageList: { value: string; label: string }[];
 
-    /**
-     * Currently active language
-     */
-    get language() {
-        return this.value && this.value.length ? this.value : this.currentLanguage;
-    }
-
-    /**
-     * Sets the new language
-     */
-    set language(language: string) {
+    @Watch('language')
+    onLanguageChange() {
         if (this.autoSubmit) {
-            this.$store.dispatch('app/SET_LANGUAGE', language);
+            this.$store.dispatch('app/SET_LANGUAGE', this.language);
         }
-
-        this.$emit('input', language);
+        this.$emit('input', this.language);
+    }
+    created() {
+        this.language = this.currentLanguage;
     }
 }
