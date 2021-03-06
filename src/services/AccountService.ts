@@ -14,7 +14,7 @@
  *
  */
 import { Account, PublicAccount, Address, NetworkType, Password, SimpleWallet, Crypto } from 'symbol-sdk';
-import { ExtendedKey, MnemonicPassPhrase, Wallet } from 'symbol-hd-wallets';
+import { ExtendedKey, MnemonicPassPhrase, Network, Wallet } from 'symbol-hd-wallets';
 // internal dependencies
 import { DerivationPathLevels, DerivationService } from './DerivationService';
 import { DerivationPathValidator } from '@/core/validation/validators';
@@ -103,7 +103,7 @@ export class AccountService {
         }
 
         // create hd extended key
-        const extendedKey = ExtendedKey.createFromSeed(mnemonic.toSeed().toString('hex'));
+        const extendedKey = ExtendedKey.createFromSeed(mnemonic.toSeed().toString('hex'), Network.SYMBOL);
 
         // create account
         const account = new Wallet(extendedKey);
@@ -113,25 +113,31 @@ export class AccountService {
     /**
      * Get extended key around \a mnemonic for \a networkTypw
      * @param {MnemonicPassPhrase} mnemonic
+     * @param curve
      * @return {ExtendedKey}
      */
-    public getExtendedKeyFromMnemonic(mnemonic: MnemonicPassPhrase): ExtendedKey {
-        return ExtendedKey.createFromSeed(mnemonic.toSeed().toString('hex'));
+    public getExtendedKeyFromMnemonic(mnemonic: MnemonicPassPhrase, curve = Network.SYMBOL): ExtendedKey {
+        return ExtendedKey.createFromSeed(mnemonic.toSeed().toString('hex'), curve);
     }
 
     /**
      * Generate \a count accounts using \a mnemonic
      * @param {MnemonicPassPhrase} mnemonic
      * @param {NetworkType} networkType
-     * @param {string} startPath
      * @param {number} count
+     * @param curve
      * @return {Account[]}
      */
-    public generateAccountsFromMnemonic(mnemonic: MnemonicPassPhrase, networkType: NetworkType, count: number = 10): Account[] {
+    public generateAccountsFromMnemonic(
+        mnemonic: MnemonicPassPhrase,
+        networkType: NetworkType,
+        count: number = 10,
+        curve = Network.SYMBOL,
+    ): Account[] {
         const derivationService = new DerivationService(networkType);
 
         // create hd extended key
-        const xkey = this.getExtendedKeyFromMnemonic(mnemonic);
+        const xkey = this.getExtendedKeyFromMnemonic(mnemonic, curve);
 
         const default_path = AccountService.getAccountPathByNetworkType(networkType);
         // increment derivation path \a count times
@@ -152,11 +158,17 @@ export class AccountService {
      * @param {MnemonicPassPhrase} mnemonic
      * @param {NetworkType} networkType
      * @param {string[]} paths
+     * @param curve
      * @returns {Account[]}
      */
-    public generateAccountsFromPaths(mnemonic: MnemonicPassPhrase, networkType: NetworkType, paths: string[]): Account[] {
+    public generateAccountsFromPaths(
+        mnemonic: MnemonicPassPhrase,
+        networkType: NetworkType,
+        paths: string[],
+        curve = Network.SYMBOL,
+    ): Account[] {
         // create hd extended key
-        const xkey = this.getExtendedKeyFromMnemonic(mnemonic);
+        const xkey = this.getExtendedKeyFromMnemonic(mnemonic, curve);
         const wallets = paths.map((path) => new Wallet(xkey.derivePath(path)));
 
         return wallets.map((wallet) => Account.createFromPrivateKey(wallet.getAccountPrivateKey(), networkType));
@@ -166,8 +178,13 @@ export class AccountService {
      * Get list of addresses using \a mnemonic
      * @return {Address[]}
      */
-    public getAddressesFromMnemonic(mnemonic: MnemonicPassPhrase, networkType: NetworkType, count: number = 10): Address[] {
-        const accounts = this.generateAccountsFromMnemonic(mnemonic, networkType, count);
+    public getAddressesFromMnemonic(
+        mnemonic: MnemonicPassPhrase,
+        networkType: NetworkType,
+        count: number = 10,
+        curve = Network.SYMBOL,
+    ): Address[] {
+        const accounts = this.generateAccountsFromMnemonic(mnemonic, networkType, count, curve);
         return accounts.map((acct) => acct.address);
     }
 
@@ -276,7 +293,7 @@ export class AccountService {
      * @param {Password} newPassword
      */
     public updateWalletPassword(account: AccountModel, oldPassword: Password, newPassword: Password): AccountModel {
-        if (account.type !== AccountType.SEED && account.type !== AccountType.PRIVATE_KEY) {
+        if (account.type !== AccountType.SEED && account.type !== AccountType.PRIVATE_KEY && account.type !== AccountType.OPT_IN) {
             return account;
         }
 
