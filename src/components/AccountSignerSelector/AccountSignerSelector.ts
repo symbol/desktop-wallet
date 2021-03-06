@@ -61,6 +61,9 @@ export class AccountSignerSelectorTs extends Vue {
     get chosenAccount(): string {
         return this.currentAccount.id;
     }
+    set chosenAccount(id: string) {
+        this.onChangeCurrentAccount(id);
+    }
 
     /**
      * Hook called when a current account is selected.
