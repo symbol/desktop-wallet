@@ -55,6 +55,7 @@ import { AccountTransactionSigner, TransactionSigner } from '@/services/Transact
 import { LedgerService } from '@/services/LedgerService';
 // @ts-ignore
 import AccountSignerSelector from '@/components/AccountSignerSelector/AccountSignerSelector.vue';
+import _ from "lodash";
 
 @Component({
     components: {
@@ -135,21 +136,17 @@ export class FormOfflineCosignTransactionTs extends FormTransactionBase {
         // filter out invalid profiles
         this.profiles = this.profileService.getProfiles().filter((p) => p.accounts.length > 0);
 
-        const reducer = (accumulator: { networkType: NetworkType; profiles: ProfileModel[] }[], currentValue: ProfileModel) => {
-            const currentAccumulator = accumulator.find((a) => a.networkType == currentValue.networkType);
-            if (currentAccumulator) {
-                currentAccumulator.profiles.push(currentValue);
-                return accumulator;
-            } else {
-                return [...accumulator, { networkType: currentValue.networkType, profiles: [currentValue] }];
-            }
-        };
-
-        this.profilesClassifiedByNetworkType = this.profiles.reduce(reducer, []);
         if (!this.profiles.length) {
             return;
         }
-        // accounts available, iterate to first profiles
+
+        const profilesGroupedByNetworkType = _.groupBy(this.profiles, (p) => p.networkType);
+        this.profilesClassifiedByNetworkType = Object.values(profilesGroupedByNetworkType).map((profiles) => ({
+            networkType: profiles[0].networkType,
+            profiles: profiles,
+        }));
+
+        // accounts available, iterate to first profile
         this.formItems.currentProfileName = this.profiles[0].profileName;
         this.onProfileNameChange();
     }

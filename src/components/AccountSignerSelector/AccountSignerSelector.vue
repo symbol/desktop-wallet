@@ -13,7 +13,7 @@
                     @change="onChangeCurrentAccount"
                 >
                     <Option v-for="item in accountModels" :key="item.id + item.name" :value="item.id">
-                        {{ item.name }}
+                        {{ `${item.name} - ${item.address.slice(0, 5)}...${item.address.slice(34)}` }}
                     </Option>
                 </Select>
             </div>
