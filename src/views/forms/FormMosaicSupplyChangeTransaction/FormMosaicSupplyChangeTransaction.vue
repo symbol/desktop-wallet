@@ -28,8 +28,7 @@
                 <FormRow>
                     <template v-slot:label> {{ $t('form_label_supply_direction') }}: </template>
                     <template v-slot:inputs>
-                        <div class="inputs-container select-container">
-                            <!-- <template v-slot:inputs> -->
+                        <div class="select-container">
                             <ValidationProvider
                                 v-slot="{ errors }"
                                 vid="newDuration"
