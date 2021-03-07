@@ -137,6 +137,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         signerAddress: '',
         targetAccount: '',
         targetId: '',
+        targetName: '',
         metadataValue: '',
         scopedKey: '',
         maxFee: 0,
@@ -371,7 +372,8 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         if (selectedItem) {
             this.formItems.signerAddress = selectedItem.sourceAddress;
             this.formItems.targetAccount = selectedItem.targetAddress;
-            this.formItems.targetId = this.targetNameById(selectedItem.targetId);
+            this.formItems.targetId = selectedItem.targetId;
+            this.formItems.targetName = this.targetNameById(selectedItem.targetId);
             this.formItems.metadataValue = selectedItem.value;
             this.formItems.scopedKey = selectedItem.scopedMetadataKey;
         }
