@@ -15,6 +15,7 @@
                     :hide-save="true"
                     :value.sync="transaction.formItems"
                     :title.sync="transaction.title"
+                    :edit-mode="true"
                     class="transaction-form-component"
                     @txInput="onTransactionFormSave"
                 ></component>
