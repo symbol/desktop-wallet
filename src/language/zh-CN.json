@@ -525,7 +525,7 @@
     "hidden_accounts": "隐藏账户",
     "hide_account": "隐藏账户",
     "id": "ID",
-    "if_you_need_to_back_up_your_mnemonics_again_you_can": "如果需要再次备份助记词，可以钱包管理-钱包详情-导出助记词中找到。",
+    "if_you_need_to_backup_your_mnemonics_again_you_can": "如果您需要再次备份助记词，请在“账户 - 我的账户 - 备份个人资料”页面操作。",
     "illegal_public_key_error": "公钥格式错误",
     "illegal_publicKey": "存在不合法的账户公钥",
     "import": "进口",

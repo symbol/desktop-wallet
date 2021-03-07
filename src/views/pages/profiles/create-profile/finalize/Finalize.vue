@@ -9,7 +9,7 @@
                     <li class="text list-item-with-disc">{{ $t('save_backups') }}</li>
                     <li class="text list-item-with-disc">{{ $t('do_not_share_mnemonics_with_anyone') }}</li>
                     <li class="text list-item-with-disc">{{ $t('phishing_warning') }}</li>
-                    <li class="text list-item-with-disc">{{ $t('if_you_need_to_back_up_your_mnemonics_again_you_can') }}</li>
+                    <li class="text list-item-with-disc">{{ $t('if_you_need_to_backup_your_mnemonics_again_you_can') }}</li>
                 </ul>
                 <div class="checkbox">
                     <Checkbox v-model="marked">
