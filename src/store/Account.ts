@@ -243,6 +243,12 @@ export default {
             selectedAccounts.splice(indexToDelete, 1);
             state.selectedAddressesOptInToInteract = selectedAccounts;
         },
+        resetSelectedAddressesToInteract: (state: AccountState) => {
+            state.selectedAddressesToInteract = [];
+        },
+        resetSelectedAddressesOptInToInteract: (state: AccountState) => {
+            state.selectedAddressesOptInToInteract = [];
+        },
         listener: (state: AccountState, listener: IListener) => Vue.set(state, 'listener', listener),
     },
     actions: {
