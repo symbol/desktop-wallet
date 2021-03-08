@@ -72,4 +72,8 @@ export default class FinalizeTs extends Vue {
     protected closeModal(modalIdentifier: string): void {
         Vue.set(this.modalVisibility, modalIdentifier, false);
     }
+    public submit() {
+        this.$store.dispatch('temporary/RESET_STATE');
+        this.$router.push({ name: 'dashboard' });
+    }
 }
