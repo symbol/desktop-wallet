@@ -175,39 +175,7 @@ export default class AccountSelectionTs extends Vue {
         if (!this.selectedAccounts.length) {
             return this.$store.dispatch('notification/ADD_ERROR', NotificationType.IMPORT_EMPTY_ACCOUNT_LIST);
         }
-
-        try {
-            // create account models
-            const normalAccounts = this.createAccountsFromPathIndexes(this.selectedAccounts);
-            const optInAccounts = this.createOptInAccountsFromPathIndexes(this.selectedOptInAccounts);
-
-            const accounts = [...optInAccounts, ...normalAccounts];
-            // save newly created accounts
-            accounts.forEach((account, index) => {
-                // Store accounts using repository
-                this.accountService.saveAccount(account);
-                // set current account
-                if (index === 0) {
-                    this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account);
-                }
-                // add accounts to profile
-                this.$store.dispatch('profile/ADD_ACCOUNT', account);
-            });
-
-            // get accounts identifiers
-            const accountIdentifiers = accounts.map((account) => account.id);
-
-            // set known accounts
-            this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', accountIdentifiers);
-
-            this.profileService.updateAccounts(this.currentProfile, accountIdentifiers);
-
-            this.$store.dispatch('temporary/RESET_STATE');
-            // execute store actions
-            return this.$router.push({ name: 'profiles.importProfile.finalize' });
-        } catch (error) {
-            return this.$store.dispatch('notification/ADD_ERROR', error);
-        }
+        return this.$router.push({ name: 'profiles.importProfile.finalize' });
     }
 
     /**
@@ -251,6 +219,10 @@ export default class AccountSelectionTs extends Vue {
         const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
         const whitelisted = process.env.KEYS_WHITELIST[key];
         const optInAccounts = possibleOptInAccounts.filter((account) => whitelisted.indexOf(account.publicKey) >= 0);
+        console.log(this.currentMnemonic);
+        console.log(this.currentProfile.networkType);
+        console.log(possibleOptInAccounts.map(acc => acc.publicKey));
+        console.log(optInAccounts.map(acc => acc.publicKey));
         if (optInAccounts.length === 0) {
             return;
         }
@@ -274,96 +246,6 @@ export default class AccountSelectionTs extends Vue {
             .value();
     }
 
-    /**
-     * Create an account instance from mnemonic and path
-     * @return {AccountModel}
-     */
-    private createAccountsFromPathIndexes(indexes: number[]): AccountModel[] {
-        const accountPath = AccountService.getAccountPathByNetworkType(this.currentProfile.networkType);
-        const paths = indexes.map((index) => {
-            if (index == 0) {
-                return accountPath;
-            }
-
-            return this.derivation.incrementPathLevel(accountPath, DerivationPathLevels.Profile, index);
-        });
-
-        const accounts = this.accountService.generateAccountsFromPaths(
-            new MnemonicPassPhrase(this.currentMnemonic),
-            this.currentProfile.networkType,
-            paths,
-        );
-
-        const simpleWallets = accounts.map((account, i) =>
-            SimpleWallet.createFromPrivateKey(
-                `Seed Account ${indexes[i] + 1}`,
-                this.currentPassword,
-                account.privateKey,
-                this.currentProfile.networkType,
-            ),
-        );
-
-        return simpleWallets.map((simpleWallet, i) => {
-            return {
-                id: SimpleObjectStorage.generateIdentifier(),
-                profileName: this.currentProfile.profileName,
-                name: simpleWallet.name,
-                node: '',
-                type: AccountType.SEED,
-                address: simpleWallet.address.plain(),
-                publicKey: accounts[i].publicKey,
-                encryptedPrivateKey: simpleWallet.encryptedPrivateKey,
-                path: paths[i],
-                isMultisig: false,
-            };
-        });
-    }
-
-    /**
-     * Create an optin account instance from mnemonic and path
-     * @return {AccountModel}
-     */
-    private createOptInAccountsFromPathIndexes(indexes: number[]): AccountModel[] {
-        const accountPath = AccountService.getAccountPathByNetworkType(this.currentProfile.networkType);
-        const paths = indexes.map((index) => {
-            if (index == 0) {
-                return accountPath;
-            }
-
-            return this.derivation.incrementPathLevel(accountPath, DerivationPathLevels.Profile, index);
-        });
-
-        const accounts = this.accountService.generateAccountsFromPaths(
-            new MnemonicPassPhrase(this.currentMnemonic),
-            this.currentProfile.networkType,
-            paths,
-            Network.BITCOIN,
-        );
-
-        const simpleWallets = accounts.map((account, i) =>
-            SimpleWallet.createFromPrivateKey(
-                `Opt In Seed Account ${indexes[i] + 1}`,
-                this.currentPassword,
-                account.privateKey,
-                this.currentProfile.networkType,
-            ),
-        );
-
-        return simpleWallets.map((simpleWallet, i) => {
-            return {
-                id: SimpleObjectStorage.generateIdentifier(),
-                profileName: this.currentProfile.profileName,
-                name: simpleWallet.name,
-                node: '',
-                type: AccountType.OPT_IN,
-                address: simpleWallet.address.plain(),
-                publicKey: accounts[i].publicKey,
-                encryptedPrivateKey: simpleWallet.encryptedPrivateKey,
-                path: paths[i],
-                isMultisig: false,
-            };
-        });
-    }
 
     /**
      * Called when clicking on an address to add it to the selection
