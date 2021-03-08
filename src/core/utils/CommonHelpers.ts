@@ -29,7 +29,7 @@ export class CommonHelpers {
     }
 
     /**
-     * Helper method to retry n times asynchronously
+     * Helper method to retry opening websocket n times asynchronously 
      */
     public static async retryNTimes(listener, trials: number, interval: number) {
         if (trials < 1) {
