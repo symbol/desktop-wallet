@@ -15,11 +15,10 @@
  */
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { AccountInfo, Address, MosaicId, NetworkType, Password, RepositoryFactory, SimpleWallet } from 'symbol-sdk';
+import { AccountInfo, Address, MosaicId, NetworkType, Password, RepositoryFactory } from 'symbol-sdk';
 import { MnemonicPassPhrase, Network } from 'symbol-hd-wallets';
 // internal dependencies
-import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
-import { DerivationPathLevels, DerivationService } from '@/services/DerivationService';
+import { DerivationService } from '@/services/DerivationService';
 import { AccountService } from '@/services/AccountService';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { Formatters } from '@/core/utils/Formatters';
@@ -29,7 +28,6 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { ProfileService } from '@/services/ProfileService';
-import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
 import _ from 'lodash';
 
 @Component({
