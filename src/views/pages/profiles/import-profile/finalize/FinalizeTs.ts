@@ -16,13 +16,13 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { ProfileService } from '@/services/ProfileService';
-import {AccountModel, AccountType} from "@/core/database/entities/AccountModel";
-import {AccountService} from "@/services/AccountService";
-import {DerivationPathLevels, DerivationService} from "@/services/DerivationService";
-import {MnemonicPassPhrase, Network} from "symbol-hd-wallets";
-import {Password, SimpleWallet} from "symbol-sdk";
-import {SimpleObjectStorage} from "@/core/database/backends/SimpleObjectStorage";
-import {ProfileModel} from "@/core/database/entities/ProfileModel";
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
+import { AccountService } from '@/services/AccountService';
+import { DerivationPathLevels, DerivationService } from '@/services/DerivationService';
+import { MnemonicPassPhrase, Network } from 'symbol-hd-wallets';
+import { Password, SimpleWallet } from 'symbol-sdk';
+import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 
 @Component({
     computed: {
@@ -39,7 +39,6 @@ import {ProfileModel} from "@/core/database/entities/ProfileModel";
     },
 })
 export default class FinalizeTs extends Vue {
-
     /**
      * Currently active profile
      * @see {Store.Profile}

@@ -242,7 +242,6 @@ export default class AccountSelectionTs extends Vue {
             .value();
     }
 
-
     /**
      * Called when clicking on an address to add it to the selection
      * @param {number} pathNumber
