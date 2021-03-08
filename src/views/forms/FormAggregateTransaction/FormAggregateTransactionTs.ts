@@ -96,7 +96,7 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
      * current selected saved transaction
      * @var {object}
      */
-    public currentSelectedTransaction: { title?: string; component?: any } = {};
+    public currentSelectedTransaction: { title?: string; component?: any; formItems?: any } = {};
 
     public toBeEditedTransaction = {};
 

@@ -161,6 +161,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     })
     isAggregate: boolean;
 
+    @Prop({
+        default: false,
+    })
+    editMode: boolean;
+
     /// end-region component properties
 
     /**
@@ -189,7 +194,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     public currentHeight: number;
 
-    protected mosaicInputsManager;
+    protected mosaicInputsManager: MosaicInputsManager;
 
     private balanceMosaics: MosaicModel[];
 
@@ -237,7 +242,14 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * Reset the form with properties
      * @return {void}
      */
-    protected resetForm() {
+    protected resetForm(): void {
+        this.showUnlockAccountModal = false;
+        this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentMosaicList());
+
+        if (this.editMode) {
+            return;
+        }
+
         // - reset attached mosaics
         this.formItems.attachedMosaics = [];
 
@@ -260,8 +272,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         }
         this.formItems.recipient = !!this.recipient ? this.recipient : null;
 
-        const currentMosaics = this.currentMosaicList();
-
         const attachedMosaics: MosaicAttachment[] = [
             {
                 id: new MosaicId(this.networkCurrency.mosaicIdHex),
@@ -275,30 +285,22 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.formItems.messagePlain = this.message ? Formatters.hexToUtf8(this.message.payload) : '';
         this.formItems.encryptMessage = false;
         this.encyptedMessage = null;
-        this.showUnlockAccountModal = false;
         // - maxFee must be absolute
         this.formItems.maxFee = this.defaultFee;
-        // - initialize mosaics input manager
-        this.mosaicInputsManager = MosaicInputsManager.initialize(currentMosaics);
 
         // transaction details passed via router
         this.importTransaction = this.$route.params.transaction || this.importedTransaction ? true : false;
         if (this.importTransaction) {
-            // @ts-ignore
-            this.setTransactions([!!this.importedTransaction ? this.importedTransaction : this.$route.params.transaction]);
-            Vue.nextTick(() => {
-                this.formItems.attachedMosaics.forEach((attachedMosaic) => {
-                    this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
-                });
+            this.setTransactions([!!this.importedTransaction ? this.importedTransaction : this.$route.params.transaction] as any);
+            this.formItems.attachedMosaics.forEach((attachedMosaic) => {
+                this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
             });
             this.onChangeRecipient();
         } else {
             // - set attachedMosaics and allocate slots
-            Vue.nextTick().then(async () => {
-                await attachedMosaics.forEach((attachedMosaic, index) => {
-                    this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
-                    Vue.set(this.formItems.attachedMosaics, index, attachedMosaic);
-                });
+            attachedMosaics.forEach((attachedMosaic, index) => {
+                this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
+                Vue.set(this.formItems.attachedMosaics, index, attachedMosaic);
             });
         }
         this.triggerChange();
@@ -755,6 +757,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     mounted() {
         if (this.isAggregate && this.value) {
             Object.assign(this.formItems, this.value);
+            if (this.formItems.attachedMosaics.length) {
+                this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentMosaicList());
+                this.formItems.attachedMosaics.forEach((m) => this.mosaicInputsManager.setSlot(m.mosaicHex, m.uid));
+            }
         }
 
         this.isMounted = true;
