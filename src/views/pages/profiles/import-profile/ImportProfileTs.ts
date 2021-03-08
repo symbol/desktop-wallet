@@ -189,8 +189,7 @@ export default class ImportProfileTs extends Vue {
 
         // fetch accounts info
         const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
-
+        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.optInAddressesList).toPromise();
         // map balances
         this.addressMosaicMap = {
             ...this.addressMosaicMap,

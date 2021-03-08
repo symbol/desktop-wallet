@@ -30,11 +30,7 @@
                     >
                         {{ $t('back') }}
                     </button>
-                    <button
-                        class="inverted-button solid-button button-style create-account-style"
-                        :disabled="!marked"
-                        @click="$router.push({ name: 'dashboard' })"
-                    >
+                    <button class="inverted-button solid-button button-style create-account-style" :disabled="!marked" @click="finish">
                         {{ $t('finish') }}
                     </button>
                 </div>
