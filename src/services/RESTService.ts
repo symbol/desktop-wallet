@@ -50,7 +50,7 @@ export class RESTService {
         if (listener) {
             if (!listener.isOpen()) {
                 await listener.open(async (event: { client: string; code: any; reason: any }) => {
-                    if (event.code !== 1005) {
+                    if (event && event.code !== 1005) {
                         await CommonHelpers.retryNTimes(listener, 3, 5000);
                     } else {
                         context.dispatch('notification/ADD_ERROR', event.reason, { root: true });
