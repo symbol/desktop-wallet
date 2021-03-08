@@ -219,10 +219,6 @@ export default class AccountSelectionTs extends Vue {
         const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
         const whitelisted = process.env.KEYS_WHITELIST[key];
         const optInAccounts = possibleOptInAccounts.filter((account) => whitelisted.indexOf(account.publicKey) >= 0);
-        console.log(this.currentMnemonic);
-        console.log(this.currentProfile.networkType);
-        console.log(possibleOptInAccounts.map(acc => acc.publicKey));
-        console.log(optInAccounts.map(acc => acc.publicKey));
         if (optInAccounts.length === 0) {
             return;
         }
