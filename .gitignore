@@ -22,3 +22,4 @@ __mocks__/**/*.js
 /.templates
 template.config.js
 .env
+keys-whitelist.json
