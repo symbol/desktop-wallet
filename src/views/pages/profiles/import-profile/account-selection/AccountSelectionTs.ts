@@ -114,6 +114,12 @@ export default class AccountSelectionTs extends Vue {
     public addressBalanceMap: { [address: string]: number } = {};
 
     /**
+     * Balances map
+     * @var {any}
+     */
+    public optInAddressBalanceMap: { [address: string]: number } = {};
+
+    /**
      * Map of selected accounts
      * @var {number[]}
      */
@@ -224,7 +230,7 @@ export default class AccountSelectionTs extends Vue {
         // map balances
         this.addressBalanceMap = {
             ...this.addressBalanceMap,
-            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic),
+            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.addressesList),
         };
     }
 
@@ -252,18 +258,17 @@ export default class AccountSelectionTs extends Vue {
 
         // fetch accounts info
         const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
-
+        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.optInAddressesList).toPromise();
         // map balances
-        this.addressBalanceMap = {
-            ...this.addressBalanceMap,
-            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic),
+        this.optInAddressBalanceMap = {
+            ...this.optInAddressBalanceMap,
+            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.optInAddressesList),
         };
     }
 
-    public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaicId: MosaicId): { [address: string]: number } {
+    public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaicId: MosaicId, addressList: Address[]): { [address: string]: number } {
         const addressToAccountInfo = _.keyBy(accountsInfo, (a) => a.address.plain());
-        return _.chain(this.addressesList)
+        return _.chain(addressList)
             .keyBy((a) => a.plain())
             .mapValues((a) => addressToAccountInfo[a.plain()]?.mosaics.find((m) => m.id.equals(mosaicId))?.amount.compact() ?? 0)
             .value();
