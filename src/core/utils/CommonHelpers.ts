@@ -30,8 +30,8 @@ export class CommonHelpers {
 
     /**
      * Helper method to retry n times asynchronously
-    */
-    public static async tryNTimes<T>(listener, trials = 3, interval = 5000) {
+     */
+    public static async retryNTimes(listener, trials: number, interval: number) {
         if (trials < 1) {
             throw new Error('could not connect');
         }
