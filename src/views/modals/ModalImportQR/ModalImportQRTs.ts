@@ -38,6 +38,9 @@ export class ModalImportQRTs extends Vue {
     @Prop({ default: [QRCodeType.AddContact, QRCodeType.RequestTransaction, QRCodeType.ExportObject] })
     readonly validQrTypes!: QRCodeType[];
 
+    @Prop() readonly confirmAction?: (qrCode: QRCode) => void;
+    @Prop() readonly confirmText?: string;
+
     /**
      * json content of uploaded qrcode
      * @type string
@@ -78,6 +81,7 @@ export class ModalImportQRTs extends Vue {
      * @param {string} json decoded from uploaded qrcode
      */
     public onUploadComplete(json) {
+        this.$emit('jsonImported', json);
         this.qrcodeJson = json;
         setTimeout(() => (this.wizardSteps.currentStepInx = 1), 1200); // labor illusion
     }

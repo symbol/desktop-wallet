@@ -1,6 +1,11 @@
 <template>
     <div>
-        <TemplateQRAction :qr-code="qrCode" :detail-items="detailItems" action-desc="cosignature_qr_action_desc" :on-submit="onSubmit">
+        <TemplateQRAction
+            :qr-code="qrCode"
+            :detail-items="detailItems"
+            :action-desc="confirmText ? confirmText : 'cosignature_qr_action_desc'"
+            :on-submit="onSubmit"
+        >
             <template v-slot:other-details>
                 <TransactionDetails :transaction="qrCode.transaction" />
             </template>

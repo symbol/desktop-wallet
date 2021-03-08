@@ -483,6 +483,46 @@ export const routes: AppRoute[] = [
         component: () => import('@/views/pages/profiles/LoginPage.vue'),
     },
     {
+        path: '/offline',
+        name: 'offline',
+        redirect: '/offline/transaction/simple',
+        meta: { protected: false },
+        // @ts-ignore
+        component: () => import('@/views/layout/RouterPage.vue'),
+        children: [
+            {
+                path: '/offlineTransaction',
+                name: 'offlineTransaction',
+                redirect: '/offlineTransaction/simple',
+                meta: { protected: false },
+                // @ts-ignore
+                component: () => import('@/views/pages/offline/OfflineTransaction.vue'),
+                children: [
+                    {
+                        path: '/offlineTransaction/simple',
+                        name: 'offlineTransaction.simple',
+                        meta: {
+                            protected: false,
+                            title: 'simple_transaction',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/offline/offlineTransferTransaction/OfflineTransferTransaction.vue'),
+                    },
+                    {
+                        path: '/offlineTransaction/cosign',
+                        name: 'offlineTransaction.cosign',
+                        meta: {
+                            protected: false,
+                            title: 'cosign_transaction',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/offline/offlineCosignTransaction/OfflineCosignTransaction.vue'),
+                    },
+                ],
+            },
+        ],
+    },
+    {
         path: '/privacy',
         name: 'privacy',
         meta: { protected: false, hideFromMenu: true },

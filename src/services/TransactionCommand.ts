@@ -62,6 +62,14 @@ export class TransactionCommand {
         this.tempTransactionSigner = new AccountTransactionSigner(this.tempAccount);
     }
 
+    public sign(service: TransactionAnnouncerService, account: TransactionSigner): Observable<Observable<SignedTransaction>[]> {
+        return this.resolveTransactions(account).pipe(
+            flatMap((transactions) => {
+                return of(transactions.map((t) => account.signTransaction(t, this.generationHash)));
+            }),
+        );
+    }
+
     public announce(service: TransactionAnnouncerService, account: TransactionSigner): Observable<Observable<BroadcastResult>[]> {
         return this.resolveTransactions(account).pipe(
             flatMap((transactions) => {
