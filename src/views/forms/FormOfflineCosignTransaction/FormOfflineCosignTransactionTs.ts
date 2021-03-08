@@ -55,7 +55,7 @@ import { AccountTransactionSigner, TransactionSigner } from '@/services/Transact
 import { LedgerService } from '@/services/LedgerService';
 // @ts-ignore
 import AccountSignerSelector from '@/components/AccountSignerSelector/AccountSignerSelector.vue';
-import _ from "lodash";
+import _ from 'lodash';
 
 @Component({
     components: {

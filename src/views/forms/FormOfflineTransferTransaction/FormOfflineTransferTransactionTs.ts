@@ -47,7 +47,7 @@ import { SettingsModel } from '@/core/database/entities/SettingsModel';
 import { SettingService } from '@/services/SettingService';
 // @ts-ignore
 import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue';
-import _ from "lodash";
+import _ from 'lodash';
 
 @Component({
     components: {
