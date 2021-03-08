@@ -138,7 +138,7 @@ export default class ImportProfileTs extends Vue {
      * @return {void}
      */
     private async initAccounts() {
-        if (this.initialized) {
+        if (this.initialized || !this.currentProfile || !this.currentProfile.networkType) {
             return;
         }
 
@@ -166,7 +166,7 @@ export default class ImportProfileTs extends Vue {
      */
     @Watch('optInSelectedAccounts')
     private async initOptInAccounts() {
-        if (this.optInInitialized) {
+        if (this.optInInitialized || !this.currentProfile || !this.currentProfile.networkType) {
             return;
         }
 
