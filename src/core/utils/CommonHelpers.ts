@@ -27,4 +27,24 @@ export class CommonHelpers {
             }, ms);
         });
     }
+
+    /**
+     * Helper method to retry n times asynchronously
+    */
+    public static async tryNTimes<T>(listener, trials = 3, interval = 5000) {
+        if (trials < 1) {
+            throw new Error('could not connect');
+        }
+        let attemptCount = 0;
+        while (!listener.isOpen()) {
+            try {
+                return await listener.open();
+            } catch (error) {
+                if (++attemptCount >= trials) {
+                    throw error;
+                }
+            }
+            await this.sleep(interval);
+        }
+    }
 }

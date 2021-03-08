@@ -19,6 +19,7 @@ import { Subscription } from 'rxjs';
 import { AddressValidator } from '@/core/validation/validators';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { TransactionGroupState } from '@/store/Transaction';
+import { CommonHelpers } from '@/core/utils/CommonHelpers';
 
 /**
  * This Service is more like a static helper now. All the methods are statics. Rename and move.
@@ -47,8 +48,14 @@ export class RESTService {
         // open websocket connection
         const address = Address.createFromRawAddress(addressStr);
         if (listener) {
-            if (listener && !listener.isOpen()) {
-                await listener.open();
+            if (!listener.isOpen()) {
+                await listener.open(async (event: { client: string; code: any; reason: any }) => {
+                    if (event.code !== 1005) {
+                        await CommonHelpers.tryNTimes(listener);
+                    } else {
+                        context.dispatch('notification/ADD_ERROR', event.reason, { root: true });
+                    }
+                });
             }
 
             // error listener
