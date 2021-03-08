@@ -856,6 +856,7 @@ export class ModalTransactionConfirmationTs extends Vue {
         if (
             AccountType.SEED === this.currentAccount.type ||
             AccountType.PRIVATE_KEY === this.currentAccount.type ||
+            AccountType.OPT_IN === this.currentAccount.type ||
             AccountType.KEYSTORE === this.currentAccount.type
         ) {
             if (this.isOfflineMode) {

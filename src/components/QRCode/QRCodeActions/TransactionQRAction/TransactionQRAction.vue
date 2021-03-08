@@ -12,7 +12,7 @@
                         />
                     </div>
                     <div v-else-if="slotProps.item.label == $t('fee')" class="qrcode-details-row-value">
-                        <MaxFeeSelector v-model="slotProps.item.value" display-only="true" />
+                        <MaxFeeSelector v-model="slotProps.item.value" :display-only="true" />
                     </div>
                     <div v-else class="qrcode-details-row-value">{{ slotProps.item.value }}</div>
                 </div>
@@ -26,3 +26,9 @@ import TransactionQRActionTs from './TransactionQRActionTs';
 
 export default class TransactionQRAction extends TransactionQRActionTs {}
 </script>
+
+<style lang="less" scoped>
+/deep/ .select-container {
+    height: unset;
+}
+</style>

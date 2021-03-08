@@ -71,6 +71,7 @@ export class RemoteAccountService extends AccountService {
             // @TODO: implement private key
             // @TODO: show error to the user
             case AccountType.KEYSTORE:
+            case AccountType.OPT_IN:
             case AccountType.PRIVATE_KEY:
                 throw new Error('remote account generation from Private Key is not supported');
             case AccountType.TREZOR:

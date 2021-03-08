@@ -13,9 +13,19 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-@import '../../views/resources/css/variables.less';
+import { Validator, staticImplements } from './Validator';
 
-.switch_language {
-    -webkit-app-region: no-drag;
-    position: relative;
+@staticImplements<Validator>()
+export class MaxMessageValidator {
+    /**
+     * Validates the max bytes of message
+     * @static
+     * @param {*} value
+     * @param {number} maxMessageNumber
+     * @returns {boolean}
+     */
+    public static validate(value: any, maxMessageNumber: number): boolean {
+        const bytes: number = new TextEncoder().encode(value).length;
+        return bytes < maxMessageNumber;
+    }
 }

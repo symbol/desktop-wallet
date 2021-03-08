@@ -49,6 +49,7 @@ import { networkConfig } from '@/config';
         ...mapGetters({
             generationHash: 'network/generationHash',
             currentProfile: 'profile/currentProfile',
+            isConnected: 'network/isConnected',
         }),
     },
 })
@@ -59,7 +60,7 @@ export class FormProfileCreationTs extends Vue {
      * @var {string}
      */
     public currentProfile: ProfileModel;
-
+    private isConnected: boolean;
     /**
      * Currently active profile
      * @see {Store.Profile}
@@ -131,6 +132,9 @@ export class FormProfileCreationTs extends Vue {
 
     /// region computed properties getter/setter
     get nextPage() {
+        if (!this.isConnected) {
+            this.connect(this.formItems.networkType);
+        }
         return this.$route.meta.nextPage;
     }
 
@@ -177,7 +181,7 @@ export class FormProfileCreationTs extends Vue {
         this.$store.dispatch('notification/ADD_ERROR', this.$t('create_profile_failed', { reason: error.message || error }));
     }
 
-    public onNetworkTypeChange(newNetworkType) {
+    public connect(newNetworkType) {
         this.$store.dispatch('network/CONNECT', { networkType: newNetworkType });
     }
 

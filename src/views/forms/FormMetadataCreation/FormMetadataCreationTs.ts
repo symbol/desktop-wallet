@@ -47,6 +47,7 @@ import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import { Component, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
+import { MosaicService } from '@/services/MosaicService';
 @Component({
     components: {
         ValidationObserver,
@@ -68,6 +69,7 @@ import { MetadataModel } from '@/core/database/entities/MetadataModel';
             ownedNamespaces: 'namespace/ownedNamespaces',
             repositoryFactory: 'network/repositoryFactory',
             metadataTransactions: 'metadata/transactions',
+            currentHeight: 'network/currentHeight',
         }),
     },
 })
@@ -126,6 +128,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      */
     protected metadataTransactions: Transaction[];
 
+    private currentHeight: number;
     /**
      * Form fields
      * @var {Object}
@@ -134,6 +137,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         signerAddress: '',
         targetAccount: '',
         targetId: '',
+        targetName: '',
         metadataValue: '',
         scopedKey: '',
         maxFee: 0,
@@ -276,11 +280,18 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         return this.isMosaic() ? 'mosaic_id' : 'namespace_id';
     }
 
+    private get availableMosaics(): MosaicModel[] {
+        return this.ownedMosaics.filter((entry) => {
+            const expiration = MosaicService.getExpiration(entry, this.currentHeight, this.networkConfiguration.blockGenerationTargetTime);
+            return expiration !== 'expired';
+        });
+    }
+
     get ownedTargetHexIds(): string[] {
         return this.type === MetadataType.Namespace
             ? this.ownedNamespaces.map(({ namespaceIdHex }) => namespaceIdHex)
-            : this.ownedMosaics
-                  .filter(({ ownerRawPlain }) => ownerRawPlain === this.currentAccount.address)
+            : this.availableMosaics
+                  .filter(({ ownerRawPlain }) => ownerRawPlain === this.currentSignerAddress.plain())
                   .map(({ mosaicIdHex }) => mosaicIdHex);
     }
 
@@ -361,7 +372,8 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         if (selectedItem) {
             this.formItems.signerAddress = selectedItem.sourceAddress;
             this.formItems.targetAccount = selectedItem.targetAddress;
-            this.formItems.targetId = this.targetNameById(selectedItem.targetId);
+            this.formItems.targetId = selectedItem.targetId;
+            this.formItems.targetName = this.targetNameById(selectedItem.targetId);
             this.formItems.metadataValue = selectedItem.value;
             this.formItems.scopedKey = selectedItem.scopedMetadataKey;
         }

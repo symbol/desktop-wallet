@@ -50,7 +50,7 @@
                                             v-model="formItems.networkType"
                                             :placeholder="$t('choose_network')"
                                             class="select-size select-style"
-                                            @on-change="onNetworkTypeChange"
+                                            @on-change="connect"
                                         >
                                             <Option v-for="(item, index) in networkTypeList" :key="index" :value="item.value">
                                                 {{ item.label }}

@@ -25,10 +25,20 @@ module.exports = {
   chainWebpack: (config) => {
     config.plugin('define').tap((args) => {
       const env = args[0]['process.env'];
+      let keys;
+      try {
+        keys = require('./keys-whitelist.json');
+      } catch {
+        keys = {
+          mainnet: [],
+          testnet: []
+        }
+      }
       args[0]['process.env'] = {
           ...env,
           PACKAGE_VERSION: packageVersion,
           WEB: web,
+          KEYS_WHITELIST: JSON.stringify(keys)
       };
       return args;
     });
