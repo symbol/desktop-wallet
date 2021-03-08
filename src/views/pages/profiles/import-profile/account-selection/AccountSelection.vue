@@ -15,8 +15,8 @@
                         <div v-if="!selectedOptInAccounts.includes(index)" class="table-item pointer">
                             <span class="address-id">{{ index + 1 }} (Opt In)</span>
                             <span class="address-value">{{ formatters.miniAddress(a) }}</span>
-                            <span v-if="addressMosaicMap[a.plain()]" class="address-balance overflow_ellipsis">
-                                <MosaicAmountDisplay :absolute-amount="addressMosaicMap[a.plain()]" />
+                            <span v-if="addressBalanceMap[a.plain()] != null" class="address-balance overflow_ellipsis">
+                                <MosaicAmountDisplay :absolute-amount="addressBalanceMap[a.plain()]" />
                             </span>
                             <span v-else class="address-balance overflow_ellipsis">
                                 N/A

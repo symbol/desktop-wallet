@@ -128,8 +128,6 @@ export default class ImportProfileTs extends Vue {
             setTimeout(() => this.initOptInAccounts(), 300);
         });
         await this.$store.dispatch('temporary/initialize');
-        this.$store.commit('account/resetSelectedAddressesToInteract');
-        this.$store.commit('account/resetSelectedAddressesOptInToInteract');
     }
 
     @Watch('selectedAccounts')
