@@ -26,6 +26,7 @@ import {
     SignedTransaction,
     Transaction,
     TransactionFees,
+    TransferTransaction,
     UInt64,
 } from 'symbol-sdk';
 import { Signer } from '@/store/Account';
@@ -34,6 +35,8 @@ import { Observable, of } from 'rxjs';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
 import { BroadcastResult } from '@/core/transactions/BroadcastResult';
 import { flatMap, map } from 'rxjs/operators';
+import { Store } from 'vuex/types/index';
+import { MosaicModel } from '@/core/database/entities/MosaicModel';
 
 export enum TransactionCommandMode {
     SIMPLE = 'SIMPLE',
@@ -63,7 +66,7 @@ export class TransactionCommand {
     }
 
     public announce(service: TransactionAnnouncerService, account: TransactionSigner): Observable<Observable<BroadcastResult>[]> {
-        return this.resolveTransactions(account).pipe(
+        return this.resolveTransactions(account, service.$store).pipe(
             flatMap((transactions) => {
                 const signedTransactions = transactions.map((t) => account.signTransaction(t, this.generationHash));
                 if (!signedTransactions.length) {
@@ -123,13 +126,23 @@ export class TransactionCommand {
         );
     }
 
-    public resolveTransactions(account: TransactionSigner = this.tempTransactionSigner): Observable<Transaction[]> {
+    public resolveTransactions(
+        account: TransactionSigner = this.tempTransactionSigner,
+        $store: Store<any> = undefined,
+    ): Observable<Transaction[]> {
         if (!this.stageTransactions.length) {
             return of([]);
         }
         const maxFee = this.stageTransactions.sort((a, b) => a.maxFee.compare(b.maxFee))[0].maxFee;
         if (this.mode === TransactionCommandMode.SIMPLE || this.mode === TransactionCommandMode.CHAINED_BINARY) {
-            return of(this.stageTransactions.map((t) => this.calculateSuggestedMaxFee(t)));
+            return of(
+                this.stageTransactions.map((t) => {
+                    if (t instanceof TransferTransaction && $store !== undefined) {
+                        t = this.auditTransferAmount(t, $store);
+                    }
+                    return this.calculateSuggestedMaxFee(t);
+                }),
+            );
         } else {
             const currentSigner = PublicAccount.createFromPublicKey(this.signerPublicKey, this.networkType);
             if (this.mode === TransactionCommandMode.AGGREGATE) {
@@ -208,5 +221,26 @@ export class TransactionCommand {
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         return undefined;
+    }
+
+    private auditTransferAmount(t: TransferTransaction, $store: Store<any>): Transaction {
+        const mosaicsInfo = $store.getters['mosaic/mosaics'] as MosaicModel[];
+        const mosaics = t.mosaics.map(
+            (mosaic): Mosaic => {
+                const amount = mosaic.amount.compact();
+                const info = mosaicsInfo.find((i) => i.mosaicIdHex === mosaic.id.toHex());
+                const div = info ? info.divisibility : 0;
+                // - format amount to absolute
+                return new Mosaic(mosaic.id, UInt64.fromUint(amount * Math.pow(10, div)));
+            },
+        );
+        return TransferTransaction.create(
+            t.deadline,
+            t.recipientAddress,
+            mosaics.length ? mosaics : [],
+            t.message,
+            t.networkType,
+            t.maxFee,
+        );
     }
 }
