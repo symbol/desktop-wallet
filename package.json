@@ -192,6 +192,7 @@
         "oneClick": false,
         "perMachine": false,
         "allowToChangeInstallationDirectory": true,
+        "publisherName": "NEM Group Limited",
         "installerIcon": "./assets/icons/Symbol.ico"
     },
     "linux": {
