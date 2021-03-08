@@ -84,6 +84,11 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
     hideSave: boolean;
 
     @Prop({
+        default: false,
+    })
+    editMode: boolean;
+
+    @Prop({
         default: () => ({}),
     })
     value: any;
@@ -181,7 +186,11 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
      * Reset the form with properties
      * @return {void}
      */
-    protected resetForm() {
+    protected resetForm(): void {
+        if (this.editMode) {
+            return;
+        }
+
         // - re-populate form if transaction staged
         // if (this.stagedTransactions.length) {
         //   // @TODO: initialization from staged transactions

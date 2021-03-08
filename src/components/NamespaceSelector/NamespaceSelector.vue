@@ -9,7 +9,7 @@
                 :name="$t('form_label_namespace_name')"
                 :rules="'required'"
                 tag="div"
-                class="inputs-container select-container"
+                class="select-container"
             >
                 <ErrorTooltip :errors="errors">
                     <Select

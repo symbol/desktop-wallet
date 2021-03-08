@@ -83,6 +83,7 @@ import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/
             signers: 'account/signers',
             networkConfiguration: 'network/networkConfiguration',
             transactionFees: 'network/transactionFees',
+            isOfflineMode: 'network/isOfflineMode',
         }),
     },
 })
@@ -178,6 +179,8 @@ export class ModalTransactionConfirmationTs extends Vue {
     public networkConfiguration: NetworkConfigurationModel;
 
     protected transactionFees: TransactionFees;
+
+    protected isOfflineMode: boolean;
 
     /**
      * Type the ValidationObserver refs
@@ -408,11 +411,15 @@ export class ModalTransactionConfirmationTs extends Vue {
             ledgerService
                 .signTransaction(currentPath, transaction, this.generationHash, ledgerAccount.publicKey)
                 .then((res: any) => {
-                    // - notify about successful transaction announce
-                    this.onConfirmationSuccess();
-                    const services = new TransactionAnnouncerService(this.$store);
-                    services.announce(res);
-                    this.show = false;
+                    if (this.isOfflineMode) {
+                        this.$emit('transaction-signed', res);
+                    } else {
+                        // - notify about successful transaction announce
+                        this.onConfirmationSuccess();
+                        const services = new TransactionAnnouncerService(this.$store);
+                        services.announce(res);
+                        this.show = false;
+                    }
                 })
                 .catch((error) => {
                     this.show = false;
@@ -435,11 +442,15 @@ export class ModalTransactionConfirmationTs extends Vue {
         ledgerService
             .signTransaction(currentPath, aggregate, this.generationHash, ledgerAccount.publicKey)
             .then((res) => {
-                // - notify about successful transaction announce
-                this.onConfirmationSuccess();
-                const services = new TransactionAnnouncerService(this.$store);
-                services.announce(res);
-                this.show = false;
+                if (this.isOfflineMode) {
+                    this.$emit('transaction-signed', res);
+                } else {
+                    // - notify about successful transaction announce
+                    this.onConfirmationSuccess();
+                    const services = new TransactionAnnouncerService(this.$store);
+                    services.announce(res);
+                    this.show = false;
+                }
             })
             .catch((error) => {
                 this.show = false;
@@ -848,14 +859,27 @@ export class ModalTransactionConfirmationTs extends Vue {
             AccountType.OPT_IN === this.currentAccount.type ||
             AccountType.KEYSTORE === this.currentAccount.type
         ) {
-            const announcements = await this.command.announce(new TransactionAnnouncerService(this.$store), transactionSigner).toPromise();
-            announcements.forEach((announcement) => {
-                announcement.subscribe((res) => {
-                    if (!res.success) {
-                        this.errorNotificationHandler(res.error);
-                    }
+            if (this.isOfflineMode) {
+                const signedTransactions = await this.command
+                    .sign(new TransactionAnnouncerService(this.$store), transactionSigner)
+                    .toPromise();
+                signedTransactions.forEach((signedTransactionObs) => {
+                    signedTransactionObs.subscribe((signedTransaction) => {
+                        this.$emit('transaction-signed', signedTransaction);
+                    });
                 });
-            });
+            } else {
+                const announcements = await this.command
+                    .announce(new TransactionAnnouncerService(this.$store), transactionSigner)
+                    .toPromise();
+                announcements.forEach((announcement) => {
+                    announcement.subscribe((res) => {
+                        if (!res.success) {
+                            this.errorNotificationHandler(res.error);
+                        }
+                    });
+                });
+            }
             // - notify about successful transaction announce
             this.onConfirmationSuccess();
             this.show = false;

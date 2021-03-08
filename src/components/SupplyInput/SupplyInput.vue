@@ -2,14 +2,7 @@
     <FormRow>
         <template v-slot:label> {{ $t(label) }}: </template>
         <template v-slot:inputs>
-            <ValidationProvider
-                v-slot="{ errors }"
-                vid="supply"
-                :name="$t(label)"
-                :rules="validationRules.supply"
-                tag="div"
-                class="inputs-container"
-            >
+            <ValidationProvider v-slot="{ errors }" vid="supply" :name="$t(label)" :rules="validationRules.supply" tag="div">
                 <ErrorTooltip :errors="errors">
                     <input v-model="chosenValue" class="input-style input-size" type="number" />
                 </ErrorTooltip>

@@ -21,7 +21,7 @@
                         :disabled="disabled"
                     />
                 </ErrorTooltip>
-                <div v-if="!disabled && addressBook.getAllContacts().length > 0" style="text-align: right; margin-top: 5px;">
+                <div v-if="!disabled && addressBook && addressBook.getAllContacts().length > 0" style="text-align: right; margin-top: 5px;">
                     <ContactSelector @change="onSelectContact" />
                 </div>
             </ValidationProvider>

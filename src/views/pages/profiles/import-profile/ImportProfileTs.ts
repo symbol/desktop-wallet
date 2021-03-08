@@ -128,6 +128,8 @@ export default class ImportProfileTs extends Vue {
             setTimeout(() => this.initOptInAccounts(), 300);
         });
         await this.$store.dispatch('temporary/initialize');
+        this.$store.commit('account/resetSelectedAddressesToInteract');
+        this.$store.commit('account/resetSelectedAddressesOptInToInteract');
     }
 
     @Watch('selectedAccounts')
@@ -177,8 +179,8 @@ export default class ImportProfileTs extends Vue {
         );
 
         // whitelist opt in accounts
-        const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'MAINNET' : 'TESTNET';
-        const whitelisted = process.env[`VUE_APP_${key}_WHITELIST`] ? process.env[`VUE_APP_${key}_WHITELIST`].split(',') : [];
+        const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
+        const whitelisted = process.env.KEYS_WHITELIST[key];
         const optInAccounts = possibleOptInAccounts.filter((account) => whitelisted.indexOf(account.publicKey) >= 0);
         if (optInAccounts.length === 0) {
             return;

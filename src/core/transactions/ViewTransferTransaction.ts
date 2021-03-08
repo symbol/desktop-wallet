@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { PublicAccount, TransferTransaction } from 'symbol-sdk';
+import { NamespaceId, PublicAccount, TransactionType, TransferTransaction } from 'symbol-sdk';
 // internal dependencies
 import { TransactionView } from './TransactionView';
 import { AttachedMosaic } from '@/services/MosaicService';
@@ -25,7 +25,21 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
 export class ViewTransferTransaction extends TransactionView<TransferTransaction> {
     public get isIncoming() {
         const currentSignerAddress = this.$store.getters['account/currentSignerAddress'];
+        if (this.transaction.type === TransactionType.TRANSFER && this.transaction.recipientAddress instanceof NamespaceId) {
+            const linkedAddress = this.$store.getters['namespace/linkedAddress'];
+            if (!linkedAddress) {
+                this.checkLinkedAddress(this.transaction.recipientAddress);
+                return false;
+            }
+            if (currentSignerAddress.equals(linkedAddress)) {
+                return true;
+            }
+        }
         return this.transaction.recipientAddress && currentSignerAddress && this.transaction.recipientAddress.equals(currentSignerAddress);
+    }
+
+    private async checkLinkedAddress(recipientNamespaceId) {
+        return await this.$store.dispatch('namespace/GET_LINKED_ADDRESS', recipientNamespaceId);
     }
 
     /**

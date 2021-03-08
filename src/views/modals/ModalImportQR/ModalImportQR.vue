@@ -11,7 +11,14 @@
                 <!-- Step2: Preview -->
                 <div v-if="wizardSteps.currentStepInx === 1" id="stepPreview">
                     <QRCodePassword :qrcode-json="qrcodeJson" @qrCodeGenerated="onQrCodeGenerated" />
-                    <QRCodeActions v-if="!!qrCode" :qr-code="qrCode" show-preview="true" :on-success="() => (show = false)" />
+                    <QRCodeActions
+                        v-if="!!qrCode"
+                        :qr-code="qrCode"
+                        show-preview="true"
+                        :on-success="() => (show = false)"
+                        :confirm-action="confirmAction"
+                        :confirm-text="confirmText"
+                    />
                 </div>
             </div>
         </Modal>
