@@ -89,7 +89,17 @@ export class TransactionAnnouncerService {
         }
     }
 
+    private retrySubscribe() {
+        const address = this.$store.getters['account/currentAccountAddress'];
+        this.$store.dispatch('account/UNSUBSCRIBE', address);
+        this.$store.dispatch('account/SUBSCRIBE', address);
+    }
+
     private timeout<T, R>(message: string): OperatorFunction<T, T> {
+        const listener: IListener = this.$store.getters['account/listener'];
+        if (!listener.isOpen()) {
+            this.retrySubscribe();
+        }
         if (!this.transactionTimeout) {
             return (o) => o;
         }

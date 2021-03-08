@@ -1050,5 +1050,6 @@
     "copyright": "Copyright © 2021 NEM Software",
     "address_list_cannot_be_empty": "リストから1つ以上のアカウントを選択してください。",
     "launching_mainnet_soon": "メインネットネットワークはまだ起動されていません。これは実験的なノードであることに注意してください。",
+    "ws_connection_failed": ">> Websocketサブスクリプションが失敗しました",
     "opt_in_account_notification": "このアカウントは古い派生によって取得されています。資産をシードアカウントへ移動することを推奨します。"
 }
