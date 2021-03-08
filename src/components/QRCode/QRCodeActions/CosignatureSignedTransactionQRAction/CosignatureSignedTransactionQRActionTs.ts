@@ -68,7 +68,14 @@ export default class CosignatureSignedTransactionQRActionTs extends Vue {
 
     public async onSubmit() {
         const transactionAnnouncerService = new TransactionAnnouncerService(this.$store);
-        transactionAnnouncerService.announceAggregateBondedCosignature(this.tran);
+        transactionAnnouncerService.announceAggregateBondedCosignature(this.tran).subscribe((res) => {
+            if (res.success) {
+                this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_announced');
+            }
+            else if (res.error) {
+                this.$store.dispatch('notification/ADD_ERROR', res.error);
+            }
+        });
         this.onSuccess();
     }
 }

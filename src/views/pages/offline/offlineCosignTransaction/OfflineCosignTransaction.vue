@@ -33,7 +33,7 @@
                         <textarea
                             v-model="importedPayload"
                             :placeholder="$t('form_label_import_placeholder')"
-                            @change="calculateAggregateTransaction"
+                            @input="calculateAggregateTransaction"
                         />
                         <button
                             type="button"

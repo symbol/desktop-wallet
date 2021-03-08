@@ -61,7 +61,14 @@ export default class SignedTransactionQRActionTs extends Vue {
 
     public async onSubmit() {
         const transactionAnnouncerService = new TransactionAnnouncerService(this.$store);
-        transactionAnnouncerService.announce(this.tran);
+        transactionAnnouncerService.announce(this.tran).subscribe((res) => {
+            if (res.success) {
+                this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_announced');
+            }
+            else if (res.error) {
+                this.$store.dispatch('notification/ADD_ERROR', res.error);
+            }
+        });
         this.onSuccess();
     }
 }
