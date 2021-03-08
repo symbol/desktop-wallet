@@ -70,7 +70,7 @@
                                                                 />
                                                             </span>
                                                             <span v-else class="address-balance">
-                                                                N/A
+                                                                0
                                                             </span>
                                                         </div>
                                                         <span class="remove-icon"
@@ -119,7 +119,7 @@
                                                                 />
                                                             </span>
                                                             <span v-else class="address-balance">
-                                                                N/A
+                                                                0
                                                             </span>
                                                         </div>
                                                         <span class="remove-icon"

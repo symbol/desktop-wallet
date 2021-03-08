@@ -155,7 +155,10 @@ export default class ImportProfileTs extends Vue {
             return;
         }
         // map balances
-        this.addressMosaicMap = this.mapBalanceByAddress(accountsInfo, this.networkMosaic);
+        this.addressMosaicMap = {
+            ...this.addressMosaicMap,
+            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic),
+        };
 
         this.initialized = true;
     }
