@@ -116,4 +116,5 @@ export enum NotificationType {
     COPY_FAILED = 'copy_failed',
     INVALID_NODE = 'invalid_node',
     WS_CONNECTION_FAILED = 'ws_connection_failed',
+    CURRENT_NODE_NOT_AVAILABLE = 'reconnect_to_different_node',
 }
