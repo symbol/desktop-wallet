@@ -1055,7 +1055,7 @@
     "address_list_cannot_be_empty": "Please, select 1 or more seed accounts from the list.",
     "launching_mainnet_soon": "Please note that this is an experimental node as the mainnet network has not been launched yet.",
     "opt_in_account_notification": "This account is obtained by an older derivation. It is recommended that you move the funds to a Seed Account",
-    "ws_connection_failed": "Websocket subscription failed.",
+    "ws_connection_failed": "Websocket is not listening.",
     "offline_transactions_title": "Offline transactions",
     "offline_transactions_text1": "To be completely safe, make sure to use a computer that is NEVER connected to internet.",
     "offline_transactions_text2": "Only simple transactions can be created because a connection is needed to fetch mosaics and multisig information from NEM nodes.",

@@ -1049,5 +1049,5 @@
     "copyright": "版权所有©2021 NEM软件",
     "address_list_cannot_be_empty": ">>请从列表中选择1个或多个帐户。",
     "launching_mainnet_soon": ">>请注意，这是一个实验性节点，因为主网尚未启动。",
-    "ws_connection_failed": "Websocket订阅失败"
+    "ws_connection_failed": "Websocket没有在监听"
 }
