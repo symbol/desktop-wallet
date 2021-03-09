@@ -20,8 +20,6 @@ import { AddressValidator } from '@/core/validation/validators';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { TransactionGroupState } from '@/store/Transaction';
 import { CommonHelpers } from '@/core/utils/CommonHelpers';
-// import { AppStore } from '@/app/AppStore';
-// import { NetworkService } from './NetworkService';
 
 /**
  * This Service is more like a static helper now. All the methods are statics. Rename and move.
