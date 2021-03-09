@@ -455,6 +455,17 @@ export default {
         SET_NETWORK_TYPE({ commit }, networkType: NetworkType) {
             commit('networkType', networkType);
         },
+        async CHECK_NODE({ rootGetters }, url: string) {
+            const NodeUrl = url.replace(/ws:/g, 'http:').replace('/ws', '');
+            const networkService = new NetworkService();
+            const networkType = rootGetters['network/networkType'];
+            const nodeNetworkModelResult = await networkService.getNetworkModel(NodeUrl, networkType, false).toPromise();
+            if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel) {
+                return true;
+            } else {
+                return false;
+            }
+        },
         async SET_CURRENT_PEER({ dispatch }, currentPeerUrl) {
             if (!UrlValidator.validate(currentPeerUrl)) {
                 console.log('Cannot change node. URL is not valid: ' + currentPeerUrl);

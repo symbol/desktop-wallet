@@ -20,6 +20,8 @@ import { AddressValidator } from '@/core/validation/validators';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { TransactionGroupState } from '@/store/Transaction';
 import { CommonHelpers } from '@/core/utils/CommonHelpers';
+// import { AppStore } from '@/app/AppStore';
+// import { NetworkService } from './NetworkService';
 
 /**
  * This Service is more like a static helper now. All the methods are statics. Rename and move.
@@ -51,7 +53,12 @@ export class RESTService {
             if (!listener.isOpen()) {
                 await listener.open(async (event: { client: string; code: any; reason: any }) => {
                     if (event && event.code !== 1005) {
-                        await CommonHelpers.retryNTimes(listener, 3, 5000);
+                        const checkNode = await context.dispatch('network/CHECK_NODE', listener.url);
+                        if (!checkNode) {
+                            context.dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE, { root: true });
+                        } else {
+                            await CommonHelpers.retryNTimes(listener, 3, 5000);
+                        }
                     } else {
                         context.dispatch('notification/ADD_ERROR', event.reason, { root: true });
                     }
@@ -139,4 +146,15 @@ export class RESTService {
             return;
         }
     }
+    // private static async checkNodeStatus(url: string) {
+    //     const NodeUrl = url.replace(/ws:/g, 'http:').replace('/ws', '');
+    //     const networkService = new NetworkService();
+    //     const currentProfile = AppStore.getters['profile/currentProfile'];
+    //     const nodeNetworkModelResult = await networkService.getNetworkModel(NodeUrl, currentProfile.networkType, false).toPromise();
+    //     if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel) {
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
 }
