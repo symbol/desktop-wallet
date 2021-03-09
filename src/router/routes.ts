@@ -457,9 +457,20 @@ export const routes: AppRoute[] = [
                         meta: {
                             protected: false,
                             isLedger: true,
+                            nextPage: 'profiles.accessLedger.walletSelection',
                         },
                         // @ts-ignore
                         component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
+                    },
+                    {
+                        path: 'walletChoose',
+                        name: 'profiles.accessLedger.walletSelection',
+                        meta: {
+                            protected: false,
+                            isLedger: true,
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/profiles/access-ledger/account-selection/AccountSelection.vue'),
                     },
                     {
                         path: 'finishCreate',

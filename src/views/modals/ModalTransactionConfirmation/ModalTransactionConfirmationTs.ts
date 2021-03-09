@@ -375,10 +375,11 @@ export class ModalTransactionConfirmationTs extends Vue {
             throw { errorCode: 'ledger_not_supported_app' };
         }
         const currentPath = this.currentAccount.path;
+        const isOptinLedgerWallet = this.currentAccount.type === AccountType.LEDGER_OPT_IN;
         const networkType = this.currentProfile.networkType;
         const accountService = new AccountService();
         this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-        const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath, true);
+        const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath, true, isOptinLedgerWallet);
         if (signerPublicKey === this.currentAccount.publicKey.toLowerCase()) {
             const publicKey = signerPublicKey;
             const ledgerAccount = PublicAccount.createFromPublicKey(publicKey.toUpperCase(), networkType);
@@ -390,6 +391,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             return {
                 ledgerService,
                 currentPath,
+                isOptinLedgerWallet,
                 networkType,
                 accountService,
                 publicKey,
@@ -405,11 +407,11 @@ export class ModalTransactionConfirmationTs extends Vue {
     }
 
     private async ledgerAccountSimpleTransactionOnSigner(values) {
-        const { ledgerService, currentPath, ledgerAccount, stageTransactions } = values;
+        const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount, stageTransactions } = values;
         stageTransactions.map(async (t) => {
             const transaction = this.command.calculateSuggestedMaxFee(t);
             ledgerService
-                .signTransaction(currentPath, transaction, this.generationHash, ledgerAccount.publicKey)
+                .signTransaction(currentPath, transaction, this.generationHash, ledgerAccount.publicKey, isOptinLedgerWallet)
                 .then((res: any) => {
                     if (this.isOfflineMode) {
                         this.$emit('transaction-signed', res);
@@ -429,7 +431,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     }
 
     private async ledgerAccountAggregateTransactionOnSigner(values) {
-        const { ledgerService, currentPath, ledgerAccount, multisigAccount, stageTransactions, maxFee } = values;
+        const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount, multisigAccount, stageTransactions, maxFee } = values;
         const aggregate = this.command.calculateSuggestedMaxFee(
             AggregateTransaction.createComplete(
                 Deadline.create(this.epochAdjustment),
@@ -440,7 +442,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             ),
         );
         ledgerService
-            .signTransaction(currentPath, aggregate, this.generationHash, ledgerAccount.publicKey)
+            .signTransaction(currentPath, aggregate, this.generationHash, ledgerAccount.publicKey, isOptinLedgerWallet)
             .then((res) => {
                 if (this.isOfflineMode) {
                     this.$emit('transaction-signed', res);
@@ -459,7 +461,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     }
 
     private async ledgerAccountMultisigTransactionOnSigner(values) {
-        const { ledgerService, currentPath, ledgerAccount, multisigAccount, stageTransactions, maxFee } = values;
+        const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount, multisigAccount, stageTransactions, maxFee } = values;
         const aggregate = this.command.calculateSuggestedMaxFee(
             AggregateTransaction.createBonded(
                 Deadline.create(this.epochAdjustment),
@@ -470,7 +472,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             ),
         );
         const signedAggregateTransaction = await ledgerService
-            .signTransaction(currentPath, aggregate, this.generationHash, ledgerAccount.publicKey)
+            .signTransaction(currentPath, aggregate, this.generationHash, ledgerAccount.publicKey, isOptinLedgerWallet)
             .then((signedAggregateTransaction) => {
                 return signedAggregateTransaction;
             });
@@ -485,7 +487,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             ),
         );
         const signedHashLock = await ledgerService
-            .signTransaction(currentPath, hashLock, this.generationHash, ledgerAccount.publicKey)
+            .signTransaction(currentPath, hashLock, this.generationHash, ledgerAccount.publicKey, isOptinLedgerWallet)
             .then((res) => {
                 return res;
             });
@@ -537,10 +539,11 @@ export class ModalTransactionConfirmationTs extends Vue {
             throw { errorCode: 'ledger_not_supported_app' };
         }
         const currentPath = this.currentAccount.path;
+        const isOptinLedgerWallet = this.currentAccount.type === AccountType.LEDGER_OPT_IN;
         const networkType = this.currentProfile.networkType;
         const accountService = new AccountService();
         this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-        const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath, true);
+        const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath, true, isOptinLedgerWallet);
         if (signerPublicKey === this.currentAccount.publicKey.toLowerCase()) {
             const ledgerAccount = PublicAccount.createFromPublicKey(signerPublicKey.toUpperCase(), networkType);
             // - open signature modal
@@ -561,7 +564,7 @@ export class ModalTransactionConfirmationTs extends Vue {
 
     private async ledgerAccDelHarvestOnStartOrSwap(values) {
         console.log('start or swap called');
-        const { ledgerService, currentPath, ledgerAccount } = values;
+        const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount } = values;
         const keyLinkAggregateCompleteTransaction = this.stagedTransactions[0];
         this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
         const signedKeyLinkAggregateCompleteTransaction = await ledgerService.signTransaction(
@@ -569,6 +572,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             keyLinkAggregateCompleteTransaction,
             this.generationHash,
             ledgerAccount.publicKey,
+            isOptinLedgerWallet,
         );
 
         const persistentDelegationRequestTransaction = this.stagedTransactions[1];
@@ -578,6 +582,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             persistentDelegationRequestTransaction,
             this.generationHash,
             ledgerAccount.publicKey,
+            isOptinLedgerWallet,
         );
         // Announce 1, after success, storage 2
         // - notify about successful transaction announce
@@ -602,7 +607,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     }
 
     private async ledgerAccDelHarvestKeyOnStop(values) {
-        const { ledgerService, currentPath, ledgerAccount } = values;
+        const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount } = values;
         const keyUnLinkAggregateCompleteTransaction = this.stagedTransactions[0];
         this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
         const signedKeyUnLinkAggregateCompleteTransaction = await ledgerService.signTransaction(
@@ -610,6 +615,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             keyUnLinkAggregateCompleteTransaction,
             this.generationHash,
             ledgerAccount.publicKey,
+            isOptinLedgerWallet,
         );
         // - notify about successful transaction announce
         this.onConfirmationSuccess();
@@ -682,7 +688,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     }
 
     private async ledgerAccMultisigDelHarvestOnStartOrSwap(values) {
-        const { ledgerService, currentPath, ledgerAccount } = values;
+        const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount } = values;
 
         const lockFundsKeyLinkAggregateBondedTransaction = this.stagedTransactions[0];
         const keyLinkAggregateBondedTransaction = this.stagedTransactions[1];
@@ -696,6 +702,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             keyLinkAggregateBondedTransaction,
             this.generationHash,
             ledgerAccount.publicKey,
+            isOptinLedgerWallet,
         );
 
         Object.assign(lockFundsKeyLinkAggregateBondedTransaction, {
@@ -707,6 +714,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             lockFundsKeyLinkAggregateBondedTransaction,
             this.generationHash,
             ledgerAccount.publicKey,
+            isOptinLedgerWallet,
         );
 
         this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
@@ -715,6 +723,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             persistentDelegationRequestAggregateBondedTransaction,
             this.generationHash,
             ledgerAccount.publicKey,
+            isOptinLedgerWallet,
         );
 
         Object.assign(lockFundsPersistentDelegationRequestAggregateBondedTransaction, {
@@ -726,6 +735,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             lockFundsPersistentDelegationRequestAggregateBondedTransaction,
             this.generationHash,
             ledgerAccount.publicKey,
+            isOptinLedgerWallet,
         );
 
         const signedKeyLinkTransactions: Observable<SignedTransaction>[] = [
