@@ -165,19 +165,16 @@
     },
     "mac": {
         "category": "public.app-category.finance",
-        "target": "tar.gz",
+        "target": "dmg",
         "icon": "./assets/icons/Icon.incs",
         "hardenedRuntime": true,
         "gatekeeperAssess": false,
         "asarUnpack": [
             "**/*.node"
         ],
-        "entitlements": "electron/entitlements.mac.plist",
+        "entitlements": "./electron/entitlements.mac.plist",
         "extendInfo": {
-            "NSCameraUsageDescription": "This app requires camera access to scan qrcodes.",
-            "NSAppTransportSecurity": {
-                "NSAllowsArbitraryLoads": true
-            }
+            "NSCameraUsageDescription": "This app requires camera access to scan qrcodes."
         }
     },
     "dmg": {
