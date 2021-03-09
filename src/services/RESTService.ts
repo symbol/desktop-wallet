@@ -58,7 +58,7 @@ export class RESTService {
                             await CommonHelpers.retryNTimes(listener, 3, 5000);
                         }
                     } else {
-                        context.dispatch('notification/ADD_ERROR', event.reason, { root: true });
+                        context.dispatch('notification/ADD_WARNING', NotificationType.WS_CONNECTION_FAILED, { root: true });
                     }
                 });
             }
