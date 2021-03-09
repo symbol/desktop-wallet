@@ -13,14 +13,20 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Formatters } from '@/core/utils/Formatters';
 import { mapGetters } from 'vuex';
-import { Address, MosaicId } from 'symbol-sdk';
+import { Network } from 'symbol-hd-wallets';
+import { AccountInfo, PublicAccount, Address, MosaicId, NetworkType, RepositoryFactory } from 'symbol-sdk';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
+// @ts-ignore
+import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue';
 
 @Component({
+    components: {
+        MosaicAmountDisplay,
+    },
     computed: {
         ...mapGetters({
             currentMnemonic: 'temporary/mnemonic',
@@ -30,6 +36,7 @@ import { AccountService } from '@/services/AccountService';
             currentProfile: 'profile/currentProfile',
             currentPassword: 'temporary/password',
             selectedAccounts: 'account/selectedAddressesToInteract',
+            optInSelectedAccounts: 'account/selectedAddressesOptInToInteract',
         }),
     },
 })
@@ -43,7 +50,7 @@ export default class AccessLedgerTs extends Vue {
      * List of steps
      * @var {string[]}
      */
-    public StepBarTitleList = ['create_profile', 'finish'];
+    public StepBarTitleList = ['create_profile', 'select_accounts', 'finish'];
 
     /**
      * Network's currency mosaic id
@@ -79,6 +86,13 @@ export default class AccessLedgerTs extends Vue {
     public addressesList: Address[] = [];
 
     /**
+     * List of opt in addresses
+     * @var {string[] | Address[]}
+     */
+    public optInAddressesList: Address[] = [];
+    private optInAccountsList: string[] = [];
+
+    /**
      * Balances map
      * @var {any}
      */
@@ -91,16 +105,113 @@ export default class AccessLedgerTs extends Vue {
     public selectedAccounts: number[];
 
     /**
+     * Map of selected accounts
+     * @var {number[]}
+     */
+    public optInSelectedAccounts: number[];
+
+    /**
      * Indicates if account balance and addresses are already fetched
      */
     private initialized: boolean = false;
+    private optInInitialized: boolean = false;
 
     /**
      * Hook called when the page is mounted
      * @return {void}
      */
     async mounted() {
+        this.accountService = new AccountService();
+        Vue.nextTick().then(() => {
+            setTimeout(() => this.initAccounts(), 300);
+        });
         await this.$store.dispatch('temporary/initialize');
+    }
+
+    @Watch('selectedAccounts')
+    /**
+     * Fetch account balances and map to address
+     * @return {void}
+     */
+    private async initAccounts() {
+        if (this.initialized) {
+            return;
+        }
+
+        // - generate addresses
+        this.addressesList = await this.accountService.getLedgerAccounts(this.currentProfile.networkType, 10);
+
+        const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+        // fetch accounts info
+        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
+        if (!accountsInfo) {
+            return;
+        }
+        // map balances
+        this.addressMosaicMap = this.mapBalanceByAddress(accountsInfo, this.networkMosaic);
+
+        this.initialized = true;
+        this.initOptInAccounts();
+    }
+
+    /**
+     * Fetch account balances and map to address
+     * @return {void}
+     */
+    @Watch('optInSelectedAccounts')
+    private async initOptInAccounts(): Promise<void> {
+        if (this.optInInitialized) {
+            return;
+        }
+
+        // - generate addresses
+        this.optInAccountsList = await this.accountService.getLedgerPublickey(this.currentProfile.networkType, 10, Network.BITCOIN, false);
+
+        // whitelist opt in accounts
+        const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
+        const whitelisted = process.env.KEYS_WHITELIST[key];
+        const optInAccounts = this.optInAccountsList.filter((account) => whitelisted.indexOf(account) >= 0);
+        if (optInAccounts.length === 0) {
+            return;
+        }
+        this.optInAddressesList = optInAccounts.map(
+            (account: string) => PublicAccount.createFromPublicKey(account, this.currentProfile.networkType).address,
+        );
+
+        // fetch accounts info
+        const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
+
+        // map balances
+        this.addressMosaicMap = {
+            ...this.addressMosaicMap,
+            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic),
+        };
+
+        this.optInInitialized = true;
+    }
+
+    public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaic: MosaicId): Record<string, number> {
+        return accountsInfo
+            .map(({ mosaics, address }) => {
+                // - check balance
+                const hasNetworkMosaic = mosaics.find((mosaicOwned) => mosaicOwned.id.equals(mosaic));
+
+                // - account doesn't hold network mosaic so the balance is zero
+                if (hasNetworkMosaic === undefined) {
+                    return {
+                        address: address.plain(),
+                        balance: 0,
+                    };
+                }
+                // - map balance to address
+                const balance = hasNetworkMosaic.amount.compact();
+                return {
+                    address: address.plain(),
+                    balance: balance,
+                };
+            })
+            .reduce((acc, { address, balance }) => ({ ...acc, [address]: balance }), {});
     }
 
     public getCurrentStep(): number {
@@ -108,12 +219,31 @@ export default class AccessLedgerTs extends Vue {
             default:
             case 'profiles.accessLedger.info':
                 return 0;
-            case 'profiles.accessLedger.finalize':
+            case 'profiles.accessLedger.walletSelection':
                 return 1;
+            case 'profiles.accessLedger.finalize':
+                return 2;
         }
     }
 
     public getStepClassName(index: number): string {
         return this.getCurrentStep() == index ? 'active' : this.getCurrentStep() > index ? 'done' : '';
+    }
+
+    /**
+     * Called when clicking on an address to remove it from the selection
+     * @protected
+     * @param {number} pathNumber
+     */
+    protected onRemoveAddress(pathNumber: number): void {
+        this.$store.commit('account/removeFromSelectedAddressesToInteract', pathNumber);
+    }
+    /**
+     * Called when clicking on an address to remove it from the selection
+     * @protected
+     * @param {number} pathNumber
+     */
+    protected onRemoveOptInAddress(pathNumber: number): void {
+        this.$store.commit('account/removeFromSelectedAddressesOptInToInteract', pathNumber);
     }
 }

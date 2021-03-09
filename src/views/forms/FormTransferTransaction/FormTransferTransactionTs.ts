@@ -415,7 +415,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
 
     protected get isLedger(): boolean {
-        return this.currentAccount.type == AccountType.LEDGER;
+        return this.currentAccount.type === AccountType.LEDGER || this.currentAccount.type === AccountType.LEDGER_OPT_IN;
     }
 
     protected get hasAccountUnlockModal(): boolean {

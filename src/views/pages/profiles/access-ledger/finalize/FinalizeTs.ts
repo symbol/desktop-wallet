@@ -31,7 +31,7 @@ import { mapGetters } from 'vuex';
 export default class FinalizeTs extends Vue {
     /**
      * Finalize the profile creation process by adding
-     * just redirect to dasbroad page.
+     * just redirect to dashboard page.
      * @return {void}
      */
     /**
@@ -45,14 +45,7 @@ export default class FinalizeTs extends Vue {
     public currentAccount: AccountModel;
     public async submit() {
         // use repository for storage
-        this.ledgerAccountService.saveAccount(this.currentAccount);
         this.profileService.updateProfileTermsAndConditionsStatus(this.currentProfile, true);
-
-        // execute store actions
-        await this.$store.dispatch('profile/ADD_ACCOUNT', this.currentAccount);
-        await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', this.currentAccount);
-        await this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', [this.currentAccount.id]);
-        await this.$store.dispatch('temporary/RESET_STATE');
 
         // flush and continue
         return this.$router.push({ name: 'dashboard' });

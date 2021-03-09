@@ -38,7 +38,7 @@ export class LedgerService {
         }
     }
 
-    public async getAccount(path: string, display: boolean) {
+    public async getAccount(path: string, display: boolean, isOptinLedgerWallet: boolean) {
         try {
             if (!DerivationPathValidator.validate(path, this.networkType)) {
                 const errorMessage = 'Invalid derivation path: ' + path;
@@ -46,7 +46,7 @@ export class LedgerService {
             }
             this.transport = await this.openTransport();
             const symbolLedger = new SymbolLedger(this.transport, 'XYM');
-            const result = await symbolLedger.getAccount(path, this.networkType, display, false);
+            const result = await symbolLedger.getAccount(path, this.networkType, display, false, isOptinLedgerWallet);
             return result;
         } catch (error) {
             throw this.formatError(error);
@@ -55,7 +55,13 @@ export class LedgerService {
         }
     }
 
-    public async signTransaction(path: string, transferTransaction: any, networkGenerationHash: string, signerPublicKey: string) {
+    public async signTransaction(
+        path: string,
+        transferTransaction: any,
+        networkGenerationHash: string,
+        signerPublicKey: string,
+        isOptinLedgerWallet: boolean,
+    ) {
         try {
             if (!DerivationPathValidator.validate(path, this.networkType)) {
                 const errorMessage = 'Invalid derivation path: ' + path;
@@ -63,7 +69,13 @@ export class LedgerService {
             }
             this.transport = await this.openTransport();
             const symbolLedger = new SymbolLedger(this.transport, 'XYM');
-            const result = await symbolLedger.signTransaction(path, transferTransaction, networkGenerationHash, signerPublicKey);
+            const result = await symbolLedger.signTransaction(
+                path,
+                transferTransaction,
+                networkGenerationHash,
+                signerPublicKey,
+                isOptinLedgerWallet,
+            );
             return result;
         } catch (error) {
             throw this.formatError(error);
@@ -72,7 +84,12 @@ export class LedgerService {
         }
     }
 
-    public async signCosignatureTransaction(path: string, cosignatureTransaction: any, signerPublicKey: string) {
+    public async signCosignatureTransaction(
+        path: string,
+        cosignatureTransaction: any,
+        signerPublicKey: string,
+        isOptinLedgerWallet: boolean,
+    ) {
         try {
             if (!DerivationPathValidator.validate(path, this.networkType)) {
                 const errorMessage = 'Invalid derivation path: ' + path;
@@ -80,7 +97,12 @@ export class LedgerService {
             }
             this.transport = await this.openTransport();
             const symbolLedger = new SymbolLedger(this.transport, 'XYM');
-            const result = await symbolLedger.signCosignatureTransaction(path, cosignatureTransaction, signerPublicKey);
+            const result = await symbolLedger.signCosignatureTransaction(
+                path,
+                cosignatureTransaction,
+                signerPublicKey,
+                isOptinLedgerWallet,
+            );
             return result;
         } catch (error) {
             throw this.formatError(error);

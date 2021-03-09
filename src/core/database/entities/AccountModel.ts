@@ -23,6 +23,7 @@ export class AccountType {
     public static readonly TREZOR = 4;
     public static readonly LEDGER = 5;
     public static readonly OPT_IN = 6;
+    public static readonly LEDGER_OPT_IN = 7;
 
     public static fromDescriptor(descriptor: string) {
         switch (descriptor) {
@@ -39,6 +40,8 @@ export class AccountType {
                 return AccountType.LEDGER;
             case 'OptIn':
                 return AccountType.OPT_IN;
+            case 'Ledger-OptIn':
+                return AccountType.LEDGER_OPT_IN;
         }
     }
 }

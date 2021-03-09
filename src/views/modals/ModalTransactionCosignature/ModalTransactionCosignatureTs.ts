@@ -297,7 +297,7 @@ export class ModalTransactionCosignatureTs extends Vue {
 
     public async onSigner(transactionSigner: TransactionSigner) {
         // - sign cosignature transaction
-        if (this.currentAccount.type === AccountType.LEDGER) {
+        if (this.currentAccount.type === AccountType.LEDGER || this.currentAccount.type === AccountType.LEDGER_OPT_IN) {
             try {
                 const ledgerService = new LedgerService(this.currentProfile.networkType);
                 const isAppSupported = await ledgerService.isAppSupported();
@@ -305,13 +305,19 @@ export class ModalTransactionCosignatureTs extends Vue {
                     throw { errorCode: 'ledger_not_supported_app' };
                 }
                 const currentPath = this.currentAccount.path;
+                const isOptinLedgerWallet = this.currentAccount.type === AccountType.LEDGER_OPT_IN;
                 const addr = this.currentAccount.address;
                 const networkType = this.currentProfile.networkType;
                 const accountService = new AccountService();
                 this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-                const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath, true);
+                const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath, true, isOptinLedgerWallet);
                 if (signerPublicKey === this.currentAccount.publicKey.toLowerCase()) {
-                    const signature = await ledgerService.signCosignatureTransaction(currentPath, this.transaction, signerPublicKey);
+                    const signature = await ledgerService.signCosignatureTransaction(
+                        currentPath,
+                        this.transaction,
+                        signerPublicKey,
+                        isOptinLedgerWallet,
+                    );
                     this.$store.dispatch(
                         'diagnostic/ADD_DEBUG',
                         `Co-signed transaction with account ${addr} and result: ${JSON.stringify({

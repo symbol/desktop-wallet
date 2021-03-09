@@ -186,7 +186,7 @@ export class ModalFormSubAccountCreationTs extends Vue {
     }
 
     public get isLedger(): boolean {
-        return this.currentAccount.type == AccountType.LEDGER;
+        return this.currentAccount.type === AccountType.LEDGER || this.currentAccount.type === AccountType.LEDGER_OPT_IN;
     }
 
     public get isPrivateKeyAccount(): boolean {
@@ -379,8 +379,14 @@ export class ModalFormSubAccountCreationTs extends Vue {
                 throw { errorCode: 'ledger_not_supported_app' };
             }
             const accountService = new AccountService();
+            const isOptinLedgerWallet = false;
             const nextPath = this.paths.getNextAccountPath(this.knownPaths);
-            const publicKey = await accountService.getLedgerPublicKeyByPath(this.currentProfile.networkType, nextPath, false);
+            const publicKey = await accountService.getLedgerPublicKeyByPath(
+                this.currentProfile.networkType,
+                nextPath,
+                false,
+                isOptinLedgerWallet,
+            );
             const address = PublicAccount.createFromPublicKey(publicKey, this.currentProfile.networkType).address;
             return {
                 id: SimpleObjectStorage.generateIdentifier(),
