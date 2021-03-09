@@ -179,7 +179,10 @@ export class ModalFormSubAccountCreationTs extends Vue {
             return [];
         }
         // filter accounts to only known account names
-        return this.knownAccounts.map((a) => a.path).filter((p) => p);
+        return this.knownAccounts
+            .filter((account) => account.type !== AccountType.OPT_IN)
+            .map((a) => a.path)
+            .filter((p) => p);
     }
 
     public get isLedger(): boolean {
