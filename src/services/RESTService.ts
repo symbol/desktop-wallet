@@ -151,15 +151,4 @@ export class RESTService {
             return;
         }
     }
-    // private static async checkNodeStatus(url: string) {
-    //     const NodeUrl = url.replace(/ws:/g, 'http:').replace('/ws', '');
-    //     const networkService = new NetworkService();
-    //     const currentProfile = AppStore.getters['profile/currentProfile'];
-    //     const nodeNetworkModelResult = await networkService.getNetworkModel(NodeUrl, currentProfile.networkType, false).toPromise();
-    //     if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
 }
