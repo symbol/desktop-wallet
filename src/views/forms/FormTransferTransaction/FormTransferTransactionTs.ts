@@ -341,13 +341,16 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * @return {TransferTransaction[]}
      */
     protected getTransactions(): TransferTransaction[] {
+        const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[];
         const mosaics = this.formItems.attachedMosaics
             .filter((attachment) => attachment.uid) // filter out null values
             .map(
                 (attachment): Mosaic => {
                     const amount = Number(attachment.amount.trim().replace(DECIMAL_SEPARATOR, '.'));
-                    const mosaicId = new MosaicId(RawUInt64.fromHex(attachment.mosaicHex));
-                    return new Mosaic(mosaicId, UInt64.fromUint(amount));
+                    const info = mosaicsInfo.find((i) => i.mosaicIdHex === attachment.mosaicHex);
+                    const div = info ? info.divisibility : 0;
+                    // - format amount to absolute
+                    return new Mosaic(new MosaicId(RawUInt64.fromHex(attachment.mosaicHex)), UInt64.fromUint(amount * Math.pow(10, div)));
                 },
             );
         return [
@@ -714,7 +717,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         const transactions = this.getTransactions().map((t) => {
             //@ts-ignore
             t.maxFee = UInt64.fromUint(maxFee);
-
             return t;
         });
 
