@@ -15,7 +15,7 @@
  */
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { AccountInfo, Address, PublicAccount, MosaicId, NetworkType, RepositoryFactory } from 'symbol-sdk';
+import { AccountInfo, Address, MosaicId, NetworkType, RepositoryFactory } from 'symbol-sdk';
 import { Network } from 'symbol-hd-wallets';
 // internal dependencies
 import { DerivationService } from '@/services/DerivationService';
@@ -128,7 +128,7 @@ export default class AccountSelectionTs extends Vue {
      * List of opt in addresses
      * @var {Address[]}
      */
-    public optInAddressesList: Address[] = [];
+    public optInAddressesList: { address: Address; index: number }[] = [];
 
     public networkCurrency: NetworkCurrencyModel;
 
@@ -252,24 +252,25 @@ export default class AccountSelectionTs extends Vue {
             // whitelist opt in accounts
             const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
             const whitelisted = process.env.KEYS_WHITELIST[key];
-            const optInAccounts = possibleOptInAccounts.filter(
-                (account: string) => whitelisted.map((publicKey) => publicKey.toUpperCase()).indexOf(account) >= 0,
-            );
+            const optInAccounts = possibleOptInAccounts
+                .map((optinAccount, index) => ({ account: optinAccount, index: index }))
+                .filter((account) => whitelisted.indexOf(account.account.publicKey) >= 0)
+                .map((account) => ({ address: account.account.address, index: account.index }));
             if (optInAccounts.length === 0) {
                 return;
             }
-            this.optInAddressesList = optInAccounts.map(
-                (account: string) => PublicAccount.createFromPublicKey(account, this.currentProfile.networkType).address,
-            );
+            this.optInAddressesList = optInAccounts;
+
+            const optInAddresses = this.optInAddressesList.map((account) => account.address);
 
             // fetch accounts info
             const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-            const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.optInAddressesList).toPromise();
+            const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(optInAddresses).toPromise();
 
             // map balances
             this.optInAddressBalanceMap = {
                 ...this.optInAddressBalanceMap,
-                ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.optInAddressesList),
+                ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, optInAddresses),
             };
         } catch (error) {
             this.errorNotificationHandler(error);

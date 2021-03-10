@@ -11,12 +11,12 @@
                     <span class="address-balance">{{ $t('balance') }}</span>
                 </div>
                 <div class="table-body">
-                    <div v-for="(a, index) in optInAddressesList" :key="'opt-in-' + index" @click="onAddAddressOptIn(index)">
-                        <div v-if="!selectedOptInAccounts.includes(index)" class="table-item pointer">
-                            <span class="address-id">{{ index + 1 }} (Opt In)</span>
-                            <span class="address-value">{{ formatters.miniAddress(a) }}</span>
-                            <span v-if="optInAddressBalanceMap[a.plain()] != null" class="address-balance overflow_ellipsis">
-                                <MosaicAmountDisplay :absolute-amount="optInAddressBalanceMap[a.plain()]" />
+                    <div v-for="(a, index) in optInAddressesList" :key="'opt-in-' + index" @click="onAddAddressOptIn(a.index)">
+                        <div v-if="!selectedOptInAccounts.includes(a.index)" class="table-item pointer">
+                            <span class="address-id">{{ a.index + 1 }} (Opt In)</span>
+                            <span class="address-value">{{ formatters.miniAddress(a.address) }}</span>
+                            <span v-if="optInAddressBalanceMap[a.address.plain()] != null" class="address-balance overflow_ellipsis">
+                                <MosaicAmountDisplay :absolute-amount="optInAddressBalanceMap[a.address.plain()]" />
                             </span>
                             <span v-else class="address-balance overflow_ellipsis">
                                 N/A

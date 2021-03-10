@@ -15,7 +15,7 @@
  */
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { NetworkType, Password, PublicAccount } from 'symbol-sdk';
+import { NetworkType, Password } from 'symbol-sdk';
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 import { ProfileService } from '@/services/ProfileService';
@@ -30,12 +30,8 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 import FormRow from '@/components/FormRow/FormRow.vue';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
-import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
-import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountService } from '@/services/AccountService';
-import { LedgerService } from '@/services/LedgerService';
 import { networkConfig } from '@/config';
-import { Network } from 'symbol-hd-wallets';
 
 /// end-region custom types
 
