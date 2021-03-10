@@ -1042,12 +1042,12 @@
     "stoping": "停止中...",
     "remote_keys_linked": "您的远程私钥和vrf私钥已链接到您的帐户，如果您想要开启委托收获，请选择一个远程节点，并链接节点密钥。如果您已经在收获，请选择您的收货节点以更新您的收获状态",
     "encrypt_ledger_keys_on_sign": "作为Ledger用户，我们需要您的密码来加密远程账户和vrf私钥。",
-    "harvesting_status_not_detected": "We can not detect you harvesting status, please select the node you are harvesting on",
+    "harvesting_status_not_detected": "我们无法检测到您的收割状态，请选择您要收割的节点。",
     "click_to_retry": "点击重试",
     "current_node_is_not_available": "当前节点不可用。\n尝试连接到节点",
     "nodes_unavailable_check_network_and": "节点（{0} / {1}）当前不可用。\n请检查您的网络连接，设置和",
     "copyright": "版权所有©2021 NEM软件",
-    "address_list_cannot_be_empty": "请从列表中选择1个或多个帐户。",
-    "launching_mainnet_soon": "Symbol 主网在 2021年3月15好发布，请在发布后下载最新版本。",
-    "ws_connection_failed": "Websocket没有在监听"
+    "address_list_cannot_be_empty": "请从列表中选择至少一个1个非选择加入账户。",
+    "launching_mainnet_soon": "Symbol 主网在 2021年3月15号发布，请在发布后下载最新版本。",
+    "ws_connection_failed": "钱包无法监视您在Symbol链上的帐户活动。请尝试选择其他节点。"
 }
