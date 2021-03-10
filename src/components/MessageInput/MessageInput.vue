@@ -17,8 +17,10 @@
                             v-model="plain"
                             wrap="hard"
                             class="textarea-style textarea-size message-textarea"
+                            :class="{ disabled: disabled }"
                             :placeholder="$t('please_enter_notes')"
                             rows="1"
+                            :disabled="disabled"
                         />
                     </div>
                 </ErrorTooltip>

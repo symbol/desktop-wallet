@@ -39,10 +39,11 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
     },
 })
 export class MessageInputTs extends Vue {
-    @Prop({
-        default: '',
-    })
+    @Prop({ default: '' })
     value: string;
+
+    @Prop({ default: false })
+    disabled: boolean;
 
     /**
      * Validation rules
