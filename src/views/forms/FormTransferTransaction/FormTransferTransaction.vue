@@ -118,6 +118,7 @@
                 :visible="hasAccountUnlockModal"
                 :on-success="onAccountUnlocked"
                 @close="closeAccountUnlockModal"
+                @cancelled="profileUnlockCancelled"
             />
         </FormWrapper>
 

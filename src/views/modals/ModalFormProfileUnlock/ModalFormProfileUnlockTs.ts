@@ -98,4 +98,8 @@ export class ModalFormProfileUnlockTs extends Vue {
     public onError(error: string) {
         this.$emit('error', error);
     }
+
+    public modalCancelled(): void {
+        this.$emit('cancelled');
+    }
 }

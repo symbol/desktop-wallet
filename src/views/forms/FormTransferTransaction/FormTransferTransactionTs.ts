@@ -691,6 +691,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         return true;
     }
 
+    profileUnlockCancelled() {
+        this.formItems.encryptMessage = false;
+    }
+
     closeAccountUnlockModal() {
         this.hasAccountUnlockModal = false;
     }
