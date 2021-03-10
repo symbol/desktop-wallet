@@ -139,7 +139,7 @@ export default class AccountSelectionTs extends Vue {
      * List of opt in addresses
      * @var {Address[]}
      */
-    public optInAddressesList: Address[] = [];
+    public optInAddressesList: { address: Address; index: number }[] = [];
 
     public networkCurrency: NetworkCurrencyModel;
 
@@ -216,19 +216,23 @@ export default class AccountSelectionTs extends Vue {
         // whitelist opt in accounts
         const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
         const whitelisted = process.env.KEYS_WHITELIST[key];
-        const optInAccounts = possibleOptInAccounts.filter((account) => whitelisted.indexOf(account.publicKey) >= 0);
+        const optInAccounts = possibleOptInAccounts
+            .map((optinAccount, index) => ({ account: optinAccount, index: index }))
+            .filter((account) => whitelisted.indexOf(account.account.publicKey) >= 0)
+            .map((account) => ({ address: account.account.address, index: account.index }));
         if (optInAccounts.length === 0) {
             return;
         }
-        this.optInAddressesList = optInAccounts.map((account) => account.address);
+        this.optInAddressesList = optInAccounts;
 
+        const optInAddresses = this.optInAddressesList.map((account) => account.address);
         // fetch accounts info
         const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.optInAddressesList).toPromise();
+        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(optInAddresses).toPromise();
         // map balances
         this.optInAddressBalanceMap = {
             ...this.optInAddressBalanceMap,
-            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.optInAddressesList),
+            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, optInAddresses),
         };
     }
 
