@@ -633,6 +633,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                 if (this.importTransaction) {
                     if (isEncrypted) {
                         this.formItems.messagePlain = importedTransactionMessage.payload;
+                        this.onChangeMessage();
                     } else {
                         this.hasAccountUnlockModal = true;
                     }
@@ -647,10 +648,12 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                         this.hasAccountUnlockModal = true;
                     } else {
                         this.formItems.messagePlain = importedTransactionMessage.payload;
+                        this.onChangeMessage();
                     }
                 } else {
                     this.formItems.messagePlain = this.plainMessage;
                     this.encyptedMessage = undefined;
+                    this.onChangeMessage();
                 }
             }
         }
@@ -680,6 +683,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                     this.currentRecipient,
                 );
                 this.formItems.messagePlain = message?.payload;
+                this.onChangeMessage();
             }
         } else {
             this.encyptedMessage = this.formItems.messagePlain
@@ -687,6 +691,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                 : PlainMessage.create('');
             this.formItems.encryptMessage = true;
             this.formItems.messagePlain = this.encyptedMessage.payload;
+            this.onChangeMessage();
         }
         return true;
     }
