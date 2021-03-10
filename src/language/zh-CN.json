@@ -1047,7 +1047,7 @@
     "current_node_is_not_available": "当前节点不可用。\n尝试连接到节点",
     "nodes_unavailable_check_network_and": "节点（{0} / {1}）当前不可用。\n请检查您的网络连接，设置和",
     "copyright": "版权所有©2021 NEM软件",
-    "address_list_cannot_be_empty": "请从列表中选择1个或多个帐户。",
+    "address_list_cannot_be_empty": "请从列表中选择至少一个1个非选择加入账户。",
     "launching_mainnet_soon": "Symbol 主网在 2021年3月15好发布，请在发布后下载最新版本。",
-    "ws_connection_failed": "Websocket没有在监听"
+    "ws_connection_failed": "钱包无法监视您在Symbol链上的帐户活动。请尝试选择其他节点。"
 }
