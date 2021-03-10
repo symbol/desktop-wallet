@@ -15,7 +15,7 @@
  */
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { AccountInfo, Address, MosaicId, NetworkType, RepositoryFactory } from 'symbol-sdk';
+import { AccountInfo, Address, MosaicId, PublicAccount, NetworkType, RepositoryFactory } from 'symbol-sdk';
 import { Network } from 'symbol-hd-wallets';
 // internal dependencies
 import { DerivationService } from '@/services/DerivationService';
@@ -253,13 +253,18 @@ export default class AccountSelectionTs extends Vue {
             const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
             const whitelisted = process.env.KEYS_WHITELIST[key];
             const optInAccounts = possibleOptInAccounts
-                .map((optinAccount, index) => ({ account: optinAccount, index: index }))
-                .filter((account) => whitelisted.indexOf(account.account.publicKey) >= 0)
-                .map((account) => ({ address: account.account.address, index: account.index }));
+                .map((publicKey, index) => ({
+                    publicKey: publicKey.toUpperCase(),
+                    index: index,
+                }))
+                .filter((account) => whitelisted.indexOf(account.publicKey) >= 0);
             if (optInAccounts.length === 0) {
                 return;
             }
-            this.optInAddressesList = optInAccounts;
+            this.optInAddressesList = optInAccounts.map((account) => ({
+                address: PublicAccount.createFromPublicKey(account.publicKey, this.currentProfile.networkType).address,
+                index: account.index,
+            }));
 
             const optInAddresses = this.optInAddressesList.map((account) => account.address);
 
