@@ -11,12 +11,16 @@
                 class="inputs-container"
             >
                 <ErrorTooltip :errors="errors">
-                    <textarea
-                        v-model="plain"
-                        wrap="hard"
-                        class="textarea-style textarea-size message-textarea"
-                        :placeholder="$t('please_enter_notes')"
-                    />
+                    <div class="textarea-container">
+                        <textarea
+                            ref="messageTextarea"
+                            v-model="plain"
+                            wrap="hard"
+                            class="textarea-style textarea-size message-textarea"
+                            :placeholder="$t('please_enter_notes')"
+                            rows="1"
+                        />
+                    </div>
                 </ErrorTooltip>
             </ValidationProvider>
         </template>

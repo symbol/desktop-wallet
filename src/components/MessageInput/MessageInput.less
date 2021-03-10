@@ -15,16 +15,36 @@
  */
 @import '../../views/resources/css/variables.less';
 
-.message-textarea {
-    resize: vertical !important;
-    overflow-y: auto !important;
+.textarea-container {
+    display: inline-grid;
+    width: 100%;
+    line-height: 0.22rem;
+
+    .message-textarea {
+        resize: none !important;
+        overflow: hidden !important;
+        width: 100%;
+        display: block;
+        color: @purpleDark;
+        grid-area: ~'1/1';
+        font-size: 0.14rem;
+        word-wrap: anywhere;
+    }
+
+    &::after {
+        content: attr(data-value) ' ';
+        visibility: hidden;
+        white-space: pre-wrap;
+        grid-area: ~'1/1';
+        font-size: 0.14rem;
+        padding: 0.06rem 0.2rem;
+        word-wrap: anywhere;
+    }
 }
 
-textarea::placeholder {
-    font-size: 0.14rem;
-    color: @grayDark;
-}
-
-/deep/ .inputs-container {
-    height: unset;
+/deep/ .inputs-container,
+/deep/ .ivu-tooltip,
+/deep/ .ivu-tooltip-rel {
+    height: unset !important;
+    line-height: 0 !important;
 }

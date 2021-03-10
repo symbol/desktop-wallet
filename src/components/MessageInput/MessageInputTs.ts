@@ -30,6 +30,13 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
         ErrorTooltip,
         FormRow,
     },
+    watch: {
+        value: {
+            handler: function (val) {
+                this.messageChanged(val);
+            },
+        },
+    },
 })
 export class MessageInputTs extends Vue {
     @Prop({
@@ -52,4 +59,10 @@ export class MessageInputTs extends Vue {
         this.$emit('input', msg);
     }
     /// end-region computed properties getter/setter
+
+    // called from watch
+    private messageChanged(newMessage: string): void {
+        const messageTextArea = this.$refs['messageTextarea'] as HTMLTextAreaElement;
+        messageTextArea.parentElement.setAttribute('data-value', newMessage);
+    }
 }
