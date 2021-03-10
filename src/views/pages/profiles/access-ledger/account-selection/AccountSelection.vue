@@ -15,8 +15,8 @@
                         <div v-if="!selectedOptInAccounts.includes(index)" class="table-item pointer">
                             <span class="address-id">{{ index + 1 }} (Opt In)</span>
                             <span class="address-value">{{ formatters.miniAddress(a) }}</span>
-                            <span v-if="addressMosaicMap[a.plain()]" class="address-balance overflow_ellipsis">
-                                <MosaicAmountDisplay :absolute-amount="addressMosaicMap[a.plain()]" />
+                            <span v-if="optInAddressBalanceMap[a.plain()] != null" class="address-balance overflow_ellipsis">
+                                <MosaicAmountDisplay :absolute-amount="optInAddressBalanceMap[a.plain()]" />
                             </span>
                             <span v-else class="address-balance overflow_ellipsis">
                                 N/A
@@ -27,8 +27,8 @@
                         <div v-if="!selectedAccounts.includes(index)" class="table-item pointer">
                             <span class="address-id">{{ index + 1 }}</span>
                             <span class="address-value">{{ formatters.miniAddress(a) }}</span>
-                            <span v-if="addressMosaicMap[a.plain()]" class="address-balance overflow_ellipsis">
-                                <MosaicAmountDisplay :absolute-amount="addressMosaicMap[a.plain()]" />
+                            <span v-if="addressBalanceMap[a.plain()] != null" class="address-balance overflow_ellipsis">
+                                <MosaicAmountDisplay :absolute-amount="addressBalanceMap[a.plain()]" />
                             </span>
                             <span v-else class="address-balance overflow_ellipsis">
                                 N/A
@@ -37,6 +37,7 @@
                     </div>
                 </div>
             </div>
+            <Spin v-if="isLoading" size="large" fix class="absolute" />
         </div>
         <div class="button-container flex-container">
             <button class="solid-button button-style create-account-style" @click="previous">

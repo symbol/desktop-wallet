@@ -157,6 +157,47 @@ export class FormProfileCreationTs extends Vue {
     public resetValidations(): void {
         this.$refs && this.$refs.observer && this.$refs.observer.reset();
     }
+    /**
+     * Error notification handler
+     */
+    private errorNotificationHandler(error: any) {
+        if (error.message && error.message.includes('cannot open device with path')) {
+            error.errorCode = 'ledger_connected_other_app';
+        }
+        if (error.errorCode) {
+            switch (error.errorCode) {
+                case 'NoDevice':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_no_device');
+                    return;
+                case 'ledger_not_supported_app':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_supported_app');
+                    return;
+                case 'ledger_connected_other_app':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_connected_other_app');
+                    return;
+                case 26628:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_device_locked');
+                    return;
+                case 26368:
+                case 27904:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_opened_app');
+                    return;
+                case 27264:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_using_xym_app');
+                    return;
+                case 27013:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_user_reject_request');
+                    return;
+            }
+        } else if (error.name) {
+            switch (error.name) {
+                case 'TransportOpenUserCancelled':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_no_device_selected');
+                    return;
+            }
+        }
+        this.$store.dispatch('notification/ADD_ERROR', this.$t('create_profile_failed', { reason: error.message || error }));
+    }
 
     /**
      * Persist created account and redirect to next step
@@ -183,9 +224,22 @@ export class FormProfileCreationTs extends Vue {
         // execute store actions
         this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile);
         this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password);
-
-        // flush and continue
-        this.$router.push({ name: this.nextPage });
+        if (this.isLedger) {
+            // try for make sure device was connected for next step require it
+            const accountService = new AccountService();
+            accountService
+                .getLedgerAccounts(this.formItems.networkType, 1)
+                .then(() => {
+                    // flush and continue
+                    this.$router.push({ name: this.nextPage });
+                })
+                .catch((error) => {
+                    this.errorNotificationHandler(error);
+                });
+        } else {
+            // flush and continue
+            this.$router.push({ name: this.nextPage });
+        }
     }
 
     /**
@@ -194,41 +248,5 @@ export class FormProfileCreationTs extends Vue {
     public stripTagsProfile() {
         this.formItems.profileName = FilterHelpers.stripFilter(this.formItems.profileName);
         this.formItems.hint = FilterHelpers.stripFilter(this.formItems.hint);
-    }
-
-    /**
-     * Get a account instance of Ledger from default path
-     * @param {number} networkType
-     * @return {AccountModel}
-     */
-    private async importDefaultLedgerAccount(networkType: number, curve: Network = Network.SYMBOL): Promise<AccountModel> {
-        const defaultPath = AccountService.getAccountPathByNetworkType(networkType);
-        const ledgerService = new LedgerService(networkType);
-        const isAppSupported = await ledgerService.isAppSupported();
-        if (!isAppSupported) {
-            throw { errorCode: 'ledger_not_supported_app' };
-        }
-        const profileName = this.formItems.profileName;
-        const accountService = new AccountService();
-        const isOptinSymbolWallet = curve === Network.BITCOIN;
-        const accountResult = await accountService.getLedgerPublicKeyByPath(networkType, defaultPath, false, isOptinSymbolWallet);
-        const publicKey = accountResult;
-        const address = PublicAccount.createFromPublicKey(publicKey, networkType).address;
-
-        // add account to list
-        const accName = this.currentProfile.profileName;
-
-        return {
-            id: SimpleObjectStorage.generateIdentifier(),
-            name: accName,
-            profileName: profileName,
-            node: '',
-            type: isOptinSymbolWallet ? AccountType.LEDGER_OPT_IN : AccountType.LEDGER,
-            address: address.plain(),
-            publicKey: publicKey.toUpperCase(),
-            encryptedPrivateKey: '',
-            path: defaultPath,
-            isMultisig: false,
-        };
     }
 }

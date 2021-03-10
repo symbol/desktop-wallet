@@ -223,7 +223,12 @@ export class FormOfflineCosignTransactionTs extends FormTransactionBase {
 
     public get isUsingHardwareWallet(): boolean {
         // XXX should use "stagedTransaction.signer" to identify account
-        return this.currentAccount && (AccountType.TREZOR === this.currentAccount.type || AccountType.LEDGER === this.currentAccount.type);
+        return (
+            this.currentAccount &&
+            (this.currentAccount.type === AccountType.TREZOR ||
+                this.currentAccount.type === AccountType.LEDGER ||
+                this.currentAccount.type === AccountType.LEDGER_OPT_IN)
+        );
     }
 
     public onError(error: string) {

@@ -281,7 +281,11 @@ export class ModalTransactionConfirmationTs extends Vue {
      */
     public get isUsingHardwareWallet(): boolean {
         // XXX should use "stagedTransaction.signer" to identify account
-        return AccountType.TREZOR === this.currentAccount.type || AccountType.LEDGER === this.currentAccount.type;
+        return (
+            this.currentAccount.type === AccountType.TREZOR ||
+            this.currentAccount.type === AccountType.LEDGER ||
+            this.currentAccount.type === AccountType.LEDGER_OPT_IN
+        );
     }
 
     /**
