@@ -137,6 +137,10 @@ export default class FormTransferTransaction extends FormTransferTransactionTs {
     width: 120px;
 }
 
+.FormTransferTransaction {
+    padding-bottom: 0.3rem;
+}
+
 /deep/.multisig_ban_container {
     padding-left: 0.7rem;
 }

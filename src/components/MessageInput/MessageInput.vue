@@ -11,7 +11,7 @@
                 class="inputs-container"
             >
                 <ErrorTooltip :errors="errors">
-                    <textarea v-model="plain" wrap="off" class="textarea-size textarea-style" :placeholder="$t('please_enter_notes')" />
+                    <textarea v-model="plain" wrap="hard" class="textarea-style textarea-size message-textarea" :placeholder="$t('please_enter_notes')" />
                 </ErrorTooltip>
             </ValidationProvider>
         </template>
@@ -22,3 +22,7 @@
 import { MessageInputTs } from './MessageInputTs';
 export default class MessageInput extends MessageInputTs {}
 </script>
+
+<style lang="less" scoped>
+@import './MessageInput.less';
+</style>
