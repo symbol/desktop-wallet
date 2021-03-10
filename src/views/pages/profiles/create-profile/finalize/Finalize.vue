@@ -37,7 +37,7 @@
                         </button>
                     </div>
                 </div>
-                <Spin v-if="isLoading" size="large" fix class="absolute" />
+                <Spin v-if="isLoading" size="large" />
             </div>
         </div>
     </div>

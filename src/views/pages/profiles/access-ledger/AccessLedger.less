@@ -71,13 +71,11 @@
 
     .form-box {
         flex: 0.7;
-        min-height: 90%;
         border-radius: 5px;
         display: flex;
         align-items: center;
         background-color: @white;
         min-height: calc(100vh - 255px);
-        max-width: 100%;
 
         .steps {
             width: 25%;
@@ -90,22 +88,26 @@
             }
 
             .single-step {
-                padding: 8%;
+                display: flex;
+                padding: 8% 5% 8% 5%;
                 font-size: @bigFont;
                 color: @grayLight;
                 font-family: @symbolFontSemiBold;
-                display: flex;
+                .check-container {
+                    min-width: 0.25rem;
+                    width: 0.25rem;
+                    img {
+                        display: none;
+                        width: 15px;
+                    }
+                }
                 &.done {
                     color: @purpleDark;
-                }
-                &.done:before {
-                    content: '';
-                    background-image: url('../../../resources/img/check.png');
-                    background-size: 0.28rem 0.23rem;
-                    display: inline-block;
-                    width: 0.46rem;
-                    height: 0.36rem;
-                    background-repeat: no-repeat;
+                    display: flex;
+                    align-items: center;
+                    .check-container img {
+                        display: block;
+                    }
                 }
                 &.active {
                     background: linear-gradient(315.55deg, #44004e -1.68%, #5200c6 110.7%);
@@ -115,9 +117,9 @@
         }
         .form {
             flex: 1;
-            overflow: hidden;
-            border-left: 0.005rem solid #d3d3d3;
-            padding: 1rem 10%;
+            padding: 0 10%;
+            width: 75%;
+            border-left: 0.5px solid #d3d3d3;
             min-height: calc(100vh - 255px);
             display: flex;
             align-items: center;
@@ -125,8 +127,6 @@
     }
 
     .inner-container {
-        background: transparent;
-
         .create-profile-box {
             margin-bottom: 40px;
             font-size: 40px;

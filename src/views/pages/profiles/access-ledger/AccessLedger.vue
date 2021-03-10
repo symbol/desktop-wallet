@@ -54,7 +54,7 @@
                                                                 />
                                                             </span>
                                                             <span v-else class="address-balance">
-                                                                N/A
+                                                                0
                                                             </span>
                                                         </div>
                                                         <span class="remove-icon"
@@ -103,7 +103,7 @@
                                                                 />
                                                             </span>
                                                             <span v-else class="address-balance">
-                                                                N/A
+                                                                0
                                                             </span>
                                                         </div>
                                                         <span class="remove-icon"
@@ -116,12 +116,25 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="address-list-container">
+                                <Spin
+                                    v-if="
+                                        (selectedAccounts.length && !addressesList.length) ||
+                                        (optInSelectedAccounts.length && !optInAddressesList.length)
+                                    "
+                                    size="large"
+                                    fix
+                                    class="absolute"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div v-if="getCurrentStep() === 2">
-                    <img src="@/views/resources/img/icons/success.png" style="width: 30%;" />
-                    <span class="success-title"> {{ $t('creation_successful') }}</span>
+                    <img src="@/views/resources/img/icons/Incoming.svg" style="width: 30%;" />
+                    <p class="text text-big">
+                        {{ $t('creation_successful') }}
+                    </p>
                 </div>
             </div>
         </div>

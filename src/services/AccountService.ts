@@ -314,18 +314,13 @@ export class AccountService {
     }
 
     /**
-     * Get list of accounts from Ledger
+     * Get list of address from Ledger device
      * @param {NetworkType} networkType
      * @param {number} count
      * @param curve
-     * @return {Address[]}
+     * @return {Promise<Address[]>}
      */
-    public async getLedgerAccounts(
-        networkType: NetworkType,
-        count: number = 10,
-        curve = Network.SYMBOL,
-        isGetAddresses: boolean = true,
-    ): Promise<Address[]> {
+    public async getLedgerAccounts(networkType: NetworkType, count: number = 10, curve = Network.SYMBOL): Promise<Address[]> {
         const isOptinLedgerWallet = curve === Network.BITCOIN;
         const derivationService = new DerivationService(networkType);
 
@@ -343,15 +338,17 @@ export class AccountService {
             const publicKey = await this.getLedgerPublicKeyByPath(networkType, path, false, isOptinLedgerWallet);
             publicKeys.push(publicKey);
         }
-        // const publicKeys = Promise.all(paths.map((path) => this.getLedgerPublicKeyByPath(networkType, path, false, isOptinLedgerWallet)));
         return publicKeys.map((publicKey) => PublicAccount.createFromPublicKey(publicKey, networkType).address);
     }
-    public async getLedgerPublickey(
-        networkType: NetworkType,
-        count: number = 10,
-        curve = Network.SYMBOL,
-        isGetAddresses: boolean = true,
-    ): Promise<string[]> {
+
+    /**
+     * Get list of public key from Ledger device
+     * @param {NetworkType} networkType
+     * @param {number} count
+     * @param curve
+     * @return {Promise<string[]>}
+     */
+    public async getLedgerPublicKey(networkType: NetworkType, count: number = 10, curve = Network.SYMBOL): Promise<string[]> {
         const isOptinLedgerWallet = curve === Network.BITCOIN;
         const derivationService = new DerivationService(networkType);
 
@@ -373,7 +370,7 @@ export class AccountService {
     }
 
     /**
-     * Derive an public key from ledger using a path
+     * Derive an public key from Ledger device using a path
      * @param {NetworkType} networkType
      * @param {string} paths
      * @param {boolean} ledgerDisplay
@@ -398,7 +395,7 @@ export class AccountService {
     }
 
     /**
-     * Derive an account instance of ledger using a path
+     * Derive an account instance of Ledger device using a path
      * @param {ProfileModel} currentProfile
      * @param {NetworkType} networkType
      * @param {string} paths
@@ -431,11 +428,11 @@ export class AccountService {
 
     /**
      * Derive accounts of ledger using an array of paths
-     * @param {MnemonicPassPhrase} mnemonic
      * @param {NetworkType} networkType
      * @param {string[]} paths
      * @param curve
-     * @returns {Account[]}
+     * @param {boolean} ledgerDisplay
+     * @returns {Promise<AccountModel[]>}
      */
     public async generateLedgerAccountsPaths(
         networkType: NetworkType,
@@ -455,7 +452,10 @@ export class AccountService {
 
     /**
      * Create a account instance of Ledger from default path
-     * @return {AccountModel}
+     * @param {ProfileModel} currentProfile
+     * @param {NetworkType} networkType
+     * @param {boolean} isOptinLedgerWallet
+     * @return {Promise<AccountModel>}
      */
     public async getDefaultLedgerAccount(
         currentProfile: ProfileModel,
