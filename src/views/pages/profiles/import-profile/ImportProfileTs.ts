@@ -174,7 +174,7 @@ export default class ImportProfileTs extends Vue {
         }
 
         // - generate addresses
-        const possibleOptInAccounts = this.accountService.generateAccountsFromMnemonic(
+        const optInAccounts = this.accountService.generateAccountsFromMnemonic(
             new MnemonicPassPhrase(this.currentMnemonic),
             this.currentProfile.networkType,
             10,
@@ -182,9 +182,6 @@ export default class ImportProfileTs extends Vue {
         );
 
         // whitelist opt in accounts
-        const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
-        const whitelisted = process.env.KEYS_WHITELIST[key];
-        const optInAccounts = possibleOptInAccounts.filter((account) => whitelisted.indexOf(account.publicKey) >= 0);
         if (optInAccounts.length === 0) {
             return;
         }
