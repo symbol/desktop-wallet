@@ -88,7 +88,7 @@
     "action_label_modify_supply": "Modify supply",
     "activate": "Activate",
     "activate_delegated_harvesting": "Activate Harvesting",
-    "activate_delegated_harvesting_message": "To activate delegated harvesting, we need your password to encrypt your vrf key in persistent harvesting message.",
+    "activate_delegated_harvesting_message": "To activate delegated harvesting we need your password to encrypt your VRF key in the persistent harvesting message.",
     "activating": "Activating...",
     "add_account_failed": "Failed to add account, reason: {reason}",
     "add_account_restrictions": "Account restrictions",
