@@ -37,6 +37,7 @@
                     </div>
                 </div>
             </div>
+            <Spin v-if="isLoading" size="large" fix class="absolute" />
         </div>
         <div class="button-container flex-container">
             <button class="solid-button button-style create-account-style" @click="previous">

@@ -174,7 +174,7 @@ export class AccountSelectorPanelTs extends Vue {
     }
 
     public get seedAccounts(): AccountModel[] {
-        return this.knownAccounts.filter((_) => _.type === 1);
+        return this.knownAccounts.filter((_) => _.type === AccountType.SEED);
     }
 
     public get optInAccounts(): AccountModel[] {
@@ -182,11 +182,15 @@ export class AccountSelectorPanelTs extends Vue {
     }
 
     public get pkAccounts(): AccountModel[] {
-        return this.knownAccounts.filter((_) => _.type === 2);
+        return this.knownAccounts.filter((_) => _.type === AccountType.PRIVATE_KEY);
     }
 
     public get ledgerAccount(): AccountModel[] {
-        return this.knownAccounts.filter((_) => _.type === 5);
+        return this.knownAccounts.filter((_) => _.type === AccountType.LEDGER);
+    }
+
+    public get ledgerOptInAccount(): AccountModel[] {
+        return this.knownAccounts.filter((_) => _.type === AccountType.LEDGER_OPT_IN);
     }
 
     public get hasAddAccountModal(): boolean {

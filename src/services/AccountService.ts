@@ -314,30 +314,93 @@ export class AccountService {
     }
 
     /**
-     * Derive an public key from ledger using a path
+     * Get list of address from Ledger device
+     * @param {NetworkType} networkType
+     * @param {number} count
+     * @param curve
+     * @return {Promise<Address[]>}
+     */
+    public async getLedgerAccounts(networkType: NetworkType, count: number = 10, curve = Network.SYMBOL): Promise<Address[]> {
+        const isOptinLedgerWallet = curve === Network.BITCOIN;
+        const derivationService = new DerivationService(networkType);
+
+        const default_path = AccountService.getAccountPathByNetworkType(networkType);
+        // increment derivation path \a count times
+        const paths = [...Array(count).keys()].map((index) => {
+            if (index == 0) {
+                return default_path;
+            }
+
+            return derivationService.incrementPathLevel(default_path, DerivationPathLevels.Profile, index);
+        });
+        const publicKeys: string[] = [];
+        for (const path of paths) {
+            const publicKey = await this.getLedgerPublicKeyByPath(networkType, path, false, isOptinLedgerWallet);
+            publicKeys.push(publicKey);
+        }
+        return publicKeys.map((publicKey) => PublicAccount.createFromPublicKey(publicKey, networkType).address);
+    }
+
+    /**
+     * Get list of public key from Ledger device
+     * @param {NetworkType} networkType
+     * @param {number} count
+     * @param curve
+     * @return {Promise<string[]>}
+     */
+    public async getLedgerPublicKey(networkType: NetworkType, count: number = 10, curve = Network.SYMBOL): Promise<string[]> {
+        const isOptinLedgerWallet = curve === Network.BITCOIN;
+        const derivationService = new DerivationService(networkType);
+
+        const default_path = AccountService.getAccountPathByNetworkType(networkType);
+        // increment derivation path \a count times
+        const paths = [...Array(count).keys()].map((index) => {
+            if (index == 0) {
+                return default_path;
+            }
+
+            return derivationService.incrementPathLevel(default_path, DerivationPathLevels.Profile, index);
+        });
+        const publicKeys: string[] = [];
+        for (const path of paths) {
+            const publicKey = await this.getLedgerPublicKeyByPath(networkType, path, false, isOptinLedgerWallet);
+            publicKeys.push(publicKey.toUpperCase());
+        }
+        return publicKeys.map((publicKey) => PublicAccount.createFromPublicKey(publicKey, networkType).publicKey);
+    }
+
+    /**
+     * Derive an public key from Ledger device using a path
      * @param {NetworkType} networkType
      * @param {string} paths
      * @param {boolean} ledgerDisplay
+     * @param {boolean} isOptinLedgerWallet
      * @return {Promise<string>}
      */
-    public async getLedgerPublicKeyByPath(networkType: NetworkType, path: string, ledgerDisplay: boolean): Promise<string> {
+    public async getLedgerPublicKeyByPath(
+        networkType: NetworkType,
+        path: string,
+        ledgerDisplay: boolean,
+        isOptinLedgerWallet: boolean,
+    ): Promise<string> {
         if (!DerivationPathValidator.validate(path, networkType)) {
             const errorMessage = 'Invalid derivation path: ' + path;
             console.error(errorMessage);
             throw new Error(errorMessage);
         }
         const ledgerService = new LedgerService(networkType);
-        const accountResult = await ledgerService.getAccount(path, ledgerDisplay);
+        const accountResult = await ledgerService.getAccount(path, ledgerDisplay, isOptinLedgerWallet);
         const { publicKey } = accountResult;
         return publicKey;
     }
 
     /**
-     * Derive an account instance of ledger using a path
+     * Derive an account instance of Ledger device using a path
      * @param {ProfileModel} currentProfile
      * @param {NetworkType} networkType
      * @param {string} paths
      * @param {boolean} ledgerDisplay
+     * @param {boolean} isOptinLedgerWallet
      * @return {Promise<AccountModel>}
      */
     public async getLedgerAccountByPath(
@@ -345,15 +408,16 @@ export class AccountService {
         networkType: NetworkType,
         path: string,
         ledgerDisplay: boolean,
+        isOptinLedgerWallet: boolean,
     ): Promise<AccountModel> {
-        const publicKey = await this.getLedgerPublicKeyByPath(networkType, path, ledgerDisplay);
+        const publicKey = await this.getLedgerPublicKeyByPath(networkType, path, ledgerDisplay, isOptinLedgerWallet);
         const address = PublicAccount.createFromPublicKey(publicKey, networkType).address;
         return {
             id: SimpleObjectStorage.generateIdentifier(),
             profileName: currentProfile.profileName,
             name: currentProfile.profileName,
             node: '',
-            type: AccountType.LEDGER,
+            type: isOptinLedgerWallet ? AccountType.LEDGER_OPT_IN : AccountType.LEDGER,
             address: address.plain(),
             publicKey: publicKey.toUpperCase(),
             encryptedPrivateKey: '',
@@ -363,12 +427,43 @@ export class AccountService {
     }
 
     /**
-     * Create a account instance of Ledger from default path
-     * @return {AccountModel}
+     * Derive accounts of ledger using an array of paths
+     * @param {NetworkType} networkType
+     * @param {string[]} paths
+     * @param curve
+     * @param {boolean} ledgerDisplay
+     * @returns {Promise<AccountModel[]>}
      */
-    public async getDefaultLedgerAccount(currentProfile: ProfileModel, networkType: NetworkType): Promise<AccountModel> {
+    public async generateLedgerAccountsPaths(
+        networkType: NetworkType,
+        paths: string[],
+        curve = Network.SYMBOL,
+        ledgerDisplay: boolean = false,
+    ): Promise<AccountModel[]> {
+        const isOptinLedgerWallet = curve === Network.BITCOIN;
+        const accounts = [];
+        for (const path of paths) {
+            const publicKey = await this.getLedgerPublicKeyByPath(networkType, path, ledgerDisplay, isOptinLedgerWallet);
+            const account = PublicAccount.createFromPublicKey(publicKey, networkType);
+            accounts.push(account);
+        }
+        return accounts;
+    }
+
+    /**
+     * Create a account instance of Ledger from default path
+     * @param {ProfileModel} currentProfile
+     * @param {NetworkType} networkType
+     * @param {boolean} isOptinLedgerWallet
+     * @return {Promise<AccountModel>}
+     */
+    public async getDefaultLedgerAccount(
+        currentProfile: ProfileModel,
+        networkType: NetworkType,
+        isOptinLedgerWallet: boolean,
+    ): Promise<AccountModel> {
         const default_path = AccountService.getAccountPathByNetworkType(networkType);
-        return await this.getLedgerAccountByPath(currentProfile, networkType, default_path, false);
+        return await this.getLedgerAccountByPath(currentProfile, networkType, default_path, false, isOptinLedgerWallet);
     }
 
     /**

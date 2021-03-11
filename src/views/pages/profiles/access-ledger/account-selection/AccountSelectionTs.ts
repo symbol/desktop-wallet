@@ -15,8 +15,8 @@
  */
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { AccountInfo, Address, MosaicId, NetworkType, Password, RepositoryFactory } from 'symbol-sdk';
-import { MnemonicPassPhrase, Network } from 'symbol-hd-wallets';
+import { AccountInfo, Address, MosaicId, PublicAccount, NetworkType, RepositoryFactory } from 'symbol-sdk';
+import { Network } from 'symbol-hd-wallets';
 // internal dependencies
 import { DerivationService } from '@/services/DerivationService';
 import { AccountService } from '@/services/AccountService';
@@ -37,8 +37,6 @@ import _ from 'lodash';
             networkMosaic: 'mosaic/networkMosaic',
             networkCurrency: 'mosaic/networkCurrency',
             currentProfile: 'profile/currentProfile',
-            currentPassword: 'temporary/password',
-            currentMnemonic: 'temporary/mnemonic',
             selectedAccounts: 'account/selectedAddressesToInteract',
             selectedOptInAccounts: 'account/selectedAddressesOptInToInteract',
         }),
@@ -46,6 +44,11 @@ import _ from 'lodash';
     components: { MosaicAmountDisplay },
 })
 export default class AccountSelectionTs extends Vue {
+    /**
+     * Form is being submitted
+     */
+    protected isLoading: boolean = false;
+
     /**
      * Formatting helpers
      * @protected
@@ -72,20 +75,6 @@ export default class AccountSelectionTs extends Vue {
      * @var {string}
      */
     public currentProfile: ProfileModel;
-
-    /**
-     * Temporary stored password
-     * @see {Store.Temporary}
-     * @var {Password}
-     */
-    public currentPassword: Password;
-
-    /**
-     * Temporary stored mnemonic pass phrase
-     * @see {Store.Temporary}
-     * @var {MnemonicPassPhrase}
-     */
-    public currentMnemonic: string;
 
     /**
      * Derivation Service
@@ -152,15 +141,62 @@ export default class AccountSelectionTs extends Vue {
         this.accountService = new AccountService();
 
         Vue.nextTick().then(() => {
-            setTimeout(() => {
-                this.initAccounts();
-                this.initOptInAccounts();
+            setTimeout(async () => {
+                this.isLoading = true;
+                await this.initAccounts();
+                await this.initOptInAccounts();
+                this.isLoading = false;
             }, 200);
         });
     }
 
     public previous() {
-        this.$router.push({ name: 'profiles.importProfile.importMnemonic' });
+        this.$router.push({ name: 'profiles.accessLedger.info' });
+    }
+
+    /**
+     * Error notification handler
+     */
+    private errorNotificationHandler(error: any) {
+        if (error.message && error.message.includes('cannot open device with path')) {
+            error.errorCode = 'ledger_connected_other_app';
+        }
+        if (error.message && error.message.includes('A transfer error')) {
+            return;
+        }
+        if (error.errorCode) {
+            switch (error.errorCode) {
+                case 'NoDevice':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_no_device');
+                    return;
+                case 'ledger_not_supported_app':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_supported_app');
+                    return;
+                case 'ledger_connected_other_app':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_connected_other_app');
+                    return;
+                case 26628:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_device_locked');
+                    return;
+                case 26368:
+                case 27904:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_opened_app');
+                    return;
+                case 27264:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_using_xym_app');
+                    return;
+                case 27013:
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_user_reject_request');
+                    return;
+            }
+        } else if (error.name) {
+            switch (error.name) {
+                case 'TransportOpenUserCancelled':
+                    this.$store.dispatch('notification/ADD_ERROR', 'ledger_no_device_selected');
+                    return;
+            }
+        }
+        this.$store.dispatch('notification/ADD_ERROR', this.$t('create_profile_failed', { reason: error.message || error }));
     }
 
     /**
@@ -168,12 +204,12 @@ export default class AccountSelectionTs extends Vue {
      * the selected accounts to storage.
      * @return {void}
      */
-    public submit() {
+    public async submit() {
         // cannot submit without selecting at least one account
         if (!this.selectedAccounts.length) {
             return this.$store.dispatch('notification/ADD_ERROR', NotificationType.IMPORT_EMPTY_ACCOUNT_LIST);
         }
-        return this.$router.push({ name: 'profiles.importProfile.finalize' });
+        return this.$router.push({ name: 'profiles.accessLedger.finalize' });
     }
 
     /**
@@ -181,23 +217,23 @@ export default class AccountSelectionTs extends Vue {
      * @return {void}
      */
     private async initAccounts() {
-        // - generate addresses
-        this.addressesList = this.accountService.getAddressesFromMnemonic(
-            new MnemonicPassPhrase(this.currentMnemonic),
-            this.currentProfile.networkType,
-            10,
-        );
-        const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-        // fetch accounts info
-        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
-        if (!accountsInfo) {
-            return;
+        try {
+            // - generate addresses
+            this.addressesList = await this.accountService.getLedgerAccounts(this.currentProfile.networkType, 10);
+            const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+            // fetch accounts info
+            const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
+            if (!accountsInfo) {
+                return;
+            }
+            // map balances
+            this.addressBalanceMap = {
+                ...this.addressBalanceMap,
+                ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.addressesList),
+            };
+        } catch (error) {
+            this.errorNotificationHandler(error);
         }
-        // map balances
-        this.addressBalanceMap = {
-            ...this.addressBalanceMap,
-            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.addressesList),
-        };
     }
 
     /**
@@ -205,35 +241,45 @@ export default class AccountSelectionTs extends Vue {
      * @return {void}
      */
     private async initOptInAccounts() {
-        // - generate addresses
-        const possibleOptInAccounts = this.accountService.generateAccountsFromMnemonic(
-            new MnemonicPassPhrase(this.currentMnemonic),
-            this.currentProfile.networkType,
-            10,
-            Network.BITCOIN,
-        );
+        try {
+            // - generate addresses
+            const possibleOptInAccounts: any[] = await this.accountService.getLedgerPublicKey(
+                this.currentProfile.networkType,
+                10,
+                Network.BITCOIN,
+            );
 
-        // whitelist opt in accounts
-        const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
-        const whitelisted = process.env.KEYS_WHITELIST[key];
-        const optInAccounts = possibleOptInAccounts
-            .map((optinAccount, index) => ({ account: optinAccount, index: index }))
-            .filter((account) => whitelisted.indexOf(account.account.publicKey) >= 0)
-            .map((account) => ({ address: account.account.address, index: account.index }));
-        if (optInAccounts.length === 0) {
-            return;
+            // whitelist opt in accounts
+            const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
+            const whitelisted = process.env.KEYS_WHITELIST[key];
+            const optInAccounts = possibleOptInAccounts
+                .map((publicKey, index) => ({
+                    publicKey: publicKey.toUpperCase(),
+                    index: index,
+                }))
+                .filter((account) => whitelisted.indexOf(account.publicKey) >= 0);
+            if (optInAccounts.length === 0) {
+                return;
+            }
+            this.optInAddressesList = optInAccounts.map((account) => ({
+                address: PublicAccount.createFromPublicKey(account.publicKey, this.currentProfile.networkType).address,
+                index: account.index,
+            }));
+
+            const optInAddresses = this.optInAddressesList.map((account) => account.address);
+
+            // fetch accounts info
+            const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+            const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(optInAddresses).toPromise();
+
+            // map balances
+            this.optInAddressBalanceMap = {
+                ...this.optInAddressBalanceMap,
+                ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, optInAddresses),
+            };
+        } catch (error) {
+            this.errorNotificationHandler(error);
         }
-        this.optInAddressesList = optInAccounts;
-
-        const optInAddresses = this.optInAddressesList.map((account) => account.address);
-        // fetch accounts info
-        const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(optInAddresses).toPromise();
-        // map balances
-        this.optInAddressBalanceMap = {
-            ...this.optInAddressBalanceMap,
-            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, optInAddresses),
-        };
     }
 
     public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaicId: MosaicId, addressList: Address[]): { [address: string]: number } {
