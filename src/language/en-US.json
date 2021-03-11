@@ -103,7 +103,7 @@
     "address_alias_not_exist": "Address alias does not exist",
     "address_format_error": "Address format error",
     "address_invalid": "This address is invalid",
-    "address_list_cannot_be_empty": "At lease 1 none Opt In account must be selected from the list.",
+    "address_list_cannot_be_empty": "At lease 1 non-opted-in account must be selected from the list.",
     "address_not_valid": "Cosignatory address is not valid",
     "address_qr_code": "Address QR code",
     "address_to_interact_with": "Address to interact with",
