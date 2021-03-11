@@ -36,11 +36,11 @@ export class HarvestStatisticsPanelTs extends Vue {
     public harvestedBlockStats: HarvestedBlockStats;
     public isFetchingHarvestedBlockStats: boolean;
     public networkCurrency: NetworkCurrencyModel;
-    private timeouts: any[];
+    private timeIntervals: any[];
 
     created() {
         this.refresh();
-        this.timeouts = [];
+        this.timeIntervals = [];
         this.checkUnLockedAccounts();
         this.refreshStatusBlocks();
     }
@@ -75,7 +75,7 @@ export class HarvestStatisticsPanelTs extends Vue {
 
     private checkUnLockedAccounts(): void {
         Vue.nextTick(() => {
-            this.timeouts.push(
+            this.timeIntervals.push(
                 setInterval(() => {
                     if (this.harvestingStatus == HarvestingStatus.INPROGRESS_ACTIVATION) {
                         this.refreshHarvestingStatus();
@@ -87,7 +87,7 @@ export class HarvestStatisticsPanelTs extends Vue {
 
     private refreshStatusBlocks(): void {
         Vue.nextTick(() => {
-            this.timeouts.push(
+            this.timeIntervals.push(
                 setInterval(() => {
                     if (this.harvestingStatus == HarvestingStatus.ACTIVE) {
                         this.refreshHarvestingStats();
@@ -98,7 +98,7 @@ export class HarvestStatisticsPanelTs extends Vue {
     }
 
     private destroyed() {
-        this.timeouts.forEach((timeout) => clearInterval(timeout));
+        this.timeIntervals.forEach((timeout) => clearInterval(timeout));
     }
     public get totalFeesEarned(): string {
         const relativeAmount = this.harvestedBlockStats.totalFeesEarned.compact() / Math.pow(10, this.networkCurrency.divisibility);
