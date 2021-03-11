@@ -620,7 +620,7 @@
     "linked_public_key": "Remote Public Key",
     "linked_remote_private_key": "Remote Private Key",
     "linked_vrf_private_key": "Vrf Private Key",
-    "linked_vrf_public_key": "Vrf Public Key",
+    "linked_vrf_public_key": "VRF Public Key",
     "linking": "Linking...",
     "loading": "Loading...",
     "locked_mosaic": "locked mosaic",
