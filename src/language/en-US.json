@@ -234,7 +234,7 @@
     "duration_permanent": "Unlimited duration",
     "edit_metadata": "Edit metadata",
     "edit_object": "Edit {objectName}",
-    "encrypt_ledger_keys_on_sign": "As a Ledger user, your password is needed to encrypt your remote account and vrf private keys",
+    "encrypt_ledger_keys_on_sign": "As a Ledger user your password is needed to encrypt your remote account and VRF private keys",
     "encrypt_message": "Encrypt message",
     "encrypted_message": "Encrypted message",
     "encrypted_message_empty_error": "Message payload cannot be empty for encrypted message",
