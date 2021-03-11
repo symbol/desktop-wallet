@@ -148,7 +148,7 @@
     "clear_staged_transactions": "Discard all transactions",
     "click_to_cosign": "Click to cosign",
     "click_to_load": "Click to load data",
-    "click_to_retry": "click to retry",
+    "click_to_retry": "Click to retry",
     "close": "Close",
     "co_signers_amount_less_than_0": "Multi-signature accounts must have at least 1 co-signatory",
     "conditions": "Conditions",
