@@ -19,7 +19,6 @@ import { mapGetters } from 'vuex';
 import { AccountInfo } from 'symbol-sdk';
 import { HarvestedBlockStats, HarvestingStatus } from '@/store/Harvesting';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
-
 @Component({
     computed: {
         ...mapGetters({
@@ -37,11 +36,11 @@ export class HarvestStatisticsPanelTs extends Vue {
     public harvestedBlockStats: HarvestedBlockStats;
     public isFetchingHarvestedBlockStats: boolean;
     public networkCurrency: NetworkCurrencyModel;
-    private isFetchingUnlocked: any;
-    private isFetchingBlocks: any;
+    private timeouts: any[];
 
     created() {
         this.refresh();
+        this.timeouts = [];
     }
 
     public refresh() {
@@ -75,24 +74,27 @@ export class HarvestStatisticsPanelTs extends Vue {
     }
 
     private checkUnLockedAccounts(): void {
-        this.$nextTick(() => {
-            this.isFetchingUnlocked = setInterval(() => {
-                this.refreshHarvestingStatus();
-            }, 45000);
+        Vue.nextTick(() => {
+            this.timeouts.push(
+                setTimeout(() => {
+                    this.refreshHarvestingStatus();
+                }, 45000),
+            );
         });
     }
 
     private refreshStatusBlocks(): void {
-        this.$nextTick(() => {
-            this.isFetchingBlocks = setInterval(() => {
-                this.refreshHarvestingStats();
-            }, 30000);
+        Vue.nextTick(() => {
+            this.timeouts.push(
+                setTimeout(() => {
+                    this.refreshHarvestingStats();
+                }, 30000),
+            );
         });
     }
 
     private destroyed() {
-        clearTimeout(this.isFetchingUnlocked);
-        clearTimeout(this.isFetchingBlocks);
+        this.timeouts.forEach((timeout) => clearTimeout(timeout));
     }
     public get totalFeesEarned(): string {
         const relativeAmount = this.harvestedBlockStats.totalFeesEarned.compact() / Math.pow(10, this.networkCurrency.divisibility);
