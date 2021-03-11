@@ -61,7 +61,7 @@
                     </FormRow>
                     <div v-if="type === MetadataType.Namespace">
                         <NamespaceSelector
-                            v-model="formItems.targetName"
+                            v-model="formItems.targetId"
                             :namespaces="ownedTargetHexIds"
                             :disable-linked="false"
                             :label="$t(targetLabel)"
