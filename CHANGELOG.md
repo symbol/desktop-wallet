@@ -8,10 +8,12 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ### Milestone: [catapult-server@v0.10.0.8](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.8)
 
 - Preview version for Symbol Mainnet.
-- Support read-only experimental Symbol Mainnet node for Symbol account & balance preview (Opt-In)
+- Support read-only experimental Symbol Mainnet node for Symbol Opt-In accounts & balances preview (Valid Opt-In only).
 - Fixed various issues.
 
-:note: When using Leger to create / import mainnet profile, please wait for the device to finish loading each selected account. Ledger devices cannot handle too many concurrent requests at a time.
+:note: When using Leger to create / import a mainnet profile, please wait for the device to finish loading each selected account. Ledger devices cannot handle too many concurrent requests at a time.
+
+New Opt-In accounts created after this beta release will not be shown on Opt-In mnemonic importing. A new version after the Opt-In snapshot will be release includes all valid opt-in accounts.
 
 ## [0.14.1][v0.14.1] - 18-Feb-2021
 
