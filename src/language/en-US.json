@@ -577,7 +577,7 @@
     "input_namespace_name": "Enter a namespace name",
     "Insert_your_account_linked_public_key": "Add your remote account public key",
     "Insert_your_node_linked_public_key": "Add your node public key",
-    "Insert_your_vrf_linked_public_key": "Add your vrf public key",
+    "Insert_your_vrf_linked_public_key": "Add your VRF public key",
     "invalid_address_book": "Invalid address book",
     "invalid_mnemonic_input": "The entered mnemonic passphrase is invalid",
     "invalid_namespace_or_mosaic_id": "The mosaic id or name is invalid",
