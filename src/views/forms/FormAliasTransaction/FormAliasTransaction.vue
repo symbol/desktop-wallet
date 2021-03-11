@@ -113,7 +113,4 @@ export default class FormAliasTransaction extends FormAliasTransactionTs {}
 .row-left-message {
     padding-left: 0.1rem;
 }
-.select-container {
-    padding-left: 0.1rem;
-}
 </style>

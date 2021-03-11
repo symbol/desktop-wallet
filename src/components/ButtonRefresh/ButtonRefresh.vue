@@ -1,7 +1,7 @@
 <template>
-    <span>
+    <Tooltip :content="$t('refresh')" placement="top" :transfer="true">
         <Icon type="md-refresh" class="button-refresh" @click="$emit('click')" />
-    </span>
+    </Tooltip>
 </template>
 <script lang="ts">
 import { ButtonRefreshTs } from './ButtonRefreshTs';

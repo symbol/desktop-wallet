@@ -32,9 +32,18 @@ export class AddressBookService {
         }
     }
 
-    public saveAddressBook(addressBook: AddressBook, profileName: string) {
+    public saveAddressBook(addressBook: AddressBook, profileName: string): void {
         const allAddressBooks = this.addressBookModelStorage.get() || {};
         allAddressBooks[profileName] = addressBook.toJSON(false);
-        return this.addressBookModelStorage.set(allAddressBooks);
+        this.addressBookModelStorage.set(allAddressBooks);
+    }
+
+    public deleteAddressBook(profileName: string): void {
+        const allAddressBooks = this.addressBookModelStorage.get();
+        if (!allAddressBooks) {
+            return;
+        }
+        delete allAddressBooks[profileName];
+        this.addressBookModelStorage.set(allAddressBooks);
     }
 }

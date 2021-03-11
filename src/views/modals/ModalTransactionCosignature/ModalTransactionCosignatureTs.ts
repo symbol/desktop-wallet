@@ -146,7 +146,11 @@ export class ModalTransactionCosignatureTs extends Vue {
      */
     public get isUsingHardwareWallet(): boolean {
         // XXX should use "stagedTransaction.signer" to identify account
-        return AccountType.TREZOR === this.currentAccount.type || AccountType.LEDGER === this.currentAccount.type;
+        return (
+            this.currentAccount.type === AccountType.TREZOR ||
+            this.currentAccount.type === AccountType.LEDGER ||
+            this.currentAccount.type === AccountType.LEDGER_OPT_IN
+        );
     }
 
     public get needsCosignature(): boolean {
@@ -201,6 +205,7 @@ export class ModalTransactionCosignatureTs extends Vue {
 
     public get cosignatureQrCode(): CosignatureQR {
         // @ts-ignore
+        console.log(this.transaction);
         return new CosignatureQR(this.transaction, this.networkType, this.generationHash);
     }
 
@@ -296,7 +301,7 @@ export class ModalTransactionCosignatureTs extends Vue {
 
     public async onSigner(transactionSigner: TransactionSigner) {
         // - sign cosignature transaction
-        if (this.currentAccount.type === AccountType.LEDGER) {
+        if (this.currentAccount.type === AccountType.LEDGER || this.currentAccount.type === AccountType.LEDGER_OPT_IN) {
             try {
                 const ledgerService = new LedgerService(this.currentProfile.networkType);
                 const isAppSupported = await ledgerService.isAppSupported();
@@ -304,13 +309,19 @@ export class ModalTransactionCosignatureTs extends Vue {
                     throw { errorCode: 'ledger_not_supported_app' };
                 }
                 const currentPath = this.currentAccount.path;
+                const isOptinLedgerWallet = this.currentAccount.type === AccountType.LEDGER_OPT_IN;
                 const addr = this.currentAccount.address;
                 const networkType = this.currentProfile.networkType;
                 const accountService = new AccountService();
                 this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-                const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath);
+                const signerPublicKey = await accountService.getLedgerPublicKeyByPath(networkType, currentPath, true, isOptinLedgerWallet);
                 if (signerPublicKey === this.currentAccount.publicKey.toLowerCase()) {
-                    const signature = await ledgerService.signCosignatureTransaction(currentPath, this.transaction, signerPublicKey);
+                    const signature = await ledgerService.signCosignatureTransaction(
+                        currentPath,
+                        this.transaction,
+                        signerPublicKey,
+                        isOptinLedgerWallet,
+                    );
                     this.$store.dispatch(
                         'diagnostic/ADD_DEBUG',
                         `Co-signed transaction with account ${addr} and result: ${JSON.stringify({

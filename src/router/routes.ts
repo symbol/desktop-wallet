@@ -271,6 +271,16 @@ export const routes: AppRoute[] = [
                         component: () => import('@/views/pages/aggregate/aggregateTransaction/AggregateTransaction.vue'),
                     },
                     {
+                        path: '/aggregate/supply',
+                        name: 'aggregate.supply',
+                        meta: {
+                            protected: true,
+                            title: 'mosaic_supply_transaction',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/aggregate/aggregateTransaction/AggregateTransaction.vue'),
+                    },
+                    {
                         path: '/aggregate/namespace',
                         name: 'aggregate.namespace',
                         meta: {
@@ -447,9 +457,20 @@ export const routes: AppRoute[] = [
                         meta: {
                             protected: false,
                             isLedger: true,
+                            nextPage: 'profiles.accessLedger.walletSelection',
                         },
                         // @ts-ignore
                         component: () => import('@/views/forms/FormProfileCreation/FormProfileCreation.vue'),
+                    },
+                    {
+                        path: 'walletChoose',
+                        name: 'profiles.accessLedger.walletSelection',
+                        meta: {
+                            protected: false,
+                            isLedger: true,
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/profiles/access-ledger/account-selection/AccountSelection.vue'),
                     },
                     {
                         path: 'finishCreate',
@@ -471,6 +492,46 @@ export const routes: AppRoute[] = [
         meta: { protected: false },
         // @ts-ignore
         component: () => import('@/views/pages/profiles/LoginPage.vue'),
+    },
+    {
+        path: '/offline',
+        name: 'offline',
+        redirect: '/offline/transaction/simple',
+        meta: { protected: false },
+        // @ts-ignore
+        component: () => import('@/views/layout/RouterPage.vue'),
+        children: [
+            {
+                path: '/offlineTransaction',
+                name: 'offlineTransaction',
+                redirect: '/offlineTransaction/simple',
+                meta: { protected: false },
+                // @ts-ignore
+                component: () => import('@/views/pages/offline/OfflineTransaction.vue'),
+                children: [
+                    {
+                        path: '/offlineTransaction/simple',
+                        name: 'offlineTransaction.simple',
+                        meta: {
+                            protected: false,
+                            title: 'simple_transaction',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/offline/offlineTransferTransaction/OfflineTransferTransaction.vue'),
+                    },
+                    {
+                        path: '/offlineTransaction/cosign',
+                        name: 'offlineTransaction.cosign',
+                        meta: {
+                            protected: false,
+                            title: 'cosign_transaction',
+                        },
+                        // @ts-ignore
+                        component: () => import('@/views/pages/offline/offlineCosignTransaction/OfflineCosignTransaction.vue'),
+                    },
+                ],
+            },
+        ],
     },
     {
         path: '/privacy',

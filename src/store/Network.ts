@@ -20,7 +20,6 @@ import { NodeModel } from '@/core/database/entities/NodeModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { CommonHelpers } from '@/core/utils/CommonHelpers';
 import { NotificationType } from '@/core/utils/NotificationType';
-import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import { URLInfo } from '@/core/utils/URLInfo';
 // configuration
@@ -128,9 +127,10 @@ interface NetworkState {
     peerNodes: NodeInfo[];
     harvestingPeerNodes: NodeInfo[];
     connectingToNodeInfo: ConnectingToNodeInfo;
+    isOfflineMode: boolean;
 }
 
-const networkState: NetworkState = {
+const initialNetworkState: NetworkState = {
     initialized: false,
     currentPeer: undefined,
     currentPeerInfo: undefined,
@@ -151,11 +151,12 @@ const networkState: NetworkState = {
     peerNodes: [],
     harvestingPeerNodes: [],
     connectingToNodeInfo: undefined,
+    isOfflineMode: false,
 };
 
 export default {
     namespaced: true,
-    state: networkState,
+    state: initialNetworkState,
     getters: {
         getInitialized: (state: NetworkState) => state.initialized,
         subscriptions: (state: NetworkState) => state.subscriptions,
@@ -177,6 +178,7 @@ export default {
         peerNodes: (state: NetworkState) => state.peerNodes,
         harvestingPeerNodes: (state: NetworkState) => state.harvestingPeerNodes,
         connectingToNodeInfo: (state: NetworkState) => state.connectingToNodeInfo,
+        isOfflineMode: (state: NetworkState) => state.isOfflineMode,
     },
     mutations: {
         setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -184,6 +186,9 @@ export default {
         },
         setConnected: (state: NetworkState, connected: boolean) => {
             state.isConnected = connected;
+        },
+        setOfflineMode: (state: NetworkState, isOfflineMode: boolean) => {
+            state.isOfflineMode = isOfflineMode;
         },
         currentHeight: (state: NetworkState, currentHeight: number) => Vue.set(state, 'currentHeight', currentHeight),
         currentPeerInfo: (state: NetworkState, currentPeerInfo: NodeModel) => Vue.set(state, 'currentPeerInfo', currentPeerInfo),
@@ -260,12 +265,27 @@ export default {
             // acquire async lock until initialized
             await Lock.initialize(callback, { getters });
         },
-        async uninitialize({ commit, dispatch, getters }) {
+        async uninitialize({ dispatch, getters }) {
             const callback = async () => {
                 dispatch('UNSUBSCRIBE');
-                commit('setInitialized', false);
+                dispatch('RESET_STATE');
             };
             await Lock.uninitialize(callback, { getters });
+        },
+        RESET_STATE({ commit }) {
+            commit('repositoryFactory', undefined);
+            commit('currentPeer', undefined);
+            commit('networkModel', undefined);
+            commit('networkConfiguration', undefined);
+            commit('transactionFees', undefined);
+            commit('networkType', undefined);
+            commit('generationHash', undefined);
+            commit('knowNodes', []);
+            commit('listener', undefined);
+            commit('currentHeight', undefined);
+            commit('currentPeerInfo', undefined);
+            commit('setConnected', false);
+            commit('connectingToNodeInfo', undefined);
         },
 
         async CONNECT(
@@ -274,7 +294,8 @@ export default {
                 newCandidateUrl,
                 networkType,
                 waitBetweenTrials = false,
-            }: { newCandidateUrl?: string | undefined; networkType?: NetworkType; waitBetweenTrials: boolean },
+                isOffline = false,
+            }: { newCandidateUrl?: string | undefined; networkType?: NetworkType; waitBetweenTrials: boolean; isOffline: boolean },
         ) {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const networkService = new NetworkService();
@@ -283,6 +304,7 @@ export default {
             if (!networkType && currentProfile && currentProfile.networkType) {
                 networkType = currentProfile.networkType;
             }
+            commit('setOfflineMode', isOffline);
             if (newCandidateUrl) {
                 commit('connectingToNodeInfo', {
                     isTryingToConnect: true,
@@ -290,7 +312,7 @@ export default {
                     progressCurrentNodeIndex: 1,
                     progressTotalNumOfNodes: 1,
                 });
-                nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType).toPromise();
+                nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType, isOffline).toPromise();
                 if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel) {
                     await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                 } else {
@@ -312,7 +334,7 @@ export default {
                         progressTotalNumOfNodes: numOfNodes,
                     });
                     nodeNetworkModelResult = await networkService
-                        .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType)
+                        .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline)
                         .toPromise();
                     if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
@@ -333,7 +355,7 @@ export default {
                         progressCurrentNodeIndex: ++progressCurrentNodeInx,
                         progressTotalNumOfNodes: numOfNodes,
                     });
-                    nodeNetworkModelResult = await networkService.getNetworkModel(nodeUrl, networkType).toPromise();
+                    nodeNetworkModelResult = await networkService.getNetworkModel(nodeUrl, networkType, isOffline).toPromise();
                     if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
@@ -365,7 +387,7 @@ export default {
             const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getChainInfo().toPromise();
             const nodes = await getNodesPromise;
             const currentHeight = (await getBlockchainHeightPromise).height.compact();
-            const listener = repositoryFactory.createListener();
+            const networkListener = repositoryFactory.createListener();
 
             const currentPeer = URLHelpers.getNodeUrl(networkModel.url);
             commit('currentPeer', currentPeer);
@@ -381,11 +403,16 @@ export default {
             commit('generationHash', networkModel.generationHash);
             commit('repositoryFactory', repositoryFactory);
             commit('knowNodes', nodes);
-            const currentListener: IListener = getters['listener'];
-            if (currentListener && currentListener.isOpen()) {
-                currentListener.close();
+            const currentNetworkListener: IListener = getters['listener'];
+            if (currentNetworkListener && currentNetworkListener.isOpen()) {
+                currentNetworkListener.close();
             }
-            commit('listener', listener);
+            commit('listener', networkListener);
+            if (networkListener && !networkListener.isOpen()) {
+                await networkListener.open();
+                await dispatch('SUBSCRIBE');
+            }
+
             commit('currentHeight', currentHeight);
             commit(
                 'currentPeerInfo',
@@ -397,7 +424,6 @@ export default {
             });
             $eventBus.$emit('newConnection', currentPeer);
             // subscribe to updates
-
             if (oldGenerationHash != networkModel.generationHash) {
                 await dispatch('account/NETWORK_CHANGED', {}, { root: true });
                 await dispatch('statistics/LOAD', {}, { root: true });
@@ -419,8 +445,8 @@ export default {
                 await dispatch('UNSUBSCRIBE');
                 await dispatch('account/UNSUBSCRIBE', currentSignerAddress, { root: true });
                 // subscribe to the newly selected node websocket
-                if (listener && !listener.isOpen()) {
-                    await listener.open();
+                if (networkListener && !networkListener.isOpen()) {
+                    await networkListener.open();
                 }
                 await dispatch('SUBSCRIBE');
                 await dispatch('account/SUBSCRIBE', currentSignerAddress, { root: true });
@@ -586,7 +612,7 @@ export default {
             const subscriptions: Subscription[] = getters.subscriptions;
             subscriptions.forEach((s) => s.unsubscribe());
             const listener: Listener = getters.listener;
-            if (listener) {
+            if (listener && listener.isOpen()) {
                 await listener.close();
             }
             // update state

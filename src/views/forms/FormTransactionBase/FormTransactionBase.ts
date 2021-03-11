@@ -43,6 +43,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
             signers: 'account/signers',
             networkConfiguration: 'network/networkConfiguration',
             transactionFees: 'network/transactionFees',
+            isOfflineMode: 'network/isOfflineMode',
         }),
     },
 })
@@ -134,6 +135,8 @@ export class FormTransactionBase extends Vue {
     public command: TransactionCommand;
 
     protected transactionFees: TransactionFees;
+
+    protected isOfflineMode: boolean;
 
     /**
      * Type the ValidationObserver refs
@@ -279,7 +282,7 @@ export class FormTransactionBase extends Vue {
         await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
             address: Address.createFromRawAddress(address),
             reset: false,
-            unsubscribeWS: true,
+            unsubscribeWS: false,
         });
     }
 

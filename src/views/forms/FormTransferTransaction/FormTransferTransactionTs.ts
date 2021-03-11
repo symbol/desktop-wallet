@@ -27,6 +27,7 @@ import {
     UInt64,
     Account,
     PublicAccount,
+    SignedTransaction,
 } from 'symbol-sdk';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
@@ -65,6 +66,8 @@ import TransactionUriDisplay from '@/components/TransactionUri/TransactionUriDis
 import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/ProtectedPrivateKeyDisplay.vue';
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
+// @ts-ignore
+import AccountSignerSelector from '@/components/AccountSignerSelector/AccountSignerSelector.vue';
 
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
@@ -101,6 +104,7 @@ export interface MosaicAttachment {
         TransactionUriDisplay,
         ProtectedPrivateKeyDisplay,
         ModalFormProfileUnlock,
+        AccountSignerSelector,
     },
     computed: {
         ...mapGetters({
@@ -142,6 +146,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     showTransactionActions: boolean;
 
     @Prop({
+        default: false,
+    })
+    hideEncryption: boolean;
+
+    @Prop({
         default: () => ({}),
     })
     value: any;
@@ -155,6 +164,16 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         default: false,
     })
     isAggregate: boolean;
+
+    @Prop({
+        default: undefined,
+    })
+    submitButtonText: string;
+
+    @Prop({
+        default: false,
+    })
+    editMode: boolean;
 
     /// end-region component properties
 
@@ -184,7 +203,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     public currentHeight: number;
 
-    protected mosaicInputsManager;
+    protected mosaicInputsManager: MosaicInputsManager;
 
     private balanceMosaics: MosaicModel[];
 
@@ -232,7 +251,14 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * Reset the form with properties
      * @return {void}
      */
-    protected resetForm() {
+    protected resetForm(): void {
+        this.showUnlockAccountModal = false;
+        this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentMosaicList());
+
+        if (this.editMode) {
+            return;
+        }
+
         // - reset attached mosaics
         this.formItems.attachedMosaics = [];
 
@@ -255,8 +281,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         }
         this.formItems.recipient = !!this.recipient ? this.recipient : null;
 
-        const currentMosaics = this.currentMosaicList();
-
         const attachedMosaics: MosaicAttachment[] = [
             {
                 id: new MosaicId(this.networkCurrency.mosaicIdHex),
@@ -270,30 +294,22 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.formItems.messagePlain = this.message ? Formatters.hexToUtf8(this.message.payload) : '';
         this.formItems.encryptMessage = false;
         this.encyptedMessage = null;
-        this.showUnlockAccountModal = false;
         // - maxFee must be absolute
         this.formItems.maxFee = this.defaultFee;
-        // - initialize mosaics input manager
-        this.mosaicInputsManager = MosaicInputsManager.initialize(currentMosaics);
 
         // transaction details passed via router
         this.importTransaction = this.$route.params.transaction || this.importedTransaction ? true : false;
         if (this.importTransaction) {
-            // @ts-ignore
-            this.setTransactions([!!this.importedTransaction ? this.importedTransaction : this.$route.params.transaction]);
-            Vue.nextTick(() => {
-                this.formItems.attachedMosaics.forEach((attachedMosaic) => {
-                    this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
-                });
+            this.setTransactions([!!this.importedTransaction ? this.importedTransaction : this.$route.params.transaction] as any);
+            this.formItems.attachedMosaics.forEach((attachedMosaic) => {
+                this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
             });
             this.onChangeRecipient();
         } else {
             // - set attachedMosaics and allocate slots
-            Vue.nextTick().then(async () => {
-                await attachedMosaics.forEach((attachedMosaic, index) => {
-                    this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
-                    Vue.set(this.formItems.attachedMosaics, index, attachedMosaic);
-                });
+            attachedMosaics.forEach((attachedMosaic, index) => {
+                this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
+                Vue.set(this.formItems.attachedMosaics, index, attachedMosaic);
             });
         }
         this.triggerChange();
@@ -399,7 +415,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
 
     protected get isLedger(): boolean {
-        return this.currentAccount.type == AccountType.LEDGER;
+        return this.currentAccount.type === AccountType.LEDGER || this.currentAccount.type === AccountType.LEDGER_OPT_IN;
     }
 
     protected get hasAccountUnlockModal(): boolean {
@@ -750,6 +766,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     mounted() {
         if (this.isAggregate && this.value) {
             Object.assign(this.formItems, this.value);
+            if (this.formItems.attachedMosaics.length) {
+                this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentMosaicList());
+                this.formItems.attachedMosaics.forEach((m) => this.mosaicInputsManager.setSlot(m.mosaicHex, m.uid));
+            }
         }
 
         this.isMounted = true;
@@ -762,5 +782,13 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         if (this.isAggregate && this.value) {
             Object.assign(this.formItems, this.value);
         }
+    }
+
+    /**
+     * Hook called when the child component ModalTransactionConfirmation triggers
+     * the event 'signed'
+     */
+    public onSignedOfflineTransaction(signedTransaction: SignedTransaction) {
+        this.$emit('txSigned', signedTransaction);
     }
 }

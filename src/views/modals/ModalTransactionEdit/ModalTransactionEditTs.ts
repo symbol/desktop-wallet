@@ -34,8 +34,7 @@ export class ModalTransactionEditTs extends Vue {
     @Prop({
         required: true,
     })
-    @Prop()
-    public transaction;
+    public transaction: any;
 
     @Prop({
         default: false,

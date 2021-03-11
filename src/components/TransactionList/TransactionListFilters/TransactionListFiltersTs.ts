@@ -67,6 +67,10 @@ export class TransactionListFiltersTs extends Vue {
         this.$store.dispatch('transaction/LOAD_TRANSACTIONS');
     }
 
+    public downloadTransactions() {
+        this.$emit('downloadTransactions');
+    }
+
     /**
      * Hook called before the component is destroyed
      */

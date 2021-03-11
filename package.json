@@ -2,7 +2,7 @@
     "name": "symbol-desktop-wallet",
     "description": "Symbol Wallet",
     "homepage": "https://github.com/nemgrouplimited/symbol-desktop-wallet",
-    "version": "0.14.1",
+    "version": "1.0.0-beta.2",
     "repository": {
         "type": "git",
         "url": "https://github.com/nemgrouplimited/symbol-desktop-wallet.git"
@@ -33,14 +33,17 @@
         "node-hid:prebuild-install:lin": "export npm_config_platform=linux && npm run node-hid:prebuild-install",
         "version": "echo $npm_package_version"
     },
-    "author": "Greg Saive <greg.saive@nem.software>",
+    "author": "NEM Group <support@nem.group>",
     "contributors": [
         {
-            "name": "Greg Saive",
-            "email": "greg.saive@nem.software"
+            "name": "NEM Group",
+            "email": "support@nem.group"
         }
     ],
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^1.2.34",
+        "@fortawesome/free-solid-svg-icons": "^5.15.2",
+        "@fortawesome/vue-fontawesome": "^2.0.2",
         "@js-joda/core": "^3.2.0",
         "@ledgerhq/hw-transport-node-hid-noevents": "^5.41.0",
         "@ledgerhq/hw-transport-webusb": "^5.41.0",
@@ -125,10 +128,10 @@
         "prettier": "2.0.5",
         "rimraf": "^3.0.2",
         "symbol-address-book": "^1.0.0",
-        "symbol-hd-wallets": "0.14.0",
+        "symbol-hd-wallets": "0.14.1-alpha-202103051108",
         "symbol-paper-wallets": "^1.0.2",
-        "symbol-qr-library": "0.14.0",
-        "symbol-sdk": "0.23.2",
+        "symbol-qr-library": "0.14.1-alpha-202103081047",
+        "symbol-sdk": "0.23.4-alpha-202103071752",
         "symbol-uri-scheme": "0.6.0",
         "ts-jest": "^25.3.0",
         "ts-mockito": "^2.6.1",
@@ -162,14 +165,14 @@
     },
     "mac": {
         "category": "public.app-category.finance",
-        "target": "tar.gz",
+        "target": "dmg",
         "icon": "./assets/icons/Icon.incs",
         "hardenedRuntime": true,
         "gatekeeperAssess": false,
         "asarUnpack": [
             "**/*.node"
         ],
-        "entitlements": "electron/entitlements.mac.plist",
+        "entitlements": "./electron/entitlements.mac.plist",
         "extendInfo": {
             "NSCameraUsageDescription": "This app requires camera access to scan qrcodes."
         }
@@ -186,6 +189,7 @@
         "oneClick": false,
         "perMachine": false,
         "allowToChangeInstallationDirectory": true,
+        "publisherName": "NEM Group Limited",
         "installerIcon": "./assets/icons/Symbol.ico"
     },
     "linux": {

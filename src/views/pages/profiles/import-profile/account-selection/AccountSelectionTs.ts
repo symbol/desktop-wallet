@@ -15,11 +15,10 @@
  */
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { AccountInfo, Address, MosaicId, NetworkType, Password, RepositoryFactory, SimpleWallet } from 'symbol-sdk';
-import { MnemonicPassPhrase } from 'symbol-hd-wallets';
+import { AccountInfo, Address, MosaicId, NetworkType, Password, RepositoryFactory } from 'symbol-sdk';
+import { MnemonicPassPhrase, Network } from 'symbol-hd-wallets';
 // internal dependencies
-import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
-import { DerivationPathLevels, DerivationService } from '@/services/DerivationService';
+import { DerivationService } from '@/services/DerivationService';
 import { AccountService } from '@/services/AccountService';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { Formatters } from '@/core/utils/Formatters';
@@ -29,7 +28,7 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { ProfileService } from '@/services/ProfileService';
-import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
+import _ from 'lodash';
 
 @Component({
     computed: {
@@ -41,6 +40,7 @@ import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorag
             currentPassword: 'temporary/password',
             currentMnemonic: 'temporary/mnemonic',
             selectedAccounts: 'account/selectedAddressesToInteract',
+            selectedOptInAccounts: 'account/selectedAddressesOptInToInteract',
         }),
     },
     components: { MosaicAmountDisplay },
@@ -109,7 +109,13 @@ export default class AccountSelectionTs extends Vue {
      * Balances map
      * @var {any}
      */
-    public addressMosaicMap = {};
+    public addressBalanceMap: { [address: string]: number } = {};
+
+    /**
+     * Balances map
+     * @var {any}
+     */
+    public optInAddressBalanceMap: { [address: string]: number } = {};
 
     /**
      * Map of selected accounts
@@ -118,10 +124,22 @@ export default class AccountSelectionTs extends Vue {
     public selectedAccounts: number[];
 
     /**
+     * Map of selected opt in accounts
+     * @var {number[]}
+     */
+    public selectedOptInAccounts: number[];
+
+    /**
      * List of addresses
      * @var {Address[]}
      */
     public addressesList: Address[] = [];
+
+    /**
+     * List of opt in addresses
+     * @var {Address[]}
+     */
+    public optInAddressesList: { address: Address; index: number }[] = [];
 
     public networkCurrency: NetworkCurrencyModel;
 
@@ -134,7 +152,10 @@ export default class AccountSelectionTs extends Vue {
         this.accountService = new AccountService();
 
         Vue.nextTick().then(() => {
-            setTimeout(() => this.initAccounts(), 200);
+            setTimeout(() => {
+                this.initAccounts();
+                this.initOptInAccounts();
+            }, 200);
         });
     }
 
@@ -150,38 +171,9 @@ export default class AccountSelectionTs extends Vue {
     public submit() {
         // cannot submit without selecting at least one account
         if (!this.selectedAccounts.length) {
-            return this.$store.dispatch('notification/ADD_ERROR', NotificationType.INPUT_EMPTY_ERROR);
+            return this.$store.dispatch('notification/ADD_ERROR', NotificationType.IMPORT_EMPTY_ACCOUNT_LIST);
         }
-
-        try {
-            // create account models
-            const accounts = this.createAccountsFromPathIndexes(this.selectedAccounts);
-
-            // save newly created accounts
-            accounts.forEach((account, index) => {
-                // Store accounts using repository
-                this.accountService.saveAccount(account);
-                // set current account
-                if (index === 0) {
-                    this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account);
-                }
-                // add accounts to profile
-                this.$store.dispatch('profile/ADD_ACCOUNT', account);
-            });
-
-            // get accounts identifiers
-            const accountIdentifiers = accounts.map((account) => account.id);
-
-            // set known accounts
-            this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', accountIdentifiers);
-
-            this.profileService.updateAccounts(this.currentProfile, accountIdentifiers);
-
-            // execute store actions
-            return this.$router.push({ name: 'profiles.importProfile.finalize' });
-        } catch (error) {
-            return this.$store.dispatch('notification/ADD_ERROR', error);
-        }
+        return this.$router.push({ name: 'profiles.importProfile.finalize' });
     }
 
     /**
@@ -202,75 +194,54 @@ export default class AccountSelectionTs extends Vue {
             return;
         }
         // map balances
-        this.addressMosaicMap = this.mapBalanceByAddress(accountsInfo, this.networkMosaic);
-    }
-
-    public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaic: MosaicId): Record<string, number> {
-        return accountsInfo
-            .map(({ mosaics, address }) => {
-                // - check balance
-                const hasNetworkMosaic = mosaics.find((mosaicOwned) => mosaicOwned.id.equals(mosaic));
-
-                // - account doesn't hold network mosaic so the balance is zero
-                if (hasNetworkMosaic === undefined) {
-                    return {
-                        address: address.plain(),
-                        balance: 0,
-                    };
-                }
-                // - map balance to address
-                const balance = hasNetworkMosaic.amount.compact();
-                return {
-                    address: address.plain(),
-                    balance: balance,
-                };
-            })
-            .reduce((acc, { address, balance }) => ({ ...acc, [address]: balance }), {});
+        this.addressBalanceMap = {
+            ...this.addressBalanceMap,
+            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.addressesList),
+        };
     }
 
     /**
-     * Create an account instance from mnemonic and path
-     * @return {AccountModel}
+     * Fetch account balances and map to address
+     * @return {void}
      */
-    private createAccountsFromPathIndexes(indexes: number[]): AccountModel[] {
-        const accountPath = AccountService.getAccountPathByNetworkType(this.currentProfile.networkType);
-        const paths = indexes.map((index) => {
-            if (index == 0) {
-                return accountPath;
-            }
-
-            return this.derivation.incrementPathLevel(accountPath, DerivationPathLevels.Profile, index);
-        });
-
-        const accounts = this.accountService.generateAccountsFromPaths(
+    private async initOptInAccounts() {
+        // - generate addresses
+        const possibleOptInAccounts = this.accountService.generateAccountsFromMnemonic(
             new MnemonicPassPhrase(this.currentMnemonic),
             this.currentProfile.networkType,
-            paths,
+            10,
+            Network.BITCOIN,
         );
 
-        const simpleWallets = accounts.map((account, i) =>
-            SimpleWallet.createFromPrivateKey(
-                `Seed Account ${indexes[i] + 1}`,
-                this.currentPassword,
-                account.privateKey,
-                this.currentProfile.networkType,
-            ),
-        );
+        // whitelist opt in accounts
+        const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
+        const whitelisted = process.env.KEYS_WHITELIST[key];
+        const optInAccounts = possibleOptInAccounts
+            .map((optinAccount, index) => ({ account: optinAccount, index: index }))
+            .filter((account) => whitelisted.indexOf(account.account.publicKey) >= 0)
+            .map((account) => ({ address: account.account.address, index: account.index }));
+        if (optInAccounts.length === 0) {
+            return;
+        }
+        this.optInAddressesList = optInAccounts;
 
-        return simpleWallets.map((simpleWallet, i) => {
-            return {
-                id: SimpleObjectStorage.generateIdentifier(),
-                profileName: this.currentProfile.profileName,
-                name: simpleWallet.name,
-                node: '',
-                type: AccountType.SEED,
-                address: simpleWallet.address.plain(),
-                publicKey: accounts[i].publicKey,
-                encryptedPrivateKey: simpleWallet.encryptedPrivateKey,
-                path: paths[i],
-                isMultisig: false,
-            };
-        });
+        const optInAddresses = this.optInAddressesList.map((account) => account.address);
+        // fetch accounts info
+        const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(optInAddresses).toPromise();
+        // map balances
+        this.optInAddressBalanceMap = {
+            ...this.optInAddressBalanceMap,
+            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, optInAddresses),
+        };
+    }
+
+    public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaicId: MosaicId, addressList: Address[]): { [address: string]: number } {
+        const addressToAccountInfo = _.keyBy(accountsInfo, (a) => a.address.plain());
+        return _.chain(addressList)
+            .keyBy((a) => a.plain())
+            .mapValues((a) => addressToAccountInfo[a.plain()]?.mosaics.find((m) => m.id.equals(mosaicId))?.amount.compact() ?? 0)
+            .value();
     }
 
     /**
@@ -279,5 +250,12 @@ export default class AccountSelectionTs extends Vue {
      */
     protected onAddAddress(pathNumber: number): void {
         this.$store.commit('account/addToSelectedAddressesToInteract', pathNumber);
+    }
+    /**
+     * Called when clicking on an address to add it to the selection optin
+     * @param {number} pathNumber
+     */
+    protected onAddAddressOptIn(pathNumber: number): void {
+        this.$store.commit('account/addToSelectedAddressesOptInToInteract', pathNumber);
     }
 }

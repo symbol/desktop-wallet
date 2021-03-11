@@ -47,6 +47,12 @@
                     <li v-if="validQrTypes.includes(5)" :class="qrType == 5 ? 'selected' : ''">
                         {{ $t('upload_qr_code_explanation_type_mnemonicqr') }}
                     </li>
+                    <li v-if="validQrTypes.includes(8)" :class="qrType == 8 ? 'selected' : ''">
+                        {{ $t('upload_qr_code_explanation_type_signedtransactionqr') }}
+                    </li>
+                    <li v-if="validQrTypes.includes(9)" :class="qrType == 9 ? 'selected' : ''">
+                        {{ $t('upload_qr_code_explanation_type_cosignaturesignedtransactionqr') }}
+                    </li>
                     <li v-if="invalidType" class="selected">
                         {{ $t('upload_qr_code_invalid_type_message', { type: qrType == 0 ? 'unknown' : qrType }) }}
                     </li>

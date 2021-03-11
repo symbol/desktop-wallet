@@ -15,7 +15,7 @@
  */
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { Password, PublicAccount } from 'symbol-sdk';
+import { NetworkType, Password } from 'symbol-sdk';
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 import { ProfileService } from '@/services/ProfileService';
@@ -30,11 +30,9 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 import FormRow from '@/components/FormRow/FormRow.vue';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
-import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
-import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountService } from '@/services/AccountService';
-import { LedgerService } from '@/services/LedgerService';
 import { networkConfig } from '@/config';
+
 /// end-region custom types
 
 @Component({
@@ -49,6 +47,7 @@ import { networkConfig } from '@/config';
         ...mapGetters({
             generationHash: 'network/generationHash',
             currentProfile: 'profile/currentProfile',
+            isConnected: 'network/isConnected',
         }),
     },
 })
@@ -59,7 +58,7 @@ export class FormProfileCreationTs extends Vue {
      * @var {string}
      */
     public currentProfile: ProfileModel;
-
+    private isConnected: boolean;
     /**
      * Currently active profile
      * @see {Store.Profile}
@@ -71,6 +70,7 @@ export class FormProfileCreationTs extends Vue {
 
     created() {
         this.profileService = new ProfileService();
+        this.formItems.networkType = NetworkType.MAIN_NET;
         const { isLedger } = this.$route.meta;
         this.isLedger = isLedger;
     }
@@ -81,12 +81,6 @@ export class FormProfileCreationTs extends Vue {
      * @var {string}
      */
     public generationHash: string;
-
-    /**
-     * Accounts repository
-     * @var {ProfileService}
-     */
-    public accountService = new ProfileService();
 
     /**
      * Ledger Accounts repository
@@ -130,11 +124,35 @@ export class FormProfileCreationTs extends Vue {
 
     /// region computed properties getter/setter
     get nextPage() {
+        if (!this.isConnected) {
+            this.connect(this.formItems.networkType);
+        }
         return this.$route.meta.nextPage;
     }
 
     /// end-region computed properties getter/setter
 
+    public connect(newNetworkType) {
+        this.$store.dispatch('network/CONNECT', { networkType: newNetworkType });
+    }
+
+    /**
+     * Submit action, validates form and creates account in storage
+     * @return {void}
+     */
+    public submit() {
+        // @VEE
+        this.persistAccountAndContinue();
+        this.resetValidations();
+    }
+
+    /**
+     *  resets form validation
+     */
+
+    public resetValidations(): void {
+        this.$refs && this.$refs.observer && this.$refs.observer.reset();
+    }
     /**
      * Error notification handler
      */
@@ -156,6 +174,7 @@ export class FormProfileCreationTs extends Vue {
                 case 26628:
                     this.$store.dispatch('notification/ADD_ERROR', 'ledger_device_locked');
                     return;
+                case 26368:
                 case 27904:
                     this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_opened_app');
                     return;
@@ -176,28 +195,6 @@ export class FormProfileCreationTs extends Vue {
         this.$store.dispatch('notification/ADD_ERROR', this.$t('create_profile_failed', { reason: error.message || error }));
     }
 
-    public onNetworkTypeChange(newNetworkType) {
-        this.$store.dispatch('network/CONNECT', { networkType: newNetworkType });
-    }
-
-    /**
-     * Submit action, validates form and creates account in storage
-     * @return {void}
-     */
-    public submit() {
-        // @VEE
-        this.persistAccountAndContinue();
-        this.resetValidations();
-    }
-
-    /**
-     *  resets form validation
-     */
-
-    public resetValidations(): void {
-        this.$refs && this.$refs.observer && this.$refs.observer.reset();
-    }
-
     /**
      * Persist created account and redirect to next step
      * @return {void}
@@ -206,7 +203,7 @@ export class FormProfileCreationTs extends Vue {
         // -  password stored as hash (never plain.)
         const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password));
         const genHash = this.generationHash || networkConfig[this.formItems.networkType].networkConfigurationDefaults.generationHash;
-        const account: ProfileModel = {
+        const profile: ProfileModel = {
             profileName: this.formItems.profileName,
             accounts: [],
             seed: '',
@@ -218,28 +215,26 @@ export class FormProfileCreationTs extends Vue {
             selectedNodeUrlToConnect: '',
         };
         // use repository for storage
-        this.accountService.saveProfile(account);
+        this.profileService.saveProfile(profile);
 
         // execute store actions
-        this.$store.dispatch('profile/SET_CURRENT_PROFILE', account);
+        this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile);
         this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password);
-        if (!this.isLedger) {
-            // flush and continue
-            this.$router.push({ name: this.nextPage });
-        } else {
-            this.importDefaultLedgerAccount(this.formItems.networkType)
-                .then((res) => {
-                    this.ledgerAccountService.saveAccount(res);
-                    // - update app state
-                    this.$store.dispatch('profile/ADD_ACCOUNT', res);
-                    this.$store.dispatch('account/SET_CURRENT_ACCOUNT', res);
-                    this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', [res.id]);
-                    this.$store.dispatch('temporary/RESET_STATE');
-                    this.$router.push({ name: 'profiles.accessLedger.finalize' });
+        if (this.isLedger) {
+            // try for make sure device was connected for next step require it
+            const accountService = new AccountService();
+            accountService
+                .getLedgerAccounts(this.formItems.networkType, 1)
+                .then(() => {
+                    // flush and continue
+                    this.$router.push({ name: this.nextPage });
                 })
                 .catch((error) => {
                     this.errorNotificationHandler(error);
                 });
+        } else {
+            // flush and continue
+            this.$router.push({ name: this.nextPage });
         }
     }
 
@@ -249,40 +244,5 @@ export class FormProfileCreationTs extends Vue {
     public stripTagsProfile() {
         this.formItems.profileName = FilterHelpers.stripFilter(this.formItems.profileName);
         this.formItems.hint = FilterHelpers.stripFilter(this.formItems.hint);
-    }
-
-    /**
-     * Get a account instance of Ledger from default path
-     * @return {AccountModel}
-     */
-    private async importDefaultLedgerAccount(networkType: number): Promise<AccountModel> {
-        const defaultPath = AccountService.getAccountPathByNetworkType(networkType);
-        const ledgerService = new LedgerService(networkType);
-        const isAppSupported = await ledgerService.isAppSupported();
-        if (!isAppSupported) {
-            throw { errorCode: 'ledger_not_supported_app' };
-        }
-        const profileName = this.formItems.profileName;
-        const accountService = new AccountService();
-        this.$store.dispatch('notification/ADD_SUCCESS', 'verify_device_information');
-        const accountResult = await accountService.getLedgerPublicKeyByPath(networkType, defaultPath);
-        const publicKey = accountResult;
-        const address = PublicAccount.createFromPublicKey(publicKey, networkType).address;
-
-        // add account to list
-        const accName = this.currentProfile.profileName;
-
-        return {
-            id: SimpleObjectStorage.generateIdentifier(),
-            name: accName,
-            profileName: profileName,
-            node: '',
-            type: AccountType.fromDescriptor('Ledger'),
-            address: address.plain(),
-            publicKey: publicKey.toUpperCase(),
-            encryptedPrivateKey: '',
-            path: defaultPath,
-            isMultisig: false,
-        };
     }
 }

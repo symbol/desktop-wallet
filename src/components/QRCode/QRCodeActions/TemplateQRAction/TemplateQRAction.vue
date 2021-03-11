@@ -2,7 +2,7 @@
     <div>
         <div class="preview-container">
             <slot name="qrcode-details">
-                <QRCodeDisplay :qr-code="qrCode" show-download="true" header="uploaded_qr_code" />
+                <QRCodeDisplay :qr-code="qrCode" header="uploaded_qr_code" />
                 <div class="qrcode-details">
                     <div v-for="(item, index) in detailItems" :key="index" class="qrcode-details-row">
                         <slot name="detailItem" :item="item">
@@ -22,7 +22,7 @@
                         <span> {{ $t(actionDesc) }} </span>
                     </div>
                     <div class="qrcode-action-button">
-                        <button v-if="showActionButton" type="submit" class="button-style validation-button" @click="onSubmit">
+                        <button v-if="showActionButton" type="submit" class="button-style inverted-button" @click="onSubmit">
                             {{ $t(actionButtonText) }}
                         </button>
                     </div>

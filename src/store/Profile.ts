@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { ProfileService } from '@/services/ProfileService';
+import { SettingService } from '@/services/SettingService';
+import { IListener } from 'symbol-sdk';
 import Vue from 'vue';
 // internal dependencies
 import { $eventBus } from '../events';
 import { AwaitLock } from './AwaitLock';
-import { SettingService } from '@/services/SettingService';
-import { ProfileModel } from '@/core/database/entities/ProfileModel';
-import { AccountModel } from '@/core/database/entities/AccountModel';
-import { ProfileService } from '@/services/ProfileService';
-import { IListener } from 'symbol-sdk';
 
 /// region globals
 const Lock = AwaitLock.create();
@@ -88,8 +88,13 @@ export default {
             if (currentAccount) {
                 await dispatch('account/uninitialize', { address: currentAccount.address }, { root: true });
             }
+            await dispatch('network/UNSUBSCRIBE', undefined, { root: true });
             await dispatch('account/SET_KNOWN_ACCOUNTS', [], { root: true });
             await dispatch('account/RESET_CURRENT_ACCOUNT', undefined, {
+                root: true,
+            });
+
+            await dispatch('network/RESET_STATE', undefined, {
                 root: true,
             });
             const currentListener: IListener = rootGetters['network/listener'];

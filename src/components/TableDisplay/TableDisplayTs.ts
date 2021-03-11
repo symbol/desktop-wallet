@@ -37,6 +37,8 @@ import TableRow from '@/components/TableRow/TableRow.vue';
 // @ts-ignore
 import ButtonAdd from '@/components/ButtonAdd/ButtonAdd';
 // @ts-ignore
+import ButtonRefresh from '@/components/ButtonRefresh/ButtonRefresh';
+// @ts-ignore
 import ModalFormWrap from '@/views/modals/ModalFormWrap/ModalFormWrap.vue';
 // @ts-ignore
 import FormAliasTransaction from '@/views/forms/FormAliasTransaction/FormAliasTransaction.vue';
@@ -68,6 +70,7 @@ import { PageInfo } from '@/store/Transaction';
         SignerFilter,
         ButtonAdd,
         ModalMetadataUpdate,
+        ButtonRefresh,
     },
     computed: {
         ...mapGetters({

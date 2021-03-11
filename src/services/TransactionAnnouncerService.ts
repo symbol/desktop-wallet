@@ -13,7 +13,13 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Store } from 'vuex';
+// configuration
+import { appConfig } from '@/config';
+// internal dependencies
+import { BroadcastResult } from '@/core/transactions/BroadcastResult';
+import i18n from '@/language';
+import { from, Observable, of, OperatorFunction, throwError } from 'rxjs';
+import { catchError, flatMap, map, switchMap, tap, timeoutWith } from 'rxjs/operators';
 import {
     Account,
     CosignatureSignedTransaction,
@@ -26,15 +32,8 @@ import {
     TransactionService,
     TransactionType,
 } from 'symbol-sdk';
-// internal dependencies
-import { BroadcastResult } from '@/core/transactions/BroadcastResult';
-import { Observable, of, OperatorFunction, throwError } from 'rxjs';
-import { catchError, flatMap, map } from 'rxjs/operators';
 import { TransactionAnnounceResponse } from 'symbol-sdk/dist/src/model/transaction/TransactionAnnounceResponse';
-// configuration
-import { appConfig } from '@/config';
-import i18n from '@/language';
-import { timeoutWith } from 'rxjs/operators';
+import { Store } from 'vuex';
 
 const { ANNOUNCE_TRANSACTION_TIMEOUT } = appConfig.constants;
 
@@ -78,22 +77,25 @@ export class TransactionAnnouncerService {
     }
 
     public announce(signedTransaction: SignedTransaction): Observable<BroadcastResult> {
-        if (this.networkType === NetworkType.MAIN_NET) {
-            return this.ByPassAnnouncement();
-        } else {
-            const listener: IListener = this.$store.getters['network/listener'];
-            const service = this.createService();
-            return service
-                .announce(signedTransaction, listener)
-                .pipe(
-                    this.timeout(this.timeoutMessage(signedTransaction.type)),
-                    catchError((e) => of(e as Error)),
-                )
-                .pipe(map((t) => this.createBroadcastResult(signedTransaction, t)));
-        }
+        const listener: IListener = this.$store.getters['account/listener'];
+        const service = this.createService();
+        return service
+            .announce(signedTransaction, listener)
+            .pipe(this.timeout(this.timeoutMessage(signedTransaction.type)))
+            .pipe(map((t) => this.createBroadcastResult(signedTransaction, t)));
+    }
+
+    private retrySubscribe() {
+        const address = this.$store.getters['account/currentAccountAddress'];
+        this.$store.dispatch('account/UNSUBSCRIBE', address);
+        this.$store.dispatch('account/SUBSCRIBE', address);
     }
 
     private timeout<T, R>(message: string): OperatorFunction<T, T> {
+        const listener: IListener = this.$store.getters['account/listener'];
+        if (!listener.isOpen()) {
+            this.retrySubscribe();
+        }
         if (!this.transactionTimeout) {
             return (o) => o;
         }
@@ -114,54 +116,52 @@ export class TransactionAnnouncerService {
         signedHashLockTransaction: SignedTransaction,
         signedAggregateTransaction: SignedTransaction,
     ): Observable<BroadcastResult> {
-        if (this.networkType === NetworkType.MAIN_NET) {
-            return this.ByPassAnnouncement();
-        } else {
-            const listener: IListener = this.$store.getters['network/listener'];
-            const service = this.createService();
-            return service
-                .announce(signedHashLockTransaction, listener)
-                .pipe(this.timeout(this.timeoutMessage(signedHashLockTransaction.type)))
-                .pipe(
-                    flatMap(() =>
-                        service
-                            .announceAggregateBonded(signedAggregateTransaction, listener)
-                            .pipe(this.timeout(this.timeoutMessage(signedAggregateTransaction.type))),
-                    ),
-                )
-
-                .pipe(catchError((e) => of(e as Error)))
-                .pipe(map((t) => this.createBroadcastResult(signedAggregateTransaction, t)));
-        }
+        const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+        const hashLockListener: IListener = repositoryFactory.createListener();
+        return from(hashLockListener.open()).pipe(
+            switchMap(() => {
+                hashLockListener.unconfirmedAdded(this.$store.getters['account/currentAccountAddress']);
+                const service = this.createService();
+                return service
+                    .announceHashLockAggregateBonded(signedHashLockTransaction, signedAggregateTransaction, hashLockListener)
+                    .pipe(this.timeout(this.timeoutMessage(signedHashLockTransaction.type)))
+                    .pipe(
+                        tap(() => {
+                            hashLockListener.close();
+                            console.log('hashAndAggregateBonded listener is closed!');
+                        }),
+                    )
+                    .pipe(
+                        catchError((e) => {
+                            hashLockListener.close();
+                            console.log('hashAndAggregateBonded listener is closed due to error!');
+                            return of(e as Error);
+                        }),
+                    )
+                    .pipe(map((t) => this.createBroadcastResult(signedAggregateTransaction, t)));
+            }),
+        );
     }
 
     public announceChainedBinary(first: SignedTransaction, second: SignedTransaction): Observable<BroadcastResult> {
-        if (this.networkType === NetworkType.MAIN_NET) {
-            return this.ByPassAnnouncement();
-        } else {
-            const listener: IListener = this.$store.getters['network/listener'];
-            const service = this.createService();
-            return service
-                .announce(first, listener)
-                .pipe(this.timeout(this.timeoutMessage(first.type)))
-                .pipe(flatMap(() => service.announce(second, listener).pipe(this.timeout(this.timeoutMessage(second.type)))))
+        const listener: IListener = this.$store.getters['account/listener'];
+        const service = this.createService();
+        return service
+            .announce(first, listener)
+            .pipe(this.timeout(this.timeoutMessage(first.type)))
+            .pipe(flatMap(() => service.announce(second, listener).pipe(this.timeout(this.timeoutMessage(second.type)))))
 
-                .pipe(catchError((e) => of(e as Error)))
-                .pipe(map((t) => this.createBroadcastResult(second, t)));
-        }
+            .pipe(catchError((e) => of(e as Error)))
+            .pipe(map((t) => this.createBroadcastResult(second, t)));
     }
 
     public announceAggregateBondedCosignature(singedTransaction: CosignatureSignedTransaction): Observable<BroadcastResult> {
-        if (this.networkType === NetworkType.MAIN_NET) {
-            return this.ByPassAnnouncement();
-        } else {
-            const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-            const transactionHttp = repositoryFactory.createTransactionRepository();
-            return transactionHttp
-                .announceAggregateBondedCosignature(singedTransaction)
-                .pipe(this.timeout('Cosignature Transaction has timed out'))
-                .pipe(map((t) => this.createBroadcastResult(singedTransaction, t)));
-        }
+        const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+        const transactionHttp = repositoryFactory.createTransactionRepository();
+        return transactionHttp
+            .announceAggregateBondedCosignature(singedTransaction)
+            .pipe(this.timeout('Cosignature Transaction has timed out'))
+            .pipe(map((t) => this.createBroadcastResult(singedTransaction, t)));
     }
 
     private createBroadcastResult(
@@ -175,13 +175,5 @@ export class TransactionAnnouncerService {
         } else {
             return new BroadcastResult(signedTransaction, undefined, true);
         }
-    }
-
-    /**
-     * TEMP PATCH TO BYPASS MAINNET TRANSACTION ANNOUNCEMENT BEFORE LAUNCH
-     * @param networkType network Type
-     */
-    private ByPassAnnouncement() {
-        return of(this.createBroadcastResult(undefined, new Error('Announcing transactions to MAINNET is not available yet!')));
     }
 }

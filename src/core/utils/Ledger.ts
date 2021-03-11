@@ -18,8 +18,9 @@ import * as BIPPath from 'bip32-path';
 // configuration
 import { Transaction, SignedTransaction, Convert, CosignatureSignedTransaction, AggregateTransaction } from 'symbol-sdk';
 
-const SUPPORT_VERSION = { LEDGER_MAJOR_VERSION: '0', LEDGER_MINOR_VERSION: '0', LEDGER_PATCH_VERSION: '4' };
+const SUPPORT_VERSION = { LEDGER_MAJOR_VERSION: '0', LEDGER_MINOR_VERSION: '0', LEDGER_PATCH_VERSION: '8' };
 const CLA_FIELD = 0xe0;
+
 /**
  * Symbol's API
  *
@@ -41,26 +42,34 @@ export class SymbolLedger {
         );
     }
     /**
-     * Return true if app version is above the supported Symbol BOLOS app version
+     * Return true if app version is above the supported Symbol app version
      * @return {boolean}
      */
     public async isAppSupported() {
         const appVersion = await this.getAppVersion();
-        if (appVersion.majorVersion < SUPPORT_VERSION.LEDGER_MAJOR_VERSION) {
-            return false;
-        } else if (appVersion.minorVersion < SUPPORT_VERSION.LEDGER_MINOR_VERSION) {
-            return false;
-        } else if (appVersion.patchVersion < SUPPORT_VERSION.LEDGER_PATCH_VERSION) {
-            return false;
-        } else {
+        if (appVersion.majorVersion > SUPPORT_VERSION.LEDGER_MAJOR_VERSION) {
             return true;
+        } else if (appVersion.majorVersion == SUPPORT_VERSION.LEDGER_MAJOR_VERSION) {
+            if (appVersion.minorVersion > SUPPORT_VERSION.LEDGER_MINOR_VERSION) {
+                return true;
+            } else if (appVersion.minorVersion == SUPPORT_VERSION.LEDGER_MINOR_VERSION) {
+                if (appVersion.patchVersion < SUPPORT_VERSION.LEDGER_PATCH_VERSION) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 
     /**
-     * Get Symbol BOLOS app version
-     *
-     * @return an object contain major, minor, patch version of the Symbol BOLOS app
+     * Get Symbol app version on Ledger device
+
+     * @return an object contain major, minor, patch version of the Symbol app on Ledger device
      */
     private async getAppVersion() {
         // APDU fields configuration
@@ -90,13 +99,14 @@ export class SymbolLedger {
      * @param path a path in BIP 44 format
      * @param display optionally enable or not the display
      * @param chainCode optionally enable or not the chainCode request
+     * @param isOptinSymbolWallet if Opt-in Symbol wallet uses curve Secp256K1 else uses curve Ed25519
      * @return an object with a publicKey and (optionally) chainCode
      */
-    async getAccount(path: string, networkType: number, display: boolean, chainCode: boolean) {
+    async getAccount(path: string, networkType: number, display: boolean, chainCode: boolean, isOptinLedgerWallet: boolean) {
         const GET_ACCOUNT_INS_FIELD = 0x02;
 
         const bipPath = BIPPath.fromString(path).toPathArray();
-        const curveMask = 0x80; // use Curve25519
+        const curveMask = isOptinLedgerWallet ? 0x40 : 0x80;
 
         // APDU fields configuration
         const apdu = {
@@ -134,13 +144,20 @@ export class SymbolLedger {
      * @param transaction a transaction needs to be signed
      * @param networkGenerationHash the network generation hash of block 1
      * @param signerPublicKey the public key of signer
+     * @param isOptinSymbolWallet if Opt-in Symbol wallet uses curve Secp256K1 else uses curve Ed25519
      * @return a signed Transaction which is signed by account at path on Ledger
      */
-    public async signTransaction(path: string, transaction: any, networkGenerationHash: string, signerPublicKey: string) {
+    public async signTransaction(
+        path: string,
+        transaction: any,
+        networkGenerationHash: string,
+        signerPublicKey: string,
+        isOptinLedgerWallet: boolean,
+    ) {
         const rawPayload = transaction.serialize();
         const signingBytes = networkGenerationHash + rawPayload.slice(216);
         const rawTx = Buffer.from(signingBytes, 'hex');
-        const response = await this.ledgerMessageHandler(path, rawTx, false);
+        const response = await this.ledgerMessageHandler(path, rawTx, false, isOptinLedgerWallet);
         // Response from Ledger
         const h = response.toString('hex');
         const signature = h.slice(0, 128);
@@ -163,13 +180,19 @@ export class SymbolLedger {
      * @param path a path in BIP 44 format
      * @param cosignatureTransaction a cosinature transaction needs to be signed
      * @param signerPublicKey the public key of signer
+     * @param isOptinSymbolWallet if Opt-in Symbol wallet uses curve Secp256K1 else uses curve Ed25519
      * @return a Signed Cosignature Transaction which is signed by account at path on Ledger
      */
-    public async signCosignatureTransaction(path: string, cosignatureTransaction: AggregateTransaction, signerPublicKey: string) {
+    public async signCosignatureTransaction(
+        path: string,
+        cosignatureTransaction: AggregateTransaction,
+        signerPublicKey: string,
+        isOptinSymbolWallet: boolean,
+    ) {
         const rawPayload = cosignatureTransaction.serialize();
         const signingBytes = cosignatureTransaction.transactionInfo.hash + rawPayload.slice(216);
         const rawTx = Buffer.from(signingBytes, 'hex');
-        const response = await this.ledgerMessageHandler(path, rawTx, false);
+        const response = await this.ledgerMessageHandler(path, rawTx, false, isOptinSymbolWallet);
         // Response from Ledger
         const h = response.toString('hex');
         const signature = h.slice(0, 128);
@@ -180,19 +203,21 @@ export class SymbolLedger {
         );
         return cosignatureSignedTransaction;
     }
+
     /**
      * handle sending and receiving packages between Ledger and Wallet
      * @param path a path in BIP 44 format
      * @param rawTx a raw payload transaction hex string
      * @param chainCode optionally enable or not the chainCode request
+     * @param isOptinSymbolWallet if Opt-in Symbol wallet uses curve Secp256K1 else uses curve Ed25519
      * @returns respond package from Ledger
      */
-    private async ledgerMessageHandler(path: string, rawTx: Buffer, chainCode: boolean) {
+    private async ledgerMessageHandler(path: string, rawTx: Buffer, chainCode: boolean, isOptinSymbolWallet: boolean) {
         const TX_INS_FIELD = 0x04;
         const MAX_CHUNK_SIZE = 255;
         const CONTINUE_SENDING = '0x9000';
 
-        const curveMask = 0x80; // use Curve25519
+        const curveMask = isOptinSymbolWallet ? 0x40 : 0x80;
         const bipPath = BIPPath.fromString(path).toPathArray();
         const apduArray = [];
         let offset = 0;

@@ -24,6 +24,16 @@
     right: 0.32rem !important;
 }
 
+/deep/ .ivu-select-selection div {
+    display: flex;
+    align-items: center;
+
+    .ivu-select-prefix {
+        display: inline-flex !important;
+        padding: 0;
+    }
+}
+
 .navbar-icon {
     display: inline;
     margin-right: 10px;
@@ -31,9 +41,14 @@
     height: 0.15rem;
 }
 
+.min-width {
+    /deep/.ivu-select-dropdown {
+        min-width: 1.6rem !important;
+    }
+}
+
 /deep/.ivu-select-dropdown {
     background-color: @grayLightest !important;
-    max-width: 7.2rem;
     left: auto !important;
 
     .ivu-select-item-selected {

@@ -4,7 +4,7 @@
             <div class="table-title-container section-title">
                 <div class="user-operation">
                     <span class="add-metadata-button">
-                        <ButtonAdd :title="$t('add_metadata')" :disabled="false" @click="$emit('on-add-metadata')" />
+                        <ButtonAdd :title="$t('add_metadata')" :disabled="false" size="26" @click="$emit('on-add-metadata')" />
                     </span>
                     <Checkbox v-if="assetType !== 'metadata'" v-model="showExpired" class="table-filter-item-container">
                         <span v-show="assetType === 'mosaic'" style="margin-left: 0.1rem;">{{ $t('show_expired_mosaics') }}</span>
@@ -13,9 +13,7 @@
                     <div v-if="signers.length > 1" style="min-width: 2rem;">
                         <SignerFilter :signers="signers" @signer-change="onSignerSelectorChange" />
                     </div>
-                    <span v-if="assetType !== 'metadata'" class="table-filter-item-container" @click="onRefresh">
-                        <Icon :class="{ 'animation-rotate': isRefreshing }" type="ios-sync" />
-                    </span>
+                    <ButtonRefresh v-if="assetType !== 'metadata'" @click="onRefresh" />
                 </div>
             </div>
         </div>
@@ -84,6 +82,7 @@
         </div>
         <ModalFormWrap
             v-if="modalFormsVisibility.aliasTransaction"
+            :hide-footer="true"
             :visible="modalFormsVisibility.aliasTransaction"
             :title="aliasModalTitle"
             @close="closeModal('aliasTransaction')"
@@ -94,6 +93,7 @@
                     :alias-target="modalFormsProps.aliasTarget"
                     :alias-action="modalFormsProps.aliasAction"
                     :asset-type="assetType"
+                    class="padding-bottom"
                     @on-confirmation-success="closeModal('aliasTransaction')"
                 />
             </template>
@@ -101,6 +101,7 @@
 
         <ModalFormWrap
             v-if="modalFormsVisibility.extendNamespaceDurationTransaction"
+            :hide-footer="true"
             :visible="modalFormsVisibility.extendNamespaceDurationTransaction"
             title="modal_title_extend_namespace_duration"
             @close="closeModal('extendNamespaceDurationTransaction')"
@@ -108,6 +109,7 @@
             <template v-slot:form>
                 <FormExtendNamespaceDurationTransaction
                     :namespace-id="modalFormsProps.namespaceId"
+                    class="padding-bottom"
                     @on-confirmation-success="closeModal('extendNamespaceDurationTransaction')"
                 />
             </template>
@@ -115,6 +117,7 @@
 
         <ModalFormWrap
             v-if="modalFormsVisibility.mosaicSupplyChangeTransaction"
+            :hide-footer="true"
             :visible="modalFormsVisibility.mosaicSupplyChangeTransaction"
             title="modal_title_mosaic_supply_change"
             @close="closeModal('mosaicSupplyChangeTransaction')"
@@ -122,6 +125,7 @@
             <template v-slot:form>
                 <FormMosaicSupplyChangeTransaction
                     :mosaic-hex-id="modalFormsProps.mosaicId.toHex()"
+                    class="padding-bottom"
                     @on-confirmation-success="closeModal('mosaicSupplyChangeTransaction')"
                 />
             </template>
@@ -138,7 +142,7 @@
             :visible="modalFormsVisibility.targetValue"
             :value="targetedMetadataList[0]"
             :metadata-list="targetedMetadataList"
-            :edit-mode="showModalUpdateMetadata"
+            :edit-mode="modalFormsVisibility.targetValue"
             :type="$route.path.indexOf('space') == -1 ? 1 : 2"
             @close="closeModal('targetValue')"
         />

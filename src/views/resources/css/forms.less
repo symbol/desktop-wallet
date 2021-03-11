@@ -552,7 +552,6 @@
 .danger-button {
     border: none;
     letter-spacing: 0.05em;
-    padding-top: 0.05em;
     font-weight: 700;
     background-image: none;
     background: none;
@@ -577,6 +576,26 @@
 
 .danger-button:disabled:hover {
     background-color: transparent;
+}
+
+.secondary-outline-button {
+    background-color: white;
+    border: 0.02rem solid @purpleDark;
+    color: @purpleDark;
+    border-radius: 0.04rem;
+    padding: 0 0.15rem;
+    margin-right: 0.3rem;
+    cursor: pointer;
+    height: 0.3rem;
+    font-weight: 700;
+    font-size: 0.16rem;
+    letter-spacing: 0.05em;
+}
+
+.secondary-outline-button:hover {
+    background-color: @purpleDark;
+    color: white;
+    transition: 0.5s;
 }
 
 /*
@@ -842,4 +861,13 @@
 
 .clickable {
     cursor: pointer;
+}
+
+::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 0;
 }

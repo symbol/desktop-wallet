@@ -39,8 +39,10 @@ export const createValidationRuleSet = ({
         duration: `required|min_value:0|max_value:${maxMosaicDuration}`,
         generationHash: 'required|min:64|max:64',
         mosaicId: 'required|mosaicId',
-        message: `max:${maxMessageSize}`,
-        namespaceDuration: `required|min_value:${minNamespaceDuration}|maxNamespaceDuration`,
+        message: `maxMessage:${maxMessageSize}`,
+        namespaceDuration: `required|min_value:${
+            minNamespaceDuration / networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.blockGenerationTargetTime
+        }|maxNamespaceDuration`,
         namespaceName: {
             required: true,
             regex: '^[a-z0-9]{1}[a-z0-9-_]{0,63}$',

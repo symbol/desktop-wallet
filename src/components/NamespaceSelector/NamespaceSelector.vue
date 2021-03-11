@@ -9,10 +9,15 @@
                 :name="$t('form_label_namespace_name')"
                 :rules="'required'"
                 tag="div"
-                class="inputs-container select-container"
+                class="select-container"
             >
                 <ErrorTooltip :errors="errors">
-                    <Select v-model="chosenValue" class="select-size select-style" :placeholder="$t('select_a_namespace')">
+                    <Select
+                        v-model="chosenValue"
+                        class="select-size select-style"
+                        :disabled="disabled"
+                        :placeholder="$t('select_a_namespace')"
+                    >
                         <Option
                             v-for="namespaceModel in filteredNamespaces"
                             :key="getName(namespaceModel)"

@@ -1,6 +1,5 @@
 <template>
     <div class="switch_language">
-        <!--<img class="language_icon" :src="require('@/views/resources/img/login/language.svg')" alt="" />-->
         <i-select v-model="language" :class="{ 'select-size select-style': defaultFormStyle }" @input="$emit('on-change')">
             <i-option v-for="({ label, value }, index) in languageList" :key="index" :value="value">
                 {{ label }}

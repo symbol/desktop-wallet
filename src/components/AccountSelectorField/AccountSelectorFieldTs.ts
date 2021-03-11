@@ -39,6 +39,11 @@ export class AccountSelectorFieldTs extends Vue {
     defaultFormStyle: boolean;
 
     @Prop({
+        default: false,
+    })
+    enableMinWidth: boolean;
+
+    @Prop({
         default: true,
     })
     showIcon: boolean;

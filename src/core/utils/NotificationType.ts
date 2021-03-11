@@ -46,6 +46,7 @@ export enum NotificationType {
     ILLEGAL_publicKey_ERROR = 'illegal_public_key_error',
     INCONSISTENT_PASSWORD_ERROR = 'create_lock_check_pw_remind',
     INPUT_EMPTY_ERROR = 'any_information_cannot_be_empty',
+    IMPORT_EMPTY_ACCOUNT_LIST = 'address_list_cannot_be_empty',
     INVALID_NAMESPACE_OR_MOSAIC_ID = 'invalid_namespace_or_mosaic_id',
     KEYSTORE_DECRYPTION_FAILED = 'keystore_decryption_failed',
     LOADING = 'loading',
@@ -114,4 +115,5 @@ export enum NotificationType {
     WRONG_WALLET_NAME_ERROR = 'wrong_wallet_name_error',
     COPY_FAILED = 'copy_failed',
     INVALID_NODE = 'invalid_node',
+    WS_CONNECTION_FAILED = 'ws_connection_failed',
 }

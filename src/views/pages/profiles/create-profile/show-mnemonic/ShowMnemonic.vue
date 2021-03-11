@@ -31,9 +31,13 @@
                         >
                             {{ $t('back') }}
                         </button>
-                        <button type="button" class="solid-button button-style create-account-style" @click="downloadPaperWallet">
+                        <Button
+                            class="solid-button button-style create-account-style download-button"
+                            :loading="downloadInProgress"
+                            @click="downloadPassPharses"
+                        >
                             {{ $t('button_download_qr') }}
-                        </button>
+                        </Button>
                         <button
                             type="submit"
                             class="solid-button button-style create-account-style inverted-button"

@@ -23,7 +23,7 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
-import { TransactionMapping } from 'symbol-sdk';
+import { CosignatureSignedTransaction, SignedTransaction, TransactionMapping } from 'symbol-sdk';
 
 @Component({
     components: { FormWrapper, FormRow, ErrorTooltip, ValidationProvider },
@@ -63,7 +63,19 @@ export default class QRCodePasswordTs extends Vue {
 
     public generateQRCode() {
         try {
-            this.qrCode = QRCodeGenerator.fromJSON(this.qrcodeJson, TransactionMapping.createFromPayload, this.formItems.password);
+            const transformToSigned = (dto: any): SignedTransaction => {
+                return new SignedTransaction(dto.payload, dto.hash, dto.signerPublicKey, dto.type, dto.networkType);
+            };
+            const transformToCosignedSigned = (dto: any): CosignatureSignedTransaction => {
+                return new CosignatureSignedTransaction(dto.parentHash, dto.signature, dto.signerPublicKey);
+            };
+            this.qrCode = QRCodeGenerator.fromJSON(
+                this.qrcodeJson,
+                TransactionMapping.createFromPayload,
+                this.formItems.password,
+                transformToSigned,
+                transformToCosignedSigned,
+            );
             this.$emit('qrCodeGenerated', this.qrCode);
             this.askForPassword = false;
         } catch (error) {

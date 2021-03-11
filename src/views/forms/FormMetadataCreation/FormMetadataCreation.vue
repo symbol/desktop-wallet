@@ -1,22 +1,20 @@
 <template>
     <div class="update-metadata-modal-conatiner">
-        <div class="modal-title">{{ $t(modalTitle) }}</div>
         <FormWrapper>
             <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
-                <form autocomplete="off" onsubmit="event.preventDefault()" class="form-line-container mt-3">
-                    <FormRow>
+                <form autocomplete="off" onsubmit="event.preventDefault()">
+                    <SignerSelector
+                        v-if="!editMode"
+                        v-model="formItems.signerAddress"
+                        :signers="signers"
+                        label="form_label_by_account"
+                        @input="onChangeSigner"
+                    />
+                    <FormRow v-else>
                         <template v-slot:label> {{ $t('form_label_by_account') }}: </template>
                         <template v-slot:inputs>
                             <div class="select-container">
-                                <SignerSelector
-                                    v-if="!editMode"
-                                    v-model="formItems.signerAddress"
-                                    :signers="signers"
-                                    :no-label="true"
-                                    @input="onChangeSigner"
-                                />
                                 <input
-                                    v-else
                                     v-model="formItems.signerAddress"
                                     :disabled="editMode"
                                     class="input-size input-style"
@@ -53,15 +51,20 @@
                     <FormRow v-if="type === MetadataType.Mosaic">
                         <template v-slot:label> {{ $t(targetLabel) }}: </template>
                         <template v-slot:inputs>
-                            <MosaicSelector v-model="formItems.targetId" :mosaic-hex-ids="ownedTargetHexIds" default-mosaic="firstInList" />
+                            <MosaicSelector
+                                v-model="formItems.targetId"
+                                :mosaic-hex-ids="ownedTargetHexIds"
+                                default-mosaic="firstInList"
+                                :disabled="editMode"
+                            />
                         </template>
                     </FormRow>
                     <div v-if="type === MetadataType.Namespace">
                         <NamespaceSelector
-                            v-model="formItems.targetId"
+                            v-model="formItems.targetName"
                             :namespaces="ownedTargetHexIds"
                             :disable-linked="false"
-                            label="targetLabel"
+                            :label="$t(targetLabel)"
                             :disabled="editMode"
                         />
                     </div>

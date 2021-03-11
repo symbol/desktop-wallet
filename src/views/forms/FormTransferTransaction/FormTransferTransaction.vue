@@ -10,7 +10,13 @@
                     </div>
 
                     <!-- Transaction signer selector -->
-                    <SignerSelector v-if="!hideSigner" v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
+                    <SignerSelector
+                        v-if="!hideSigner && !isOfflineMode"
+                        v-model="formItems.signerAddress"
+                        :signers="signers"
+                        @input="onChangeSigner"
+                    />
+                    <AccountSignerSelector v-if="!hideSigner && isOfflineMode" />
 
                     <!-- Transfer recipient input field -->
                     <RecipientInput v-model="formItems.recipientRaw" style="margin-bottom: 0.5rem;" @input="onChangeRecipient" />
@@ -31,7 +37,7 @@
                     </div>
 
                     <!-- Add mosaic button -->
-                    <div class="form-row align-right action-link" style="margin-top: -0.1rem;">
+                    <div v-if="mosaicInputsManager.hasFreeSlots()" class="form-row align-right action-link" style="margin-top: -0.1rem;">
                         <a
                             v-if="mosaicInputsManager.hasFreeSlots()"
                             style="color: #44004e; margin-right: 0.1rem; font-size: 0.14rem;"
@@ -48,7 +54,7 @@
 
                     <!-- Transfer message input field -->
                     <MessageInput v-model="formItems.messagePlain" @input="onChangeMessage" />
-                    <FormRow v-if="!selectedSigner.multisig && !isAggregate && !isLedger">
+                    <FormRow v-if="!selectedSigner.multisig && !isAggregate && !isLedger && !hideEncryption">
                         <template v-slot:inputs>
                             <div class="inputs-container checkboxes">
                                 <Checkbox v-model="formItems.encryptMessage" @input="onEncryptionChange">
@@ -63,6 +69,7 @@
                         v-if="!isAggregate"
                         v-model="formItems.maxFee"
                         :hide-submit="hideSubmit"
+                        :submit-button-text="submitButtonText"
                         :calculated-recommended-fee="calculatedRecommendedFee"
                         :calculated-highest-fee="calculatedHighestFee"
                         :disable-submit="currentAccount.isMultisig"
@@ -93,6 +100,7 @@
                 v-if="hasConfirmationModal"
                 :command="command"
                 :visible="hasConfirmationModal"
+                @transaction-signed="onSignedOfflineTransaction"
                 @success="onConfirmationSuccess"
                 @error="onConfirmationError"
                 @close="onConfirmationCancel"

@@ -42,11 +42,12 @@ export class AmountDisplayTs extends Vue {
 
     /// region computed properties getter/setter
     get integerPart(): string {
-        return Math.floor(this.value).toLocaleString();
+        return this.value >= 0 ? Math.floor(this.value).toLocaleString() : '-' + Math.floor(this.value * -1).toLocaleString();
     }
 
     get fractionalPart(): string {
-        const rest = this.value - Math.floor(this.value);
+        const absoluteValue = Math.abs(this.value);
+        const rest = absoluteValue - Math.floor(absoluteValue);
         const decimals = this.decimals === undefined ? this.networkConfiguration.maxMosaicDivisibility || 6 : this.decimals;
         const formatOptions = {
             minimumFractionDigits: 0,

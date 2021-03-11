@@ -8,7 +8,14 @@ import { NotificationType } from '@/core/utils/NotificationType';
 import { AppStore } from '@/app/AppStore';
 // configuration
 import { networkConfig, appConfig } from '@/config';
-import { AddressValidator, AliasValidator, MaxDecimalsValidator, PublicKeyValidator, UrlValidator } from './validators';
+import {
+    AddressValidator,
+    AliasValidator,
+    MaxDecimalsValidator,
+    MaxMessageValidator,
+    PublicKeyValidator,
+    UrlValidator,
+} from './validators';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
@@ -41,6 +48,15 @@ export class CustomValidationRules {
             },
             message: (_fieldName: string, values: Values) => `${i18n.t('max_decimal_number_error', values)}`,
             params: ['maxDecimalNumber'],
+        });
+
+        extend('maxMessage', {
+            validate: (value, args: any) => {
+                const { maxMessageNumber } = args;
+                return MaxMessageValidator.validate(value, maxMessageNumber);
+            },
+            message: (_fieldName: string, values: Values) => `${i18n.t('max_message_length_error', values)}`,
+            params: ['maxMessageNumber'],
         });
 
         extend('positiveDecimal', {
@@ -164,15 +180,26 @@ export class CustomValidationRules {
                 return new RegExp(`(?=.*[0-9])(?=.*[a-zA-Z])(.{${MIN_PASSWORD_LENGTH},})$`).test(value);
             },
             message: `${i18n.t('error_new_password_format')}`,
-        }),
-            extend('in', {
-                validate: (value, array: string[]) => {
-                    if (!array) {
-                        return false;
-                    }
-                    return array.includes(value);
-                },
-                message: (_fieldName: string, values: Values) => `${i18n.t('error_not_exist', values)}`,
-            });
+        });
+
+        extend('in', {
+            validate: (value, array: string[]) => {
+                if (!array) {
+                    return false;
+                }
+                return array.includes(value);
+            },
+            message: (_fieldName: string, values: Values) => `${i18n.t('error_not_exist', values)}`,
+        });
+
+        extend('profileExists', {
+            validate: (value, profileNames: string[]) => {
+                if (!profileNames) {
+                    return false;
+                }
+                return profileNames.includes(value);
+            },
+            message: (_fieldName: string, values: Values) => `${i18n.t('error_profile_does_not_exist', values)}`,
+        });
     }
 }

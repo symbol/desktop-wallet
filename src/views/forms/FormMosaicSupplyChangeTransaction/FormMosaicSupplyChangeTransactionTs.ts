@@ -41,6 +41,8 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
 import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
+// @ts-ignore
+import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue';
 
 @Component({
     components: {
@@ -55,16 +57,41 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
         FormRow,
         ErrorTooltip,
         MaxFeeAndSubmit,
+        MosaicSelector,
     },
-    computed: { ...mapGetters({ mosaics: 'mosaic/mosaics' }) },
+    computed: { ...mapGetters({ mosaics: 'mosaic/mosaics', holdMosaics: 'mosaic/holdMosaics' }) },
 })
 export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
     /**
      * Mosaic hex Id
      * @type {string}
      */
-    @Prop({ default: null, required: true }) mosaicHexId: string;
+    @Prop({ default: null }) mosaicHexId: string;
 
+    @Prop({
+        default: '',
+    })
+    title: string;
+
+    @Prop({
+        default: false,
+    })
+    isAggregate: boolean;
+
+    @Prop({
+        default: false,
+    })
+    hideSave: boolean;
+
+    @Prop({
+        default: false,
+    })
+    editMode: boolean;
+
+    @Prop({
+        default: () => ({}),
+    })
+    value: any;
     /**
      * Validation rules
      * @var {ValidationRuleset}
@@ -94,6 +121,7 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
      * @protected
      */
     private mosaics: MosaicModel[];
+    private holdMosaics: MosaicModel[];
 
     /**
      * Current mosaic info
@@ -101,7 +129,9 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
      * @protected
      */
     protected get currentMosaicInfo(): MosaicModel {
-        return this.mosaics.find(({ mosaicIdHex }) => mosaicIdHex === this.formItems.mosaicHexId);
+        if (this.formItems.mosaicHexId) {
+            return this.mosaics.find(({ mosaicIdHex }) => mosaicIdHex === this.formItems.mosaicHexId);
+        }
     }
 
     /**
@@ -113,7 +143,7 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
     protected get currentMosaicRelativeSupply(): string | null {
         const currentMosaicInfo = this.currentMosaicInfo;
         if (!currentMosaicInfo) {
-            return null;
+            return;
         }
         const relative = currentMosaicInfo.supply / Math.pow(10, currentMosaicInfo.divisibility);
         return isNaN(relative) ? null : relative.toLocaleString();
@@ -128,7 +158,7 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
     protected get newMosaicAbsoluteSupply(): number | null {
         const currentMosaicInfo = this.currentMosaicInfo;
         if (currentMosaicInfo === undefined) {
-            return null;
+            return;
         }
         const newSupply =
             this.formItems.action === MosaicSupplyChangeAction.Increase
@@ -146,7 +176,7 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
      */
     protected get newMosaicRelativeSupply(): string | null {
         if (!this.newMosaicAbsoluteSupply) {
-            return null;
+            return;
         }
         const relative = this.newMosaicAbsoluteSupply / Math.pow(10, this.currentMosaicInfo.divisibility);
         return isNaN(relative) ? null : relative.toLocaleString();
@@ -156,7 +186,11 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
      * Reset the form with properties
      * @return {void}
      */
-    protected resetForm() {
+    protected resetForm(): void {
+        if (this.editMode) {
+            return;
+        }
+
         // - re-populate form if transaction staged
         // if (this.stagedTransactions.length) {
         //   // @TODO: initialization from staged transactions
@@ -208,5 +242,22 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
 
         // - populate maxFee
         this.formItems.maxFee = supplyChange.maxFee.compact();
+    }
+
+    get ownedTargetHexIds(): string[] {
+        return this.holdMosaics.filter((m) => m.ownerRawPlain === this.currentAccount.address).map(({ mosaicIdHex }) => mosaicIdHex);
+    }
+
+    public emitToAggregate() {
+        if (this.getTransactions().length > 0) {
+            this.$emit('txInput', this.formItems);
+        }
+    }
+
+    mounted() {
+        if (this.isAggregate && this.value) {
+            Object.assign(this.formItems, this.value);
+            this.formItems.action = this.value.action;
+        }
     }
 }

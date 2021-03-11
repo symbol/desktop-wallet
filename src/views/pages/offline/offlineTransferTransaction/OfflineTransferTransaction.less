@@ -1,0 +1,212 @@
+@import '../../../resources/css/variables.less';
+
+#main-container {
+    display: grid;
+    grid-template-rows: 0.8rem auto;
+}
+
+.title-container {
+    padding: 0 0.4rem;
+    margin: 0.2rem 0;
+
+    .step {
+        font-family: @symbolFont;
+        font-size: @bigFont;
+        margin-right: 0.2rem;
+        margin-left: 0.2rem;
+        &.active {
+            font-weight: @bold;
+            color: @purpleDark;
+        }
+        &.inactive {
+            font-weight: @symbolFontLight;
+            color: @grayDark;
+        }
+    }
+}
+
+.account-detail-outer-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 0.5rem;
+    background-color: @white;
+    border-radius: 0.04rem;
+
+    .account-detail-inner-container {
+        width: 100%;
+        padding: 0.2rem 0.4rem;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: auto;
+
+        .right-container {
+            width: 100%;
+
+            .title-row {
+                font-size: @biggerFont;
+            }
+
+            .account-details-container {
+                height: 100%;
+                display: grid;
+            }
+
+            .right-container-title {
+                font-size: @normalFont;
+                color: #222;
+                font-weight: 500;
+            }
+
+            .account-details-grid {
+                background-color: white;
+                font-size: @normalFont;
+                display: inline-grid;
+                color: @primary;
+                grid-auto-rows: 0.5rem;
+                padding-left: 10px;
+            }
+
+            .detail-row {
+                grid-row: span 1;
+            }
+
+            .detail-double-row {
+                grid-row: span 2;
+            }
+
+            .account-detail-row-3cols {
+                display: grid;
+                grid-template-columns: 1.4rem 5rem auto;
+            }
+
+            .account-detail-row {
+                display: grid;
+                grid-template-columns: 1.4rem 5rem;
+            }
+
+            .account-detail-cosignatory  {
+                display: grid;
+                grid-template-rows: auto rem;
+            }
+
+            .account-detail-row,
+            .account-detail-row-3cols {
+                font .label {
+                    font-family: @symbolFontMedium;
+                    font-weight: bold;
+                    margin-right: 10px;
+                    width: 1.4rem;
+                }
+
+                /deep/ .value {
+                    font-family: @symbolFontLight;
+                    text-overflow: ellipsis;
+                    color: @purpleDark;
+                }
+
+                /deep/ .value {
+                }
+
+                .select-style {
+                    .ivu-select-selection {
+                        height: auto;
+                    }
+                }
+            }
+        }
+
+        .left-container {
+            /deep/ .qr-code-image {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
+        }
+    }
+
+    .account-actions-outer-container {
+        background-color: lightgray;
+        width: 100%;
+        padding: 25px 0 0 0;
+
+        .account-actions-inner-container {
+            background-color: lightseagreen;
+            width: 100%;
+            border-radius: 0.04rem;
+        }
+    }
+}
+
+.transaction-form-container {
+    overflow: auto;
+    padding-left: 0.1rem;
+}
+
+.action-buttons {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    margin-right: 1rem;
+
+    .buttonD {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+}
+
+.single-step {
+    padding: 0.2rem;
+    font-size: @bigFont;
+    color: @grayLight;
+    font-family: @symbolFontSemiBold;
+    &.done {
+        color: @purpleDark;
+    }
+    &.done:before {
+        content: '';
+        background-image: url('../../../resources/img/check.png');
+        background-size: 0.25rem 0.2rem;
+        background-position: center;
+        display: inline-block;
+        width: 0.46rem;
+        height: 0.36rem;
+        background-repeat: no-repeat;
+    }
+    &.active {
+        background: linear-gradient(315.55deg, #44004e -1.68%, #5200c6 110.7%);
+        color: @white;
+    }
+}
+
+.title {
+    color: @purpleDark;
+    font-size: 23px;
+    font-family: @normalFont;
+    margin-bottom: 0.1rem;
+}
+
+.description-text {
+    color: @purpleDark;
+    font-size: @smallFont;
+    margin-top: 0.3rem;
+
+    .mt {
+        margin-top: 0.25rem;
+    }
+}
+
+.raw-json {
+    width: 80%;
+    text-align: center;
+    word-break: break-all;
+    font-size: @smallerFont;
+}
+
+/deep/.qrcode-display {
+    width: 1.9rem;
+    img {
+        width: 1.4rem;
+    }
+}

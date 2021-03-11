@@ -17,6 +17,9 @@ import { Convert, Password, SHA3Hasher } from 'symbol-sdk';
 // internal dependencies
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { ProfileModelStorage } from '@/core/database/storage/ProfileModelStorage';
+import { AccountService } from './AccountService';
+import { AddressBookService } from './AddressBookService';
+import { SettingService } from './SettingService';
 
 /**
  * Service in charge of loading profiles information from the wallet.
@@ -27,6 +30,9 @@ export class ProfileService {
      * feature.
      */
     private readonly profilesStorage = ProfileModelStorage.INSTANCE;
+    private readonly accountService = new AccountService();
+    private readonly addressBookService = new AddressBookService();
+    private readonly settingService = new SettingService();
 
     public getProfiles(): ProfileModel[] {
         return Object.values(this.getProfilesByProfileName());
@@ -51,6 +57,10 @@ export class ProfileService {
         const profiles = this.getProfilesByProfileName();
         delete profiles[profileName];
         this.profilesStorage.set(profiles);
+
+        this.accountService.deleteAccounts(profileName);
+        this.addressBookService.deleteAddressBook(profileName);
+        this.settingService.deleteProfileSettings(profileName);
     }
 
     public updateSeed(profile: ProfileModel, seed: string): ProfileModel {

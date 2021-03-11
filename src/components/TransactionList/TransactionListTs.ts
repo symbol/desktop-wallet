@@ -315,7 +315,8 @@ export class TransactionListTs extends Vue {
     public set hasTransactionExportModal(f: boolean) {
         this.isViewingExportModal = f;
     }
-    public downloadTransaction() {
+
+    public downloadTransactions() {
         this.hasTransactionExportModal = true;
     }
 }

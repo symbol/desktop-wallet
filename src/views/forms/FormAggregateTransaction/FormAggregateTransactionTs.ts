@@ -20,6 +20,8 @@ import {
     MosaicId,
     MosaicFlags,
     NamespaceRegistrationTransaction,
+    MosaicSupplyChangeAction,
+    MosaicSupplyChangeTransaction,
 } from 'symbol-sdk';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
@@ -38,6 +40,8 @@ import { TransactionCommand, TransactionCommandMode } from '@/services/Transacti
 import ModalTransactionEdit from '@/views/modals/ModalTransactionEdit/ModalTransactionEdit.vue';
 // @ts-ignore
 import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue';
+// @ts-ignore
+import FormMosaicSupplyChangeTransaction from '@/views/forms/FormMosaicSupplyChangeTransaction/FormMosaicSupplyChangeTransaction.vue';
 
 @Component({
     components: {
@@ -46,6 +50,7 @@ import NavigationTabs from '@/components/NavigationTabs/NavigationTabs.vue';
         FormTransferTransaction,
         FormNamespaceRegistrationTransaction,
         FormMosaicDefinitionTransaction,
+        FormMosaicSupplyChangeTransaction,
         FormRow,
         MaxFeeSelector,
         ModalTransactionConfirmation,
@@ -91,7 +96,7 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
      * current selected saved transaction
      * @var {object}
      */
-    public currentSelectedTransaction: { title?: string; component?: any } = {};
+    public currentSelectedTransaction: { title?: string; component?: any; formItems?: any } = {};
 
     public toBeEditedTransaction = {};
 
@@ -119,6 +124,9 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
             case 'aggregate.mosaic':
                 transaction['component'] = FormMosaicDefinitionTransaction;
                 break;
+            case 'aggregate.supply':
+                transaction['component'] = FormMosaicSupplyChangeTransaction;
+                break;
             case 'aggregate.namespace':
                 transaction['component'] = FormNamespaceRegistrationTransaction;
                 break;
@@ -135,6 +143,8 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
                 return `${this.$t('mosaic_transaction')}` + this.aggregateTransactionIndex;
             case 'aggregate.namespace':
                 return `${this.$t('namespace_transaction')}` + this.aggregateTransactionIndex;
+            case 'aggregate.supply':
+                return `${this.$t('mosaic_supply_transaction')}` + this.aggregateTransactionIndex;
         }
     }
 
@@ -153,10 +163,10 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
         });
     }
 
-    public async saveEditedTransaction(forItems) {
+    public async saveEditedTransaction(formItems) {
         await this.$store.dispatch('aggregateTransaction/ON_SAVE_TRANSACTION', {
             title: this.toBeEditedTransaction['title'],
-            formItems: forItems,
+            formItems,
             component: this.toBeEditedTransaction['component'],
         });
         this.toBeEditedTransaction = undefined;
@@ -236,6 +246,13 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
             this.networkType,
             maxFee,
         );
+    }
+    private createMosaicSupplyTx(tx: {}): MosaicSupplyChangeTransaction {
+        const maxFee = UInt64.fromUint(tx['formItems']['maxFee']);
+        const action = tx['formItems']['action'] == 1 ? MosaicSupplyChangeAction.Increase : MosaicSupplyChangeAction.Decrease;
+        const mosaicId = new MosaicId(tx['formItems']['mosaicHexId']);
+        const delta = UInt64.fromUint(tx['formItems']['delta']);
+        return MosaicSupplyChangeTransaction.create(this.createDeadline(), mosaicId, action, delta, this.networkType, maxFee);
     }
     /**
      * create root namespace transaction
@@ -335,6 +352,8 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
                 } else if (tx['title'].indexOf(`${this.$t('mosaic_transaction')}`) !== -1) {
                     transaction = this.createMosaicTx(tx);
                     // @ts-ignore
+                } else if (tx['title'].indexOf(`${this.$t('mosaic_supply_transaction')}`) !== -1) {
+                    transaction = this.createMosaicSupplyTx(tx);
                 } else {
                     transaction = this.CreateRootNameSpaceTx(tx);
                 }

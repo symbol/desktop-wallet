@@ -35,6 +35,12 @@ import { VeeValidateSetup } from '@/core/validation/VeeValidateSetup';
 import App from '@/app/App.vue';
 import clickOutsideDirective from '@/directives/clickOutside';
 import { PluginOptions } from 'vue-toastification/dist/types/src/types';
+// @ts-ignore
+import { library } from '@fortawesome/fontawesome-svg-core';
+// @ts-ignore
+import { faFileCsv } from '@fortawesome/free-solid-svg-icons';
+// @ts-ignore
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 /// region UI plugins
 Vue.use(iView, { locale });
@@ -51,6 +57,8 @@ const toastDefaultOptions: PluginOptions = {
     transitionDuration: 300,
 };
 Vue.use(Toast, toastDefaultOptions);
+library.add(faFileCsv);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 /// end-region UI plugins
 
 /// directives
