@@ -595,7 +595,7 @@
     "label_signed_by": "Signed by co-signatory=>",
     "label_unlink_node_account_public_key": "Unlink your node public key",
     "label_unlink_remote_account_public_key": "Unlink your remote public key",
-    "label_unlink_vrf_account_public_key": "Unlink your vrf public key",
+    "label_unlink_vrf_account_public_key": "Unlink your VRF public key",
     "latest_news_articles": "Latest news and articles",
     "launching_mainnet_soon": "Symbol mainnet launch date: 15th March 2021. Please download the latest version after launch.",
     "ledger_connected_other_app": "Ledger device cannot access the path, please use your ledger to verify your address or close any other opened apps then try again.",
