@@ -597,7 +597,7 @@
     "label_unlink_remote_account_public_key": "リモート公開鍵のリンク解除",
     "label_unlink_vrf_account_public_key": "VRF 公開鍵のリンク解除",
     "latest_news_articles": "最新ニュース",
-    "launching_mainnet_soon": "Symbol mainnet 発売日：2021年3月15日。発売後、最新版をダウンロードしてください。",
+    "launching_mainnet_soon": "Symbol mainnet ローンチ日  2021年3月15日。ローンチ後、最新版をダウンロードしてください。",
     "ledger_connected_other_app": "Ledger デバイスはパスにアクセスできません。Ledger を使用してアドレスを確認するか、開いている他のアプリをすべて閉じてから、再試行してください。",
     "ledger_correct_account": "正しい Symbol Ledger アカウントを使用中です",
     "ledger_description": "Ledger デバイスからウォレットをインポートします",
