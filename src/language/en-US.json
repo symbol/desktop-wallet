@@ -879,7 +879,7 @@
     "refresh_too_fast_warning": "Too many network requests have been executed. Please, try again later.",
     "register": "Sign up",
     "relative": "relative",
-    "remote_keys_linked": "You have remote & vrf keys linked to your account, if you want to activate delegated harvesting, please select a harvesting node and link the node key. If you are harvesting already, please select your harvesting node to update your harvesting status.",
+    "remote_keys_linked": "You have remote & VRF keys linked to your account, if you want to activate delegated harvesting, please select a harvesting node and link the node key. If you are harvesting already, please select your harvesting node to update your harvesting status.",
     "removal_greater_than_cosignatories": "There are {delta} more required cosignatories for min removal than available cosignatories. Please add cosignatories or reduce the min. removal number.",
     "removal_or_approval_is_zero": "Minimum approval and/or minimum removal cannot be set to 0 while there are {delta} cosignatories in your list",
     "repeat_password_label": "Confirm your password",
