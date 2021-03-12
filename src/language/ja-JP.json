@@ -1050,7 +1050,7 @@
     "address_list_cannot_be_empty": "リース1では、リストからOpt Inアカウントを選択する必要はありません。",
     "ws_connection_failed": "ウォレットは、シンボルチェーン上のアカウントのアクティビティを監視できません。別のノードを選択してみてください。",
     "select_opt_in_accounts": "選択されたオプトインアカウント",
-    "launching_mainnet_soon": "メインネットネットワークがまだ立ち上がっていないので、これは実験ノードであることに注意してください。",
+    "launching_mainnet_soon": "Symbol mainnet ローンチ日 2021年3月15日。ローンチ後、最新版をダウンロードしてください。",
     "opt_in_account_notification": "このアカウントは古い派生によって取得されています。シードアカウントに資金を移動することをお勧めします。",
     "qrcode_detail_item_type_signedqr": "署名されたトランザクション",
     "transaction_qr_signed_action_desc": "これらの詳細を含むトランザクションをブロードキャストするために 続ける をクリックしてください。",

@@ -372,8 +372,8 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         if (selectedItem) {
             this.formItems.signerAddress = selectedItem.sourceAddress;
             this.formItems.targetAccount = selectedItem.targetAddress;
-            this.formItems.targetId = selectedItem.targetId;
             this.formItems.targetName = this.targetNameById(selectedItem.targetId);
+            this.formItems.targetId = this.type === MetadataType.Mosaic ? selectedItem.targetId : this.formItems.targetName;
             this.formItems.metadataValue = selectedItem.value;
             this.formItems.scopedKey = selectedItem.scopedMetadataKey;
         }
