@@ -119,3 +119,9 @@
 import { FormMosaicSupplyChangeTransactionTs } from './FormMosaicSupplyChangeTransactionTs';
 export default class FormMosaicSupplyChangeTransaction extends FormMosaicSupplyChangeTransactionTs {}
 </script>
+<style lang="less" scoped>
+.button-style {
+    height: 0.3rem !important;
+    width: 1.2rem;
+}
+</style>
