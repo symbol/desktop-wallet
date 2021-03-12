@@ -545,7 +545,9 @@ export default {
             const nodeRepository = repositoryFactory.createNodeRepository();
 
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
-            const allNodes = [...staticPeerNodes, ...peerNodes.sort((a, b) => a.host.localeCompare(b.host))];
+            const networkType = await repositoryFactory.getNetworkType().toPromise();
+            const staticPeers = networkType === NetworkType.MAIN_NET ? [] : staticPeerNodes;
+            const allNodes = [...staticPeers, ...peerNodes.sort((a, b) => a.host.localeCompare(b.host))];
             commit('peerNodes', _.uniqBy(allNodes, 'host'));
         },
         // TODO :: re-apply that behavior if red screen issue fixed
