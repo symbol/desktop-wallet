@@ -1049,6 +1049,7 @@
     "encrypt_ledger_keys_on_sign": "As a Ledger user your password is needed to encrypt your remote account and VRF private keys",
     "harvesting_status_not_detected": "Harvesting status cannot be detected. Please select the node you are harvesting on.",
     "click_to_retry": "Click to retry",
+    "symbol_node_cannot_connect": "Cannot connect to the Symbol node",
     "current_node_is_not_available": "Current node is not available. Trying to connect to node #{0}/{1}",
     "nodes_unavailable_check_network_and": "Nodes({0}/{1}) are currently unavailable. Please check your network connection, settings and ",
     "copyright": "Copyright © 2021 NEM Software",
