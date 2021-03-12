@@ -14,6 +14,7 @@
  *
  */
 import { Component, Vue } from 'vue-property-decorator';
+// @ts-ignore
 import pdf from 'vue-pdf';
 import terms from '../../../documents/terms.json';
 
