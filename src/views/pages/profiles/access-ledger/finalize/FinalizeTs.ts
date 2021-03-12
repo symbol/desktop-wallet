@@ -283,6 +283,7 @@ export default class FinalizeTs extends Vue {
             this.profileService.updateAccounts(this.currentProfile, accountIdentifiers);
 
             this.$store.dispatch('temporary/RESET_STATE');
+            await this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES');
             // execute store actions
             return this.$router.push({ name: 'dashboard' });
         } catch (error) {

@@ -337,8 +337,10 @@ export default {
                         .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline)
                         .toPromise();
                     if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
-                        await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
-                        nodeFound = true;
+                        if (nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType) {
+                            await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
+                            nodeFound = true;
+                        }
                     } else {
                         // selectedNodeUrlToConnect didn't work, let's remove it from the nodeList
                         nodesList = nodesList.filter((n) => n.url !== currentProfile.selectedNodeUrlToConnect);
@@ -402,7 +404,10 @@ export default {
             commit('epochAdjustment', networkModel.networkConfiguration.epochAdjustment);
             commit('generationHash', networkModel.generationHash);
             commit('repositoryFactory', repositoryFactory);
-            commit('knowNodes', nodes);
+            commit(
+                'knowNodes',
+                nodes.filter((node) => node.networkType === currentProfile.networkType),
+            );
             const currentNetworkListener: IListener = getters['listener'];
             if (currentNetworkListener && currentNetworkListener.isOpen()) {
                 currentNetworkListener.close();
