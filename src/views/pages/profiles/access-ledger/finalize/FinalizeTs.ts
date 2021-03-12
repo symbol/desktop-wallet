@@ -40,6 +40,10 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
 })
 export default class FinalizeTs extends Vue {
     /**
+     * Form is being submitted
+     */
+    protected isLoading: boolean = false;
+    /**
      * Currently active profile
      * @see {Store.Profile}
      * @var {string}
@@ -252,6 +256,7 @@ export default class FinalizeTs extends Vue {
 
     public async finish() {
         try {
+            this.isLoading = true;
             // create account models
             const normalAccounts = await this.createAccountsFromPathIndexes(this.selectedAccounts);
             const optInAccounts = await this.createOptInAccountsFromPathIndexes(this.selectedOptInAccounts);

@@ -1044,6 +1044,7 @@
     "encrypt_ledger_keys_on_sign": "作为Ledger用户，我们需要您的密码来加密远程账户和vrf私钥。",
     "harvesting_status_not_detected": "我们无法检测到您的收割状态，请选择您要收割的节点。",
     "click_to_retry": "点击重试",
+    "symbol_node_cannot_connect": "无法连接到Symbol节点",
     "current_node_is_not_available": "当前节点不可用。\n尝试连接到节点",
     "nodes_unavailable_check_network_and": "节点（{0} / {1}）当前不可用。\n请检查您的网络连接，设置和",
     "copyright": "版权所有©2021 NEM软件",
