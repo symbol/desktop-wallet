@@ -468,7 +468,7 @@
     "Failure_Chain_Block_Not_Hit": "Validation failed because a block was received that is not a hit",
     "Failure_Chain_Block_Inconsistent_State_Hash": "Validation failed because a block was received that has an inconsistent state hash",
     "Failure_Chain_Block_Inconsistent_Receipts_Hash": "Validation failed because a block was received that has an inconsistent receipts hash",
-    "Failure_Chain_Block_Invalid_vrf_Proof": "Validation failed because the VRF proof is invalid",
+    "Failure_Chain_Block_Invalid_Vrf_Proof": "Validation failed because the VRF proof is invalid",
     "Failure_Chain_Block_Unknown_Signer": "Validation failed because the block signer is unknown",
     "Failure_Chain_Unconfirmed_Cache_Too_Full": "Validation failed because the unconfirmed cache is too full",
     "Failure_Consumer_Empty_Input": "Validation failed because the consumer input is empty",
