@@ -1054,7 +1054,6 @@
     "nodes_unavailable_check_network_and": "ノード (#{0}/{1}) は現在無効です。ネットワーク接続や設定を確認してください。",
     "copyright": "Copyright © 2021 NEM Software",
     "address_list_cannot_be_empty": "リストから最低でもオプトインされていないアカウントを 1 つ選択する必要があります。",
-    "launching_mainnet_soon": "Symbol メインネット ローンチ日: 2021年3月15日 ローンチ後に最新版をダウンロードしてください。",
     "opt_in_account_notification": "このアカウントは古い派生によって取得されています。資産をシードアカウントへ移動することを推奨します。",
     "ws_connection_failed": "ウォレットは、シンボルチェーン上のアカウントのアクティビティを監視できません。別のノードを選択してみてください。",
     "offline_transactions_title": "オフライントランザクション",

@@ -110,7 +110,6 @@ const defaultMainnetNetworkConfig: NetworkConfig = {
         generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
     },
     nodes: [
-        { friendlyName: 'Experimental Main', roles: 2, url: 'http://api.experimental.symboldev.network' },
         { friendlyName: 'ngl-api-001', roles: 2, url: 'http://ngl-api-001.symbolblockchain.io:3000' },
         { friendlyName: 'ngl-api-002', roles: 2, url: 'http://ngl-api-002.symbolblockchain.io:3000' },
         { friendlyName: 'ngl-api-003', roles: 2, url: 'http://ngl-api-003.symbolblockchain.io:3000' },

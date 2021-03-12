@@ -1054,7 +1054,6 @@
     "nodes_unavailable_check_network_and": "Nodes({0}/{1}) are currently unavailable. Please check your network connection, settings and ",
     "copyright": "Copyright © 2021 NEM Software",
     "address_list_cannot_be_empty": "At lease 1 non-opted-in account must be selected from the list.",
-    "launching_mainnet_soon": "Symbol mainnet launch date: 15th March 2021. Please download the latest version after launch.",
     "opt_in_account_notification": "This account is obtained by an older derivation. It is recommended that you move the funds to a Seed Account",
     "ws_connection_failed": "The wallet cannot monitor the activities of your account on the Symbol chain. Please try selecting a different node.",
     "offline_transactions_title": "Offline transactions",

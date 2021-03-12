@@ -1051,7 +1051,6 @@
     "address_list_cannot_be_empty": "请从列表中选择至少一个1个非选择加入账户。",
     "ws_connection_failed": "钱包无法监视您在Symbol链上的帐户活动。请尝试选择其他节点。",
     "select_opt_in_accounts": "请选择Opt In账户",
-    "launching_mainnet_soon": "此节点是主网试验节点， 正式主网还未上线",
     "opt_in_account_notification": "该帐户是通过较早的派生算法获得的。建议您将资金转移到新的种子帐户",
     "qrcode_detail_item_type_signedqr": "已签署的交易",
     "transaction_qr_signed_action_desc": "点击下一步来发布交易",
