@@ -85,7 +85,7 @@ const defaultTestnetNetworkConfig: NetworkConfig = {
 };
 
 const defaultMainnetNetworkConfig: NetworkConfig = {
-    explorerUrl: 'http://explorer.mainnet.symboldev.network/',
+    explorerUrl: 'http://explorer.symbolblockchain.io/',
     faucetUrl: 'http://faucet.mainnet.symboldev.network/',
     defaultNetworkType: 104,
     networkConfigurationDefaults: {
@@ -110,7 +110,6 @@ const defaultMainnetNetworkConfig: NetworkConfig = {
         generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
     },
     nodes: [
-        { friendlyName: 'local', roles: 2, url: 'http://localhost:3000' },
         { friendlyName: 'ngl-dual-001', roles: 2, url: 'http://ngl-dual-001.symbolblockchain.io:3000' },
         { friendlyName: 'ngl-dual-002', roles: 2, url: 'http://ngl-dual-002.symbolblockchain.io:3000' },
         { friendlyName: 'ngl-dual-003', roles: 2, url: 'http://ngl-dual-003.symbolblockchain.io:3000' },
