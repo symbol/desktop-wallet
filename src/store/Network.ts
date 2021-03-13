@@ -336,11 +336,13 @@ export default {
                     nodeNetworkModelResult = await networkService
                         .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline)
                         .toPromise();
-                    if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
-                        if (nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType) {
-                            await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
-                            nodeFound = true;
-                        }
+                    if (
+                        nodeNetworkModelResult &&
+                        nodeNetworkModelResult.repositoryFactory &&
+                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                    ) {
+                        await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
+                        nodeFound = true;
                     } else {
                         // selectedNodeUrlToConnect didn't work, let's remove it from the nodeList
                         nodesList = nodesList.filter((n) => n.url !== currentProfile.selectedNodeUrlToConnect);
