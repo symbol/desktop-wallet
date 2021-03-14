@@ -1078,5 +1078,6 @@
     "form_label_import_placeholder": "粘贴交易有效负载",
     "payload_not_valid": "负载无效",
     "import_payload": "导入负载",
-    "import_payload_text": "您也可以选择使用CLI生成的交易负载"
+    "import_payload_text": "您也可以选择使用CLI生成的交易负载",
+    "ledger_available_on_standalone_app": "Ledger不适用于Web版本。 要使用Ledger，请下载桌面应用程序。"
 }
