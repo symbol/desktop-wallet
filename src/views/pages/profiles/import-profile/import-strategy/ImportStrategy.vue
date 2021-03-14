@@ -14,7 +14,7 @@
             </div>
             <div class="profile-type">
                 <div v-for="(item, index) in importInfoList" :key="index" class="profile-item" @click="redirect(item.route)">
-                    <Tooltip v-if="item.title === 'access_ledger'" placement="top" :content="$t('ledger')">
+                    <Tooltip v-if="item.title === 'access_ledger'" placement="top" :content="$t('ledger_available_on_standalone_app')">
                         <div>
                             <div class="img-box radius">
                                 <img :src="item.image" />
