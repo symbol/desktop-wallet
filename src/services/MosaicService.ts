@@ -89,6 +89,7 @@ export class MosaicService {
         generationHash: string,
         networkCurrency: NetworkCurrencyModel,
         accountsInfo: AccountInfo[],
+        ownerAddress: Address,
     ): Observable<MosaicModel[]> {
         if (!accountsInfo.length) {
             return of([]);
@@ -96,7 +97,7 @@ export class MosaicService {
         const mosaicDataList = this.loadMosaicData(generationHash) || [];
         const resolvedBalancesObservable = this.resolveBalances(repositoryFactory, accountsInfo);
         const accountAddresses = accountsInfo.map((a) => a.address);
-        const mosaicsFromAccountsObservable = repositoryFactory.createMosaicRepository().search({ ownerAddress: accountAddresses[0] });
+        const mosaicsFromAccountsObservable = repositoryFactory.createMosaicRepository().search({ ownerAddress });
 
         return combineLatest([resolvedBalancesObservable, mosaicsFromAccountsObservable])
             .pipe(
