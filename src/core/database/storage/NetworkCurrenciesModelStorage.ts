@@ -72,6 +72,10 @@ export class NetworkCurrenciesModelStorage extends VersionedNetworkBasedObjectSt
                 description: 'Reset accounts for 1.0.0.0 network (non backwards compatible)',
                 migrate: () => undefined,
             },
+            {
+                description: 'Reset for Symbol mainet launch.',
+                migrate: () => undefined,
+            },
         ]);
     }
 }
