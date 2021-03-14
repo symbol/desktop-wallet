@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.0][1.0.0] - 15-Mar-2021
+
+### Milestone: [catapult-server@v1.0.0.0](https://github.com/nemtech/catapult-server/releases/tag/v1.0.0.0)
+
+- Symbol mainnet launch release.
+
+## [0.15.1][0.15.1] - 13-Mar-2021
+
+### Milestone: [catapult-server@v1.0.0.0](https://github.com/nemtech/catapult-server/releases/tag/v1.0.0.0)
+
+- Pre Symbol launch release.
+- Updated experimental Symbol mainnet node with final Opt In balances
+
 ## [0.15.0][0.15.0] - 11-Mar-2021
 
 ### Milestone: [catapult-server@v0.10.0.8](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.8)
