@@ -14,15 +14,30 @@
             </div>
             <div class="profile-type">
                 <div v-for="(item, index) in importInfoList" :key="index" class="profile-item" @click="redirect(item.route)">
-                    <div class="img-box radius">
-                        <img :src="item.image" />
+                    <Tooltip v-if="item.title === 'access_ledger'" placement="top" :content="$t('ledger_available_on_standalone_app')">
+                        <div>
+                            <div class="img-box radius">
+                                <img :src="item.image" />
+                            </div>
+                            <p class="access-name">
+                                {{ $t(item.title) }}
+                            </p>
+                            <p class="access-info">
+                                {{ $t(item.description) }}
+                            </p>
+                        </div>
+                    </Tooltip>
+                    <div v-else>
+                        <div class="img-box radius">
+                            <img :src="item.image" />
+                        </div>
+                        <p class="access-name">
+                            {{ $t(item.title) }}
+                        </p>
+                        <p class="access-info">
+                            {{ $t(item.description) }}
+                        </p>
                     </div>
-                    <p class="access-name">
-                        {{ $t(item.title) }}
-                    </p>
-                    <p class="access-info">
-                        {{ $t(item.description) }}
-                    </p>
                 </div>
             </div>
         </div>
