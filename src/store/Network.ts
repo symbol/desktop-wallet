@@ -399,6 +399,7 @@ export default {
                 const profileService: ProfileService = new ProfileService();
                 profileService.updateSelectedNode(currentProfile, currentPeer);
             }
+            const currentNetworkType = currentProfile.networkType || networkType;
             commit('networkModel', networkModel);
             commit('networkConfiguration', networkModel.networkConfiguration);
             commit('transactionFees', networkModel.transactionFees);
@@ -408,7 +409,7 @@ export default {
             commit('repositoryFactory', repositoryFactory);
             commit(
                 'knowNodes',
-                nodes.filter((node) => node.networkType === currentProfile.networkType),
+                nodes.filter((node) => node.networkType === currentNetworkType),
             );
             const currentNetworkListener: IListener = getters['listener'];
             if (currentNetworkListener && currentNetworkListener.isOpen()) {
