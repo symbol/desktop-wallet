@@ -1041,7 +1041,7 @@
     "form_label_use_link_node_public_key_icon": "Use link button to link your node public key",
     "label_unlink_node_account_public_key": "Unlink your node public key",
     "label_unlink_remote_account_public_key": "Unlink your remote public key",
-    "label_unlink_VRF_account_public_key": "Unlink your VRF public key",
+    "label_unlink_vrf_account_public_key": "Unlink your VRF public key",
     "please_link_your_public_key": "Please relink your public key to generate your private key",
     "linking": "Linking...",
     "stoping": "Stopping...",
