@@ -258,6 +258,8 @@ export class PageLayoutTs extends Vue {
     }
 
     public reconnect() {
-        this.$store.dispatch('network/CONNECT', { waitBetweenTrials: true });
+        if (this.$route.fullPath !== '/home') {
+            this.$store.dispatch('network/CONNECT', { waitBetweenTrials: true });
+        }
     }
 }
