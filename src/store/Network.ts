@@ -313,7 +313,11 @@ export default {
                     progressTotalNumOfNodes: 1,
                 });
                 nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType, isOffline).toPromise();
-                if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel) {
+                if (
+                    nodeNetworkModelResult &&
+                    nodeNetworkModelResult.networkModel &&
+                    nodeNetworkModelResult.networkModel.networkType === networkType
+                ) {
                     await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                 } else {
                     return await dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE, { root: true });
@@ -360,7 +364,11 @@ export default {
                         progressTotalNumOfNodes: numOfNodes,
                     });
                     nodeNetworkModelResult = await networkService.getNetworkModel(nodeUrl, networkType, isOffline).toPromise();
-                    if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
+                    if (
+                        nodeNetworkModelResult &&
+                        nodeNetworkModelResult.repositoryFactory &&
+                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                    ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
                     } else {
@@ -405,6 +413,7 @@ export default {
             commit('transactionFees', networkModel.transactionFees);
             commit('networkType', networkType);
             commit('epochAdjustment', networkModel.networkConfiguration.epochAdjustment);
+            console.log(networkModel);
             commit('generationHash', networkModel.generationHash);
             commit('repositoryFactory', repositoryFactory);
             commit(

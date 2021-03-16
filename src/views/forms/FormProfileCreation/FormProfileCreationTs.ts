@@ -124,9 +124,8 @@ export class FormProfileCreationTs extends Vue {
 
     /// region computed properties getter/setter
     get nextPage() {
-        if (!this.isConnected) {
-            this.connect(this.formItems.networkType);
-        }
+        this.connect(this.formItems.networkType);
+
         return this.$route.meta.nextPage;
     }
 
