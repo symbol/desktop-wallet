@@ -1041,7 +1041,7 @@
     "form_label_use_link_node_public_key_icon": "ノード公開鍵をリンクするにはリンクボタンを押下してください",
     "label_unlink_node_account_public_key": "ノード公開鍵のリンク解除",
     "label_unlink_remote_account_public_key": "リモート公開鍵のリンク解除",
-    "label_unlink_VRF_account_public_key": "VRF公開鍵のリンク解除",
+    "label_unlink_vrf_account_public_key": "VRF公開鍵のリンク解除",
     "please_link_your_public_key": "秘密鍵を生成するために、公開鍵を再リンクしてください",
     "linking": "リンク中...",
     "stoping": "停止中...",
