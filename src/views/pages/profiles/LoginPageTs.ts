@@ -72,7 +72,7 @@ export default class LoginPageTs extends Vue {
     private profilesClassifiedByNetworkType: {
         networkType: NetworkType;
         profiles: ProfileModel[];
-    }[];
+    }[] = [];
 
     private performingLogin = false;
 
