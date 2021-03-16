@@ -413,7 +413,6 @@ export default {
             commit('transactionFees', networkModel.transactionFees);
             commit('networkType', networkType);
             commit('epochAdjustment', networkModel.networkConfiguration.epochAdjustment);
-            console.log(networkModel);
             commit('generationHash', networkModel.generationHash);
             commit('repositoryFactory', repositoryFactory);
             commit(
