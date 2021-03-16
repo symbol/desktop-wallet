@@ -964,6 +964,7 @@
     "transaction_descriptor_17220": "Namespace metadata",
     "transaction_descriptor_17230": "Mosaic alias",
     "transaction_descriptor_17232": "Account operation restriction",
+    "transaction_descriptor_harvesting": "Delegated Harvesting",
     "transaction_details": "Transaction details",
     "transaction_expired": "Transaction has expired",
     "transaction_has_cosignature": "Co-signatures received",
