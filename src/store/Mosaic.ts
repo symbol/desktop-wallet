@@ -179,16 +179,15 @@ export default {
             const accountsInfo: AccountInfo[] = rootGetters['account/accountsInfo'] || [];
             const generationHash = rootGetters['network/generationHash'];
             const mosaicMetadataList: MetadataModel[] = rootGetters['metadata/mosaicMetadataList'];
-
+            const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
             if (!repositoryFactory) {
                 return;
             }
             commit('isFetchingMosaics', true);
 
             new MosaicService()
-                .getMosaics(repositoryFactory, generationHash, networkCurrency, accountsInfo)
+                .getMosaics(repositoryFactory, generationHash, networkCurrency, accountsInfo, currentSignerAddress)
                 .subscribe((mosaics) => {
-                    const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
                     if (!currentSignerAddress) {
                         return;
                     }

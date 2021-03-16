@@ -77,6 +77,8 @@ interface AccountState {
     subscriptions: Record<string, SubscriptionType[]>;
     currentRecipient: PublicAccount;
     currentAccountAliases: AccountNames[];
+    addressesList: Address[];
+    optInAddressesList: { address: Address; index: number }[];
     selectedAddressesToInteract: number[];
     selectedAddressesOptInToInteract: number[];
     currentSignerAccountModel: AccountModel;
@@ -103,6 +105,8 @@ const accountState: AccountState = {
     subscriptions: {},
     currentRecipient: null,
     multisigAccountGraph: null,
+    addressesList: [],
+    optInAddressesList: [],
     selectedAddressesToInteract: [],
     selectedAddressesOptInToInteract: [],
     currentSignerAccountModel: null,
@@ -142,6 +146,8 @@ export default {
         currentRecipient: (state: AccountState) => state.currentRecipient,
         currentAccountAliases: (state: AccountState) => state.currentAccountAliases,
         multisigAccountGraph: (state: AccountState) => state.multisigAccountGraph,
+        addressesList: (state: AccountState) => state.addressesList,
+        optInAddressesList: (state: AccountState) => state.optInAddressesList,
         selectedAddressesToInteract: (state: AccountState) => state.selectedAddressesToInteract,
         selectedAddressesOptInToInteract: (state: AccountState) => state.selectedAddressesOptInToInteract,
         currentSignerAccountModel: (state: AccountState) =>
@@ -221,6 +227,12 @@ export default {
             // update state
             Vue.set(state.subscriptions, address, newSubscriptions);
         },
+        addressesList: (state: AccountState, addressesList: Address[]) => {
+            state.addressesList = addressesList;
+        },
+        optInAddressesList: (state: AccountState, optInAddressesList: { address: Address; index: number }[]) => {
+            state.optInAddressesList = optInAddressesList;
+        },
         addToSelectedAddressesToInteract: (state: AccountState, pathNumber: number) => {
             const selectedAccounts = [...state.selectedAddressesToInteract];
             selectedAccounts.push(pathNumber);
@@ -242,6 +254,12 @@ export default {
             const indexToDelete = selectedAccounts.indexOf(pathNumber);
             selectedAccounts.splice(indexToDelete, 1);
             state.selectedAddressesOptInToInteract = selectedAccounts;
+        },
+        resetAddressesList: (state: AccountState) => {
+            state.addressesList = [];
+        },
+        resetOptInAddressesList: (state: AccountState) => {
+            state.optInAddressesList = [];
         },
         resetSelectedAddressesToInteract: (state: AccountState) => {
             state.selectedAddressesToInteract = [];

@@ -336,7 +336,11 @@ export default {
                     nodeNetworkModelResult = await networkService
                         .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline)
                         .toPromise();
-                    if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
+                    if (
+                        nodeNetworkModelResult &&
+                        nodeNetworkModelResult.repositoryFactory &&
+                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                    ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
                     } else {
@@ -402,7 +406,10 @@ export default {
             commit('epochAdjustment', networkModel.networkConfiguration.epochAdjustment);
             commit('generationHash', networkModel.generationHash);
             commit('repositoryFactory', repositoryFactory);
-            commit('knowNodes', nodes);
+            commit(
+                'knowNodes',
+                nodes.filter((node) => node.networkType === currentProfile.networkType),
+            );
             const currentNetworkListener: IListener = getters['listener'];
             if (currentNetworkListener && currentNetworkListener.isOpen()) {
                 currentNetworkListener.close();
@@ -545,7 +552,9 @@ export default {
             const nodeRepository = repositoryFactory.createNodeRepository();
 
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
-            const allNodes = [...staticPeerNodes, ...peerNodes.sort((a, b) => a.host.localeCompare(b.host))];
+            const networkType = await repositoryFactory.getNetworkType().toPromise();
+            const staticPeers = networkType === NetworkType.MAIN_NET ? [] : staticPeerNodes;
+            const allNodes = [...staticPeers, ...peerNodes.sort((a, b) => a.host.localeCompare(b.host))];
             commit('peerNodes', _.uniqBy(allNodes, 'host'));
         },
         // TODO :: re-apply that behavior if red screen issue fixed

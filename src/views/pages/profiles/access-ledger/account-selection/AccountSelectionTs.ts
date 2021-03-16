@@ -37,6 +37,8 @@ import _ from 'lodash';
             networkMosaic: 'mosaic/networkMosaic',
             networkCurrency: 'mosaic/networkCurrency',
             currentProfile: 'profile/currentProfile',
+            addressesList: 'account/addressesList',
+            optInAddressesList: 'account/optInAddressesList',
             selectedAccounts: 'account/selectedAddressesToInteract',
             selectedOptInAccounts: 'account/selectedAddressesOptInToInteract',
         }),
@@ -122,13 +124,13 @@ export default class AccountSelectionTs extends Vue {
      * List of addresses
      * @var {Address[]}
      */
-    public addressesList: Address[] = [];
+    public addressesList: Address[];
 
     /**
      * List of opt in addresses
      * @var {Address[]}
      */
-    public optInAddressesList: { address: Address; index: number }[] = [];
+    public optInAddressesList: { address: Address; index: number }[];
 
     public networkCurrency: NetworkCurrencyModel;
 
@@ -139,6 +141,11 @@ export default class AccountSelectionTs extends Vue {
     async mounted() {
         this.derivation = new DerivationService(this.currentProfile.networkType);
         this.accountService = new AccountService();
+        await this.$store.dispatch('temporary/initialize');
+        this.$store.commit('account/resetAddressesList');
+        this.$store.commit('account/resetOptInAddressesList');
+        this.$store.commit('account/resetSelectedAddressesToInteract');
+        this.$store.commit('account/resetSelectedAddressesOptInToInteract');
 
         Vue.nextTick().then(() => {
             setTimeout(async () => {
@@ -219,18 +226,22 @@ export default class AccountSelectionTs extends Vue {
     private async initAccounts() {
         try {
             // - generate addresses
-            this.addressesList = await this.accountService.getLedgerAccounts(this.currentProfile.networkType, 10);
-            const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+            const addressesList = await this.accountService.getLedgerAccounts(this.currentProfile.networkType, 10);
+            this.$store.commit('account/addressesList', addressesList);
+
             // fetch accounts info
-            const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
-            if (!accountsInfo) {
+            const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+            if (repositoryFactory) {
+                const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
+                // map balances
+                this.addressBalanceMap = {
+                    ...this.addressBalanceMap,
+                    ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.addressesList),
+                };
+            } else {
+                this.$store.dispatch('notification/ADD_ERROR', 'symbol_node_cannot_connect');
                 return;
             }
-            // map balances
-            this.addressBalanceMap = {
-                ...this.addressBalanceMap,
-                ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.addressesList),
-            };
         } catch (error) {
             this.errorNotificationHandler(error);
         }
@@ -261,22 +272,27 @@ export default class AccountSelectionTs extends Vue {
             if (optInAccounts.length === 0) {
                 return;
             }
-            this.optInAddressesList = optInAccounts.map((account) => ({
+            const optInAddressesList = optInAccounts.map((account) => ({
                 address: PublicAccount.createFromPublicKey(account.publicKey, this.currentProfile.networkType).address,
                 index: account.index,
             }));
+            this.$store.commit('account/optInAddressesList', optInAddressesList);
 
             const optInAddresses = this.optInAddressesList.map((account) => account.address);
 
             // fetch accounts info
             const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-            const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(optInAddresses).toPromise();
-
-            // map balances
-            this.optInAddressBalanceMap = {
-                ...this.optInAddressBalanceMap,
-                ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, optInAddresses),
-            };
+            if (repositoryFactory) {
+                const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(optInAddresses).toPromise();
+                // map balances
+                this.optInAddressBalanceMap = {
+                    ...this.optInAddressBalanceMap,
+                    ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, optInAddresses),
+                };
+            } else {
+                this.$store.dispatch('notification/ADD_ERROR', 'symbol_node_cannot_connect');
+                return;
+            }
         } catch (error) {
             this.errorNotificationHandler(error);
         }

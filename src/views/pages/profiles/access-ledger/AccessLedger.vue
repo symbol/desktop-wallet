@@ -88,18 +88,20 @@
                                                 <div class="table-item-content">
                                                     <div class="row">
                                                         <span class="address-value overflow_ellipsis">{{
-                                                            formatters.miniAddress(optInAddressesList[index])
+                                                            formatters.miniAddress(optInAddressesList[index].address)
                                                         }}</span>
                                                     </div>
                                                     <div class="row balance-row">
                                                         <div class="row">
                                                             <span class="address-balance">{{ $t('balance') }}: </span>
                                                             <span
-                                                                v-if="addressMosaicMap[optInAddressesList[index].plain()]"
+                                                                v-if="addressMosaicMap[optInAddressesList[index].address.plain()]"
                                                                 class="address-balance"
                                                             >
                                                                 <MosaicAmountDisplay
-                                                                    :absolute-amount="addressMosaicMap[optInAddressesList[index].plain()]"
+                                                                    :absolute-amount="
+                                                                        addressMosaicMap[optInAddressesList[index].address.plain()]
+                                                                    "
                                                                 />
                                                             </span>
                                                             <span v-else class="address-balance">
