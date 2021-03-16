@@ -399,7 +399,7 @@ export default {
                 const profileService: ProfileService = new ProfileService();
                 profileService.updateSelectedNode(currentProfile, currentPeer);
             }
-            const currentNetworkType = currentProfile.networkType || networkType;
+            const currentNetworkType = currentProfile ? currentProfile.networkType : networkType;
             commit('networkModel', networkModel);
             commit('networkConfiguration', networkModel.networkConfiguration);
             commit('transactionFees', networkModel.transactionFees);
