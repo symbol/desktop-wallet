@@ -13,7 +13,7 @@
         "test": "vue-cli-service test:unit",
         "dev": "vue-cli-service serve ",
         "build": "npm run build:web",
-        "build:web": "rimraf dist && mkdir dist && tsc && vue-cli-service build && mv dist/index.html dist/start.html",
+        "build:web": "rimraf dist && mkdir dist && tsc && vue-cli-service build",
         "release": "npm run build && npm run release:all",
         "release:all": "npm run release:win && npm run release:lin && npm run release:mac && npm run release:zip",
         "release:mac": "npm run node-hid:prebuild-install:mac && electron-builder --mac",
