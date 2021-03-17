@@ -77,7 +77,7 @@ export class ViewTransferTransaction extends TransactionView<TransferTransaction
             return {
                 id: transactionMosaic.id,
                 mosaicHex: transactionMosaic.id.toHex(),
-                amount: transactionMosaic.amount.compact(),
+                amount: parseFloat(transactionMosaic.amount.toString()),
             } as AttachedMosaic;
         });
         const message = this.transaction.message;
