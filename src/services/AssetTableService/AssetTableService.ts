@@ -103,7 +103,14 @@ export abstract class AssetTableService {
      */
     public sort(valuesToSort: any[], options: TableSortingOptions): any[] {
         const values = [...valuesToSort];
-        const sortingMethod = options.direction === 'asc' ? 'sort' : 'reverse';
+
+        function sortingMethodChooser(sortedValues) {
+            if (options.direction === 'desc') {
+                return sortedValues.reverse();
+            }
+            return sortedValues;
+        }
+
         if (!values.length) {
             return values;
         }
@@ -117,25 +124,31 @@ export abstract class AssetTableService {
 
         // - sorting method depends on type
         if ('string' === typeof sampleValue) {
-            return [...values][sortingMethod]((a, b) => {
-                return a[options.fieldName]
-                    .toLowerCase()
-                    .localeCompare(b[options.fieldName].toLowerCase(), navigator.languages[0] || navigator.language, {
-                        numeric: true,
-                        ignorePunctuation: true,
-                    });
-            });
+            return sortingMethodChooser(
+                [...values].sort((a, b) => {
+                    return a[options.fieldName]
+                        .toLowerCase()
+                        .localeCompare(b[options.fieldName].toLowerCase(), navigator.languages[0] || navigator.language, {
+                            numeric: true,
+                            ignorePunctuation: true,
+                        });
+                }),
+            );
         } else if ('boolean' === typeof sampleValue) {
-            return [...values][sortingMethod]((a, b) => {
-                return a[options.fieldName] === b[options.fieldName] ? 0 : a[options.fieldName] ? -1 : 1;
-            });
+            return sortingMethodChooser(
+                [...values].sort((a, b) => {
+                    return a[options.fieldName] === b[options.fieldName] ? 0 : a[options.fieldName] ? -1 : 1;
+                }),
+            );
         } else if ('number' === typeof sampleValue) {
-            return values[sortingMethod]((a, b) => {
-                if (!b[options.fieldName] || !a[options.fieldName]) {
-                    return 1;
-                }
-                return b[options.fieldName] - a[options.fieldName];
-            });
+            return sortingMethodChooser(
+                values.sort((a, b) => {
+                    if (!b[options.fieldName] || !a[options.fieldName]) {
+                        return 1;
+                    }
+                    return b[options.fieldName] - a[options.fieldName];
+                }),
+            );
         }
 
         throw new Error(`sorting the data type ${typeof sampleValue} is not supported`);

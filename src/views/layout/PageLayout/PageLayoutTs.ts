@@ -39,6 +39,8 @@ import AccountSelectorField from '@/components/AccountSelectorField/AccountSelec
 import ModalDebugConsole from '@/views/modals/ModalDebugConsole/ModalDebugConsole.vue';
 //@ts-ignore
 import Settings from '@/components/Settings/Settings.vue';
+//@ts-ignore
+import LogoutButton from '@/components/LogoutButton/LogoutButton.vue';
 import { URLInfo } from '@/core/utils/URLInfo';
 //@ts-ignore
 import ImportQRButton from '@/components/QRCode/ImportQRButton/ImportQRButton.vue';
@@ -63,6 +65,7 @@ import i18n from '@/language';
         Settings,
         ImportQRButton,
         AccountLinks,
+        LogoutButton,
     },
     computed: {
         ...mapGetters({
@@ -255,6 +258,8 @@ export class PageLayoutTs extends Vue {
     }
 
     public reconnect() {
-        this.$store.dispatch('network/CONNECT', { waitBetweenTrials: true });
+        if (this.$route.fullPath !== '/home') {
+            this.$store.dispatch('network/CONNECT', { waitBetweenTrials: true });
+        }
     }
 }

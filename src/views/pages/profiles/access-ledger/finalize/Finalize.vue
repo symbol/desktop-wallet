@@ -1,45 +1,42 @@
 <template>
-    <div class="finish-sec scroll" @keyup.enter="submit">
+    <div class="finish-sec" @keyup.enter="$router.push({ name: 'dashboard' })">
         <div class="finish-col">
             <div class="finish-left">
                 <p class="text1">
                     {{ $t('terms_and_conditions') }}
                 </p>
-                <div class="flex bottom-space term">
+
+                <div class="checkbox">
                     <Checkbox v-model="marked">
-                        <span class="link">{{ $t('i_accept') }}</span>
-                        <a class="link" href="#/terms">
-                            {{ $t('terms_and_conditions') }}
-                        </a>
-                        &
-                        <a class="link" href="#/privacy">
-                            {{ $t('privacy_policy') }}
-                        </a>
-                        <span>.</span>
+                        <span class="checkbox-label">
+                            {{ $t('i_accept') }}
+                            <a href="#/terms">{{ $t('terms_and_conditions') }}</a>
+                            &
+                            <a href="#/privacy">{{ $t('privacy_policy') }}</a
+                            >.
+                        </span>
                     </Checkbox>
                 </div>
-                <div class="buttons clear">
-                    <div class="float-right">
-                        <button type="button" class="solid-button button-style fat-button create-account-style" @click="$router.back()">
-                            {{ $t('back') }}
-                        </button>
-                        <button
-                            type="submit"
-                            class="inverted-button button-style fat-button create-account-style"
-                            :disabled="!marked"
-                            @click="submit"
-                        >
-                            {{ $t('next') }}
-                        </button>
-                    </div>
+                <div class="jump-btn">
+                    <button
+                        class="solid-button button-style create-account-style"
+                        @click="$router.push({ name: 'profiles.importProfile.walletSelection' })"
+                    >
+                        {{ $t('back') }}
+                    </button>
+                    <button class="inverted-button solid-button button-style create-account-style" :disabled="!marked" @click="finish">
+                        {{ $t('finish') }}
+                    </button>
                 </div>
             </div>
+            <Spin v-if="isLoading" size="large" fix class="absolute" />
         </div>
     </div>
 </template>
 
-<script lang="ts">
+<script>
 import FinalizeTs from './FinalizeTs';
+
 export default class Finalize extends FinalizeTs {}
 </script>
 <style lang="less" scoped>

@@ -74,6 +74,10 @@ export class SettingsModelStorage extends VersionedObjectStorage<Record<string, 
                 description: 'Reset accounts for 0.10.0.6 network (non backwards compatible)',
                 migrate: () => undefined,
             },
+            {
+                description: 'Reset for Symbol mainet launch.',
+                migrate: () => undefined,
+            },
         ]);
     }
 }

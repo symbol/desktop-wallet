@@ -127,6 +127,7 @@ interface NetworkState {
     peerNodes: NodeInfo[];
     harvestingPeerNodes: NodeInfo[];
     connectingToNodeInfo: ConnectingToNodeInfo;
+    isOfflineMode: boolean;
 }
 
 const initialNetworkState: NetworkState = {
@@ -150,6 +151,7 @@ const initialNetworkState: NetworkState = {
     peerNodes: [],
     harvestingPeerNodes: [],
     connectingToNodeInfo: undefined,
+    isOfflineMode: false,
 };
 
 export default {
@@ -176,6 +178,7 @@ export default {
         peerNodes: (state: NetworkState) => state.peerNodes,
         harvestingPeerNodes: (state: NetworkState) => state.harvestingPeerNodes,
         connectingToNodeInfo: (state: NetworkState) => state.connectingToNodeInfo,
+        isOfflineMode: (state: NetworkState) => state.isOfflineMode,
     },
     mutations: {
         setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -183,6 +186,9 @@ export default {
         },
         setConnected: (state: NetworkState, connected: boolean) => {
             state.isConnected = connected;
+        },
+        setOfflineMode: (state: NetworkState, isOfflineMode: boolean) => {
+            state.isOfflineMode = isOfflineMode;
         },
         currentHeight: (state: NetworkState, currentHeight: number) => Vue.set(state, 'currentHeight', currentHeight),
         currentPeerInfo: (state: NetworkState, currentPeerInfo: NodeModel) => Vue.set(state, 'currentPeerInfo', currentPeerInfo),
@@ -288,7 +294,8 @@ export default {
                 newCandidateUrl,
                 networkType,
                 waitBetweenTrials = false,
-            }: { newCandidateUrl?: string | undefined; networkType?: NetworkType; waitBetweenTrials: boolean },
+                isOffline = false,
+            }: { newCandidateUrl?: string | undefined; networkType?: NetworkType; waitBetweenTrials: boolean; isOffline: boolean },
         ) {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const networkService = new NetworkService();
@@ -297,6 +304,7 @@ export default {
             if (!networkType && currentProfile && currentProfile.networkType) {
                 networkType = currentProfile.networkType;
             }
+            commit('setOfflineMode', isOffline);
             if (newCandidateUrl) {
                 commit('connectingToNodeInfo', {
                     isTryingToConnect: true,
@@ -304,8 +312,12 @@ export default {
                     progressCurrentNodeIndex: 1,
                     progressTotalNumOfNodes: 1,
                 });
-                nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType).toPromise();
-                if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel) {
+                nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType, isOffline).toPromise();
+                if (
+                    nodeNetworkModelResult &&
+                    nodeNetworkModelResult.networkModel &&
+                    nodeNetworkModelResult.networkModel.networkType === networkType
+                ) {
                     await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                 } else {
                     return await dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE, { root: true });
@@ -326,9 +338,13 @@ export default {
                         progressTotalNumOfNodes: numOfNodes,
                     });
                     nodeNetworkModelResult = await networkService
-                        .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType)
+                        .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline)
                         .toPromise();
-                    if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
+                    if (
+                        nodeNetworkModelResult &&
+                        nodeNetworkModelResult.repositoryFactory &&
+                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                    ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
                     } else {
@@ -347,8 +363,12 @@ export default {
                         progressCurrentNodeIndex: ++progressCurrentNodeInx,
                         progressTotalNumOfNodes: numOfNodes,
                     });
-                    nodeNetworkModelResult = await networkService.getNetworkModel(nodeUrl, networkType).toPromise();
-                    if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
+                    nodeNetworkModelResult = await networkService.getNetworkModel(nodeUrl, networkType, isOffline).toPromise();
+                    if (
+                        nodeNetworkModelResult &&
+                        nodeNetworkModelResult.repositoryFactory &&
+                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                    ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
                     } else {
@@ -387,6 +407,7 @@ export default {
                 const profileService: ProfileService = new ProfileService();
                 profileService.updateSelectedNode(currentProfile, currentPeer);
             }
+            const currentNetworkType = currentProfile ? currentProfile.networkType : networkType;
             commit('networkModel', networkModel);
             commit('networkConfiguration', networkModel.networkConfiguration);
             commit('transactionFees', networkModel.transactionFees);
@@ -394,7 +415,10 @@ export default {
             commit('epochAdjustment', networkModel.networkConfiguration.epochAdjustment);
             commit('generationHash', networkModel.generationHash);
             commit('repositoryFactory', repositoryFactory);
-            commit('knowNodes', nodes);
+            commit(
+                'knowNodes',
+                nodes.filter((node) => node.networkType === currentNetworkType),
+            );
             const currentNetworkListener: IListener = getters['listener'];
             if (currentNetworkListener && currentNetworkListener.isOpen()) {
                 currentNetworkListener.close();
@@ -416,7 +440,6 @@ export default {
             });
             $eventBus.$emit('newConnection', currentPeer);
             // subscribe to updates
-
             if (oldGenerationHash != networkModel.generationHash) {
                 await dispatch('account/NETWORK_CHANGED', {}, { root: true });
                 await dispatch('statistics/LOAD', {}, { root: true });
@@ -538,7 +561,9 @@ export default {
             const nodeRepository = repositoryFactory.createNodeRepository();
 
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
-            const allNodes = [...staticPeerNodes, ...peerNodes.sort((a, b) => a.host.localeCompare(b.host))];
+            const networkType = await repositoryFactory.getNetworkType().toPromise();
+            const staticPeers = networkType === NetworkType.MAIN_NET ? [] : staticPeerNodes;
+            const allNodes = [...staticPeers, ...peerNodes.sort((a, b) => a.host.localeCompare(b.host))];
             commit('peerNodes', _.uniqBy(allNodes, 'host'));
         },
         // TODO :: re-apply that behavior if red screen issue fixed

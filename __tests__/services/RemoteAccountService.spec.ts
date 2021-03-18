@@ -74,7 +74,7 @@ describe('services/RemoteAccountService', () => {
                 repositoryFactory.createAccountRepository(),
             ).getAvailableRemoteAccount(new Password('password'));
 
-            expect(remoteAccount.publicKey).toBe('C2E5342E7853CCD120136191A6CE8879CCDC42D56520A3180C025292B1AAB68A');
+            expect(remoteAccount.publicKey).toBe('82F7AFB6655B85563DCF6E7722B556722992B432ED0F51A22A4587E0E18B797C');
             done();
         });
     });

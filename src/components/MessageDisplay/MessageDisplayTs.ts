@@ -85,7 +85,7 @@ export class MessageDisplayTs extends Vue {
     protected async loadDetails(): Promise<void> {
         this.isEncrypted = this.message.type === MessageType.EncryptedMessage;
         if (this.isEncrypted) {
-            this.messageDisplay = this.unannounced ? `${this.message.payload} (${this.$t('encrypt_message')})` : '******';
+            this.messageDisplay = this.unannounced ? `${this.message.payload} (${this.$t('encrypted_message')})` : '******';
         } else {
             this.messageDisplay = this.message.payload;
         }

@@ -1,11 +1,16 @@
 <template>
     <div class="login-profile-wrapper">
         <VideoBackground class="video-background-section" :src="require('@/views/resources/videos/symbol_3d_rotate.mp4')">
+            <div class="switch-language-container">
+                <button class="trigger-accountlink" @click="$router.push('offlineTransaction')">
+                    <Icon type="ios-cloud-download-outline" class="navbar-icon white" />
+                    <span class="color white">{{ $t('go_to_offline_transactions') }}</span>
+                </button>
+                <img class="language_icon" :src="require('@/views/resources/img/login/language.svg')" alt="" />
+                <LanguageSelector />
+            </div>
             <ValidationObserver v-slot="{ handleSubmit }" slim>
                 <form onsubmit="event.preventDefault()">
-                    <div class="switch-language-container">
-                        <LanguageSelector />
-                    </div>
                     <div class="welcome-box">
                         <div class="banner-image">
                             <span class="top-welcome-text">{{ $t('welcome_to_symbol') }}</span>
@@ -66,7 +71,7 @@
                             </p>
                             <ValidationProvider
                                 v-slot="{ errors }"
-                                mode="lazy"
+                                mode="passive"
                                 vid="password"
                                 :name="$t('password')"
                                 rules="required|min:8"
@@ -105,7 +110,9 @@
                                     {{ $t('create_a_new_account') }}?
                                 </span>
                             </div>
-                            <div v-if="formItems.hasHint" class="hint">{{ $t('password_hint') }}: {{ getPasswordHint() }}</div>
+                            <div v-if="formItems.hasHint && !!getPasswordHint().length" class="hint">
+                                {{ $t('password_hint') }}: {{ getPasswordHint() }}
+                            </div>
                             <Button
                                 v-if="profilesClassifiedByNetworkType"
                                 class="pointer button"

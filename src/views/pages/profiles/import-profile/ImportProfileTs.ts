@@ -16,7 +16,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Formatters } from '@/core/utils/Formatters';
 import { mapGetters } from 'vuex';
-import { MnemonicPassPhrase } from 'symbol-hd-wallets';
+import { MnemonicPassPhrase, Network } from 'symbol-hd-wallets';
 import { AccountInfo, Address, MosaicId, RepositoryFactory } from 'symbol-sdk';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
@@ -36,6 +36,7 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
             currentProfile: 'profile/currentProfile',
             currentPassword: 'temporary/password',
             selectedAccounts: 'account/selectedAddressesToInteract',
+            optInSelectedAccounts: 'account/selectedAddressesOptInToInteract',
         }),
     },
 })
@@ -85,6 +86,12 @@ export default class ImportProfileTs extends Vue {
     public addressesList: Address[] = [];
 
     /**
+     * List of opt in addresses
+     * @var {Address[]}
+     */
+    public optInAddressesList: Address[] = [];
+
+    /**
      * Balances map
      * @var {any}
      */
@@ -97,9 +104,16 @@ export default class ImportProfileTs extends Vue {
     public selectedAccounts: number[];
 
     /**
+     * Map of selected accounts
+     * @var {number[]}
+     */
+    public optInSelectedAccounts: number[];
+
+    /**
      * Indicates if account balance and addresses are already fetched
      */
     private initialized: boolean = false;
+    private optInInitialized: boolean = false;
 
     /**
      * Hook called when the page is mounted
@@ -110,8 +124,12 @@ export default class ImportProfileTs extends Vue {
         Vue.nextTick().then(() => {
             setTimeout(() => this.initAccounts(), 300);
         });
-
+        Vue.nextTick().then(() => {
+            setTimeout(() => this.initOptInAccounts(), 300);
+        });
         await this.$store.dispatch('temporary/initialize');
+        this.$store.commit('account/resetSelectedAddressesToInteract');
+        this.$store.commit('account/resetSelectedAddressesOptInToInteract');
     }
 
     @Watch('selectedAccounts')
@@ -120,7 +138,7 @@ export default class ImportProfileTs extends Vue {
      * @return {void}
      */
     private async initAccounts() {
-        if (this.initialized) {
+        if (this.initialized || !this.currentProfile || !this.currentProfile.networkType) {
             return;
         }
 
@@ -137,9 +155,48 @@ export default class ImportProfileTs extends Vue {
             return;
         }
         // map balances
-        this.addressMosaicMap = this.mapBalanceByAddress(accountsInfo, this.networkMosaic);
+        this.addressMosaicMap = {
+            ...this.addressMosaicMap,
+            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic),
+        };
 
         this.initialized = true;
+    }
+
+    /**
+     * Fetch account balances and map to address
+     * @return {void}
+     */
+    @Watch('optInSelectedAccounts')
+    private async initOptInAccounts() {
+        if (this.optInInitialized || !this.currentProfile || !this.currentProfile.networkType) {
+            return;
+        }
+
+        // - generate addresses
+        const optInAccounts = this.accountService.generateAccountsFromMnemonic(
+            new MnemonicPassPhrase(this.currentMnemonic),
+            this.currentProfile.networkType,
+            10,
+            Network.BITCOIN,
+        );
+
+        // whitelist opt in accounts
+        if (optInAccounts.length === 0) {
+            return;
+        }
+        this.optInAddressesList = optInAccounts.map((account) => account.address);
+
+        // fetch accounts info
+        const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.optInAddressesList).toPromise();
+        // map balances
+        this.addressMosaicMap = {
+            ...this.addressMosaicMap,
+            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic),
+        };
+
+        this.optInInitialized = true;
     }
 
     public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaic: MosaicId): Record<string, number> {
@@ -190,5 +247,13 @@ export default class ImportProfileTs extends Vue {
      */
     protected onRemoveAddress(pathNumber: number): void {
         this.$store.commit('account/removeFromSelectedAddressesToInteract', pathNumber);
+    }
+    /**
+     * Called when clicking on an address to remove it from the selection
+     * @protected
+     * @param {number} pathNumber
+     */
+    protected onRemoveOptInAddress(pathNumber: number): void {
+        this.$store.commit('account/removeFromSelectedAddressesOptInToInteract', pathNumber);
     }
 }

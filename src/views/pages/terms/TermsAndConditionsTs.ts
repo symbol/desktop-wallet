@@ -14,8 +14,31 @@
  *
  */
 import { Component, Vue } from 'vue-property-decorator';
+// @ts-ignore
+import pdf from 'vue-pdf';
+import terms from '../../../documents/terms.json';
 
-@Component
+const data = 'data:application/pdf;base64,' + terms.base64;
+const loadingTask = pdf.createLoadingTask(data);
+
+@Component({
+    components: {
+        pdf,
+    },
+    mounted() {
+        this.src = pdf.createLoadingTask(data);
+        this.src.promise.then((pdf) => {
+            this.numPages = pdf.numPages;
+        });
+    },
+    data() {
+        return {
+            data,
+            src: loadingTask,
+            numPages: undefined,
+        };
+    },
+})
 export default class TermsAndConditionsTs extends Vue {
     /**
      * back

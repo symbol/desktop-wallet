@@ -1,8 +1,5 @@
 <template>
     <div class="check-mnemonic-sec">
-        <div class="skip pointer" @click="$router.push({ name: 'profiles.createProfile.finalize' })">
-            {{ $t('skip') }}
-        </div>
         <p class="set-title-create">
             {{ $t('verify_mnemonics') }}
         </p>

@@ -19,7 +19,7 @@ import { MosaicId, NetworkType } from 'symbol-sdk';
 import { ValidationProvider } from 'vee-validate';
 // internal dependencies
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
-import { AccountModel } from '@/core/database/entities/AccountModel';
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountService } from '@/services/AccountService';
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 // child components
@@ -174,15 +174,23 @@ export class AccountSelectorPanelTs extends Vue {
     }
 
     public get seedAccounts(): AccountModel[] {
-        return this.knownAccounts.filter((_) => _.type === 1);
+        return this.knownAccounts.filter((_) => _.type === AccountType.SEED);
+    }
+
+    public get optInAccounts(): AccountModel[] {
+        return this.knownAccounts.filter((_) => _.type === AccountType.OPT_IN);
     }
 
     public get pkAccounts(): AccountModel[] {
-        return this.knownAccounts.filter((_) => _.type === 2);
+        return this.knownAccounts.filter((_) => _.type === AccountType.PRIVATE_KEY);
     }
 
     public get ledgerAccount(): AccountModel[] {
-        return this.knownAccounts.filter((_) => _.type === 5);
+        return this.knownAccounts.filter((_) => _.type === AccountType.LEDGER);
+    }
+
+    public get ledgerOptInAccount(): AccountModel[] {
+        return this.knownAccounts.filter((_) => _.type === AccountType.LEDGER_OPT_IN);
     }
 
     public get hasAddAccountModal(): boolean {

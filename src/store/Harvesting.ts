@@ -140,7 +140,7 @@ export default {
         async FETCH_STATUS({ commit, rootGetters }) {
             const currentSignerAccountInfo: AccountInfo = rootGetters['account/currentSignerAccountInfo'];
             // reset
-            commit('status', HarvestingStatus.INACTIVE);
+            let status: HarvestingStatus = HarvestingStatus.INACTIVE;
             if (!currentSignerAccountInfo) {
                 return;
             }
@@ -171,7 +171,6 @@ export default {
                 currentSignerAccountInfo.supplementalPublicKeys?.node &&
                 currentSignerAccountInfo.supplementalPublicKeys?.vrf;
 
-            let status: HarvestingStatus;
             if (allKeysLinked) {
                 status = accountUnlocked
                     ? HarvestingStatus.ACTIVE

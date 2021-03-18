@@ -34,8 +34,13 @@ export class NavigationTabsTs extends Vue {
      * @var {string}
      */
     @Prop({ default: '' }) parentRouteName: string;
+    @Prop() customTabEntries: TabEntry[];
 
     public get tabEntries(): TabEntry[] {
+        if (this.customTabEntries && this.customTabEntries.length > 0) {
+            return this.customTabEntries;
+        }
+
         // @ts-ignore
         const getTabEntries = this.$router.getTabEntries(this.parentRouteName);
         if (this.isLedger) {
@@ -50,7 +55,7 @@ export class NavigationTabsTs extends Vue {
     public currentAccount: AccountModel;
 
     public get isLedger(): boolean {
-        return this.currentAccount.type == AccountType.LEDGER;
+        return this.currentAccount.type === AccountType.LEDGER || this.currentAccount.type === AccountType.LEDGER_OPT_IN;
     }
 
     @Prop({ default: 'horizontal' }) direction: 'horizontal' | 'vertical';

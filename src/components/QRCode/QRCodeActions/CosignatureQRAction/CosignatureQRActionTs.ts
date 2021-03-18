@@ -26,6 +26,7 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
 // @ts-ignore
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
+import { QRCode } from 'symbol-qr-library/index';
 
 @Component({
     components: { TemplateQRAction, MosaicAmountDisplay, MaxFeeSelector, TransactionDetails },
@@ -34,6 +35,10 @@ export default class CosignatureQRActionTs extends Vue {
     @Prop({ default: null }) readonly qrCode!: CosignatureQR;
 
     @Prop({ default: null }) readonly onSuccess: () => void;
+
+    @Prop() readonly confirmAction?: (qrCode: QRCode) => void;
+
+    @Prop() readonly confirmText?: string;
 
     /**
      * Get QR Code detail items
@@ -56,10 +61,14 @@ export default class CosignatureQRActionTs extends Vue {
 
     public onSubmit() {
         this.onSuccess();
-        this.$router.push({
-            name: 'dashboard.index',
-            // @ts-ignore
-            params: { transaction: this.qrCode.transaction, action: 'transaction-details' },
-        });
+        if (this.confirmAction) {
+            this.confirmAction(this.qrCode);
+        } else {
+            this.$router.push({
+                name: 'dashboard.index',
+                // @ts-ignore
+                params: { transaction: this.qrCode.transaction, action: 'transaction-details' },
+            });
+        }
     }
 }

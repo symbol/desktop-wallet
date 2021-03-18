@@ -186,7 +186,7 @@ export class ModalBackupProfileTs extends Vue {
             rootAccountInfo,
             this.knownAccountInfos,
             this.currentProfile.networkType,
-            this.generationHash,
+            this.currentProfile.generationHash,
         );
         const pdfArray: Uint8Array = await paperWallet.toPdf();
         return UIHelpers.downloadBytesAsFile(pdfArray, `paper-wallet-${this.currentProfile.profileName}`, 'application/pdf');

@@ -64,7 +64,7 @@
                             v-model="formItems.targetId"
                             :namespaces="ownedTargetHexIds"
                             :disable-linked="false"
-                            label="targetLabel"
+                            :label="$t(targetLabel)"
                             :disabled="editMode"
                         />
                     </div>
