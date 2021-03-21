@@ -826,6 +826,8 @@
     "qrcode_detail_item_type_signedqr": "署名済みトランザクション",
     "qrcode_password_info": "アップロードされた QR コードはパスワードで保護されています。この QR コードが生成されたときのパスワードを入力してください。",
     "recipient": "受信者",
+    "recipient_input_accounts": "マイアカウント",
+    "recipient_input_contacts": "マイ連絡先",
     "recipient_linked_address_invalid": "受信者のエイリアス名にリンクされたアドレスがありません",
     "recipient_public_key_invalid_error": "無効な受信者公開鍵",
     "refresh": "更新",

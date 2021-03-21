@@ -11,7 +11,12 @@
                     <RestrictionTypeInput v-model="formItems.blockType" :disabled="isDeleteMode || transactionTypeDisabled" />
 
                     <!-- Transfer recipient input field -->
-                    <RecipientInput v-if="restrictionTxType === 'ADDRESS'" v-model="formItems.recipientRaw" :disabled="isDeleteMode" />
+                    <RecipientInput
+                        v-if="restrictionTxType === 'ADDRESS'"
+                        v-model="formItems.recipientRaw"
+                        :disabled="isDeleteMode"
+                        :autocomplete-popup-max-width-in-rem="6.3"
+                    />
 
                     <FormRow v-if="restrictionTxType === 'MOSAIC'" class-name="emphasis">
                         <template v-slot:label> {{ $t('mosaic_id') }}: </template>

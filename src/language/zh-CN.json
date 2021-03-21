@@ -821,6 +821,8 @@
     "qrcode_detail_item_type_transactionqr": "发票",
     "qrcode_password_info": "上载的QR码受密码保护。\n请在生成此二维码时输入您的密码。",
     "recipient": "接收人",
+    "recipient_input_accounts": "我的帐户",
+    "recipient_input_contacts": "我的联系方式",
     "recipient_linked_address_invalid": "接受账户的别名没有链接的地址",
     "recipient_public_key_invalid_error": "接受人公匙不合法",
     "refresh": "刷新",

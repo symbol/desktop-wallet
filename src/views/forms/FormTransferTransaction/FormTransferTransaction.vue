@@ -19,7 +19,12 @@
                     <AccountSignerSelector v-if="!hideSigner && isOfflineMode" />
 
                     <!-- Transfer recipient input field -->
-                    <RecipientInput v-model="formItems.recipientRaw" style="margin-bottom: 0.5rem;" @input="onChangeRecipient" />
+                    <RecipientInput
+                        v-model="formItems.recipientRaw"
+                        style="margin-bottom: 0.5rem;"
+                        :autocomplete-popup-max-width-in-rem="8"
+                        @input="onChangeRecipient"
+                    />
 
                     <!-- Mosaics attachments input fields -->
                     <div v-for="(attachedMosaic, index) in formItems.attachedMosaics" :key="index">

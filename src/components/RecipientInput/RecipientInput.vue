@@ -12,18 +12,13 @@
                 class="inputs-container"
             >
                 <ErrorTooltip :errors="errors">
-                    <input
+                    <AccountAutoCompleteInput
                         v-model="rawValue"
-                        v-focus
-                        class="input-size input-style"
-                        :placeholder="$t('placeholder_address_or_alias')"
-                        type="text"
+                        placeholder="placeholder_address_or_alias"
                         :disabled="disabled"
+                        :autocomplete-popup-max-width-in-rem="autocompletePopupMaxWidthInRem"
                     />
                 </ErrorTooltip>
-                <div v-if="!disabled && addressBook && addressBook.getAllContacts().length > 0" style="text-align: right; margin-top: 5px;">
-                    <ContactSelector @change="onSelectContact" />
-                </div>
             </ValidationProvider>
         </template>
     </FormRow>

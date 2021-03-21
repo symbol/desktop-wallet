@@ -826,6 +826,8 @@
     "qrcode_detail_item_type_signedqr": "Signed transaction",
     "qrcode_password_info": "Uploaded QR Code is password protected. Please enter your password at the time this QR Code was generated.",
     "recipient": "Recipient",
+    "recipient_input_accounts": "My accounts",
+    "recipient_input_contacts": "My contacts",
     "recipient_linked_address_invalid": "The recipient's alias name does not have a linked address",
     "recipient_public_key_invalid_error": "Invalid recipient public key",
     "refresh": "Refresh",

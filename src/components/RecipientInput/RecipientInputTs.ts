@@ -27,42 +27,36 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
-import ContactSelector from '@/components/ContactSelector/ContactSelector.vue';
-import { AddressBook } from 'symbol-address-book/AddressBook';
+import AccountAutoCompleteInput from '@/components/AccountAutoCompleteInput/AccountAutoCompleteInput.vue';
 
 @Component({
     components: {
         ValidationProvider,
         ErrorTooltip,
         FormRow,
-        ContactSelector,
+        AccountAutoCompleteInput,
     },
     computed: {
         ...mapGetters({
             networkType: 'network/networkType',
-            addressBook: 'addressBook/getAddressBook',
         }),
     },
 })
 export class RecipientInputTs extends Vue {
-    @Prop({
-        default: null,
-    })
+    @Prop({ default: null })
     value: string;
 
     @Prop({ default: false })
     readonly disabled!: boolean;
+
+    @Prop({ default: undefined })
+    autocompletePopupMaxWidthInRem: number;
 
     /**
      * Current network type
      * @var {NetworkType}
      */
     public networkType: NetworkType;
-    /**
-     * Current address book
-     * @var {AddressBook}
-     */
-    public addressBook: AddressBook;
 
     /**
      * Validation rules
@@ -79,11 +73,4 @@ export class RecipientInputTs extends Vue {
         this.$emit('input', input);
     }
     /// end-region computed properties getter/setter
-
-    public onSelectContact(id: string) {
-        const contact = this.addressBook.getContactById(id);
-        if (contact) {
-            this.rawValue = contact.address;
-        }
-    }
 }
