@@ -29,6 +29,7 @@
                     </button>
                 </div>
             </div>
+            <Spin v-if="isLoading" size="large" fix class="absolute" />
         </div>
     </div>
 </template>

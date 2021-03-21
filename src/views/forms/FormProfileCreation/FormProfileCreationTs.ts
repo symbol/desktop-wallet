@@ -124,9 +124,7 @@ export class FormProfileCreationTs extends Vue {
 
     /// region computed properties getter/setter
     get nextPage() {
-        if (!this.isConnected) {
-            this.connect(this.formItems.networkType);
-        }
+        this.connect(this.formItems.networkType);
         return this.$route.meta.nextPage;
     }
 
@@ -202,7 +200,7 @@ export class FormProfileCreationTs extends Vue {
     private persistAccountAndContinue() {
         // -  password stored as hash (never plain.)
         const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password));
-        const genHash = this.generationHash || networkConfig[this.formItems.networkType].networkConfigurationDefaults.generationHash;
+        const genHash = networkConfig[this.formItems.networkType].networkConfigurationDefaults.generationHash || this.generationHash;
         const profile: ProfileModel = {
             profileName: this.formItems.profileName,
             accounts: [],

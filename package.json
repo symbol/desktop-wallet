@@ -2,7 +2,7 @@
     "name": "symbol-desktop-wallet",
     "description": "Symbol Wallet",
     "homepage": "https://github.com/nemgrouplimited/symbol-desktop-wallet",
-    "version": "1.0.0-beta.2",
+    "version": "1.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/nemgrouplimited/symbol-desktop-wallet.git"
@@ -71,6 +71,7 @@
         "vue-infinite-scroll": "^2.0.2",
         "vue-moment": "^4.1.0",
         "vue-number-animation": "1.0.5",
+        "vue-pdf": "^4.2.0",
         "vue-property-decorator": "^8.1.0",
         "vue-qrcode-reader": "^2.3.10",
         "vue-responsive-video-background-player": "^1.1.4",
@@ -131,7 +132,7 @@
         "symbol-hd-wallets": "0.14.1-alpha-202103051108",
         "symbol-paper-wallets": "^1.0.2",
         "symbol-qr-library": "0.14.1-alpha-202103081047",
-        "symbol-sdk": "0.23.4-alpha-202103071752",
+        "symbol-sdk": "1.0.0",
         "symbol-uri-scheme": "0.6.0",
         "ts-jest": "^25.3.0",
         "ts-mockito": "^2.6.1",

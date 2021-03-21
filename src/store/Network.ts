@@ -313,7 +313,11 @@ export default {
                     progressTotalNumOfNodes: 1,
                 });
                 nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType, isOffline).toPromise();
-                if (nodeNetworkModelResult && nodeNetworkModelResult.networkModel) {
+                if (
+                    nodeNetworkModelResult &&
+                    nodeNetworkModelResult.networkModel &&
+                    nodeNetworkModelResult.networkModel.networkType === networkType
+                ) {
                     await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                 } else {
                     return await dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE, { root: true });
@@ -336,7 +340,11 @@ export default {
                     nodeNetworkModelResult = await networkService
                         .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline)
                         .toPromise();
-                    if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
+                    if (
+                        nodeNetworkModelResult &&
+                        nodeNetworkModelResult.repositoryFactory &&
+                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                    ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
                     } else {
@@ -356,7 +364,11 @@ export default {
                         progressTotalNumOfNodes: numOfNodes,
                     });
                     nodeNetworkModelResult = await networkService.getNetworkModel(nodeUrl, networkType, isOffline).toPromise();
-                    if (nodeNetworkModelResult && nodeNetworkModelResult.repositoryFactory) {
+                    if (
+                        nodeNetworkModelResult &&
+                        nodeNetworkModelResult.repositoryFactory &&
+                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                    ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
                     } else {
@@ -395,6 +407,7 @@ export default {
                 const profileService: ProfileService = new ProfileService();
                 profileService.updateSelectedNode(currentProfile, currentPeer);
             }
+            const currentNetworkType = currentProfile ? currentProfile.networkType : networkType;
             commit('networkModel', networkModel);
             commit('networkConfiguration', networkModel.networkConfiguration);
             commit('transactionFees', networkModel.transactionFees);
@@ -402,7 +415,10 @@ export default {
             commit('epochAdjustment', networkModel.networkConfiguration.epochAdjustment);
             commit('generationHash', networkModel.generationHash);
             commit('repositoryFactory', repositoryFactory);
-            commit('knowNodes', nodes);
+            commit(
+                'knowNodes',
+                nodes.filter((node) => node.networkType === currentNetworkType),
+            );
             const currentNetworkListener: IListener = getters['listener'];
             if (currentNetworkListener && currentNetworkListener.isOpen()) {
                 currentNetworkListener.close();
@@ -545,7 +561,9 @@ export default {
             const nodeRepository = repositoryFactory.createNodeRepository();
 
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
-            const allNodes = [...staticPeerNodes, ...peerNodes.sort((a, b) => a.host.localeCompare(b.host))];
+            const networkType = await repositoryFactory.getNetworkType().toPromise();
+            const staticPeers = networkType === NetworkType.MAIN_NET ? [] : staticPeerNodes;
+            const allNodes = [...staticPeers, ...peerNodes.sort((a, b) => a.host.localeCompare(b.host))];
             commit('peerNodes', _.uniqBy(allNodes, 'host'));
         },
         // TODO :: re-apply that behavior if red screen issue fixed

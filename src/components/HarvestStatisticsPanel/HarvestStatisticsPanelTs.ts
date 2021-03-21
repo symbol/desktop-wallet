@@ -19,7 +19,6 @@ import { mapGetters } from 'vuex';
 import { AccountInfo } from 'symbol-sdk';
 import { HarvestedBlockStats, HarvestingStatus } from '@/store/Harvesting';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
-
 @Component({
     computed: {
         ...mapGetters({
@@ -37,11 +36,13 @@ export class HarvestStatisticsPanelTs extends Vue {
     public harvestedBlockStats: HarvestedBlockStats;
     public isFetchingHarvestedBlockStats: boolean;
     public networkCurrency: NetworkCurrencyModel;
-    private isFetchingUnlocked: any;
-    private isFetchingBlocks: any;
+    private timeIntervals: any[];
 
     created() {
         this.refresh();
+        this.timeIntervals = [];
+        this.checkUnLockedAccounts();
+        this.refreshStatusBlocks();
     }
 
     public refresh() {
@@ -60,14 +61,12 @@ export class HarvestStatisticsPanelTs extends Vue {
     public get harvestingStatusIndicator() {
         switch (this.harvestingStatus) {
             case HarvestingStatus.ACTIVE:
-                this.refreshStatusBlocks();
                 return { cls: 'status-indicator green', text: this.$t('harvesting_status_active') };
             case HarvestingStatus.INACTIVE:
                 return { cls: 'status-indicator red', text: this.$t('harvesting_status_inactive') };
             case HarvestingStatus.KEYS_LINKED:
                 return { cls: 'status-indicator amber', text: this.$t('harvesting_status_keys_linked') };
             case HarvestingStatus.INPROGRESS_ACTIVATION:
-                this.checkUnLockedAccounts();
                 return { cls: 'status-indicator amber', text: this.$t('harvesting_status_inprogress_activation') };
             case HarvestingStatus.INPROGRESS_DEACTIVATION:
                 return { cls: 'status-indicator amber', text: this.$t('harvesting_status_inprogress_deactivation') };
@@ -75,24 +74,31 @@ export class HarvestStatisticsPanelTs extends Vue {
     }
 
     private checkUnLockedAccounts(): void {
-        this.$nextTick(() => {
-            this.isFetchingUnlocked = setInterval(() => {
-                this.refreshHarvestingStatus();
-            }, 45000);
+        Vue.nextTick(() => {
+            this.timeIntervals.push(
+                setInterval(() => {
+                    if (this.harvestingStatus == HarvestingStatus.INPROGRESS_ACTIVATION) {
+                        this.refreshHarvestingStatus();
+                    }
+                }, 45000),
+            );
         });
     }
 
     private refreshStatusBlocks(): void {
-        this.$nextTick(() => {
-            this.isFetchingBlocks = setInterval(() => {
-                this.refreshHarvestingStats();
-            }, 30000);
+        Vue.nextTick(() => {
+            this.timeIntervals.push(
+                setInterval(() => {
+                    if (this.harvestingStatus == HarvestingStatus.ACTIVE) {
+                        this.refreshHarvestingStats();
+                    }
+                }, 30000),
+            );
         });
     }
 
     private destroyed() {
-        clearTimeout(this.isFetchingUnlocked);
-        clearTimeout(this.isFetchingBlocks);
+        this.timeIntervals.forEach((timeout) => clearInterval(timeout));
     }
     public get totalFeesEarned(): string {
         const relativeAmount = this.harvestedBlockStats.totalFeesEarned.compact() / Math.pow(10, this.networkCurrency.divisibility);
