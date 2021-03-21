@@ -14,8 +14,8 @@
                         </span>
                     </div>
                     <div class="article-right-section">
-                        <span class="article-title">{{ a.title }}</span>
-                        <span class="article-content">{{ a.contentSnippet }}</span>
+                        <div class="article-title">{{ a.title }}</div>
+                        <div class="article-content">{{ a.contentSnippet }}</div>
                     </div>
                 </div>
             </div>
