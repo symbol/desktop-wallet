@@ -12,11 +12,10 @@
                 >
                     <div class="input-container">
                         <ErrorTooltip :errors="errors">
-                            <input
+                            <AccountAutoCompleteInput
                                 v-model="cosignatory"
-                                :placeholder="$t('placeholder_address_or_public_key')"
-                                class="input-style input-size"
-                                type="text"
+                                placeholder="placeholder_address_or_public_key"
+                                :autocomplete-popup-max-width-in-rem="7.2"
                                 @input="stripTagsCosignatory"
                             />
                         </ErrorTooltip>

@@ -29,6 +29,8 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
 import ButtonAdd from '@/components/ButtonAdd/ButtonAdd.vue';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
+// @ts-ignore
+import AccountAutoCompleteInput from '@/components/AccountAutoCompleteInput/AccountAutoCompleteInput.vue';
 
 @Component({
     components: {
@@ -37,6 +39,7 @@ import { FilterHelpers } from '@/core/utils/FilterHelpers';
         ErrorTooltip,
         FormRow,
         ButtonAdd,
+        AccountAutoCompleteInput,
     },
     computed: {
         ...mapGetters({
