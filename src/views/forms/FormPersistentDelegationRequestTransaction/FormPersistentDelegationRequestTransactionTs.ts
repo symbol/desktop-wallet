@@ -59,7 +59,6 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 import { ValidationProvider } from 'vee-validate';
 
-import { feesConfig } from '@/config';
 import { HarvestingStatus } from '@/store/Harvesting';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
 import { Observable, of } from 'rxjs';
@@ -111,6 +110,7 @@ export enum HarvestingAction {
             currentSignerHarvestingModel: 'harvesting/currentSignerHarvestingModel',
             networkBalanceMosaics: 'mosaic/networkBalanceMosaics',
             currentAccount: 'account/currentAccount',
+            feesConfig: 'network/feesConfig',
         }),
     },
 })
@@ -152,7 +152,12 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public remotePrivateKeyTemp: string;
 
     private activating = false;
-
+    private feesConfig: {
+        median: number;
+        fast: number;
+        slow: number;
+        slowest: number;
+    };
     /**
      * Current account owned mosaics
      * @protected
@@ -211,7 +216,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * To get singleKeyTransaction
      */
     protected getSingleKeyLinkTransaction(type?: string): Observable<Transaction[]> {
-        const maxFee = UInt64.fromUint(feesConfig.fastest);
+        const maxFee = UInt64.fromUint(this.feesConfig.fast);
 
         let transaction: Transaction;
         switch (type) {
@@ -253,7 +258,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * To get all the key link transactions
      */
     protected getKeyLinkTransactions(transactionSigner = this.tempTransactionSigner): Observable<Transaction[]> {
-        const maxFee = UInt64.fromUint(feesConfig.fastest); // fixed to the Highest, txs must get confirmed
+        const maxFee = UInt64.fromUint(this.feesConfig.fast); // fixed to the Highest, txs must get confirmed
         const txs: Transaction[] = [];
 
         /*
@@ -368,7 +373,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public getPersistentDelegationRequestTransaction(
         transactionSigner: TransactionSigner = this.tempTransactionSigner,
     ): Observable<Transaction[]> {
-        const maxFee = UInt64.fromUint(feesConfig.fastest);
+        const maxFee = UInt64.fromUint(this.feesConfig.fast);
         if (this.action !== HarvestingAction.STOP) {
             const persistentDelegationReqTx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
                 Deadline.create(this.epochAdjustment, this.isMultisigMode() ? 24 : 2),
@@ -549,14 +554,14 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     private resolveFeeMultipler(transaction: Transaction): number | undefined {
-        if (transaction.maxFee.compact() == 1) {
+        if (transaction.maxFee.compact() == 10) {
             const fees =
                 this.transactionFees.averageFeeMultiplier * 1.2 < this.transactionFees.minFeeMultiplier
                     ? this.transactionFees.minFeeMultiplier
                     : this.transactionFees.averageFeeMultiplier * 1.2;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
-        if (transaction.maxFee.compact() == 2) {
+        if (transaction.maxFee.compact() == 20) {
             const fees =
                 this.transactionFees.highestFeeMultiplier < this.transactionFees.minFeeMultiplier
                     ? this.transactionFees.minFeeMultiplier

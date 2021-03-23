@@ -71,7 +71,6 @@
                         :hide-submit="hideSubmit"
                         :submit-button-text="submitButtonText"
                         :calculated-recommended-fee="calculatedRecommendedFee"
-                        :calculated-highest-fee="calculatedHighestFee"
                         :disable-submit="currentAccount.isMultisig"
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"

@@ -6,7 +6,6 @@
                 <MaxFeeSelector
                     v-model="maxFee"
                     :calculated-recommended-fee="calculatedRecommendedFee"
-                    :calculated-highest-fee="calculatedHighestFee"
                     :show-low-fee-warning="showWarnings && anyWarnings && isFeeLowerThanRecommendedFee"
                 />
                 <div v-if="!hideSubmit" class="ml-2">
@@ -58,11 +57,6 @@ export default class MaxFeeAndSubmit extends Vue {
     @Prop({ default: 0 }) calculatedRecommendedFee: number;
 
     /**
-     * Dynamically calculated highest fee
-     */
-    @Prop({ default: 0 }) calculatedHighestFee: number;
-
-    /**
      * Whether warnings are visible
      */
     @Prop({ default: true }) showWarnings: boolean;
@@ -106,7 +100,7 @@ export default class MaxFeeAndSubmit extends Vue {
      * Whether selected fee is lower than recommended fee
      */
     protected get isFeeLowerThanRecommendedFee() {
-        if (this.calculatedRecommendedFee > 0 && this.maxFee !== 1 && this.maxFee !== 2) {
+        if (this.calculatedRecommendedFee > 0 && this.maxFee !== 10 && this.maxFee !== 20) {
             return this.maxFee < this.calculatedRecommendedFee;
         }
         return false;
