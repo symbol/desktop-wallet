@@ -744,7 +744,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
         return true;
     }
-    mounted(){
-        console.log(this.formItems.nodeModel)
+    mounted() {
+        console.log(this.formItems.nodeModel);
     }
 }
