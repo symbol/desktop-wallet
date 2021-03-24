@@ -26,7 +26,7 @@ describe('transactions/ViewHashLockTransaction', () => {
         test('populate hash lock transaction fields', () => {
             const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
             const aggregateTransaction = AggregateTransaction.createBonded(
-                Deadline.create(epochAdjustment),
+                Deadline.create(epochAdjustment, 48),
                 [],
                 NetworkType.MIJIN_TEST,
                 [],

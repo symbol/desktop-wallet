@@ -329,7 +329,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public toMultiSigAggregate(txs: Transaction[], maxFee, transactionSigner: TransactionSigner) {
         const aggregate = this.calculateSuggestedMaxFee(
             AggregateTransaction.createBonded(
-                Deadline.create(this.epochAdjustment),
+                Deadline.create(this.epochAdjustment, 48),
                 txs.map((t) => t.toAggregate(this.currentSignerAccount)),
                 this.networkType,
                 [],
