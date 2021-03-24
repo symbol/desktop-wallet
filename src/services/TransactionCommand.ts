@@ -159,7 +159,7 @@ export class TransactionCommand {
 
                 const aggregate = this.calculateSuggestedMaxFee(
                     AggregateTransaction.createBonded(
-                        Deadline.create(this.epochAdjustment),
+                        Deadline.create(this.epochAdjustment, 48),
                         signedInnerTransactions,
                         this.networkType,
                         [],

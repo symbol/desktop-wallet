@@ -468,7 +468,7 @@ export class ModalTransactionConfirmationTs extends Vue {
         const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount, multisigAccount, stageTransactions, maxFee } = values;
         const aggregate = this.command.calculateSuggestedMaxFee(
             AggregateTransaction.createBonded(
-                Deadline.create(this.epochAdjustment),
+                Deadline.create(this.epochAdjustment, 48),
                 stageTransactions.map((t) => t.toAggregate(multisigAccount)),
                 this.networkType,
                 [],
