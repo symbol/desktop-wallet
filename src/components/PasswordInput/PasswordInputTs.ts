@@ -1,5 +1,6 @@
 import { Vue, Prop, Component } from 'vue-property-decorator';
-import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
+// @ts-ignore
+import PasswordInput from './PasswordInput.vue';
 
 @Component({
     components: { PasswordInput },

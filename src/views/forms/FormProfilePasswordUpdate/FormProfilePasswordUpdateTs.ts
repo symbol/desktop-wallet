@@ -33,6 +33,7 @@ import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
+// @ts-ignore
 import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
 
 @Component({

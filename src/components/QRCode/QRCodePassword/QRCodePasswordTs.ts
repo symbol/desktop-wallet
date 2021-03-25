@@ -24,6 +24,7 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 import { CosignatureSignedTransaction, SignedTransaction, TransactionMapping } from 'symbol-sdk';
+// @ts-ignore
 import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
 
 @Component({
