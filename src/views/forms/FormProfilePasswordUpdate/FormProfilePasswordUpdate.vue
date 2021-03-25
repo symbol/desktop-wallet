@@ -15,16 +15,10 @@
                             class="inputs-container items-container"
                         >
                             <ErrorTooltip :errors="errors">
-                                <input
+                                <PasswordInput
                                     ref="passwordInput"
                                     v-model="formItems.password"
-                                    onselectstart="return false"
-                                    onpaste="return false;"
-                                    onCopy="return false"
-                                    onCut="return false"
-                                    class="input-size input-style"
                                     :placeholder="$t('form_label_new_password')"
-                                    type="password"
                                     @input="onChange"
                                 />
                             </ErrorTooltip>
@@ -45,16 +39,10 @@
                             class="inputs-container items-container"
                         >
                             <ErrorTooltip :errors="errors">
-                                <input
+                                <PasswordInput
                                     ref="passwordInput"
                                     v-model="formItems.passwordConfirm"
-                                    onselectstart="return false"
-                                    onpaste="return false;"
-                                    onCopy="return false"
-                                    onCut="return false"
-                                    class="input-size input-style"
                                     :placeholder="$t('form_label_new_password_confirm')"
-                                    type="password"
                                     @input="onChange"
                                 />
                             </ErrorTooltip>

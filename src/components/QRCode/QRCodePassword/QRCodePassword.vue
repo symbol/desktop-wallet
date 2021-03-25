@@ -19,15 +19,9 @@
                                     slim
                                 >
                                     <ErrorTooltip :errors="errors">
-                                        <input
+                                        <PasswordInput
                                             v-model="formItems.password"
                                             v-focus
-                                            onselectstart="return false"
-                                            onpaste="return false;"
-                                            onCopy="return false"
-                                            onCut="return false"
-                                            type="password"
-                                            class="input-size input-style"
                                             :placeholder="$t('please_enter_your_account_password')"
                                         />
                                     </ErrorTooltip>

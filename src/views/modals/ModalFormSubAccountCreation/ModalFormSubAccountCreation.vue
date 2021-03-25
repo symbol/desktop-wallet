@@ -65,15 +65,9 @@
                                     class="inputs-container items-container"
                                 >
                                     <ErrorTooltip :errors="errors">
-                                        <input
+                                        <PasswordInput
                                             v-model="formItems.privateKey"
-                                            onselectstart="return false"
-                                            onpaste="return false;"
-                                            onCopy="return false"
-                                            onCut="return false"
-                                            type="password"
                                             name="privateKey"
-                                            class="input-size input-style"
                                             autocomplete="new-password"
                                             :disabled="isCreatingAccount"
                                         />

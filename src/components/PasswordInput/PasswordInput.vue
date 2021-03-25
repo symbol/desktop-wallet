@@ -1,14 +1,14 @@
 <template>
     <input
         :value="value"
-        @input="updateValue($event.target.value)"
         onselectstart="return false"
         onpaste="return false"
         onCopy="return false"
         onCut="return false"
-        class="input-size input-style"
+        :class="className"
         :placeholder="placeholder"
         type="password"
+        @input="updateValue($event.target.value)"
     />
 </template>
 

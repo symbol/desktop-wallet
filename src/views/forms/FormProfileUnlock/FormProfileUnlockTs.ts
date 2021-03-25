@@ -28,6 +28,7 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 import { ProfileService } from '@/services/ProfileService';
+import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
 
 @Component({
     components: {
@@ -35,6 +36,7 @@ import { ProfileService } from '@/services/ProfileService';
         FormWrapper,
         FormRow,
         ErrorTooltip,
+        PasswordInput,
     },
     computed: {
         ...mapGetters({
