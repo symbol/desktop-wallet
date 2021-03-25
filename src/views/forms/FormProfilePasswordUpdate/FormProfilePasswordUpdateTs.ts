@@ -43,7 +43,7 @@ import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
         FormWrapper,
         FormRow,
         ModalFormProfileUnlock,
-        PasswordInput
+        PasswordInput,
     },
     computed: {
         ...mapGetters({

@@ -39,6 +39,7 @@ import { AccountService } from '@/services/AccountService';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
 import { officialIcons } from '@/views/resources/Images';
 import _ from 'lodash';
+import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
 
 @Component({
     computed: {
@@ -53,6 +54,7 @@ import _ from 'lodash';
         ValidationObserver,
         LanguageSelector,
         VideoBackground,
+        PasswordInput,
     },
 })
 export default class LoginPageTs extends Vue {

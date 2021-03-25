@@ -1,10 +1,16 @@
-import { Vue, Prop } from 'vue-property-decorator';
+import { Vue, Prop, Component } from 'vue-property-decorator';
+import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
 
+@Component({
+    components: { PasswordInput },
+})
 export default class PasswordInputTs extends Vue {
     @Prop({ default: '' })
     public value: string;
-
+    @Prop({ default: '' })
     public placeholder: string;
+    @Prop({ default: 'input-size input-style' })
+    public className: string;
 
     public updateValue(value) {
         this.$emit('input', value);

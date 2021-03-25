@@ -13,17 +13,11 @@
                             slim
                         >
                             <ErrorTooltip :errors="errors">
-                                <input
+                                <PasswordInput
                                     ref="passwordInput"
                                     v-model="formItems.password"
-                                    onselectstart="return false"
-                                    onpaste="return false;"
-                                    onCopy="return false"
-                                    onCut="return false"
-                                    type="password"
-                                    class="input-size input-style"
-                                    :disabled="isLoading"
                                     :placeholder="$t('please_enter_your_account_password')"
+                                    :disabled="isLoading"
                                 />
                             </ErrorTooltip>
                         </ValidationProvider>
