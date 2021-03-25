@@ -848,6 +848,7 @@
     "scenes_to_be_used": "Use cases",
     "see_transactions_other_account": "Display multi-signature account transactions",
     "seed_account_can_not_be_more_than_10": "You have reached the limit of accounts that can be created in one profile. Please use a different profile to create a new account.",
+    "select": "Select",
     "select_a_namespace": "Select a namespace",
     "select_a_profile": "Select a profile",
     "select_accounts": "Selected Accounts",

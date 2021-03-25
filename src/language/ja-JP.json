@@ -848,6 +848,7 @@
     "scenes_to_be_used": "使用例",
     "see_transactions_other_account": "マルチシグアカウントのトランザクション表示",
     "seed_account_can_not_be_more_than_10": "1 つのプロファイルに作成できるアカウントの上限に達しました。別のプロファイルで新しいアカウントを作成してください。",
+    "select": "選択",
     "select_a_namespace": "ネームスペースの選択",
     "select_a_profile": "プロファイルを選択",
     "select_accounts": "選択済みアカウント",

@@ -7,7 +7,6 @@
                     ref="nodeUrlInput"
                     v-model="formNodeUrl"
                     name="endpoint"
-                    :data="customNodeData"
                     class="auto-complete-size auto-complete-style"
                     :placeholder="$t('form_label_network_node_url')"
                     placement="bottom"
@@ -16,7 +15,21 @@
                     :disabled="disabled"
                     @on-select="fetchNodePublicKey"
                     @on-clear="onClear"
-                ></AutoComplete>
+                >
+                    <div class="auto-complete-sub-container scroll">
+                        <div class="custom-node-input-container">
+                            <input v-model="customNode" class="input-style input-size" type="text" />
+                            <button class="select-button" @click="handleSelectCustomNode">
+                                {{ $t('select') }}
+                            </button>
+                        </div>
+                        <div v-for="(node, index) in customNodeData" :key="index">
+                            <Option :value="node" :label="node">
+                                <span>{{ node }}</span>
+                            </Option>
+                        </div>
+                    </div>
+                </AutoComplete>
                 <Icon v-if="isFetchingNodeInfo" type="ios-loading" size="18" class="demo-spin-icon-load"></Icon>
             </div>
             <div v-if="showInputPublicKey" class="inputs-container publickey-input-container">
