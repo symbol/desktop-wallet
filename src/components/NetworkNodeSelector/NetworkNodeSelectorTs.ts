@@ -46,6 +46,8 @@ export class NetworkNodeSelectorTs extends Vue {
      */
     protected formNodeUrl = '';
 
+    protected customNode = '';
+
     protected formNodePublicKey = '';
 
     public customNodeData = [];
@@ -146,6 +148,13 @@ export class NetworkNodeSelectorTs extends Vue {
         // @ts-ignore
         this.$refs.nodeUrlInput.$el.focus();
         this.$emit('input', { nodePublicKey: '' });
+    }
+
+    public handleSelectCustomNode() {
+        if (this.customNode !== '') {
+            Vue.set(this, 'formNodeUrl', this.customNode);
+            Vue.set(this, 'customNode', '');
+        }
     }
 
     protected get filteredNodes() {
