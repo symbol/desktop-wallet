@@ -170,9 +170,9 @@ export class TransactionCommand {
                     map((signedAggregateTransaction) => {
                         const hashLock = this.calculateSuggestedMaxFee(
                             LockFundsTransaction.create(
-                                Deadline.create(this.epochAdjustment),
+                                Deadline.create(this.epochAdjustment, 6),
                                 new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
-                                UInt64.fromUint(1000),
+                                UInt64.fromUint(5760),
                                 signedAggregateTransaction,
                                 this.networkType,
                                 maxFee,

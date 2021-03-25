@@ -33,9 +33,9 @@ describe('transactions/ViewHashLockTransaction', () => {
             );
             const signedTransaction = getTestAccount('cosigner1').sign(aggregateTransaction, generationHash);
             const hashLock = LockFundsTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(epochAdjustment, 6),
                 NetworkCurrencies.PUBLIC.currency.createRelative(10),
-                UInt64.fromUint(10),
+                UInt64.fromUint(5760),
                 signedTransaction,
                 NetworkType.MIJIN_TEST,
             );
