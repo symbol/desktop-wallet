@@ -39,6 +39,7 @@ import { LedgerService } from '@/services/LedgerService';
 import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import { AccountService } from '@/services/AccountService';
+import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
 
 @Component({
     components: {
@@ -49,6 +50,7 @@ import { AccountService } from '@/services/AccountService';
         ErrorTooltip,
         ValidationObserver,
         FormWrapper,
+        PasswordInput,
     },
     computed: {
         ...mapGetters({

@@ -75,16 +75,10 @@
                                 class="inputs-create-container select-container"
                             >
                                 <ErrorTooltip :errors="errors">
-                                    <input
+                                    <PasswordInput
                                         ref="passwordInput"
                                         v-model="formItems.password"
-                                        onselectstart="return false"
-                                        onpaste="return false;"
-                                        onCopy="return false"
-                                        onCut="return false"
-                                        class="input-size input-style"
                                         :placeholder="$t('please_enter_your_account_password')"
-                                        type="password"
                                     />
                                 </ErrorTooltip>
                             </ValidationProvider>
@@ -103,16 +97,10 @@
                                 class="inputs-create-container items-container"
                             >
                                 <ErrorTooltip :errors="errors">
-                                    <input
+                                    <PasswordInput
                                         v-model="formItems.passwordAgain"
-                                        onselectstart="return false"
-                                        onpaste="return false;"
-                                        onCopy="return false"
-                                        onCut="return false"
-                                        class="input-size input-style"
-                                        data-vv-name="confirmPassword"
                                         :placeholder="$t('please_enter_your_new_password_again')"
-                                        type="password"
+                                        data-vv-name="confirmPassword"
                                     />
                                 </ErrorTooltip>
                             </ValidationProvider>
