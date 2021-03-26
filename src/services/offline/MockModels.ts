@@ -29,7 +29,7 @@ export const OfflineGenerationHash = {
     [NetworkType.MAIN_NET]: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
 };
 
-export const OfflineTransactionFees = new TransactionFees(84587, 100, 1136363, 0, 0);
+export const OfflineTransactionFees = new TransactionFees(2168, 2314, 6211, 0, 35);
 
 export const OfflineNodeInfo = (networkType: NetworkType) =>
     new NodeInfo('pubkey', OfflineGenerationHash[networkType], 3000, networkType, 0, [], 'host', 'name');
@@ -78,15 +78,15 @@ export const OfflineNetworkProperties = {
         new NetworkProperties(
             'public',
             NodeIdentityEqualityStrategy.Host,
-            '78F0F6FFDE5C130777506FE2A597ADC5E98BD46041ABF775908299FE94BFD5D0',
+            'BE0B4CF546B7B4F4BBFCFF9F574FDA527C07A53D3FC76F8BB7DB746F8E8E0A9F',
             OfflineGenerationHash[NetworkType.MAIN_NET],
-            '1609459200s',
+            '1615853185s',
         ),
         new ChainProperties(
             true,
             true,
-            "0x4F8E'3FB7'5C77'C83E",
-            "0x4F8E'3FB7'5C77'C83E",
+            "0x6BED'913F'A202'23F8",
+            "0x6BED'913F'A202'23F8",
             '30s',
             '3000',
             '180',
@@ -108,7 +108,7 @@ export const OfflineNetworkProperties = {
             '26280',
             '25',
             '5',
-            'NAMV77WU2EUFC6FBDFBQCDQARAGUTCRFDN7YLVA',
+            'NBUTOBVT5JQDCV6UEPCPFHWWOAOPOCLA5AY5FLI',
             "6'000",
         ),
         new PluginProperties(),
