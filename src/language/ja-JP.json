@@ -297,6 +297,7 @@
     "form_label_multisig_operation_type": "操作タイプ",
     "form_label_namespace_name": "スペース名",
     "form_label_network_node_url": "ハーベスティングノードURLを入力 (例: http://localhost:3000)",
+    "form_label_network_custom_node": "ハーベスティングノードURLを入力",
     "form_label_new_absolute_supply": "新しい絶対供給量",
     "form_label_new_account_name": "新しいアカウント名",
     "form_label_new_account_type": "アカウントタイプの選択",

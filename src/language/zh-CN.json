@@ -296,6 +296,7 @@
     "form_label_multisig_operation_type": "操作类型",
     "form_label_namespace_name": "空间名",
     "form_label_network_node_url": "输入收益节点URL(例: http://localhost:3000)",
+    "form_label_network_custom_node": "输入收益节点URL",
     "form_label_new_absolute_supply": "新增绝对供应量",
     "form_label_new_account_name": "新钱包名称",
     "form_label_new_account_type": "选择钱包类型",

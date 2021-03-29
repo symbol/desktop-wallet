@@ -52,6 +52,8 @@ export class NetworkNodeSelectorTs extends Vue {
 
     public customNodeData = [];
 
+    public filteredData = [];
+
     public showInputPublicKey = false;
 
     public currentProfile: ProfileModel;
@@ -114,6 +116,7 @@ export class NetworkNodeSelectorTs extends Vue {
     public async created() {
         await this.$store.dispatch('network/LOAD_PEER_NODES');
         this.customNodeData = this.filteredNodes.map((n) => n.host);
+        this.filteredData = [...this.customNodeData];
         const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect.replace(/http:|:3000|\//g, '');
         if (this.customNodeData.includes(currentNodeUrl) && !this.value.url) {
             this.fetchNodePublicKey(currentNodeUrl);
@@ -132,6 +135,13 @@ export class NetworkNodeSelectorTs extends Vue {
             }
         } else {
             this.formNodeUrl = '';
+        }
+    }
+
+    @Watch('formNodeUrl', { immediate: true })
+    protected nodeWatcher(newInput: string) {
+        if (newInput) {
+            this.filteredData = this.customNodeData.filter((n) => n.toLowerCase().startsWith(newInput.toLowerCase()));
         }
     }
 
@@ -154,6 +164,9 @@ export class NetworkNodeSelectorTs extends Vue {
         if (this.customNode !== '') {
             Vue.set(this, 'formNodeUrl', this.customNode);
             Vue.set(this, 'customNode', '');
+            if (this.customNodeData.includes(this.customNode) && !this.value.url) {
+                this.fetchNodePublicKey(this.customNode);
+            }
         }
     }
 
