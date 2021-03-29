@@ -18,12 +18,18 @@
                 >
                     <div class="auto-complete-sub-container scroll">
                         <div class="custom-node-input-container">
-                            <input v-model="customNode" class="input-style input-size" type="text" />
+                            <input
+                                v-model="customNode"
+                                :placeholder="$t('form_label_network_custom_node')"
+                                class="input-style input-size"
+                                :disabled="disabled"
+                                type="text"
+                            />
                             <button class="select-button" @click="handleSelectCustomNode">
                                 {{ $t('select') }}
                             </button>
                         </div>
-                        <div v-for="(node, index) in customNodeData" :key="index">
+                        <div v-for="(node, index) in filteredData" :key="index">
                             <Option :value="node" :label="node">
                                 <span>{{ node }}</span>
                             </Option>
