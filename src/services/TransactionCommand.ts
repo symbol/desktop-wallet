@@ -201,18 +201,32 @@ export class TransactionCommand {
     }
 
     private resolveFeeMultipler(transaction: Transaction): number | undefined {
-        if (transaction.maxFee.compact() == 1) {
+        if (transaction.maxFee.compact() === 10) {
             const fees =
-                this.transactionFees.medianFeeMultiplier < this.transactionFees.minFeeMultiplier
+                this.transactionFees.averageFeeMultiplier < this.transactionFees.minFeeMultiplier
                     ? this.transactionFees.minFeeMultiplier
-                    : this.transactionFees.medianFeeMultiplier;
+                    : this.transactionFees.averageFeeMultiplier;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
-        if (transaction.maxFee.compact() == 2) {
+        if (transaction.maxFee.compact() === 20) {
             const fees =
-                this.transactionFees.highestFeeMultiplier < this.transactionFees.minFeeMultiplier
+                this.transactionFees.averageFeeMultiplier * 2 < this.transactionFees.minFeeMultiplier
                     ? this.transactionFees.minFeeMultiplier
-                    : this.transactionFees.highestFeeMultiplier;
+                    : this.transactionFees.averageFeeMultiplier * 2;
+            return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
+        }
+        if (transaction.maxFee.compact() === 1) {
+            const fees =
+                this.transactionFees.averageFeeMultiplier * 0.1 < this.transactionFees.minFeeMultiplier
+                    ? this.transactionFees.minFeeMultiplier
+                    : this.transactionFees.averageFeeMultiplier * 0.1;
+            return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
+        }
+        if (transaction.maxFee.compact() === 5) {
+            const fees =
+                this.transactionFees.averageFeeMultiplier * 0.5 < this.transactionFees.minFeeMultiplier
+                    ? this.transactionFees.minFeeMultiplier
+                    : this.transactionFees.averageFeeMultiplier * 0.5;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         return undefined;

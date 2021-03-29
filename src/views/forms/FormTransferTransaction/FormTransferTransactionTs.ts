@@ -75,7 +75,7 @@ import { MosaicService } from '@/services/MosaicService';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { TransactionCommand } from '@/services/TransactionCommand';
-import { feesConfig, appConfig } from '@/config';
+import { appConfig } from '@/config';
 import { NotificationType } from '@/core/utils/NotificationType';
 const { DECIMAL_SEPARATOR } = appConfig.constants;
 
@@ -111,6 +111,7 @@ export interface MosaicAttachment {
             currentHeight: 'network/currentHeight',
             balanceMosaics: 'mosaic/balanceMosaics',
             currentRecipient: 'account/currentRecipient',
+            feesConfig: 'network/feesConfig',
         }),
     },
 })
@@ -230,11 +231,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     private calculatedRecommendedFee: number = 0;
 
     /**
-     * Calculated highest fee based on the txs size
-     */
-    private calculatedHighestFee: number = 0;
-
-    /**
      * Current recipient account info
      */
     private currentRecipient: PublicAccount;
@@ -246,7 +242,12 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     private importTransaction = false;
 
     private plainMessage: string;
-
+    private feesConfig: {
+        median: number;
+        fast: number;
+        slow: number;
+        slowest: number;
+    };
     /**
      * Reset the form with properties
      * @return {void}
@@ -699,13 +700,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * Calculates the dynamic fees based on the txs size
      * */
     private calculateDynamicFees() {
-        this.createTransactionCommandForFee(feesConfig.median)
+        this.createTransactionCommandForFee(this.feesConfig.median)
             .getTotalMaxFee()
             .subscribe((val) => (this.calculatedRecommendedFee = val.compact()));
-
-        this.createTransactionCommandForFee(feesConfig.highest)
-            .getTotalMaxFee()
-            .subscribe((val) => (this.calculatedHighestFee = val.compact()));
     }
 
     /**
@@ -741,7 +738,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     private resetDynamicFees() {
         this.calculatedRecommendedFee = 0;
-        this.calculatedHighestFee = 0;
     }
 
     /**

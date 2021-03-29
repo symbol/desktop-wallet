@@ -15,8 +15,6 @@
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-// configuration
-import { feesConfig } from '@/config';
 // @ts-ignore
 import FormLabel from '@/components/FormLabel/FormLabel.vue';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
@@ -32,6 +30,7 @@ import { TransactionFees } from 'symbol-sdk';
             networkMosaicName: 'mosaic/networkMosaicName',
             networkCurrency: 'mosaic/networkCurrency',
             transactionFees: 'network/transactionFees',
+            feesConfig: 'network/feesConfig',
         }),
     },
     props: {
@@ -57,6 +56,12 @@ export class MaxFeeSelectorTs extends Vue {
      * @var {string}
      */
     private networkMosaicName: string;
+    private feesConfig: {
+        slow: number;
+        slowest: number;
+        median: number;
+        fast: number;
+    };
 
     /**
      * Known mosaics info
@@ -77,10 +82,6 @@ export class MaxFeeSelectorTs extends Vue {
     @Prop({ default: 0 }) calculatedRecommendedFee: number;
 
     /**
-     * Dynamically calculated highest fee
-     */
-    @Prop({ default: 0 }) calculatedHighestFee: number;
-
     /**
      * Show low fee warning
      */
@@ -99,7 +100,7 @@ export class MaxFeeSelectorTs extends Vue {
     multiplier: number;
 
     public created() {
-        this.fees = Object.entries(feesConfig).map((entry) => ({
+        this.fees = Object.entries(this.feesConfig).map((entry) => ({
             label: this.getLabel([entry[0], entry[1] as number]),
             maxFee: entry[1] as number,
             calculatedFee: entry[1] as number,
@@ -112,17 +113,37 @@ export class MaxFeeSelectorTs extends Vue {
      */
     private getLabel([key, value]: [string, number]) {
         //SPECIAL VALUES!!!
-        if (value === feesConfig.median) {
+        if (value === this.feesConfig.median) {
             return this.formatLabel(
                 'fee_speed_' + key,
                 this.calculatedRecommendedFee,
                 this.networkMosaicName,
                 this.calculatedRecommendedFee > 0,
             );
-        } else if (value === feesConfig.highest) {
-            return this.formatLabel('fee_speed_' + key, this.calculatedHighestFee, this.networkMosaicName, this.calculatedHighestFee > 0);
+        } else if (value === this.feesConfig.fast) {
+            return this.formatLabel(
+                'fee_speed_' + key,
+                this.calculatedRecommendedFee * 2,
+                this.networkMosaicName,
+                this.calculatedRecommendedFee * 2 > 0,
+            );
+        } else if (value === this.feesConfig.slow) {
+            return this.formatLabel(
+                'fee_speed_' + key,
+                this.calculatedRecommendedFee * 0.5,
+                this.networkMosaicName,
+                this.calculatedRecommendedFee * 0.5 > 0,
+            );
+        } else if (value === this.feesConfig.slowest) {
+            return this.formatLabel(
+                'fee_speed_' + key,
+                this.calculatedRecommendedFee * 0.1,
+                this.networkMosaicName,
+                this.calculatedRecommendedFee * 0.1 > 0,
+            );
+        } else {
+            return this.formatLabel('fee_speed_' + key, value, this.networkMosaicName);
         }
-        return this.formatLabel('fee_speed_' + key, value, this.networkMosaicName);
     }
 
     /**
@@ -145,7 +166,7 @@ export class MaxFeeSelectorTs extends Vue {
      * @type {number}
      */
     @Prop({
-        default: feesConfig.median,
+        default: 10,
     })
     value: number;
 
@@ -187,17 +208,31 @@ export class MaxFeeSelectorTs extends Vue {
     public get feesCalculated(): { label: string; maxFee: number }[] {
         return this.fees
             .map((i) => {
-                if (i.maxFee === 1) {
+                if (i.maxFee === this.feesConfig.median) {
                     return {
-                        label: this.getLabel(['median', feesConfig.median]),
+                        // @ts-ignore
+                        label: this.getLabel(['median', this.feesConfig.median]),
                         maxFee: i.maxFee,
                         calculatedFee: this.calculatedRecommendedFee,
                     };
-                } else if (i.maxFee === 2) {
+                } else if (i.maxFee === this.feesConfig.fast) {
                     return {
-                        label: this.getLabel(['highest', feesConfig.highest]),
+                        // @ts-ignore
+                        label: this.getLabel(['fast', this.feesConfig.fast]),
                         maxFee: i.maxFee,
-                        calculatedFee: this.calculatedHighestFee,
+                        calculatedFee: this.calculatedRecommendedFee * 2,
+                    };
+                } else if (i.maxFee === this.feesConfig.slow) {
+                    return {
+                        label: this.getLabel(['slow', this.feesConfig.slow]),
+                        maxFee: i.maxFee,
+                        calculatedFee: this.calculatedRecommendedFee * 0.5,
+                    };
+                } else if (i.maxFee === this.feesConfig.slowest) {
+                    return {
+                        label: this.getLabel(['slowest', this.feesConfig.slowest]),
+                        maxFee: i.maxFee,
+                        calculatedFee: this.calculatedRecommendedFee * 0.1,
                     };
                 } else {
                     return i;

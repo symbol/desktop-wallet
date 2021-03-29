@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { networkConfig } from '@/config';
+import { feesConfig, networkConfig } from '@/config';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { NetworkModel } from '@/core/database/entities/NetworkModel';
 import { NodeModel } from '@/core/database/entities/NodeModel';
@@ -128,6 +128,7 @@ interface NetworkState {
     harvestingPeerNodes: NodeInfo[];
     connectingToNodeInfo: ConnectingToNodeInfo;
     isOfflineMode: boolean;
+    feesConfig: any;
 }
 
 const initialNetworkState: NetworkState = {
@@ -152,6 +153,7 @@ const initialNetworkState: NetworkState = {
     harvestingPeerNodes: [],
     connectingToNodeInfo: undefined,
     isOfflineMode: false,
+    feesConfig: undefined,
 };
 
 export default {
@@ -179,6 +181,7 @@ export default {
         harvestingPeerNodes: (state: NetworkState) => state.harvestingPeerNodes,
         connectingToNodeInfo: (state: NetworkState) => state.connectingToNodeInfo,
         isOfflineMode: (state: NetworkState) => state.isOfflineMode,
+        feesConfig: (state: NetworkState) => state.feesConfig,
     },
     mutations: {
         setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -253,6 +256,9 @@ export default {
             Vue.set(state, 'harvestingPeerNodes', harvestingPeerNodes),
         connectingToNodeInfo: (state: NetworkState, connectingToNodeInfo: ConnectingToNodeInfo) =>
             Vue.set(state, 'connectingToNodeInfo', connectingToNodeInfo),
+        setFeesConfig: (state: NetworkState, feesConfig: {}) => {
+            Vue.set(state, 'feesConfig', feesConfig);
+        },
     },
     actions: {
         async initialize({ commit, getters }) {
@@ -286,6 +292,7 @@ export default {
             commit('currentPeerInfo', undefined);
             commit('setConnected', false);
             commit('connectingToNodeInfo', undefined);
+            commit('setFeesConfig', undefined);
         },
 
         async CONNECT(
@@ -644,7 +651,10 @@ export default {
         LOAD_TRANSACTION_FEES({ commit, rootGetters }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const networkRepository = repositoryFactory.createNetworkRepository();
-            networkRepository.getTransactionFees().subscribe((fees: TransactionFees) => commit('transactionFees', fees));
+            networkRepository.getTransactionFees().subscribe((fees: TransactionFees) => {
+                commit('transactionFees', fees);
+            });
+            commit('setFeesConfig', feesConfig);
         },
     },
 };
