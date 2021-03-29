@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.1][1.0.1] - 29-Mar-2021
+
+### Milestone: [catapult-server@v1.0.0.0](https://github.com/nemtech/catapult-server/releases/tag/v1.0.0.0)
+
+#### Changed
+
+- Changed transaction fee structure to align with network transaction fees. Reduced slow and average fee multipliers.
+- Increased HashLock duration and AggregatedBonded tranaction deadline to 48 hours.
+
 ## [1.0.0][1.0.0] - 15-Mar-2021
 
 ### Milestone: [catapult-server@v1.0.0.0](https://github.com/nemtech/catapult-server/releases/tag/v1.0.0.0)
