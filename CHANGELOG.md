@@ -10,7 +10,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 #### Changed
 
 - Changed transaction fee structure to align with network transaction fees. Reduced slow and average fee multipliers.
-- Increased HashLock duration and AggregatedBonded tranaction deadline to 48 hours.
+- Increased HashLock duration and AggregatedBonded transaction deadline to 48 hours.
 
 ## [1.0.0][1.0.0] - 15-Mar-2021
 
