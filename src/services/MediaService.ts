@@ -1,5 +1,7 @@
-const soundDing = require('@/views/resources/audio/ding.ogg'); // eslint-disable-line
-const soundDing2 = require('@/views/resources/audio/ding2.ogg'); // eslint-disable-line
+//@ts-ignore
+import soundDing from '@/views/resources/audio/ding.ogg';
+//@ts-ignore
+import soundDing2 from '@/views/resources/audio/ding2.ogg';
 
 export class MediaService {
     public static playUnconfirmedTransactionSound(): void {
