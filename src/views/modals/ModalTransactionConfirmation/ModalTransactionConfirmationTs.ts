@@ -555,6 +555,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             return {
                 ledgerService,
                 currentPath,
+                isOptinLedgerWallet,
                 networkType,
                 accountService,
                 signerPublicKey,
