@@ -77,6 +77,10 @@ import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 import { officialIcons } from '@/views/resources/Images';
+// @ts-ignore
+import NavigationLinks from "@/components/NavigationLinks/NavigationLinks.vue";
+// @ts-ignore
+import ModalConfirm from "@/views/modals/ModalConfirm/ModalConfirm.vue";
 
 export enum HarvestingAction {
     START = 1,
@@ -101,6 +105,8 @@ export enum HarvestingAction {
         AccountPublicKeyDisplay,
         ProtectedPrivateKeyDisplay,
         ModalFormProfileUnlock,
+        NavigationLinks,
+        ModalConfirm,
     },
     computed: {
         ...mapGetters({
@@ -150,6 +156,25 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     private tempAccount: Account;
     public vrfPrivateKeyTemp: string;
     public remotePrivateKeyTemp: string;
+
+    /**
+     * Panel tab management getters/setters
+     */
+    public showConfirmModal = false;
+    public activeIndex = 0;
+    public get activePanel() {
+        return this.activeIndex;
+    }
+    public set activePanel(panel) {
+        if (panel === 1) this.showConfirmModal = true;
+        else if (panel === -1) this.activeIndex = 1;
+        else this.activeIndex = panel;
+    }
+
+    public get isActivatedFromAnotherDevice(): boolean {
+        return (!this.currentSignerHarvestingModel.encRemotePrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.linked) ||
+            (!this.currentSignerHarvestingModel.encVrfPrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.vrf)
+    }
 
     private activating = false;
     private feesConfig: {

@@ -5,9 +5,6 @@
                 <HarvestStatisticsPanel />
             </div>
             <div class="dashboard-bottom-left-container">
-                <div class="header-container">
-                    <NavigationTabs direction="horizontal" :parent-route-name="'harvesting'" />
-                </div>
                 <div class="harvesting-container">
                     <router-view />
                 </div>

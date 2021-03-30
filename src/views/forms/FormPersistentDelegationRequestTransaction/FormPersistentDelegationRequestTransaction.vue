@@ -1,169 +1,192 @@
 <template>
     <div class="form-persistent-delegation-request">
+        <NavigationLinks
+            :direction="'horizontal'"
+            :items="['delegated_harvesting', 'key_links']"
+            :current-item-index="activePanel"
+            translation-prefix="tab_harvesting_"
+            @selected="(i) => (activePanel = i)"
+        />
         <FormWrapper>
             <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
                 <form onsubmit="event.preventDefault()">
-                    <div class="info-text">
-                        <span>
-                            {{ $t('delegated_harvesting_info') }}
-                        </span>
-                    </div>
+                    <div v-if="activePanel === 0">
+                        <div class="info-text">
+                            <span>
+                                {{ $t('delegated_harvesting_info') }}
+                            </span>
+                        </div>
+                        <div data-if="isActivatedFromAnotherDevice" class="info-text" style="margin-top: 0">
+                            <Alert type="error" class="alert-error">
+                                {{ $t('harvesting_activated_from_another_device') }}
+                            </Alert>
+                        </div>
 
-                    <!-- Transaction signer selector -->
-                    <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
+                        <!-- Transaction signer selector -->
+                        <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
 
-                    <NetworkNodeSelector
-                        v-model="formItems.nodeModel"
-                        :disabled="harvestingStatus !== 'INACTIVE' && isPublicAndPrivateKeysLinked"
-                    />
-                    <div class="linked-keys-info">
-                        <span>
-                            {{ $t('linked_keys_info') }}
-                        </span>
-                    </div>
-                    <div v-if="isVrfKeyLinked && isAccountKeyLinked && !isNodeKeyLinked" class="info-text warning-node-swap">
-                        <Icon type="ios-warning-outline" />
-
-                        <span>
-                            {{ $t('remote_keys_linked') }}
-                        </span>
-                    </div>
-                    <div v-if="!isPublicAndPrivateKeysLinked" class="info-text keys-warning">
-                        <Icon type="ios-warning-outline" />
-
-                        <span>
-                            {{ $t('harvesting_status_not_detected') }}
-                        </span>
-                    </div>
-                    <!-- <FormRow class="form-warning-row" v-if="harvestingStatus !== 'INACTIVE'">
-                        <template v-slot:inputs>
-                            <div  type="warning" class="warning-node-swap">
-                                <Icon type="ios-warning-outline" />
-                                {{ $t('harvesting_warning_node_swap') }}
-                            </div>
-                        </template>
-                    </FormRow> -->
-                    <div class="key-item separtate-spacing">
-                        <FormRow>
-                            <template v-slot:label> {{ $t('linked_node_public_key') }}: </template>
-
-                            <template v-slot:inputs>
-                                <AccountPublicKeyDisplay
-                                    v-if="isNodeKeyLinked"
-                                    :public-key="currentSignerAccountInfo.supplementalPublicKeys.node.publicKey"
-                                />
-                                <Tooltip
-                                    v-else
-                                    class="linked-label"
-                                    word-wrap
-                                    placement="bottom"
-                                    :content="$t('form_label_use_link_node_public_key_icon')"
-                                >
-                                    <span> {{ $t('not_linked') }}:</span>
-                                    <Icon type="ios-information-circle-outline" />
-                                </Tooltip>
-                            </template>
-                        </FormRow>
-                        <img
-                            v-if="!isNodeKeyLinked"
-                            :src="linkIcon"
-                            class="button-icon"
-                            @click="handleSubmit(onSingleKeyOperation('node'))"
+                        <NetworkNodeSelector
+                            v-model="formItems.nodeModel"
+                            :disabled="harvestingStatus !== 'INACTIVE' && isPublicAndPrivateKeysLinked"
                         />
-                        <Tooltip v-else word-wrap placement="bottom" :content="$t('label_unlink_node_account_public_key')">
-                            <Icon type="md-trash" class="button-icon" size="20" @click="handleSubmit(onSingleKeyOperation('node'))" />
-                        </Tooltip>
                     </div>
-                    <!-- link/unlink button for node public key -->
+                    <div v-if="activePanel === 1">
+                        <div class="info-text">
+                            <span>
+                                {{ $t('delegated_harvesting_keys_info') }}
+                            </span>
+                        </div>
+                        <div v-if="isVrfKeyLinked && isAccountKeyLinked && !isNodeKeyLinked" class="info-text warning-node-swap">
+                            <Icon type="ios-warning-outline" />
 
-                    <div class="key-item">
-                        <FormRow>
-                            <template v-slot:label> {{ $t('linked_public_key') }}: </template>
-                            <template v-slot:inputs>
-                                <AccountPublicKeyDisplay
-                                    v-if="isAccountKeyLinked"
-                                    :public-key="currentSignerAccountInfo.supplementalPublicKeys.linked.publicKey"
-                                />
-                                <Tooltip
-                                    v-else
-                                    word-wrap
-                                    placement="bottom"
-                                    class="linked-label"
-                                    :content="$t('form_label_use_link_remote_public_key_icon')"
-                                >
-                                    <span> {{ $t('not_linked') }}:</span>
-                                    <Icon type="ios-information-circle-outline" />
-                                </Tooltip>
-                            </template>
-                        </FormRow>
-                        <img
-                            v-if="!isAccountKeyLinked"
-                            :src="linkIcon"
-                            class="button-icon"
-                            @click="handleSubmit(onSingleKeyOperation('account'))"
-                        />
-                        <Tooltip v-else word-wrap placement="bottom" :content="$t('label_unlink_remote_account_public_key')">
-                            <Icon type="md-trash" class="button-icon" size="20" @click="handleSubmit(onSingleKeyOperation('account'))" />
-                        </Tooltip>
-                    </div>
-                    <!-- link/unlink button for remote account public key -->
+                            <span>
+                                {{ $t('remote_keys_linked') }}
+                            </span>
+                        </div>
+                        <div v-if="!isPublicAndPrivateKeysLinked" class="info-text keys-warning">
+                            <Icon type="ios-warning-outline" />
 
-                    <div class="key-item separtate-spacing">
-                        <FormRow>
-                            <template v-slot:label> {{ $t('linked_remote_private_key') }}: </template>
+                            <span>
+                                {{ $t('harvesting_status_not_detected') }}
+                            </span>
+                        </div>
+                        <!-- <FormRow class="form-warning-row" v-if="harvestingStatus !== 'INACTIVE'">
                             <template v-slot:inputs>
-                                <div class="detail-row">
-                                    <div class="detail-row">
-                                        <ProtectedPrivateKeyDisplay :enc-private-key="currentSignerHarvestingModel.encRemotePrivateKey" />
-                                    </div>
+                                <div  type="warning" class="warning-node-swap">
+                                    <Icon type="ios-warning-outline" />
+                                    {{ $t('harvesting_warning_node_swap') }}
                                 </div>
                             </template>
-                        </FormRow>
-                    </div>
+                        </FormRow> -->
+                        <div class="key-item separtate-spacing">
+                            <FormRow>
+                                <template v-slot:label> {{ $t('linked_node_public_key') }}: </template>
 
-                    <div class="key-item">
-                        <FormRow>
-                            <template v-slot:label> {{ $t('linked_vrf_public_key') }}: </template>
-                            <template v-slot:inputs>
-                                <AccountPublicKeyDisplay
-                                    v-if="isVrfKeyLinked"
-                                    :public-key="currentSignerAccountInfo.supplementalPublicKeys.vrf.publicKey"
+                                <template v-slot:inputs>
+                                    <AccountPublicKeyDisplay
+                                        v-if="isNodeKeyLinked"
+                                        :public-key="currentSignerAccountInfo.supplementalPublicKeys.node.publicKey"
+                                    />
+                                    <Tooltip
+                                        v-else
+                                        class="linked-label"
+                                        word-wrap
+                                        placement="bottom"
+                                        :content="$t('form_label_use_link_node_public_key_icon')"
+                                    >
+                                        <span> {{ $t('not_linked') }}:</span>
+                                        <Icon type="ios-information-circle-outline" />
+                                    </Tooltip>
+                                </template>
+                            </FormRow>
+                            <img
+                                v-if="!isNodeKeyLinked"
+                                :src="linkIcon"
+                                class="button-icon"
+                                @click="handleSubmit(onSingleKeyOperation('node'))"
+                            />
+                            <Tooltip v-else word-wrap placement="bottom" :content="$t('label_unlink_node_account_public_key')">
+                                <Icon type="md-trash" class="button-icon" size="20" @click="handleSubmit(onSingleKeyOperation('node'))" />
+                            </Tooltip>
+                        </div>
+                        <!-- link/unlink button for node public key -->
+
+                        <div class="key-item">
+                            <FormRow>
+                                <template v-slot:label> {{ $t('linked_public_key') }}: </template>
+                                <template v-slot:inputs>
+                                    <AccountPublicKeyDisplay
+                                        v-if="isAccountKeyLinked"
+                                        :public-key="currentSignerAccountInfo.supplementalPublicKeys.linked.publicKey"
+                                    />
+                                    <Tooltip
+                                        v-else
+                                        word-wrap
+                                        placement="bottom"
+                                        class="linked-label"
+                                        :content="$t('form_label_use_link_remote_public_key_icon')"
+                                    >
+                                        <span> {{ $t('not_linked') }}:</span>
+                                        <Icon type="ios-information-circle-outline" />
+                                    </Tooltip>
+                                </template>
+                            </FormRow>
+                            <img
+                                v-if="!isAccountKeyLinked"
+                                :src="linkIcon"
+                                class="button-icon"
+                                @click="handleSubmit(onSingleKeyOperation('account'))"
+                            />
+                            <Tooltip v-else word-wrap placement="bottom" :content="$t('label_unlink_remote_account_public_key')">
+                                <Icon
+                                    type="md-trash"
+                                    class="button-icon"
+                                    size="20"
+                                    @click="handleSubmit(onSingleKeyOperation('account'))"
                                 />
-                                <Tooltip
-                                    v-else
-                                    class="linked-label"
-                                    word-wrap
-                                    placement="bottom"
-                                    :content="$t('form_label_use_link_vrf_public_key_icon')"
-                                >
-                                    <span> {{ $t('not_linked') }}:</span>
-                                    <Icon type="ios-information-circle-outline" />
-                                </Tooltip>
-                            </template>
-                        </FormRow>
-                        <img
-                            v-if="!isVrfKeyLinked"
-                            :src="linkIcon"
-                            class="button-icon"
-                            @click="handleSubmit(onSingleKeyOperation('vrf'))"
-                        />
-                        <Tooltip v-else word-wrap placement="bottom" :content="$t('label_unlink_vrf_account_public_key')">
-                            <Icon type="md-trash" class="button-icon" size="20" @click="handleSubmit(onSingleKeyOperation('vrf'))" />
-                        </Tooltip>
-                    </div>
+                            </Tooltip>
+                        </div>
+                        <!-- link/unlink button for remote account public key -->
 
-                    <!-- link/unlink button for vrf public key -->
-                    <div class="key-item">
-                        <FormRow>
-                            <template v-slot:label> {{ $t('linked_vrf_private_key') }}: </template>
-                            <template v-slot:inputs>
-                                <div class="detail-row">
+                        <div class="key-item separtate-spacing">
+                            <FormRow>
+                                <template v-slot:label> {{ $t('linked_remote_private_key') }}: </template>
+                                <template v-slot:inputs>
                                     <div class="detail-row">
-                                        <ProtectedPrivateKeyDisplay :enc-private-key="currentSignerHarvestingModel.encVrfPrivateKey" />
+                                        <div class="detail-row">
+                                            <ProtectedPrivateKeyDisplay
+                                                :enc-private-key="currentSignerHarvestingModel.encRemotePrivateKey"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                            </template>
-                        </FormRow>
+                                </template>
+                            </FormRow>
+                        </div>
+
+                        <div class="key-item">
+                            <FormRow>
+                                <template v-slot:label> {{ $t('linked_vrf_public_key') }}: </template>
+                                <template v-slot:inputs>
+                                    <AccountPublicKeyDisplay
+                                        v-if="isVrfKeyLinked"
+                                        :public-key="currentSignerAccountInfo.supplementalPublicKeys.vrf.publicKey"
+                                    />
+                                    <Tooltip
+                                        v-else
+                                        class="linked-label"
+                                        word-wrap
+                                        placement="bottom"
+                                        :content="$t('form_label_use_link_vrf_public_key_icon')"
+                                    >
+                                        <span> {{ $t('not_linked') }}:</span>
+                                        <Icon type="ios-information-circle-outline" />
+                                    </Tooltip>
+                                </template>
+                            </FormRow>
+                            <img
+                                v-if="!isVrfKeyLinked"
+                                :src="linkIcon"
+                                class="button-icon"
+                                @click="handleSubmit(onSingleKeyOperation('vrf'))"
+                            />
+                            <Tooltip v-else word-wrap placement="bottom" :content="$t('label_unlink_vrf_account_public_key')">
+                                <Icon type="md-trash" class="button-icon" size="20" @click="handleSubmit(onSingleKeyOperation('vrf'))" />
+                            </Tooltip>
+                        </div>
+
+                        <!-- link/unlink button for vrf public key -->
+                        <div class="key-item">
+                            <FormRow>
+                                <template v-slot:label> {{ $t('linked_vrf_private_key') }}: </template>
+                                <template v-slot:inputs>
+                                    <div class="detail-row">
+                                        <div class="detail-row">
+                                            <ProtectedPrivateKeyDisplay :enc-private-key="currentSignerHarvestingModel.encVrfPrivateKey" />
+                                        </div>
+                                    </div>
+                                </template>
+                            </FormRow>
+                        </div>
                     </div>
 
                     <FormRow class-name="buttons-row button-margin">
@@ -234,6 +257,12 @@
             @error="onConfirmationError"
             @close="onConfirmationCancel"
             @unlocked="decryptKeys"
+        />
+        <ModalConfirm
+            v-model="showConfirmModal"
+            :title="$t('open_harvesting_keys_warning_title')"
+            :message="$t('open_harvesting_keys_warning_text')"
+            @confirmed="activePanel = -1"
         />
     </div>
 </template>
