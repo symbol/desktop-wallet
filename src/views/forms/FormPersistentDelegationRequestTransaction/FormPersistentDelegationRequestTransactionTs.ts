@@ -458,6 +458,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                                     ? this.saveRemoteKey(accountAddress, Crypto.encrypt(this.remotePrivateKeyTemp, this.password))
                                     : this.saveRemoteKey(accountAddress, null);
                             }
+                            if (res.transaction?.type === TransactionType.NODE_KEY_LINK) {
+                                this.$store.dispatch('harvesting/SET_POLLING_TRIALS', 1);
+                                this.updateHarvestingRequestStatus(accountAddress, false);
+                            }
                             this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
                                 accountAddress,
                                 isPersistentDelReqSent: false,
@@ -499,6 +503,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                                 val.linkAction == LinkAction.Link && this.vrfPrivateKeyTemp
                                     ? this.saveVrfKey(accountAddress, Crypto.encrypt(this.vrfPrivateKeyTemp, this.password))
                                     : this.saveVrfKey(accountAddress, null);
+                            }
+                            if (val.type === TransactionType.NODE_KEY_LINK) {
+                                this.$store.dispatch('harvesting/SET_POLLING_TRIALS', 1);
+                                this.updateHarvestingRequestStatus(accountAddress, false);
                             }
                         });
 
@@ -576,6 +584,9 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
     public saveRemoteKey(accountAddress: string, encRemotePrivateKey: string) {
         this.$store.dispatch('harvesting/UPDATE_REMOTE_ACCOUNT_PRIVATE_KEY', { accountAddress, encRemotePrivateKey });
+    }
+    public updateHarvestingRequestStatus(accountAddress: string, delegatedHarvestingRequestFailed: boolean) {
+        this.$store.dispatch('harvesting/UPDATE_HARVESTING_REQUEST_STATUS', { accountAddress, delegatedHarvestingRequestFailed });
     }
 
     private createAccountKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): AccountKeyLinkTransaction {

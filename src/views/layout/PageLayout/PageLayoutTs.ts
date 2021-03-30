@@ -51,6 +51,8 @@ import { officialIcons } from '@/views/resources/Images';
 import { ConnectingToNodeInfo } from '@/store/Network';
 
 import i18n from '@/language';
+import { HarvestingStatus } from '@/store/Harvesting';
+import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
 
 @Component({
     components: {
@@ -79,6 +81,9 @@ import i18n from '@/language';
             explorerBaseUrl: 'app/explorerUrl',
             faucetBaseUrl: 'app/faucetUrl',
             connectingToNodeInfo: 'network/connectingToNodeInfo',
+            pollingTrials: 'harvesting/pollingTrials',
+            harvestingStatus: 'harvesting/status',
+            currentSignerHarvestingModel: 'harvesting/currentSignerHarvestingModel',
         }),
     },
 })
@@ -117,7 +122,9 @@ export class PageLayoutTs extends Vue {
      * @var {string}
      */
     public generationHash: string;
-
+    private harvestingStatus: string;
+    private pollingTrials: number;
+    private currentSignerHarvestingModel: HarvestingModel;
     /**
      * Whether cosignatory mode is active
      * @see {Store.Account}
@@ -192,6 +199,16 @@ export class PageLayoutTs extends Vue {
             return {
                 show: true,
                 message: 'account_network_does_not_match_current_network_type',
+            };
+        }
+        if (
+            this.$route.fullPath === '/delegatedHarvesting' &&
+            this.harvestingStatus === HarvestingStatus.FAILED &&
+            (this.pollingTrials === 20 || this.currentSignerHarvestingModel?.delegatedHarvestingRequestFailed)
+        ) {
+            return {
+                show: true,
+                message: 'delegated_harvesting_request_failed',
             };
         }
 
