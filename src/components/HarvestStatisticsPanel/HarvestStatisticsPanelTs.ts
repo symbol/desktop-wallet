@@ -96,7 +96,7 @@ export class HarvestStatisticsPanelTs extends Vue {
                             return;
                         }
                     }
-                }, 2000);
+                }, 45000);
             } else {
                 const harvestingModel = harvestingService.getHarvestingModel(this.currentSignerHarvestingModel.accountAddress);
                 harvestingService.updateDelegatedHarvestingRequestFailed(harvestingModel, true);
