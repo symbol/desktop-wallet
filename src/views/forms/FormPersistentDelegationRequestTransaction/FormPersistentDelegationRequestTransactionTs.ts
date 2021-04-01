@@ -78,9 +78,9 @@ import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 import { officialIcons } from '@/views/resources/Images';
 // @ts-ignore
-import NavigationLinks from "@/components/NavigationLinks/NavigationLinks.vue";
+import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
 // @ts-ignore
-import ModalConfirm from "@/views/modals/ModalConfirm/ModalConfirm.vue";
+import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
 
 export enum HarvestingAction {
     START = 1,
@@ -166,14 +166,20 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return this.activeIndex;
     }
     public set activePanel(panel) {
-        if (panel === 1) this.showConfirmModal = true;
-        else if (panel === -1) this.activeIndex = 1;
-        else this.activeIndex = panel;
+        if (panel === 1) {
+            this.showConfirmModal = true;
+        } else if (panel === -1) {
+            this.activeIndex = 1;
+        } else {
+            this.activeIndex = panel;
+        }
     }
 
     public get isActivatedFromAnotherDevice(): boolean {
-        return (!this.currentSignerHarvestingModel.encRemotePrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.linked) ||
+        return (
+            (!this.currentSignerHarvestingModel.encRemotePrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.linked) ||
             (!this.currentSignerHarvestingModel.encVrfPrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.vrf)
+        );
     }
 
     private activating = false;

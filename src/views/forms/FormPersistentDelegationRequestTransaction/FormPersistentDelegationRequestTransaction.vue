@@ -16,7 +16,7 @@
                                 {{ $t('delegated_harvesting_info') }}
                             </span>
                         </div>
-                        <div data-if="isActivatedFromAnotherDevice" class="info-text" style="margin-top: 0">
+                        <div data-if="isActivatedFromAnotherDevice" class="info-text" style="margin-top: 0;">
                             <Alert type="error" class="alert-error">
                                 {{ $t('harvesting_activated_from_another_device') }}
                             </Alert>
