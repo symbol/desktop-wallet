@@ -179,7 +179,7 @@
                                     {{ linking ? $t('linking') : $t('link_keys') }}
                                 </button>
                                 <button
-                                    v-if="!isPersistentDelReqSent && harvestingStatus !== 'INACTIVE'"
+                                    v-if="!isPersistentDelReqSent && harvestingStatus !== 'INACTIVE' && harvestingStatus !== 'ACTIVE'"
                                     class="centered-button button-style submit-button inverted-button"
                                     :disabled="activating || linking || !isPublicAndPrivateKeysLinked"
                                     @click="handleSubmit(onActivate())"

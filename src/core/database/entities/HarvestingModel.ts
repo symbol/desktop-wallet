@@ -22,4 +22,5 @@ export class HarvestingModel {
     public readonly selectedHarvestingNode?: NodeModel;
     public readonly encRemotePrivateKey?: string;
     public readonly encVrfPrivateKey?: string;
+    public readonly delegatedHarvestingRequestFailed?: boolean;
 }
