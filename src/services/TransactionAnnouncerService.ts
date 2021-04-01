@@ -182,10 +182,10 @@ export class TransactionAnnouncerService {
         const unannouncedPairs: HashLockAggregatePairModel[] = [];
         for (const hashLockAggregatePair of hashLockAggregatePairs) {
             const hashLockGroup = await this.getTransactionGroup(hashLockAggregatePair.hashLockHash);
-            if (!hashLockGroup === null) {
+            if (hashLockGroup === null) {
                 continue;
             }
-            if (hashLockGroup === TransactionGroup.Unconfirmed) {
+            else if (hashLockGroup === TransactionGroup.Unconfirmed) {
                 unannouncedPairs.push(hashLockAggregatePair);
                 continue;
             }
