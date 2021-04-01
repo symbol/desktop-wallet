@@ -212,7 +212,6 @@ export class TransactionAnnouncerService {
                     this.$store.dispatch('notification/ADD_ERROR', error);
                 },
             );
-            unannouncedPairs.push(hashLockAggregatePair);
         }
         this.hashLockAggregatePairModelStorage.set(unannouncedPairs);
     }
