@@ -77,6 +77,8 @@ import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 import { officialIcons } from '@/views/resources/Images';
+// @ts-ignore
+import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
 
 export enum HarvestingAction {
     START = 1,
@@ -101,6 +103,7 @@ export enum HarvestingAction {
         AccountPublicKeyDisplay,
         ProtectedPrivateKeyDisplay,
         ModalFormProfileUnlock,
+        MaxFeeSelector,
     },
     computed: {
         ...mapGetters({
@@ -129,6 +132,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public formItems = {
         nodeModel: { nodePublicKey: '' } as NodeModel,
         signerAddress: '',
+        maxFee: 0,
     };
 
     private newVrfKeyAccount: Account;
@@ -216,7 +220,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * To get singleKeyTransaction
      */
     protected getSingleKeyLinkTransaction(type?: string): Observable<Transaction[]> {
-        const maxFee = UInt64.fromUint(this.feesConfig.fast);
+        const maxFee = UInt64.fromUint(this.formItems.maxFee) || UInt64.fromUint(this.feesConfig.fast);
 
         let transaction: Transaction;
         switch (type) {
@@ -258,7 +262,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * To get all the key link transactions
      */
     protected getKeyLinkTransactions(transactionSigner = this.tempTransactionSigner): Observable<Transaction[]> {
-        const maxFee = UInt64.fromUint(this.feesConfig.fast); // fixed to the Highest, txs must get confirmed
+        const maxFee = UInt64.fromUint(this.formItems.maxFee) || UInt64.fromUint(this.feesConfig.fast);
         const txs: Transaction[] = [];
 
         /*
@@ -373,7 +377,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public getPersistentDelegationRequestTransaction(
         transactionSigner: TransactionSigner = this.tempTransactionSigner,
     ): Observable<Transaction[]> {
-        const maxFee = UInt64.fromUint(this.feesConfig.fast);
+        const maxFee = UInt64.fromUint(this.formItems.maxFee) || UInt64.fromUint(this.feesConfig.fast);
         if (this.action !== HarvestingAction.STOP) {
             const persistentDelegationReqTx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
                 Deadline.create(this.epochAdjustment, this.isMultisigMode() ? 24 : 2),
@@ -554,18 +558,32 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     private resolveFeeMultipler(transaction: Transaction): number | undefined {
-        if (transaction.maxFee.compact() == 10) {
+        if (transaction.maxFee.compact() === 10) {
             const fees =
                 this.transactionFees.averageFeeMultiplier * 1.2 < this.transactionFees.minFeeMultiplier
                     ? this.transactionFees.minFeeMultiplier
                     : this.transactionFees.averageFeeMultiplier * 1.2;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
-        if (transaction.maxFee.compact() == 20) {
+        if (transaction.maxFee.compact() === 20) {
             const fees =
-                this.transactionFees.highestFeeMultiplier < this.transactionFees.minFeeMultiplier
+                this.transactionFees.averageFeeMultiplier * 2 < this.transactionFees.minFeeMultiplier
                     ? this.transactionFees.minFeeMultiplier
-                    : this.transactionFees.highestFeeMultiplier;
+                    : this.transactionFees.averageFeeMultiplier * 2;
+            return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
+        }
+        if (transaction.maxFee.compact() === 1) {
+            const fees =
+                this.transactionFees.averageFeeMultiplier * 0.1 < this.transactionFees.minFeeMultiplier
+                    ? this.transactionFees.minFeeMultiplier
+                    : this.transactionFees.averageFeeMultiplier * 0.1;
+            return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
+        }
+        if (transaction.maxFee.compact() === 5) {
+            const fees =
+                this.transactionFees.averageFeeMultiplier * 0.5 < this.transactionFees.minFeeMultiplier
+                    ? this.transactionFees.minFeeMultiplier
+                    : this.transactionFees.averageFeeMultiplier * 0.5;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         return undefined;
@@ -748,5 +766,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             return false;
         }
         return true;
+    }
+    private get LowFeeValue() {
+        return this.formItems.maxFee === 0 || this.formItems.maxFee === 1 || this.formItems.maxFee === 5;
     }
 }
