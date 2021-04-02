@@ -16,17 +16,19 @@
                     @on-select="fetchNodePublicKey"
                     @on-clear="onClear"
                 >
-                    <div class="auto-complete-sub-container scroll">
-                        <div class="custom-node-input-container">
+                    <div v-if="!hideList" class="auto-complete-sub-container scroll">
+                        <div v-if="!nodeExistsInList || hideList" class="custom-node-input-container">
                             <input
                                 v-model="customNode"
                                 :placeholder="$t('form_label_network_custom_node')"
-                                class="input-style input-size"
-                                :disabled="disabled"
+                                class="input-style input-size clickable-input"
+                                readonly="readonly"
                                 type="text"
+                                :disabled="disabled"
+                                @click="handleSelectCustomNode"
                             />
                             <button class="select-button" @click="handleSelectCustomNode">
-                                {{ $t('select') }}
+                                {{ $t('select_custom_node') }}
                             </button>
                         </div>
                         <div v-for="(node, index) in filteredData" :key="index">
@@ -44,6 +46,7 @@
                     class="input-size input-style"
                     :placeholder="$t('node_public_key_input')"
                     type="text"
+                    :disabled="true"
                     @blur="onChangeFormNodePublicKey"
                 />
             </div>

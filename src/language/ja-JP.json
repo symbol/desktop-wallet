@@ -1081,5 +1081,6 @@
     "payload_not_valid": "ペイロードは不正です",
     "import_payload": "ペイロードをインポート",
     "import_payload_text": "symbol-cli が生成したトランザクションのペイロードを入力することもできます。",
-    "ledger_available_on_standalone_app": "Ledgerを使用するには、デスクトップネイティブアプリをダウンロードしてください。"
+    "ledger_available_on_standalone_app": "Ledgerを使用するには、デスクトップネイティブアプリをダウンロードしてください。",
+    "select_custom_node": "カスタムノードを選択"
 }

@@ -57,6 +57,8 @@ export class NetworkNodeSelectorTs extends Vue {
     public showInputPublicKey = false;
 
     public currentProfile: ProfileModel;
+
+    private hideList: boolean = false;
     /**
      * Checks if the given node is eligible for harvesting
      * @protected
@@ -140,8 +142,13 @@ export class NetworkNodeSelectorTs extends Vue {
 
     @Watch('formNodeUrl', { immediate: true })
     protected nodeWatcher(newInput: string) {
+        this.hideList = false;
+        this.customNode = newInput;
         if (newInput) {
             this.filteredData = this.customNodeData.filter((n) => n.toLowerCase().startsWith(newInput.toLowerCase()));
+        }
+        if (!this.formNodeUrl) {
+            this.filteredData = this.customNodeData;
         }
     }
 
@@ -160,13 +167,11 @@ export class NetworkNodeSelectorTs extends Vue {
         this.$emit('input', { nodePublicKey: '' });
     }
 
-    public handleSelectCustomNode() {
+    public async handleSelectCustomNode() {
         if (this.customNode !== '') {
-            Vue.set(this, 'formNodeUrl', this.customNode);
-            Vue.set(this, 'customNode', '');
-            if (this.customNodeData.includes(this.customNode) && !this.value.url) {
-                this.fetchNodePublicKey(this.customNode);
-            }
+            this.hideList = true;
+            await this.fetchNodePublicKey(this.customNode);
+            this.customNode = '';
         }
     }
 
@@ -187,5 +192,8 @@ export class NetworkNodeSelectorTs extends Vue {
 
     private isIncluded(role: RoleType) {
         return this.includeRoles?.some((includedRole) => includedRole === role);
+    }
+    get nodeExistsInList() {
+        return this.filteredData.includes(this.customNode);
     }
 }
