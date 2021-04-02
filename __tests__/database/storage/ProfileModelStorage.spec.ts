@@ -111,6 +111,7 @@ describe('storage/ProfileModelStorage.spec ==>', () => {
                 defaultTestnetNetworkConfig.nodes.find((n) => n.url === migratedData.someTestnetProfile.selectedNodeUrlToConnect),
             ).toBeDefined();
             expect(migratedData).toEqual(expected);
+            expect(delegate.get()).toEqual({ version: 8, data: migratedData });
         });
 
         test('Should not upgrade, testnet already v8', () => {
@@ -161,6 +162,7 @@ describe('storage/ProfileModelStorage.spec ==>', () => {
             const storage = new ProfileModelStorage(delegate);
             const migratedData = storage.get();
             expect(migratedData).toEqual(profiles.data);
+            expect(delegate.get()).toEqual(profiles);
         });
     });
 });
