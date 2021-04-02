@@ -115,7 +115,7 @@ describe('storage/ProfileModelStorage.spec ==>', () => {
 
         test('Should not upgrade, testnet already v8', () => {
             const profiles = {
-                version: 7,
+                version: 8,
                 data: {
                     someMainnetProfile: {
                         profileName: 'someMainnetProfile',
