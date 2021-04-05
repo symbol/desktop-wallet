@@ -24,35 +24,38 @@ export class NodeModelStorage extends VersionedObjectStorage<NodeModel[]> {
     public static INSTANCE = new NodeModelStorage();
 
     private constructor() {
-        super('node', [
-            {
-                description: 'Update node to 0.9.5.1 network',
-                migrate: () => undefined,
-            },
-            {
-                description: 'Update node for 0.9.6.3 network (known nodes)',
-                migrate: () => undefined,
-            },
-            {
-                description: 'Update node for 0.10.x network (known nodes)',
-                migrate: () => undefined,
-            },
-            {
-                description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
-                migrate: () => undefined,
-            },
-            {
-                description: 'Reset accounts for 0.10.0.6 network (non backwards compatible)',
-                migrate: () => undefined,
-            },
-            {
-                description: 'Reset accounts for 0.10.0.7 network (non backwards compatible)',
-                migrate: () => undefined,
-            },
-            {
-                description: 'Reset accounts for 1.0.0.0 network (non backwards compatible)',
-                migrate: () => undefined,
-            },
-        ]);
+        super({
+            storageKey: 'node',
+            migrations: [
+                {
+                    description: 'Update node to 0.9.5.1 network',
+                    migrate: () => undefined,
+                },
+                {
+                    description: 'Update node for 0.9.6.3 network (known nodes)',
+                    migrate: () => undefined,
+                },
+                {
+                    description: 'Update node for 0.10.x network (known nodes)',
+                    migrate: () => undefined,
+                },
+                {
+                    description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
+                    migrate: () => undefined,
+                },
+                {
+                    description: 'Reset accounts for 0.10.0.6 network (non backwards compatible)',
+                    migrate: () => undefined,
+                },
+                {
+                    description: 'Reset accounts for 0.10.0.7 network (non backwards compatible)',
+                    migrate: () => undefined,
+                },
+                {
+                    description: 'Reset accounts for 1.0.0.0 network (non backwards compatible)',
+                    migrate: () => undefined,
+                },
+            ],
+        });
     }
 }

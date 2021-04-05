@@ -20,7 +20,7 @@ describe('database/SimpleObjectStorage.spec ==>', () => {
     describe('constructor() should', () => {
         test('Get/Set/Delete', () => {
             const storageKey = 'someTable';
-            const storage1 = new VersionedObjectStorage<number>(storageKey);
+            const storage1 = new VersionedObjectStorage<number>({ storageKey: storageKey });
             expect(storage1.get()).toBeUndefined();
             expect(storage1.getVersion()).toBeUndefined();
             storage1.set(123);
@@ -35,7 +35,7 @@ describe('database/SimpleObjectStorage.spec ==>', () => {
 
         test('Get/Set/Delete Migration', () => {
             const storageKey = 'someTable';
-            const storage1 = new VersionedObjectStorage<number>(storageKey);
+            const storage1 = new VersionedObjectStorage<number>({ storageKey: storageKey });
             storage1.set(123);
             expect(storage1.getVersion()).toBe(1);
             expect(storage1.get()).toBe(123);
@@ -61,17 +61,26 @@ describe('database/SimpleObjectStorage.spec ==>', () => {
                 },
             };
             // Migrate to string
-            const storage2 = new VersionedObjectStorage<string>(storageKey, [migration1]);
+            const storage2 = new VersionedObjectStorage<string>({
+                storageKey: storageKey,
+                migrations: [migration1],
+            });
             expect(storage2.get()).toBe('123');
             expect(storage2.getVersion()).toBe(2);
 
             // No Migration
-            const storage3 = new VersionedObjectStorage<string>(storageKey, [migration1]);
+            const storage3 = new VersionedObjectStorage<string>({
+                storageKey: storageKey,
+                migrations: [migration1],
+            });
             expect(storage3.get()).toBe('123');
             expect(storage3.getVersion()).toBe(2);
 
             // Double Migration (append A and append Z)
-            const storage4 = new VersionedObjectStorage<string>(storageKey, [migration1, migration2, migration3]);
+            const storage4 = new VersionedObjectStorage<string>({
+                storageKey: storageKey,
+                migrations: [migration1, migration2, migration3],
+            });
             expect(storage4.get()).toBe('123AZ');
             expect(storage4.getVersion()).toBe(4);
         });
