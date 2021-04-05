@@ -29,6 +29,18 @@
                             v-model="formItems.nodeModel"
                             :disabled="harvestingStatus !== 'INACTIVE' && isPublicAndPrivateKeysLinked"
                         />
+
+                    <FormRow class="fee-selector">
+                        <template v-slot:label> {{ $t('fee') }}: </template>
+                        <template v-slot:inputs>
+                            <MaxFeeSelector v-model="formItems.maxFee" :show-fee-label="false" />
+                            <span v-if="LowFeeValue" class="fee-warning">
+                                <Icon type="ios-warning-outline" />
+                                {{ $t('low_fee_warning_message') }}
+                            </span>
+                        </template>
+                    </FormRow>
+
                     </div>
                     <div v-if="activePanel === 1">
                         <div class="info-text">
@@ -202,7 +214,7 @@
                                     {{ linking ? $t('linking') : $t('link_keys') }}
                                 </button>
                                 <button
-                                    v-if="!isPersistentDelReqSent && harvestingStatus !== 'INACTIVE'"
+                                    v-if="!isPersistentDelReqSent && harvestingStatus !== 'INACTIVE' && harvestingStatus !== 'ACTIVE'"
                                     class="centered-button button-style submit-button inverted-button"
                                     :disabled="activating || linking || !isPublicAndPrivateKeysLinked"
                                     @click="handleSubmit(onActivate())"

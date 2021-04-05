@@ -513,6 +513,7 @@
     "harvesting_status": "收割状态",
     "harvesting_status_active": "活性",
     "harvesting_status_inactive": "不活跃",
+    "harvesting_status_failed": "失败的",
     "harvesting_status_inprogress_activation": "激活中",
     "harvesting_status_inprogress_deactivation": "正在停用中",
     "harvesting_status_keys_linked": "按键链接",
@@ -1079,5 +1080,6 @@
     "payload_not_valid": "负载无效",
     "import_payload": "导入负载",
     "import_payload_text": "您也可以选择使用CLI生成的交易负载",
-    "ledger_available_on_standalone_app": "Ledger不适用于Web版本。 要使用Ledger，请下载桌面应用程序。"
+    "ledger_available_on_standalone_app": "Ledger不适用于Web版本。 要使用Ledger，请下载桌面应用程序。",
+    "delegated_harvesting_request_failed": "请注意，您委托的“收割”请求失败，请停止收割并尝试其他节点。"
 }

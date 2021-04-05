@@ -513,6 +513,7 @@
     "harvesting_status": "ハーベスト状況",
     "harvesting_status_active": "有効",
     "harvesting_status_inactive": "無効",
+    "harvesting_status_failed": "失敗しました",
     "harvesting_status_inprogress_activation": "有効化が進行中",
     "harvesting_status_inprogress_deactivation": "無効化が進行中",
     "harvesting_status_keys_linked": "リンク済みキー",
@@ -1079,5 +1080,6 @@
     "payload_not_valid": "ペイロードは不正です",
     "import_payload": "ペイロードをインポート",
     "import_payload_text": "symbol-cli が生成したトランザクションのペイロードを入力することもできます。",
-    "ledger_available_on_standalone_app": "Ledgerを使用するには、デスクトップネイティブアプリをダウンロードしてください。"
+    "ledger_available_on_standalone_app": "Ledgerを使用するには、デスクトップネイティブアプリをダウンロードしてください。",
+    "delegated_harvesting_request_failed": "委任されたハーベスティングリクエストが失敗したことに注意してください。ハーベスティングを停止して、別のノードを試してください。"
 }
