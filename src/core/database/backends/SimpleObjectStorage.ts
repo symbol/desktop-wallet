@@ -33,11 +33,11 @@ export class SimpleObjectStorage<E> implements IStorage<E> {
     /**
      * The Storage backend, if localStorage is not available the storage will be in memory.
      */
-    private readonly storageBackend: IStorageBackend;
 
-    public constructor(private readonly storageKey) {
-        this.storageBackend = !!localStorage ? new LocalStorageBackend() : new ObjectStorageBackend();
-    }
+    public constructor(
+        private readonly storageKey: string,
+        private readonly storageBackend: IStorageBackend = !!localStorage ? new LocalStorageBackend() : new ObjectStorageBackend(),
+    ) {}
 
     /**
      * @return the stored value or undefined
