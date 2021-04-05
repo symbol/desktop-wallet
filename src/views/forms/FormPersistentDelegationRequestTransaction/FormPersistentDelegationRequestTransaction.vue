@@ -30,17 +30,16 @@
                             :disabled="harvestingStatus !== 'INACTIVE' && isPublicAndPrivateKeysLinked"
                         />
 
-                    <FormRow class="fee-selector">
-                        <template v-slot:label> {{ $t('fee') }}: </template>
-                        <template v-slot:inputs>
-                            <MaxFeeSelector v-model="formItems.maxFee" :show-fee-label="false" />
-                            <span v-if="LowFeeValue" class="fee-warning">
-                                <Icon type="ios-warning-outline" />
-                                {{ $t('low_fee_warning_message') }}
-                            </span>
-                        </template>
-                    </FormRow>
-
+                        <FormRow class="fee-selector">
+                            <template v-slot:label> {{ $t('fee') }}: </template>
+                            <template v-slot:inputs>
+                                <MaxFeeSelector v-model="formItems.maxFee" :show-fee-label="false" />
+                                <span v-if="LowFeeValue" class="fee-warning">
+                                    <Icon type="ios-warning-outline" />
+                                    {{ $t('low_fee_warning_message') }}
+                                </span>
+                            </template>
+                        </FormRow>
                     </div>
                     <div v-if="activePanel === 1">
                         <div class="info-text">
