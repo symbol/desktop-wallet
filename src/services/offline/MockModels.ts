@@ -3,11 +3,14 @@ import {
     AccountNames,
     ChainInfo,
     ChainProperties,
+    Currency,
     FinalizedBlock,
+    MosaicId,
     MultisigAccountGraphInfo,
     NamespaceId,
     NamespaceName,
     NetworkConfiguration,
+    NetworkCurrencies,
     NetworkProperties,
     NetworkType,
     NodeInfo,
@@ -147,3 +150,15 @@ export const OfflineAccountNames = (address: Address) => new AccountNames(addres
 export const OfflineNamespaceNames = (namespaceId: NamespaceId) => new NamespaceName(namespaceId, 'mocknamespace');
 
 export const OfflineMultisigAccountGraphInfo = new MultisigAccountGraphInfo(new Map());
+
+export const OfflineNetworkCurrencies = (networkType: NetworkType): NetworkCurrencies => {
+    const publicCurrency = new Currency({
+        namespaceId: new NamespaceId('symbol.xym'),
+        divisibility: 6,
+        transferable: true,
+        supplyMutable: false,
+        restrictable: false,
+        mosaicId: new MosaicId(networkType === NetworkType.TEST_NET ? '2CF403E85507F39E' : '4F8E3FB75C77C83E'),
+    });
+    return new NetworkCurrencies(publicCurrency, publicCurrency);
+};
