@@ -176,6 +176,9 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     public get isActivatedFromAnotherDevice(): boolean {
+        if (!this.currentSignerAccountInfo || !this.currentSignerAccountInfo.supplementalPublicKeys) {
+            return false;
+        }
         return (
             (!this.currentSignerHarvestingModel.encRemotePrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.linked) ||
             (!this.currentSignerHarvestingModel.encVrfPrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.vrf)
