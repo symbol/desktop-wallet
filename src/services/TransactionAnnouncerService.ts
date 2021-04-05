@@ -184,8 +184,7 @@ export class TransactionAnnouncerService {
             const hashLockGroup = await this.getTransactionGroup(hashLockAggregatePair.hashLockHash);
             if (hashLockGroup === null) {
                 continue;
-            }
-            else if (hashLockGroup === TransactionGroup.Unconfirmed) {
+            } else if (hashLockGroup === TransactionGroup.Unconfirmed) {
                 unannouncedPairs.push(hashLockAggregatePair);
                 continue;
             }
