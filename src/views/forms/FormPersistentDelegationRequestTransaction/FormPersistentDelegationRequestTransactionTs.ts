@@ -57,6 +57,8 @@ import NetworkNodeSelector from '@/components/NetworkNodeSelector/NetworkNodeSel
 import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
+// @ts-ignore
+import Alert from '@/components/Alert/Alert.vue';
 import { ValidationProvider } from 'vee-validate';
 
 import { HarvestingStatus } from '@/store/Harvesting';
@@ -94,6 +96,7 @@ export enum HarvestingAction {
 
 @Component({
     components: {
+        Alert,
         FormWrapper,
         ModalTransactionConfirmation,
         SignerSelector,
@@ -167,9 +170,15 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public showConfirmModal = false;
     public isDelegatedHarvestingWarningModalShown = false;
     public activeIndex = 0;
+
     public get activePanel() {
         return this.activeIndex;
     }
+
+    public get allNodeListUrl() {
+        return this.$store.getters['app/explorerUrl'] + 'nodes';
+    }
+
     public set activePanel(panel) {
         if (panel === 1) {
             this.showConfirmModal = true;
@@ -368,6 +377,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             }
         }
         return of([]);
+    }
+
+    public get isAllKeysLinked(): boolean {
+        return this.isNodeKeyLinked && this.isVrfKeyLinked && this.isAccountKeyLinked;
     }
 
     public toMultiSigAggregate(txs: Transaction[], maxFee, transactionSigner: TransactionSigner) {
