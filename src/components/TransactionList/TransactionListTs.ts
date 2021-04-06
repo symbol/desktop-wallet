@@ -34,6 +34,7 @@ import ModalTransactionExport from '@/views/modals/ModalTransactionExport/ModalT
 import { PageInfo } from '@/store/Transaction';
 // @ts-ignore
 import Pagination from '@/components/Pagination/Pagination.vue';
+import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerService';
 
 @Component({
     components: {
@@ -151,6 +152,8 @@ export class TransactionListTs extends Vue {
      */
     public currentConfirmedPage: PageInfo;
 
+    public timeIntervals: any[] = [];
+
     public getEmptyMessage() {
         return 'no_data_transactions';
     }
@@ -165,6 +168,20 @@ export class TransactionListTs extends Vue {
 
     public get totalCountItems(): number {
         return this.filteredTransactions.length;
+    }
+
+    private checkUnspentHashLocks(): void {
+        Vue.nextTick(() => {
+            this.timeIntervals.push(
+                setInterval(async () => {
+                    try {
+                        await new TransactionAnnouncerService(this.$store).sendUnspentHashLockPairs();
+                    } catch (e) {
+                        console.log(`Error trying to send unspent hash locks: ${e.toString()}`);
+                    }
+                }, 10000),
+            );
+        });
     }
 
     /**
@@ -221,8 +238,9 @@ export class TransactionListTs extends Vue {
     }
 
     /// end-region computed properties getter/setter
-
     created() {
+        this.timeIntervals = [];
+        this.checkUnspentHashLocks();
         if (this.$route.params.transaction) {
             // @ts-ignore
             this.activePartialTransaction = this.$route.params.transaction as AggregateTransaction;
