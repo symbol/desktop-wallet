@@ -726,10 +726,11 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     // }
 
     public onStartClick() {
-        if (this.activePanel === 1)
+        if (this.activePanel === 1) {
             this.onConfirmStart();
-        else
+        } else {
             this.isDelegatedHarvestingWarningModalShown = true;
+        }
     }
 
     public onConfirmStart() {

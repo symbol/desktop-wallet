@@ -31,13 +31,10 @@ export default class Alert extends Vue {
     }
 
     get iconSrc(): boolean {
-        return this.type === 'danger'
-            ? this.ImageWarning
-            : this.ImageInfo;
+        return this.type === 'danger' ? this.ImageWarning : this.ImageInfo;
     }
 }
 </script>
-
 
 <style lang="less" scoped>
 @import '../../views/resources/css/variables.less';
@@ -81,10 +78,12 @@ export default class Alert extends Vue {
     background-color: @redDark;
 }
 
-.collapse-enter-active, .collapse-leave-active {
+.collapse-enter-active,
+.collapse-leave-active {
     transition: max-height 0.2s;
 }
-.collapse-enter, .collapse-leave-to {
+.collapse-enter,
+.collapse-leave-to {
     max-height: 0;
 }
 </style>

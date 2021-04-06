@@ -60,11 +60,7 @@
                                 type="warning"
                                 :value="$t('remote_keys_linked')"
                             />
-                            <Alert
-                                :visible="!isPublicAndPrivateKeysLinked"
-                                type="warning"
-                                :value="$t('harvesting_status_not_detected')"
-                            />
+                            <Alert :visible="!isPublicAndPrivateKeysLinked" type="warning" :value="$t('harvesting_status_not_detected')" />
                         </div>
                         <!-- <FormRow class="form-warning-row" v-if="harvestingStatus !== 'INACTIVE'">
                             <template v-slot:inputs>

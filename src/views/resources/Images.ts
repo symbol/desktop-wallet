@@ -359,7 +359,7 @@ export const officialIcons = {
     faucet,
     warning,
     warningWhite,
-    infoWhite
+    infoWhite,
 };
 
 export const transactionTypeToIcon = {

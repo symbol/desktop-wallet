@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <Modal v-model="show" class-name="modal-container" class="modal-confirm"  :transfer="false" :footer-hide="true">
+        <Modal v-model="show" class-name="modal-container" class="modal-confirm" :transfer="false" :footer-hide="true">
             <div class="container">
                 <div class="header bottom-space">
                     <div class="title">
@@ -10,7 +10,7 @@
                         <img :src="officialIcons.warning" class="warning-icon" />
                     </div>
                 </div>
-                <div class=" bottom-space body-text">{{$t(message)}}</div>
+                <div class="bottom-space body-text">{{ $t(message) }}</div>
                 <div v-if="showCheckbox" class="checkbox-container bottom-space">
                     <Checkbox id="Confirmed" :value="isCheckboxChecked" @input="onCheckboxCheck">
                         <span class="checkbox-label">
