@@ -171,12 +171,12 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public isDelegatedHarvestingWarningModalShown = false;
     public activeIndex = 0;
 
-    public get activePanel() {
-        return this.activeIndex;
-    }
-
     public get allNodeListUrl() {
         return this.$store.getters['app/explorerUrl'] + 'nodes';
+    }
+
+    public get activePanel() {
+        return this.activeIndex;
     }
 
     public set activePanel(panel) {
