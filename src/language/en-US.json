@@ -1091,7 +1091,7 @@
     "ledger_available_on_standalone_app": "To use Ledger please download the desktop native app.",
     "select_custom_node": "Select custom node",
     "delegated_harvesting_request_failed": "Your delegated harvesting request has failed, please stop harvesting and try a different node.",
-    "create_vrf_public_key": "Create Vrf Public Key",
+    "create_vrf_public_key": "Create VRF Public Key",
     "create_remote_public_key": "Create Remote Public Key",
     "generate_random_public_key": "Generate Key",
     "import_key_manually": "Import Key manually",
