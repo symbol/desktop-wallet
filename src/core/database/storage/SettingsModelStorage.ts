@@ -78,6 +78,10 @@ export class SettingsModelStorage extends VersionedObjectStorage<Record<string, 
                 description: 'Reset for Symbol mainet launch.',
                 migrate: () => undefined,
             },
+            {
+                description: 'Reset for fees update.',
+                migrate: () => undefined,
+            },
         ]);
     }
 }
