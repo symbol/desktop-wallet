@@ -13,7 +13,7 @@
                     <div v-if="activePanel === 0">
                         <div class="info-text">
                             <span>
-                                {{ $t('delegated_harvesting_info') }}
+                                {{ $t('harvesting_delegated_description') }}
                             </span>
                         </div>
                         <div v-if="isActivatedFromAnotherDevice" class="info-text" style="margin-top: 0;">
@@ -208,7 +208,7 @@
                                     type="submit"
                                     class="centered-button button-style submit-button inverted-button"
                                     :disabled="linking"
-                                    @click="handleSubmit(onStart())"
+                                    @click="handleSubmit(onStartClick())"
                                 >
                                     {{ linking ? $t('linking') : $t('link_keys') }}
                                 </button>
@@ -270,7 +270,15 @@
             @unlocked="decryptKeys"
         />
         <ModalConfirm
+            v-model="isDelegatedHarvestingWarningModalShown"
+            :warning="true"
+            :title="$t('harvesting_delegated_request_warning_title')"
+            :message="$t('harvesting_delegated_request_warning')"
+            @confirmed="onConfirmStart"
+        />
+        <ModalConfirm
             v-model="showConfirmModal"
+            :warning="true"
             :title="$t('open_harvesting_keys_warning_title')"
             :message="$t('open_harvesting_keys_warning_text')"
             @confirmed="activePanel = -1"

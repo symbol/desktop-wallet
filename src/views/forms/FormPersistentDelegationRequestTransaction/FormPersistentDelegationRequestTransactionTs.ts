@@ -165,6 +165,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * Panel tab management getters/setters
      */
     public showConfirmModal = false;
+    public isDelegatedHarvestingWarningModalShown = false;
     public activeIndex = 0;
     public get activePanel() {
         return this.activeIndex;
@@ -710,6 +711,18 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     //     this.action = HarvestingAction.SWAP;
     //     this.onSubmit();
     // }
+
+    public onStartClick() {
+        if (this.activePanel === 1)
+            this.onConfirmStart();
+        else
+            this.isDelegatedHarvestingWarningModalShown = true;
+    }
+
+    public onConfirmStart() {
+        this.isDelegatedHarvestingWarningModalShown = false;
+        this.onStart();
+    }
 
     public onActivate() {
         this.hasAccountUnlockModal = true;

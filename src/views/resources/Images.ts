@@ -228,6 +228,8 @@ import voting from '@/views/resources/img/navbar/explorer.svg';
 import faucet from '@/views/resources/img/navbar/faucet.svg';
 // @ts-ignore
 import settings from '@/views/resources/img/navbar/settings.svg';
+// @ts-ignore
+import warning from '@/views/resources/img/icons/warning.png';
 
 /// region exported image objects
 export const walletTypeImages = {
@@ -351,6 +353,7 @@ export const officialIcons = {
     xymCoin,
     voting,
     faucet,
+    warning,
 };
 
 export const transactionTypeToIcon = {

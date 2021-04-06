@@ -190,6 +190,14 @@
     "decrease": "Decrease",
     "decrypt_message": "Decrypt",
     "define": "Registration",
+    
+    "harvesting_description": "Harvesting is the process of creating new blocks on Symbol network using a node. In this process, the account that harvests a block is rewarded with any transaction fees produced and any inflation tokens generated.",
+    "harvesting_delegated_description": "Delegated Harvesting allows to receive rewards from creating new blocks using the account importance score without having to run own node locally. To activate Delegated Harvesting you have to link all keys and reqest node to harvest for your account.",
+    "harvesting_type_consider_description": "To activate Delegated Harvesting please follow the steps below. If you already activated the Delegated Harvesting using different device or you would like to watch",
+    "harvesting_link_description": "To activate Harvesting the account should link  ",
+    "harvesting_delegated_request_warning": "There is possibility that the node will not accept your Delegated Harvesting reqest. It depends on account importance score and wether the node has a free slots. \n\nAlso please note that the node may remove any account from their harvester slots. \n\nIn these cases you will need to change the node and repeat the Delegated Harvesting activation process. Transaction fees paid for the activation will not be refunded.",
+    "harvesting_delegated_request_warning_title": "Delegated Harvesting",
+
     "delegated_harvesting_info": "Delegated harvesting allows using the importance score of an account to create new blocks and receive rewards\n                            without having to run a node locally. You can send a Delegated Harvesting Request to the selected Node or swap\n                            to another one.",
     "delegated_harvesting_keys_info": "Linked keys are used for remote and delegated harvesting. If you own a node you must copy the following keys into your node configuration, if you are just doing delegate harvesting wallet holds this keys for you.",
     "open_harvesting_keys_warning_title": "Open harvesting linked keys",
