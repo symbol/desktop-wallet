@@ -16,15 +16,12 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import {
     Account,
-    AccountAddressRestrictionTransaction,
     AggregateTransaction,
     AggregateTransactionCosignature,
     CosignatureTransaction,
     MultisigAccountInfo,
-    MultisigAccountModificationTransaction,
     NetworkType,
     TransactionStatus,
-    TransactionType,
 } from 'symbol-sdk';
 import { mapGetters } from 'vuex';
 
@@ -43,7 +40,6 @@ import { CosignatureQR } from 'symbol-qr-library';
 import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue';
 import { AccountService } from '@/services/AccountService';
 import { LedgerService } from '@/services/LedgerService';
-import { AccountMetadataTransaction } from 'symbol-sdk';
 
 @Component({
     components: {
@@ -160,34 +156,8 @@ export class ModalTransactionCosignatureTs extends Vue {
             if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
                 return false;
             }
-            const cosignerAddresses = this.transaction.innerTransactions.map((t) => t.signer?.address);
-            const cosignList = [];
-            this.transaction.innerTransactions.forEach((t) => {
-                if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {
-                    cosignList.push(...(t as MultisigAccountModificationTransaction).addressAdditions);
-                } else if (t.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf()) {
-                    cosignList.push(...(t as AccountAddressRestrictionTransaction).restrictionAdditions);
-                } else if (t.type === TransactionType.ACCOUNT_METADATA) {
-                    cosignList.push((t as AccountMetadataTransaction).targetAddress);
-                }
-            });
-
-            if (cosignList.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
-                return true;
-            }
-            const cosignRequired = cosignerAddresses.find((c) => {
-                if (c) {
-                    return (
-                        c.plain() === this.currentAccount.address ||
-                        (this.currentAccountMultisigInfo &&
-                            this.currentAccountMultisigInfo.multisigAddresses.find((m) => c.equals(m)) !== undefined)
-                    );
-                }
-                return false;
-            });
-            return cosignRequired !== undefined;
         }
-        return false;
+        return !this.transaction.signedByAccount(currentPubAccount);
     }
 
     public get cosignatures(): AggregateTransactionCosignature[] {
