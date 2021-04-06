@@ -336,7 +336,7 @@ export class AccountService {
         const publicKeys: string[] = [];
         for (const path of paths) {
             const publicKey = await this.getLedgerPublicKeyByPath(networkType, path, false, isOptinLedgerWallet);
-            publicKeys.push(publicKey);
+            publicKeys.push(publicKey.toUpperCase());
         }
         return publicKeys.map((publicKey) => PublicAccount.createFromPublicKey(publicKey, networkType).address);
     }
@@ -411,7 +411,7 @@ export class AccountService {
         isOptinLedgerWallet: boolean,
     ): Promise<AccountModel> {
         const publicKey = await this.getLedgerPublicKeyByPath(networkType, path, ledgerDisplay, isOptinLedgerWallet);
-        const address = PublicAccount.createFromPublicKey(publicKey, networkType).address;
+        const address = PublicAccount.createFromPublicKey(publicKey.toUpperCase(), networkType).address;
         return {
             id: SimpleObjectStorage.generateIdentifier(),
             profileName: currentProfile.profileName,
@@ -444,7 +444,7 @@ export class AccountService {
         const accounts = [];
         for (const path of paths) {
             const publicKey = await this.getLedgerPublicKeyByPath(networkType, path, ledgerDisplay, isOptinLedgerWallet);
-            const account = PublicAccount.createFromPublicKey(publicKey, networkType);
+            const account = PublicAccount.createFromPublicKey(publicKey.toUpperCase(), networkType);
             accounts.push(account);
         }
         return accounts;
@@ -462,8 +462,8 @@ export class AccountService {
         networkType: NetworkType,
         isOptinLedgerWallet: boolean,
     ): Promise<AccountModel> {
-        const default_path = AccountService.getAccountPathByNetworkType(networkType);
-        return await this.getLedgerAccountByPath(currentProfile, networkType, default_path, false, isOptinLedgerWallet);
+        const defaultPath = AccountService.getAccountPathByNetworkType(networkType);
+        return await this.getLedgerAccountByPath(currentProfile, networkType, defaultPath, false, isOptinLedgerWallet);
     }
 
     /**
