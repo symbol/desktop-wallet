@@ -77,6 +77,8 @@ import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 import { officialIcons } from '@/views/resources/Images';
+// @ts-ignore
+import ModalImportPrivateKey from '@/views/modals/ModalImportPrivateKey/ModalImportPrivateKey.vue';
 
 export enum HarvestingAction {
     START = 1,
@@ -84,6 +86,10 @@ export enum HarvestingAction {
     SWAP = 3,
     ACTIVATE = 4,
     SINGLE_KEY = 5,
+}
+export enum PublicKeyTitle {
+    REMOTE = 'create_remote_public_key',
+    VRF = 'create_vrf_public_key',
 }
 
 @Component({
@@ -101,6 +107,7 @@ export enum HarvestingAction {
         AccountPublicKeyDisplay,
         ProtectedPrivateKeyDisplay,
         ModalFormProfileUnlock,
+        ModalImportPrivateKey,
     },
     computed: {
         ...mapGetters({
@@ -182,6 +189,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     private password: string;
     private linkIcon: string = officialIcons.publicChain;
     private linking = false;
+    private showModalImportKey: boolean = false;
+    private modalImportKeyTitle: string = '';
 
     /**
      * Reset the form with properties
@@ -677,14 +686,36 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             if (!this.isAccountKeyLinked && this.isLedger) {
                 this.hasLedgerAccountUnlockModal = true;
             } else {
-                this.onSubmit();
+                if (!this.isAccountKeyLinked) {
+                    this.modalImportKeyTitle = PublicKeyTitle.REMOTE;
+                    this.showModalImportKey = true;
+                } else {
+                    this.onSubmit();
+                }
             }
         } else {
             if (!this.isVrfKeyLinked && this.isLedger) {
                 this.hasLedgerAccountUnlockModal = true;
             } else {
-                this.onSubmit();
+                if (!this.isVrfKeyLinked) {
+                    this.modalImportKeyTitle = PublicKeyTitle.VRF;
+                    this.showModalImportKey = true;
+                } else {
+                    this.onSubmit();
+                }
             }
+        }
+    }
+    onSubmitPublicKey(accountObject: { account: Account; type: string }) {
+        if (!accountObject.account) {
+            this.onSubmit();
+        } else {
+            if (accountObject.type === 'vrf') {
+                this.newVrfKeyAccount = accountObject.account;
+            } else {
+                this.newRemoteAccount = accountObject.account;
+            }
+            this.onSubmit();
         }
     }
 

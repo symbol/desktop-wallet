@@ -210,7 +210,12 @@
                 </form>
             </ValidationObserver>
         </FormWrapper>
-
+        <ModalImportPrivateKey
+            :visible="showModalImportKey"
+            :title="modalImportKeyTitle"
+            @close="showModalImportKey = false"
+            @submit="onSubmitPublicKey"
+        />
         <ModalFormProfileUnlock
             v-if="hasAccountUnlockModal || isLedger"
             :visible="hasAccountUnlockModal"
