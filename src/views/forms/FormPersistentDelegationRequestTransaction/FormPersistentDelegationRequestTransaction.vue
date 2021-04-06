@@ -15,20 +15,20 @@
                             <p v-if="harvestingStatus === 'INACTIVE'">
                                 {{ $t('harvesting_delegated_description') }}
                             </p>
-                            <p v-if="harvestingStatus === 'INACTIVE'">
+                            <p v-if="harvestingStatus === 'INACTIVE' && !isActivatedFromAnotherDevice">
                                 {{ $t('harvesting_node_selection') }}
                                 <a :href="allNodeListUrl"> {{ $t('open_explorer_node_list') }} </a>
                             </p>
                             <Alert
-                                :visible="harvestingStatus === 'KEYS_LINKED'"
+                                :visible="isActivatedFromAnotherDevice"
+                                type="danger"
+                                :value="$t('harvesting_activated_from_another_device')"
+                            />
+                            <Alert
+                                :visible="harvestingStatus === 'KEYS_LINKED' && !isActivatedFromAnotherDevice"
                                 type="warning"
                                 :value="$t('harvesting_keys_linked_next_step_guide')"
                             />
-                        </div>
-                        <div v-if="isActivatedFromAnotherDevice" class="info-text" style="margin-top: 0;">
-                            <Alert type="error" class="alert-error">
-                                {{ $t('harvesting_activated_from_another_device') }}
-                            </Alert>
                         </div>
 
                         <!-- Transaction signer selector -->
