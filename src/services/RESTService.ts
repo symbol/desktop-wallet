@@ -20,6 +20,7 @@ import { AddressValidator } from '@/core/validation/validators';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { TransactionGroupState } from '@/store/Transaction';
 import { CommonHelpers } from '@/core/utils/CommonHelpers';
+import { MediaService } from '@/services/MediaService';
 
 /**
  * This Service is more like a static helper now. All the methods are statics. Rename and move.
@@ -72,6 +73,7 @@ export class RESTService {
                         { root: true },
                     );
                     context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_UNCONFIRMED_TRANSACTION, { root: true });
+                    MediaService.playUnconfirmedTransactionSound();
                 },
                 (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
             );
@@ -93,6 +95,7 @@ export class RESTService {
                         root: true,
                     });
                     context.dispatch('notification/ADD_SUCCESS', NotificationType.COSIGNATURE_ADDED, { root: true });
+                    MediaService.playUnconfirmedTransactionSound();
                 },
                 (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
             );
@@ -101,6 +104,7 @@ export class RESTService {
                 (transaction) => {
                     context.dispatch('transaction/ADD_TRANSACTION', { group: TransactionGroupState.partial, transaction }, { root: true });
                     context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_AGGREGATE_BONDED, { root: true });
+                    MediaService.playUnconfirmedTransactionSound();
                 },
                 (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
             );
@@ -127,6 +131,7 @@ export class RESTService {
                         root: true,
                     });
                     context.dispatch('notification/ADD_SUCCESS', NotificationType.NEW_CONFIRMED_TRANSACTION, { root: true });
+                    MediaService.playConfirmedTransactionSound();
                 },
                 (err) => context.dispatch('diagnostic/ADD_ERROR', err, { root: true }),
             );
