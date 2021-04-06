@@ -6,5 +6,6 @@ export * from './MaxMessageValidator';
 export * from './MosaicIdValidator';
 export * from './NamespaceIdValidator';
 export * from './PublicKeyValidator';
+export * from './PrivateKeyValidator';
 export * from './UrlValidator';
 export * from './Validator';

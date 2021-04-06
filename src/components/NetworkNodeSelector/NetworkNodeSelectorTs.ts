@@ -46,13 +46,19 @@ export class NetworkNodeSelectorTs extends Vue {
      */
     protected formNodeUrl = '';
 
+    protected customNode = '';
+
     protected formNodePublicKey = '';
 
     public customNodeData = [];
 
+    public filteredData = [];
+
     public showInputPublicKey = false;
 
     public currentProfile: ProfileModel;
+
+    private hideList: boolean = false;
     /**
      * Checks if the given node is eligible for harvesting
      * @protected
@@ -112,6 +118,7 @@ export class NetworkNodeSelectorTs extends Vue {
     public async created() {
         await this.$store.dispatch('network/LOAD_PEER_NODES');
         this.customNodeData = this.filteredNodes.map((n) => n.host);
+        this.filteredData = [...this.customNodeData];
         const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect.replace(/http:|:3000|\//g, '');
         if (this.customNodeData.includes(currentNodeUrl) && !this.value.url) {
             this.fetchNodePublicKey(currentNodeUrl);
@@ -133,6 +140,18 @@ export class NetworkNodeSelectorTs extends Vue {
         }
     }
 
+    @Watch('formNodeUrl', { immediate: true })
+    protected nodeWatcher(newInput: string) {
+        this.hideList = false;
+        this.customNode = newInput;
+        if (newInput) {
+            this.filteredData = this.customNodeData.filter((n) => n.toLowerCase().startsWith(newInput.toLowerCase()));
+        }
+        if (!this.formNodeUrl) {
+            this.filteredData = this.customNodeData;
+        }
+    }
+
     public filterUrls(value, option) {
         return option.toUpperCase().indexOf(value.toUpperCase()) !== -1;
     }
@@ -146,6 +165,14 @@ export class NetworkNodeSelectorTs extends Vue {
         // @ts-ignore
         this.$refs.nodeUrlInput.$el.focus();
         this.$emit('input', { nodePublicKey: '' });
+    }
+
+    public async handleSelectCustomNode() {
+        if (this.customNode !== '') {
+            this.hideList = true;
+            await this.fetchNodePublicKey(this.customNode);
+            this.customNode = '';
+        }
     }
 
     protected get filteredNodes() {
@@ -165,5 +192,8 @@ export class NetworkNodeSelectorTs extends Vue {
 
     private isIncluded(role: RoleType) {
         return this.includeRoles?.some((includedRole) => includedRole === role);
+    }
+    get nodeExistsInList() {
+        return this.filteredData.includes(this.customNode);
     }
 }
