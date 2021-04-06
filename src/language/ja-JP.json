@@ -514,6 +514,7 @@
     "harvesting_status": "ハーベスト状況",
     "harvesting_status_active": "有効",
     "harvesting_status_inactive": "無効",
+    "harvesting_status_failed": "失敗しました",
     "harvesting_status_inprogress_activation": "有効化が進行中",
     "harvesting_status_inprogress_deactivation": "無効化が進行中",
     "harvesting_status_keys_linked": "リンク済みキー",
@@ -1082,5 +1083,17 @@
     "import_payload": "ペイロードをインポート",
     "import_payload_text": "symbol-cli が生成したトランザクションのペイロードを入力することもできます。",
     "ledger_available_on_standalone_app": "Ledgerを使用するには、デスクトップネイティブアプリをダウンロードしてください。",
-    "select_custom_node": "カスタムノードを選択"
+    "select_custom_node": "カスタムノードを選択",
+    "delegated_harvesting_request_failed": "委任されたハーベスティングリクエストが失敗したことに注意してください。ハーベスティングを停止して、別のノードを試してください。",
+    "create_remote_public_key": "リモート公開鍵を作成する",
+    "delegated_harvesting_keys_info": "リンクされたキーは、リモートおよび委任されたハーベスティングに使用されます。\nノードを所有している場合は、次のキーをノード構成にコピーする必要があります。デリゲートハーベスティングウォレットを実行している場合は、このキーが保持されます。",
+    "create_vrf_public_key": "Vrf公開鍵を作成する",
+    "generate_random_public_key": "キーの生成",
+    "import_key_manually": "キーを手動でインポートする",
+    "key_type": "キータイプ",
+    "open_harvesting_keys_warning_text": "リンクされたキーは高度な機能であり、キーの収集がどのように機能するかを理解している専門家のみが管理する必要があります。\n通常のユーザーの場合は、委任されたハーベスティング画面にとどまることをお勧めします。",
+    "tab_harvesting_delegated_harvesting": "委任された収穫",
+    "tab_harvesting_key_links": "キーリンク",
+    "open_harvesting_keys_warning_title": "リンクされたキーの収穫を開く",
+    "harvesting_activated_from_another_device": "別のデバイスを使用してハーベスティングがアクティブ化されました。\nこのウォレットにはすべての情報が含まれていないため、表示される収穫ステータスが正しくない可能性があります。"
 }

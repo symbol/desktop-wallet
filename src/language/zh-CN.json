@@ -329,7 +329,6 @@
     "form_label_target_namespace_id": "目标命名空间ID",
     "form_label_value": "值",
     "form_label_value_hint": "链接到标识符的值是一个字符串，最多1024个字符",
-    "from_label_by_account": "帐户",
     "from_qr_code": "从二维码",
     "from_to_action": "发起/接受（行为）",
     "Failure_Core_Past_Deadline": "验证失败，因为截止日期已过",
@@ -514,6 +513,7 @@
     "harvesting_status": "收割状态",
     "harvesting_status_active": "活性",
     "harvesting_status_inactive": "不活跃",
+    "harvesting_status_failed": "失败的",
     "harvesting_status_inprogress_activation": "激活中",
     "harvesting_status_inprogress_deactivation": "正在停用中",
     "harvesting_status_keys_linked": "按键链接",
@@ -1082,5 +1082,16 @@
     "import_payload": "导入负载",
     "import_payload_text": "您也可以选择使用CLI生成的交易负载",
     "ledger_available_on_standalone_app": "Ledger不适用于Web版本。 要使用Ledger，请下载桌面应用程序。",
-    "select_custom_node": "选择自定义节点"
+    "select_custom_node": "选择自定义节点",
+    "delegated_harvesting_request_failed": "请注意，您委托的“收割”请求失败，请停止收割并尝试其他节点。",
+    "tab_harvesting_key_links": "关键链接",
+    "tab_harvesting_delegated_harvesting": "委托收获",
+    "open_harvesting_keys_warning_title": "打开收割链接的钥匙",
+    "open_harvesting_keys_warning_text": "链接密钥是一项高级功能，只能由了解收集密钥工作原理的专家进行管理。\n如果您是普通用户，我们建议您留在委派的收获屏幕中。",
+    "delete_account_confirmation_checkbox": "是的，我想删除此帐户。",
+    "delegated_harvesting_keys_info": "链接的密钥用于远程和委派收获。\n如果您拥有节点，则必须将以下密钥复制到您的节点配置中，如果您只是在进行委托收获，钱包将为您保留此密钥。",
+    "harvesting_activated_from_another_device": "收割已使用其他设备激活。\n显示的收获状态可能不正确，因为此钱包没有所有信息。",
+    "create_remote_public_key": "创建远程公钥",
+    "generate_random_public_key": "产生金钥",
+    "import_key_manually": "手动导入密钥"
 }
