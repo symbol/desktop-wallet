@@ -38,7 +38,7 @@ export class LocalStorageBackend implements IStorageBackend {
      * @param {string} key
      * @return {any}
      */
-    public getItem(key: string): string | undefined {
+    public getItem(key: string): any {
         return localStorage.getItem(key);
     }
 
@@ -47,7 +47,7 @@ export class LocalStorageBackend implements IStorageBackend {
      * @param {string} key
      * @param {any} value
      */
-    public setItem(key: string, value: string): void {
+    public setItem(key: string, value: any): void {
         localStorage.setItem(key, value);
     }
 

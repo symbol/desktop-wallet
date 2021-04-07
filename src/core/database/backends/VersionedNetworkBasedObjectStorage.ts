@@ -25,11 +25,6 @@ import { NetworkBasedModel } from '@/core/database/entities/NetworkBasedModel';
  */
 export class VersionedNetworkBasedObjectStorage<E> extends NetworkBasedObjectStorage<E> implements INetworkBasedStorage<E> {
     constructor(storageKey: string, migrations: Migration[] = []) {
-        super(
-            new VersionedObjectStorage<NetworkBasedModel<E>>({
-                storageKey: storageKey,
-                migrations: migrations,
-            }),
-        );
+        super(new VersionedObjectStorage<NetworkBasedModel<E>>(storageKey, migrations));
     }
 }

@@ -50,43 +50,41 @@ export interface NetworkConfig {
     networkConfigurationDefaults: NetworkConfigurationDefaults;
 }
 
-export const defaultTestnetNetworkConfig: NetworkConfig = {
+const defaultTestnetNetworkConfig: NetworkConfig = {
     explorerUrl: 'http://explorer.testnet.symboldev.network/',
     faucetUrl: 'http://faucet.testnet.symboldev.network/',
     defaultNetworkType: 152,
     networkConfigurationDefaults: {
         maxMosaicDivisibility: 6,
-        namespaceGracePeriodDuration: 86400,
+        namespaceGracePeriodDuration: 2592000,
         lockedFundsPerAggregate: '10000000',
         maxCosignatoriesPerAccount: 25,
         blockGenerationTargetTime: 30,
         maxNamespaceDepth: 3,
         maxMosaicDuration: 315360000,
         minNamespaceDuration: 2592000,
-        maxNamespaceDuration: 157680000,
+        maxNamespaceDuration: 5256000,
         maxTransactionsPerAggregate: 100,
         maxCosignedAccountsPerAccount: 25,
         maxMessageSize: 1024,
-        maxMosaicAtomicUnits: 8999999999000000,
-        currencyMosaicId: '091F837E059AE13C',
-        harvestingMosaicId: '091F837E059AE13C',
-        defaultDynamicFeeMultiplier: 100,
-        epochAdjustment: 1616694977,
-        totalChainImportance: 7842928625000000,
-        generationHash: '3B5E1FA6445653C971A50687E75E6D09FB30481055E3990C84B25E9222DC1155',
+        maxMosaicAtomicUnits: 9000000000000000,
+        currencyMosaicId: '2CF403E85507F39E',
+        harvestingMosaicId: '2CF403E85507F39E',
+        defaultDynamicFeeMultiplier: 1000,
+        epochAdjustment: 1573430400,
+        totalChainImportance: undefined,
+        generationHash: '45FBCF2F0EA36EFA7923C9BC923D6503169651F7FA4EFC46A8EAF5AE09057EBD',
     },
     nodes: [
-        { friendlyName: 'ngl-dual-001', roles: 2, url: 'http://ngl-dual-001.testnet.symboldev.network:3000' },
-        { friendlyName: 'ngl-dual-101', roles: 2, url: 'http://ngl-dual-101.testnet.symboldev.network:3000' },
-        { friendlyName: 'ngl-dual-201', roles: 2, url: 'http://ngl-dual-201.testnet.symboldev.network:3000' },
-        { friendlyName: 'ngl-dual-301', roles: 2, url: 'http://ngl-dual-301.testnet.symboldev.network:3000' },
-        { friendlyName: 'ngl-dual-401', roles: 2, url: 'http://ngl-dual-401.testnet.symboldev.network:3000' },
-        { friendlyName: 'ngl-dual-501', roles: 2, url: 'http://ngl-dual-501.testnet.symboldev.network:3000' },
-        { friendlyName: 'ngl-dual-601', roles: 2, url: 'http://ngl-dual-601.testnet.symboldev.network:3000' },
+        { friendlyName: 'API North East 1', roles: 2, url: 'http://api-01.ap-northeast-1.testnet.symboldev.network:3000' },
+        { friendlyName: 'API South West 1', roles: 2, url: 'http://api-01.ap-southeast-1.testnet.symboldev.network:3000' },
+        { friendlyName: 'API EU Central 1', roles: 2, url: 'http://api-01.eu-central-1.testnet.symboldev.network:3000' },
+        { friendlyName: 'API EU West 1', roles: 2, url: 'http://api-01.eu-west-1.testnet.symboldev.network:3000' },
+        { friendlyName: 'API US West 1', roles: 2, url: 'http://api-01.us-west-1.testnet.symboldev.network:3000' },
     ],
 };
 
-export const defaultMainnetNetworkConfig: NetworkConfig = {
+const defaultMainnetNetworkConfig: NetworkConfig = {
     explorerUrl: 'http://explorer.symbolblockchain.io/',
     faucetUrl: 'http://faucet.mainnet.symboldev.network/',
     defaultNetworkType: 104,

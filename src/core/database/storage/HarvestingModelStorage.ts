@@ -24,18 +24,15 @@ export class HarvestingModelStorage extends VersionedObjectStorage<HarvestingMod
     public static INSTANCE = new HarvestingModelStorage();
 
     private constructor() {
-        super({
-            storageKey: 'harvestingModels',
-            migrations: [
-                {
-                    description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
-                    migrate: () => undefined,
-                },
-                {
-                    description: 'Reset accounts for 0.10.0.6 network (non backwards compatible)',
-                    migrate: () => undefined,
-                },
-            ],
-        });
+        super('harvestingModels', [
+            {
+                description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
+            {
+                description: 'Reset accounts for 0.10.0.6 network (non backwards compatible)',
+                migrate: () => undefined,
+            },
+        ]);
     }
 }

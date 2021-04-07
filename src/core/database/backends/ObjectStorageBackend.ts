@@ -16,12 +16,20 @@
 // internal dependencies
 import { IStorageBackend } from './IStorageBackend';
 
-export class ObjectStorageBackend<T> implements IStorageBackend {
+export class ObjectStorageBackend implements IStorageBackend {
+    /**
+     * The storage backend (a simple object)
+     * @var {any}
+     */
+    protected backend: any = {};
+
     /**
      * Construct an object storage backend
      * @param backend
      */
-    public constructor(protected readonly backend: Record<string, string> = {}) {}
+    public constructor(backend: any = {}) {
+        this.backend = backend;
+    }
 
     /**
      * The number of available entries
@@ -44,7 +52,7 @@ export class ObjectStorageBackend<T> implements IStorageBackend {
      * @param {string} key
      * @return {any}
      */
-    public getItem(key: string): string | null {
+    public getItem(key: string): any {
         if (!this.backend || !this.backend[key]) {
             return null;
         }
@@ -57,7 +65,7 @@ export class ObjectStorageBackend<T> implements IStorageBackend {
      * @param {string} key
      * @param {any} value
      */
-    public setItem(key: string, value: string): void {
+    public setItem(key: string, value: any): void {
         this.backend[key] = value;
     }
 

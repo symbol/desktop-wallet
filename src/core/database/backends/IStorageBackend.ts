@@ -25,14 +25,14 @@ export interface IStorageBackend {
      * @param {string} key
      * @return {string|null}
      */
-    getItem(key: string): string | null;
+    getItem(key: string): any;
 
     /**
      * Setter for \a key with \a value
      * @param {string} key
      * @param {any} value
      */
-    setItem(key: string, value: string): void;
+    setItem(key: string, value: any): void;
 
     /**
      * Deletes the value for the given key
