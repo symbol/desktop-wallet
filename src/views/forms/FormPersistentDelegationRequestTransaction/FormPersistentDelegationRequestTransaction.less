@@ -51,10 +51,29 @@
 
 .info-text {
     color: @purpleDark;
-    font-size: @biggerFont;
-    font-family: @symbolFontLight;
-    margin: 0.3rem 1rem 0.3rem 0.7rem;
+    font-size: @normalFont;
+    font-family: @symbolFont;
+    line-height: @normalFontLineHeight;
+    margin: 0.4rem 1rem 0.4rem 0.7rem;
     text-align: justify;
+}
+
+.info-text > p {
+    margin-bottom: 0.2rem;
+}
+
+a {
+    color: @accentPink;
+    font-family: @symbolFontSemiBold;
+}
+
+a:hover {
+    color: @accentPink;
+    opacity: 0.5;
+}
+
+.text-accent {
+    font-family: @symbolFontSemiBold;
 }
 
 /deep/ .ivu-icon {

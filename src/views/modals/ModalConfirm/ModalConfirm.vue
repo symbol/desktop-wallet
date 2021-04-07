@@ -1,21 +1,26 @@
 <template>
     <div class="container">
-        <Modal v-model="show" class-name="modal-container" class="modal-confirm" :title="$t(title)" :transfer="false" :footer-hide="true">
+        <Modal v-model="show" class-name="modal-container" class="modal-confirm" :transfer="false" :footer-hide="true">
             <div class="container">
-                <div v-if="danger" class="centered-content bottom-space">
-                    <Icon type="ios-alert-outline" size="50" />
+                <div class="header bottom-space">
+                    <div class="title">
+                        {{ $t(title) }}
+                    </div>
+                    <div v-if="danger || warning" class="">
+                        <img :src="officialIcons.warning" class="warning-icon" />
+                    </div>
                 </div>
-                <h5 class="centered-content bottom-space">
-                    {{ $t(message) }}
-                </h5>
+                <div class="bottom-space body-text">{{ $t(message) }}</div>
                 <div v-if="showCheckbox" class="checkbox-container bottom-space">
                     <Checkbox id="Confirmed" :value="isCheckboxChecked" @input="onCheckboxCheck">
-                        {{ $t(checkboxLabel) }}
+                        <span class="checkbox-label">
+                            {{ $t(checkboxLabel) }}
+                        </span>
                     </Checkbox>
                 </div>
             </div>
-            <div class="footer bottom-space">
-                <button class="secondary-outline-button" @click="cancel">
+            <div class="footer">
+                <button class="ivu-btn secondary-outline-button button-style button" @click="cancel">
                     {{ $t('cancel') }}
                 </button>
                 <button

@@ -57,6 +57,8 @@ import NetworkNodeSelector from '@/components/NetworkNodeSelector/NetworkNodeSel
 import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
+// @ts-ignore
+import Alert from '@/components/Alert/Alert.vue';
 import { ValidationProvider } from 'vee-validate';
 
 import { HarvestingStatus } from '@/store/Harvesting';
@@ -100,6 +102,7 @@ export enum PublicKeyTitle {
 
 @Component({
     components: {
+        Alert,
         FormWrapper,
         ModalTransactionConfirmation,
         SignerSelector,
@@ -172,10 +175,17 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * Panel tab management getters/setters
      */
     public showConfirmModal = false;
+    public isDelegatedHarvestingWarningModalShown = false;
     public activeIndex = 0;
+
+    public get allNodeListUrl() {
+        return this.$store.getters['app/explorerUrl'] + 'nodes';
+    }
+
     public get activePanel() {
         return this.activeIndex;
     }
+
     public set activePanel(panel) {
         if (panel === 1) {
             this.showConfirmModal = true;
@@ -376,6 +386,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             }
         }
         return of([]);
+    }
+
+    public get isAllKeysLinked(): boolean {
+        return this.isNodeKeyLinked && this.isVrfKeyLinked && this.isAccountKeyLinked;
     }
 
     public toMultiSigAggregate(txs: Transaction[], maxFee, transactionSigner: TransactionSigner) {
@@ -719,6 +733,19 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     //     this.action = HarvestingAction.SWAP;
     //     this.onSubmit();
     // }
+
+    public onStartClick() {
+        if (this.activePanel === 1) {
+            this.onConfirmStart();
+        } else {
+            this.isDelegatedHarvestingWarningModalShown = true;
+        }
+    }
+
+    public onConfirmStart() {
+        this.isDelegatedHarvestingWarningModalShown = false;
+        this.onStart();
+    }
 
     public onActivate() {
         this.hasAccountUnlockModal = true;

@@ -3,17 +3,64 @@
 
 .modal-confirm {
     /deep/.ivu-modal {
-        width: 7rem !important;
+        width: 9rem !important;
         overflow-wrap: break-word;
         word-wrap: break-word;
         word-break: break-word;
-        hyphens: auto;
+    }
+
+    /deep/.ivu-modal-body {
+        margin-left: 0.6rem;
+        margin-right: 0.6rem;
+        padding-bottom: 0.4rem;
+        padding-top: 0.4rem;
+    }
+
+    /deep/.header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+        width: 100%;
+    }
+
+    /deep/.title {
+        color: @purpleDark;
+        font-size: @subtitleFont;
+        font-family: @symbolFontBold;
+        max-width: 70%;
+    }
+
+    /deep/.warning-icon {
+        height: 0.6rem;
+    }
+
+    /deep/.body-text {
+        color: @purpleDark;
+        font-size: @normalFont;
+        font-family: @symbolFontSemiBold;
+        line-height: @normalFontLineHeight;
+        white-space: pre-wrap;
+        text-align: justify;
+    }
+
+    /deep/.checkbox-label {
+        color: @purpleDark;
+        font-size: @normalFont;
+        font-family: @symbolFont;
+        line-height: @normalFontLineHeight;
     }
 
     /deep/.footer {
         width: 100%;
         display: flex;
         justify-content: flex-end;
+    }
+
+    /deep/.button {
+        margin-right: 0;
+        margin-left: 0.1rem;
+        padding: 0.1em 0.3rem;
     }
 
     /deep/.centered-content {
@@ -26,15 +73,8 @@
     }
 
     /deep/.bottom-space {
-        margin-bottom: 30px;
+        margin-bottom: 0.4rem;
     }
-}
-
-/deep/ .ivu-modal-body {
-    font-size: @bigFont !important;
-    margin-left: 1rem;
-    color: @primary;
-    margin-right: 1rem;
 }
 
 /deep/.ivu-btn-primary {
@@ -55,6 +95,6 @@
     }
 
     .checkbox-container {
-        width: max-content;
+        width: 100%;
     }
 }
