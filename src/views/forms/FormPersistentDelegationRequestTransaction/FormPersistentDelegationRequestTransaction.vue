@@ -276,7 +276,8 @@
             :visible="showModalImportKey"
             :title="modalImportKeyTitle"
             @close="showModalImportKey = false"
-            @submit="onSubmitPublicKey"
+            @submit="onSubmitPrivateKey"
+            @confirmed="showModalImportKey = false"
         />
         <ModalFormProfileUnlock
             v-if="hasAccountUnlockModal || isLedger"
