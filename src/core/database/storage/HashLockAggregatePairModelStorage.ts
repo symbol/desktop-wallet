@@ -38,7 +38,7 @@ export class HashLockAggregatePairModelStorage extends VersionedObjectStorage<Ha
                     description: 'Reset accounts for 0.10.0.6 network (non backwards compatible)',
                     migrate: () => undefined,
                 },
-            ]
+            ],
         });
     }
 }
