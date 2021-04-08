@@ -200,7 +200,7 @@
     "delegated_harvesting_keys_info": "Linked keys are used for both remote and delegated harvesting. If you own a node you must copy the following keys into your node configuration to enable remote harvesting. Otherwise, the wallet holds these keys for you when enabling delegated harvesting.",
     "open_harvesting_keys_warning_title": "Open harvesting linked keys",
     "open_harvesting_keys_warning_text": "Linked keys is an advanced feature and should only be managed by users that understand how harvesting keys work. Please use the delegated harvesting screen if this is not your case.",
-    "harvesting_activated_from_another_device": "Harvesting has been activated using another device. The harvesting status displayed could be incorrect because this wallet does not have all the required information. If you know the node you selected int the other device, you can select the node below",
+    "harvesting_activated_from_another_device": "Harvesting has been activated using another device. The harvesting status displayed could be incorrect because this wallet does not have all the required information. If you know the node you selected in the other device, you can select it below.",
     "harvesting_keys_linked_missing": "In order to activate harvesting wallet needs to have all linked key pairs. Please re-link them.",
     "delete": "Delete",
     "delete_account": "Delete Account",
