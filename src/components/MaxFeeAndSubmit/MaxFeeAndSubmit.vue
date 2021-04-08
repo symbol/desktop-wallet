@@ -112,7 +112,7 @@ export default class MaxFeeAndSubmit extends Vue {
         return false;
     }
     get averageFee() {
-        return (this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.6) * this.size;
+        return (this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.65) * this.size;
     }
     get slowFee() {
         return (this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.35) * this.size;

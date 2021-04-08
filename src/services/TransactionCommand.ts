@@ -200,7 +200,7 @@ export class TransactionCommand {
     private resolveFeeMultipler(transaction: Transaction): number | undefined {
         // average
         if (transaction.maxFee.compact() === 10) {
-            const fees = this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.6;
+            const fees = this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.65;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         // fast
