@@ -85,8 +85,8 @@ export class AccountModelStorage extends VersionedObjectStorage<Record<string, A
                                 encRemotePrivateKey,
                                 encVrfPrivateKey,
                                 delegatedHarvestingRequestFailed,
-                            ...nonHarvesting
-                        } = modified[name];
+                                ...nonHarvesting
+                            } = modified[name];
 
                             try {
                                 harvestingService.saveHarvestingModel({
@@ -96,19 +96,19 @@ export class AccountModelStorage extends VersionedObjectStorage<Record<string, A
                                     encRemotePrivateKey,
                                     encVrfPrivateKey,
                                     delegatedHarvestingRequestFailed,
-                                ...nonHarvesting,
-                            });
-                            modified[name] = {
-                                address,
-                                encRemotePrivateKey,
-                                encVrfPrivateKey,
-                                delegatedHarvestingRequestFailed,
-                                ...nonHarvesting,
-                            };
-                        } catch (error) {
-                            console.log(error);
-                        }
-                    });
+                                    ...nonHarvesting,
+                                });
+                                modified[name] = {
+                                    address,
+                                    encRemotePrivateKey,
+                                    encVrfPrivateKey,
+                                    delegatedHarvestingRequestFailed,
+                                    ...nonHarvesting,
+                                };
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        });
 
                         return modified;
                     },
