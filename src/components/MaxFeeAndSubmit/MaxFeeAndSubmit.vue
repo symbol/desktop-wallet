@@ -7,6 +7,10 @@
                     v-model="maxFee"
                     :calculated-recommended-fee="calculatedRecommendedFee"
                     :show-low-fee-warning="showWarnings && anyWarnings && isFeeLowerThanRecommendedFee"
+                    :slow-fee="slowFee"
+                    :average-fee="averageFee"
+                    :slowest-fee="slowestFee"
+                    :fast-fee="fastFee"
                 />
                 <div v-if="!hideSubmit" class="ml-2">
                     <button
@@ -30,8 +34,17 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 // child components
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
 import FormRow from '@/components/FormRow/FormRow.vue';
+import { TransactionFees } from 'symbol-sdk';
+import { mapGetters } from 'vuex';
 
-@Component({ components: { MaxFeeSelector, FormRow } })
+@Component({
+    components: { MaxFeeSelector, FormRow },
+    computed: {
+        ...mapGetters({
+            transactionFees: 'network/transactionFees',
+        }),
+    },
+})
 export default class MaxFeeAndSubmit extends Vue {
     /**
      * Max fee value, bound to parent v-model
@@ -71,6 +84,11 @@ export default class MaxFeeAndSubmit extends Vue {
      */
     @Prop({ default: 'inverted-button' }) submitButtonClasses: string;
 
+    @Prop({
+        default: 0,
+    })
+    size: number;
+    private transactionFees: TransactionFees;
     /**
      * Get max fee value from the value prop
      * @readonly
@@ -104,6 +122,18 @@ export default class MaxFeeAndSubmit extends Vue {
             return this.maxFee < this.calculatedRecommendedFee;
         }
         return false;
+    }
+    get averageFee() {
+        return (this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.6) * this.size;
+    }
+    get slowFee() {
+        return (this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.35) * this.size;
+    }
+    get slowestFee() {
+        return this.transactionFees.minFeeMultiplier * this.size;
+    }
+    get fastFee() {
+        return this.transactionFees.averageFeeMultiplier * this.size;
     }
 }
 </script>

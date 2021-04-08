@@ -72,6 +72,7 @@
                         :submit-button-text="submitButtonText"
                         :calculated-recommended-fee="calculatedRecommendedFee"
                         :disable-submit="currentAccount.isMultisig"
+                        :size="transactionSize"
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
                     />
