@@ -72,6 +72,7 @@
                         :submit-button-text="submitButtonText"
                         :calculated-recommended-fee="calculatedRecommendedFee"
                         :disable-submit="currentAccount.isMultisig"
+                        :size="transactionSize"
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
                     />
@@ -135,7 +136,6 @@ export default class FormTransferTransaction extends FormTransferTransactionTs {
     text-align: center;
     width: 120px;
 }
-
 /deep/.multisig_ban_container {
     padding-left: 0.7rem;
 }

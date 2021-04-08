@@ -52,7 +52,7 @@ export class SettingService {
     public createDefaultSettingsModel(profileName: string, networkType: NetworkType): SettingsModel {
         const browserLocale = i18n.locale;
         const language = appConfig.languages.find((l) => l.value == browserLocale) ? browserLocale : appConfig.languages[0].value;
-        return new SettingsModel(profileName, language, feesConfig.median, '', networkConfig[networkType].explorerUrl);
+        return new SettingsModel(profileName, language, feesConfig.slowest, '', networkConfig[networkType].explorerUrl);
     }
 
     public deleteProfileSettings(profileName: string): void {
