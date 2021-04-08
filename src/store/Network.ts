@@ -39,7 +39,6 @@ import {
     RentalFees,
     RepositoryFactory,
     RepositoryFactoryHttp,
-    RoleType,
     TransactionFees,
 } from 'symbol-sdk';
 import Vue from 'vue';
