@@ -36,8 +36,19 @@ export class VersionedObjectStorage<E> implements IStorage<E> {
 
     private readonly currentVersion: number;
 
-    constructor(storageKey: string, migrations: Migration[] = []) {
-        this.delegate = new SimpleObjectStorage<VersionedModel<E>>(storageKey);
+    constructor({
+        delegate,
+        storageKey,
+        migrations = [],
+    }: {
+        delegate?: IStorage<VersionedModel<E>>;
+        storageKey?: string;
+        migrations?: Migration[];
+    }) {
+        if (!delegate && !storageKey) {
+            throw new Error('delegate or storage key must be provided!');
+        }
+        this.delegate = delegate || new SimpleObjectStorage<VersionedModel<E>>(storageKey);
         this.currentVersion = migrations.length + 1;
         const versioned = this.delegate.get();
         if (!versioned || versioned.version == this.currentVersion) {
