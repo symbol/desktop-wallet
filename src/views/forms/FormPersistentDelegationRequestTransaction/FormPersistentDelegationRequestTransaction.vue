@@ -17,7 +17,7 @@
                             </p>
                             <p v-if="harvestingStatus === 'INACTIVE' && !isActivatedFromAnotherDevice">
                                 {{ $t('harvesting_node_selection') }}
-                                <a :href="allNodeListUrl"> {{ $t('open_explorer_node_list') }} </a>
+                                <a :href="allNodeListUrl" target="_blank"> {{ $t('open_explorer_node_list') }} </a>
                             </p>
                             <Alert
                                 :visible="isActivatedFromAnotherDevice"
@@ -25,9 +25,14 @@
                                 :value="$t('harvesting_activated_from_another_device')"
                             />
                             <Alert
-                                :visible="harvestingStatus === 'KEYS_LINKED' && !isActivatedFromAnotherDevice"
+                                :visible="harvestingStatus === 'KEYS_LINKED' && isPublicAndPrivateKeysLinked"
                                 type="warning"
                                 :value="$t('harvesting_keys_linked_next_step_guide')"
+                            />
+                            <Alert
+                                :visible="harvestingStatus === 'KEYS_LINKED' && !isPublicAndPrivateKeysLinked"
+                                type="warning"
+                                :value="$t('harvesting_keys_linked_missing')"
                             />
                         </div>
 
@@ -49,6 +54,57 @@
                                 </span>
                             </template>
                         </FormRow>
+
+                        <FormRow class-name="buttons-row button-margin">
+                            <template v-slot:inputs>
+                                <div class="harvesting-buttons-container">
+                                    <button
+                                        v-if="harvestingStatus === 'INACTIVE'"
+                                        type="submit"
+                                        class="centered-button button-style submit-button inverted-button"
+                                        :disabled="linking"
+                                        @click="handleSubmit(onStartClick())"
+                                    >
+                                        {{ linking ? $t('linking') : $t('link_keys') }}
+                                    </button>
+                                    <button
+                                        v-if="!isPersistentDelReqSent && harvestingStatus !== 'INACTIVE' && harvestingStatus !== 'ACTIVE'"
+                                        class="centered-button button-style submit-button inverted-button"
+                                        :disabled="activating || linking || !isPublicAndPrivateKeysLinked"
+                                        @click="handleSubmit(onActivate())"
+                                    >
+                                        {{ activating ? $t('requesting') : $t('request_harvesting') }}
+                                    </button>
+                                    <!-- <button
+                                        v-if="isPersistentDelReqSent && harvestingStatus !== 'INACTIVE'"
+                                        type="submit"
+                                        class="centered-button button-style submit-button inverted-button"
+                                        :disabled="swapDisabled"
+                                        @click="handleSubmit(onSwap())"
+                                    >
+                                        {{ $t('swap') }}
+                                    </button> -->
+                                    <button
+                                        v-if="harvestingStatus !== 'INACTIVE' && harvestingStatus !== 'KEYS_LINKED'"
+                                        type="submit"
+                                        class="centered-button button-style submit-button danger-button"
+                                        :disabled="linking || activating"
+                                        @click="handleSubmit(onStop())"
+                                    >
+                                        {{ linking ? $t('stoping') : $t('stop_harvesting') }}
+                                    </button>
+                                    <button
+                                        v-if="harvestingStatus === 'KEYS_LINKED'"
+                                        type="submit"
+                                        class="centered-button secondary-outline-button button-style submit-button button"
+                                        :disabled="linking || activating"
+                                        @click="handleSubmit(onStop())"
+                                    >
+                                        {{ linking ? $t('unlinking') : $t('unlink_keys') }}
+                                    </button>
+                                </div>
+                            </template>
+                        </FormRow>
                     </div>
                     <div v-if="activePanel === 1">
                         <div class="info-text">
@@ -60,7 +116,7 @@
                                 type="warning"
                                 :value="$t('remote_keys_linked')"
                             />
-                            <Alert :visible="!isPublicAndPrivateKeysLinked" type="warning" :value="$t('harvesting_status_not_detected')" />
+                            <Alert :visible="isActivatedFromAnotherDevice" type="warning" :value="$t('harvesting_status_not_detected')" />
                         </div>
                         <!-- <FormRow class="form-warning-row" v-if="harvestingStatus !== 'INACTIVE'">
                             <template v-slot:inputs>
@@ -199,58 +255,20 @@
                                 </template>
                             </FormRow>
                         </div>
-                    </div>
 
-                    <FormRow class-name="buttons-row button-margin">
-                        <template v-slot:inputs>
-                            <div class="harvesting-buttons-container">
-                                <button
-                                    v-if="harvestingStatus === 'INACTIVE'"
-                                    type="submit"
-                                    class="centered-button button-style submit-button inverted-button"
-                                    :disabled="linking"
-                                    @click="handleSubmit(onStartClick())"
-                                >
-                                    {{ linking ? $t('linking') : $t('link_keys') }}
-                                </button>
-                                <button
-                                    v-if="!isPersistentDelReqSent && harvestingStatus !== 'INACTIVE' && harvestingStatus !== 'ACTIVE'"
-                                    class="centered-button button-style submit-button inverted-button"
-                                    :disabled="activating || linking || !isPublicAndPrivateKeysLinked"
-                                    @click="handleSubmit(onActivate())"
-                                >
-                                    {{ activating ? $t('requesting') : $t('request_harvesting') }}
-                                </button>
-                                <!-- <button
-                                    v-if="isPersistentDelReqSent && harvestingStatus !== 'INACTIVE'"
-                                    type="submit"
-                                    class="centered-button button-style submit-button inverted-button"
-                                    :disabled="swapDisabled"
-                                    @click="handleSubmit(onSwap())"
-                                >
-                                    {{ $t('swap') }}
-                                </button> -->
-                                <button
-                                    v-if="harvestingStatus !== 'INACTIVE' && harvestingStatus !== 'KEYS_LINKED'"
-                                    type="submit"
-                                    class="centered-button button-style submit-button danger-button"
-                                    :disabled="linking || activating"
-                                    @click="handleSubmit(onStop())"
-                                >
-                                    {{ linking ? $t('stoping') : $t('stop_harvesting') }}
-                                </button>
-                                <button
-                                    v-if="harvestingStatus === 'KEYS_LINKED'"
-                                    type="submit"
-                                    class="centered-button secondary-outline-button button-style submit-button button"
-                                    :disabled="linking || activating"
-                                    @click="handleSubmit(onStop())"
-                                >
-                                    {{ linking ? $t('unlinking') : $t('unlink_keys') }}
-                                </button>
-                            </div>
-                        </template>
-                    </FormRow>
+                        <div class="key-item">
+                            <FormRow class="fee-selector">
+                                <template v-slot:label> {{ $t('fee') }}: </template>
+                                <template v-slot:inputs>
+                                    <MaxFeeSelector v-model="formItems.maxFee" :show-fee-label="false" />
+                                    <span v-if="LowFeeValue" class="fee-warning">
+                                        <Icon type="ios-warning-outline" />
+                                        {{ $t('low_fee_warning_message') }}
+                                    </span>
+                                </template>
+                            </FormRow>
+                        </div>
+                    </div>
                 </form>
             </ValidationObserver>
         </FormWrapper>

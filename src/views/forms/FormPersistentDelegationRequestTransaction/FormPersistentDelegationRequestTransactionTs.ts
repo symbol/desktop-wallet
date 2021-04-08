@@ -201,8 +201,9 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             return false;
         }
         return (
-            (!this.currentSignerHarvestingModel.encRemotePrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.linked) ||
-            (!this.currentSignerHarvestingModel.encVrfPrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.vrf)
+            !this.formItems.nodeModel.url &&
+            ((!this.currentSignerHarvestingModel.encRemotePrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.linked) ||
+                (!this.currentSignerHarvestingModel.encVrfPrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.vrf))
         );
     }
 
@@ -266,6 +267,22 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             }
         } else {
             this.formItems.nodeModel = { nodePublicKey: '' } as NodeModel;
+        }
+    }
+
+    @Watch('formItems.nodeModel', { immediate: true })
+    private nodeModelChanged() {
+        if (
+            this.isActivatedFromAnotherDevice &&
+            this.formItems.nodeModel &&
+            this.formItems.nodeModel.url &&
+            this.formItems.nodeModel.nodePublicKey === this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey
+        ) {
+            const accountAddress = this.currentSignerHarvestingModel.accountAddress;
+            this.$store.dispatch('harvesting/UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
+                accountAddress,
+                selectedHarvestingNode: this.formItems.nodeModel,
+            });
         }
     }
 
