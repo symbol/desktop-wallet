@@ -46,7 +46,6 @@
                     class="input-size input-style"
                     :placeholder="$t('node_public_key_input')"
                     type="text"
-                    :disabled="true"
                     @blur="onChangeFormNodePublicKey"
                 />
             </div>
