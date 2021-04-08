@@ -773,39 +773,39 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         if (this.type == 'node') {
             this.onSubmit();
         } else if (this.type == 'account') {
-            if (!this.isAccountKeyLinked && this.isLedger) {
-                this.hasLedgerAccountUnlockModal = true;
+            if (!this.isAccountKeyLinked) {
+                this.modalImportKeyTitle = PublicKeyTitle.REMOTE;
+                this.showModalImportKey = true;
             } else {
-                if (!this.isAccountKeyLinked) {
-                    this.modalImportKeyTitle = PublicKeyTitle.REMOTE;
-                    this.showModalImportKey = true;
-                } else {
-                    this.onSubmit();
-                }
+                this.onSubmit();
             }
         } else {
-            if (!this.isVrfKeyLinked && this.isLedger) {
-                this.hasLedgerAccountUnlockModal = true;
+            if (!this.isVrfKeyLinked) {
+                this.modalImportKeyTitle = PublicKeyTitle.VRF;
+                this.showModalImportKey = true;
             } else {
-                if (!this.isVrfKeyLinked) {
-                    this.modalImportKeyTitle = PublicKeyTitle.VRF;
-                    this.showModalImportKey = true;
-                } else {
-                    this.onSubmit();
-                }
+                this.onSubmit();
             }
         }
     }
-    onSubmitPublicKey(accountObject: { account: Account; type: string }) {
+    onSubmitPrivateKey(accountObject: { account: Account; type: string }) {
         if (!accountObject.account) {
-            this.onSubmit();
+            if (this.isLedger) {
+                this.hasLedgerAccountUnlockModal = true;
+            } else {
+                this.onSubmit();
+            }
         } else {
             if (accountObject.type === 'vrf') {
                 this.newVrfKeyAccount = accountObject.account;
             } else {
                 this.newRemoteAccount = accountObject.account;
             }
-            this.onSubmit();
+            if (this.isLedger) {
+                this.hasLedgerAccountUnlockModal = true;
+            } else {
+                this.onSubmit();
+            }
         }
     }
 

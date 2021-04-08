@@ -105,6 +105,7 @@ export default class ModalImportPrivateKeyTs extends Vue {
                 this.$emit('submit', { account: undefined, type: 'vrf' });
             }
         }
+        this.$emit('confirmed', true);
     }
     get showPrivateKeyInput() {
         return this.type === 'own_key';
