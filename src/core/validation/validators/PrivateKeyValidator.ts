@@ -26,10 +26,9 @@ export class PrivateKeyValidator {
      * @param {*} value
      * @returns {boolean}
      */
-    public static validate(value: any): boolean {
+    public static validate(value: any, networkType?: NetworkType): boolean {
         try {
-            /** The NetworkType below is for public key testing only */
-            Account.createFromPrivateKey(value, NetworkType.TEST_NET);
+            Account.createFromPrivateKey(value, networkType);
             return true;
         } catch (error) {
             return false;

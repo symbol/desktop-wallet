@@ -77,7 +77,7 @@ export default class ModalImportPrivateKeyTs extends Vue {
     }
 
     public get isValidPrivateKey(): boolean {
-        if (PrivateKeyValidator.validate(this.privateKey) || this.type === 'random_key') {
+        if (PrivateKeyValidator.validate(this.privateKey, this.currentProfile.networkType) || this.type === 'random_key') {
             return true;
         }
         return false;
