@@ -27,15 +27,18 @@ export class HashLockAggregatePairModelStorage extends VersionedObjectStorage<Ha
     public static INSTANCE = new HashLockAggregatePairModelStorage();
 
     private constructor() {
-        super('addressBookPerProfile', [
-            {
-                description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
-                migrate: () => undefined,
-            },
-            {
-                description: 'Reset accounts for 0.10.0.6 network (non backwards compatible)',
-                migrate: () => undefined,
-            },
-        ]);
+        super({
+            storageKey: 'hashLockAggregatePairs',
+            migrations: [
+                {
+                    description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',
+                    migrate: () => undefined,
+                },
+                {
+                    description: 'Reset accounts for 0.10.0.6 network (non backwards compatible)',
+                    migrate: () => undefined,
+                },
+            ],
+        });
     }
 }
