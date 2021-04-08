@@ -15,19 +15,20 @@
  */
 
 import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage';
+import { HashLockAggregatePairModel } from '@/core/database/entities/HashLockAggregatePairModel';
 
 /**
  * Stored cache for the known block infos.
  */
-export class AddressBookModelStorage extends VersionedObjectStorage<Record<string, string>> {
+export class HashLockAggregatePairModelStorage extends VersionedObjectStorage<HashLockAggregatePairModel[]> {
     /**
      * Singleton instance as we want to run the migration just once
      */
-    public static INSTANCE = new AddressBookModelStorage();
+    public static INSTANCE = new HashLockAggregatePairModelStorage();
 
     private constructor() {
         super({
-            storageKey: 'addressBookPerProfile',
+            storageKey: 'hashLockAggregatePairs',
             migrations: [
                 {
                     description: 'Reset accounts for 0.10.0.5 network (non backwards compatible)',

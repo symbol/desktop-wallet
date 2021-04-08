@@ -3,11 +3,14 @@ import {
     AccountNames,
     ChainInfo,
     ChainProperties,
+    Currency,
     FinalizedBlock,
+    MosaicId,
     MultisigAccountGraphInfo,
     NamespaceId,
     NamespaceName,
     NetworkConfiguration,
+    NetworkCurrencies,
     NetworkProperties,
     NetworkType,
     NodeInfo,
@@ -21,12 +24,13 @@ import { NodeIdentityEqualityStrategy } from 'symbol-openapi-typescript-fetch-cl
 import { Address } from 'symbol-sdk';
 import { AccountType } from 'symbol-sdk';
 import { SupplementalPublicKeys } from 'symbol-sdk';
+import { networkConfig } from '@/config';
 
 export const OfflineUrl = 'http://mock:3000';
 
 export const OfflineGenerationHash = {
-    [NetworkType.TEST_NET]: '45FBCF2F0EA36EFA7923C9BC923D6503169651F7FA4EFC46A8EAF5AE09057EBD',
-    [NetworkType.MAIN_NET]: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
+    [NetworkType.TEST_NET]: networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.generationHash,
+    [NetworkType.MAIN_NET]: networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.generationHash,
 };
 
 export const OfflineTransactionFees = new TransactionFees(84587, 100, 1136363, 0, 0);
@@ -41,14 +45,14 @@ export const OfflineNetworkProperties = {
             NodeIdentityEqualityStrategy.Host,
             '071964D3C040D62DE905EAE978E2119BFC8E70489BFDF45A85B3D7ED5A517AA8',
             OfflineGenerationHash[NetworkType.TEST_NET],
-            '1573430400s',
+            networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.epochAdjustment + 's',
         ),
         new ChainProperties(
             true,
             true,
-            "0x2CF4'03E8'5507'F39E",
-            "0x2CF4'03E8'5507'F39E",
-            '30s',
+            networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.currencyMosaicId,
+            networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.harvestingMosaicId,
+            networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.blockGenerationTargetTime + 's',
             '3000',
             '180',
             '5',
@@ -59,7 +63,7 @@ export const OfflineNetworkProperties = {
             '500ms',
             "7'831'975'436'000'000",
             "9'000'000'000'000'000",
-            "7'831'975'436'000'000",
+            `${networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.maxMosaicAtomicUnits}`,
             "10'000'000'000",
             "50'000'000'000'000",
             "3'000'000'000'000",
@@ -80,14 +84,14 @@ export const OfflineNetworkProperties = {
             NodeIdentityEqualityStrategy.Host,
             '78F0F6FFDE5C130777506FE2A597ADC5E98BD46041ABF775908299FE94BFD5D0',
             OfflineGenerationHash[NetworkType.MAIN_NET],
-            '1609459200s',
+            networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.epochAdjustment + 's',
         ),
         new ChainProperties(
             true,
             true,
-            "0x4F8E'3FB7'5C77'C83E",
-            "0x4F8E'3FB7'5C77'C83E",
-            '30s',
+            networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.currencyMosaicId,
+            networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.harvestingMosaicId,
+            networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.blockGenerationTargetTime + 's',
             '3000',
             '180',
             '5',
@@ -98,7 +102,7 @@ export const OfflineNetworkProperties = {
             '500ms',
             "7'831'975'436'000'000",
             "9'000'000'000'000'000",
-            "7'831'975'436'000'000",
+            `${networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.maxMosaicAtomicUnits}`,
             "10'000'000'000",
             "50'000'000'000'000",
             "3'000'000'000'000",
@@ -147,3 +151,15 @@ export const OfflineAccountNames = (address: Address) => new AccountNames(addres
 export const OfflineNamespaceNames = (namespaceId: NamespaceId) => new NamespaceName(namespaceId, 'mocknamespace');
 
 export const OfflineMultisigAccountGraphInfo = new MultisigAccountGraphInfo(new Map());
+
+export const OfflineNetworkCurrencies = (networkType: NetworkType): NetworkCurrencies => {
+    const publicCurrency = new Currency({
+        namespaceId: new NamespaceId('symbol.xym'),
+        divisibility: 6,
+        transferable: true,
+        supplyMutable: false,
+        restrictable: false,
+        mosaicId: new MosaicId(networkConfig[networkType].networkConfigurationDefaults.currencyMosaicId),
+    });
+    return new NetworkCurrencies(publicCurrency, publicCurrency);
+};

@@ -93,6 +93,12 @@
             @close="isImportQRModalOpen = false"
             @jsonImported="onQRCodeGenerated"
         />
+        <ModalTransactionDetails
+            v-if="aggregateTransactionView"
+            :visible="transactionDetailsVisible"
+            :transaction="aggregateTransactionView"
+            @close="transactionDetailsVisible = false"
+        />
     </div>
 </template>
 

@@ -13,30 +13,21 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-export interface IStorageBackend {
-    /**
-     * The number of available entries
-     * @var {number}
-     */
-    length: number;
 
-    /**
-     * Getter for value with \a key
-     * @param {string} key
-     * @return {string|null}
-     */
-    getItem(key: string): string | null;
+import { NetworkType, TransactionType } from 'symbol-sdk';
 
-    /**
-     * Setter for \a key with \a value
-     * @param {string} key
-     * @param {any} value
-     */
-    setItem(key: string, value: string): void;
-
-    /**
-     * Deletes the value for the given key
-     * @param {string} key
-     */
-    removeItem(key: string): void;
+/**
+ * HashLock Aggregate Pair to hold unspent HashLocks information
+ *
+ */
+export class HashLockAggregatePairModel {
+    public readonly profileName: string;
+    public readonly hashLockHash: string;
+    public readonly aggregateTransactionDTO: {
+        payload: string;
+        hash: string;
+        signerPublicKey: string;
+        type: TransactionType;
+        networkType: NetworkType;
+    };
 }

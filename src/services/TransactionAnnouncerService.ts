@@ -29,11 +29,15 @@ import {
     RepositoryFactory,
     SignedTransaction,
     Transaction,
+    TransactionGroup,
     TransactionService,
     TransactionType,
 } from 'symbol-sdk';
 import { TransactionAnnounceResponse } from 'symbol-sdk/dist/src/model/transaction/TransactionAnnounceResponse';
 import { Store } from 'vuex';
+import { HashLockAggregatePairModelStorage } from '@/core/database/storage/HashLockAggregatePairModelStorage';
+import { HashLockAggregatePairModel } from '@/core/database/entities/HashLockAggregatePairModel';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 
 const { ANNOUNCE_TRANSACTION_TIMEOUT } = appConfig.constants;
 
@@ -68,6 +72,11 @@ export class TransactionAnnouncerService {
     private networkType: NetworkType;
 
     /**
+     * The namespace information local cache.
+     */
+    private readonly hashLockAggregatePairModelStorage = HashLockAggregatePairModelStorage.INSTANCE;
+
+    /**
      * Construct a service instance around \a store
      * @param store
      */
@@ -81,6 +90,15 @@ export class TransactionAnnouncerService {
         const service = this.createService();
         return service
             .announce(signedTransaction, listener)
+            .pipe(this.timeout(this.timeoutMessage(signedTransaction.type)))
+            .pipe(map((t) => this.createBroadcastResult(signedTransaction, t)));
+    }
+
+    public announceAggregateBonded(signedTransaction: SignedTransaction): Observable<BroadcastResult> {
+        const listener: IListener = this.$store.getters['account/listener'];
+        const service = this.createService();
+        return service
+            .announceAggregateBonded(signedTransaction, listener)
             .pipe(this.timeout(this.timeoutMessage(signedTransaction.type)))
             .pipe(map((t) => this.createBroadcastResult(signedTransaction, t)));
     }
@@ -118,6 +136,7 @@ export class TransactionAnnouncerService {
     ): Observable<BroadcastResult> {
         const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
         const hashLockListener: IListener = repositoryFactory.createListener();
+        this.addHashLockAggregateBondedPair(signedHashLockTransaction.hash, signedAggregateTransaction);
         return from(hashLockListener.open()).pipe(
             switchMap(() => {
                 hashLockListener.unconfirmedAdded(this.$store.getters['account/currentAccountAddress']);
@@ -141,6 +160,86 @@ export class TransactionAnnouncerService {
                     .pipe(map((t) => this.createBroadcastResult(signedAggregateTransaction, t)));
             }),
         );
+    }
+
+    private addHashLockAggregateBondedPair(hashLockHash: string, aggregateBonded: SignedTransaction): void {
+        const currentProfile: ProfileModel = this.$store.getters['profile/currentProfile'];
+        const hashLockAggregatePairs = this.hashLockAggregatePairModelStorage.get() || [];
+        hashLockAggregatePairs.push({
+            profileName: currentProfile.profileName,
+            hashLockHash: hashLockHash,
+            aggregateTransactionDTO: aggregateBonded.toDTO(),
+        } as HashLockAggregatePairModel);
+        this.hashLockAggregatePairModelStorage.set(hashLockAggregatePairs);
+    }
+
+    public async sendUnspentHashLockPairs(): Promise<void> {
+        const currentProfile: ProfileModel = this.$store.getters['profile/currentProfile'];
+        if (!currentProfile) {
+            return;
+        }
+        const hashLockAggregatePairs = this.hashLockAggregatePairModelStorage.get() || [];
+        const unannouncedPairs: HashLockAggregatePairModel[] = [];
+        for (const hashLockAggregatePair of hashLockAggregatePairs) {
+            const hashLockGroup = await this.getTransactionGroup(hashLockAggregatePair.hashLockHash);
+            if (hashLockGroup === null) {
+                continue;
+            } else if (hashLockGroup === TransactionGroup.Unconfirmed) {
+                unannouncedPairs.push(hashLockAggregatePair);
+                continue;
+            }
+            const isAnnounced = await this.getTransactionGroup(hashLockAggregatePair.aggregateTransactionDTO.hash);
+            const signedTransaction = new SignedTransaction(
+                hashLockAggregatePair.aggregateTransactionDTO.payload,
+                hashLockAggregatePair.aggregateTransactionDTO.hash,
+                hashLockAggregatePair.aggregateTransactionDTO.signerPublicKey,
+                hashLockAggregatePair.aggregateTransactionDTO.type,
+                hashLockAggregatePair.aggregateTransactionDTO.networkType,
+            );
+            if (isAnnounced !== null) {
+                continue;
+            }
+            this.announceAggregateBonded(signedTransaction).subscribe(
+                (res) => {
+                    if (res.success) {
+                        this.$store.dispatch('notification/ADD_SUCCESS', 'success_transactions_announced');
+                    } else if (res.error) {
+                        this.$store.dispatch('notification/ADD_ERROR', res.error);
+                    }
+                },
+                (error) => {
+                    this.$store.dispatch('notification/ADD_ERROR', error);
+                },
+            );
+        }
+        this.hashLockAggregatePairModelStorage.set(unannouncedPairs);
+    }
+
+    private async getTransactionGroup(hash: string): Promise<TransactionGroup | null> {
+        const repositoryFactory: RepositoryFactory = this.$store.getters['network/repositoryFactory'];
+        const transactionHttp = repositoryFactory.createTransactionRepository();
+        try {
+            const transaction = await transactionHttp.getTransaction(hash, TransactionGroup.Confirmed).toPromise();
+            if (transaction) {
+                return TransactionGroup.Confirmed;
+            }
+            // eslint-disable-next-line no-empty
+        } catch {}
+        try {
+            const transaction = await transactionHttp.getTransaction(hash, TransactionGroup.Partial).toPromise();
+            if (transaction) {
+                return TransactionGroup.Partial;
+            }
+            // eslint-disable-next-line no-empty
+        } catch {}
+        try {
+            const transaction = await transactionHttp.getTransaction(hash, TransactionGroup.Unconfirmed).toPromise();
+            if (transaction) {
+                return TransactionGroup.Unconfirmed;
+            }
+            // eslint-disable-next-line no-empty
+        } catch {}
+        return null;
     }
 
     public announceChainedBinary(first: SignedTransaction, second: SignedTransaction): Observable<BroadcastResult> {

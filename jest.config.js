@@ -15,7 +15,7 @@ module.exports = {
   transform: {
     "^.+\\.js$": "babel-jest",
     '^.+\\.vue$': 'vue-jest',
-    '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
+    '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2|ogg)$': 'jest-transform-stub',
     "^.+\\.ts$": "ts-jest",
   },
   transformIgnorePatterns: [
@@ -45,6 +45,7 @@ module.exports = {
     "!**/node_modules/**",
     "!**/__mocks__/**",
     "!**/*.png",
+    "!**/*.ogg",
     "!**/*.d.ts",
     "!**/*.less",
   ],
