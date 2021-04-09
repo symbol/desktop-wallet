@@ -38,6 +38,20 @@ export class NetworkNodeSelectorTs extends Vue {
     })
     disabled: boolean;
 
+    @Prop({
+        default: false,
+    })
+    isAccountKeyLinked: boolean;
+    @Prop({
+        default: false,
+    })
+    isVrfKeyLinked: boolean;
+
+    @Prop({
+        default: false,
+    })
+    missingKeys: boolean;
+
     public peerNodes: NodeInfo[];
     public isFetchingNodeInfo = false;
     public networkType: NetworkType;
@@ -102,6 +116,10 @@ export class NetworkNodeSelectorTs extends Vue {
                 );
                 Vue.set(this, 'showInputPublicKey', false);
                 this.$emit('input', nodeModel);
+                if (this.isAccountKeyLinked && this.isVrfKeyLinked && this.missingKeys) {
+                    console.log('got hereeeeeeee', value);
+                    this.$store.dispatch('harvesting/FETCH_STATUS', value);
+                }
             } else {
                 Vue.set(this, 'showInputPublicKey', true);
             }
