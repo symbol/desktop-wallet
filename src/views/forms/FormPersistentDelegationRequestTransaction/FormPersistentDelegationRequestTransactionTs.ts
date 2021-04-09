@@ -746,7 +746,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             this.$store.dispatch('notification/ADD_ERROR', this.$t('harvesting_account_has_zero_importance'));
             return;
         }
-        console.log();
         if (!this.isLedger) {
             this.onSubmit();
         } else {
