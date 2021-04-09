@@ -885,7 +885,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     public get isPublicAndPrivateKeysLinked(): boolean {
-        console.log(this.isVrfKeyLinked, this.isAccountKeyLinked)
         if (
             (this.isAccountKeyLinked && !this.currentSignerHarvestingModel?.encRemotePrivateKey) ||
             (this.isVrfKeyLinked && !this.currentSignerHarvestingModel?.encVrfPrivateKey)
