@@ -1093,5 +1093,20 @@
     "harvesting_activated_from_another_device": "收割已使用其他设备激活。\n显示的收获状态可能不正确，因为此钱包没有所有信息。",
     "create_remote_public_key": "创建远程公钥",
     "generate_random_public_key": "产生金钥",
-    "import_key_manually": "手动导入密钥"
+    "import_key_manually": "手动导入密钥",
+    "create_vrf_public_key": "创建VRF公钥",
+    "harvesting_account_has_extra_balance": "要开始委派收割，您的帐户必须持有少于50000000的XYM。",
+    "harvesting_account_has_zero_importance": "重要性低，重要性为0时，帐户无法开始收获。",
+    "harvesting_delegated_description": "委托收获允许在不运行节点的情况下使用帐户的重要性得分从创建新区块中获得奖励。\n要激活委派收获，您必须链接所有键并请求一个节点来收获您的帐户。",
+    "harvesting_delegated_request_warning": "根据您帐户的重要性得分和该节点的免费收获时段，可能不会批准您的请求。\n\n\n另外，请注意，节点可以随时从其收获槽中删除帐户。\n\n\n在这些情况下，您需要切换到其他节点并重复Delegated Harvesting激活过程。\n激活支付的交易费用将不予退还。\n\n\n如果输入了自定义节点URL，则显示的“收获”状态可能在所有设备上都不正确。",
+    "harvesting_delegated_request_warning_title": "委托收获",
+    "harvesting_keys_linked_missing": "为了激活收款钱包，需要具有所有链接的密钥对。\n请重新链接它们。",
+    "harvesting_keys_linked_next_step_guide": "键已链接。\n现在，您可以请求一个节点来收获您的帐户。\n如果要更改节点，则必须首先取消链接。\n使用下面的按钮。",
+    "harvesting_node_selection": "请从下面的下拉列表中选择一个节点。\n您可以在Symbol Explorer中找到更多节点，并通过输入其URL来使用它们。",
+    "key_type": "密钥类型",
+    "open_explorer_node_list": "访问Symbol Explorer的节点列表",
+    "request_harvesting": "要求收获",
+    "requesting": "正在要求...",
+    "unlink_keys": "取消链接键",
+    "unlinking": "取消连结..."
 }
