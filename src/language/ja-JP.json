@@ -1095,5 +1095,18 @@
     "tab_harvesting_delegated_harvesting": "委任された収穫",
     "tab_harvesting_key_links": "キーリンク",
     "open_harvesting_keys_warning_title": "リンクされたキーの収穫を開く",
-    "harvesting_activated_from_another_device": "別のデバイスを使用してハーベスティングがアクティブ化されました。\nこのウォレットにはすべての情報が含まれていないため、表示される収穫ステータスが正しくない可能性があります。"
+    "harvesting_activated_from_another_device": "別のデバイスを使用してハーベスティングがアクティブ化されました。\nこのウォレットにはすべての情報が含まれていないため、表示される収穫ステータスが正しくない可能性があります。",
+    "unlink_keys": "キーのリンクを解除する",
+    "unlinking": "リンクを解除しています...",
+    "request_harvesting": "収穫をリクエストする",
+    "harvesting_account_has_extra_balance": "委任されたハーベスティングを開始するには、アカウントが50000000未満のXYMの量を保持する必要があります。",
+    "harvesting_account_has_zero_importance": "重要度が低いため、重要度が0の場合、アカウントは収集を開始できません。",
+    "harvesting_delegated_description": "Delegated Harvestingを使用すると、ノードを実行せずに、アカウントの重要度スコアを使用して新しいブロックを作成することで報酬を受け取ることができます。\n委任されたハーベスティングをアクティブ化するには、すべてのキーをリンクし、アカウントのハーベスティングをノードに要求する必要があります。",
+    "harvesting_delegated_request_warning": "アカウントの重要度スコアとノードの無料のハーベスティングスロットによっては、リクエストが許可されない場合があります。\n\n\nまた、ノードはいつでもハーベスティングスロットからアカウントを削除する可能性があることに注意してください。\n\n\nこのような場合は、別のノードに切り替えて、DelegatedHarvestingアクティベーションプロセスを繰り返す必要があります。\nアクティベーションに支払われた取引手数料は返金されません。\n\n\nカスタムノードURLを入力した場合、表示されるハーベスティングステータスはすべてのデバイスで正確ではない可能性があります。",
+    "harvesting_delegated_request_warning_title": "委任された収穫",
+    "harvesting_keys_linked_missing": "ハーベスティングウォレットをアクティブ化するには、すべてのリンクされたキーペアが必要です。\nそれらを再リンクしてください。",
+    "harvesting_keys_linked_next_step_guide": "キーはリンクされています。\nこれで、アカウントの収集をノードに要求できます。\nノードを変更する場合は、最初にキーのリンクを解除する必要があります。\n下のボタンを使用してください。",
+    "harvesting_node_selection": "下のドロップダウンリストからノードを選択してください。\nシンボルエクスプローラーでさらにノードを見つけて、それらのURLを入力することでそれらを使用できます。",
+    "open_explorer_node_list": "SymbolExplorerのノードリストにアクセスします",
+    "requesting": "リクエストしています..."
 }

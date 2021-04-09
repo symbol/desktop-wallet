@@ -130,6 +130,7 @@ export enum PublicKeyTitle {
             networkBalanceMosaics: 'mosaic/networkBalanceMosaics',
             currentAccount: 'account/currentAccount',
             feesConfig: 'network/feesConfig',
+            accountsInfo: 'account/accountsInfo',
         }),
     },
 })
@@ -150,6 +151,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         signerAddress: '',
         maxFee: 0,
     };
+    private accountsInfo: AccountInfo[];
 
     private newVrfKeyAccount: Account;
     private newRemoteAccount: Account;
@@ -734,6 +736,17 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             this.$store.dispatch('notification/ADD_ERROR', this.$t('harvesting_account_insufficient_balance'));
             return;
         }
+        if (this.networkBalanceMosaics.balance / Math.pow(10, this.networkBalanceMosaics.divisibility) >= 50000000) {
+            this.$store.dispatch('notification/ADD_ERROR', this.$t('harvesting_account_has_extra_balance'));
+            return;
+        }
+        if (
+            this.accountsInfo.find((k) => k.address.plain() === this.currentSignerHarvestingModel.accountAddress).importance.compact() === 0
+        ) {
+            this.$store.dispatch('notification/ADD_ERROR', this.$t('harvesting_account_has_zero_importance'));
+            return;
+        }
+        console.log();
         if (!this.isLedger) {
             this.onSubmit();
         } else {
