@@ -147,7 +147,7 @@ export default {
         SET_POLLING_TRIALS({ commit }, pollingTrials) {
             commit('setPollingTrials', pollingTrials);
         },
-        async FETCH_STATUS({ commit, rootGetters }) {
+        async FETCH_STATUS({ commit, rootGetters }, nodeUrl?: string) {
             const currentSignerAccountInfo: AccountInfo = rootGetters['account/currentSignerAccountInfo'];
             // reset
             let status: HarvestingStatus;
@@ -160,7 +160,7 @@ export default {
             if (currentSignerHarvestingModel) {
                 //find the node url from currentSignerHarvestingModel (localStorage)
                 const selectedNode = currentSignerHarvestingModel.selectedHarvestingNode;
-                const harvestingNodeUrl = selectedNode?.url;
+                const harvestingNodeUrl = selectedNode?.url || nodeUrl;
                 let unlockedAccounts: string[] = [];
 
                 if (harvestingNodeUrl) {

@@ -42,6 +42,9 @@
                         <NetworkNodeSelector
                             v-model="formItems.nodeModel"
                             :disabled="harvestingStatus !== 'INACTIVE' && isPublicAndPrivateKeysLinked"
+                            :is-account-key-linked="isAccountKeyLinked"
+                            :is-vrf-key-linked="isVrfKeyLinked"
+                            :missing-keys="harvestingStatus === 'KEYS_LINKED' && !isPublicAndPrivateKeysLinked"
                         />
 
                         <FormRow class="fee-selector">
