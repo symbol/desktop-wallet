@@ -248,6 +248,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         slow: number;
         slowest: number;
     };
+    private transactionSize: number = 0;
     /**
      * Reset the form with properties
      * @return {void}
@@ -566,6 +567,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     triggerChange() {
         if (AddressValidator.validate(this.formItems.recipientRaw)) {
             this.transactions = this.getTransactions();
+            this.transactionSize = this.transactions[0].size;
             // avoid error
             if (this.transactions) {
                 const data: ITransactionEntry[] = [];

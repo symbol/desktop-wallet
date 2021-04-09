@@ -554,18 +554,26 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     private resolveFeeMultipler(transaction: Transaction): number | undefined {
-        if (transaction.maxFee.compact() == 10) {
-            const fees =
-                this.transactionFees.averageFeeMultiplier * 1.2 < this.transactionFees.minFeeMultiplier
-                    ? this.transactionFees.minFeeMultiplier
-                    : this.transactionFees.averageFeeMultiplier * 1.2;
+        if (transaction.maxFee.compact() === 10) {
+            const fees = this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.65;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
-        if (transaction.maxFee.compact() == 20) {
+        // fast
+        if (transaction.maxFee.compact() === 20) {
             const fees =
-                this.transactionFees.highestFeeMultiplier < this.transactionFees.minFeeMultiplier
+                this.transactionFees.averageFeeMultiplier < this.transactionFees.minFeeMultiplier
                     ? this.transactionFees.minFeeMultiplier
-                    : this.transactionFees.highestFeeMultiplier;
+                    : this.transactionFees.averageFeeMultiplier;
+            return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
+        }
+        // slowest
+        if (transaction.maxFee.compact() === 1) {
+            const fees = this.transactionFees.minFeeMultiplier;
+            return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
+        }
+        // slow
+        if (transaction.maxFee.compact() === 5) {
+            const fees = this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.35;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         return undefined;
