@@ -88,6 +88,10 @@ export class MaxFeeSelectorTs extends Vue {
     @Prop({ default: false }) showLowFeeWarning: boolean;
 
     @Prop({ default: false }) showFeeLabel: boolean;
+    @Prop({ default: 0 }) slowFee: number;
+    @Prop({ default: 0 }) slowestFee: number;
+    @Prop({ default: 0 }) fastFee: number;
+    @Prop({ default: 0 }) averageFee: number;
 
     /**
      * The fees to be displayed in the dropw down.
@@ -114,33 +118,13 @@ export class MaxFeeSelectorTs extends Vue {
     private getLabel([key, value]: [string, number]) {
         //SPECIAL VALUES!!!
         if (value === this.feesConfig.median) {
-            return this.formatLabel(
-                'fee_speed_' + key,
-                this.calculatedRecommendedFee,
-                this.networkMosaicName,
-                this.calculatedRecommendedFee > 0,
-            );
+            return this.formatLabel('fee_speed_' + key, this.averageFee, this.networkMosaicName, !!this.averageFee);
         } else if (value === this.feesConfig.fast) {
-            return this.formatLabel(
-                'fee_speed_' + key,
-                this.calculatedRecommendedFee * 2,
-                this.networkMosaicName,
-                this.calculatedRecommendedFee * 2 > 0,
-            );
+            return this.formatLabel('fee_speed_' + key, this.fastFee, this.networkMosaicName, !!this.fastFee);
         } else if (value === this.feesConfig.slow) {
-            return this.formatLabel(
-                'fee_speed_' + key,
-                this.calculatedRecommendedFee * 0.5,
-                this.networkMosaicName,
-                this.calculatedRecommendedFee * 0.5 > 0,
-            );
+            return this.formatLabel('fee_speed_' + key, this.slowFee, this.networkMosaicName, !!this.slowFee);
         } else if (value === this.feesConfig.slowest) {
-            return this.formatLabel(
-                'fee_speed_' + key,
-                this.calculatedRecommendedFee * 0.1,
-                this.networkMosaicName,
-                this.calculatedRecommendedFee * 0.1 > 0,
-            );
+            return this.formatLabel('fee_speed_' + key, this.slowestFee, this.networkMosaicName, !!this.slowestFee);
         } else {
             return this.formatLabel('fee_speed_' + key, value, this.networkMosaicName);
         }
@@ -210,34 +194,33 @@ export class MaxFeeSelectorTs extends Vue {
             .map((i) => {
                 if (i.maxFee === this.feesConfig.median) {
                     return {
-                        // @ts-ignore
                         label: this.getLabel(['median', this.feesConfig.median]),
                         maxFee: i.maxFee,
-                        calculatedFee: this.calculatedRecommendedFee,
+                        calculatedFee: this.averageFee,
                     };
                 } else if (i.maxFee === this.feesConfig.fast) {
                     return {
-                        // @ts-ignore
                         label: this.getLabel(['fast', this.feesConfig.fast]),
                         maxFee: i.maxFee,
-                        calculatedFee: this.calculatedRecommendedFee * 2,
+                        calculatedFee: this.fastFee,
                     };
                 } else if (i.maxFee === this.feesConfig.slow) {
                     return {
                         label: this.getLabel(['slow', this.feesConfig.slow]),
                         maxFee: i.maxFee,
-                        calculatedFee: this.calculatedRecommendedFee * 0.5,
+                        calculatedFee: this.slowFee,
                     };
                 } else if (i.maxFee === this.feesConfig.slowest) {
                     return {
                         label: this.getLabel(['slowest', this.feesConfig.slowest]),
                         maxFee: i.maxFee,
-                        calculatedFee: this.calculatedRecommendedFee * 0.1,
+                        calculatedFee: this.slowestFee,
                     };
                 } else {
                     return i;
                 }
             })
+            .slice()
             .sort((a, b) => a.calculatedFee - b.calculatedFee);
     }
 }

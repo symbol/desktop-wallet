@@ -641,31 +641,25 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     private resolveFeeMultipler(transaction: Transaction): number | undefined {
         if (transaction.maxFee.compact() === 10) {
-            const fees =
-                this.transactionFees.averageFeeMultiplier * 1.2 < this.transactionFees.minFeeMultiplier
-                    ? this.transactionFees.minFeeMultiplier
-                    : this.transactionFees.averageFeeMultiplier * 1.2;
+            const fees = this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.65;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
+        // fast
         if (transaction.maxFee.compact() === 20) {
             const fees =
-                this.transactionFees.averageFeeMultiplier * 2 < this.transactionFees.minFeeMultiplier
+                this.transactionFees.averageFeeMultiplier < this.transactionFees.minFeeMultiplier
                     ? this.transactionFees.minFeeMultiplier
-                    : this.transactionFees.averageFeeMultiplier * 2;
+                    : this.transactionFees.averageFeeMultiplier;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
+        // slowest
         if (transaction.maxFee.compact() === 1) {
-            const fees =
-                this.transactionFees.averageFeeMultiplier * 0.1 < this.transactionFees.minFeeMultiplier
-                    ? this.transactionFees.minFeeMultiplier
-                    : this.transactionFees.averageFeeMultiplier * 0.1;
+            const fees = this.transactionFees.minFeeMultiplier;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
+        // slow
         if (transaction.maxFee.compact() === 5) {
-            const fees =
-                this.transactionFees.averageFeeMultiplier * 0.5 < this.transactionFees.minFeeMultiplier
-                    ? this.transactionFees.minFeeMultiplier
-                    : this.transactionFees.averageFeeMultiplier * 0.5;
+            const fees = this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.35;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         return undefined;
@@ -879,6 +873,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     public get isPublicAndPrivateKeysLinked(): boolean {
+        console.log(this.isVrfKeyLinked, this.isAccountKeyLinked)
         if (
             (this.isAccountKeyLinked && !this.currentSignerHarvestingModel?.encRemotePrivateKey) ||
             (this.isVrfKeyLinked && !this.currentSignerHarvestingModel?.encVrfPrivateKey)
