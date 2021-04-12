@@ -83,7 +83,7 @@ export class AddCosignatoryInputTs extends Vue {
             this.addCosignerFromAddress();
             this.cosignatory = '';
             return;
-        } else if (PublicKeyValidator.validate(this.cosignatory)) {
+        } else if (PublicKeyValidator.validate(this.cosignatory, this.networkType)) {
             this.addCosignerFromPublicKey();
             this.cosignatory = '';
             return;

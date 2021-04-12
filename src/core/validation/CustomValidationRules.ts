@@ -157,7 +157,8 @@ export class CustomValidationRules {
         extend('addressOrPublicKey', {
             validate: (value) => {
                 const isValidAddress = AddressValidator.validate(value);
-                const isValidPublicKey = PublicKeyValidator.validate(value);
+                const currentProfile: ProfileModel = AppStore.getters['profile/currentProfile'];
+                const isValidPublicKey = PublicKeyValidator.validate(value, currentProfile.networkType);
                 if (isValidAddress || isValidPublicKey) {
                     return true;
                 }

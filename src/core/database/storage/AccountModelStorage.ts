@@ -84,6 +84,7 @@ export class AccountModelStorage extends VersionedObjectStorage<Record<string, A
                                 selectedHarvestingNode,
                                 encRemotePrivateKey,
                                 encVrfPrivateKey,
+                                delegatedHarvestingRequestFailed,
                                 ...nonHarvesting
                             } = modified[name];
 
@@ -94,12 +95,14 @@ export class AccountModelStorage extends VersionedObjectStorage<Record<string, A
                                     selectedHarvestingNode,
                                     encRemotePrivateKey,
                                     encVrfPrivateKey,
+                                    delegatedHarvestingRequestFailed,
                                     ...nonHarvesting,
                                 });
                                 modified[name] = {
                                     address,
                                     encRemotePrivateKey,
                                     encVrfPrivateKey,
+                                    delegatedHarvestingRequestFailed,
                                     ...nonHarvesting,
                                 };
                             } catch (error) {

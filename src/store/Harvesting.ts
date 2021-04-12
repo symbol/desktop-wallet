@@ -53,6 +53,7 @@ export enum HarvestingStatus {
     KEYS_LINKED = 'KEYS_LINKED',
     INPROGRESS_ACTIVATION = 'INPROGRESS_ACTIVATION',
     INPROGRESS_DEACTIVATION = 'INPROGRESS_DEACTIVATION',
+    FAILED = 'FAILED',
 }
 
 export enum LedgerHarvestingMode {
@@ -70,6 +71,7 @@ interface HarvestingState {
     harvestedBlockStats: HarvestedBlockStats;
     isFetchingHarvestedBlockStats: boolean;
     currentSignerHarvestingModel: HarvestingModel;
+    pollingTrials: number;
 }
 
 const initialState: HarvestingState = {
@@ -84,6 +86,7 @@ const initialState: HarvestingState = {
     },
     isFetchingHarvestedBlockStats: false,
     currentSignerHarvestingModel: null,
+    pollingTrials: 1,
 };
 
 export default {
@@ -98,6 +101,7 @@ export default {
         harvestedBlockStats: (state) => state.harvestedBlockStats,
         isFetchingHarvestedBlockStats: (state) => state.isFetchingHarvestedBlockStats,
         currentSignerHarvestingModel: (state) => state.currentSignerHarvestingModel,
+        pollingTrials: (state) => state.pollingTrials,
     },
     mutations: {
         setInitialized: (state, initialized) => {
@@ -115,6 +119,9 @@ export default {
             Vue.set(state, 'isFetchingHarvestedBlockStats', isFetchingHarvestedBlockStats),
         currentSignerHarvestingModel: (state, currentSignerHarvestingModel) =>
             Vue.set(state, 'currentSignerHarvestingModel', currentSignerHarvestingModel),
+        setPollingTrials: (state, pollingTrials) => {
+            Vue.set(state, 'pollingTrials', pollingTrials);
+        },
     },
     actions: {
         async initialize({ commit, getters }) {
@@ -137,10 +144,13 @@ export default {
             commit('harvestedBlocks', { harvestedBlocks: null, pageInfo: { pageNumber: 1, isLastPage: false } });
             commit('isFetchingHarvestedBlocks', false);
         },
-        async FETCH_STATUS({ commit, rootGetters }) {
+        SET_POLLING_TRIALS({ commit }, pollingTrials) {
+            commit('setPollingTrials', pollingTrials);
+        },
+        async FETCH_STATUS({ commit, rootGetters }, nodeUrl?: string) {
             const currentSignerAccountInfo: AccountInfo = rootGetters['account/currentSignerAccountInfo'];
             // reset
-            let status: HarvestingStatus = HarvestingStatus.INACTIVE;
+            let status: HarvestingStatus;
             if (!currentSignerAccountInfo) {
                 return;
             }
@@ -150,7 +160,7 @@ export default {
             if (currentSignerHarvestingModel) {
                 //find the node url from currentSignerHarvestingModel (localStorage)
                 const selectedNode = currentSignerHarvestingModel.selectedHarvestingNode;
-                const harvestingNodeUrl = selectedNode?.url;
+                const harvestingNodeUrl = selectedNode?.url || nodeUrl;
                 let unlockedAccounts: string[] = [];
 
                 if (harvestingNodeUrl) {
@@ -165,17 +175,18 @@ export default {
                 const remotePublicKey = currentSignerAccountInfo.supplementalPublicKeys?.linked?.publicKey;
                 accountUnlocked = unlockedAccounts?.some((publicKey) => publicKey === remotePublicKey);
             }
-
             const allKeysLinked =
                 currentSignerAccountInfo.supplementalPublicKeys?.linked &&
                 currentSignerAccountInfo.supplementalPublicKeys?.node &&
                 currentSignerAccountInfo.supplementalPublicKeys?.vrf;
-
             if (allKeysLinked) {
+                const pollingTrials = rootGetters['harvesting/pollingTrials'];
                 status = accountUnlocked
                     ? HarvestingStatus.ACTIVE
                     : currentSignerHarvestingModel?.isPersistentDelReqSent
-                    ? HarvestingStatus.INPROGRESS_ACTIVATION
+                    ? pollingTrials === 20 || currentSignerHarvestingModel?.delegatedHarvestingRequestFailed
+                        ? HarvestingStatus.FAILED
+                        : HarvestingStatus.INPROGRESS_ACTIVATION
                     : HarvestingStatus.KEYS_LINKED;
             } else {
                 status = accountUnlocked ? HarvestingStatus.INPROGRESS_DEACTIVATION : HarvestingStatus.INACTIVE;
@@ -306,6 +317,8 @@ export default {
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateSelectedHarvestingNode(harvestingModel, selectedHarvestingNode);
             commit('currentSignerHarvestingModel', harvestingModel);
+            harvestingService.updateDelegatedHarvestingRequestFailed(harvestingModel, false);
+            commit('setPollingTrials', 1);
         },
         UPDATE_REMOTE_ACCOUNT_PRIVATE_KEY(
             { commit },
@@ -323,6 +336,15 @@ export default {
             const harvestingService = new HarvestingService();
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateVrfKey(harvestingModel, encVrfPrivateKey);
+            commit('currentSignerHarvestingModel', harvestingModel);
+        },
+        UPDATE_HARVESTING_REQUEST_STATUS(
+            { commit },
+            { accountAddress, delegatedHarvestingRequestFailed }: { accountAddress: string; delegatedHarvestingRequestFailed: boolean },
+        ) {
+            const harvestingService = new HarvestingService();
+            const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
+            harvestingService.updateDelegatedHarvestingRequestFailed(harvestingModel, delegatedHarvestingRequestFailed);
             commit('currentSignerHarvestingModel', harvestingModel);
         },
         /// end-region scoped actions
