@@ -126,7 +126,6 @@ export default class OfflineCosignTransactionTs extends Vue {
                 transaction.serialize(),
                 Array.from(Convert.hexToUint8(OfflineGenerationHash[transaction.networkType])),
             );
-            await this.$store.dispatch('profile/SET_CURRENT_PROFILE', { networkType: transaction.networkType });
             await this.$store.dispatch('network/CONNECT', { networkType: transaction.networkType, isOffline: true });
             this.aggregateTransactionView = _.cloneDeep(transaction);
             this.transactionDetailsVisible = true;
@@ -148,7 +147,6 @@ export default class OfflineCosignTransactionTs extends Vue {
         if (!this.aggregateTransaction) {
             this.$store.dispatch('notification/ADD_ERROR', 'payload_not_valid');
         } else {
-            this.$store.dispatch('network/CONNECT', { networkType: this.aggregateTransaction.networkType, isOffline: true });
             this.step = 1;
         }
     }
