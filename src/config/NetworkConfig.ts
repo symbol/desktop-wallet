@@ -51,8 +51,8 @@ export interface NetworkConfig {
 }
 
 export const defaultTestnetNetworkConfig: NetworkConfig = {
-    explorerUrl: 'http://explorer-preview.testnet.symboldev.network/',
-    faucetUrl: 'http://faucet-preview.testnet.symboldev.network/',
+    explorerUrl: 'http://explorer.testnet.symboldev.network/',
+    faucetUrl: 'http://faucet.testnet.symboldev.network/',
     defaultNetworkType: 152,
     networkConfigurationDefaults: {
         maxMosaicDivisibility: 6,
