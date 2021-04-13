@@ -226,7 +226,6 @@ export class MosaicService {
      * @returns {Observable<NetworkCurrencyModel[]>}
      */
     public getNetworkCurrencies(repositoryFactory: RepositoryFactory, generationHash: string): Observable<NetworkCurrenciesModel> {
-        const storedNetworkCurrencies = this.networkCurrencyStorage.get(generationHash);
         return repositoryFactory.getCurrencies().pipe(
             map((networkMosaics) => {
                 const currency = this.getNetworkCurrency(networkMosaics.currency);
@@ -234,7 +233,6 @@ export class MosaicService {
                 return new NetworkCurrenciesModel(currency, harvest);
             }),
             tap((d) => this.networkCurrencyStorage.set(generationHash, d)),
-            ObservableHelpers.defaultFirst(storedNetworkCurrencies),
         );
     }
 

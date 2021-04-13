@@ -186,10 +186,7 @@ export class TransactionCommand {
     }
 
     public calculateSuggestedMaxFee(transaction: Transaction): Transaction {
-        const feeMultiplier =
-            this.resolveFeeMultipler(transaction) < this.transactionFees.minFeeMultiplier
-                ? this.transactionFees.minFeeMultiplier
-                : this.resolveFeeMultipler(transaction);
+        const feeMultiplier = this.resolveFeeMultipler(transaction);
         if (!feeMultiplier) {
             return transaction;
         }
@@ -201,32 +198,27 @@ export class TransactionCommand {
     }
 
     private resolveFeeMultipler(transaction: Transaction): number | undefined {
+        // average
         if (transaction.maxFee.compact() === 10) {
+            const fees = this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.65;
+            return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
+        }
+        // fast
+        if (transaction.maxFee.compact() === 20) {
             const fees =
                 this.transactionFees.averageFeeMultiplier < this.transactionFees.minFeeMultiplier
                     ? this.transactionFees.minFeeMultiplier
                     : this.transactionFees.averageFeeMultiplier;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
-        if (transaction.maxFee.compact() === 20) {
-            const fees =
-                this.transactionFees.averageFeeMultiplier * 2 < this.transactionFees.minFeeMultiplier
-                    ? this.transactionFees.minFeeMultiplier
-                    : this.transactionFees.averageFeeMultiplier * 2;
-            return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
-        }
+        // slowest
         if (transaction.maxFee.compact() === 1) {
-            const fees =
-                this.transactionFees.averageFeeMultiplier * 0.1 < this.transactionFees.minFeeMultiplier
-                    ? this.transactionFees.minFeeMultiplier
-                    : this.transactionFees.averageFeeMultiplier * 0.1;
+            const fees = this.transactionFees.minFeeMultiplier;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
+        // slow
         if (transaction.maxFee.compact() === 5) {
-            const fees =
-                this.transactionFees.averageFeeMultiplier * 0.5 < this.transactionFees.minFeeMultiplier
-                    ? this.transactionFees.minFeeMultiplier
-                    : this.transactionFees.averageFeeMultiplier * 0.5;
+            const fees = this.transactionFees.minFeeMultiplier + this.transactionFees.averageFeeMultiplier * 0.35;
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         return undefined;

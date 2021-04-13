@@ -25,10 +25,15 @@ import QRCodeDisplay from '@/components/QRCode/QRCodeDisplay/QRCodeDisplay.vue';
 import ModalImportQR from '@/views/modals/ModalImportQR/ModalImportQR.vue';
 // @ts-ignore
 import FormOfflineCosignTransaction from '@/views/forms/FormOfflineCosignTransaction/FormOfflineCosignTransaction.vue';
+// @ts-ignore
+import ModalTransactionDetails from '@/views/modals/ModalTransactionDetails/ModalTransactionDetails.vue';
+// @ts-ignore
+import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
 
 import { AggregateTransaction, Convert, CosignatureSignedTransaction, NetworkType, Transaction, TransactionMapping } from 'symbol-sdk';
 import { QRCode, CosignatureQR, CosignatureSignedTransactionQR } from 'symbol-qr-library';
 import { OfflineGenerationHash } from '@/services/offline/MockModels';
+import _ from 'lodash';
 
 @Component({
     components: {
@@ -36,6 +41,8 @@ import { OfflineGenerationHash } from '@/services/offline/MockModels';
         QRCodeDisplay,
         ModalImportQR,
         FormOfflineCosignTransaction,
+        ModalTransactionDetails,
+        TransactionDetails,
     },
     computed: {
         ...mapGetters({
@@ -64,6 +71,10 @@ export default class OfflineCosignTransactionTs extends Vue {
     public aggregateTransaction: AggregateTransaction;
 
     public validTx: boolean = false;
+
+    public transactionDetailsVisible = true;
+
+    public aggregateTransactionView: AggregateTransaction = null;
 
     /**
      * Hook called when the child component ModalTransactionConfirmation triggers
@@ -98,7 +109,7 @@ export default class OfflineCosignTransactionTs extends Vue {
         this.step = 1;
     }
 
-    public calculateAggregateTransaction() {
+    public async calculateAggregateTransaction() {
         let transaction: AggregateTransaction;
         if (this.importedQrCode) {
             transaction = this.importedQrCode.transaction as AggregateTransaction;
@@ -115,6 +126,9 @@ export default class OfflineCosignTransactionTs extends Vue {
                 transaction.serialize(),
                 Array.from(Convert.hexToUint8(OfflineGenerationHash[transaction.networkType])),
             );
+            await this.$store.dispatch('network/CONNECT', { networkType: transaction.networkType, isOffline: true });
+            this.aggregateTransactionView = _.cloneDeep(transaction);
+            this.transactionDetailsVisible = true;
             // @ts-ignore
             transaction.transactionInfo = { hash: hash };
             this.aggregateTransaction = transaction;
@@ -133,7 +147,6 @@ export default class OfflineCosignTransactionTs extends Vue {
         if (!this.aggregateTransaction) {
             this.$store.dispatch('notification/ADD_ERROR', 'payload_not_valid');
         } else {
-            this.$store.dispatch('network/CONNECT', { networkType: this.aggregateTransaction.networkType, isOffline: true });
             this.step = 1;
         }
     }

@@ -3,6 +3,38 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.2][v1.0.2] - 13-Apr-2021
+
+### Milestone: New testnet update
+
+##
+:warning: **This version updates testnet profiles to use the new testnet network. You will be able to claim new testnet XYM using the faucet.**
+##
+
+#### Added
+
+- Harvesting persistent delegation request now has a timeout to indicate when de harvesting fails
+- When doing harvesting transactions you can now select fee
+- Added the possibility to start delegated harvesting on a custom node
+- Now failed aggregate bonded transactions due to listener closing connection are recovered and broadcasted
+- Reproduce sounds when having a new transaction
+- Disable link delegated harvesting when importance is 0
+
+#### Changed
+
+- Harvesting is separated between two modes, delegated harvesting for easy usage and remote/key link harvesting for advanced usage.
+- minFeeMultiplier is being used as slowest and averageFeeMultiplier as highest, the rest use a distribution in between to avoid network fees going up
+
+#### Fixed
+
+- Harvesting status is now preserved between devices
+- Offline transactions failing on mainnet
+- Offline transaction cosignature also show a transaction detail view when importing payload
+- Harvesting VRF and Remote keys where shared between profiles
+- Import QR was not working on a fully offline machine
+- Ledger with harvesting issues
+- Confirm buttons where dispalced
+
 ## [1.0.1][1.0.1] - 29-Mar-2021
 
 ### Milestone: [catapult-server@v1.0.0.0](https://github.com/nemtech/catapult-server/releases/tag/v1.0.0.0)

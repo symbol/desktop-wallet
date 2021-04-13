@@ -30,7 +30,7 @@ import {
     TransactionStatusRepository,
 } from 'symbol-sdk';
 import { Observable, of } from 'rxjs';
-import { OfflineGenerationHash, OfflineUrl } from '@/services/offline/MockModels';
+import { OfflineGenerationHash, OfflineNetworkCurrencies, OfflineUrl } from '@/services/offline/MockModels';
 import { OfflineNetworkRepository } from '@/services/offline/OfflineNetworkRepository';
 import { OfflineNodeRepository } from '@/services/offline/OfflineNodeRepository';
 import { OfflineChainRepository } from '@/services/offline/OfflineChainRepository';
@@ -126,7 +126,7 @@ export class OfflineRepositoryFactory implements RepositoryFactory {
     }
 
     getCurrencies(): Observable<NetworkCurrencies> {
-        return of(NetworkCurrencies.PUBLIC);
+        return of(OfflineNetworkCurrencies(this.networkType));
     }
 
     getEpochAdjustment(): Observable<number> {

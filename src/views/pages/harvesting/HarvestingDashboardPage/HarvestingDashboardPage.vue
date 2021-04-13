@@ -5,19 +5,14 @@
                 <HarvestStatisticsPanel />
             </div>
             <div class="dashboard-bottom-left-container">
-                <div class="header-container">
-                    <NavigationTabs direction="horizontal" :parent-route-name="'harvesting'" />
-                </div>
                 <div class="harvesting-container">
                     <router-view />
                 </div>
             </div>
         </div>
         <div class="dashboard-right-container">
-            <div class="header-container-placeholder">
-                <h1 class="section-title">
-                    {{ $t('harvested_blocks') }}
-                </h1>
+            <div class="title">
+                <span class="title_txt">{{ $t('harvested_blocks') }}</span>
             </div>
             <div class="harvested-blocks">
                 <HarvestedBlocksList />

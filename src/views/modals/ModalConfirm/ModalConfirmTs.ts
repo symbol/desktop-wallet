@@ -15,6 +15,7 @@
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Checkbox } from 'view-design';
+import { officialIcons } from '@/views/resources/Images';
 
 @Component({
     components: {
@@ -35,6 +36,11 @@ export default class ModalConfirmTs extends Vue {
     @Prop({
         default: false,
     })
+    warning: boolean;
+
+    @Prop({
+        default: false,
+    })
     showCheckbox: boolean;
 
     @Prop({
@@ -46,6 +52,7 @@ export default class ModalConfirmTs extends Vue {
 
     @Prop({ default: 'confirmation_message' }) readonly message!: string;
 
+    public officialIcons = officialIcons;
     protected isCheckboxChecked: boolean = false;
 
     get isOkClickable(): boolean {

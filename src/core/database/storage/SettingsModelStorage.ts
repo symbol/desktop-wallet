@@ -26,58 +26,65 @@ export class SettingsModelStorage extends VersionedObjectStorage<Record<string, 
     public static INSTANCE = new SettingsModelStorage();
 
     private constructor() {
-        super('settings', [
-            {
-                description: 'Update settings to 0.9.5.1 network',
-                migrate: () => undefined,
-            },
-            {
-                description: 'Update settings for 0.9.6.3 network (address changes)',
-                migrate: (from: any) => {
-                    // update all pre-0.9.6.x settings
-                    const profiles = Object.keys(from);
-
-                    const modified: any = from;
-                    profiles.map((name: string) => {
-                        modified[name] = {
-                            ...modified[name],
-                            explorerUrl: networkConfig[NetworkType.TEST_NET].explorerUrl,
-                        };
-                    });
-
-                    return modified;
+        super({
+            storageKey: 'settings',
+            migrations: [
+                {
+                    description: 'Update settings to 0.9.5.1 network',
+                    migrate: () => undefined,
                 },
-            },
-            {
-                description: 'Update settings for 0.10.x network (address changes)',
-                migrate: (from: any) => {
-                    // update all pre-0.10.x settings
-                    const settings = Object.keys(from);
+                {
+                    description: 'Update settings for 0.9.6.3 network (address changes)',
+                    migrate: (from: any) => {
+                        // update all pre-0.9.6.x settings
+                        const profiles = Object.keys(from);
 
-                    const modified: any = from;
-                    settings.map((name: string) => {
-                        modified[name] = {
-                            ...modified[name],
-                            explorerUrl: networkConfig[NetworkType.TEST_NET].explorerUrl,
-                            faucetUrl: networkConfig[NetworkType.TEST_NET].faucetUrl,
-                        };
-                    });
+                        const modified: any = from;
+                        profiles.map((name: string) => {
+                            modified[name] = {
+                                ...modified[name],
+                                explorerUrl: networkConfig[NetworkType.TEST_NET].explorerUrl,
+                            };
+                        });
 
-                    return modified;
+                        return modified;
+                    },
                 },
-            },
-            {
-                description: 'Update profiles for 0.10.0.5 pre main network release (non backwards compatible on protocol v0.10.0.4)',
-                migrate: () => undefined,
-            },
-            {
-                description: 'Reset accounts for 0.10.0.6 network (non backwards compatible)',
-                migrate: () => undefined,
-            },
-            {
-                description: 'Reset for Symbol mainet launch.',
-                migrate: () => undefined,
-            },
-        ]);
+                {
+                    description: 'Update settings for 0.10.x network (address changes)',
+                    migrate: (from: any) => {
+                        // update all pre-0.10.x settings
+                        const settings = Object.keys(from);
+
+                        const modified: any = from;
+                        settings.map((name: string) => {
+                            modified[name] = {
+                                ...modified[name],
+                                explorerUrl: networkConfig[NetworkType.TEST_NET].explorerUrl,
+                                faucetUrl: networkConfig[NetworkType.TEST_NET].faucetUrl,
+                            };
+                        });
+
+                        return modified;
+                    },
+                },
+                {
+                    description: 'Update profiles for 0.10.0.5 pre main network release (non backwards compatible on protocol v0.10.0.4)',
+                    migrate: () => undefined,
+                },
+                {
+                    description: 'Reset accounts for 0.10.0.6 network (non backwards compatible)',
+                    migrate: () => undefined,
+                },
+                {
+                    description: 'Reset for Symbol mainet launch.',
+                    migrate: () => undefined,
+                },
+                {
+                    description: 'Reset for fees update.',
+                    migrate: () => undefined,
+                },
+            ],
+        });
     }
 }

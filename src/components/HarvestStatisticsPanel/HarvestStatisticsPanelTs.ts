@@ -19,6 +19,8 @@ import { mapGetters } from 'vuex';
 import { AccountInfo } from 'symbol-sdk';
 import { HarvestedBlockStats, HarvestingStatus } from '@/store/Harvesting';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
+import { HarvestingService } from '@/services/HarvestingService';
+import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
 @Component({
     computed: {
         ...mapGetters({
@@ -26,7 +28,9 @@ import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyMo
             harvestingStatus: 'harvesting/status',
             harvestedBlockStats: 'harvesting/harvestedBlockStats',
             isFetchingHarvestedBlockStats: 'harvesting/isFetchingHarvestedBlockStats',
+            pollingTrials: 'harvesting/pollingTrials',
             networkCurrency: 'mosaic/networkCurrency',
+            currentSignerHarvestingModel: 'harvesting/currentSignerHarvestingModel',
         }),
     },
 })
@@ -36,11 +40,13 @@ export class HarvestStatisticsPanelTs extends Vue {
     public harvestedBlockStats: HarvestedBlockStats;
     public isFetchingHarvestedBlockStats: boolean;
     public networkCurrency: NetworkCurrencyModel;
-    private timeIntervals: any[];
 
+    private pollingTrials: number;
+    private statusPollingInterval: any;
+    private statsPollingInterval: any;
+    private currentSignerHarvestingModel: HarvestingModel;
     created() {
         this.refresh();
-        this.timeIntervals = [];
         this.checkUnLockedAccounts();
         this.refreshStatusBlocks();
     }
@@ -70,35 +76,48 @@ export class HarvestStatisticsPanelTs extends Vue {
                 return { cls: 'status-indicator amber', text: this.$t('harvesting_status_inprogress_activation') };
             case HarvestingStatus.INPROGRESS_DEACTIVATION:
                 return { cls: 'status-indicator amber', text: this.$t('harvesting_status_inprogress_deactivation') };
+            case HarvestingStatus.FAILED:
+                return { cls: 'status-indicator red', text: this.$t('harvesting_status_failed') };
         }
     }
 
     private checkUnLockedAccounts(): void {
         Vue.nextTick(() => {
-            this.timeIntervals.push(
-                setInterval(() => {
-                    if (this.harvestingStatus == HarvestingStatus.INPROGRESS_ACTIVATION) {
-                        this.refreshHarvestingStatus();
+            const harvestingService = new HarvestingService();
+            if (this.harvestingStatus !== HarvestingStatus.FAILED) {
+                this.statusPollingInterval = setInterval(() => {
+                    if (this.harvestingStatus === HarvestingStatus.INPROGRESS_ACTIVATION) {
+                        if (this.pollingTrials < 20 && !this.currentSignerHarvestingModel.delegatedHarvestingRequestFailed) {
+                            this.refreshHarvestingStatus();
+                            this.$store.dispatch('harvesting/SET_POLLING_TRIALS', this.pollingTrials + 1);
+                        } else {
+                            const harvestingModel = harvestingService.getHarvestingModel(this.currentSignerHarvestingModel.accountAddress);
+                            harvestingService.updateDelegatedHarvestingRequestFailed(harvestingModel, true);
+                            return;
+                        }
                     }
-                }, 45000),
-            );
+                }, 45000);
+            } else {
+                const harvestingModel = harvestingService.getHarvestingModel(this.currentSignerHarvestingModel.accountAddress);
+                harvestingService.updateDelegatedHarvestingRequestFailed(harvestingModel, true);
+                return;
+            }
         });
     }
 
     private refreshStatusBlocks(): void {
         Vue.nextTick(() => {
-            this.timeIntervals.push(
-                setInterval(() => {
-                    if (this.harvestingStatus == HarvestingStatus.ACTIVE) {
-                        this.refreshHarvestingStats();
-                    }
-                }, 30000),
-            );
+            this.statsPollingInterval = setInterval(() => {
+                if (this.harvestingStatus == HarvestingStatus.ACTIVE) {
+                    this.refreshHarvestingStats();
+                }
+            }, 30000);
         });
     }
 
     private destroyed() {
-        this.timeIntervals.forEach((timeout) => clearInterval(timeout));
+        clearInterval(this.statusPollingInterval);
+        clearInterval(this.statsPollingInterval);
     }
     public get totalFeesEarned(): string {
         const relativeAmount = this.harvestedBlockStats.totalFeesEarned.compact() / Math.pow(10, this.networkCurrency.divisibility);

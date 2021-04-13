@@ -39,7 +39,6 @@ import {
     RentalFees,
     RepositoryFactory,
     RepositoryFactoryHttp,
-    RoleType,
     TransactionFees,
 } from 'symbol-sdk';
 import Vue from 'vue';
@@ -65,38 +64,6 @@ type SubscriptionType = {
 type BlockRangeType = { start: number };
 
 /// end-region custom types
-
-const staticPeerNodes: NodeInfo[] = [
-    {
-        nodePublicKey: 'D78CB884297CABEFDAC66DB9599C31CB7C719DC09F40E9A95984EFC1234E0324',
-        host: 'api-01.ap-northeast-1.testnet.symboldev.network',
-        roles: [RoleType.PeerNode],
-        networkIdentifier: NetworkType.TEST_NET,
-    },
-    {
-        nodePublicKey: '9F03C0953AD1065E1E78C804FBAF3D4D9E29CE89C9687CA2D7F39886FE5952EA',
-        host: 'api-01.ap-southeast-1.testnet.symboldev.network',
-        roles: [RoleType.PeerNode],
-        networkIdentifier: NetworkType.TEST_NET,
-    },
-    {
-        nodePublicKey: '135214B2892687293096D909CF040C3EFDD60E5AE4C40B5257E6BFE2B8467AA8',
-        host: 'api-01.eu-central-1.testnet.symboldev.network',
-        roles: [RoleType.PeerNode],
-        networkIdentifier: NetworkType.TEST_NET,
-    },
-    {
-        nodePublicKey: '7064CA58E2A24A4426BAE33051C6EC39BCBCC58C4900AB32406C3279FC4C93D4',
-        host: 'api-01.eu-west-1.testnet.symboldev.network',
-        roles: [RoleType.PeerNode],
-        networkIdentifier: NetworkType.TEST_NET,
-    },
-    {
-        nodePublicKey: 'F57FB70C3F51663D0DDF47303C93ADC8FDD266DC61BBA67B983052D075FD900E',
-        host: 'api-01.us-east-1.testnet.symboldev.network',
-        roles: [RoleType.PeerNode],
-    },
-] as NodeInfo[];
 
 export interface ConnectingToNodeInfo {
     isTryingToConnect: boolean;
@@ -568,9 +535,7 @@ export default {
             const nodeRepository = repositoryFactory.createNodeRepository();
 
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
-            const networkType = await repositoryFactory.getNetworkType().toPromise();
-            const staticPeers = networkType === NetworkType.MAIN_NET ? [] : staticPeerNodes;
-            const allNodes = [...staticPeers, ...peerNodes.sort((a, b) => a.host.localeCompare(b.host))];
+            const allNodes = peerNodes.sort((a, b) => a.host.localeCompare(b.host));
             commit('peerNodes', _.uniqBy(allNodes, 'host'));
         },
         // TODO :: re-apply that behavior if red screen issue fixed

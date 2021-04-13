@@ -26,10 +26,9 @@ export class PublicKeyValidator {
      * @param {*} value
      * @returns {boolean}
      */
-    public static validate(value: any): boolean {
+    public static validate(value: any, networkType?: NetworkType): boolean {
         try {
-            /** The NetworkType below is for public key testing only */
-            PublicAccount.createFromPublicKey(value, NetworkType.TEST_NET);
+            PublicAccount.createFromPublicKey(value, networkType);
             return value;
         } catch (error) {
             return false;

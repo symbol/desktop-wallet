@@ -43,14 +43,37 @@
     color: @primary;
 }
 
+.alert-error {
+    font-size: 0.2rem;
+    padding: 0.1rem;
+    line-height: 0.25rem;
+}
+
 .info-text {
     color: @purpleDark;
-    font-size: @biggerFont;
-    font-family: @symbolFontLight;
-    margin-left: 0.7rem;
-    margin-top: 5%;
-    margin-right: 1rem;
+    font-size: @normalFont;
+    font-family: @symbolFont;
+    line-height: @normalFontLineHeight;
+    margin: 0.4rem 1rem 0.4rem 0.7rem;
     text-align: justify;
+}
+
+.info-text > p {
+    margin-bottom: 0.2rem;
+}
+
+a {
+    color: @accentPink;
+    font-family: @symbolFontSemiBold;
+}
+
+a:hover {
+    color: @accentPink;
+    opacity: 0.5;
+}
+
+.text-accent {
+    font-family: @symbolFontSemiBold;
 }
 
 /deep/ .ivu-icon {
@@ -152,4 +175,12 @@
     i {
         font-size: 0.2rem;
     }
+}
+.fee-selector {
+    padding-top: 0.2rem;
+}
+.fee-warning {
+    color: red;
+    position: absolute;
+    padding-top: 0.2rem;
 }
