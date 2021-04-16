@@ -173,7 +173,9 @@ export default {
                     }
                 }
                 const remotePublicKey = currentSignerAccountInfo.supplementalPublicKeys?.linked?.publicKey;
-                accountUnlocked = unlockedAccounts?.some((publicKey) => publicKey === remotePublicKey);
+                accountUnlocked = unlockedAccounts?.some(
+                    (publicKey) => publicKey === remotePublicKey || publicKey === currentSignerAccountInfo.publicKey,
+                );
             }
             const allKeysLinked =
                 currentSignerAccountInfo.supplementalPublicKeys?.linked &&
