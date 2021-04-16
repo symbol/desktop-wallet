@@ -147,7 +147,7 @@ export default {
         SET_POLLING_TRIALS({ commit }, pollingTrials) {
             commit('setPollingTrials', pollingTrials);
         },
-        async FETCH_STATUS({ commit, rootGetters }, nodeUrl?: string) {
+        async FETCH_STATUS({ commit, rootGetters, dispatch }, node?: []) {
             const currentSignerAccountInfo: AccountInfo = rootGetters['account/currentSignerAccountInfo'];
             // reset
             let status: HarvestingStatus;
@@ -160,7 +160,8 @@ export default {
             if (currentSignerHarvestingModel) {
                 //find the node url from currentSignerHarvestingModel (localStorage)
                 const selectedNode = currentSignerHarvestingModel.selectedHarvestingNode;
-                const harvestingNodeUrl = selectedNode?.url || nodeUrl;
+                // @ts-ignore
+                const harvestingNodeUrl = selectedNode?.url || (node && !!node.length ? node[0] : '');
                 let unlockedAccounts: string[] = [];
 
                 if (harvestingNodeUrl) {
@@ -188,6 +189,15 @@ export default {
                         ? HarvestingStatus.FAILED
                         : HarvestingStatus.INPROGRESS_ACTIVATION
                     : HarvestingStatus.KEYS_LINKED;
+                // @ts-ignore
+                if (status === HarvestingStatus.ACTIVE && node && node[1]) {
+                    // @ts-ignore
+                    dispatch('UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
+                        accountAddress: currentSignerHarvestingModel.accountAddress,
+                        // @ts-ignore
+                        selectedHarvestingNode: node[1],
+                    });
+                }
             } else {
                 status = accountUnlocked ? HarvestingStatus.INPROGRESS_DEACTIVATION : HarvestingStatus.INACTIVE;
             }
