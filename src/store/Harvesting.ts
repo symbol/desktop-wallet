@@ -152,6 +152,7 @@ export default {
             // reset
             let status: HarvestingStatus;
             if (!currentSignerAccountInfo) {
+                commit('status', HarvestingStatus.INACTIVE);
                 return;
             }
             const currentSignerHarvestingModel: HarvestingModel = rootGetters['harvesting/currentSignerHarvestingModel'];
