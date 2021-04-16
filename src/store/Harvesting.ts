@@ -173,15 +173,13 @@ export default {
                     }
                 }
                 const remotePublicKey = currentSignerAccountInfo.supplementalPublicKeys?.linked?.publicKey;
-                accountUnlocked = unlockedAccounts?.some(
-                    (publicKey) => publicKey === remotePublicKey || publicKey === currentSignerAccountInfo.publicKey,
-                );
+                accountUnlocked = unlockedAccounts?.some((publicKey) => publicKey === remotePublicKey);
             }
             const allKeysLinked =
                 currentSignerAccountInfo.supplementalPublicKeys?.linked &&
                 currentSignerAccountInfo.supplementalPublicKeys?.node &&
                 currentSignerAccountInfo.supplementalPublicKeys?.vrf;
-            if (allKeysLinked) {
+            if (allKeysLinked || accountUnlocked) {
                 const pollingTrials = rootGetters['harvesting/pollingTrials'];
                 status = accountUnlocked
                     ? HarvestingStatus.ACTIVE

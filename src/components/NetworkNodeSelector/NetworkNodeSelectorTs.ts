@@ -9,7 +9,7 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 import FormRow from '@/components/FormRow/FormRow.vue';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import { URLHelpers } from '@/core/utils/URLHelpers';
-import { NetworkType, NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
+import { AccountInfo, NetworkType, NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 
@@ -24,6 +24,7 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
             peerNodes: 'network/peerNodes',
             networkType: 'network/networkType',
             currentProfile: 'profile/currentProfile',
+            currentSignerAccountInfo: 'account/currentSignerAccountInfo',
         }),
     },
 })
@@ -73,6 +74,7 @@ export class NetworkNodeSelectorTs extends Vue {
     public currentProfile: ProfileModel;
 
     private hideList: boolean = false;
+    private currentSignerAccountInfo: AccountInfo;
     /**
      * Checks if the given node is eligible for harvesting
      * @protected
@@ -94,6 +96,7 @@ export class NetworkNodeSelectorTs extends Vue {
                 peerNode.publicKey,
                 peerNode.nodePublicKey,
             );
+            console.log(nodeModel.publicKey);
             Vue.set(this, 'showInputPublicKey', false);
             this.$emit('input', nodeModel);
             return;
@@ -116,7 +119,14 @@ export class NetworkNodeSelectorTs extends Vue {
                 );
                 Vue.set(this, 'showInputPublicKey', false);
                 this.$emit('input', nodeModel);
-                if (this.isAccountKeyLinked && this.isVrfKeyLinked && this.missingKeys) {
+                const unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
+                let nodeOperatorAccount = false;
+                const remotePublicKey = this.currentSignerAccountInfo.supplementalPublicKeys?.linked?.publicKey;
+
+                if (unlockedAccounts) {
+                    nodeOperatorAccount = unlockedAccounts?.some((publicKey) => publicKey === remotePublicKey);
+                }
+                if (this.isAccountKeyLinked && this.isVrfKeyLinked && (this.missingKeys || nodeOperatorAccount)) {
                     this.$store.dispatch('harvesting/FETCH_STATUS', value);
                 }
             } else {
