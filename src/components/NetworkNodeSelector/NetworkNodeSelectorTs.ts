@@ -96,7 +96,6 @@ export class NetworkNodeSelectorTs extends Vue {
                 peerNode.publicKey,
                 peerNode.nodePublicKey,
             );
-            console.log(nodeModel.publicKey);
             Vue.set(this, 'showInputPublicKey', false);
             this.$emit('input', nodeModel);
             return;
