@@ -397,7 +397,7 @@
     "Failure_Metadata_Value_Size_Delta_Too_Large": "Validation failed because the metadata value size delta is larger in magnitude than the value size",
     "Failure_Metadata_Value_Size_Delta_Mismatch": "Validation failed because the metadata value size delta does not match expected value based on the current state",
     "Failure_Metadata_Value_Change_Irreversible": "Validation failed because a metadata value change (truncation) is irreversible",
-    "Failure_Mosaic_Invalid_Duration": "Validation failed because the duration of mosaic has an invalid value",
+    "Failure_Mosaic_Invalid_Duration": "Validation failed because the mosaic's duration has an invalid value",
     "Failure_Mosaic_Invalid_Name": "Validation failed because the name is invalid",
     "Failure_Mosaic_Name_Id_Mismatch": "Validation failed because the name and id don't match",
     "Failure_Mosaic_Expired": "Validation failed because the parent is expired",
