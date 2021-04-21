@@ -45,7 +45,7 @@ export const createValidationRuleSet = ({
         }|maxNamespaceDuration`,
         namespaceName: {
             required: true,
-            regex: '^[a-z0-9]{1}[a-z0-9-_]{0,63}$',
+            regex: '^(?!symbol$)([a-z0-9]{1}[a-z0-9-_]{0,63})$',
         },
         subNamespaceName: {
             required: true,
