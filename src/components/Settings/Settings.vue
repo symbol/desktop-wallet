@@ -4,7 +4,12 @@
             <img :src="settingsIcon" class="setting-menu-icon" />
             <span>{{ $t('settings') }}</span>
         </a>
-        <ModalSettings v-if="isSettingsVisible" :visible="isSettingsVisible" @close="toggleSettings" />
+        <ModalSettings
+            v-if="isSettingsVisible"
+            :network-settings-selected="isNetworkSettingsSelected"
+            :visible="isSettingsVisible"
+            @close="toggleSettings"
+        />
     </div>
 </template>
 <script lang="ts">
