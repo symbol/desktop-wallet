@@ -432,7 +432,7 @@
     "Failure_Multisig_Loop": "Validation failed because a multisig loop is created",
     "Failure_Multisig_Max_Multisig_Depth": "Validation failed because the max multisig depth is exceeded",
     "Failure_Multisig_Operation_Prohibited_By_Account": "Validation failed because an operation is not permitted by a multisig account",
-    "Failure_Namespace_Invalid_Duration": "Validation failed because the duration of namespace has an invalid value",
+    "Failure_Namespace_Invalid_Duration": "Validation failed because the namespace's duration has an invalid value",
     "Failure_Namespace_Invalid_Name": "Validation failed because the name is invalid",
     "Failure_Namespace_Name_Id_Mismatch": "Validation failed because the name and id don't match",
     "Failure_Namespace_Expired": "Validation failed because the parent is expired",
