@@ -4,9 +4,17 @@
             <div class="image-container">
             </div>
             <div class="text-container">
+                <div class="title-text">
+                    Congratulation!
+                </div>
+                <div class="content-text">
+                    Your account is in the opt-in round. You will recieve your XYM after this transaction got confirmed. 
+                    The amount you will recieve: <span class="amount-text">{{ amount }}</span>.
+                    The XEM address which participated in the Op-in process: <span class="address-text">{{ NISAddress }}</span>.
+                </div>
             </div>
         </div>
-        <div class="row">
+        <div class="column">
             <div class="details-button">
                 {{ detailsButtonText }}
             </div>
@@ -29,8 +37,8 @@ import TransactionDetails from '@/components/TransactionDetails/TransactionDetai
 })
 export default class Alert extends Vue {
     @Prop({ required: true }) readonly transaction: AggregateTransaction;
-    @Prop({ required: true }) readonly currentAccount: AccountModel;
-    @Prop({ required: true }) readonly networkType: NetworkType;
+    // @Prop({ required: true }) readonly currentAccount: AccountModel;
+    // @Prop({ required: true }) readonly networkType: NetworkType;
 
     private OptinLogo = officialIcons.optinLogo;
     private isDetailsShown = false;
@@ -55,6 +63,52 @@ export default class Alert extends Vue {
 }
 </script>
 
-<style>
+<style lang="less" scoped>
+@import '../../views/resources/css/variables.less';
 
+.root {
+   
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.image-container {
+    width: 1rem;
+}
+
+.text-container {
+    flex: 1;
+    color: @primary;
+}
+
+.title-text {
+    font-family: @symbolFontBold;
+}
+
+.content-text {
+    font-family: @symbolFontMedium;
+}
+
+.address-text {
+    font-family: @symbolFontSemiBold;
+    color: @purpleLightest;
+}
+
+.amount-text {
+    font-family: @symbolFontSemiBold;
+    color: @accentGreen;
+}
+
+.details-button {
+    font-family: @symbolFontSemiBold;
+    color: @accentPink;
+}
 </style>
