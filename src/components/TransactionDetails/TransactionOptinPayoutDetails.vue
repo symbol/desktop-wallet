@@ -6,31 +6,34 @@
             </div>
             <div class="text-container">
                 <div class="title-text">
-                    Post-launch Opt-in
+                    {{$t('optin_postlaunch_tx_title')}}
                 </div>
                 <div class="content-text text-description">
-                    Your Opt-in payment is being processed. You will receive the XYM coins, when this transaction is confirmed.
+                    {{completed ? $t('optin_postlaunch_tx_completed_description') : $t('optin_postlaunch_tx_pending_description')}}
                 </div>
                 <div class="content-text">
                     <table>
                         <tr>
-                            <td class="table-header-text">The amount you will recieve:</td>
+                            <td class="table-header-text">{{completed ? $t('optin_postlaunch_tx_completed_amount') : $t('optin_postlaunch_tx_pending_amount')}}</td>
                             <td class="amount-text">{{ amount }} XYM</td>
                         </tr>
                         <tr>
-                            <td class="table-header-text">Yor NEM NIS1 Address:</td>
+                            <td class="table-header-text">{{$t('optin_postlaunch_tx_nis_address')}}</td>
                             <td class="address-text">{{ NISAddress }}</td>
                         </tr>
                     </table>
-                     <span ></span>.
                 </div>
             </div>
         </div>
         <div class="column">
-            <div class="details-button">
-                {{ detailsButtonText }}
+            <div class="details-button" @click="onDetailsClick">
+                {{isDetailsShown ? $t('hide_details') : $t('show_details')}}
             </div>
-            <TransactionDetails v-if="isDetailsShown" :transaction="transaction" />
+            <div v-if="isDetailsShown" class="transaction-details">
+                <TransactionDetails 
+                    :transaction="transaction" 
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -41,6 +44,7 @@ import { AggregateTransaction, NetworkType } from 'symbol-sdk';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { optinImages } from '@/views/resources/Images';
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
+import { TransactionView } from '@/core/transactions/TransactionView';
 
 @Component({
     components: {
@@ -55,6 +59,9 @@ export default class TransactionOptinPayoutDetails extends Vue {
     private OptinLogo = optinImages.optinLogo;
     private isDetailsShown = false;
 
+    private get completed() {
+        return TransactionView.getTransactionStatus(this.transaction) === 'confirmed';
+    }
     private get amount() {
         return 39.65;
     }
@@ -63,10 +70,8 @@ export default class TransactionOptinPayoutDetails extends Vue {
         return 'TCF7NKYXF6X3KFFO6AKLXBTHDCZL73K45ILQVWJK';
     }
 
-    private get detailsButtonText() {
-        return this.isDetailsShown 
-            ? 'Hide Details'
-            : 'Show Details';
+    private onDetailsClick() {
+        this.isDetailsShown = !this.isDetailsShown;
     }
 
     private mounted() {
@@ -97,7 +102,7 @@ export default class TransactionOptinPayoutDetails extends Vue {
     flex-direction: column;
     justify-content: flex-start;
     width: 2rem;
-    //margin-top: 0.1rem;
+    margin-top: -1px;
     margin-left: 0.1rem;
     margin-right: 0.3rem;
 }
@@ -116,7 +121,7 @@ export default class TransactionOptinPayoutDetails extends Vue {
 .title-text {
     font-family: @symbolFontBold;
     font-size: 40px;
-    margin-bottom: 0.2rem;
+    margin: 0 0 0;
 }
 
 .content-text {
@@ -131,24 +136,30 @@ export default class TransactionOptinPayoutDetails extends Vue {
 }
 
 .table-header-text {
-    //font-family: @symbolFontBold;
    padding-right: 0.3rem;
 }
 
 .address-text {
-    //font-family: @symbolFontSemiBold;
     color: @purpleLightest;
 }
 
 .amount-text {
-    //font-family: @symbolFontSemiBold;
     color: @accentGreen;
 }
 
 .details-button {
     font-family: @symbolFontSemiBold;
     color: @accentPink;
+    margin-right: 0.1rem;
     align-self: flex-end;
     cursor: pointer;
+}
+
+.transaction-details {
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top-color: @line;
+    margin: 0.3rem 0;
+    padding-top: 0.3rem;
 }
 </style>
