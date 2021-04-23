@@ -2,6 +2,7 @@
     <div class="root">
         <div class="row">
             <div class="image-container">
+                <img :src="OptinLogo" class="image" />
             </div>
             <div class="text-container">
                 <div class="title-text">
@@ -27,7 +28,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { AggregateTransaction, NetworkType } from 'symbol-sdk';
 import { AccountModel } from '@/core/database/entities/AccountModel';
-import { officialIcons } from '@/views/resources/Images';
+import { optinImages } from '@/views/resources/Images';
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
 
 @Component({
@@ -40,7 +41,7 @@ export default class Alert extends Vue {
     // @Prop({ required: true }) readonly currentAccount: AccountModel;
     // @Prop({ required: true }) readonly networkType: NetworkType;
 
-    private OptinLogo = officialIcons.optinLogo;
+    private OptinLogo = optinImages.optinLogo;
     private isDetailsShown = false;
 
     private get amount() {

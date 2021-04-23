@@ -46,6 +46,8 @@ import dashboardUnconfirmed from '@/views/resources/img/monitor/dash-board/dashb
 // @ts-ignore
 import dashboardConfirmed from '@/views/resources/img/monitor/dash-board/dashboardConfirmed.png';
 // @ts-ignore
+import optinLogo from '@/views/resources/img/optin.png';
+// @ts-ignore
 import windowDashboard from '@/views/resources/img/window/windowDashboard.png';
 // @ts-ignore
 import windowDashboardActive from '@/views/resources/img/window/windowDashboardActive.png';
@@ -361,6 +363,10 @@ export const officialIcons = {
     warningWhite,
     infoWhite,
 };
+
+export const optinImages = {
+    optinLogo
+}
 
 export const transactionTypeToIcon = {
     [TransactionType.NAMESPACE_REGISTRATION]: officialIcons.namespaceTransaction,
