@@ -6,12 +6,23 @@
             </div>
             <div class="text-container">
                 <div class="title-text">
-                    Congratulation!
+                    Post-launch Opt-in
+                </div>
+                <div class="content-text text-description">
+                    Your Opt-in payment is being processed. You will receive the XYM coins, when this transaction is confirmed.
                 </div>
                 <div class="content-text">
-                    Your account is in the opt-in round. You will recieve your XYM after this transaction got confirmed. 
-                    The amount you will recieve: <span class="amount-text">{{ amount }}</span>.
-                    The XEM address which participated in the Op-in process: <span class="address-text">{{ NISAddress }}</span>.
+                    <table>
+                        <tr>
+                            <td class="table-header-text">The amount you will recieve:</td>
+                            <td class="amount-text">{{ amount }} XYM</td>
+                        </tr>
+                        <tr>
+                            <td class="table-header-text">Yor NEM NIS1 Address:</td>
+                            <td class="address-text">{{ NISAddress }}</td>
+                        </tr>
+                    </table>
+                     <span ></span>.
                 </div>
             </div>
         </div>
@@ -36,7 +47,7 @@ import TransactionDetails from '@/components/TransactionDetails/TransactionDetai
         TransactionDetails
     }
 })
-export default class Alert extends Vue {
+export default class TransactionOptinPayoutDetails extends Vue {
     @Prop({ required: true }) readonly transaction: AggregateTransaction;
     // @Prop({ required: true }) readonly currentAccount: AccountModel;
     // @Prop({ required: true }) readonly networkType: NetworkType;
@@ -54,8 +65,8 @@ export default class Alert extends Vue {
 
     private get detailsButtonText() {
         return this.isDetailsShown 
-            ? 'Show Details'
-            : 'Hide Details';
+            ? 'Hide Details'
+            : 'Show Details';
     }
 
     private mounted() {
@@ -68,7 +79,7 @@ export default class Alert extends Vue {
 @import '../../views/resources/css/variables.less';
 
 .root {
-   
+   padding-bottom: 33.2px;
 }
 
 .row {
@@ -82,34 +93,62 @@ export default class Alert extends Vue {
 }
 
 .image-container {
-    width: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 2rem;
+    //margin-top: 0.1rem;
+    margin-left: 0.1rem;
+    margin-right: 0.3rem;
+}
+
+.image {
+    width: 2rem;
+    height: auto;
 }
 
 .text-container {
     flex: 1;
     color: @primary;
+    font-size: @normalFont;
 }
 
 .title-text {
     font-family: @symbolFontBold;
+    font-size: 40px;
+    margin-bottom: 0.2rem;
 }
 
 .content-text {
     font-family: @symbolFontMedium;
+    margin: 16px 0;
+    line-height: 24px;
+}
+
+.text-description {
+    font-family: @symbolFontSemiBold;
+    margin-bottom: 0.6rem;
+}
+
+.table-header-text {
+    //font-family: @symbolFontBold;
+   padding-right: 0.3rem;
 }
 
 .address-text {
-    font-family: @symbolFontSemiBold;
+    //font-family: @symbolFontSemiBold;
     color: @purpleLightest;
 }
 
 .amount-text {
-    font-family: @symbolFontSemiBold;
+    //font-family: @symbolFontSemiBold;
     color: @accentGreen;
 }
 
 .details-button {
     font-family: @symbolFontSemiBold;
     color: @accentPink;
+    align-self: flex-end;
+    cursor: pointer;
 }
 </style>

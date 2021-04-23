@@ -35,6 +35,8 @@ import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigne
 // @ts-ignore
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
 // @ts-ignore
+import TransactionOptinPayoutDetails from '@/components/TransactionDetails/TransactionOptinPayoutDetails.vue';
+// @ts-ignore
 import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue';
 // @ts-ignore
 import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue';
@@ -48,6 +50,7 @@ import { AccountMetadataTransaction } from 'symbol-sdk';
 @Component({
     components: {
         TransactionDetails,
+        TransactionOptinPayoutDetails,
         FormProfileUnlock,
         HardwareConfirmationButton,
         QRCodeDisplay,
@@ -157,7 +160,7 @@ export class ModalTransactionCosignatureTs extends Vue {
 
         return isAnnouncerNGLFinance;
     }
-    
+
     /**
      * Returns whether current account is a hardware wallet
      * @return {boolean}
