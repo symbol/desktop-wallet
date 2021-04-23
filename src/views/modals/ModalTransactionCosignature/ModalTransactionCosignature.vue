@@ -8,7 +8,10 @@
             :footer-hide="true"
             @close="show = false"
         >
-            <div class="transaction-details-content">
+            <div v-if="isOptinPayoutTransaction" class="transaction-details-content">
+                <TransactionOptinPayoutDetails :transaction="transaction" />
+            </div>
+            <div v-else class="transaction-details-content">
                 <TransactionDetails :transaction="transaction" />
 
                 <div v-if="cosignatures && cosignatures.length">
