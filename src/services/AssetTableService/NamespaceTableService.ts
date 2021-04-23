@@ -26,6 +26,7 @@ export class NamespaceTableService extends AssetTableService {
         currentHeight: number,
         private readonly namespaces: NamespaceModel[],
         private readonly networkConfiguration: NetworkConfigurationModel,
+        private readonly showExpired: boolean,
     ) {
         super(currentHeight);
     }
@@ -47,20 +48,35 @@ export class NamespaceTableService extends AssetTableService {
 
     public getTableRows(): any[] {
         const namespaces: NamespaceModel[] = this.namespaces;
-
-        return namespaces.map((namespaceModel) => {
-            const { expired, expiration } = this.getExpiration(namespaceModel);
-
-            return {
-                hexId: namespaceModel.namespaceIdHex,
-                name: namespaceModel.name,
-                expiration: expiration,
-                expired: expired,
-                aliasType: this.getAliasType(namespaceModel),
-                aliasIdentifier: this.getAliasIdentifier(namespaceModel),
-                metadataList: namespaceModel.metadataList || [],
-            };
-        });
+        const showExpired: boolean = this.showExpired;
+        const currentHeight: number = this.currentHeight;
+        return !showExpired
+            ? namespaces
+                  .filter((ns) => ns.endHeight > currentHeight)
+                  .map((namespaceModel) => {
+                      const { expired, expiration } = this.getExpiration(namespaceModel);
+                      return {
+                          hexId: namespaceModel.namespaceIdHex,
+                          name: namespaceModel.name,
+                          expiration: expiration,
+                          expired: expired,
+                          aliasType: this.getAliasType(namespaceModel),
+                          aliasIdentifier: this.getAliasIdentifier(namespaceModel),
+                          metadataList: namespaceModel.metadataList || [],
+                      };
+                  })
+            : namespaces.map((namespaceModel) => {
+                  const { expired, expiration } = this.getExpiration(namespaceModel);
+                  return {
+                      hexId: namespaceModel.namespaceIdHex,
+                      name: namespaceModel.name,
+                      expiration: expiration,
+                      expired: expired,
+                      aliasType: this.getAliasType(namespaceModel),
+                      aliasIdentifier: this.getAliasIdentifier(namespaceModel),
+                      metadataList: namespaceModel.metadataList || [],
+                  };
+              });
     }
 
     /**
