@@ -16,7 +16,15 @@
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { MosaicId, NamespaceId, Transaction, TransactionType, TransferTransaction } from 'symbol-sdk';
+import {
+    AggregateTransaction,
+    HashLockTransaction,
+    MosaicId,
+    NamespaceId,
+    Transaction,
+    TransactionType,
+    TransferTransaction,
+} from 'symbol-sdk';
 // internal dependencies
 import { Formatters } from '@/core/utils/Formatters';
 import { TimeHelpers } from '@/core/utils/TimeHelpers';
@@ -189,9 +197,21 @@ export class TransactionRowTs extends Vue {
             .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
     }
     public get date() {
-        return this.transaction.deadline
-            .toLocalDateTime(this.networkConfiguration.epochAdjustment)
-            .minusHours(2)
-            .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+        if (this.transaction instanceof AggregateTransaction) {
+            return this.transaction.deadline
+                .toLocalDateTime(this.networkConfiguration.epochAdjustment)
+                .minusHours(48)
+                .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+        } else if (this.transaction instanceof HashLockTransaction) {
+            return this.transaction.deadline
+                .toLocalDateTime(this.networkConfiguration.epochAdjustment)
+                .minusHours(6)
+                .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+        } else {
+            this.transaction.deadline
+                .toLocalDateTime(this.networkConfiguration.epochAdjustment)
+                .minusHours(2)
+                .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+        }
     }
 }
