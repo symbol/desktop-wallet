@@ -147,16 +147,16 @@ export class ModalTransactionCosignatureTs extends Vue {
      * Returns whether aggregate bonded transaction is announced by NGL Finance
      */
     public get isOptinPayoutTransaction(): boolean {
-        if (!this.transaction)
+        if (!this.transaction) {
             return false;
+        }
 
-        const networktype = this.currentProfile.networkType === NetworkType.MAIN_NET 
-            ? 'mainnet' 
-            : 'testnet';
+        const networktype = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
         const keysFinance = process.env.KEYS_FINANCE[networktype];
         const announcerPublicKey = this.transaction.signer.publicKey;
-        const isAnnouncerNGLFinance = keysFinance.find(financePublicKey => 
-            financePublicKey.toUpperCase() === announcerPublicKey.toUpperCase());
+        const isAnnouncerNGLFinance = keysFinance.find(
+            (financePublicKey) => financePublicKey.toUpperCase() === announcerPublicKey.toUpperCase(),
+        );
 
         return isAnnouncerNGLFinance;
     }

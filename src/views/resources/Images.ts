@@ -365,8 +365,8 @@ export const officialIcons = {
 };
 
 export const optinImages = {
-    optinLogo
-}
+    optinLogo,
+};
 
 export const transactionTypeToIcon = {
     [TransactionType.NAMESPACE_REGISTRATION]: officialIcons.namespaceTransaction,

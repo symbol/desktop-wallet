@@ -9,7 +9,7 @@
             @close="show = false"
         >
             <div v-if="isOptinPayoutTransaction" class="transaction-details-content">
-                <TransactionOptinPayoutDetails :transaction="transaction" :currentAccount="currentAccount" />
+                <TransactionOptinPayoutDetails :transaction="transaction" :current-account="currentAccount" />
             </div>
             <div v-else class="transaction-details-content">
                 <TransactionDetails :transaction="transaction" />

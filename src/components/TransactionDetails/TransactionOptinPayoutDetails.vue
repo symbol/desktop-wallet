@@ -6,15 +6,17 @@
             </div>
             <div class="text-container">
                 <div class="title-text">
-                    {{$t('optin_postlaunch_tx_title')}}
+                    {{ $t('optin_postlaunch_tx_title') }}
                 </div>
                 <div class="content-text text-description">
-                    {{completed ? $t('optin_postlaunch_tx_completed_description') : $t('optin_postlaunch_tx_pending_description')}}
+                    {{ completed ? $t('optin_postlaunch_tx_completed_description') : $t('optin_postlaunch_tx_pending_description') }}
                 </div>
                 <div class="content-text">
                     <table>
                         <tr>
-                            <td class="table-header-text">{{completed ? $t('optin_postlaunch_tx_completed_amount') : $t('optin_postlaunch_tx_pending_amount')}}</td>
+                            <td class="table-header-text">
+                                {{ completed ? $t('optin_postlaunch_tx_completed_amount') : $t('optin_postlaunch_tx_pending_amount') }}
+                            </td>
                             <td class="amount-text">
                                 <MosaicAmountDisplay
                                     v-if="amount !== null"
@@ -22,12 +24,11 @@
                                     :absolute-amount="amount"
                                     :show-ticker="true"
                                     color="green"
-                                    
                                 />
                             </td>
                         </tr>
                         <tr>
-                            <td class="table-header-text">{{$t('optin_postlaunch_tx_nis_address')}}</td>
+                            <td class="table-header-text">{{ $t('optin_postlaunch_tx_nis_address') }}</td>
                             <td class="address-text">{{ NISAddress }}</td>
                         </tr>
                     </table>
@@ -36,13 +37,13 @@
         </div>
         <div class="column">
             <div class="details-button" @click="onDetailsClick">
-                {{isDetailsShown ? $t('hide_details') : $t('show_details')}}
+                {{ isDetailsShown ? $t('hide_details') : $t('show_details') }}
             </div>
-            <div v-if="isDetailsShown" class="transaction-details">
-                <TransactionDetails 
-                    :transaction="transaction" 
-                />
-            </div>
+            <transition name="collapse">
+                <div v-if="isDetailsShown" class="transaction-details">
+                    <TransactionDetails :transaction="transaction" />
+                </div>
+            </transition>
         </div>
     </div>
 </template>
@@ -59,8 +60,8 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 @Component({
     components: {
         MosaicAmountDisplay,
-        TransactionDetails
-    }
+        TransactionDetails,
+    },
 })
 export default class TransactionOptinPayoutDetails extends Vue {
     @Prop({ required: true }) readonly transaction: AggregateTransaction;
@@ -72,12 +73,12 @@ export default class TransactionOptinPayoutDetails extends Vue {
     private get referenceInnerTransaction(): TransferTransaction | null {
         const currentAddress = this.currentAccount.address;
         const transaction = this.transaction.innerTransactions.find(
-            innerTransaction => 
+            (innerTransaction) =>
                 innerTransaction.type === TransactionType.TRANSFER &&
-                (innerTransaction as TransferTransaction).recipientAddress?.plain() === currentAddress
+                (innerTransaction as TransferTransaction).recipientAddress?.plain() === currentAddress,
         );
 
-        return transaction as TransferTransaction || null;
+        return (transaction as TransferTransaction) || null;
     }
 
     private get completed(): boolean {
@@ -98,12 +99,13 @@ export default class TransactionOptinPayoutDetails extends Vue {
 
     private get NISAddress(): string | null {
         let NISAddress = null;
-        
+
         try {
             const json = JSON.parse(this.referenceInnerTransaction?.message.payload);
             NISAddress = json.nisAddress;
+        } catch (e) {
+            console.log('Opt-in payment transaction. Failed to get NIS1 address', e);
         }
-        catch(e){}
 
         return NISAddress;
     }
@@ -122,7 +124,7 @@ export default class TransactionOptinPayoutDetails extends Vue {
 @import '../../views/resources/css/variables.less';
 
 .root {
-   padding-bottom: 33.2px;
+    padding-bottom: 33.2px;
 }
 
 .row {
@@ -139,14 +141,14 @@ export default class TransactionOptinPayoutDetails extends Vue {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    width: 2rem;
+    width: 1.93rem;
     margin-top: -1px;
     margin-left: 0.1rem;
     margin-right: 0.3rem;
 }
 
 .image {
-    width: 2rem;
+    width: 1.93rem;
     height: auto;
 }
 
@@ -174,7 +176,7 @@ export default class TransactionOptinPayoutDetails extends Vue {
 }
 
 .table-header-text {
-   padding-right: 0.3rem;
+    padding-right: 0.3rem;
 }
 
 .address-text {
@@ -199,5 +201,16 @@ export default class TransactionOptinPayoutDetails extends Vue {
     border-top-color: @line;
     margin: 0.3rem 0;
     padding-top: 0.3rem;
+    max-height: 5rem;
+}
+
+.collapse-enter-active,
+.collapse-leave-active {
+    transition: max-height 0.2s;
+}
+
+.collapse-enter,
+.collapse-leave-to {
+    max-height: 0;
 }
 </style>
