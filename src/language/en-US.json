@@ -1111,9 +1111,9 @@
     "key_type": "Key Type",
     "optin_postlaunch_tx_title": "Post-launch Opt-in",
     "optin_postlaunch_tx_pending_description": "Your Opt-in payment is being processed. You will receive the XYM coins, when this transaction is confirmed.",
-    "optin_postlaunch_tx_completed_description": "Congratulation! Your Opt-in payment is completed.",
-    "optin_postlaunch_tx_pending_amount": "The amount you will recieve:",
-    "optin_postlaunch_tx_completed_amount": "The amount you have recieved:",
+    "optin_postlaunch_tx_completed_description": "Congratulations! Your Opt-in payment is completed.",
+    "optin_postlaunch_tx_pending_amount": "The Amount You Will Recieve:",
+    "optin_postlaunch_tx_completed_amount": "The Amount You Have Recieved:",
     "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 Account:",
     "show_details": "Show Details",
     "hide_details": "Hide Details"
