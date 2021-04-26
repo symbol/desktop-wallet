@@ -47,36 +47,22 @@ export class NamespaceTableService extends AssetTableService {
     }
 
     public getTableRows(): any[] {
-        const namespaces: NamespaceModel[] = this.namespaces;
         const showExpired: boolean = this.showExpired;
         const currentHeight: number = this.currentHeight;
-        return !showExpired
-            ? namespaces
-                  .filter((ns) => ns.endHeight > currentHeight)
-                  .map((namespaceModel) => {
-                      const { expired, expiration } = this.getExpiration(namespaceModel);
-                      return {
-                          hexId: namespaceModel.namespaceIdHex,
-                          name: namespaceModel.name,
-                          expiration: expiration,
-                          expired: expired,
-                          aliasType: this.getAliasType(namespaceModel),
-                          aliasIdentifier: this.getAliasIdentifier(namespaceModel),
-                          metadataList: namespaceModel.metadataList || [],
-                      };
-                  })
-            : namespaces.map((namespaceModel) => {
-                  const { expired, expiration } = this.getExpiration(namespaceModel);
-                  return {
-                      hexId: namespaceModel.namespaceIdHex,
-                      name: namespaceModel.name,
-                      expiration: expiration,
-                      expired: expired,
-                      aliasType: this.getAliasType(namespaceModel),
-                      aliasIdentifier: this.getAliasIdentifier(namespaceModel),
-                      metadataList: namespaceModel.metadataList || [],
-                  };
-              });
+        const namespaces: NamespaceModel[] = showExpired ? this.namespaces : this.namespaces.filter((ns) => ns.endHeight > currentHeight);
+
+        return namespaces.map((namespaceModel) => {
+            const { expired, expiration } = this.getExpiration(namespaceModel);
+            return {
+                hexId: namespaceModel.namespaceIdHex,
+                name: namespaceModel.name,
+                expiration: expiration,
+                expired: expired,
+                aliasType: this.getAliasType(namespaceModel),
+                aliasIdentifier: this.getAliasIdentifier(namespaceModel),
+                metadataList: namespaceModel.metadataList || [],
+            };
+        });
     }
 
     /**
