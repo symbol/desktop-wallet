@@ -1114,7 +1114,7 @@
     "optin_postlaunch_tx_completed_description": "Congratulation! Your Opt-in payment is completed.",
     "optin_postlaunch_tx_pending_amount": "The amount you will recieve:",
     "optin_postlaunch_tx_completed_amount": "The amount you have recieved:",
-    "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS Account:",
+    "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 Account:",
     "show_details": "Show Details",
     "hide_details": "Hide Details"
 }

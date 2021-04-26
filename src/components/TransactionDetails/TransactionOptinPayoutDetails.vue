@@ -158,23 +158,24 @@ export default class TransactionOptinPayoutDetails extends Vue {
 
 .title-text {
     font-family: @symbolFontBold;
-    font-size: 40px;
-    margin: 0 0 0;
+    font-size: @subtitleFont;
+    margin: 0 0 13px;
 }
 
 .content-text {
     font-family: @symbolFontMedium;
     margin: 16px 0;
-    line-height: 24px;
+    line-height: 28px;
 }
 
 .text-description {
-    font-family: @symbolFontSemiBold;
-    margin-bottom: 0.6rem;
+    font-family: @symbolFont;
+    margin-bottom: 32px;
 }
 
 .table-header-text {
    padding-right: 0.3rem;
+   font-family: @symbolFontMedium;
 }
 
 .address-text {
@@ -187,6 +188,7 @@ export default class TransactionOptinPayoutDetails extends Vue {
 
 .details-button {
     font-family: @symbolFontSemiBold;
+    font-size: @smallFont;
     color: @accentPink;
     margin-right: 0.1rem;
     align-self: flex-end;
@@ -197,7 +199,7 @@ export default class TransactionOptinPayoutDetails extends Vue {
     border-top-style: solid;
     border-top-width: 1px;
     border-top-color: @line;
-    margin: 0.3rem 0;
+    margin: 0.3rem 0.1rem;
     padding-top: 0.3rem;
 }
 </style>
