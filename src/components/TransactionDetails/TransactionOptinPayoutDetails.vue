@@ -40,7 +40,7 @@
                 {{ isDetailsShown ? $t('hide_details') : $t('show_details') }}
             </div>
             <transition name="collapse">
-                <div v-if="isDetailsShown" class="transaction-details">
+                <div v-if="isDetailsShown" class="transaction-details" :class="{'transaction-details-expanded': isExpanded}">
                     <TransactionDetails :transaction="transaction" />
                 </div>
             </transition>
@@ -56,6 +56,7 @@ import { optinImages } from '@/views/resources/Images';
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
 import { TransactionView } from '@/core/transactions/TransactionView';
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue';
+import { set } from 'node_modules/vue/types/umd';
 
 @Component({
     components: {
@@ -69,6 +70,7 @@ export default class TransactionOptinPayoutDetails extends Vue {
 
     private OptinLogo = optinImages.optinLogo;
     private isDetailsShown = false;
+    private isExpanded = false;
 
     private get referenceInnerTransaction(): TransferTransaction | null {
         const currentAddress = this.currentAccount.address;
@@ -112,10 +114,14 @@ export default class TransactionOptinPayoutDetails extends Vue {
 
     private onDetailsClick() {
         this.isDetailsShown = !this.isDetailsShown;
+        setTimeout(() => {
+            this.isExpanded = this.isDetailsShown;
+        }, 500)
     }
 
     private mounted() {
         this.isDetailsShown = false;
+        this.isExpanded = false;
     }
 }
 </script>
@@ -124,7 +130,7 @@ export default class TransactionOptinPayoutDetails extends Vue {
 @import '../../views/resources/css/variables.less';
 
 .root {
-    padding-bottom: 33.2px;
+    padding-bottom: 0.1rem;
 }
 
 .row {
@@ -141,14 +147,14 @@ export default class TransactionOptinPayoutDetails extends Vue {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    width: 1.93rem;
+    width: 1.92rem;
     margin-top: -1px;
     margin-left: 0.1rem;
     margin-right: 0.3rem;
 }
 
 .image {
-    width: 1.93rem;
+    width: 1.92rem;
     height: auto;
 }
 
@@ -161,7 +167,7 @@ export default class TransactionOptinPayoutDetails extends Vue {
 .title-text {
     font-family: @symbolFontBold;
     font-size: 40px;
-    margin: 0 0 0;
+    margin: 0;
 }
 
 .content-text {
@@ -199,14 +205,18 @@ export default class TransactionOptinPayoutDetails extends Vue {
     border-top-style: solid;
     border-top-width: 1px;
     border-top-color: @line;
-    margin: 0.3rem 0;
-    padding-top: 0.3rem;
-    max-height: 5rem;
+    padding-top: 0.4rem;
+    margin-top: 0.4rem;
+    max-height: 3rem;
+}
+
+.transaction-details-expanded {
+    max-height: 100rem;
 }
 
 .collapse-enter-active,
 .collapse-leave-active {
-    transition: max-height 0.2s;
+    transition: max-height 0.3s;
 }
 
 .collapse-enter,
