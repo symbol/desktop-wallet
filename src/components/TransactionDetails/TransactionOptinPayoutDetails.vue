@@ -40,7 +40,7 @@
                 {{ isDetailsShown ? $t('hide_details') : $t('show_details') }}
             </div>
             <transition name="collapse">
-                <div v-if="isDetailsShown" class="transaction-details" :class="{'transaction-details-expanded': isExpanded}">
+                <div v-if="isDetailsShown" class="transaction-details" :class="{ 'transaction-details-expanded': isExpanded }">
                     <TransactionDetails :transaction="transaction" />
                 </div>
             </transition>
@@ -116,7 +116,7 @@ export default class TransactionOptinPayoutDetails extends Vue {
         this.isDetailsShown = !this.isDetailsShown;
         setTimeout(() => {
             this.isExpanded = this.isDetailsShown;
-        }, 500)
+        }, 500);
     }
 
     private mounted() {

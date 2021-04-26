@@ -179,6 +179,8 @@ import notMultisig from '@/views/resources/img/icons/not-multisig.png';
 // @ts-ignore
 import outgoing from '@/views/resources/img/icons/outgoing.png';
 // @ts-ignore
+import optinTransaction from '@/views/resources/img/icons/optin-transaction.png';
+// @ts-ignore
 import pending from '@/views/resources/img/icons/pending.png';
 // @ts-ignore
 import privateChain from '@/views/resources/img/icons/private-chain.png';
@@ -334,6 +336,7 @@ export const officialIcons = {
     nodes,
     notMultisig,
     outgoing,
+    optinTransaction,
     pending,
     privateChain,
     privateKey,
@@ -377,6 +380,7 @@ export const transactionTypeToIcon = {
     [TransactionType.MULTISIG_ACCOUNT_MODIFICATION]: officialIcons.multipleParties,
     [TransactionType.AGGREGATE_COMPLETE]: officialIcons.aggregateTransaction,
     [TransactionType.AGGREGATE_BONDED]: officialIcons.aggregateTransaction,
+    [TransactionType.AGGREGATE_BONDED + '_optin']: optinTransaction,
     [TransactionType.HASH_LOCK]: officialIcons.lock,
     [TransactionType.SECRET_LOCK]: officialIcons.lock,
     [TransactionType.SECRET_PROOF]: officialIcons.lock,

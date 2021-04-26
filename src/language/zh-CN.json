@@ -949,6 +949,7 @@
     "transaction_descriptor_16724": "转账",
     "transaction_descriptor_16725": "修改多签名帐户",
     "transaction_descriptor_16961": "担保聚合",
+    "transaction_descriptor_16961_optin": "Post-launch Opt-In",
     "transaction_descriptor_16963": "验证密钥链接",
     "transaction_descriptor_16964": "马赛克元数据",
     "transaction_descriptor_16972": "Link node key",
@@ -1108,5 +1109,13 @@
     "request_harvesting": "要求收获",
     "requesting": "正在要求...",
     "unlink_keys": "取消链接键",
-    "unlinking": "取消连结..."
+    "unlinking": "取消连结...",
+    "optin_postlaunch_tx_title": "Post-launch Opt-in",
+    "optin_postlaunch_tx_pending_description": "Your Opt-in payment is being processed. You will receive the XYM coins, when this transaction is confirmed.",
+    "optin_postlaunch_tx_completed_description": "Congratulations! Your Opt-in payment is completed.",
+    "optin_postlaunch_tx_pending_amount": "The Amount You Will Receive:",
+    "optin_postlaunch_tx_completed_amount": "The Amount You Have Received:",
+    "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 Account:",
+    "show_details": "Show Details",
+    "hide_details": "Hide Details"
 }
