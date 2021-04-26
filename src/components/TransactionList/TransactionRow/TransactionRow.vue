@@ -7,7 +7,7 @@
 
         <!-- SECOND COLUMN -->
         <div class="address-cell">
-            <ActionDisplay :transaction="transaction" :isOptinPayoutTransaction="isOptinPayoutTransaction" />
+            <ActionDisplay :transaction="transaction" :is-optin-payout-transaction="isOptinPayoutTransaction" />
         </div>
 
         <!-- THIRD COLUMN -->

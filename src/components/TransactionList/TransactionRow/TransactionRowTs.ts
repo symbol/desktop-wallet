@@ -95,7 +95,7 @@ export class TransactionRowTs extends Vue {
     /**
      * Returns whether aggregate bonded transaction is announced by NGL Finance
      */
-     public get isOptinPayoutTransaction(): boolean {
+    public get isOptinPayoutTransaction(): boolean {
         if (!this.transaction) {
             return false;
         }
@@ -124,8 +124,9 @@ export class TransactionRowTs extends Vue {
                 return view.isIncoming ? officialIcons.incoming : officialIcons.outgoing;
             }
 
-            if (this.isOptinPayoutTransaction)
+            if (this.isOptinPayoutTransaction) {
                 return transactionTypeToIcon[view.transaction.type + '_optin'];
+            }
 
             // - otherwise use per-type icon
             return transactionTypeToIcon[view.transaction.type];
