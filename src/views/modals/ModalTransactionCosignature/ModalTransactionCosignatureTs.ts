@@ -25,6 +25,7 @@ import {
     NetworkType,
     TransactionStatus,
     TransactionType,
+    TransferTransaction
 } from 'symbol-sdk';
 import { mapGetters } from 'vuex';
 
@@ -144,13 +145,25 @@ export class ModalTransactionCosignatureTs extends Vue {
     }
 
     /**
-     * Returns whether aggregate bonded transaction is announced by NGL Finance
+     * Returns whether aggregate bonded transaction is announced by NGL Finance bot
      */
     public get isOptinPayoutTransaction(): boolean {
         if (!this.transaction) {
             return false;
         }
 
+        // Check wether the Aggregate Bonded has inner Transfer with the current account address as a recipient.
+        const currentAddress = this.currentAccount.address;
+        const innerTransferTransaction = this.transaction.innerTransactions.find(
+            (innerTransaction) =>
+                innerTransaction.type === TransactionType.TRANSFER &&
+                (innerTransaction as TransferTransaction).recipientAddress?.plain() === currentAddress,
+        );
+        
+        if (!innerTransferTransaction)
+            return false;
+
+        // Check wether the signer of the Aggregate Bonded is the NGL Finance bot.
         const networktype = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
         const keysFinance = process.env.KEYS_FINANCE[networktype];
         const announcerPublicKey = this.transaction.signer.publicKey;
