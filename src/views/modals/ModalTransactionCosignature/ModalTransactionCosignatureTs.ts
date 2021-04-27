@@ -148,7 +148,13 @@ export class ModalTransactionCosignatureTs extends Vue {
      * Returns whether aggregate bonded transaction is announced by NGL Finance bot
      */
     public get isOptinPayoutTransaction(): boolean {
+        // Check wether the 'transaction' prop is provided.
         if (!this.transaction) {
+            return false;
+        }
+
+        // Check wether the Aggregate Bonded doesn't need a current account cosignature.
+        if (this.hasMissSignatures && this.needsCosignature) {
             return false;
         }
 
@@ -159,7 +165,6 @@ export class ModalTransactionCosignatureTs extends Vue {
                 innerTransaction.type === TransactionType.TRANSFER &&
                 (innerTransaction as TransferTransaction).recipientAddress?.plain() === currentAddress,
         );
-
         if (!innerTransferTransaction) {
             return false;
         }
