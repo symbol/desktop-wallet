@@ -26,6 +26,8 @@ module.exports = {
     config.plugin('define').tap((args) => {
       const env = args[0]['process.env'];
       let keys;
+      let keysFinance;
+
       try {
         keys = require('./keys-whitelist.json');
       } catch {
@@ -34,11 +36,21 @@ module.exports = {
           testnet: []
         }
       }
+
+      try {
+        keysFinance = require('./keys-finance.json');
+      } catch {
+        keysFinance = {
+          mainnet: [],
+          testnet: []
+        }
+      }
       args[0]['process.env'] = {
           ...env,
           PACKAGE_VERSION: packageVersion,
           WEB: web,
-          KEYS_WHITELIST: JSON.stringify(keys)
+          KEYS_WHITELIST: JSON.stringify(keys),
+          KEYS_FINANCE: JSON.stringify(keysFinance)
       };
       return args;
     });

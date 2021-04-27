@@ -35,6 +35,8 @@ import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigne
 // @ts-ignore
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
 // @ts-ignore
+import TransactionOptinPayoutDetails from '@/components/TransactionDetails/TransactionOptinPayoutDetails.vue';
+// @ts-ignore
 import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue';
 // @ts-ignore
 import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue';
@@ -48,6 +50,7 @@ import { AccountMetadataTransaction } from 'symbol-sdk';
 @Component({
     components: {
         TransactionDetails,
+        TransactionOptinPayoutDetails,
         FormProfileUnlock,
         HardwareConfirmationButton,
         QRCodeDisplay,
@@ -138,6 +141,24 @@ export class ModalTransactionCosignatureTs extends Vue {
         if (!val) {
             this.$emit('close');
         }
+    }
+
+    /**
+     * Returns whether aggregate bonded transaction is announced by NGL Finance
+     */
+    public get isOptinPayoutTransaction(): boolean {
+        if (!this.transaction) {
+            return false;
+        }
+
+        const networktype = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
+        const keysFinance = process.env.KEYS_FINANCE[networktype];
+        const announcerPublicKey = this.transaction.signer.publicKey;
+        const isAnnouncerNGLFinance = keysFinance.find(
+            (financePublicKey) => financePublicKey.toUpperCase() === announcerPublicKey.toUpperCase(),
+        );
+
+        return isAnnouncerNGLFinance;
     }
 
     /**
