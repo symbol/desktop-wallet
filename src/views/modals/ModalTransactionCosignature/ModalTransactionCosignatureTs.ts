@@ -25,7 +25,7 @@ import {
     NetworkType,
     TransactionStatus,
     TransactionType,
-    TransferTransaction
+    TransferTransaction,
 } from 'symbol-sdk';
 import { mapGetters } from 'vuex';
 
@@ -159,9 +159,10 @@ export class ModalTransactionCosignatureTs extends Vue {
                 innerTransaction.type === TransactionType.TRANSFER &&
                 (innerTransaction as TransferTransaction).recipientAddress?.plain() === currentAddress,
         );
-        
-        if (!innerTransferTransaction)
+
+        if (!innerTransferTransaction) {
             return false;
+        }
 
         // Check wether the signer of the Aggregate Bonded is the NGL Finance bot.
         const networktype = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
