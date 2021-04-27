@@ -16,6 +16,7 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import {
     Account,
+    Address,
     AccountAddressRestrictionTransaction,
     AggregateTransaction,
     AggregateTransactionCosignature,
@@ -163,7 +164,7 @@ export class ModalTransactionCosignatureTs extends Vue {
         const innerTransferTransaction = this.transaction.innerTransactions.find(
             (innerTransaction) =>
                 innerTransaction.type === TransactionType.TRANSFER &&
-                (innerTransaction as TransferTransaction).recipientAddress?.plain() === currentAddress,
+                (innerTransaction as TransferTransaction).recipientAddress.equals(Address.createFromRawAddress(currentAddress)),
         );
         if (!innerTransferTransaction) {
             return false;

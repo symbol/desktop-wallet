@@ -33,7 +33,8 @@ module.exports = {
 
       try {
         configFile = require('./keys-whitelist.json');
-      } catch {
+      } catch(e) {
+        console.error('Failed to read "keys-whitelist.json"', e);
         configFile = {
           preLaunchOptin: dataPlaceholder,
           nglFinanceBot: dataPlaceholder
