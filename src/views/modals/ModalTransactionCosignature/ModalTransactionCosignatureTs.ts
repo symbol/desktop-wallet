@@ -164,7 +164,7 @@ export class ModalTransactionCosignatureTs extends Vue {
         const innerTransferTransaction = this.transaction.innerTransactions.find(
             (innerTransaction) =>
                 innerTransaction.type === TransactionType.TRANSFER &&
-                (innerTransaction as TransferTransaction).recipientAddress.equals(Address.createFromRawAddress(currentAddress)),
+                (innerTransaction as TransferTransaction).recipientAddress?.equals(Address.createFromRawAddress(currentAddress)),
         );
         if (!innerTransferTransaction) {
             return false;
