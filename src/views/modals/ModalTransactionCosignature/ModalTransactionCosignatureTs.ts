@@ -16,6 +16,7 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import {
     Account,
+    Address,
     AccountAddressRestrictionTransaction,
     AggregateTransaction,
     AggregateTransactionCosignature,
@@ -25,6 +26,7 @@ import {
     NetworkType,
     TransactionStatus,
     TransactionType,
+    TransferTransaction,
 } from 'symbol-sdk';
 import { mapGetters } from 'vuex';
 
@@ -144,13 +146,31 @@ export class ModalTransactionCosignatureTs extends Vue {
     }
 
     /**
-     * Returns whether aggregate bonded transaction is announced by NGL Finance
+     * Returns whether aggregate bonded transaction is announced by NGL Finance bot
      */
     public get isOptinPayoutTransaction(): boolean {
+        // Check wether the 'transaction' prop is provided.
         if (!this.transaction) {
             return false;
         }
 
+        // Check wether the Aggregate Bonded doesn't need a current account cosignature.
+        if (this.hasMissSignatures && this.needsCosignature) {
+            return false;
+        }
+
+        // Check wether the Aggregate Bonded has inner Transfer with the current account address as a recipient.
+        const currentAddress = this.currentAccount.address;
+        const innerTransferTransaction = this.transaction.innerTransactions.find(
+            (innerTransaction) =>
+                innerTransaction.type === TransactionType.TRANSFER &&
+                (innerTransaction as TransferTransaction).recipientAddress?.equals(Address.createFromRawAddress(currentAddress)),
+        );
+        if (!innerTransferTransaction) {
+            return false;
+        }
+
+        // Check wether the signer of the Aggregate Bonded is the NGL Finance bot.
         const networktype = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
         const keysFinance = process.env.KEYS_FINANCE[networktype];
         const announcerPublicKey = this.transaction.signer.publicKey;

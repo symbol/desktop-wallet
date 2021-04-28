@@ -20,7 +20,7 @@
                             <td class="amount-text">
                                 <MosaicAmountDisplay
                                     v-if="amount !== null"
-                                    :id="transferredMosaicId"
+                                    :id="mosaicId"
                                     :absolute-amount="amount"
                                     :show-ticker="true"
                                     color="green"
