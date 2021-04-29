@@ -120,7 +120,6 @@ import { URLInfo } from '@/core/utils/URLInfo';
     computed: {
         ...mapGetters({
             networkModel: 'network/networkModel',
-            networkType: 'network/networkType',
             currentPeer: 'network/currentPeer',
         }),
     },
@@ -138,10 +137,9 @@ export default class AboutPage extends Vue {
         network: networkConfig,
     };
     public types = NetworkType;
-    public networkType: NetworkType;
 
     public isNetworkType(type): boolean {
-        return networkConfig[this.networkType].defaultNetworkType === type;
+        return networkConfig[this.generationHash].defaultNetworkType === type;
     }
 
     public get generationHash(): string {

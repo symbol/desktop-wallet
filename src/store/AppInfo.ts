@@ -19,11 +19,10 @@ import i18n from '@/language';
 import app from '@/main';
 import { AwaitLock } from './AwaitLock';
 // configuration
-import { appConfig } from '@/config';
+import { appConfig, defaultGenerationHashes } from '@/config';
 import { networkConfig } from '@/config';
 import { SettingsModel } from '@/core/database/entities/SettingsModel';
 import { SettingService } from '@/services/SettingService';
-import { NetworkType } from 'symbol-sdk';
 import _ from 'lodash';
 
 const Lock = AwaitLock.create();
@@ -53,7 +52,7 @@ const appInfoState: AppInfoState = {
     hasControlsDisabled: false,
     controlsDisabledMessage: '',
     faucetUrl: undefined,
-    settings: settingService.getProfileSettings(ANON_PROFILE_NAME, NetworkType.TEST_NET), // TODO how to fix here? why static?
+    settings: settingService.getProfileSettings(ANON_PROFILE_NAME, defaultGenerationHashes.TEST_NET), // TODO how to fix here? why static?
 };
 
 export default {
@@ -89,7 +88,7 @@ export default {
         setLoadingOverlayMessage: (state: AppInfoState, message: string) => Vue.set(state, 'loadingOverlayMessage', message),
         setLoadingDisableCloseButton: (state: AppInfoState, bool: boolean) => Vue.set(state, 'loadingDisableCloseButton', bool),
         faucetUrl: (state: AppInfoState, faucetUrl) => {
-            Vue.set(state, 'faucetUrl', faucetUrl || networkConfig[NetworkType.TEST_NET].faucetUrl);
+            Vue.set(state, 'faucetUrl', faucetUrl || networkConfig[defaultGenerationHashes.TEST_NET].faucetUrl);
         },
     },
     actions: {
@@ -139,8 +138,8 @@ export default {
             }
             const currentProfile = rootGetters['profile/currentProfile'];
             const profileName = (currentProfile && currentProfile.profileName) || ANON_PROFILE_NAME;
-            commit('settings', settingService.changeProfileSettings(profileName, settingsModel, currentProfile.networkType));
-            commit('faucetUrl', networkConfig[currentProfile.networkType].faucetUrl);
+            commit('settings', settingService.changeProfileSettings(profileName, settingsModel, currentProfile.generationHash));
+            commit('faucetUrl', networkConfig[currentProfile.generationHash].faucetUrl);
         },
 
         SET_EXPLORER_URL({ dispatch }, explorerUrl: string) {

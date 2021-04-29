@@ -14,11 +14,8 @@
  *
  */
 // configuration
-import { appConfig } from '@/config';
+import { networkConfig, appConfig, defaultGenerationHashes } from '@/config';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
-
-import { networkConfig } from '@/config';
-import { NetworkType } from 'symbol-sdk';
 
 const { MIN_PASSWORD_LENGTH } = appConfig.constants;
 
@@ -41,7 +38,7 @@ export const createValidationRuleSet = ({
         mosaicId: 'required|mosaicId',
         message: `maxMessage:${maxMessageSize}`,
         namespaceDuration: `required|min_value:${
-            minNamespaceDuration / networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.blockGenerationTargetTime
+            minNamespaceDuration / networkConfig[defaultGenerationHashes.TEST_NET].networkConfigurationDefaults.blockGenerationTargetTime
         }|maxNamespaceDuration`,
         namespaceName: {
             required: true,
@@ -72,4 +69,4 @@ export const createValidationRuleSet = ({
 
 // TODO ValidationRuleset needs to be created when the network configuration is resolved, UI needs
 // to use the resolved ValidationResulset ATM rules are using the hardocded ones
-export const ValidationRuleset = createValidationRuleSet(networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults);
+export const ValidationRuleset = createValidationRuleSet(networkConfig[defaultGenerationHashes.TEST_NET].networkConfigurationDefaults);

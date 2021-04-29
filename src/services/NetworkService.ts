@@ -25,6 +25,7 @@ import { combineLatest, defer, EMPTY, from, Observable } from 'rxjs';
 import { catchError, flatMap, map, tap } from 'rxjs/operators';
 import { NetworkConfiguration, NetworkType, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk';
 import { OfflineRepositoryFactory } from '@/services/offline/OfflineRepositoryFactory';
+import { CommonHelpers } from '@/core/utils/CommonHelpers';
 
 /**
  * The service in charge of loading and caching anything related to Network from Rest.
@@ -43,7 +44,6 @@ export class NetworkService {
         const storedNetworkModel = this.storage.getLatest();
         return URLHelpers.formatUrl(storedNetworkModel && storedNetworkModel.url).url;
     }
-
     /**
      * This method get the network data from the provided URL. If the server in the candidateUrl is down,
      * the next available url will be used.
@@ -128,7 +128,8 @@ export class NetworkService {
     }
 
     private toNetworkConfigurationModel(dto: NetworkConfiguration, networkType: NetworkType): NetworkConfigurationModel {
-        const fileDefaults: NetworkConfigurationModel = networkConfig[networkType].networkConfigurationDefaults;
+        const generationHash = CommonHelpers.getGenerationHash(networkType);
+        const fileDefaults: NetworkConfigurationModel = networkConfig[generationHash].networkConfigurationDefaults;
         const fromDto: NetworkConfigurationModel = {
             epochAdjustment: NetworkConfigurationHelpers.epochAdjustment(dto),
             maxMosaicDivisibility: NetworkConfigurationHelpers.maxMosaicDivisibility(dto),
@@ -155,14 +156,14 @@ export class NetworkService {
     public reset(generationHash: string) {
         this.storage.remove(generationHash);
     }
-
     /**
      * It creates the RepositoryFactory used to build the http repository/clients and listeners.
      * @param url the url.
      */
     public static createRepositoryFactory(url: string, isOffline: boolean = false, networkType = NetworkType.TEST_NET): RepositoryFactory {
+        const genHash = CommonHelpers.getGenerationHash(networkType);
         return isOffline
-            ? new OfflineRepositoryFactory(networkType)
+            ? new OfflineRepositoryFactory(genHash)
             : new RepositoryFactoryHttp(url, {
                   websocketUrl: URLHelpers.httpToWsUrl(url) + '/ws',
                   websocketInjected: WebSocket,

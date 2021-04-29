@@ -207,7 +207,7 @@ export default class LoginPageTs extends Vue {
             }
 
             // profile exists, fetch data
-            const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.networkType);
+            const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.generationHash);
 
             const knownAccounts: AccountModel[] = this.accountService.getKnownAccounts(profile.accounts);
             if (knownAccounts.length == 0) {

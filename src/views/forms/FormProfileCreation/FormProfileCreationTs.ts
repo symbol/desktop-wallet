@@ -31,7 +31,7 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { AccountService } from '@/services/AccountService';
-import { networkConfig } from '@/config';
+import { CommonHelpers } from '@/core/utils/CommonHelpers';
 
 /// end-region custom types
 
@@ -47,7 +47,6 @@ import { networkConfig } from '@/config';
         ...mapGetters({
             generationHash: 'network/generationHash',
             currentProfile: 'profile/currentProfile',
-            isConnected: 'network/isConnected',
         }),
     },
 })
@@ -58,7 +57,6 @@ export class FormProfileCreationTs extends Vue {
      * @var {string}
      */
     public currentProfile: ProfileModel;
-    private isConnected: boolean;
     /**
      * Currently active profile
      * @see {Store.Profile}
@@ -200,7 +198,7 @@ export class FormProfileCreationTs extends Vue {
     private persistAccountAndContinue() {
         // -  password stored as hash (never plain.)
         const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password));
-        const genHash = networkConfig[this.formItems.networkType].networkConfigurationDefaults.generationHash || this.generationHash;
+        const genHash = CommonHelpers.getGenerationHash(this.formItems.networkType) || this.generationHash;
         const profile: ProfileModel = {
             profileName: this.formItems.profileName,
             accounts: [],

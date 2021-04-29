@@ -290,7 +290,7 @@ export default {
                 if (
                     nodeNetworkModelResult &&
                     nodeNetworkModelResult.networkModel &&
-                    nodeNetworkModelResult.networkModel.networkType === networkType
+                    nodeNetworkModelResult.networkModel.generationHash === currentProfile.generationHash
                 ) {
                     await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                 } else {
@@ -298,7 +298,7 @@ export default {
                 }
                 return;
             } else {
-                let nodesList = [...networkConfig[networkType].nodes];
+                let nodesList = [...networkConfig[currentProfile.generationHash].nodes];
                 let nodeFound = false,
                     progressCurrentNodeInx = 0;
                 const numOfNodes = nodesList.length;
@@ -317,7 +317,7 @@ export default {
                     if (
                         nodeNetworkModelResult &&
                         nodeNetworkModelResult.repositoryFactory &&
-                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                        nodeNetworkModelResult.networkModel.generationHash === currentProfile.generationHash
                     ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
@@ -341,7 +341,7 @@ export default {
                     if (
                         nodeNetworkModelResult &&
                         nodeNetworkModelResult.repositoryFactory &&
-                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                        nodeNetworkModelResult.networkModel.generationHash === currentProfile.generationHash
                     ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;

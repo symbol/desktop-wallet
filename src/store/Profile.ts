@@ -110,7 +110,7 @@ export default {
 
             dispatch('diagnostic/ADD_DEBUG', 'Changing current profile to ' + currentProfile.profileName, { root: true });
 
-            const settings = new SettingService().getProfileSettings(currentProfile.profileName, currentProfile.networkType);
+            const settings = new SettingService().getProfileSettings(currentProfile.profileName, currentProfile.generationHash);
             dispatch('app/SET_SETTINGS', settings, { root: true });
             dispatch('addressBook/LOAD_ADDRESS_BOOK', null, { root: true });
 

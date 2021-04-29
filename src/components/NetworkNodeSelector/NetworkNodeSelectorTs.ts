@@ -23,6 +23,7 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
             repositoryFactory: 'network/repositoryFactory',
             peerNodes: 'network/peerNodes',
             networkType: 'network/networkType',
+            generationHash: 'network/generationHash',
             currentProfile: 'profile/currentProfile',
         }),
     },
@@ -55,6 +56,7 @@ export class NetworkNodeSelectorTs extends Vue {
     public peerNodes: NodeInfo[];
     public isFetchingNodeInfo = false;
     public networkType: NetworkType;
+    public generationHash: string;
     /**
      * Form items
      */
@@ -201,7 +203,7 @@ export class NetworkNodeSelectorTs extends Vue {
                     !node.host?.includes('ap-southeast-1.testnet') &&
                     !node.host.includes('us-east-1.testnet') &&
                     !node.host.includes('eu-central-1.testnet') &&
-                    node.networkIdentifier === this.networkType,
+                    node.networkGenerationHashSeed === this.generationHash,
             );
         }
         return this.peerNodes;

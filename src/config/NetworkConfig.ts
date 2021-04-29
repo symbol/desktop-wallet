@@ -149,10 +149,13 @@ export const defaultMainnetNetworkConfig: NetworkConfig = {
         { friendlyName: 'ngl-dual-605', roles: 2, url: 'http://ngl-dual-605.symbolblockchain.io:3000' },
     ],
 };
-
-const defaultNetworkConfig: Record<number, NetworkConfig> = {
-    152: defaultTestnetNetworkConfig,
-    104: defaultMainnetNetworkConfig,
+export const defaultGenerationHashes: Record<string, string> = {
+    TEST_NET: '3B5E1FA6445653C971A50687E75E6D09FB30481055E3990C84B25E9222DC1155',
+    MAIN_NET: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
+};
+const defaultNetworkConfig: Record<string, NetworkConfig> = {
+    '3B5E1FA6445653C971A50687E75E6D09FB30481055E3990C84B25E9222DC1155': defaultTestnetNetworkConfig,
+    '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6': defaultMainnetNetworkConfig,
 };
 
 const resolvedNetworkConfig: NetworkConfig = window['networkConfig'] || defaultNetworkConfig;

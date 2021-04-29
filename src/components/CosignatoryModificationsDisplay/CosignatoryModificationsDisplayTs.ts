@@ -15,9 +15,6 @@
  */
 // external dependencies
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { mapGetters } from 'vuex';
-import { NetworkType } from 'symbol-sdk';
-
 // child components
 import { ValidationProvider } from 'vee-validate';
 // @ts-ignore
@@ -33,11 +30,6 @@ import { CosignatoryModifications } from '@/views/forms/FormMultisigAccountModif
         ErrorTooltip,
         FormRow,
     },
-    computed: {
-        ...mapGetters({
-            networkType: 'network/networkType',
-        }),
-    },
 })
 export class CosignatoryModificationsDisplayTs extends Vue {
     /**
@@ -48,8 +40,6 @@ export class CosignatoryModificationsDisplayTs extends Vue {
         default: {},
     })
     cosignatoryModifications: CosignatoryModifications;
-
-    private networkType: NetworkType;
 
     get modifications(): {
         address: string;

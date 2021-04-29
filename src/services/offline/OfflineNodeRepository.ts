@@ -1,16 +1,17 @@
-import { NetworkType, NodeHealth, NodeInfo, NodeRepository, NodeTime, ServerInfo, StorageInfo } from 'symbol-sdk';
+import { NodeHealth, NodeInfo, NodeRepository, NodeTime, ServerInfo, StorageInfo } from 'symbol-sdk';
 import { Observable, of } from 'rxjs';
 import { OfflineNodeInfo, OfflineStorageInfo } from '@/services/offline/MockModels';
+import { networkConfig } from '@/config';
 
 export class OfflineNodeRepository implements NodeRepository {
-    constructor(private readonly networkType: NetworkType) {}
+    constructor(private readonly genHash: string) {}
 
     getNodeHealth(): Observable<NodeHealth> {
         throw new Error(`OfflineNodeRepository: getNodeHealth not implemented`);
     }
 
     getNodeInfo(): Observable<NodeInfo> {
-        return of(OfflineNodeInfo(this.networkType));
+        return of(OfflineNodeInfo(networkConfig[this.genHash].defaultNetworkType));
     }
 
     getNodePeers(): Observable<NodeInfo[]> {

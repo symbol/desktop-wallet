@@ -22,6 +22,7 @@ import { NodeModel } from '@/core/database/entities/NodeModel';
 import * as _ from 'lodash';
 import { networkConfig } from '@/config';
 import { NodeModelStorage } from '@/core/database/storage/NodeModelStorage';
+import { CommonHelpers } from '@/core/utils/CommonHelpers';
 
 /**
  * The service in charge of loading and caching anything related to Node and Peers from Rest.
@@ -40,7 +41,6 @@ export class NodeService {
     public getNodes(repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string, networkType: NetworkType): Observable<NodeModel[]> {
         const storedNodes = this.getKnowNodesOnly(networkType);
         const nodeRepository = repositoryFactory.createNodeRepository();
-
         return nodeRepository.getNodeInfo().pipe(
             map((dto: NodeInfo) =>
                 this.createNodeModel(repositoryFactoryUrl, networkType, dto.friendlyName, undefined, dto.publicKey, dto.nodePublicKey),
@@ -50,9 +50,8 @@ export class NodeService {
             tap((p) => this.saveNodes(p)),
         );
     }
-
     private loadStaticNodes(networkType: NetworkType): NodeModel[] {
-        return networkConfig[networkType].nodes.map((n) => {
+        return networkConfig[CommonHelpers.getGenerationHash(networkType)].nodes.map((n) => {
             return this.createNodeModel(n.url, networkType, n.friendlyName, true);
         });
     }
@@ -68,7 +67,7 @@ export class NodeService {
         return new NodeModel(
             url,
             friendlyName || '',
-            isDefault || !!networkConfig[networkType].nodes.find((n) => n.url === url),
+            isDefault || !!networkConfig[CommonHelpers.getGenerationHash(networkType)].nodes.find((n) => n.url === url),
             networkType,
             publicKey,
             nodePublicKey,

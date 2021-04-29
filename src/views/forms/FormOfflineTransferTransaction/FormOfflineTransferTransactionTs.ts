@@ -199,7 +199,7 @@ export class FormOfflineTransferTransactionTs extends Vue {
 
         const settingService = new SettingService();
 
-        const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.networkType);
+        const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.generationHash);
 
         const knownAccounts: AccountModel[] = this.accountService.getKnownAccounts(profile.accounts);
 
