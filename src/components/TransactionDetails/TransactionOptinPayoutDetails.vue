@@ -77,7 +77,7 @@ export default class TransactionOptinPayoutDetails extends Vue {
             (innerTransaction) =>
                 innerTransaction.type === TransactionType.TRANSFER &&
                 (innerTransaction as TransferTransaction).recipientAddress?.plain() === currentAddress &&
-                (innerTransaction as TransferTransaction).mosaics?.length
+                (innerTransaction as TransferTransaction).mosaics?.length,
         );
 
         return transactions as Array<TransferTransaction>;
@@ -88,13 +88,13 @@ export default class TransactionOptinPayoutDetails extends Vue {
     }
 
     private get transferredMosaics(): Array<Mosaic> {
-        return this.referenceInnerTransactions.map(transaction => transaction.mosaics[0]);
+        return this.referenceInnerTransactions.map((transaction) => transaction.mosaics[0]);
     }
 
     private get amount(): UInt64 {
         let sumAmount = UInt64.fromNumericString('0');
-        this.transferredMosaics?.forEach(mosaic => sumAmount = sumAmount.add(mosaic.amount));
-        
+        this.transferredMosaics?.forEach((mosaic) => (sumAmount = sumAmount.add(mosaic.amount)));
+
         return sumAmount;
     }
 
@@ -107,11 +107,8 @@ export default class TransactionOptinPayoutDetails extends Vue {
 
         try {
             NISAddresses = this.referenceInnerTransactions
-                .map(transaction =>
-                    JSON.parse(transaction?.message.payload || '{}')
-                    .nisAddress
-                )
-                .filter(nisAddress => !!nisAddress);
+                .map((transaction) => JSON.parse(transaction?.message.payload || '{}').nisAddress)
+                .filter((nisAddress) => !!nisAddress);
         } catch (e) {
             console.log('Opt-in payment transaction. Failed to get NIS1 address', e);
         }
