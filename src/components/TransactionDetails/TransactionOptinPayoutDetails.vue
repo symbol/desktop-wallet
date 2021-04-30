@@ -28,7 +28,9 @@
                             </td>
                         </tr>
                         <tr v-for="(address, index) in NISAddresses" :key="'' + index + 'nisaddr'">
-                            <td class="table-header-text">{{ $t('optin_postlaunch_tx_nis_address') }}</td>
+                            <td class="table-header-text">
+                                {{ $t('optin_postlaunch_tx_nis_address') }} {{ NISAddresses.length > 1 ? index + 1 : '' }}:
+                            </td>
                             <td class="address-text">{{ address }}</td>
                         </tr>
                     </table>
