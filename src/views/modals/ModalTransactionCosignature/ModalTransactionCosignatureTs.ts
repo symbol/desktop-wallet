@@ -146,9 +146,9 @@ export class ModalTransactionCosignatureTs extends Vue {
     }
 
     /**
-     * Returns whether aggregate bonded transaction is announced by NGL Finance bot
+     * Returns whether aggregate bonded transaction has inner Transfer with the current account address as a recipient.
      */
-     public get isOptinTransactionContainsPayout(): boolean {
+    public get isOptinTransactionContainsPayout(): boolean {
         // Check wether the 'transaction' prop is provided.
         if (!this.transaction) {
             return false;
@@ -162,7 +162,7 @@ export class ModalTransactionCosignatureTs extends Vue {
                 (innerTransaction as TransferTransaction).recipientAddress?.equals(Address.createFromRawAddress(currentAddress)),
         );
 
-        return !!innerTransferTransaction; 
+        return !!innerTransferTransaction;
     }
 
     /**
