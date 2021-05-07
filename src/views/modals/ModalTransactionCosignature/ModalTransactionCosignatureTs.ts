@@ -146,16 +146,11 @@ export class ModalTransactionCosignatureTs extends Vue {
     }
 
     /**
-     * Returns whether aggregate bonded transaction is announced by NGL Finance bot
+     * Returns whether aggregate bonded transaction has inner Transfer with the current account address as a recipient.
      */
-    public get isOptinPayoutTransaction(): boolean {
+    public get isOptinTransactionContainsPayout(): boolean {
         // Check wether the 'transaction' prop is provided.
         if (!this.transaction) {
-            return false;
-        }
-
-        // Check wether the Aggregate Bonded doesn't need a current account cosignature.
-        if (this.hasMissSignatures && this.needsCosignature) {
             return false;
         }
 
@@ -166,7 +161,21 @@ export class ModalTransactionCosignatureTs extends Vue {
                 innerTransaction.type === TransactionType.TRANSFER &&
                 (innerTransaction as TransferTransaction).recipientAddress?.equals(Address.createFromRawAddress(currentAddress)),
         );
-        if (!innerTransferTransaction) {
+
+        return !!innerTransferTransaction;
+    }
+
+    /**
+     * Returns whether aggregate bonded transaction is announced by NGL Finance bot
+     */
+    public get isOptinTransaction(): boolean {
+        // Check wether the 'transaction' prop is provided.
+        if (!this.transaction) {
+            return false;
+        }
+
+        // Check wether the Aggregate Bonded doesn't need a current account cosignature.
+        if (this.hasMissSignatures && this.needsCosignature) {
             return false;
         }
 
