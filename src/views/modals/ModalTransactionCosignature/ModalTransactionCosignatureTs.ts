@@ -209,7 +209,16 @@ export class ModalTransactionCosignatureTs extends Vue {
                 } else if (t.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf()) {
                     cosignList.push(...(t as AccountAddressRestrictionTransaction).restrictionAdditions);
                 } else if (t.type === TransactionType.ACCOUNT_METADATA) {
-                    cosignList.push((t as AccountMetadataTransaction).targetAddress);
+                    if (
+                        this.currentAccountMultisigInfo &&
+                        this.currentAccountMultisigInfo.multisigAddresses.find(
+                            (m) => m.plain() === (t as AccountMetadataTransaction).targetAddress.plain(),
+                        ) !== undefined
+                    ) {
+                        cosignList.push(Address.createFromRawAddress(this.currentAccount.address));
+                    } else {
+                        cosignList.push((t as AccountMetadataTransaction).targetAddress);
+                    }
                 }
             });
 
