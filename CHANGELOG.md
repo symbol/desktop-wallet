@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.3][v1.0.3] - 10-May-2021
+
+### Milestone: Post-launch Opt-in
+
+- Added a custom view for Opt-in payout transactions
+
 ## [1.0.2][v1.0.2] - 13-Apr-2021
 
 ### Milestone: New testnet update
