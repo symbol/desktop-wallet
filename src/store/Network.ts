@@ -502,11 +502,16 @@ export default {
         SET_NETWORK_IS_NOT_MATCHING_PROFILE({ commit }, networkIsNotMatchingProfile) {
             commit('networkIsNotMatchingProfile', networkIsNotMatchingProfile);
         },
-        ADD_KNOWN_PEER({ commit }, peerUrl) {
+        async ADD_KNOWN_PEER({ commit, rootGetters, dispatch }, peerUrl) {
             if (!UrlValidator.validate(peerUrl)) {
                 throw Error('Cannot add node. URL is not valid: ' + peerUrl);
             }
             commit('addPeer', peerUrl);
+            const repositoryFactory = rootGetters['network/repositoryFactory'];
+            const isConnected = rootGetters['network/isConnected'];
+            if (!repositoryFactory || !isConnected) {
+                await dispatch('SET_CURRENT_PEER', peerUrl);
+            }
         },
         REMOVE_KNOWN_PEER({ commit }, peerUrl) {
             commit('removePeer', peerUrl);
