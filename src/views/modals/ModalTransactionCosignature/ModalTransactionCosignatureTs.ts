@@ -174,6 +174,10 @@ export class ModalTransactionCosignatureTs extends Vue {
             return false;
         }
 
+        // Check wether the 'transaction' is type of Aggregate Bonded.
+        if (this.transaction.type !== TransactionType.AGGREGATE_BONDED)
+            return false;
+
         // Check wether the Aggregate Bonded doesn't need a current account cosignature.
         if (this.hasMissSignatures && this.needsCosignature) {
             return false;

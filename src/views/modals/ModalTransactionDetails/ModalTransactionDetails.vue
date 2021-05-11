@@ -1,6 +1,12 @@
 <template>
     <div class="transaction_modal">
-        <Modal v-model="show" :title="$t('modal_title_transaction_details')" :transfer="false" @close="show = false">
+        <Modal 
+            v-model="show" 
+            :title="$t('modal_title_transaction_details')"
+            :transfer="false"
+            :footer-hide="true"
+            @close="show = false"
+        >
             <TransactionOptinPayoutDetails
                 v-if="isOptinTransaction" 
                 :current-account="currentAccount"

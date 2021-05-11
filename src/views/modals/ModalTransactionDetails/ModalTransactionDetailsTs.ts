@@ -15,7 +15,7 @@
  */
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { NetworkType, Transaction } from 'symbol-sdk';
+import { NetworkType, Transaction, TransactionType } from 'symbol-sdk';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 // child components
@@ -96,6 +96,10 @@ export class ModalTransactionDetailsTs extends Vue {
         if (!this.transaction) {
             return false;
         }
+
+        // Check wether the 'transaction' is type of Aggregate Bonded.
+        if (this.transaction.type !== TransactionType.AGGREGATE_BONDED)
+            return false;
 
         // Check wether the signer of the Aggregate Bonded is the NGL Finance bot.
         const networktype = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
