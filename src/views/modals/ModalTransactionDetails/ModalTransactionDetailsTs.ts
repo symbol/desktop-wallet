@@ -27,7 +27,7 @@ import TransactionOptinPayoutDetails from '@/components/TransactionDetails/Trans
 @Component({
     components: {
         TransactionDetails,
-        TransactionOptinPayoutDetails
+        TransactionOptinPayoutDetails,
     },
     computed: {
         ...mapGetters({
@@ -56,10 +56,10 @@ export class ModalTransactionDetailsTs extends Vue {
     protected currentAccount: AccountModel;
 
     /**
-      * Currently active profile
-      * @see {Store.Profile}
-      * @var {string}
-      */
+     * Currently active profile
+     * @see {Store.Profile}
+     * @var {string}
+     */
     public currentProfile: ProfileModel;
 
     /**
@@ -98,8 +98,9 @@ export class ModalTransactionDetailsTs extends Vue {
         }
 
         // Check wether the 'transaction' is type of Aggregate Bonded.
-        if (this.transaction.type !== TransactionType.AGGREGATE_BONDED)
+        if (this.transaction.type !== TransactionType.AGGREGATE_BONDED) {
             return false;
+        }
 
         // Check wether the signer of the Aggregate Bonded is the NGL Finance bot.
         const networktype = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';

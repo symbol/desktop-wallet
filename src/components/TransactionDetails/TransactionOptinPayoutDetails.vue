@@ -53,14 +53,14 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { 
+import {
     AggregateTransaction,
-    UInt64, 
-    Mosaic, 
+    UInt64,
+    Mosaic,
     TransactionStatus,
-    TransactionType, 
-    TransferTransaction, 
-    UnresolvedMosaicId 
+    TransactionType,
+    TransferTransaction,
+    UnresolvedMosaicId,
 } from 'symbol-sdk';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { optinImages } from '@/views/resources/Images';
@@ -86,9 +86,9 @@ export default class TransactionOptinPayoutDetails extends Vue {
 
     private get referenceInnerTransactions(): Array<TransferTransaction> {
         const currentAddress = this.currentAccount.address;
-        const innerTransactions = this.transaction.innerTransactions.length 
-            ? this.transaction.innerTransactions 
-            : (this.transactionDetails?.innerTransactions || []);
+        const innerTransactions = this.transaction.innerTransactions.length
+            ? this.transaction.innerTransactions
+            : this.transactionDetails?.innerTransactions || [];
 
         const transactions = innerTransactions.filter(
             (innerTransaction) =>
@@ -142,10 +142,9 @@ export default class TransactionOptinPayoutDetails extends Vue {
 
         try {
             const transactionHash = this.transaction.transactionInfo.hash;
-            const transactionStatus: TransactionStatus = (await this.$store.dispatch(
-                'transaction/FETCH_TRANSACTION_STATUS', 
-                { transactionHash }
-            )) as TransactionStatus;
+            const transactionStatus: TransactionStatus = (await this.$store.dispatch('transaction/FETCH_TRANSACTION_STATUS', {
+                transactionHash,
+            })) as TransactionStatus;
 
             if (transactionStatus.group !== 'failed') {
                 this.transactionDetails = (await this.$store.dispatch('transaction/LOAD_TRANSACTION_DETAILS', {
