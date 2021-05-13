@@ -1110,12 +1110,12 @@
     "generate_random_public_key": "Generate Key",
     "import_key_manually": "Import Key manually",
     "key_type": "Key Type",
-    "optin_postlaunch_tx_title": "Post-launch Opt-in",
-    "optin_postlaunch_tx_pending_description": "Your Opt-in payment is being processed. You will receive the XYM coins, when this transaction is confirmed.",
-    "optin_postlaunch_tx_completed_description": "Success! Your Opt-in payment is completed.",
-    "optin_postlaunch_tx_pending_amount": "The Amount You Will Receive:",
-    "optin_postlaunch_tx_completed_amount": "The Amount You Have Received:",
-    "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 Account",
-    "show_details": "Show Details",
-    "hide_details": "Hide Details"
+    "optin_postlaunch_tx_title": "Post-launch opt-in",
+    "optin_postlaunch_tx_pending_description": "Your opt-in payment is being processed. You will receive the XYM coins, when this transaction is confirmed",
+    "optin_postlaunch_tx_completed_description": "Success! Your opt-in payment is complete.",
+    "optin_postlaunch_tx_pending_amount": "The amount you will receive:",
+    "optin_postlaunch_tx_completed_amount": "The amount you have received:",
+    "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 account",
+    "show_details": "Show details",
+    "hide_details": "Hide details"
 }

@@ -1110,12 +1110,12 @@
     "generate_random_public_key": "キーの生成",
     "import_key_manually": "キーを手動でインポートする",
     "key_type": "キータイプ",
-    "optin_postlaunch_tx_title": "Post-launch Opt-in",
-    "optin_postlaunch_tx_pending_description": "Your Opt-in payment is being processed. You will receive the XYM coins, when this transaction is confirmed.",
-    "optin_postlaunch_tx_completed_description": "Success! Your Opt-in payment is completed.",
-    "optin_postlaunch_tx_pending_amount": "The Amount You Will Receive:",
-    "optin_postlaunch_tx_completed_amount": "The Amount You Have Received:",
-    "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 Account",
-    "show_details": "Show Details",
-    "hide_details": "Hide Details"
+    "optin_postlaunch_tx_title": "Symbolローンチ後オプトイン",
+    "optin_postlaunch_tx_pending_description": "オプトインの支払が処理されています。この取引が確認されると、XYMコインを受け取ることができます。",
+    "optin_postlaunch_tx_completed_description": "オプトインの支払いが完了しました。",
+    "optin_postlaunch_tx_pending_amount": "受け取る枚数",
+    "optin_postlaunch_tx_completed_amount": "受け取った枚数",
+    "optin_postlaunch_tx_nis_address": "オプトイン済みのNEM NIS1アカウント",
+    "show_details": "詳細を表示",
+    "hide_details": "隠す"
 }

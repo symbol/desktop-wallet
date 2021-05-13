@@ -1110,12 +1110,12 @@
     "requesting": "正在要求...",
     "unlink_keys": "取消链接键",
     "unlinking": "取消连结...",
-    "optin_postlaunch_tx_title": "Post-launch Opt-in",
-    "optin_postlaunch_tx_pending_description": "Your Opt-in payment is being processed. You will receive the XYM coins, when this transaction is confirmed.",
-    "optin_postlaunch_tx_completed_description": "Success! Your Opt-in payment is completed.",
-    "optin_postlaunch_tx_pending_amount": "The Amount You Will Receive:",
-    "optin_postlaunch_tx_completed_amount": "The Amount You Have Received:",
-    "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 Account",
-    "show_details": "Show Details",
-    "hide_details": "Hide Details"
+    "optin_postlaunch_tx_title": "发布后选择加入",
+    "optin_postlaunch_tx_pending_description": "您的选择加入正在处理中。当交易确认后，您会获得相应的XYM。",
+    "optin_postlaunch_tx_completed_description": "恭喜！您的选择加入付款已完成。",
+    "optin_postlaunch_tx_pending_amount": "您将会收到的金额：",
+    "optin_postlaunch_tx_completed_amount": "您已收到的金额：",
+    "optin_postlaunch_tx_nis_address": "选择加入NEM NIS1账户",
+    "show_details": "显示详细信息",
+    "hide_details": "隐藏详细信息"
 }
