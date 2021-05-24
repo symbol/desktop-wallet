@@ -12,6 +12,7 @@ import { URLHelpers } from '@/core/utils/URLHelpers';
 import { NetworkType, NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { networkConfig } from '@/config';
 
 @Component({
     components: {
@@ -133,8 +134,11 @@ export class NetworkNodeSelectorTs extends Vue {
     }
 
     public async created() {
+        // add static hardcoded nodes to harvesting list
+        const staticNodesUrls = [];
+        networkConfig[this.networkType].nodes.map((node) => staticNodesUrls.push(node.url.replace(/http:|:3000|\//g, '')));
         await this.$store.dispatch('network/LOAD_PEER_NODES');
-        this.customNodeData = this.filteredNodes.map((n) => n.host);
+        this.customNodeData = this.filteredNodes.map((n) => n.host).concat(staticNodesUrls);
         this.filteredData = [...this.customNodeData];
         const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect.replace(/http:|:3000|\//g, '');
         if (this.customNodeData.includes(currentNodeUrl) && !this.value.url) {
@@ -195,14 +199,9 @@ export class NetworkNodeSelectorTs extends Vue {
     protected get filteredNodes() {
         if (this.includeRoles && this.includeRoles.length > 0) {
             // exclude ngl nodes that doesn't support harvesting
-            return this.peerNodes.filter(
-                (node) =>
-                    node.roles?.some((role) => this.isIncluded(role)) &&
-                    !node.host?.includes('ap-southeast-1.testnet') &&
-                    !node.host.includes('us-east-1.testnet') &&
-                    !node.host.includes('eu-central-1.testnet') &&
-                    node.networkIdentifier === this.networkType,
-            );
+            return this.peerNodes
+                .filter((node) => node.roles?.some((role) => this.isIncluded(role)) && node.networkIdentifier === this.networkType)
+                .concat();
         }
         return this.peerNodes;
     }
