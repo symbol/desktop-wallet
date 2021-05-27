@@ -16,7 +16,7 @@
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { MosaicId, NamespaceId, NetworkType, Transaction, TransactionType, TransferTransaction } from 'symbol-sdk';
+import { Mosaic, MosaicId, NamespaceId, NetworkType, Transaction, TransactionType, TransferTransaction } from 'symbol-sdk';
 // internal dependencies
 import { Formatters } from '@/core/utils/Formatters';
 import { TimeHelpers } from '@/core/utils/TimeHelpers';
@@ -33,6 +33,7 @@ import { TransactionStatus } from '@/core/transactions/TransactionStatus';
 import { NetworkConfigurationModel } from '../../../core/database/entities/NetworkConfigurationModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { DateTimeFormatter } from '@js-joda/core';
+import { MosaicModel } from '@/core/database/entities/MosaicModel';
 
 @Component({
     components: {
@@ -44,6 +45,7 @@ import { DateTimeFormatter } from '@js-joda/core';
         explorerBaseUrl: 'app/explorerUrl',
         networkConfiguration: 'network/networkConfiguration',
         currentProfile: 'profile/currentProfile',
+        mosaics: 'mosaic/mosaics',
     }),
 })
 export class TransactionRowTs extends Vue {
@@ -84,6 +86,8 @@ export class TransactionRowTs extends Vue {
      * Time helpers
      */
     protected timeHelpers: TimeHelpers = TimeHelpers;
+
+    private mosaics: MosaicModel[];
 
     /// region computed properties getter/setter
     public get view(): TransactionView<Transaction> {
@@ -151,7 +155,8 @@ export class TransactionRowTs extends Vue {
         if (this.transaction.type === TransactionType.TRANSFER) {
             // We may prefer XYM over other mosaic if XYM is 2nd+
             const transferTransaction = this.transaction as TransferTransaction;
-            const amount = (transferTransaction.mosaics.length && transferTransaction.mosaics[0].amount.compact()) || 0;
+            const amount =
+                (transferTransaction.mosaics.length && transferTransaction.mosaics[0].amount.compact()) || this.customAmount || 0;
             if (!this.isIncomingTransaction()) {
                 return -amount;
             }
@@ -224,5 +229,34 @@ export class TransactionRowTs extends Vue {
             .toLocalDateTime(this.networkConfiguration.epochAdjustment)
             .minusHours(2)
             .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+    }
+
+    get hasMessage() {
+        return !!(this.transaction as TransferTransaction).message.payload.length;
+    }
+    private getMosaicList(mosaics: Mosaic[]): any[] {
+        const mosaicList = [];
+        mosaics.forEach((entry) => {
+            const mosaic = this.mosaics.find((m) => m.mosaicIdHex == entry.id.toHex());
+            const divisibility = mosaic ? mosaic.divisibility : this.networkConfiguration.maxMosaicDivisibility;
+            const amount = entry.amount.compact() / Math.pow(10, divisibility);
+            const id = (mosaic && mosaic.name) || entry.id.toHex();
+            mosaicList.push({ id, amount });
+        });
+        return mosaicList;
+    }
+
+    get customAmount() {
+        const transferTransaction = this.transaction as TransferTransaction;
+        let amount = (transferTransaction.mosaics.length && transferTransaction.mosaics[0].amount.compact()) || 0;
+        if (transferTransaction.mosaics.length > 1 && amount == 0) {
+            for (const mosaic of transferTransaction.mosaics) {
+                if (!!mosaic.amount.compact()) {
+                    amount = mosaic.amount.compact();
+                    break;
+                }
+            }
+            return amount;
+        }
     }
 }

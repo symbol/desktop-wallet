@@ -18,6 +18,9 @@
                 :absolute-amount="getAmount()"
                 :color="getAmountColor()"
                 :show-ticker="isAmountShowTicker()"
+                :has-message="hasMessage"
+                :has-custom-mosaic="!!customAmount"
+                :mosaic-list="transaction.mosaics.length > 1 ? getMosaicList(transaction.mosaics) : []"
             />
             <span v-else>N/A</span>
         </div>
