@@ -92,7 +92,6 @@ interface NetworkState {
     rentalFeeEstimation: RentalFees;
     networkIsNotMatchingProfile: boolean;
     peerNodes: NodeInfo[];
-    harvestingPeerNodes: NodeInfo[];
     connectingToNodeInfo: ConnectingToNodeInfo;
     isOfflineMode: boolean;
     feesConfig: any;
@@ -117,7 +116,6 @@ const initialNetworkState: NetworkState = {
     epochAdjustment: undefined,
     networkIsNotMatchingProfile: false,
     peerNodes: [],
-    harvestingPeerNodes: [],
     connectingToNodeInfo: undefined,
     isOfflineMode: false,
     feesConfig: undefined,
@@ -145,7 +143,6 @@ export default {
         rentalFeeEstimation: (state: NetworkState) => state.rentalFeeEstimation,
         networkIsNotMatchingProfile: (state: NetworkState) => state.networkIsNotMatchingProfile,
         peerNodes: (state: NetworkState) => state.peerNodes,
-        harvestingPeerNodes: (state: NetworkState) => state.harvestingPeerNodes,
         connectingToNodeInfo: (state: NetworkState) => state.connectingToNodeInfo,
         isOfflineMode: (state: NetworkState) => state.isOfflineMode,
         feesConfig: (state: NetworkState) => state.feesConfig,
@@ -219,8 +216,6 @@ export default {
             Vue.set(state, 'subscriptions', [...subscriptions, payload]);
         },
         peerNodes: (state: NetworkState, peerNodes: NodeInfo[]) => Vue.set(state, 'peerNodes', peerNodes),
-        harvestingPeerNodes: (state: NetworkState, harvestingPeerNodes: NodeInfo[]) =>
-            Vue.set(state, 'harvestingPeerNodes', harvestingPeerNodes),
         connectingToNodeInfo: (state: NetworkState, connectingToNodeInfo: ConnectingToNodeInfo) =>
             Vue.set(state, 'connectingToNodeInfo', connectingToNodeInfo),
         setFeesConfig: (state: NetworkState, feesConfig: {}) => {
@@ -533,9 +528,12 @@ export default {
         async LOAD_PEER_NODES({ commit, rootGetters }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const nodeRepository = repositoryFactory.createNodeRepository();
+            const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
 
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
-            const allNodes = peerNodes.sort((a, b) => a.host.localeCompare(b.host));
+            const allNodes = nodeInfo.nodePublicKey
+                ? peerNodes.sort((a, b) => a.host.localeCompare(b.host)).concat(nodeInfo)
+                : peerNodes.sort((a, b) => a.host.localeCompare(b.host));
             commit('peerNodes', _.uniqBy(allNodes, 'host'));
         },
         // TODO :: re-apply that behavior if red screen issue fixed
