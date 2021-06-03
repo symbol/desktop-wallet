@@ -32,6 +32,7 @@ import _ from 'lodash';
 import { Subscription } from 'rxjs';
 import {
     BlockInfo,
+    Deadline,
     IListener,
     Listener,
     NetworkType,
@@ -41,10 +42,13 @@ import {
     RepositoryFactoryHttp,
     TransactionFees,
 } from 'symbol-sdk';
+// @ts-ignore
+import { DeadlineService } from 'symbol-sdk/dist/src/service/DeadlineService';
 import Vue from 'vue';
 // internal dependencies
 import { $eventBus } from '../events';
 import { AwaitLock } from './AwaitLock';
+
 const Lock = AwaitLock.create();
 
 /// region custom types
@@ -96,6 +100,7 @@ interface NetworkState {
     connectingToNodeInfo: ConnectingToNodeInfo;
     isOfflineMode: boolean;
     feesConfig: any;
+    transactionDeadline: Deadline;
 }
 
 const initialNetworkState: NetworkState = {
@@ -121,6 +126,7 @@ const initialNetworkState: NetworkState = {
     connectingToNodeInfo: undefined,
     isOfflineMode: false,
     feesConfig: undefined,
+    transactionDeadline: undefined,
 };
 
 export default {
@@ -149,6 +155,7 @@ export default {
         connectingToNodeInfo: (state: NetworkState) => state.connectingToNodeInfo,
         isOfflineMode: (state: NetworkState) => state.isOfflineMode,
         feesConfig: (state: NetworkState) => state.feesConfig,
+        transactionDeadline: (state: NetworkState) => state.transactionDeadline,
     },
     mutations: {
         setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -226,6 +233,9 @@ export default {
         setFeesConfig: (state: NetworkState, feesConfig: {}) => {
             Vue.set(state, 'feesConfig', feesConfig);
         },
+        transactionDeadline: (state: NetworkState, transactionDeadline: Deadline) => {
+            Vue.set(state, 'transactionDeadline', transactionDeadline);
+        },
     },
     actions: {
         async initialize({ commit, getters }) {
@@ -260,6 +270,7 @@ export default {
             commit('setConnected', false);
             commit('connectingToNodeInfo', undefined);
             commit('setFeesConfig', undefined);
+            commit('transactionDeadline', undefined);
         },
 
         async CONNECT(
@@ -537,6 +548,12 @@ export default {
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
             const allNodes = peerNodes.sort((a, b) => a.host.localeCompare(b.host));
             commit('peerNodes', _.uniqBy(allNodes, 'host'));
+        },
+        async SET_TRANSACTION_DEADLINE({ commit, rootGetters }, deadlineInHours = 0) {
+            const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
+            const deadline = await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime(deadlineInHours);
+            commit('transactionDeadline', deadline);
+            return deadline;
         },
         // TODO :: re-apply that behavior if red screen issue fixed
         // load nodes that eligible for delegate harvesting

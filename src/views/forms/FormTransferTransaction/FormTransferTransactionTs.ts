@@ -569,7 +569,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             this.transactions = this.getTransactions();
             this.transactionSize = this.transactions[0].size;
             // avoid error
-            if (this.transactions) {
+            if (this.transactions && this.transactions[0].deadline) {
                 const data: ITransactionEntry[] = [];
                 this.transactions.map((item: TransferTransaction) => {
                     data.push({
