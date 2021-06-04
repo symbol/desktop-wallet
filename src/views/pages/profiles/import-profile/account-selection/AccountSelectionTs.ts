@@ -189,15 +189,21 @@ export default class AccountSelectionTs extends Vue {
         );
         const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
         // fetch accounts info
-        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
-        if (!accountsInfo) {
+        if (repositoryFactory) {
+            const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
+            if (!accountsInfo) {
+                return;
+            }
+
+            // map balances
+            this.addressBalanceMap = {
+                ...this.addressBalanceMap,
+                ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.addressesList),
+            };
+        } else {
+            this.$store.dispatch('notification/ADD_ERROR', 'symbol_node_cannot_connect');
             return;
         }
-        // map balances
-        this.addressBalanceMap = {
-            ...this.addressBalanceMap,
-            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.addressesList),
-        };
     }
 
     /**
@@ -228,12 +234,17 @@ export default class AccountSelectionTs extends Vue {
         const optInAddresses = this.optInAddressesList.map((account) => account.address);
         // fetch accounts info
         const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(optInAddresses).toPromise();
-        // map balances
-        this.optInAddressBalanceMap = {
-            ...this.optInAddressBalanceMap,
-            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, optInAddresses),
-        };
+        if (repositoryFactory) {
+            const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(optInAddresses).toPromise();
+            // map balances
+            this.optInAddressBalanceMap = {
+                ...this.optInAddressBalanceMap,
+                ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, optInAddresses),
+            };
+        } else {
+            this.$store.dispatch('notification/ADD_ERROR', 'symbol_node_cannot_connect');
+            return;
+        }
     }
 
     public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaicId: MosaicId, addressList: Address[]): { [address: string]: number } {
