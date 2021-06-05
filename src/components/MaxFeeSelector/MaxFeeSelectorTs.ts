@@ -57,11 +57,10 @@ export class MaxFeeSelectorTs extends Vue {
      */
     private networkMosaicName: string;
     private feesConfig: {
-        fast: number;
-        median: number;
         slow: number;
         slowest: number;
-        free: number;
+        median: number;
+        fast: number;
     };
 
     /**
