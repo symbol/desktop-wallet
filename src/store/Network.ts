@@ -614,12 +614,12 @@ export default {
         },
 
         LOAD_TRANSACTION_FEES({ commit, rootGetters }) {
+            commit('setFeesConfig', feesConfig);
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const networkRepository = repositoryFactory.createNetworkRepository();
             networkRepository.getTransactionFees().subscribe((fees: TransactionFees) => {
                 commit('transactionFees', fees);
             });
-            commit('setFeesConfig', feesConfig);
         },
     },
 };
