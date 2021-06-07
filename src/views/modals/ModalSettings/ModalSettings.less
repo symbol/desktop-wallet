@@ -1,10 +1,14 @@
 @import '../../resources/css/variables.less';
 
 .settings-modal-container {
-    overflow-y: auto;
     /deep/.ivu-modal {
         .auto-complete-size {
             width: 100%;
+        }
+
+        /deep/.ivu-modal-body {
+            overflow-y: hide;
+            padding: 0.15rem 0.3rem;
         }
     }
 
@@ -12,14 +16,14 @@
         display: grid;
         grid-template-columns: 20% 80%;
         padding: 0 !important;
-        height: 5rem;
+        height: 6.55rem;
         margin: -0.15rem -0.3rem;
     }
 }
 
 .nav-links-wrapper {
     border-right: 2px solid @grayLight;
-
+    width: 2.2rem;
     .header-container {
         padding-left: 0.25rem;
         padding-top: 0.25rem;
