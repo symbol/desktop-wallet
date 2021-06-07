@@ -221,7 +221,6 @@ export class MaxFeeSelectorTs extends Vue {
                     return i;
                 }
             })
-            .slice()
-            .sort((a, b) => a.calculatedFee - b.calculatedFee);
+            .slice();
     }
 }
