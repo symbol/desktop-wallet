@@ -971,6 +971,7 @@
     "transaction_descriptor_16724": "転送",
     "transaction_descriptor_16725": "マルチシグアカウントの変更",
     "transaction_descriptor_16961": "アグリゲートボンデッド",
+    "transaction_descriptor_16961_optin": "Post-launch Opt-In",
     "transaction_descriptor_16963": "VRFキーリンク",
     "transaction_descriptor_16964": "モザイクメタデータ",
     "transaction_descriptor_16972": "ノードキーリンク",
@@ -1108,5 +1109,13 @@
     "create_remote_public_key": "リモート公開鍵を作成する",
     "generate_random_public_key": "キーの生成",
     "import_key_manually": "キーを手動でインポートする",
-    "key_type": "キータイプ"
+    "key_type": "キータイプ",
+    "optin_postlaunch_tx_title": "Symbolローンチ後オプトイン",
+    "optin_postlaunch_tx_pending_description": "オプトインの支払が処理されています。この取引が確認されると、XYMコインを受け取ることができます。",
+    "optin_postlaunch_tx_completed_description": "オプトインの支払いが完了しました。",
+    "optin_postlaunch_tx_pending_amount": "受け取る枚数",
+    "optin_postlaunch_tx_completed_amount": "受け取った枚数",
+    "optin_postlaunch_tx_nis_address": "オプトイン済みのNEM NIS1アカウント",
+    "show_details": "詳細を表示",
+    "hide_details": "隠す"
 }

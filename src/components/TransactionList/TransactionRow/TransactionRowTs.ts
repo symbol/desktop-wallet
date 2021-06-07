@@ -24,6 +24,7 @@ import {
     Transaction,
     TransactionType,
     TransferTransaction,
+    NetworkType,
 } from 'symbol-sdk';
 // internal dependencies
 import { Formatters } from '@/core/utils/Formatters';
@@ -39,6 +40,7 @@ import { TransactionViewFactory } from '@/core/transactions/TransactionViewFacto
 import { TransactionView } from '@/core/transactions/TransactionView';
 import { TransactionStatus } from '@/core/transactions/TransactionStatus';
 import { NetworkConfigurationModel } from '../../../core/database/entities/NetworkConfigurationModel';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { DateTimeFormatter } from '@js-joda/core';
 
 @Component({
@@ -50,6 +52,7 @@ import { DateTimeFormatter } from '@js-joda/core';
         networkMosaic: 'mosaic/networkMosaic',
         explorerBaseUrl: 'app/explorerUrl',
         networkConfiguration: 'network/networkConfiguration',
+        currentProfile: 'profile/currentProfile',
     }),
 })
 export class TransactionRowTs extends Vue {
@@ -57,6 +60,13 @@ export class TransactionRowTs extends Vue {
     public transaction: Transaction;
 
     protected networkConfiguration: NetworkConfigurationModel;
+
+    /**
+     * Currently active profile
+     * @see {Store.Profile}
+     * @var {string}
+     */
+    public currentProfile: ProfileModel;
 
     /**
      * Explorer base path
@@ -92,6 +102,24 @@ export class TransactionRowTs extends Vue {
     /// end-region computed properties getter/setter
 
     /**
+     * Returns whether aggregate bonded transaction is announced by NGL Finance
+     */
+    public get isOptinPayoutTransaction(): boolean {
+        if (!this.transaction) {
+            return false;
+        }
+
+        const networktype = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
+        const keysFinance = process.env.KEYS_FINANCE[networktype];
+        const announcerPublicKey = this.transaction.signer?.publicKey;
+        const isAnnouncerNGLFinance = keysFinance.find(
+            (financePublicKey) => financePublicKey.toUpperCase() === announcerPublicKey.toUpperCase(),
+        );
+
+        return isAnnouncerNGLFinance && this.view.transaction.type === this.transactionType.AGGREGATE_BONDED;
+    }
+
+    /**
      * Get icon per-transaction
      * @return an icon.
      */
@@ -103,6 +131,10 @@ export class TransactionRowTs extends Vue {
             // - transfers have specific incoming/outgoing icons
             if (view.transaction.type === this.transactionType.TRANSFER) {
                 return view.isIncoming ? officialIcons.incoming : officialIcons.outgoing;
+            }
+
+            if (this.isOptinPayoutTransaction) {
+                return transactionTypeToIcon[view.transaction.type + '_optin'];
             }
 
             // - otherwise use per-type icon

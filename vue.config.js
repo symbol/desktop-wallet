@@ -25,20 +25,27 @@ module.exports = {
   chainWebpack: (config) => {
     config.plugin('define').tap((args) => {
       const env = args[0]['process.env'];
-      let keys;
+      const dataPlaceholder = {
+        testnet: [],
+        mainnet: []
+      };
+      let configFile;
+
       try {
-        keys = require('./keys-whitelist.json');
-      } catch {
-        keys = {
-          mainnet: [],
-          testnet: []
-        }
+        configFile = require('./keys-whitelist.json');
+      } catch(e) {
+        console.error('Failed to read "keys-whitelist.json"', e);
+        configFile = {
+          preLaunchOptin: dataPlaceholder,
+          nglFinanceBot: dataPlaceholder
+        };
       }
       args[0]['process.env'] = {
           ...env,
           PACKAGE_VERSION: packageVersion,
           WEB: web,
-          KEYS_WHITELIST: JSON.stringify(keys)
+          KEYS_WHITELIST: JSON.stringify(configFile.preLaunchOptin),
+          KEYS_FINANCE: JSON.stringify(configFile.nglFinanceBot)
       };
       return args;
     });
