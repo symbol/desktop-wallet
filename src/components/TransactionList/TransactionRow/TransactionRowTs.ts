@@ -240,7 +240,7 @@ export class TransactionRowTs extends Vue {
                 .minusHours(6)
                 .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
         } else {
-            this.transaction.deadline
+            return this.transaction.deadline
                 .toLocalDateTime(this.networkConfiguration.epochAdjustment)
                 .minusHours(2)
                 .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
