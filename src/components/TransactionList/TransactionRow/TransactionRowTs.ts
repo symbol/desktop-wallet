@@ -234,7 +234,7 @@ export class TransactionRowTs extends Vue {
                 .toLocalDateTime(this.networkConfiguration.epochAdjustment)
                 .minusHours(48)
                 .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
-        } else if (this.transaction instanceof HashLockTransaction) {
+        } else if (this.transaction.type === TransactionType.HASH_LOCK) {
             return this.transaction.deadline
                 .toLocalDateTime(this.networkConfiguration.epochAdjustment)
                 .minusHours(6)
