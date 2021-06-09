@@ -142,7 +142,6 @@ export class TransactionCommand {
         } else {
             const currentSigner = PublicAccount.createFromPublicKey(this.signerPublicKey, this.networkType);
             if (this.mode === TransactionCommandMode.AGGREGATE) {
-                this.createDeadline();
                 const deadline = this.createDeadline();
 
                 const aggregate = this.calculateSuggestedMaxFee(
@@ -229,6 +228,6 @@ export class TransactionCommand {
     private createDeadline(deadlineInHours = 2): Deadline {
         AppStore.dispatch('network/SET_TRANSACTION_DEADLINE', deadlineInHours);
         const deadline: Deadline = AppStore.getters['network/transactionDeadline'];
-        return deadline;
+        return deadline ? deadline : undefined;
     }
 }

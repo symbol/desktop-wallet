@@ -161,7 +161,7 @@ export default {
             if (!currentSignerAddress) {
                 return;
             }
-            await dispatch('network/SET_TRANSACTION_DEADLINE', 0, { root: true });
+            await dispatch('network/SET_TRANSACTION_DEADLINE', 2, { root: true });
             const deadline = rootGetters['network/transactionDeadline'];
             const metadataService = new MetadataService();
             const metadataTransaction = await metadataService

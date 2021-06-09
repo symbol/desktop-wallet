@@ -41,9 +41,9 @@ import {
     RepositoryFactory,
     RepositoryFactoryHttp,
     TransactionFees,
+    DeadlineService,
 } from 'symbol-sdk';
 // @ts-ignore
-import { DeadlineService } from 'symbol-sdk/dist/src/service/DeadlineService';
 import Vue from 'vue';
 // internal dependencies
 import { $eventBus } from '../events';
@@ -549,7 +549,7 @@ export default {
             const allNodes = peerNodes.sort((a, b) => a.host.localeCompare(b.host));
             commit('peerNodes', _.uniqBy(allNodes, 'host'));
         },
-        async SET_TRANSACTION_DEADLINE({ commit, rootGetters }, deadlineInHours = 0) {
+        async SET_TRANSACTION_DEADLINE({ commit, rootGetters }, deadlineInHours = 2) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const deadline = await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime(deadlineInHours);
             commit('transactionDeadline', deadline);
