@@ -155,7 +155,6 @@ export class FormProfileCreationTs extends Vue {
      * Error notification handler
      */
     private errorNotificationHandler(error: any) {
-        console.log(error.message, error.errorCode);
         if (error.message && error.message.includes('cannot open device with path')) {
             error.errorCode = 'ledger_connected_other_app';
         }
@@ -192,7 +191,6 @@ export class FormProfileCreationTs extends Vue {
                     return;
             }
         }
-        console.log(error.message, error);
         this.$store.dispatch('notification/ADD_ERROR', this.$t('create_profile_failed', { reason: error.message || error }));
     }
 
