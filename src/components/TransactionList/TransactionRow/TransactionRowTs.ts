@@ -46,6 +46,7 @@ import { NetworkConfigurationModel } from '../../../core/database/entities/Netwo
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { DateTimeFormatter } from '@js-joda/core';
 import { AccountModel } from '@/core/database/entities/AccountModel';
+import { TransactionStatus as TransactionStatusEnum } from '@/core/transactions/TransactionStatus';
 
 @Component({
     components: {
@@ -59,7 +60,6 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
         currentProfile: 'profile/currentProfile',
         currentAccount: 'account/currentAccount',
         currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
-        generationHash: 'network/generationHash',
     }),
 })
 export class TransactionRowTs extends Vue {
@@ -107,11 +107,6 @@ export class TransactionRowTs extends Vue {
      * @var {AccountModel}
      */
     private currentAccount: AccountModel;
-    /**
-     * Current network's generation hash
-     * @var {string}
-     */
-    public generationHash: string;
     /**
      * Current account multisig info
      * @type {MultisigAccountInfo}
@@ -236,7 +231,7 @@ export class TransactionRowTs extends Vue {
         // return true
         return false;
     }
-    public get needsCosignature(): boolean {
+    public async needsCosignature() {
         // Multisig account can not sign
 
         const currentPubAccount = AccountModel.getObjects(this.currentAccount).publicAccount;
@@ -245,51 +240,46 @@ export class TransactionRowTs extends Vue {
             this.transaction.type === TransactionType.AGGREGATE_BONDED &&
             !this.transaction.signedByAccount(currentPubAccount)
         ) {
-            this.transactionSigningFlag = true;
-            setTimeout(() => {
-                if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
-                    this.transactionSigningFlag = false;
-                    return false;
-                }
-                if (
-                    this.aggregateTransactionDetails !== undefined &&
-                    this.aggregateTransactionDetails.transactionInfo?.hash == this.transaction.transactionInfo?.hash
-                ) {
-                    const cosignList = [];
-                    const cosignerAddresses = this.aggregateTransactionDetails.innerTransactions.map((t) => t.signer?.address);
-                    this.aggregateTransactionDetails.innerTransactions.forEach((t) => {
-                        if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {
-                            cosignList.push(...(t as MultisigAccountModificationTransaction).addressAdditions);
-                        } else if (t.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf()) {
-                            cosignList.push(...(t as AccountAddressRestrictionTransaction).restrictionAdditions);
-                        } else if (t.type === TransactionType.ACCOUNT_METADATA) {
-                            cosignList.push((t as AccountMetadataTransaction).targetAddress);
-                        }
-                    });
-                    if (cosignList.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
-                        this.transactionSigningFlag = true;
-                        return true;
-                    }
-                    const cosignRequired = cosignerAddresses.find((c) => {
-                        if (c) {
-                            this.transactionSigningFlag =
-                                c.plain() === this.currentAccount.address ||
-                                (this.currentAccountMultisigInfo &&
-                                    this.currentAccountMultisigInfo.multisigAddresses.find((m) => c.equals(m)) !== undefined);
-
-                            return this.transactionSigningFlag;
-                        }
-                        this.transactionSigningFlag = false;
-                        return false;
-                    });
-                    this.transactionSigningFlag = cosignRequired !== undefined;
-                    return this.transactionSigningFlag;
-                }
+            if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
                 this.transactionSigningFlag = false;
-                return false;
-            }, 1000);
+                return;
+            }
+            if (
+                this.aggregateTransactionDetails !== undefined &&
+                this.aggregateTransactionDetails.transactionInfo?.hash == this.transaction.transactionInfo?.hash
+            ) {
+                const cosignList = [];
+                const cosignerAddresses = this.aggregateTransactionDetails.innerTransactions.map((t) => t.signer?.address);
+                this.aggregateTransactionDetails.innerTransactions.forEach((t) => {
+                    if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {
+                        cosignList.push(...(t as MultisigAccountModificationTransaction).addressAdditions);
+                    } else if (t.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf()) {
+                        cosignList.push(...(t as AccountAddressRestrictionTransaction).restrictionAdditions);
+                    } else if (t.type === TransactionType.ACCOUNT_METADATA) {
+                        cosignList.push((t as AccountMetadataTransaction).targetAddress);
+                    }
+                });
+                if (cosignList.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
+                    this.transactionSigningFlag = true;
+                    return;
+                }
+                const cosignRequired = cosignerAddresses.find((c) => {
+                    if (c) {
+                        return (this.transactionSigningFlag =
+                            c.plain() === this.currentAccount.address ||
+                            (this.currentAccountMultisigInfo &&
+                                this.currentAccountMultisigInfo.multisigAddresses.find((m) => c.equals(m)) !== undefined));
+                    }
+                    this.transactionSigningFlag = false;
+                    return;
+                });
+                this.transactionSigningFlag = cosignRequired !== undefined;
+                return;
+            }
+            this.transactionSigningFlag = false;
+            return;
         }
-        return false;
+        return;
     }
     private get hasMissSignatures(): boolean {
         //merkleComponentHash ==='000000000000...' present that the transaction is still lack of signature
@@ -308,6 +298,7 @@ export class TransactionRowTs extends Vue {
             this.hasMissSignatures &&
             !this.transaction.signedByAccount(AccountModel.getObjects(this.currentAccount).publicAccount)
         ) {
+            this.transactionSigningFlag = true;
             try {
                 // first get the last status
                 const transactionStatus: TransactionStatus = (await this.$store.dispatch('transaction/FETCH_TRANSACTION_STATUS', {
@@ -320,6 +311,7 @@ export class TransactionRowTs extends Vue {
                         group: transactionStatus.group,
                         transactionHash: this.transaction.transactionInfo?.hash,
                     })) as AggregateTransaction;
+                    await this.needsCosignature();
                 }
             } catch (error) {
                 console.log(error);
@@ -332,7 +324,7 @@ export class TransactionRowTs extends Vue {
      */
     public getHeight(): string {
         const transactionStatus = TransactionView.getTransactionStatus(this.transaction);
-        if (transactionStatus === 'confirmed') {
+        if (transactionStatus === TransactionStatusEnum.confirmed) {
             return this.view.info?.height.compact().toString();
         } else {
             return this.$t(`transaction_status_${transactionStatus}`).toString();
