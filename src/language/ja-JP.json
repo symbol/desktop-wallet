@@ -615,6 +615,7 @@
     "logout": "ログアウト",
     "low_fee_warning_message": "平均手数料未満のトランザクションは受け入れられず、最終的に期限切れとなる場合があります",
     "max_approval_amount_more_than_10": "承認に必要な連署者の最大数は 10 を超えることはできません",
+    "max_amount_error": "{_field_} を超えることはできません 9,000,000,000.",
     "max_decimal_number_error": "{_field_} には {maxDecimalNumber} 小数点以下の桁数を指定してください",
     "max_message_length_error": "{_field_} フィールドは {maxMessageNumber} 文字を超えることはできません",
     "positive_decimal_error": "数字と \"{decimalSeparator}\" のみが利用可能です",
