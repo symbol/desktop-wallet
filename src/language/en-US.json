@@ -971,6 +971,7 @@
     "transaction_descriptor_16724": "Transfer",
     "transaction_descriptor_16725": "Multisig account modification",
     "transaction_descriptor_16961": "Aggregate bonded",
+    "transaction_descriptor_16961_optin": "Post-launch Opt-In",
     "transaction_descriptor_16963": "VRF Key Link",
     "transaction_descriptor_16964": "Mosaic metadata",
     "transaction_descriptor_16972": "Node Key Link",
@@ -1108,5 +1109,13 @@
     "create_remote_public_key": "Create Remote Public Key",
     "generate_random_public_key": "Generate Key",
     "import_key_manually": "Import Key manually",
-    "key_type": "Key Type"
+    "key_type": "Key Type",
+    "optin_postlaunch_tx_title": "Post-launch opt-in",
+    "optin_postlaunch_tx_pending_description": "Your opt-in payment is being processed. You will receive the XYM coins, when this transaction is confirmed",
+    "optin_postlaunch_tx_completed_description": "Success! Your opt-in payment is complete.",
+    "optin_postlaunch_tx_pending_amount": "The amount you will receive:",
+    "optin_postlaunch_tx_completed_amount": "The amount you have received:",
+    "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 account",
+    "show_details": "Show details",
+    "hide_details": "Hide details"
 }

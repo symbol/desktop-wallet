@@ -46,6 +46,8 @@ import dashboardUnconfirmed from '@/views/resources/img/monitor/dash-board/dashb
 // @ts-ignore
 import dashboardConfirmed from '@/views/resources/img/monitor/dash-board/dashboardConfirmed.png';
 // @ts-ignore
+import optinLogo from '@/views/resources/img/optin.png';
+// @ts-ignore
 import windowDashboard from '@/views/resources/img/window/windowDashboard.png';
 // @ts-ignore
 import windowDashboardActive from '@/views/resources/img/window/windowDashboardActive.png';
@@ -176,6 +178,8 @@ import nodes from '@/views/resources/img/icons/nodes.png';
 import notMultisig from '@/views/resources/img/icons/not-multisig.png';
 // @ts-ignore
 import outgoing from '@/views/resources/img/icons/outgoing.png';
+// @ts-ignore
+import optinTransaction from '@/views/resources/img/icons/optin-transaction.png';
 // @ts-ignore
 import pending from '@/views/resources/img/icons/pending.png';
 // @ts-ignore
@@ -332,6 +336,7 @@ export const officialIcons = {
     nodes,
     notMultisig,
     outgoing,
+    optinTransaction,
     pending,
     privateChain,
     privateKey,
@@ -362,6 +367,10 @@ export const officialIcons = {
     infoWhite,
 };
 
+export const optinImages = {
+    optinLogo,
+};
+
 export const transactionTypeToIcon = {
     [TransactionType.NAMESPACE_REGISTRATION]: officialIcons.namespaceTransaction,
     [TransactionType.ADDRESS_ALIAS]: officialIcons.alias,
@@ -371,6 +380,7 @@ export const transactionTypeToIcon = {
     [TransactionType.MULTISIG_ACCOUNT_MODIFICATION]: officialIcons.multipleParties,
     [TransactionType.AGGREGATE_COMPLETE]: officialIcons.aggregateTransaction,
     [TransactionType.AGGREGATE_BONDED]: officialIcons.aggregateTransaction,
+    [TransactionType.AGGREGATE_BONDED + '_optin']: optinTransaction,
     [TransactionType.HASH_LOCK]: officialIcons.lock,
     [TransactionType.SECRET_LOCK]: officialIcons.lock,
     [TransactionType.SECRET_PROOF]: officialIcons.lock,

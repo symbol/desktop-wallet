@@ -42,6 +42,12 @@ export class ActionDisplayTs extends Vue {
     public transactionType = TransactionType;
 
     /**
+     * Whether the transaction is the Opt-in Payment
+     * @type {boolean}
+     */
+    @Prop({ default: false }) isOptinPayoutTransaction: boolean;
+
+    /**
      * @protected
      * @type {boolean}
      */
