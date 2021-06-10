@@ -43,6 +43,7 @@ export const createValidationRuleSet = ({
         namespaceDuration: `required|min_value:${
             minNamespaceDuration / networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.blockGenerationTargetTime
         }|maxNamespaceDuration`,
+        // remove symbol from regex when rest https://github.com/nemtech/catapult-rest/issues/631 fixed
         namespaceName: {
             required: true,
             regex: '^(?!symbol$)([a-z0-9]{1}[a-z0-9-_]{0,63})$',
