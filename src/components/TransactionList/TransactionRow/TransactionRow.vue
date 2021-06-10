@@ -19,8 +19,8 @@
                 :color="getAmountColor()"
                 :show-ticker="isAmountShowTicker()"
                 :has-message="hasMessage"
-                :has-custom-mosaic="!!customAmount"
-                :mosaic-list="transaction.mosaics.length > 1 ? getMosaicList(transaction.mosaics) : []"
+                :has-custom-mosaic="!!customAmount || transaction.mosaics.length > 1"
+                :mosaic-list="getMosaicList(transaction.mosaics)"
             />
             <span v-else>N/A</span>
         </div>

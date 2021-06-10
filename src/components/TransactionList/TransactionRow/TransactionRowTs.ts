@@ -34,6 +34,7 @@ import { NetworkConfigurationModel } from '../../../core/database/entities/Netwo
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { DateTimeFormatter } from '@js-joda/core';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 
 @Component({
     components: {
@@ -46,6 +47,7 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
         networkConfiguration: 'network/networkConfiguration',
         currentProfile: 'profile/currentProfile',
         mosaics: 'mosaic/mosaics',
+        networkCurrency: 'mosaic/networkCurrency',
     }),
 })
 export class TransactionRowTs extends Vue {
@@ -88,6 +90,7 @@ export class TransactionRowTs extends Vue {
     protected timeHelpers: TimeHelpers = TimeHelpers;
 
     private mosaics: MosaicModel[];
+    private networkCurrency: NetworkCurrencyModel;
 
     /// region computed properties getter/setter
     public get view(): TransactionView<Transaction> {
