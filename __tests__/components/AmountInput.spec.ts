@@ -9,9 +9,8 @@ import flushPromises from 'flush-promises';
 import VueI18n, { Values } from 'vue-i18n';
 import i18n from '@/language/index';
 import { StandardValidationRules } from '@/core/validation/StandardValidationRules';
-import { MaxDecimalsValidator } from '@/core/validation/validators';
+import { MaxDecimalsValidator, PositiveDecimalNumberValidator, MaxAmountValidator } from '@/core/validation/validators';
 import { appConfig } from '@/config';
-import { PositiveDecimalNumberValidator } from '@/core/validation/validators/PositiveDecimalNumberValidator';
 
 StandardValidationRules.register();
 appConfig.constants.DECIMAL_SEPARATOR = '.';
@@ -26,6 +25,10 @@ extend('maxDecimals', {
 extend('positiveDecimal', {
     validate: (value) => PositiveDecimalNumberValidator.validate(value),
     message: () => i18n.t('positive_decimal_error', { decimalSeparator: appConfig.constants.DECIMAL_SEPARATOR }).toString(),
+});
+extend('maxAmount', {
+    validate: (value) => MaxAmountValidator.validate(value),
+    message: (_fieldName: string, values: Values) => `${i18n.t('max_amount_error', values)}`,
 });
 const localVue = createLocalVue();
 localVue.component('ValidationProvider', ValidationProvider);
