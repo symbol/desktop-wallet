@@ -48,8 +48,9 @@ export class NamespaceTableService extends AssetTableService {
 
     public getTableRows(): any[] {
         const showExpired: boolean = this.showExpired;
-        const currentHeight: number = this.currentHeight;
-        const namespaces: NamespaceModel[] = showExpired ? this.namespaces : this.namespaces.filter((ns) => ns.endHeight > currentHeight);
+        const namespaces: NamespaceModel[] = showExpired
+            ? this.namespaces
+            : this.namespaces.filter((ns) => !this.getExpiration(ns).expired);
 
         return namespaces.map((namespaceModel) => {
             const { expired, expiration } = this.getExpiration(namespaceModel);
