@@ -1,6 +1,7 @@
 export * from './AddressValidator';
 export * from './AliasValidator';
 export * from './DerivationPathValidator';
+export * from './MaxAmountValidator';
 export * from './MaxDecimalsValidator';
 export * from './MaxMessageValidator';
 export * from './MosaicIdValidator';
@@ -9,3 +10,4 @@ export * from './PublicKeyValidator';
 export * from './PrivateKeyValidator';
 export * from './UrlValidator';
 export * from './Validator';
+export * from './PositiveDecimalNumberValidator';
