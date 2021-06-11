@@ -185,7 +185,7 @@ export class TransactionCommand {
 
     public calculateSuggestedMaxFee(transaction: Transaction): Transaction {
         if (!transaction) {
-            return;
+            return undefined;
         }
         const feeMultiplier = this.resolveFeeMultipler(transaction);
         if (!feeMultiplier) {

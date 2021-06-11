@@ -549,8 +549,8 @@ export default {
             const allNodes = peerNodes.sort((a, b) => a.host.localeCompare(b.host));
             commit('peerNodes', _.uniqBy(allNodes, 'host'));
         },
-        async SET_TRANSACTION_DEADLINE({ commit, rootGetters }, deadlineInHours = 2) {
-            const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
+        async SET_TRANSACTION_DEADLINE({ commit, getters }, deadlineInHours = 2) {
+            const repositoryFactory: RepositoryFactory = getters['repositoryFactory'];
             const deadline = await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime(deadlineInHours);
             commit('transactionDeadline', deadline);
             return deadline;
