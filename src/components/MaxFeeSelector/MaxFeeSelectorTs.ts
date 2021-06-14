@@ -49,6 +49,15 @@ export class MaxFeeSelectorTs extends Vue {
     @Prop({ default: false })
     public displayOnly!: boolean;
 
+    /**
+     * Value set by the parent component's v-model
+     * @type {number}
+     */
+    @Prop({
+        default: 10,
+    })
+    value: number;
+
     public placement: string;
 
     /**
@@ -57,10 +66,11 @@ export class MaxFeeSelectorTs extends Vue {
      */
     private networkMosaicName: string;
     private feesConfig: {
+        fast: number;
+        median: number;
         slow: number;
         slowest: number;
-        median: number;
-        fast: number;
+        free: number;
     };
 
     /**
@@ -145,22 +155,13 @@ export class MaxFeeSelectorTs extends Vue {
         return label;
     }
 
-    /**
-     * Value set by the parent component's v-model
-     * @type {number}
-     */
-    @Prop({
-        default: 10,
-    })
-    value: number;
-
     /// region computed properties getter/setter
     /**
      * Value set by the parent component
      * @type {number}
      */
     get chosenMaxFee(): number {
-        return typeof this.value === 'number' ? this.value : this.defaultFee;
+        return typeof this.value === 'number' ? this.value : typeof this.value === 'string' ? Number(this.value) : this.defaultFee;
     }
 
     /**
@@ -220,7 +221,6 @@ export class MaxFeeSelectorTs extends Vue {
                     return i;
                 }
             })
-            .slice()
-            .sort((a, b) => a.calculatedFee - b.calculatedFee);
+            .slice();
     }
 }
