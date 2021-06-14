@@ -344,9 +344,21 @@ export class TransactionRowTs extends Vue {
             .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
     }
     public get date() {
-        return this.transaction.deadline
-            .toLocalDateTime(this.networkConfiguration.epochAdjustment)
-            .minusHours(2)
-            .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+        if (this.transaction instanceof AggregateTransaction) {
+            return this.transaction.deadline
+                .toLocalDateTime(this.networkConfiguration.epochAdjustment)
+                .minusHours(48)
+                .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+        } else if (this.transaction.type === TransactionType.HASH_LOCK) {
+            return this.transaction.deadline
+                .toLocalDateTime(this.networkConfiguration.epochAdjustment)
+                .minusHours(6)
+                .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+        } else {
+            return this.transaction.deadline
+                .toLocalDateTime(this.networkConfiguration.epochAdjustment)
+                .minusHours(2)
+                .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+        }
     }
 }
