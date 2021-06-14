@@ -17,6 +17,7 @@
 import { appConfig } from '@/config';
 // internal dependencies
 import { BroadcastResult } from '@/core/transactions/BroadcastResult';
+import { NotificationType } from '@/core/utils/NotificationType';
 import i18n from '@/language';
 import { from, Observable, of, OperatorFunction, throwError } from 'rxjs';
 import { catchError, flatMap, map, switchMap, tap, timeoutWith } from 'rxjs/operators';
@@ -103,16 +104,26 @@ export class TransactionAnnouncerService {
             .pipe(map((t) => this.createBroadcastResult(signedTransaction, t)));
     }
 
-    private retrySubscribe() {
-        const address = this.$store.getters['account/currentAccountAddress'];
-        this.$store.dispatch('account/UNSUBSCRIBE', address);
-        this.$store.dispatch('account/SUBSCRIBE', address);
+    private async retrySubscribe(url) {
+        const nodeStauts = await this.checkNodeStatus(url);
+        if (nodeStauts) {
+            const address = this.$store.getters['account/currentAccountAddress'];
+            this.$store.dispatch('account/UNSUBSCRIBE', address);
+            this.$store.dispatch('account/SUBSCRIBE', address);
+        } else {
+            this.$store.commit('network/setConnected', false);
+            this.$store.dispatch('notification/ADD_WARNING', NotificationType.CURRENT_NODE_NOT_AVAILABLE, { root: true });
+        }
+    }
+    private async checkNodeStatus(url) {
+        const checkNode = await this.$store.dispatch('network/CHECK_NODE', url);
+        return checkNode ? true : false;
     }
 
     private timeout<T, R>(message: string): OperatorFunction<T, T> {
         const listener: IListener = this.$store.getters['account/listener'];
         if (!listener.isOpen()) {
-            this.retrySubscribe();
+            this.retrySubscribe(listener.url);
         }
         if (!this.transactionTimeout) {
             return (o) => o;
