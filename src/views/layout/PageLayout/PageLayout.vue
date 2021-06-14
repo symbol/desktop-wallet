@@ -4,7 +4,7 @@
             <Alert class="alert warning_alert" type="error">
                 <Icon type="ios-warning-outline" />
                 {{ $t(`${alert.message}`) }}
-                <a v-if="alert.showRetry" @click="reconnect">{{ $t('click_to_retry') }}</a>
+                <a v-if="alert.showRetry" @click="reconnect">{{ ` ${'(' + $t('click_to_retry') + ')'}` }}</a>
             </Alert>
         </div>
         <div v-else-if="info.show">
