@@ -117,7 +117,7 @@ export class NetworkNodeSelectorTs extends Vue {
                 Vue.set(this, 'showInputPublicKey', false);
                 this.$emit('input', nodeModel);
                 if (this.isAccountKeyLinked && this.isVrfKeyLinked && this.missingKeys) {
-                    this.$store.dispatch('harvesting/FETCH_STATUS', [value, nodeModel]);
+                    this.$store.dispatch('harvesting/FETCH_STATUS', value);
                 }
             } else {
                 Vue.set(this, 'showInputPublicKey', true);
