@@ -114,6 +114,9 @@ export class MaxFeeSelectorTs extends Vue {
     multiplier: number;
 
     public created() {
+        if (!this.feesConfig) {
+            this.$store.dispatch('network/LOAD_TRANSACTION_FEES');
+        }
         this.fees = Object.entries(this.feesConfig).map((entry) => ({
             label: this.getLabel([entry[0], entry[1] as number]),
             maxFee: entry[1] as number,
