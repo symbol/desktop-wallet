@@ -1119,7 +1119,7 @@
     "hide_details": "隠す",
     "transaction_signed": "正常に署名されました",
     "address_list_cannot_be_empty": "リストから1つ以上のアカウントを選択してください。",
-    "ws_connection_failed": ">> Websocketサブスクリプションが失敗しました",
+    "ws_connection_failed": "Websocketがリッスンしていません",
     "opt_in_account_notification": "このアカウントは古い派生によって取得されています。資産をシードアカウントへ移動することを推奨します。",
     "reconnect_to_different_node": "現在のノードが使用できないため、トランザクションのアナウンスに失敗しました。 有効なものに再接続しています..."
 }
