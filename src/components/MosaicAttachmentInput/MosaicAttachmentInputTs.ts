@@ -78,6 +78,7 @@ export class MosaicAttachmentInputTs extends Vue {
      * @type {{mosaicHex: string, amount: number}}
      */
     protected get chosenValue(): { mosaicHex: string; amount: string } {
+        this.mosaicAttachment.amount = this.mosaicAttachment.amount.replace(',', '');
         return this.mosaicAttachment;
     }
 
