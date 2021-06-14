@@ -68,6 +68,7 @@
                             :key="`sep${index}`"
                             class="list-item pointer"
                             :class="[{ active: currentPeerInfo.url == url }]"
+                            @click="currentPeerInfo.url !== url ? switchPeer(url) : ''"
                         >
                             <div class="overflow_ellipsis" :title="friendlyName">
                                 <div class="node-list-entry">{{ friendlyName }}</div>
