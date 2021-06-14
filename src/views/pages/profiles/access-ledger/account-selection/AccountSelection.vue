@@ -1,5 +1,9 @@
 <template>
-    <div class="account-selection-container" @keyup.enter="submit">
+    <div
+        v-if="!!Object.keys(addressBalanceMap).length || !!Object.keys(optInAddressBalanceMap).length"
+        class="account-selection-container"
+        @keyup.enter="submit"
+    >
         <div class="dialog-sub-tips">
             {{ $t('address_to_interact_with') }}
         </div>
@@ -47,6 +51,9 @@
                 {{ $t('next') }}
             </button>
         </div>
+    </div>
+    <div v-else>
+        <Spin size="large" fix class="absolute" />
     </div>
 </template>
 

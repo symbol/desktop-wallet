@@ -22,6 +22,8 @@ import { MultisigAccountInfo, Address } from 'symbol-sdk';
 import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
 import AddCosignatoryInput from '@/components/AddCosignatoryInput/AddCosignatoryInput.vue';
+// @ts-ignore
+import ButtonAdd from '@/components/ButtonAdd/ButtonAdd';
 
 // custom types
 type AddOrRemove = 'add' | 'remove';
@@ -37,6 +39,7 @@ type Cosignatories = { address: Address }[];
     components: {
         FormRow,
         AddCosignatoryInput,
+        ButtonAdd,
     },
 })
 export class MultisigCosignatoriesDisplayTs extends Vue {

@@ -172,6 +172,7 @@
     "cosignature_qr_action_desc": "Continue to transaction details page to sign your part.",
     "create_a_new_account": "Create a new profile",
     "create_a_new_profile": "Create a new profile",
+    "create_mnemonic_passphrase": "Create a mnemonic passphrase",
     "create_lock_check_pw_remind": "Two passwords are inconsistent",
     "create_lock_pw_remind": "Password setting error",
     "create_lock_pw_txt_remind": "Password hint error",
@@ -546,7 +547,8 @@
     "import": "Import",
     "import_address_book": "Import address book",
     "import_mnemonic": "Import mnemonic",
-    "import_mnemonic_passphrase_create_profile": "Import profile",
+    "import_profile": "Import Profile",
+    "import_mnemonic_passphrase": "Import a mnemonic passphrase",
     "import_private_key": "Import Private Key",
     "import_private_key_account_successfully": "Congratulations, Private key account imported successfully.",
     "import_private_key_account_successfully_title_tips": "The current profile was created using a private key. It is not possible to add other accounts to it. Hope you have a pleasant experience and journey.",
@@ -1117,5 +1119,6 @@
     "optin_postlaunch_tx_completed_amount": "The amount you have received:",
     "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 account",
     "show_details": "Show details",
-    "hide_details": "Hide details"
+    "hide_details": "Hide details",
+    "transaction_signed": "Signed Successfully"
 }

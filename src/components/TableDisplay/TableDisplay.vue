@@ -4,7 +4,7 @@
             <div class="table-title-container section-title">
                 <div class="user-operation">
                     <span class="add-metadata-button">
-                        <ButtonAdd :title="$t('add_metadata')" :disabled="false" size="26" @click="$emit('on-add-metadata')" />
+                        <ButtonAdd :title="$t('add_metadata')" :disabled="false" :size="24" @click="$emit('on-add-metadata')" />
                     </span>
                     <Checkbox v-if="assetType !== 'metadata'" v-model="showExpired" class="table-filter-item-container">
                         <span v-show="assetType === 'mosaic'" style="margin-left: 0.1rem;">{{ $t('show_expired_mosaics') }}</span>
@@ -13,7 +13,7 @@
                     <div v-if="signers.length > 1" style="min-width: 2rem;">
                         <SignerFilter :signers="signers" @signer-change="onSignerSelectorChange" />
                     </div>
-                    <ButtonRefresh v-if="assetType !== 'metadata'" @click="onRefresh" />
+                    <ButtonRefresh v-if="assetType !== 'metadata'" :size="24" @click="onRefresh" />
                 </div>
             </div>
         </div>
