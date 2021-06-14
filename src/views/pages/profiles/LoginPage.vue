@@ -106,7 +106,7 @@
                                         }
                                     "
                                 >
-                                    {{ $t('create_a_new_account') }}?
+                                    {{ $t('create_a_new_account') }}
                                 </span>
                             </div>
                             <div v-if="formItems.hasHint && !!getPasswordHint().length" class="hint">

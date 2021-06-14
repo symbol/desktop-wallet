@@ -528,13 +528,8 @@ export default {
         async LOAD_PEER_NODES({ commit, rootGetters }) {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const nodeRepository = repositoryFactory.createNodeRepository();
-            const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
-
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
-            const allNodes = nodeInfo.nodePublicKey
-                ? peerNodes.sort((a, b) => a.host.localeCompare(b.host)).concat(nodeInfo)
-                : peerNodes.sort((a, b) => a.host.localeCompare(b.host));
-            commit('peerNodes', _.uniqBy(allNodes, 'host'));
+            commit('peerNodes', _.uniqBy(peerNodes, 'host'));
         },
         // TODO :: re-apply that behavior if red screen issue fixed
         // load nodes that eligible for delegate harvesting
@@ -612,12 +607,12 @@ export default {
         },
 
         LOAD_TRANSACTION_FEES({ commit, rootGetters }) {
+            commit('setFeesConfig', feesConfig);
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const networkRepository = repositoryFactory.createNetworkRepository();
             networkRepository.getTransactionFees().subscribe((fees: TransactionFees) => {
                 commit('transactionFees', fees);
             });
-            commit('setFeesConfig', feesConfig);
         },
     },
 };

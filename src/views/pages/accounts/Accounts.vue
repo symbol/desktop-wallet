@@ -22,7 +22,7 @@
                 <Poptip placement="bottom-end" class="endpoint-poptip">
                     <div class="button-container">
                         <div class="header-end">
-                            <ButtonAdd :disabled="false" />
+                            <ButtonAdd :size="24" :disabled="false" />
                         </div>
                     </div>
                     <div slot="content" class="node-selector-container">

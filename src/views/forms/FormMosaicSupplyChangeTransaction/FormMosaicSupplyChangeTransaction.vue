@@ -124,4 +124,7 @@ export default class FormMosaicSupplyChangeTransaction extends FormMosaicSupplyC
     height: 0.3rem !important;
     width: 1.2rem;
 }
+/deep/.form-row-inner-container {
+    grid-template-columns: 3rem 6.5rem !important;
+}
 </style>
