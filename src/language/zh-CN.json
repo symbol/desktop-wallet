@@ -1117,5 +1117,6 @@
     "optin_postlaunch_tx_completed_amount": "您已收到的金额：",
     "optin_postlaunch_tx_nis_address": "选择加入NEM NIS1账户",
     "show_details": "显示详细信息",
-    "hide_details": "隐藏详细信息"
+    "hide_details": "隐藏详细信息",
+    "transaction_signed": "已签"
 }
