@@ -39,10 +39,10 @@ export default {
     },
     actions: {
         async LOAD({ commit, rootGetters }) {
-            commit('countTransactions', 0);
-            commit('countBlocks', 0);
-            commit('countAccounts', 0);
-            commit('countNodes', 0);
+            let countTransactions = 0;
+            let countBlocks = 0;
+            let countAccounts = 0;
+            let countNodes = 0;
 
             const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
             const nodeHttp = repositoryFactory.createNodeRepository();
@@ -51,11 +51,15 @@ export default {
 
             const diagnostic: StorageInfo = await storageInfoPromise;
             const nodes = await nodePeersPromise;
+            countTransactions = diagnostic.numTransactions;
+            countBlocks = diagnostic.numBlocks;
+            countAccounts = diagnostic.numAccounts;
+            countNodes = nodes.length;
 
-            commit('countTransactions', diagnostic.numTransactions);
-            commit('countBlocks', diagnostic.numBlocks);
-            commit('countAccounts', diagnostic.numAccounts);
-            commit('countNodes', nodes.length);
+            commit('countTransactions', countTransactions);
+            commit('countBlocks', countBlocks);
+            commit('countAccounts', countAccounts);
+            commit('countNodes', countNodes);
         },
     },
 };
