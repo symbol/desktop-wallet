@@ -14,9 +14,22 @@
  *
  */
 // external dependencies
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { MosaicId, NamespaceId, Transaction, TransactionType, TransferTransaction } from 'symbol-sdk';
+import {
+    AccountAddressRestrictionTransaction,
+    AccountMetadataTransaction,
+    AggregateTransaction,
+    MosaicId,
+    MultisigAccountInfo,
+    MultisigAccountModificationTransaction,
+    NamespaceId,
+    NetworkType,
+    Transaction,
+    TransactionType,
+    TransferTransaction,
+    TransactionStatus,
+} from 'symbol-sdk';
 // internal dependencies
 import { Formatters } from '@/core/utils/Formatters';
 import { TimeHelpers } from '@/core/utils/TimeHelpers';
@@ -29,9 +42,11 @@ import ActionDisplay from '@/components/ActionDisplay/ActionDisplay.vue';
 import { dashboardImages, officialIcons, transactionTypeToIcon } from '@/views/resources/Images';
 import { TransactionViewFactory } from '@/core/transactions/TransactionViewFactory';
 import { TransactionView } from '@/core/transactions/TransactionView';
-import { TransactionStatus } from '@/core/transactions/TransactionStatus';
 import { NetworkConfigurationModel } from '../../../core/database/entities/NetworkConfigurationModel';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { DateTimeFormatter } from '@js-joda/core';
+import { AccountModel } from '@/core/database/entities/AccountModel';
+import { TransactionStatus as TransactionStatusEnum } from '@/core/transactions/TransactionStatus';
 
 @Component({
     components: {
@@ -42,6 +57,9 @@ import { DateTimeFormatter } from '@js-joda/core';
         networkMosaic: 'mosaic/networkMosaic',
         explorerBaseUrl: 'app/explorerUrl',
         networkConfiguration: 'network/networkConfiguration',
+        currentProfile: 'profile/currentProfile',
+        currentAccount: 'account/currentAccount',
+        currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
     }),
 })
 export class TransactionRowTs extends Vue {
@@ -49,6 +67,13 @@ export class TransactionRowTs extends Vue {
     public transaction: Transaction;
 
     protected networkConfiguration: NetworkConfigurationModel;
+
+    /**
+     * Currently active profile
+     * @see {Store.Profile}
+     * @var {string}
+     */
+    public currentProfile: ProfileModel;
 
     /**
      * Explorer base path
@@ -76,12 +101,51 @@ export class TransactionRowTs extends Vue {
      */
     protected timeHelpers: TimeHelpers = TimeHelpers;
 
+    /**
+     * Currently active account
+     * @see {Store.Account}
+     * @var {AccountModel}
+     */
+    private currentAccount: AccountModel;
+    /**
+     * Current account multisig info
+     * @type {MultisigAccountInfo}
+     */
+    private currentAccountMultisigInfo: MultisigAccountInfo;
+    /**
+     * Current transaction Details
+     * @type {AggregateTransaction}
+     */
+    private aggregateTransactionDetails: AggregateTransaction;
+    /**
+     * Checks wether transaction is signed
+     * @type {boolean}
+     */
+    private transactionSigningFlag: boolean = false;
     /// region computed properties getter/setter
     public get view(): TransactionView<Transaction> {
         return TransactionViewFactory.getView(this.$store, this.transaction);
     }
 
     /// end-region computed properties getter/setter
+
+    /**
+     * Returns whether aggregate bonded transaction is announced by NGL Finance
+     */
+    public get isOptinPayoutTransaction(): boolean {
+        if (!this.transaction) {
+            return false;
+        }
+
+        const networktype = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
+        const keysFinance = process.env.KEYS_FINANCE[networktype];
+        const announcerPublicKey = this.transaction.signer?.publicKey;
+        const isAnnouncerNGLFinance = keysFinance.find(
+            (financePublicKey) => financePublicKey.toUpperCase() === announcerPublicKey.toUpperCase(),
+        );
+
+        return isAnnouncerNGLFinance && this.view.transaction.type === this.transactionType.AGGREGATE_BONDED;
+    }
 
     /**
      * Get icon per-transaction
@@ -95,6 +159,10 @@ export class TransactionRowTs extends Vue {
             // - transfers have specific incoming/outgoing icons
             if (view.transaction.type === this.transactionType.TRANSFER) {
                 return view.isIncoming ? officialIcons.incoming : officialIcons.outgoing;
+            }
+
+            if (this.isOptinPayoutTransaction) {
+                return transactionTypeToIcon[view.transaction.type + '_optin'];
             }
 
             // - otherwise use per-type icon
@@ -163,13 +231,100 @@ export class TransactionRowTs extends Vue {
         // return true
         return false;
     }
+    public async needsCosignature() {
+        // Multisig account can not sign
+
+        const currentPubAccount = AccountModel.getObjects(this.currentAccount).publicAccount;
+        if (
+            this.transaction instanceof AggregateTransaction &&
+            this.transaction.type === TransactionType.AGGREGATE_BONDED &&
+            !this.transaction.signedByAccount(currentPubAccount)
+        ) {
+            if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
+                this.transactionSigningFlag = false;
+                return;
+            }
+            if (
+                this.aggregateTransactionDetails !== undefined &&
+                this.aggregateTransactionDetails.transactionInfo?.hash == this.transaction.transactionInfo?.hash
+            ) {
+                const cosignList = [];
+                const cosignerAddresses = this.aggregateTransactionDetails.innerTransactions.map((t) => t.signer?.address);
+                this.aggregateTransactionDetails.innerTransactions.forEach((t) => {
+                    if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {
+                        cosignList.push(...(t as MultisigAccountModificationTransaction).addressAdditions);
+                    } else if (t.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf()) {
+                        cosignList.push(...(t as AccountAddressRestrictionTransaction).restrictionAdditions);
+                    } else if (t.type === TransactionType.ACCOUNT_METADATA) {
+                        cosignList.push((t as AccountMetadataTransaction).targetAddress);
+                    }
+                });
+                if (cosignList.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
+                    this.transactionSigningFlag = true;
+                    return;
+                }
+                const cosignRequired = cosignerAddresses.find((c) => {
+                    if (c) {
+                        return (this.transactionSigningFlag =
+                            c.plain() === this.currentAccount.address ||
+                            (this.currentAccountMultisigInfo &&
+                                this.currentAccountMultisigInfo.multisigAddresses.find((m) => c.equals(m)) !== undefined));
+                    }
+                    this.transactionSigningFlag = false;
+                    return;
+                });
+                this.transactionSigningFlag = cosignRequired !== undefined;
+                return;
+            }
+            this.transactionSigningFlag = false;
+            return;
+        }
+        return;
+    }
+    private get hasMissSignatures(): boolean {
+        //merkleComponentHash ==='000000000000...' present that the transaction is still lack of signature
+        return (
+            this.transaction?.transactionInfo != null &&
+            this.transaction?.transactionInfo.merkleComponentHash !== undefined &&
+            this.transaction?.transactionInfo.merkleComponentHash.startsWith('000000000000')
+        );
+    }
+
+    @Watch('transaction', { immediate: true })
+    private async fetchTransaction() {
+        if (
+            this.transaction instanceof AggregateTransaction &&
+            this.transaction.type === TransactionType.AGGREGATE_BONDED &&
+            this.hasMissSignatures &&
+            !this.transaction.signedByAccount(AccountModel.getObjects(this.currentAccount).publicAccount)
+        ) {
+            this.transactionSigningFlag = true;
+            try {
+                // first get the last status
+                const transactionStatus: TransactionStatus = (await this.$store.dispatch('transaction/FETCH_TRANSACTION_STATUS', {
+                    transactionHash: this.transaction.transactionInfo?.hash,
+                })) as TransactionStatus;
+
+                if (transactionStatus.group != 'failed') {
+                    // fetch the transaction by using the status
+                    this.aggregateTransactionDetails = (await this.$store.dispatch('transaction/LOAD_TRANSACTION_DETAILS', {
+                        group: transactionStatus.group,
+                        transactionHash: this.transaction.transactionInfo?.hash,
+                    })) as AggregateTransaction;
+                    await this.needsCosignature();
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
 
     /**
      * Returns the transaction height or number of confirmations
      */
     public getHeight(): string {
         const transactionStatus = TransactionView.getTransactionStatus(this.transaction);
-        if (transactionStatus == TransactionStatus.confirmed) {
+        if (transactionStatus === TransactionStatusEnum.confirmed) {
             return this.view.info?.height.compact().toString();
         } else {
             return this.$t(`transaction_status_${transactionStatus}`).toString();
@@ -189,9 +344,21 @@ export class TransactionRowTs extends Vue {
             .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
     }
     public get date() {
-        return this.transaction.deadline
-            .toLocalDateTime(this.networkConfiguration.epochAdjustment)
-            .minusHours(2)
-            .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+        if (this.transaction instanceof AggregateTransaction) {
+            return this.transaction.deadline
+                .toLocalDateTime(this.networkConfiguration.epochAdjustment)
+                .minusHours(48)
+                .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+        } else if (this.transaction.type === TransactionType.HASH_LOCK) {
+            return this.transaction.deadline
+                .toLocalDateTime(this.networkConfiguration.epochAdjustment)
+                .minusHours(6)
+                .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+        } else {
+            return this.transaction.deadline
+                .toLocalDateTime(this.networkConfiguration.epochAdjustment)
+                .minusHours(2)
+                .format(DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss'));
+        }
     }
 }

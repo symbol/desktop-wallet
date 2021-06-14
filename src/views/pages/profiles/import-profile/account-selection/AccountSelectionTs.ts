@@ -151,11 +151,9 @@ export default class AccountSelectionTs extends Vue {
         this.derivation = new DerivationService(this.currentProfile.networkType);
         this.accountService = new AccountService();
 
-        Vue.nextTick().then(() => {
-            setTimeout(() => {
-                this.initAccounts();
-                this.initOptInAccounts();
-            }, 200);
+        Vue.nextTick().then(async () => {
+            await this.initAccounts();
+            await this.initOptInAccounts();
         });
     }
 
@@ -182,22 +180,32 @@ export default class AccountSelectionTs extends Vue {
      */
     private async initAccounts() {
         // - generate addresses
-        this.addressesList = this.accountService.getAddressesFromMnemonic(
-            new MnemonicPassPhrase(this.currentMnemonic),
-            this.currentProfile.networkType,
-            10,
-        );
-        const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-        // fetch accounts info
-        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
-        if (!accountsInfo) {
-            return;
+        try {
+            this.addressesList = this.accountService.getAddressesFromMnemonic(
+                new MnemonicPassPhrase(this.currentMnemonic),
+                this.currentProfile.networkType,
+                10,
+            );
+            const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+            // fetch accounts info
+            if (repositoryFactory) {
+                const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(this.addressesList).toPromise();
+                if (!accountsInfo) {
+                    return;
+                }
+
+                // map balances
+                this.addressBalanceMap = {
+                    ...this.addressBalanceMap,
+                    ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.addressesList),
+                };
+            } else {
+                this.$store.dispatch('notification/ADD_ERROR', 'symbol_node_cannot_connect');
+                return;
+            }
+        } catch (error) {
+            console.log(error);
         }
-        // map balances
-        this.addressBalanceMap = {
-            ...this.addressBalanceMap,
-            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, this.addressesList),
-        };
     }
 
     /**
@@ -205,35 +213,44 @@ export default class AccountSelectionTs extends Vue {
      * @return {void}
      */
     private async initOptInAccounts() {
-        // - generate addresses
-        const possibleOptInAccounts = this.accountService.generateAccountsFromMnemonic(
-            new MnemonicPassPhrase(this.currentMnemonic),
-            this.currentProfile.networkType,
-            10,
-            Network.BITCOIN,
-        );
+        try {
+            // - generate addresses
+            const possibleOptInAccounts = this.accountService.generateAccountsFromMnemonic(
+                new MnemonicPassPhrase(this.currentMnemonic),
+                this.currentProfile.networkType,
+                10,
+                Network.BITCOIN,
+            );
 
-        // whitelist opt in accounts
-        const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
-        const whitelisted = process.env.KEYS_WHITELIST[key];
-        const optInAccounts = possibleOptInAccounts
-            .map((optinAccount, index) => ({ account: optinAccount, index: index }))
-            .filter((account) => whitelisted.indexOf(account.account.publicKey) >= 0)
-            .map((account) => ({ address: account.account.address, index: account.index }));
-        if (optInAccounts.length === 0) {
-            return;
+            // whitelist opt in accounts
+            const key = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
+            const whitelisted = process.env.KEYS_WHITELIST[key];
+            const optInAccounts = possibleOptInAccounts
+                .map((optinAccount, index) => ({ account: optinAccount, index: index }))
+                .filter((account) => whitelisted.indexOf(account.account.publicKey) >= 0)
+                .map((account) => ({ address: account.account.address, index: account.index }));
+            if (optInAccounts.length === 0) {
+                return;
+            }
+            this.optInAddressesList = optInAccounts;
+
+            const optInAddresses = this.optInAddressesList.map((account) => account.address);
+            // fetch accounts info
+            const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
+            if (repositoryFactory) {
+                const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(optInAddresses).toPromise();
+                // map balances
+                this.optInAddressBalanceMap = {
+                    ...this.optInAddressBalanceMap,
+                    ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, optInAddresses),
+                };
+            } else {
+                this.$store.dispatch('notification/ADD_ERROR', 'symbol_node_cannot_connect');
+                return;
+            }
+        } catch (error) {
+            console.log(error);
         }
-        this.optInAddressesList = optInAccounts;
-
-        const optInAddresses = this.optInAddressesList.map((account) => account.address);
-        // fetch accounts info
-        const repositoryFactory = this.$store.getters['network/repositoryFactory'] as RepositoryFactory;
-        const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(optInAddresses).toPromise();
-        // map balances
-        this.optInAddressBalanceMap = {
-            ...this.optInAddressBalanceMap,
-            ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, optInAddresses),
-        };
     }
 
     public mapBalanceByAddress(accountsInfo: AccountInfo[], mosaicId: MosaicId, addressList: Address[]): { [address: string]: number } {

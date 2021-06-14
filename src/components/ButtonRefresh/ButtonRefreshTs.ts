@@ -1,3 +1,5 @@
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 @Component
-export class ButtonRefreshTs extends Vue {}
+export class ButtonRefreshTs extends Vue {
+    @Prop({ default: undefined }) size: string;
+}
