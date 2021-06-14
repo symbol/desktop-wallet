@@ -1,6 +1,6 @@
 <template>
     <Tooltip :content="$t('refresh')" placement="top" :transfer="true">
-        <Icon type="md-refresh" class="button-refresh" @click="$emit('click')" />
+        <Icon type="md-refresh" class="button-refresh" size="size" @click="$emit('click')" />
     </Tooltip>
 </template>
 <script lang="ts">

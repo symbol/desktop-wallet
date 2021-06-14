@@ -7,7 +7,7 @@
 
         <!-- SECOND COLUMN -->
         <div class="address-cell">
-            <ActionDisplay :transaction="transaction" />
+            <ActionDisplay :transaction="transaction" :is-optin-payout-transaction="isOptinPayoutTransaction" />
         </div>
 
         <!-- THIRD COLUMN -->
@@ -25,6 +25,9 @@
         <!-- FOURTH COLUMN -->
         <div class="confirmation-cell">
             {{ getHeight() }}
+            <Tooltip v-if="hasMissSignatures && !transactionSigningFlag" :content="$t('transaction_signed')" placement="top">
+                <Icon type="md-done-all" size="17" class="coloring" />
+            </Tooltip>
         </div>
 
         <!-- FIFTH COLUMN -->

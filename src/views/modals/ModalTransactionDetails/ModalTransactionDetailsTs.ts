@@ -14,15 +14,27 @@
  *
  */
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { Transaction } from 'symbol-sdk';
-
+import { mapGetters } from 'vuex';
+import { NetworkType, Transaction, TransactionType } from 'symbol-sdk';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { AccountModel } from '@/core/database/entities/AccountModel';
 // child components
 // @ts-ignore
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
+// @ts-ignore
+import TransactionOptinPayoutDetails from '@/components/TransactionDetails/TransactionOptinPayoutDetails.vue';
 
 @Component({
     components: {
         TransactionDetails,
+        TransactionOptinPayoutDetails,
+    },
+    computed: {
+        ...mapGetters({
+            currentAccount: 'account/currentAccount',
+            currentProfile: 'profile/currentProfile',
+            networkType: 'network/networkType',
+        }),
     },
 })
 export class ModalTransactionDetailsTs extends Vue {
@@ -35,6 +47,27 @@ export class ModalTransactionDetailsTs extends Vue {
         default: null,
     })
     transaction: Transaction;
+
+    /**
+     * Currently active account
+     * @see {Store.Account}
+     * @var {AccountModel}
+     */
+    protected currentAccount: AccountModel;
+
+    /**
+     * Currently active profile
+     * @see {Store.Profile}
+     * @var {string}
+     */
+    public currentProfile: ProfileModel;
+
+    /**
+     * Network type
+     * @see {Store.Network}
+     * @var {NetworkType}
+     */
+    public networkType: NetworkType;
 
     /// region computed properties
 
@@ -53,6 +86,31 @@ export class ModalTransactionDetailsTs extends Vue {
         if (!val) {
             this.$emit('close');
         }
+    }
+
+    /**
+     * Returns whether aggregate bonded transaction is announced by NGL Finance bot
+     */
+    public get isOptinTransaction(): boolean {
+        // Check wether the 'transaction' prop is provided.
+        if (!this.transaction) {
+            return false;
+        }
+
+        // Check wether the 'transaction' is type of Aggregate Bonded.
+        if (this.transaction.type !== TransactionType.AGGREGATE_BONDED) {
+            return false;
+        }
+
+        // Check wether the signer of the Aggregate Bonded is the NGL Finance bot.
+        const networktype = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
+        const keysFinance = process.env.KEYS_FINANCE[networktype];
+        const announcerPublicKey = this.transaction.signer.publicKey;
+        const isAnnouncerNGLFinance = keysFinance.find(
+            (financePublicKey) => financePublicKey.toUpperCase() === announcerPublicKey.toUpperCase(),
+        );
+
+        return !!isAnnouncerNGLFinance;
     }
     /// end-region computed properties
 }

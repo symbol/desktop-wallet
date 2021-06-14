@@ -245,7 +245,9 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
     }
 
     get ownedTargetHexIds(): string[] {
-        return this.holdMosaics.filter((m) => m.ownerRawPlain === this.currentAccount.address).map(({ mosaicIdHex }) => mosaicIdHex);
+        return this.holdMosaics
+            .filter((m) => m.ownerRawPlain === this.currentAccount.address && m.supplyMutable)
+            .map(({ mosaicIdHex }) => mosaicIdHex);
     }
 
     public emitToAggregate() {

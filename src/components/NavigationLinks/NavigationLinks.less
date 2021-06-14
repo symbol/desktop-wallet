@@ -22,6 +22,7 @@
         }
         &.active-item {
             background-color: #f3f4f8;
+            border-right: 0.3em #ff00ff solid;
         }
     }
 }
@@ -32,8 +33,10 @@
     grid-auto-flow: column;
     justify-items: start;
     justify-content: start;
-    background-color: transparent;
-
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
     .empty {
         display: flex;
         height: 100%;
