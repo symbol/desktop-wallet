@@ -6,9 +6,7 @@ import VueI18n from 'vue-i18n';
 import { NetworkType } from 'symbol-sdk';
 import router from '@/router/AppRouter';
 //@ts-ignore
-import ImportQRButton from '@/components/QRCode/ImportQRButton/ImportQRButton.vue';
-//@ts-ignore
-import PageLayoutTs from '@/views/layout/PageLayout/PageLayout.vue';
+import PageLayout from '@/views/layout/PageLayout/PageLayout.vue';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import { getTestProfile } from '@MOCKS/profiles';
 
@@ -63,15 +61,12 @@ const options = {
     i18n,
     store,
     router,
-    stubs: {
-        ImportQRButton,
-    },
 };
 
 let wrapper;
 let vm;
 beforeEach(() => {
-    wrapper = shallowMount(PageLayoutTs, options);
+    wrapper = shallowMount(PageLayout, options);
     vm = wrapper.vm;
 });
 afterEach(() => {
