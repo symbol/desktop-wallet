@@ -94,8 +94,8 @@ export class NamespaceService {
         const expiredIn = endHeight - namespaceGracePeriodBlocks - currentHeight;
         const deletedIn = endHeight - currentHeight;
         const expiration = expired
-            ? TimeHelpers.durationToRelativeTime(expiredIn, blockGenerationTargetTime)
-            : TimeHelpers.durationToRelativeTime(deletedIn, blockGenerationTargetTime);
+            ? TimeHelpers.durationToRelativeTime(deletedIn, blockGenerationTargetTime)
+            : TimeHelpers.durationToRelativeTime(expiredIn, blockGenerationTargetTime);
         return { expired, expiration };
     }
 

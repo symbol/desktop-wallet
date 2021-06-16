@@ -21,7 +21,6 @@ import i18n from '@/language';
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
 import { MosaicService } from '@/services/MosaicService';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
-
 export class ViewTransferTransaction extends TransactionView<TransferTransaction> {
     public get isIncoming() {
         const currentSignerAddress = this.$store.getters['account/currentSignerAddress'];
@@ -85,8 +84,11 @@ export class ViewTransferTransaction extends TransactionView<TransferTransaction
         const mosaicItems = attachedMosaics.map((mosaic, index, self) => {
             const color = incoming ? 'green' : 'red';
             const mosaicLabel = i18n.t('mosaic');
+            const networkConfiguration = this.$store.getters['network/networkConfiguration'];
+
             // check if mosaic not expired yet
-            return this.availableMosaics.some((entry) => entry.mosaicIdHex == mosaic.mosaicHex)
+            return this.availableMosaics.some((entry) => entry.mosaicIdHex == mosaic.mosaicHex) ||
+                mosaic.mosaicHex === networkConfiguration.currencyMosaicId
                 ? {
                       key: `${mosaicLabel} (${index + 1}/${self.length})`,
                       value: { ...mosaic, color },

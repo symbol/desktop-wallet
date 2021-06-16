@@ -8,7 +8,7 @@
             :footer-hide="true"
             @close="show = false"
         >
-            <div v-if="isOptinPayoutTransaction" class="transaction-details-content">
+            <div v-if="isOptinTransaction && isOptinTransactionContainsPayout" class="transaction-details-content">
                 <TransactionOptinPayoutDetails :transaction="transaction" :current-account="currentAccount" />
             </div>
             <div v-else class="transaction-details-content">
@@ -36,7 +36,7 @@
                 </div>
                 <div v-if="hasMissSignatures">
                     <div v-if="!needsCosignature">
-                        <div class="explain">
+                        <div v-if="!isOptinTransaction" class="explain">
                             <span class="subtitle">{{ $t('transaction_needs_cosignature') }}</span>
                             <div class="explain-qr">
                                 <p>{{ $t('transaction_needs_cosignature_explain_signed') }}</p>

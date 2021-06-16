@@ -33,6 +33,7 @@ interface ProfileState {
     currentProfile: ProfileModel;
     isAuthenticated: boolean;
     isSettingsVisible: boolean;
+    isNetworkSettingsSelected: boolean;
 }
 
 const profileState: ProfileState = {
@@ -40,6 +41,7 @@ const profileState: ProfileState = {
     currentProfile: null,
     isAuthenticated: false,
     isSettingsVisible: false,
+    isNetworkSettingsSelected: false,
 };
 export default {
     namespaced: true,
@@ -52,6 +54,7 @@ export default {
         isPrivateKeyProfile: (state: ProfileState): boolean => {
             return state.currentProfile ? !state.currentProfile.seed : false;
         },
+        isNetworkSettingsSelected: (state: ProfileState) => state.isNetworkSettingsSelected,
     },
     mutations: {
         setInitialized: (state: ProfileState, initialized: boolean) => {
@@ -61,6 +64,9 @@ export default {
         setAuthenticated: (state: ProfileState, isAuthenticated: boolean) => Vue.set(state, 'isAuthenticated', isAuthenticated),
         toggleSettings: (state: ProfileState) => {
             state.isSettingsVisible = !state.isSettingsVisible;
+        },
+        toggleNetworkSettings: (state: ProfileState, networkTabSelector: boolean) => {
+            state.isNetworkSettingsSelected = networkTabSelector;
         },
     },
     actions: {

@@ -34,6 +34,7 @@ import {
     AccountAddressRestrictionTransaction,
     AccountMosaicRestrictionTransaction,
     AccountOperationRestrictionTransaction,
+    PersistentHarvestingDelegationMessage,
 } from 'symbol-sdk';
 import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction';
 import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction';
@@ -55,6 +56,7 @@ import { ViewMosaicMetadataTransaction } from '@/core/transactions/ViewMosaicMet
 import { ViewAccountAddressRestrictionTransaction } from './ViewAccountAddressRestrictionTransaction';
 import { ViewAccountMosaicRestrictionTransaction } from './ViewAccountMosaicRestrictionTransaction';
 import { ViewAccountOperationRestrictionTransaction } from './ViewAccountOperationRestrictionTransaction';
+import { ViewHarvestingTransaction } from './ViewHarvestingTransaction';
 
 /**
  * Transaction view factory.
@@ -105,8 +107,12 @@ export class TransactionViewFactory {
                 return new ViewMosaicSupplyChangeTransaction($store, transaction as MosaicSupplyChangeTransaction);
             case TransactionType.NAMESPACE_REGISTRATION:
                 return new ViewNamespaceRegistrationTransaction($store, transaction as NamespaceRegistrationTransaction);
-            case TransactionType.TRANSFER:
-                return new ViewTransferTransaction($store, transaction as TransferTransaction);
+            case TransactionType.TRANSFER: {
+                const transferTransaction = transaction as TransferTransaction;
+                return transferTransaction.message instanceof PersistentHarvestingDelegationMessage
+                    ? new ViewHarvestingTransaction($store, transferTransaction)
+                    : new ViewTransferTransaction($store, transferTransaction);
+            }
             case TransactionType.MOSAIC_ALIAS:
                 return new ViewAliasTransaction($store, transaction as MosaicAliasTransaction);
             case TransactionType.ADDRESS_ALIAS:

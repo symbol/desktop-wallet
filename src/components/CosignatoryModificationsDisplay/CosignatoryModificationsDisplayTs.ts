@@ -15,14 +15,16 @@
  */
 // external dependencies
 import { Component, Vue, Prop } from 'vue-property-decorator';
-// child components
 import { ValidationProvider } from 'vee-validate';
+
+// child components
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
 
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
-import { CosignatoryModifications } from '@/views/forms/FormMultisigAccountModificationTransaction/FormMultisigAccountModificationTransactionTs';
+// @ts-ignore
+import CosignatoryModifications from '@/views/forms/FormMultisigAccountModificationTransaction/FormMultisigAccountModificationTransactionTs';
 
 @Component({
     components: {

@@ -1,6 +1,6 @@
 <template>
     <div class="root">
-        <div class="row">
+        <div v-if="!isLoading" class="row">
             <div class="image-container">
                 <img :src="OptinLogo" class="image" />
             </div>
@@ -11,7 +11,7 @@
                 <div class="content-text text-description">
                     {{ completed ? $t('optin_postlaunch_tx_completed_description') : $t('optin_postlaunch_tx_pending_description') }}
                 </div>
-                <div class="content-text">
+                <div v-if="hasTransfers" class="content-text">
                     <table>
                         <tr>
                             <td class="table-header-text">
@@ -27,9 +27,11 @@
                                 />
                             </td>
                         </tr>
-                        <tr>
-                            <td class="table-header-text">{{ $t('optin_postlaunch_tx_nis_address') }}</td>
-                            <td class="address-text">{{ NISAddress }}</td>
+                        <tr v-for="(address, index) in NISAddresses" :key="'' + index + 'nisaddr'">
+                            <td class="table-header-text">
+                                {{ $t('optin_postlaunch_tx_nis_address') }} {{ NISAddresses.length > 1 ? index + 1 : '' }}:
+                            </td>
+                            <td class="address-text">{{ address }}</td>
                         </tr>
                     </table>
                 </div>
@@ -45,12 +47,21 @@
                 </div>
             </transition>
         </div>
+        <Spin v-if="isLoading" size="large" fix class="absolute" />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { AggregateTransaction, UInt64, Mosaic, TransactionType, TransferTransaction, UnresolvedMosaicId } from 'symbol-sdk';
+import {
+    AggregateTransaction,
+    UInt64,
+    Mosaic,
+    TransactionStatus,
+    TransactionType,
+    TransferTransaction,
+    UnresolvedMosaicId,
+} from 'symbol-sdk';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { optinImages } from '@/views/resources/Images';
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
@@ -70,45 +81,82 @@ export default class TransactionOptinPayoutDetails extends Vue {
     private OptinLogo = optinImages.optinLogo;
     private isDetailsShown = false;
     private isExpanded = false;
+    private isLoading = false;
+    private transactionDetails: AggregateTransaction = null;
 
-    private get referenceInnerTransaction(): TransferTransaction | null {
+    private get referenceInnerTransactions(): Array<TransferTransaction> {
         const currentAddress = this.currentAccount.address;
-        const transaction = this.transaction.innerTransactions.find(
+        const innerTransactions = this.transaction.innerTransactions.length
+            ? this.transaction.innerTransactions
+            : this.transactionDetails?.innerTransactions || [];
+
+        const transactions = innerTransactions.filter(
             (innerTransaction) =>
                 innerTransaction.type === TransactionType.TRANSFER &&
-                (innerTransaction as TransferTransaction).recipientAddress?.plain() === currentAddress,
+                (innerTransaction as TransferTransaction).recipientAddress?.plain() === currentAddress &&
+                (innerTransaction as TransferTransaction).mosaics?.length,
         );
 
-        return (transaction as TransferTransaction) || null;
+        return transactions as Array<TransferTransaction>;
+    }
+
+    private get hasTransfers(): boolean {
+        return !!this.referenceInnerTransactions.length;
     }
 
     private get completed(): boolean {
         return TransactionView.getTransactionStatus(this.transaction) === 'confirmed';
     }
 
-    private get transferredMosaic(): Mosaic | null {
-        return (this.referenceInnerTransaction?.mosaics?.length && this.referenceInnerTransaction.mosaics[0]) || null;
+    private get transferredMosaics(): Array<Mosaic> {
+        return this.referenceInnerTransactions.map((transaction) => transaction.mosaics[0]);
     }
 
     private get amount(): UInt64 {
-        return this.transferredMosaic?.amount;
+        let sumAmount = UInt64.fromNumericString('0');
+        this.transferredMosaics?.forEach((mosaic) => (sumAmount = sumAmount.add(mosaic.amount)));
+
+        return sumAmount;
     }
 
     private get mosaicId(): UnresolvedMosaicId {
-        return this.transferredMosaic?.id;
+        return this.transferredMosaics[0]?.id;
     }
 
-    private get NISAddress(): string | null {
-        let NISAddress = null;
+    private get NISAddresses(): Array<string> {
+        let NISAddresses = [];
 
         try {
-            const json = JSON.parse(this.referenceInnerTransaction?.message.payload);
-            NISAddress = json.nisAddress;
+            NISAddresses = this.referenceInnerTransactions
+                .map((transaction) => JSON.parse(transaction?.message.payload || '{}').nisAddress)
+                .filter((nisAddress) => !!nisAddress);
         } catch (e) {
             console.log('Opt-in payment transaction. Failed to get NIS1 address', e);
         }
 
-        return NISAddress;
+        return NISAddresses;
+    }
+
+    public async fetchTransactionDetails() {
+        this.isLoading = true;
+
+        try {
+            const transactionHash = this.transaction.transactionInfo.hash;
+            const transactionStatus: TransactionStatus = (await this.$store.dispatch('transaction/FETCH_TRANSACTION_STATUS', {
+                transactionHash,
+            })) as TransactionStatus;
+
+            if (transactionStatus.group !== 'failed') {
+                this.transactionDetails = (await this.$store.dispatch('transaction/LOAD_TRANSACTION_DETAILS', {
+                    group: transactionStatus.group,
+                    transactionHash,
+                })) as AggregateTransaction;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+        this.isLoading = false;
     }
 
     private onDetailsClick() {
@@ -121,6 +169,8 @@ export default class TransactionOptinPayoutDetails extends Vue {
     private mounted() {
         this.isDetailsShown = false;
         this.isExpanded = false;
+        this.isLoading = false;
+        this.fetchTransactionDetails();
     }
 }
 </script>
