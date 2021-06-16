@@ -67,6 +67,21 @@ export class MosaicAmountDisplayTs extends Vue {
     })
     showTicker: false;
 
+    @Prop({
+        default: false,
+    })
+    hasMessage: boolean;
+
+    @Prop({
+        default: false,
+    })
+    hasCustomMosaic: boolean;
+
+    @Prop({
+        default: () => [],
+    })
+    mosaicList: any[];
+
     private mosaics: MosaicModel[];
 
     private networkCurrency: NetworkCurrencyModel;

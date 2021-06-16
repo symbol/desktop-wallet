@@ -23,9 +23,6 @@
             <Icon type="ios-warning-outline" />
             {{ $t('low_fee_warning_message') }}
         </span>
-        <span v-else-if="transactionFees.minFeeMultiplier && !displayOnly" style="color: #ff9600;">
-            {{ $t('minimal_fee_transaction') + transactionFees.minFeeMultiplier.toString() }}
-        </span>
     </div>
 </template>
 
