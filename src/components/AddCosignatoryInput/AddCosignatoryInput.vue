@@ -21,7 +21,7 @@
                             />
                         </ErrorTooltip>
                     </div>
-                    <ButtonAdd class="button-add align-right" @click="handleSubmit(onAddCosignatory())" />
+                    <ButtonAdd class="button-add align-right" :size="24" @click="handleSubmit(onAddCosignatory())" />
                 </ValidationProvider>
             </ValidationObserver>
         </template>

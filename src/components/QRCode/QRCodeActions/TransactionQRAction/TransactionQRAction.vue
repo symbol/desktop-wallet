@@ -5,11 +5,7 @@
                 <div class="qrcode-details-row-inner">
                     <div class="qrcode-details-row-label">{{ slotProps.item.label }}:</div>
                     <div v-if="slotProps.item.label == $t('amount')" class="qrcode-details-row-value">
-                        <MosaicAmountDisplay
-                            :id="tran.mosaics[0].id"
-                            :absolute-amount="tran.mosaics[0].amount.toString()"
-                            :show-ticker="true"
-                        />
+                        <MosaicAmountDisplay :id="mosaicId" :absolute-amount="mosaicAmount" :show-ticker="true" />
                     </div>
                     <div v-else-if="slotProps.item.label == $t('fee')" class="qrcode-details-row-value">
                         <MaxFeeSelector v-model="slotProps.item.value" :display-only="true" />

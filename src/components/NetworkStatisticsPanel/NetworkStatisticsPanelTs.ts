@@ -95,15 +95,29 @@ export class NetworkStatisticsPanelTs extends Vue {
     protected isHarvestingEnabled = false;
 
     /**
+     * Refreshing panel data interval
+     */
+    private refreshingInterval: any;
+
+    /**
      * Current network target block time
      */
     protected get blockGenerationTargetTime(): number {
         return this.networkConfiguration.blockGenerationTargetTime;
     }
-
+    private refreshTransactions() {
+        this.refreshingInterval = setInterval(async () => {
+            await this.$store.dispatch('statistics/LOAD', {}, { root: true });
+        }, 15000);
+    }
     public created() {
         if (this.currentAccount) {
             this.isHarvestingEnabled = this.harvestingSupportedProfileTypes.includes(this.currentAccount.type);
+            this.refreshTransactions();
         }
+    }
+
+    private destroyed() {
+        clearInterval(this.refreshingInterval);
     }
 }
