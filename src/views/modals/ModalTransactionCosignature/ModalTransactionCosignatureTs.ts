@@ -260,7 +260,6 @@ export class ModalTransactionCosignatureTs extends Vue {
 
     public get cosignatureQrCode(): CosignatureQR {
         // @ts-ignore
-        console.log(this.transaction);
         return new CosignatureQR(this.transaction, this.networkType, this.generationHash);
     }
 
