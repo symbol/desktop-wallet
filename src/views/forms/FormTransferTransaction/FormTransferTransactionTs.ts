@@ -67,7 +67,7 @@ import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 // @ts-ignore
-import AccountSignerSelector from '@/components/AccountSignerSelector/AccountSignerSelector.vue';
+const AccountSignerSelector = () => import('@/components/AccountSignerSelector/AccountSignerSelector.vue');
 
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
