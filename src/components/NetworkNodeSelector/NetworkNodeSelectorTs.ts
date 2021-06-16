@@ -133,6 +133,7 @@ export class NetworkNodeSelectorTs extends Vue {
     }
 
     public async created() {
+        // add static hardcoded nodes to harvesting list
         await this.$store.dispatch('network/LOAD_PEER_NODES');
         this.customNodeData = this.filteredNodes.map((n) => n.host);
         this.filteredData = [...this.customNodeData];
@@ -196,12 +197,7 @@ export class NetworkNodeSelectorTs extends Vue {
         if (this.includeRoles && this.includeRoles.length > 0) {
             // exclude ngl nodes that doesn't support harvesting
             return this.peerNodes.filter(
-                (node) =>
-                    node.roles?.some((role) => this.isIncluded(role)) &&
-                    !node.host?.includes('ap-southeast-1.testnet') &&
-                    !node.host.includes('us-east-1.testnet') &&
-                    !node.host.includes('eu-central-1.testnet') &&
-                    node.networkIdentifier === this.networkType,
+                (node) => node.roles?.some((role) => this.isIncluded(role)) && node.networkIdentifier === this.networkType,
             );
         }
         return this.peerNodes;
