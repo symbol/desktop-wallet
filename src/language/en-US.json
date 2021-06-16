@@ -613,7 +613,7 @@
     "loading": "Loading...",
     "locked_mosaic": "locked mosaic",
     "login": "Log in",
-    "login_to_symbol_account": "Log in to your Symbol account",
+    "login_to_symbol_account": "Log in to your Symbol profile",
     "logout": "Log out",
     "low_fee_warning_message": "Transactions with less than the average fee might not get accepted and eventually expire",
     "max_approval_amount_more_than_10": "The maximum number of co-signatories needed for approval cannot exceed 10",
