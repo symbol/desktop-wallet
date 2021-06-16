@@ -181,7 +181,7 @@ export default {
                 currentSignerAccountInfo.supplementalPublicKeys?.linked &&
                 currentSignerAccountInfo.supplementalPublicKeys?.node &&
                 currentSignerAccountInfo.supplementalPublicKeys?.vrf;
-            if (allKeysLinked) {
+            if (allKeysLinked || accountUnlocked) {
                 const pollingTrials = rootGetters['harvesting/pollingTrials'];
                 status = accountUnlocked
                     ? HarvestingStatus.ACTIVE
