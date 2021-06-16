@@ -963,6 +963,7 @@
     "transaction_descriptor_17220": "命名空间元数据",
     "transaction_descriptor_17230": "马赛克别名",
     "transaction_descriptor_17232": "账户操作约束",
+    "transaction_descriptor_harvesting": "委托收获",
     "transaction_details": "事务细节",
     "transaction_expired": "交易已过期",
     "transaction_has_cosignature": "已接收的联合签名",
