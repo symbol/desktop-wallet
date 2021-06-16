@@ -18,7 +18,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { mapGetters } from 'vuex';
 import { MultisigAccountInfo } from 'symbol-sdk';
-import i18n from "@/language";
+import i18n from '@/language';
 
 @Component({
     computed: {
@@ -98,8 +98,13 @@ export class AccountMultisigGraphTs extends Vue {
     getAccountLabel(info: MultisigAccountInfo, accounts: AccountModel[]): string {
         const account = accounts.find((wlt) => info.accountAddress.plain() === wlt.address);
         const addressOrName = (account && account.name) || info.accountAddress.plain();
-        return addressOrName + (info.isMultisig() ? `\n
-        ${info.minApproval} of ${info.cosignatoryAddresses.length} ${i18n.t("label_for_approvals")} \n
-        ${info.minRemoval} of ${info.cosignatoryAddresses.length} ${i18n.t("label_for_removals")}` : '');
+        return (
+            addressOrName +
+            (info.isMultisig()
+                ? `\n
+        ${info.minApproval} of ${info.cosignatoryAddresses.length} ${i18n.t('label_for_approvals')} \n
+        ${info.minRemoval} of ${info.cosignatoryAddresses.length} ${i18n.t('label_for_removals')}`
+                : '')
+        );
     }
 }
