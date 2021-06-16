@@ -1121,5 +1121,6 @@
     "optin_postlaunch_tx_nis_address": "选择加入NEM NIS1账户",
     "show_details": "显示详细信息",
     "hide_details": "隐藏详细信息",
+    "view_message": "查看留言",
     "transaction_signed": "已签"
 }

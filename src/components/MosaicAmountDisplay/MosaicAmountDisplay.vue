@@ -1,6 +1,15 @@
 <template>
     <span :class="['amount', 'overflow_ellipsis', color]">
-        <AmountDisplay :value="amount" :decimals="divisibility" :size="size" :show-ticker="showTicker" :ticker="ticker" />
+        <AmountDisplay
+            :value="amount"
+            :decimals="divisibility"
+            :size="size"
+            :show-ticker="showTicker"
+            :ticker="ticker"
+            :has-message="hasMessage"
+            :has-custom-mosaic="hasCustomMosaic"
+            :mosaic-list="mosaicList"
+        />
     </span>
 </template>
 
