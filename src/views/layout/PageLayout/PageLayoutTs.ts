@@ -43,7 +43,7 @@ import Settings from '@/components/Settings/Settings.vue';
 import LogoutButton from '@/components/LogoutButton/LogoutButton.vue';
 import { URLInfo } from '@/core/utils/URLInfo';
 //@ts-ignore
-import ImportQRButton from '@/components/QRCode/ImportQRButton/ImportQRButton.vue';
+const ImportQRButton = () => import('@/components/QRCode/ImportQRButton/ImportQRButton.vue');
 import { AccountModel } from '@/core/database/entities/AccountModel';
 //@ts-ignore
 import AccountLinks from '@/components/AccountLinks/AccountLinks.vue';
