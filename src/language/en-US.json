@@ -1117,5 +1117,6 @@
     "optin_postlaunch_tx_completed_amount": "The amount you have received:",
     "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 account",
     "show_details": "Show details",
-    "hide_details": "Hide details"
+    "hide_details": "Hide details",
+    "view_message": "View message"
 }

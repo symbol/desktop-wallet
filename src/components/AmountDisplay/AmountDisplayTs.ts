@@ -17,6 +17,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { mapGetters } from 'vuex';
+import { officialIcons } from '@/views/resources/Images';
 
 // configuration
 
@@ -37,9 +38,12 @@ export class AmountDisplayTs extends Vue {
     @Prop({ default: '' }) ticker: string;
 
     @Prop({ default: 'normal' }) size: 'normal' | 'smaller' | 'bigger' | 'biggest';
+    @Prop({ default: false }) hasMessage: boolean;
+    @Prop({ default: false }) hasCustomMosaic: boolean;
+    @Prop({ default: () => [] }) mosaicList: any[];
 
     public networkConfiguration: NetworkConfigurationModel;
-
+    private mosaicImage = officialIcons.mosaic;
     /// region computed properties getter/setter
     get integerPart(): string {
         return this.value >= 0 ? Math.floor(this.value).toLocaleString() : '-' + Math.floor(this.value * -1).toLocaleString();
