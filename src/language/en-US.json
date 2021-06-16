@@ -249,7 +249,7 @@
     "error_incorrect_url": "This is not a valid URL",
     "error_invalid_password": "This password is invalid",
     "error_new_namespace_duration_max_value": "The new namespace duration cannot be greater than {maxValue}",
-    "error_new_password_format": "The password should contain at least one letter and one number.",
+    "error_new_password_format": "The password must contain at least one letter and one number.",
     "error_peer_connection_went_wrong": "Something went wrong. Connection to the node {peerUrl} timed out",
     "error_peer_unreachable": "This node is unreachable.",
     "error_profile_does_not_exist": "Profile does not exist",
