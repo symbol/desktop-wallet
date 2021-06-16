@@ -1,40 +1,44 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
-import i18n from '@/language';
 import VueI18n from 'vue-i18n';
 import { NetworkType } from 'symbol-sdk';
+import i18n from '@/language';
 import router from '@/router/AppRouter';
 //@ts-ignore
 import PageLayout from '@/views/layout/PageLayout/PageLayout.vue';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import { getTestProfile } from '@MOCKS/profiles';
+import { ProfileService } from '@/services/ProfileService';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
 localVue.use(VueI18n);
 localVue.use(VueRouter);
 
+const testnetProfile = getTestProfile('profile_testnet');
+const service = new ProfileService();
+
 const networkModule = {
     namespaced: true,
     getters: {
         isConnected: () => true,
-        currentPeer: () => URLHelpers.getNodeUrl('http://localhost:3000'),
+        currentPeer: () => URLHelpers.getNodeUrl(testnetProfile.selectedNodeUrlToConnect),
         networkType: () => NetworkType.TEST_NET,
-        generationHash: () => '3B5E1FA6445653C971A50687E75E6D09FB30481055E3990C84B25E9222DC1155',
+        generationHash: () => testnetProfile.generationHash,
     },
 };
 const profileModule = {
     namespaced: true,
     getters: {
-        currentProfile: () => getTestProfile('profile1'),
+        currentProfile: () => testnetProfile,
     },
 };
 const accountModule = {
     namespaced: true,
     getters: {
         isCosignatoryMode: () => false,
-        currentAccount: () => getTestProfile('profile1'),
+        currentAccount: () => testnetProfile,
     },
 };
 const appModule = {
@@ -66,17 +70,33 @@ const options = {
 let wrapper;
 let vm;
 beforeEach(() => {
+    // Mock profile
+    service.saveProfile(testnetProfile);
     wrapper = shallowMount(PageLayout, options);
     vm = wrapper.vm;
 });
 afterEach(() => {
+    // delete mock profile
+    service.deleteProfile(testnetProfile.profileName);
     wrapper.destroy();
     vm = undefined;
 });
 
-describe('PageLayoutTs', () => {
-    it('call on reconnect', async () => {
+describe('PageLayout', () => {
+    it('should not able to call reconnect method in /login path', async () => {
+        // act
         vm.reconnect();
+
+        // assert
+        expect(vm.$store.dispatch).not.toBeCalledWith('network/CONNECT', { waitBetweenTrials: true });
+    });
+
+    it('should able to call reconnect method in any non `login` path', async () => {
+        // act
+        vm.$router.push('/non-login');
+        vm.reconnect();
+
+        // assert
         expect(vm.$store.dispatch).toBeCalledWith('network/CONNECT', { waitBetweenTrials: true });
     });
 });
