@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-
-import { defaultGenerationHashes } from '@/config';
-import { NetworkType } from 'symbol-sdk';
-
 export class CommonHelpers {
     /**
      * Helper method to sleep for ms miliseconds
@@ -48,15 +44,6 @@ export class CommonHelpers {
                 }
             }
             await this.sleep(interval);
-        }
-    }
-
-    public static getGenerationHash(networkType: NetworkType): string {
-        switch (networkType) {
-            case NetworkType.MAIN_NET:
-                return defaultGenerationHashes.MAIN_NET;
-            case NetworkType.TEST_NET:
-                return defaultGenerationHashes.TEST_NET;
         }
     }
 }

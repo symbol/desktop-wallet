@@ -369,7 +369,9 @@ export default {
             const nodeService = new NodeService();
             const oldGenerationHash = getters['generationHash'];
             const networkType = networkModel.networkType;
-            const getNodesPromise = nodeService.getNodes(repositoryFactory, networkModel.url, networkType).toPromise();
+            const getNodesPromise = nodeService
+                .getNodes(repositoryFactory, networkModel.url, networkType, networkModel.generationHash)
+                .toPromise();
             const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getChainInfo().toPromise();
             const nodes = await getNodesPromise;
             const currentHeight = (await getBlockchainHeightPromise).height.compact();
@@ -516,8 +518,8 @@ export default {
             const repositoryFactory = new RepositoryFactoryHttp(peerUrl);
             const nodeService = new NodeService();
             const networkType = rootGetters['network/networkType'];
-
-            const knownNodes = await nodeService.getNodes(repositoryFactory, peerUrl, networkType).toPromise();
+            const generationHash = rootGetters['network/generationHash'] || rootGetters['profile/currentProfile'].generationHash;
+            const knownNodes = await nodeService.getNodes(repositoryFactory, peerUrl, networkType, generationHash).toPromise();
             commit('knowNodes', knownNodes);
         },
 

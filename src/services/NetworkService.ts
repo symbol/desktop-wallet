@@ -25,8 +25,7 @@ import { combineLatest, defer, EMPTY, from, Observable } from 'rxjs';
 import { catchError, flatMap, map, tap } from 'rxjs/operators';
 import { NetworkConfiguration, NetworkType, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk';
 import { OfflineRepositoryFactory } from '@/services/offline/OfflineRepositoryFactory';
-import { CommonHelpers } from '@/core/utils/CommonHelpers';
-
+import { AppStore } from '@/app/AppStore';
 /**
  * The service in charge of loading and caching anything related to Network from Rest.
  * The cache is done by storing the payloads in SimpleObjectStorage.
@@ -73,7 +72,7 @@ export class NetworkService {
 
                         const networkPropertiesObservable = networkRepository
                             .getNetworkProperties()
-                            .pipe(map((d) => this.toNetworkConfigurationModel(d, defaultNetworkType)));
+                            .pipe(map((d) => this.toNetworkConfigurationModel(d)));
                         const nodeInfoObservable = nodeRepository.getNodeInfo();
 
                         const transactionFeesObservable = repositoryFactory.createNetworkRepository().getTransactionFees();
@@ -127,8 +126,8 @@ export class NetworkService {
         );
     }
 
-    private toNetworkConfigurationModel(dto: NetworkConfiguration, networkType: NetworkType): NetworkConfigurationModel {
-        const generationHash = CommonHelpers.getGenerationHash(networkType);
+    private toNetworkConfigurationModel(dto: NetworkConfiguration): NetworkConfigurationModel {
+        const generationHash = AppStore.getters['network/GenerationHash'] || AppStore.getters['profile/currentProfile'].generationHash;
         const fileDefaults: NetworkConfigurationModel = networkConfig[generationHash].networkConfigurationDefaults;
         const fromDto: NetworkConfigurationModel = {
             epochAdjustment: NetworkConfigurationHelpers.epochAdjustment(dto),
@@ -161,7 +160,8 @@ export class NetworkService {
      * @param url the url.
      */
     public static createRepositoryFactory(url: string, isOffline: boolean = false, networkType = NetworkType.TEST_NET): RepositoryFactory {
-        const genHash = CommonHelpers.getGenerationHash(networkType);
+        const genHash = AppStore.getters['network/GenerationHash'] || AppStore.getters['profile/currentProfile'].generationHash;
+
         return isOffline
             ? new OfflineRepositoryFactory(genHash)
             : new RepositoryFactoryHttp(url, {

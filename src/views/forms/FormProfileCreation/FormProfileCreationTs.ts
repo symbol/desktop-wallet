@@ -31,7 +31,6 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { AccountService } from '@/services/AccountService';
-import { CommonHelpers } from '@/core/utils/CommonHelpers';
 
 /// end-region custom types
 
@@ -198,7 +197,7 @@ export class FormProfileCreationTs extends Vue {
     private persistAccountAndContinue() {
         // -  password stored as hash (never plain.)
         const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password));
-        const genHash = CommonHelpers.getGenerationHash(this.formItems.networkType) || this.generationHash;
+        const genHash = this.generationHash || this.currentProfile.generationHash;
         const profile: ProfileModel = {
             profileName: this.formItems.profileName,
             accounts: [],

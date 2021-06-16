@@ -56,7 +56,6 @@ import { optinImages } from '@/views/resources/Images';
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
 import { TransactionView } from '@/core/transactions/TransactionView';
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue';
-import { set } from 'node_modules/vue/types/umd';
 
 @Component({
     components: {
