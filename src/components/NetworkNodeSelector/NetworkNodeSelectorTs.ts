@@ -208,9 +208,7 @@ export class NetworkNodeSelectorTs extends Vue {
         if (this.includeRoles && this.includeRoles.length > 0) {
             // exclude ngl nodes that doesn't support harvesting
             return this.peerNodes.filter(
-                (node) =>
-                    node.roles?.some((role) => this.isIncluded(role)) &&
-                    node.networkGenerationHashSeed === this.generationHash,
+                (node) => node.roles?.some((role) => this.isIncluded(role)) && node.networkGenerationHashSeed === this.generationHash,
             );
         }
         return this.peerNodes;
