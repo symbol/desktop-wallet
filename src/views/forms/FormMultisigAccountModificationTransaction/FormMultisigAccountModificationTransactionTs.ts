@@ -16,10 +16,9 @@
 // external dependencies
 import { MultisigAccountInfo, MultisigAccountModificationTransaction, UInt64, Address } from 'symbol-sdk';
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
 // internal dependencies
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
-// child components
-import { ValidationObserver, ValidationProvider } from 'vee-validate';
 // @ts-ignore
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 // @ts-ignore

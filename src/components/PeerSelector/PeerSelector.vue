@@ -12,13 +12,14 @@
                     <Row>
                         <i-col span="5" class="current-node-header">{{ $t('current_endpoint') }}:</i-col>
                         <i-col
+                            v-if="currentPeerInfo"
                             span="19"
                             class="current-node-value overflow_ellipsis"
                             :title="currentPeerInfo.url + currentPeerInfo.friendlyName"
                         >
                             <div>
-                                <div class="node-list-entry">{{ currentPeerInfo.friendlyName }}</div>
-                                <div class="node-url">{{ currentPeerInfo.url }}</div>
+                                <div v-if="currentPeerInfo" class="node-list-entry">{{ currentPeerInfo.friendlyName }}</div>
+                                <div v-if="currentPeerInfo" class="node-url">{{ currentPeerInfo.url }}</div>
                             </div>
                         </i-col>
                     </Row>
@@ -26,9 +27,9 @@
                 <div class="node-list-container">
                     <div class="node-list-head">
                         <span>{{ $t('node_list') }}</span>
-                        <span> ({{ peersList.length }})</span>
+                        <span> ({{ peersList && peersList.length ? peersList.length : 0 }})</span>
                     </div>
-                    <div class="node-list-content">
+                    <div v-if="currentPeerInfo && peersList.length" class="node-list-content">
                         <ul v-auto-scroll="'active'">
                             <li
                                 v-for="({ url, friendlyName }, index) in peersList"
@@ -61,13 +62,14 @@
                     <span>{{ $t('node_list') }}</span>
                     <span> ({{ peersList.length }})</span>
                 </div>
-                <div class="node-list-content">
+                <div v-if="currentPeerInfo" class="node-list-content">
                     <ul v-auto-scroll="'active'">
                         <li
                             v-for="({ url, friendlyName }, index) in peersList"
                             :key="`sep${index}`"
                             class="list-item pointer"
                             :class="[{ active: currentPeerInfo.url == url }]"
+                            @click="currentPeerInfo.url !== url ? switchPeer(url) : ''"
                         >
                             <div class="overflow_ellipsis" :title="friendlyName">
                                 <div class="node-list-entry">{{ friendlyName }}</div>

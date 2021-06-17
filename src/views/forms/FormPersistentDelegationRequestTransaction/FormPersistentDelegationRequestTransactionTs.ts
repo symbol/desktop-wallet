@@ -211,10 +211,11 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     private activating = false;
     private feesConfig: {
-        median: number;
         fast: number;
+        median: number;
         slow: number;
         slowest: number;
+        free: number;
     };
     /**
      * Current account owned mosaics

@@ -15,7 +15,7 @@
  */
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { TransactionQR } from 'symbol-qr-library';
-import { NetworkType, TransferTransaction, Address } from 'symbol-sdk';
+import { NetworkType, TransferTransaction, Address, MosaicId } from 'symbol-sdk';
 
 import { QRCodeDetailItem } from '@/components/QRCode/QRCodeActions/TemplateQRAction/TemplateQRActionTs';
 // @ts-ignore
@@ -24,8 +24,15 @@ import TemplateQRAction from '@/components/QRCode/QRCodeActions/TemplateQRAction
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue';
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
+import { mapGetters } from 'vuex';
+import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 @Component({
     components: { TemplateQRAction, MosaicAmountDisplay, MaxFeeSelector },
+    computed: {
+        ...mapGetters({
+            networkCurrency: 'mosaic/networkCurrency',
+        }),
+    },
 })
 export default class TransactionQRActionTs extends Vue {
     @Prop({ default: null }) readonly qrCode!: TransactionQR;
@@ -36,7 +43,11 @@ export default class TransactionQRActionTs extends Vue {
      * TransferTransaction read from QR
      */
     tran: TransferTransaction;
-
+    private networkCurrency: NetworkCurrencyModel;
+    private mosaicAmount: string = '';
+    private mosaicIdHex: string = '';
+    private fees: string = '';
+    private mosaicId: MosaicId = undefined;
     /**
      * Get QR Code detail items
      *
@@ -54,10 +65,14 @@ export default class TransactionQRActionTs extends Vue {
         items.push(new QRCodeDetailItem(this.$t('qrcode_detail_item_network_type').toString(), NetworkType[this.qrCode.networkType], true));
         this.tran = (this.qrCode.transaction as unknown) as TransferTransaction;
         items.push(new QRCodeDetailItem(this.$t('to').toString(), (this.tran.recipientAddress as Address).plain(), true));
-        items.push(new QRCodeDetailItem(this.$t('mosaic_id').toString(), this.tran.mosaics[0].id.id.toHex(), true));
-        items.push(new QRCodeDetailItem(this.$t('amount').toString(), this.tran.mosaics[0].amount.toString(), true));
+        this.mosaicIdHex = !!this.tran.mosaics?.length ? this.tran.mosaics[0].id.id.toHex() : this.networkCurrency.mosaicIdHex.toString();
+        this.mosaicId = new MosaicId(this.mosaicIdHex);
+        items.push(new QRCodeDetailItem(this.$t('mosaic_id').toString(), this.mosaicIdHex, true));
+        this.mosaicAmount = !!this.tran.mosaics?.length ? this.tran.mosaics[0].amount.toString() : '0';
+        items.push(new QRCodeDetailItem(this.$t('amount').toString(), this.mosaicAmount, true));
         items.push(new QRCodeDetailItem(this.$t('message').toString(), this.tran.message.payload, true));
-        items.push(new QRCodeDetailItem(this.$t('fee').toString(), this.tran.maxFee.toString(), true));
+        this.fees = this.tran.maxFee ? this.tran.maxFee.toString() : '0';
+        items.push(new QRCodeDetailItem(this.$t('fee').toString(), this.fees, true));
         return items;
     }
 

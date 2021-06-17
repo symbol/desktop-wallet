@@ -243,10 +243,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     private plainMessage: string;
     private feesConfig: {
-        median: number;
         fast: number;
+        median: number;
         slow: number;
         slowest: number;
+        free: number;
     };
     private transactionSize: number = 0;
     /**

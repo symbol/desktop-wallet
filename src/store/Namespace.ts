@@ -79,7 +79,7 @@ export default {
             });
 
             // if it's a refresh request then refresh the list, else concat the new items to the list
-            state.ownedNamespaces = refresh ? uniqueNamespaces : state.ownedNamespaces.concat(uniqueNamespaces);
+            state.ownedNamespaces = refresh ? uniqueNamespaces : _.uniqBy(state.ownedNamespaces.concat(uniqueNamespaces), 'namespaceIdHex');
             state.currentConfirmedPage = pageInfo;
         },
         isFetchingNamespaces: (state: NamespaceState, isFetchingNamespaces: boolean) =>

@@ -9,7 +9,7 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 import FormRow from '@/components/FormRow/FormRow.vue';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import { URLHelpers } from '@/core/utils/URLHelpers';
-import { NetworkType, NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
+import { AccountInfo, NetworkType, NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 
@@ -24,6 +24,7 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
             peerNodes: 'network/peerNodes',
             networkType: 'network/networkType',
             currentProfile: 'profile/currentProfile',
+            currentSignerAccountInfo: 'account/currentSignerAccountInfo',
         }),
     },
 })
@@ -73,6 +74,7 @@ export class NetworkNodeSelectorTs extends Vue {
     public currentProfile: ProfileModel;
 
     private hideList: boolean = false;
+    private currentSignerAccountInfo: AccountInfo;
     /**
      * Checks if the given node is eligible for harvesting
      * @protected
@@ -116,8 +118,15 @@ export class NetworkNodeSelectorTs extends Vue {
                 );
                 Vue.set(this, 'showInputPublicKey', false);
                 this.$emit('input', nodeModel);
-                if (this.isAccountKeyLinked && this.isVrfKeyLinked && this.missingKeys) {
-                    this.$store.dispatch('harvesting/FETCH_STATUS', value);
+                const unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
+                let nodeOperatorAccount = false;
+                const remotePublicKey = this.currentSignerAccountInfo.supplementalPublicKeys?.linked?.publicKey;
+
+                if (unlockedAccounts) {
+                    nodeOperatorAccount = unlockedAccounts?.some((publicKey) => publicKey === remotePublicKey);
+                }
+                if (this.isAccountKeyLinked && this.isVrfKeyLinked && (this.missingKeys || nodeOperatorAccount)) {
+                    this.$store.dispatch('harvesting/FETCH_STATUS', [value, nodeModel]);
                 }
             } else {
                 Vue.set(this, 'showInputPublicKey', true);
@@ -133,6 +142,7 @@ export class NetworkNodeSelectorTs extends Vue {
     }
 
     public async created() {
+        // add static hardcoded nodes to harvesting list
         await this.$store.dispatch('network/LOAD_PEER_NODES');
         this.customNodeData = this.filteredNodes.map((n) => n.host);
         this.filteredData = [...this.customNodeData];
@@ -196,12 +206,7 @@ export class NetworkNodeSelectorTs extends Vue {
         if (this.includeRoles && this.includeRoles.length > 0) {
             // exclude ngl nodes that doesn't support harvesting
             return this.peerNodes.filter(
-                (node) =>
-                    node.roles?.some((role) => this.isIncluded(role)) &&
-                    !node.host?.includes('ap-southeast-1.testnet') &&
-                    !node.host.includes('us-east-1.testnet') &&
-                    !node.host.includes('eu-central-1.testnet') &&
-                    node.networkIdentifier === this.networkType,
+                (node) => node.roles?.some((role) => this.isIncluded(role)) && node.networkIdentifier === this.networkType,
             );
         }
         return this.peerNodes;
