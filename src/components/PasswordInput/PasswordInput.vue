@@ -5,7 +5,7 @@
         onpaste="return false"
         onCopy="return false"
         onCut="return false"
-        :class="className"
+        class="input-size input-style"
         :placeholder="placeholder"
         type="password"
         @input="updateValue($event.target.value)"
