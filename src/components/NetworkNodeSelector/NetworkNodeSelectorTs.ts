@@ -126,7 +126,7 @@ export class NetworkNodeSelectorTs extends Vue {
                     nodeOperatorAccount = unlockedAccounts?.some((publicKey) => publicKey === remotePublicKey);
                 }
                 if (this.isAccountKeyLinked && this.isVrfKeyLinked && (this.missingKeys || nodeOperatorAccount)) {
-                    this.$store.dispatch('harvesting/FETCH_STATUS', value);
+                    this.$store.dispatch('harvesting/FETCH_STATUS', [value, nodeModel]);
                 }
             } else {
                 Vue.set(this, 'showInputPublicKey', true);
