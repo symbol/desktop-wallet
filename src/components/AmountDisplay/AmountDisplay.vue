@@ -5,15 +5,14 @@
         <span v-if="showTicker" :class="['ticker', size]">&nbsp;({{ displayedTicker }})</span>
 
         <div v-if="hasCustomMosaic" class="tooltip">
-            <img :src="mosaicImage" class="warning-icon" />
+            <img :src="mosaicIcon" class="warning-icon" />
             <div class="tooltiptext">
                 <div v-for="mosaic in mosaicList" :key="mosaic.id">
                     {{ `${'- ' + mosaic.id + ': ' + mosaic.amount}` }}
                 </div>
             </div>
         </div>
-
-        <Icon v-if="hasMessage" type="md-mail" class="coloring" />
+        <img v-if="hasMessage" :src="messagesIcon" class="warning-icon" />
     </span>
 </template>
 

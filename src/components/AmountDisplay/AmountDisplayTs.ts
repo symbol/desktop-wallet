@@ -43,7 +43,8 @@ export class AmountDisplayTs extends Vue {
     @Prop({ default: () => [] }) mosaicList: any[];
 
     public networkConfiguration: NetworkConfigurationModel;
-    private mosaicImage = officialIcons.mosaic;
+    private mosaicIcon = officialIcons.mosaicsIcon;
+    private messagesIcon = officialIcons.messagesIcon;
     /// region computed properties getter/setter
     get integerPart(): string {
         return this.value >= 0 ? Math.floor(this.value).toLocaleString() : '-' + Math.floor(this.value * -1).toLocaleString();

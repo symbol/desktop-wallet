@@ -238,6 +238,10 @@ import warning from '@/views/resources/img/icons/warning.png';
 import warningWhite from '@/views/resources/img/icons/warning-white.png';
 // @ts-ignore
 import infoWhite from '@/views/resources/img/icons/info-white.png';
+// @ts-ignore
+import mosaicsIcon from '@/views/resources/img/icons/mosaics.png';
+// @ts-ignore
+import messagesIcon from '@/views/resources/img/icons/messages.png';
 
 /// region exported image objects
 export const walletTypeImages = {
@@ -365,6 +369,8 @@ export const officialIcons = {
     warning,
     warningWhite,
     infoWhite,
+    mosaicsIcon,
+    messagesIcon,
 };
 
 export const optinImages = {
