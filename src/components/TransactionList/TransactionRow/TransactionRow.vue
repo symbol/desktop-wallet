@@ -28,11 +28,11 @@
                         <div slot="content">
                             <!-- allow top 5 mosaics show in the tooltip -->
                             <div v-for="mosaic in nonNativeMosaicList().slice(0, numberOfShowMosicsTooltips)" :key="mosaic.id">
-                                {{mosaic.name}} - {{mosaic.relativeAmount}}
+                                {{ mosaic.name }} - {{ mosaic.relativeAmount }}
                             </div>
 
                             <div v-if="nonNativeMosaicList().length - numberOfShowMosicsTooltips > 0">
-                                {{ $t('tooltip_mosaic_view_more', {count: nonNativeMosaicList().length - numberOfShowMosicsTooltips}) }}
+                                {{ $t('tooltip_mosaic_view_more', { count: nonNativeMosaicList().length - numberOfShowMosicsTooltips }) }}
                             </div>
                         </div>
                     </Tooltip>
