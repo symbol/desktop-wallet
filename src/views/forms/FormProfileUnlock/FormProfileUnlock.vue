@@ -13,11 +13,9 @@
                             slim
                         >
                             <ErrorTooltip :errors="errors">
-                                <input
+                                <PasswordInput
                                     ref="passwordInput"
                                     v-model="formItems.password"
-                                    type="password"
-                                    class="input-size input-style"
                                     :disabled="isLoading"
                                     :placeholder="$t('please_enter_your_account_password')"
                                 />

@@ -15,12 +15,10 @@
                             class="inputs-container items-container"
                         >
                             <ErrorTooltip :errors="errors">
-                                <input
+                                <PasswordInput
                                     ref="passwordInput"
                                     v-model="formItems.password"
-                                    class="input-size input-style"
                                     :placeholder="$t('form_label_new_password')"
-                                    type="password"
                                     @input="onChange"
                                 />
                             </ErrorTooltip>
@@ -41,12 +39,10 @@
                             class="inputs-container items-container"
                         >
                             <ErrorTooltip :errors="errors">
-                                <input
+                                <PasswordInput
                                     ref="passwordInput"
                                     v-model="formItems.passwordConfirm"
-                                    class="input-size input-style"
                                     :placeholder="$t('form_label_new_password_confirm')"
-                                    type="password"
                                     @input="onChange"
                                 />
                             </ErrorTooltip>
