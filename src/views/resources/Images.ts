@@ -135,6 +135,8 @@ import encryptedMessage from '@/views/resources/img/icons/encrypted-message.png'
 // @ts-ignore
 import enterprise from '@/views/resources/img/icons/enterprise.png';
 // @ts-ignore
+import envelope from '@/views/resources/img/icons/envelope.png';
+// @ts-ignore
 import explorer from '@/views/resources/img/newicons/NavExplorer.svg';
 // @ts-ignore
 import fingerprint from '@/views/resources/img/icons/fingerprint.png';
@@ -152,6 +154,8 @@ import message from '@/views/resources/img/icons/message.png';
 import metadata from '@/views/resources/img/icons/metadata.png';
 // @ts-ignore
 import mosaic from '@/views/resources/img/icons/mosaic.svg';
+// @ts-ignore
+import mosaics from '@/views/resources/img/icons/mosaics.png';
 // @ts-ignore
 import mosaicTransaction from '@/views/resources/img/icons/mosaic.png';
 // @ts-ignore
@@ -314,6 +318,7 @@ export const officialIcons = {
     delegatedHarvesting,
     encryptedMessage,
     enterprise,
+    envelope,
     explorer,
     fingerprint,
     harvest,
@@ -323,6 +328,7 @@ export const officialIcons = {
     message,
     metadata,
     mosaic,
+    mosaics,
     mosaicRestriction,
     mosaicTransaction,
     multipleParties,
