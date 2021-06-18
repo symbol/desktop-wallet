@@ -43,7 +43,7 @@ import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
         ErrorTooltip,
         FormWrapper,
         FormRow,
-        PasswordInput
+        PasswordInput,
     },
     computed: {
         ...mapGetters({

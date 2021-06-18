@@ -50,7 +50,7 @@ import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
         ErrorTooltip,
         ValidationObserver,
         FormWrapper,
-        PasswordInput
+        PasswordInput,
     },
     computed: {
         ...mapGetters({

@@ -80,7 +80,8 @@
                                     <PasswordInput
                                         v-model="formItems.password"
                                         v-focus
-                                        :class-name="[!profilesClassifiedByNetworkType ? 'un_click' : '']"                                        :placeholder="$t('please_enter_your_account_password')"
+                                        :class-name="[!profilesClassifiedByNetworkType ? 'un_click' : '']"
+                                        :placeholder="$t('please_enter_your_account_password')"
                                         :disabled="!profilesClassifiedByNetworkType || performingLogin"
                                     />
                                 </ErrorTooltip>

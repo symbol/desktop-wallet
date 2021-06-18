@@ -54,7 +54,7 @@ import _ from 'lodash';
         ValidationObserver,
         LanguageSelector,
         VideoBackground,
-        PasswordInput
+        PasswordInput,
     },
 })
 export default class LoginPageTs extends Vue {
