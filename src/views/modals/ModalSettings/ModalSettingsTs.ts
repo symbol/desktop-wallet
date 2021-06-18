@@ -39,6 +39,7 @@ enum SettingsTabs {
 export class ModalSettingsTs extends Vue {
     /// region component properties
     @Prop({ default: false }) visible: boolean;
+    @Prop({ default: false }) networkSettingsSelected: boolean;
     /// end-region component properties
 
     /**
@@ -68,6 +69,9 @@ export class ModalSettingsTs extends Vue {
     created() {
         // when on /profiles route, only the NETWORK tab should be displayed
         this.availableTabs = this.availableTabs.filter((key) => !!this.currentAccount || key === 'NETWORK');
+        if (this.networkSettingsSelected) {
+            this.currentTabIndex = 2;
+        }
     }
 
     /**

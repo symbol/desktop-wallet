@@ -16,9 +16,15 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { QrcodeCapture, QrcodeDropZone, QrcodeStream } from 'vue-qrcode-reader';
 import { QRCodeType } from 'symbol-qr-library';
+import { mapGetters } from 'vuex';
 
 @Component({
     components: { QrcodeCapture, QrcodeDropZone, QrcodeStream },
+    computed: {
+        ...mapGetters({
+            feesConfig: 'network/feesConfig',
+        }),
+    },
 })
 export default class UploadQRCodeTs extends Vue {
     @Prop({ default: true })
@@ -35,7 +41,13 @@ export default class UploadQRCodeTs extends Vue {
 
     @Prop({ default: 'upload_file_message' })
     readonly uploadFileMessage!: string;
-
+    private feesConfig: {
+        fast: number;
+        median: number;
+        slow: number;
+        slowest: number;
+        free: number;
+    };
     /**
      * Whether scan tab is active
      */
@@ -71,6 +83,9 @@ export default class UploadQRCodeTs extends Vue {
      * @param json
      */
     public onDecode(json) {
+        if (!this.feesConfig) {
+            this.$store.dispatch('network/LOAD_TRANSACTION_FEES');
+        }
         const jsonObj = JSON.parse(json);
         this.qrType = jsonObj.type;
         if (this.validQrTypes.includes(this.qrType)) {

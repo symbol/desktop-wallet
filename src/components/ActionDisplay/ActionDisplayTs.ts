@@ -14,10 +14,11 @@
  *
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Address, Transaction, TransactionType } from 'symbol-sdk';
+import { Address, PersistentHarvestingDelegationMessage, Transaction, TransactionType, TransferTransaction } from 'symbol-sdk';
 // @ts-ignore
 import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue';
 import { mapGetters } from 'vuex';
+import i18n from '@/language';
 
 @Component({
     components: {
@@ -60,4 +61,15 @@ export class ActionDisplayTs extends Vue {
      * @type {boolean}
      */
     protected needsCosignature: boolean = false;
+
+    /**
+     * Returns transaction type label
+     */
+    protected getTransactionType() {
+        if (this.transaction instanceof TransferTransaction && this.transaction.message instanceof PersistentHarvestingDelegationMessage) {
+            return i18n.t('transaction_descriptor_harvesting');
+        }
+
+        return i18n.t(`transaction_descriptor_${this.transaction.type}${this.isOptinPayoutTransaction ? '_optin' : ''}`);
+    }
 }

@@ -274,7 +274,7 @@ export class TableDisplayTs extends Vue {
                 return new MosaicTableService(this.currentHeight, this.holdMosaics, this.networkConfiguration);
 
             case TableAssetType.Namespace:
-                return new NamespaceTableService(this.currentHeight, this.ownedNamespaces, this.networkConfiguration);
+                return new NamespaceTableService(this.currentHeight, this.ownedNamespaces, this.networkConfiguration, this.showExpired);
 
             case TableAssetType.Metadata:
                 return new MetadataTableService(this.currentHeight, this.attachedMetadataList, this.networkConfiguration);
