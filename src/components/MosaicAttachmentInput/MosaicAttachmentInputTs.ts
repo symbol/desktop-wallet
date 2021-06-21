@@ -78,7 +78,12 @@ export class MosaicAttachmentInputTs extends Vue {
      * @type {{mosaicHex: string, amount: number}}
      */
     protected get chosenValue(): { mosaicHex: string; amount: string } {
-        this.mosaicAttachment.amount = this.mosaicAttachment.amount.replace(',', '');
+        if (navigator.languages != undefined) {
+            const decimalSeparator = this.getDecimalSeparator(navigator.languages[0]);
+            if (decimalSeparator !== ',') {
+                this.mosaicAttachment.amount = this.mosaicAttachment.amount.replace(',', '');
+            }
+        }
         return this.mosaicAttachment;
     }
 
@@ -153,5 +158,17 @@ export class MosaicAttachmentInputTs extends Vue {
     @Watch('mosaicAttachment')
     public onMosaicAttachmentChange(mosaicAttachment: { mosaicHex: string; amount: string }) {
         this.relativeAmount = mosaicAttachment.amount;
+    }
+    /**
+     * Checks current locale separator
+     * @private
+     * @return {string}
+     */
+    private getDecimalSeparator(locale): string {
+        // testing against current locale to figure out separator
+        const numberWithDecimalSeparator = 1.1;
+        return Intl.NumberFormat(locale)
+            .formatToParts(numberWithDecimalSeparator)
+            .find((part) => part.type === 'decimal').value;
     }
 }
