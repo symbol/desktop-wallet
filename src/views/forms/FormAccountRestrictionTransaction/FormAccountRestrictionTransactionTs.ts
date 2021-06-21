@@ -47,6 +47,7 @@ import {
     AccountRestrictionTransaction,
     Address,
     AddressRestrictionFlag,
+    Deadline,
     MosaicId,
     MosaicRestrictionFlag,
     NamespaceId,
@@ -182,7 +183,7 @@ export class FormAccountRestrictionTransactionTs extends FormTransactionBase {
                 const toBeDeleted = this.isDeleteMode ? [this.instantiatedRecipient] : [];
 
                 return AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-                    this.createDeadline(),
+                    this.createDeadline() as Deadline,
                     RestrictionFlagMapping.toRestrictionFlag(
                         restrictionTxType,
                         this.formItems.direction,
@@ -216,7 +217,7 @@ export class FormAccountRestrictionTransactionTs extends FormTransactionBase {
                 const toBeDeleted = this.isDeleteMode ? [this.formItems.transactionType] : [];
 
                 return AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-                    this.createDeadline(),
+                    this.createDeadline() as Deadline,
                     RestrictionFlagMapping.toRestrictionFlag(
                         restrictionTxType,
                         this.formItems.direction,

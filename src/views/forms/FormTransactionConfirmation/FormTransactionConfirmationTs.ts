@@ -15,7 +15,7 @@
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { Account, Transaction } from 'symbol-sdk';
+import { Account, Deadline, Transaction } from 'symbol-sdk';
 // internal dependencies
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
@@ -40,6 +40,7 @@ import { TransactionCommand } from '@/services/TransactionCommand';
     computed: {
         ...mapGetters({
             currentAccount: 'account/currentAccount',
+            transactionDeadline: 'network/transactionDeadline',
         }),
     },
 })
@@ -48,7 +49,7 @@ export class FormTransactionConfirmationTs extends Vue {
         required: true,
     })
     public command: TransactionCommand;
-
+    private transactionDeadline: Deadline;
     /**
      * Whether to hide submit button
      */

@@ -40,6 +40,8 @@ import {
     RepositoryFactory,
     RepositoryFactoryHttp,
     TransactionFees,
+    DeadlineService,
+    Deadline,
 } from 'symbol-sdk';
 import Vue from 'vue';
 // internal dependencies
@@ -95,6 +97,7 @@ interface NetworkState {
     connectingToNodeInfo: ConnectingToNodeInfo;
     isOfflineMode: boolean;
     feesConfig: any;
+    transactionDeadline: Deadline;
 }
 
 const initialNetworkState: NetworkState = {
@@ -119,6 +122,7 @@ const initialNetworkState: NetworkState = {
     connectingToNodeInfo: undefined,
     isOfflineMode: false,
     feesConfig: undefined,
+    transactionDeadline: undefined,
 };
 
 export default {
@@ -146,6 +150,7 @@ export default {
         connectingToNodeInfo: (state: NetworkState) => state.connectingToNodeInfo,
         isOfflineMode: (state: NetworkState) => state.isOfflineMode,
         feesConfig: (state: NetworkState) => state.feesConfig,
+        transactionDeadline: (state: NetworkState) => state.transactionDeadline,
     },
     mutations: {
         setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -221,6 +226,9 @@ export default {
         setFeesConfig: (state: NetworkState, feesConfig: {}) => {
             Vue.set(state, 'feesConfig', feesConfig);
         },
+        transactionDeadline: (state: NetworkState, transactionDeadline: Deadline) => {
+            Vue.set(state, 'transactionDeadline', transactionDeadline);
+        },
     },
     actions: {
         async initialize({ commit, getters }) {
@@ -255,6 +263,7 @@ export default {
             commit('setConnected', false);
             commit('connectingToNodeInfo', undefined);
             commit('setFeesConfig', undefined);
+            commit('transactionDeadline', undefined);
         },
 
         async CONNECT(
@@ -535,6 +544,12 @@ export default {
             const nodeRepository = repositoryFactory.createNodeRepository();
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
             commit('peerNodes', _.uniqBy(peerNodes, 'host'));
+        },
+        async SET_TRANSACTION_DEADLINE({ commit, getters }, deadlineInHours = 2) {
+            const repositoryFactory: RepositoryFactory = getters['repositoryFactory'] as RepositoryFactory;
+            const deadline = await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime(deadlineInHours);
+            commit('transactionDeadline', deadline);
+            return deadline;
         },
         // TODO :: re-apply that behavior if red screen issue fixed
         // load nodes that eligible for delegate harvesting
