@@ -357,7 +357,7 @@ export class TransactionRowTs extends Vue {
                     if (mosaicInfo) {
                         return {
                             name: mosaicInfo.name || mosaicInfo.mosaicIdHex,
-                            relativeAmount: Formatters.formatNumber(mosaic.amount.compact() * Math.pow(10, mosaicInfo.divisibility)),
+                            relativeAmount: Formatters.formatNumber(mosaic.amount.compact() / Math.pow(10, mosaicInfo.divisibility)),
                         };
                     } else {
                         return {
