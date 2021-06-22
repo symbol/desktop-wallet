@@ -1122,5 +1122,5 @@
     "show_details": "Show details",
     "hide_details": "Hide details",
     "transaction_signed": "Signed Successfully",
-    "tooltip_mosaic_view_more": "and {count} more..."
+    "tooltip_mosaic_view_more": "And {count} more..."
 }
