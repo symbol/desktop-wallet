@@ -232,9 +232,13 @@ export default {
                             (t) =>
                                 (({
                                     blockNo: t.height,
-                                    fee: (t.receipts as BalanceChangeReceipt[]).find(
-                                        (r) => r.targetAddress.plain() === targetAddress.plain(),
-                                    )?.amount,
+                                    fee: (t.receipts as BalanceChangeReceipt[]).reduce((acc, r) => {
+                                        if (r.targetAddress && r.targetAddress.plain() === targetAddress.plain()) {
+                                            return acc.add(r.amount);
+                                        } else {
+                                            return acc;
+                                        }
+                                    }, UInt64.fromUint(0)),
                                 } as unknown) as HarvestedBlock),
                         );
                         const pageInfo = { isLastPage: pageTxStatement.isLastPage, pageNumber: pageTxStatement.pageNumber };
