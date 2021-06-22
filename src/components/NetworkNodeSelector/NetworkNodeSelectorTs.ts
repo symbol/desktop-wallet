@@ -145,10 +145,16 @@ export class NetworkNodeSelectorTs extends Vue {
         // add static hardcoded nodes to harvesting list
         const staticNodesUrls = [];
         networkConfig[this.networkType].nodes.map((node) => staticNodesUrls.push(node.url.replace(/http:|:3000|\//g, '')));
-        await this.$store.dispatch('network/LOAD_PEER_NODES');
-        this.customNodeData = this.filteredNodes.map((n) => n.host).concat(staticNodesUrls);
-        this.filteredData = [...this.customNodeData];
+
+        // add selected nodes
         const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect.replace(/http:|:3000|\//g, '');
+        staticNodesUrls.push(currentNodeUrl);
+
+        await this.$store.dispatch('network/LOAD_PEER_NODES');
+
+        // remove the duplicate item in array.
+        this.customNodeData = [...new Set(this.filteredNodes.map((n) => n.host).concat(staticNodesUrls))];
+
         if (this.customNodeData.includes(currentNodeUrl) && !this.value.url) {
             this.fetchNodePublicKey(currentNodeUrl);
         }
