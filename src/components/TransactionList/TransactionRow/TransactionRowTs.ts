@@ -255,11 +255,7 @@ export class TransactionRowTs extends Vue {
         // Multisig account can not sign
 
         const currentPubAccount = AccountModel.getObjects(this.currentAccount).publicAccount;
-        if (
-            this.transaction instanceof AggregateTransaction &&
-            this.transaction.type === TransactionType.AGGREGATE_BONDED &&
-            !this.transaction.signedByAccount(currentPubAccount)
-        ) {
+        if (this.transaction instanceof AggregateTransaction && this.transaction.type === TransactionType.AGGREGATE_BONDED) {
             if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
                 this.transactionSigningFlag = false;
                 return;
@@ -268,6 +264,10 @@ export class TransactionRowTs extends Vue {
                 this.aggregateTransactionDetails !== undefined &&
                 this.aggregateTransactionDetails.transactionInfo?.hash == this.transaction.transactionInfo?.hash
             ) {
+                if (this.aggregateTransactionDetails.signedByAccount(currentPubAccount)) {
+                    this.transactionSigningFlag = false;
+                    return;
+                }
                 const cosignList = [];
                 const cosignerAddresses = this.aggregateTransactionDetails.innerTransactions.map((t) => t.signer?.address);
                 this.aggregateTransactionDetails.innerTransactions.forEach((t) => {
@@ -408,8 +408,7 @@ export class TransactionRowTs extends Vue {
         if (
             this.transaction instanceof AggregateTransaction &&
             this.transaction.type === TransactionType.AGGREGATE_BONDED &&
-            this.hasMissSignatures &&
-            !this.transaction.signedByAccount(AccountModel.getObjects(this.currentAccount).publicAccount)
+            this.hasMissSignatures
         ) {
             this.transactionSigningFlag = true;
             try {
