@@ -1121,5 +1121,6 @@
     "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 account",
     "show_details": "Show details",
     "hide_details": "Hide details",
-    "transaction_signed": "Signed Successfully"
+    "transaction_signed": "Signed Successfully",
+    "tooltip_mosaic_view_more": "And {count} more..."
 }
