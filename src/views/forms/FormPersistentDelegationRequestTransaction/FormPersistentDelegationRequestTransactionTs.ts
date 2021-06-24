@@ -269,7 +269,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 this.formItems.nodeModel = { nodePublicKey: '' } as NodeModel;
             }
         } else {
-            this.formItems.nodeModel = { nodePublicKey: '' } as NodeModel;
+            // Check account is belong to node operator.
+            this.formItems.nodeModel = this.currentSignerHarvestingModel?.selectedHarvestingNode
+                ? this.currentSignerHarvestingModel.selectedHarvestingNode
+                : ({ nodePublicKey: '' } as NodeModel);
         }
     }
 
