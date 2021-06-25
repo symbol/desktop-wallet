@@ -20,7 +20,7 @@ import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { map, tap } from 'rxjs/operators';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import * as _ from 'lodash';
-import { networkConfig } from '@/config';
+import { getNetworkConfig } from '@/config';
 import { NodeModelStorage } from '@/core/database/storage/NodeModelStorage';
 
 /**
@@ -33,27 +33,42 @@ export class NodeService {
      */
     private readonly storage = NodeModelStorage.INSTANCE;
 
-    public getKnowNodesOnly(networkType: NetworkType): NodeModel[] {
-        return _.uniqBy(this.loadNodes().concat(this.loadStaticNodes(networkType)), 'url').filter((n) => n.networkType === networkType);
+    public getKnowNodesOnly(networkType: NetworkType, generationHash?: string): NodeModel[] {
+        return _.uniqBy(this.loadNodes().concat(this.loadStaticNodes(networkType, generationHash)), 'url').filter(
+            (n) => n.networkType === networkType,
+        );
     }
 
-    public getNodes(repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string, networkType: NetworkType): Observable<NodeModel[]> {
-        const storedNodes = this.getKnowNodesOnly(networkType);
+    public getNodes(
+        repositoryFactory: RepositoryFactory,
+        repositoryFactoryUrl: string,
+        networkType: NetworkType,
+        generationHash?: string,
+    ): Observable<NodeModel[]> {
+        const storedNodes = this.getKnowNodesOnly(networkType, generationHash);
         const nodeRepository = repositoryFactory.createNodeRepository();
 
         return nodeRepository.getNodeInfo().pipe(
             map((dto: NodeInfo) =>
-                this.createNodeModel(repositoryFactoryUrl, networkType, dto.friendlyName, undefined, dto.publicKey, dto.nodePublicKey),
+                this.createNodeModel(
+                    repositoryFactoryUrl,
+                    networkType,
+                    dto.friendlyName,
+                    undefined,
+                    generationHash,
+                    dto.publicKey,
+                    dto.nodePublicKey,
+                ),
             ),
-            ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl, networkType)),
+            ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl, networkType, undefined, undefined, generationHash)),
             map((currentNode) => _.uniqBy([currentNode, ...storedNodes], 'url')),
             tap((p) => this.saveNodes(p)),
         );
     }
 
-    private loadStaticNodes(networkType: NetworkType): NodeModel[] {
-        return networkConfig[networkType].nodes.map((n) => {
-            return this.createNodeModel(n.url, networkType, n.friendlyName, true);
+    private loadStaticNodes(networkType: NetworkType, generationHash?: string): NodeModel[] {
+        return getNetworkConfig(generationHash).nodes.map((n) => {
+            return this.createNodeModel(n.url, networkType, n.friendlyName, true, generationHash);
         });
     }
 
@@ -62,13 +77,14 @@ export class NodeService {
         networkType: NetworkType,
         friendlyName: string | undefined = undefined,
         isDefault: boolean | undefined = undefined,
+        generationHash?: string,
         publicKey?: string,
         nodePublicKey?: string,
     ): NodeModel {
         return new NodeModel(
             url,
             friendlyName || '',
-            isDefault || !!networkConfig[networkType].nodes.find((n) => n.url === url),
+            isDefault || !!getNetworkConfig(generationHash).nodes.find((n) => n.url === url),
             networkType,
             publicKey,
             nodePublicKey,

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { feesConfig, networkConfig } from '@/config';
+import { feesConfig, getNetworkConfig } from '@/config';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { NetworkModel } from '@/core/database/entities/NetworkModel';
 import { NodeModel } from '@/core/database/entities/NodeModel';
@@ -262,16 +262,23 @@ export default {
             {
                 newCandidateUrl,
                 networkType,
+                generationHash = '',
                 waitBetweenTrials = false,
                 isOffline = false,
-            }: { newCandidateUrl?: string | undefined; networkType?: NetworkType; waitBetweenTrials: boolean; isOffline: boolean },
+            }: {
+                newCandidateUrl?: string | undefined;
+                networkType?: NetworkType;
+                generationHash?: string | undefined;
+                waitBetweenTrials: boolean;
+                isOffline: boolean;
+            },
         ) {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const networkService = new NetworkService();
             let nodeNetworkModelResult: any;
             // if network not specified set to profile's network
-            if (!networkType && currentProfile && currentProfile.networkType) {
-                networkType = currentProfile.networkType;
+            if (!generationHash && currentProfile && currentProfile.generationHash) {
+                generationHash = currentProfile.generationHash;
             }
             commit('setOfflineMode', isOffline);
             if (newCandidateUrl) {
@@ -281,11 +288,13 @@ export default {
                     progressCurrentNodeIndex: 1,
                     progressTotalNumOfNodes: 1,
                 });
-                nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType, isOffline).toPromise();
+                nodeNetworkModelResult = await networkService
+                    .getNetworkModel(newCandidateUrl, networkType, generationHash, isOffline)
+                    .toPromise();
                 if (
                     nodeNetworkModelResult &&
                     nodeNetworkModelResult.networkModel &&
-                    nodeNetworkModelResult.networkModel.networkType === networkType
+                    nodeNetworkModelResult.networkModel.generationHash === currentProfile.generationHash
                 ) {
                     await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                 } else {
@@ -293,7 +302,7 @@ export default {
                 }
                 return;
             } else {
-                let nodesList = [...networkConfig[networkType].nodes];
+                let nodesList = [...getNetworkConfig(generationHash).nodes];
                 let nodeFound = false,
                     progressCurrentNodeInx = 0;
                 const numOfNodes = nodesList.length;
@@ -307,12 +316,13 @@ export default {
                         progressTotalNumOfNodes: numOfNodes,
                     });
                     nodeNetworkModelResult = await networkService
-                        .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline)
+                        .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, generationHash, isOffline)
                         .toPromise();
+
                     if (
                         nodeNetworkModelResult &&
                         nodeNetworkModelResult.repositoryFactory &&
-                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                        nodeNetworkModelResult.networkModel.generationHash === currentProfile.generationHash
                     ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
@@ -332,11 +342,13 @@ export default {
                         progressCurrentNodeIndex: ++progressCurrentNodeInx,
                         progressTotalNumOfNodes: numOfNodes,
                     });
-                    nodeNetworkModelResult = await networkService.getNetworkModel(nodeUrl, networkType, isOffline).toPromise();
+                    nodeNetworkModelResult = await networkService
+                        .getNetworkModel(nodeUrl, networkType, generationHash, isOffline)
+                        .toPromise();
                     if (
                         nodeNetworkModelResult &&
                         nodeNetworkModelResult.repositoryFactory &&
-                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                        nodeNetworkModelResult.networkModel.generationHash === currentProfile.generationHash
                     ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
@@ -364,7 +376,9 @@ export default {
             const nodeService = new NodeService();
             const oldGenerationHash = getters['generationHash'];
             const networkType = networkModel.networkType;
-            const getNodesPromise = nodeService.getNodes(repositoryFactory, networkModel.url, networkType).toPromise();
+            const getNodesPromise = nodeService
+                .getNodes(repositoryFactory, networkModel.url, networkType, networkModel.generationHash)
+                .toPromise();
             const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getChainInfo().toPromise();
             const nodes = await getNodesPromise;
             const currentHeight = (await getBlockchainHeightPromise).height.compact();
@@ -516,8 +530,8 @@ export default {
             const repositoryFactory = new RepositoryFactoryHttp(peerUrl);
             const nodeService = new NodeService();
             const networkType = rootGetters['network/networkType'];
-
-            const knownNodes = await nodeService.getNodes(repositoryFactory, peerUrl, networkType).toPromise();
+            const generationHash = rootGetters['network/generationHash'] || rootGetters['profile/currentProfile'].generationHash;
+            const knownNodes = await nodeService.getNodes(repositoryFactory, peerUrl, networkType, generationHash).toPromise();
             commit('knowNodes', knownNodes);
         },
 

@@ -24,8 +24,9 @@ import { ValidationProvider } from 'vee-validate';
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 import { mapGetters } from 'vuex';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
-import { networkConfig } from '@/config';
+import { defaultGenerationHashes, getNetworkConfig } from '@/config';
 import { NetworkType } from 'symbol-sdk';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 
 @Component({
     components: {
@@ -36,6 +37,8 @@ import { NetworkType } from 'symbol-sdk';
         ...mapGetters({
             mosaics: 'mosaic/mosaics',
             networkType: 'network/networkType',
+            generationHash: 'network/generationHash',
+            currentProfile: 'profile/currentProfile',
         }),
     },
 })
@@ -53,13 +56,16 @@ export class AmountInputTs extends Vue {
      * @var {ValidationRuleset}
      */
     public validationRules;
-
     public networkType: NetworkType;
-
+    private generationHash: string;
+    private currentProfile: ProfileModel;
     created() {
         // update validation rule to reflect correct mosaic divisibility
         const chosenMosaic = this.mosaics.find((mosaic) => this.mosaicHex === mosaic.mosaicIdHex);
-        const networkConfigurationDefaults = networkConfig[this.networkType || NetworkType.TEST_NET].networkConfigurationDefaults;
+        // use default for unit tests
+        const generationHash =
+            this.generationHash || (this.currentProfile && this.currentProfile.generationHash) || defaultGenerationHashes.TEST_NET;
+        const networkConfigurationDefaults = getNetworkConfig(generationHash).networkConfigurationDefaults;
         networkConfigurationDefaults.maxMosaicDivisibility = chosenMosaic ? chosenMosaic.divisibility : 6;
 
         // set validation rules for this field

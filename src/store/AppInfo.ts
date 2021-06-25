@@ -19,12 +19,10 @@ import i18n from '@/language';
 import app from '@/main';
 import { AwaitLock } from './AwaitLock';
 // configuration
-import { appConfig } from '@/config';
-import { networkConfig } from '@/config';
+import { appConfig, defaultGenerationHashes, getNetworkConfig } from '@/config';
 import { SettingsModel } from '@/core/database/entities/SettingsModel';
 import { SettingService } from '@/services/SettingService';
-import { NetworkType } from 'symbol-sdk';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 const Lock = AwaitLock.create();
 const settingService = new SettingService();
@@ -41,6 +39,7 @@ interface AppInfoState {
     controlsDisabledMessage: string;
     faucetUrl: string;
     settings: SettingsModel;
+    generationHashes: string[];
 }
 
 const appInfoState: AppInfoState = {
@@ -53,7 +52,8 @@ const appInfoState: AppInfoState = {
     hasControlsDisabled: false,
     controlsDisabledMessage: '',
     faucetUrl: undefined,
-    settings: settingService.getProfileSettings(ANON_PROFILE_NAME, NetworkType.TEST_NET), // TODO how to fix here? why static?
+    settings: settingService.getProfileSettings(ANON_PROFILE_NAME, defaultGenerationHashes.TEST_NET), // TODO how to fix here? why static?
+    generationHashes: undefined,
 };
 
 export default {
@@ -74,6 +74,7 @@ export default {
         faucetUrl: (state: AppInfoState) => state.faucetUrl,
         defaultFee: (state: AppInfoState) => state.settings.defaultFee,
         defaultAccount: (state: AppInfoState) => state.settings.defaultAccount,
+        generationHashes: (state: AppInfoState) => state.generationHashes,
     },
     mutations: {
         setInitialized: (state: AppInfoState, initialized) => {
@@ -89,8 +90,9 @@ export default {
         setLoadingOverlayMessage: (state: AppInfoState, message: string) => Vue.set(state, 'loadingOverlayMessage', message),
         setLoadingDisableCloseButton: (state: AppInfoState, bool: boolean) => Vue.set(state, 'loadingDisableCloseButton', bool),
         faucetUrl: (state: AppInfoState, faucetUrl) => {
-            Vue.set(state, 'faucetUrl', faucetUrl || networkConfig[NetworkType.TEST_NET].faucetUrl);
+            Vue.set(state, 'faucetUrl', faucetUrl || getNetworkConfig(defaultGenerationHashes.TEST_NET).faucetUrl);
         },
+        generationHashes: (state: AppInfoState, generationHashes) => Vue.set(state, 'generationHashes', generationHashes),
     },
     actions: {
         async initialize({ commit, getters }) {
@@ -139,8 +141,8 @@ export default {
             }
             const currentProfile = rootGetters['profile/currentProfile'];
             const profileName = (currentProfile && currentProfile.profileName) || ANON_PROFILE_NAME;
-            commit('settings', settingService.changeProfileSettings(profileName, settingsModel, currentProfile.networkType));
-            commit('faucetUrl', networkConfig[currentProfile.networkType].faucetUrl);
+            commit('settings', settingService.changeProfileSettings(profileName, settingsModel, currentProfile.generationHash));
+            commit('faucetUrl', getNetworkConfig(currentProfile.generationHash).faucetUrl);
         },
 
         SET_EXPLORER_URL({ dispatch }, explorerUrl: string) {
@@ -155,6 +157,14 @@ export default {
         },
         SET_DEFAULT_ACCOUNT({ dispatch }, defaultAccount: string) {
             dispatch('SET_SETTINGS', { defaultAccount });
+        },
+        SET_GENERATION_HASHES({ commit, getters }, generationHash?: string) {
+            let generationHashes = (getters['generationHashes'] as string[]) || [];
+            const defaults = Object.values(defaultGenerationHashes);
+            generationHash
+                ? (generationHashes = [...new Set([...generationHashes, ...defaults, generationHash])])
+                : (generationHashes = [...new Set([...generationHashes, ...defaults])]);
+            commit('generationHashes', generationHashes);
         },
         /// end-region scoped actions
     },

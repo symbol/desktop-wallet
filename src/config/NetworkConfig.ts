@@ -150,11 +150,26 @@ export const defaultMainnetNetworkConfig: NetworkConfig = {
     ],
 };
 
-const defaultNetworkConfig: Record<number, NetworkConfig> = {
-    152: defaultTestnetNetworkConfig,
-    104: defaultMainnetNetworkConfig,
+// const defaultNetworkConfig: Record<number, NetworkConfig> = {
+//     152: defaultTestnetNetworkConfig,
+//     104: defaultMainnetNetworkConfig,
+// };
+export const defaultGenerationHashes: Record<string, string> = {
+    TEST_NET: '3B5E1FA6445653C971A50687E75E6D09FB30481055E3990C84B25E9222DC1155',
+    MAIN_NET: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
 };
-
-const resolvedNetworkConfig: NetworkConfig = window['networkConfig'] || defaultNetworkConfig;
+export function getNetworkConfig(generationHash?: string): NetworkConfig {
+    const generationHashes = [
+        Object.values(defaultTestnetNetworkConfig.networkConfigurationDefaults)[18],
+        Object.values(defaultMainnetNetworkConfig.networkConfigurationDefaults)[18],
+    ];
+    switch (generationHash) {
+        case generationHashes[1]:
+            return defaultMainnetNetworkConfig;
+        default:
+            return defaultTestnetNetworkConfig;
+    }
+}
+const resolvedNetworkConfig: NetworkConfig = window['networkConfig'] || getNetworkConfig();
 console.log('networkConfig resolved!', resolvedNetworkConfig);
 export const networkConfig = resolvedNetworkConfig;

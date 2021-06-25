@@ -15,7 +15,7 @@
  */
 import { mapGetters } from 'vuex';
 import { Component, Vue } from 'vue-property-decorator';
-import { NetworkType, Password } from 'symbol-sdk';
+import { Password } from 'symbol-sdk';
 import VideoBackground from 'vue-responsive-video-background-player';
 
 // internal dependencies
@@ -45,6 +45,7 @@ import _ from 'lodash';
         ...mapGetters({
             currentProfile: 'profile/currentProfile',
             isAuthenticated: 'profile/isAuthenticated',
+            generationHash: 'network/generationHash',
         }),
     },
     components: {
@@ -69,8 +70,8 @@ export default class LoginPageTs extends Vue {
     /**
      * Profiles indexed by network type
      */
-    private profilesClassifiedByNetworkType: {
-        networkType: NetworkType;
+    private profilesClassifiedByGenerationHash: {
+        generationHash: string;
         profiles: ProfileModel[];
     }[] = [];
 
@@ -82,6 +83,8 @@ export default class LoginPageTs extends Vue {
      * @var {string}
      */
     public currentProfile: ProfileModel;
+
+    private generationHash: string;
 
     /**
      * Profiles repository
@@ -123,10 +126,9 @@ export default class LoginPageTs extends Vue {
         if (!this.profiles.length) {
             return;
         }
-
-        const profilesGroupedByNetworkType = _.groupBy(this.profiles, (p) => p.networkType);
-        this.profilesClassifiedByNetworkType = Object.values(profilesGroupedByNetworkType).map((profiles) => ({
-            networkType: profiles[0].networkType,
+        const profilesGroupedByGenerationHash = _.groupBy(this.profiles, (p) => p.generationHash);
+        this.profilesClassifiedByGenerationHash = Object.values(profilesGroupedByGenerationHash).map((profiles) => ({
+            generationHash: profiles[0].generationHash,
             profiles: profiles,
         }));
 
@@ -136,11 +138,11 @@ export default class LoginPageTs extends Vue {
 
     /**
      * Getter for network type label
-     * @param {NetworkType} networkType
+     * @param {GenerationHash} string
      * @return {string}
      */
-    public getNetworkTypeLabel(networkType: NetworkType): string {
-        return NetworkTypeHelper.getNetworkTypeLabel(networkType);
+    public getGenerationHashLabel(generationHash: string): string {
+        return NetworkTypeHelper.getGenerationHashLabel(generationHash);
     }
 
     /**
@@ -207,7 +209,7 @@ export default class LoginPageTs extends Vue {
             }
 
             // profile exists, fetch data
-            const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.networkType);
+            const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.generationHash);
 
             const knownAccounts: AccountModel[] = this.accountService.getKnownAccounts(profile.accounts);
             if (knownAccounts.length == 0) {

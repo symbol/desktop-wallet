@@ -27,7 +27,7 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 import FormRow from '@/components/FormRow/FormRow.vue';
 
 // configuration
-import { networkConfig } from '@/config';
+import { getNetworkConfig } from '@/config';
 import { NetworkType } from 'symbol-sdk';
 
 @Component({
@@ -41,6 +41,7 @@ import { NetworkType } from 'symbol-sdk';
         ...mapGetters({
             explorerUrl: 'app/explorerUrl',
             networkType: 'network/networkType',
+            generationHash: 'network/generationHash',
         }),
     },
 })
@@ -54,7 +55,7 @@ export class ExplorerUrlSetterTs extends Vue {
         default: true,
     })
     autoSubmit: boolean;
-
+    private generationHash: string;
     /**
      * Validation rules
      * @var {ValidationRuleset}
@@ -76,7 +77,7 @@ export class ExplorerUrlSetterTs extends Vue {
      */
     get defaultExplorerLinkList(): string[] {
         // @TODO
-        return [networkConfig[this.networkType].explorerUrl];
+        return [getNetworkConfig(this.generationHash).explorerUrl];
     }
 
     /**

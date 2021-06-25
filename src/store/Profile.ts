@@ -115,9 +115,12 @@ export default {
             commit('setAuthenticated', true);
 
             dispatch('diagnostic/ADD_DEBUG', 'Changing current profile to ' + currentProfile.profileName, { root: true });
+            const generationHash = currentProfile.generationHash;
+            const settings = new SettingService().getProfileSettings(currentProfile.profileName, generationHash);
 
-            const settings = new SettingService().getProfileSettings(currentProfile.profileName, currentProfile.networkType);
             dispatch('app/SET_SETTINGS', settings, { root: true });
+            dispatch('app/SET_GENERATION_HASHES', generationHash || undefined, { root: true });
+
             dispatch('addressBook/LOAD_ADDRESS_BOOK', null, { root: true });
 
             dispatch('network/SET_NETWORK_TYPE', currentProfile.networkType, { root: true });

@@ -31,7 +31,6 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { AccountService } from '@/services/AccountService';
-import { networkConfig } from '@/config';
 
 /// end-region custom types
 
@@ -48,6 +47,7 @@ import { networkConfig } from '@/config';
             generationHash: 'network/generationHash',
             currentProfile: 'profile/currentProfile',
             isConnected: 'network/isConnected',
+            generationHashes: 'app/generationHashes',
         }),
     },
 })
@@ -59,6 +59,7 @@ export class FormProfileCreationTs extends Vue {
      */
     public currentProfile: ProfileModel;
     private isConnected: boolean;
+    private generationHashes: string[];
     /**
      * Currently active profile
      * @see {Store.Profile}
@@ -71,6 +72,8 @@ export class FormProfileCreationTs extends Vue {
     created() {
         this.profileService = new ProfileService();
         this.formItems.networkType = NetworkType.MAIN_NET;
+        this.$store.dispatch('app/SET_GENERATION_HASHES');
+        this.formItems.generationHash = this.generationHashes[1];
         const { isLedger } = this.$route.meta;
         this.isLedger = isLedger;
     }
@@ -103,14 +106,15 @@ export class FormProfileCreationTs extends Vue {
         password: '',
         passwordAgain: '',
         hint: '',
+        generationHash: '',
         networkType: this.$store.getters['network/networkType'],
     };
 
     /**
-     * Network types
-     * @var {NetworkNodeEntry[]}
+     * GenerationHashes/Network types
+     * @var {string[]}
      */
-    public networkTypeList = NetworkTypeHelper.networkTypeList;
+    public generationHashList = NetworkTypeHelper.generationHashList;
 
     /**
      * Type the ValidationObserver refs
@@ -124,14 +128,14 @@ export class FormProfileCreationTs extends Vue {
 
     /// region computed properties getter/setter
     get nextPage() {
-        this.connect(this.formItems.networkType);
+        this.connect(this.formItems.networkType, this.formItems.generationHash);
         return this.$route.meta.nextPage;
     }
 
     /// end-region computed properties getter/setter
 
-    public connect(newNetworkType) {
-        this.$store.dispatch('network/CONNECT', { networkType: newNetworkType });
+    public connect(newNetworkType, newGenerationHash) {
+        this.$store.dispatch('network/CONNECT', { networkType: newNetworkType, generationHash: newGenerationHash });
     }
 
     /**
@@ -201,7 +205,9 @@ export class FormProfileCreationTs extends Vue {
     private persistAccountAndContinue() {
         // -  password stored as hash (never plain.)
         const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password));
-        const genHash = networkConfig[this.formItems.networkType].networkConfigurationDefaults.generationHash || this.generationHash;
+        this.formItems.generationHash === this.generationHashes[0]
+            ? (this.formItems.networkType = NetworkType.TEST_NET)
+            : (this.formItems.networkType = NetworkType.MAIN_NET);
         const profile: ProfileModel = {
             profileName: this.formItems.profileName,
             accounts: [],
@@ -209,7 +215,7 @@ export class FormProfileCreationTs extends Vue {
             password: passwordHash,
             hint: this.formItems.hint,
             networkType: this.formItems.networkType,
-            generationHash: genHash,
+            generationHash: this.formItems.generationHash,
             termsAndConditionsApproved: false,
             selectedNodeUrlToConnect: '',
         };

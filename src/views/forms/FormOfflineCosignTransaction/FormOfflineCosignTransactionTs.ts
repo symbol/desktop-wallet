@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Address, Account, NetworkType, CosignatureTransaction, AggregateTransaction } from 'symbol-sdk';
+import { Address, Account, CosignatureTransaction, AggregateTransaction } from 'symbol-sdk';
 import { Component, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
@@ -93,8 +93,8 @@ export class FormOfflineCosignTransactionTs extends FormTransactionBase {
     /**
      * Profiles indexed by network type
      */
-    private profilesClassifiedByNetworkType: {
-        networkType: NetworkType;
+    private profilesClassifiedByGenerationHash: {
+        generationHash: string;
         profiles: ProfileModel[];
     }[];
 
@@ -140,9 +140,9 @@ export class FormOfflineCosignTransactionTs extends FormTransactionBase {
             return;
         }
 
-        const profilesGroupedByNetworkType = _.groupBy(this.profiles, (p) => p.networkType);
-        this.profilesClassifiedByNetworkType = Object.values(profilesGroupedByNetworkType).map((profiles) => ({
-            networkType: profiles[0].networkType,
+        const profilesGroupedByGenerationHash = _.groupBy(this.profiles, (p) => p.generationHash);
+        this.profilesClassifiedByGenerationHash = Object.values(profilesGroupedByGenerationHash).map((profiles) => ({
+            generationHash: profiles[0].generationHash,
             profiles: profiles,
         }));
 
@@ -153,11 +153,11 @@ export class FormOfflineCosignTransactionTs extends FormTransactionBase {
 
     /**
      * Getter for network type label
-     * @param {NetworkType} networkType
+     * @param {GenerationHash} string
      * @return {string}
      */
-    public getNetworkTypeLabel(networkType: NetworkType): string {
-        return NetworkTypeHelper.getNetworkTypeLabel(networkType);
+    public getGenerationHashLabel(generationHash: string): string {
+        return NetworkTypeHelper.getGenerationHashLabel(generationHash);
     }
 
     public async onProfileNameChange() {
@@ -170,8 +170,7 @@ export class FormOfflineCosignTransactionTs extends FormTransactionBase {
 
         const settingService = new SettingService();
 
-        const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.networkType);
-
+        const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.generationHash);
         const knownAccounts: AccountModel[] = this.accountService.getKnownAccounts(profile.accounts);
 
         if (knownAccounts.length == 0) {

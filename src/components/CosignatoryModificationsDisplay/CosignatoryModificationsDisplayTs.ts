@@ -15,8 +15,6 @@
  */
 // external dependencies
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { mapGetters } from 'vuex';
-import { NetworkType } from 'symbol-sdk';
 import { ValidationProvider } from 'vee-validate';
 
 // child components
@@ -34,11 +32,6 @@ import CosignatoryModifications from '@/views/forms/FormMultisigAccountModificat
         ErrorTooltip,
         FormRow,
     },
-    computed: {
-        ...mapGetters({
-            networkType: 'network/networkType',
-        }),
-    },
 })
 export class CosignatoryModificationsDisplayTs extends Vue {
     /**
@@ -49,8 +42,6 @@ export class CosignatoryModificationsDisplayTs extends Vue {
         default: {},
     })
     cosignatoryModifications: CosignatoryModifications;
-
-    private networkType: NetworkType;
 
     get modifications(): {
         address: string;

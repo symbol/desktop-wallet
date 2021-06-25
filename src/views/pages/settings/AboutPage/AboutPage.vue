@@ -103,7 +103,7 @@ import { NetworkType } from 'symbol-sdk';
 import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 import FormLabel from '@/components/FormLabel/FormLabel.vue';
 // configuration
-import { appConfig } from '@/config';
+import { appConfig, getNetworkConfig } from '@/config';
 import { feesConfig } from '@/config';
 import { networkConfig } from '@/config';
 import packageConfig from '@/../package.json';
@@ -122,6 +122,7 @@ import { URLInfo } from '@/core/utils/URLInfo';
             networkModel: 'network/networkModel',
             networkType: 'network/networkType',
             currentPeer: 'network/currentPeer',
+            generationHash: 'network/generationHash',
         }),
     },
 })
@@ -141,7 +142,7 @@ export default class AboutPage extends Vue {
     public networkType: NetworkType;
 
     public isNetworkType(type): boolean {
-        return networkConfig[this.networkType].defaultNetworkType === type;
+        return getNetworkConfig(this.generationHash).defaultNetworkType === type;
     }
 
     public get generationHash(): string {

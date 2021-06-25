@@ -25,6 +25,7 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
             networkType: 'network/networkType',
             currentProfile: 'profile/currentProfile',
             currentSignerAccountInfo: 'account/currentSignerAccountInfo',
+            generationHash: 'network/generationHash',
         }),
     },
 })
@@ -75,6 +76,7 @@ export class NetworkNodeSelectorTs extends Vue {
 
     private hideList: boolean = false;
     private currentSignerAccountInfo: AccountInfo;
+    public generationHash: string;
     /**
      * Checks if the given node is eligible for harvesting
      * @protected
@@ -206,7 +208,7 @@ export class NetworkNodeSelectorTs extends Vue {
         if (this.includeRoles && this.includeRoles.length > 0) {
             // exclude ngl nodes that doesn't support harvesting
             return this.peerNodes.filter(
-                (node) => node.roles?.some((role) => this.isIncluded(role)) && node.networkIdentifier === this.networkType,
+                (node) => node.roles?.some((role) => this.isIncluded(role)) && node.networkGenerationHashSeed === this.generationHash,
             );
         }
         return this.peerNodes;

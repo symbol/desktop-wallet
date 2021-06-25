@@ -15,7 +15,7 @@
  */
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { MosaicId, NetworkType } from 'symbol-sdk';
+import { MosaicId } from 'symbol-sdk';
 import { ValidationProvider } from 'vee-validate';
 // internal dependencies
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
@@ -56,7 +56,6 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
             currentProfile: 'profile/currentProfile',
             currentAccount: 'account/currentAccount',
             knownAccounts: 'account/knownAccounts',
-            networkType: 'network/networkType',
             mosaics: 'mosaic/mosaics',
             networkMosaic: 'mosaic/networkMosaic',
             networkCurrency: 'mosaic/networkCurrency',
@@ -69,13 +68,6 @@ export class AccountSelectorPanelTs extends Vue {
      * The network currency.
      */
     public networkCurrency: NetworkCurrencyModel;
-
-    /**
-     * Currently active networkType
-     * @see {Store.Network}
-     * @var {NetworkType}
-     */
-    public networkType: NetworkType;
 
     /**
      * Currently active profile

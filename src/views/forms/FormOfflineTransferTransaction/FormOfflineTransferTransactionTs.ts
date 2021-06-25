@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Address, NetworkType, SignedTransaction } from 'symbol-sdk';
+import { Address, SignedTransaction } from 'symbol-sdk';
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // internal dependencies
@@ -84,10 +84,10 @@ export class FormOfflineTransferTransactionTs extends Vue {
     /**
      * Profiles indexed by network type
      */
-    private profilesClassifiedByNetworkType: {
-        networkType: NetworkType;
+    private profilesClassifiedByGenerationHash: {
+        generationHash: string;
         profiles: ProfileModel[];
-    }[];
+    }[] = [];
 
     private performingLogin = false;
 
@@ -147,9 +147,9 @@ export class FormOfflineTransferTransactionTs extends Vue {
             return;
         }
 
-        const profilesGroupedByNetworkType = _.groupBy(this.profiles, (p) => p.networkType);
-        this.profilesClassifiedByNetworkType = Object.values(profilesGroupedByNetworkType).map((profiles) => ({
-            networkType: profiles[0].networkType,
+        const profilesGroupedByGenerationHash = _.groupBy(this.profiles, (p) => p.generationHash);
+        this.profilesClassifiedByGenerationHash = Object.values(profilesGroupedByGenerationHash).map((profiles) => ({
+            generationHash: profiles[0].generationHash,
             profiles: profiles,
         }));
 
@@ -157,14 +157,13 @@ export class FormOfflineTransferTransactionTs extends Vue {
         this.formItems.currentProfileName = this.profiles[0].profileName;
         this.onProfileNameChange();
     }
-
     /**
      * Getter for network type label
-     * @param {NetworkType} networkType
+     * @param {GenerationHash} string
      * @return {string}
      */
-    public getNetworkTypeLabel(networkType: NetworkType): string {
-        return NetworkTypeHelper.getNetworkTypeLabel(networkType);
+    public getGenerationHashLabel(generationHash: string): string {
+        return NetworkTypeHelper.getGenerationHashLabel(generationHash);
     }
 
     /**
@@ -199,7 +198,7 @@ export class FormOfflineTransferTransactionTs extends Vue {
 
         const settingService = new SettingService();
 
-        const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.networkType);
+        const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.generationHash);
 
         const knownAccounts: AccountModel[] = this.accountService.getKnownAccounts(profile.accounts);
 

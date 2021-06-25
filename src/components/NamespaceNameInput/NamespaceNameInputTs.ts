@@ -15,8 +15,7 @@
  */
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { mapGetters } from 'vuex';
-import { NamespaceRegistrationType, NetworkType } from 'symbol-sdk';
+import { NamespaceRegistrationType } from 'symbol-sdk';
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 // child components
@@ -32,11 +31,6 @@ import FormRow from '@/components/FormRow/FormRow.vue';
         ErrorTooltip,
         FormRow,
     },
-    computed: {
-        ...mapGetters({
-            networkType: 'network/networkType',
-        }),
-    },
 })
 export class NamespaceNameInputTs extends Vue {
     @Prop({ default: null }) value: string;
@@ -45,12 +39,6 @@ export class NamespaceNameInputTs extends Vue {
     namespaceRegistrationType: NamespaceRegistrationType;
 
     @Prop({ default: true }) isNeedAutoFocus: boolean;
-
-    /**
-     * Current network type
-     * @var {NetworkType}
-     */
-    public networkType: NetworkType;
 
     /**
      * Validation rules

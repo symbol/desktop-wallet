@@ -14,7 +14,7 @@
  *
  */
 
-import { networkConfig } from '@/config';
+import { getNetworkConfig } from '@/config';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { NetworkModel } from '@/core/database/entities/NetworkModel';
 import { NetworkModelStorage } from '@/core/database/storage/NetworkModelStorage';
@@ -25,7 +25,6 @@ import { combineLatest, defer, EMPTY, from, Observable } from 'rxjs';
 import { catchError, flatMap, map, tap } from 'rxjs/operators';
 import { NetworkConfiguration, NetworkType, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk';
 import { OfflineRepositoryFactory } from '@/services/offline/OfflineRepositoryFactory';
-
 /**
  * The service in charge of loading and caching anything related to Network from Rest.
  * The cache is done by storing the payloads in SimpleObjectStorage.
@@ -55,12 +54,13 @@ export class NetworkService {
     public getNetworkModel(
         nodeUrl: string,
         defaultNetworkType: NetworkType = NetworkType.TEST_NET,
+        generationHash: string = '',
         isOffline = false,
     ): Observable<{
         networkModel: NetworkModel;
         repositoryFactory: RepositoryFactory;
     }> {
-        return from(this.createRepositoryFactory(nodeUrl, isOffline, defaultNetworkType)).pipe(
+        return from(this.createRepositoryFactory(nodeUrl, isOffline, generationHash)).pipe(
             flatMap(({ url, repositoryFactory }) => {
                 return repositoryFactory.getGenerationHash().pipe(
                     flatMap((generationHash) => {
@@ -70,10 +70,9 @@ export class NetworkService {
                             .getNetworkType()
                             .pipe(ObservableHelpers.defaultLast(defaultNetworkType));
                         const generationHashObservable = repositoryFactory.getGenerationHash();
-
                         const networkPropertiesObservable = networkRepository
                             .getNetworkProperties()
-                            .pipe(map((d) => this.toNetworkConfigurationModel(d, defaultNetworkType)));
+                            .pipe(map((d) => this.toNetworkConfigurationModel(d, generationHash)));
                         const nodeInfoObservable = nodeRepository.getNodeInfo();
 
                         const transactionFeesObservable = repositoryFactory.createNetworkRepository().getTransactionFees();
@@ -109,10 +108,10 @@ export class NetworkService {
     private createRepositoryFactory(
         url: string,
         isOffline = false,
-        networkType = NetworkType.TEST_NET,
+        generationHash = '',
     ): Observable<{ url: string; repositoryFactory: RepositoryFactory }> {
         // console.log(`Testing ${url}`);
-        const repositoryFactory = NetworkService.createRepositoryFactory(url, isOffline, networkType);
+        const repositoryFactory = NetworkService.createRepositoryFactory(url, isOffline, generationHash);
         return defer(() => {
             return repositoryFactory.getGenerationHash();
         }).pipe(
@@ -127,8 +126,8 @@ export class NetworkService {
         );
     }
 
-    private toNetworkConfigurationModel(dto: NetworkConfiguration, networkType: NetworkType): NetworkConfigurationModel {
-        const fileDefaults: NetworkConfigurationModel = networkConfig[networkType].networkConfigurationDefaults;
+    private toNetworkConfigurationModel(dto: NetworkConfiguration, generationHash: string): NetworkConfigurationModel {
+        const fileDefaults: NetworkConfigurationModel = getNetworkConfig(generationHash).networkConfigurationDefaults;
         const fromDto: NetworkConfigurationModel = {
             epochAdjustment: NetworkConfigurationHelpers.epochAdjustment(dto),
             maxMosaicDivisibility: NetworkConfigurationHelpers.maxMosaicDivisibility(dto),
@@ -160,9 +159,9 @@ export class NetworkService {
      * It creates the RepositoryFactory used to build the http repository/clients and listeners.
      * @param url the url.
      */
-    public static createRepositoryFactory(url: string, isOffline: boolean = false, networkType = NetworkType.TEST_NET): RepositoryFactory {
+    public static createRepositoryFactory(url: string, isOffline: boolean = false, generationHash: string = ''): RepositoryFactory {
         return isOffline
-            ? new OfflineRepositoryFactory(networkType)
+            ? new OfflineRepositoryFactory(generationHash)
             : new RepositoryFactoryHttp(url, {
                   websocketUrl: URLHelpers.httpToWsUrl(url) + '/ws',
                   websocketInjected: WebSocket,

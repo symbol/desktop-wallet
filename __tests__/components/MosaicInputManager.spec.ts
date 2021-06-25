@@ -1,3 +1,4 @@
+// @ts-ignore
 import { MosaicInputsManager } from '@/views/forms/FormTransferTransaction/MosaicInputsManager.ts';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 

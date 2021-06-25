@@ -14,9 +14,11 @@
  *
  */
 /// region custom types
+import { defaultGenerationHashes } from '@/config';
 import { NetworkType } from 'symbol-sdk';
 
 type NetworkNodeEntry = { value: NetworkType; label: string };
+type NetworkGenerationHashEntry = { value: string; label: string };
 
 export class NetworkTypeHelper {
     /**
@@ -26,7 +28,10 @@ export class NetworkTypeHelper {
         { value: NetworkType.MAIN_NET, label: 'Symbol Mainnet' },
         { value: NetworkType.TEST_NET, label: 'Symbol Testnet' },
     ];
-
+    public static generationHashList: NetworkGenerationHashEntry[] = [
+        { value: defaultGenerationHashes.MAIN_NET, label: 'Symbol Mainnet' },
+        { value: defaultGenerationHashes.TEST_NET, label: 'Symbol Testnet' },
+    ];
     /**
      * Getter for network type label
      * @param {NetworkType} networkType
@@ -34,6 +39,13 @@ export class NetworkTypeHelper {
      */
     public static getNetworkTypeLabel(networkType: NetworkType): string {
         const findType = NetworkTypeHelper.networkTypeList.find((n) => n.value === networkType);
+        if (findType === undefined) {
+            return '';
+        }
+        return findType.label;
+    }
+    public static getGenerationHashLabel(generationHash: string): string {
+        const findType = NetworkTypeHelper.generationHashList.find((n) => n.value === generationHash);
         if (findType === undefined) {
             return '';
         }

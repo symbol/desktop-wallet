@@ -42,12 +42,16 @@ const nodeRepository = instance(mockNodeRepository);
 
 when(mockRepoFactory.createNodeRepository()).thenReturn(nodeRepository);
 when(mockRepoFactory.getEpochAdjustment()).thenReturn(of(1573430400));
-when(mockRepoFactory.getNetworkType()).thenReturn(of(NetworkType.MIJIN_TEST));
+when(mockRepoFactory.getGenerationHash()).thenReturn(of('3B5E1FA6445653C971A50687E75E6D09FB30481055E3990C84B25E9222DC1155'));
 const repositoryFactory = instance(mockRepoFactory);
 
 describe('services/NodeService', () => {
     test('getNodes', async () => {
-        const peers = await nodeService.getNodes(repositoryFactory, realUrl, NetworkType.TEST_NET).pipe(toArray()).toPromise();
+        const generationHash = await repositoryFactory.getGenerationHash().toPromise();
+        const peers = await nodeService
+            .getNodes(repositoryFactory, realUrl, NetworkType.TEST_NET, generationHash)
+            .pipe(toArray())
+            .toPromise();
         console.log(JSON.stringify(peers, null, 2));
     });
 });

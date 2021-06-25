@@ -41,9 +41,10 @@ import { OfflineAccountRepository } from '@/services/offline/OfflineAccountRepos
 import { OfflineNamespaceRepository } from '@/services/offline/OfflineNamespaceRepository';
 import { OfflineMosaicRepository } from '@/services/offline/OfflineMosaicRepository';
 import { OfflineMultisigRepository } from '@/services/offline/OfflineMultisigRepository';
+import { getNetworkConfig } from '@/config';
 
 export class OfflineRepositoryFactory implements RepositoryFactory {
-    constructor(private readonly networkType: NetworkType) {}
+    constructor(private readonly genHash: string) {}
 
     createAccountRepository(): AccountRepository {
         return new OfflineAccountRepository();
@@ -89,11 +90,12 @@ export class OfflineRepositoryFactory implements RepositoryFactory {
     }
 
     createNetworkRepository(): NetworkRepository {
-        return new OfflineNetworkRepository(this.networkType);
+        const networkType = getNetworkConfig(this.genHash).defaultNetworkType;
+        return new OfflineNetworkRepository(networkType);
     }
 
     createNodeRepository(): NodeRepository {
-        return new OfflineNodeRepository(this.networkType);
+        return new OfflineNodeRepository(this.genHash);
     }
 
     createReceiptRepository(): ReceiptRepository {
@@ -126,7 +128,7 @@ export class OfflineRepositoryFactory implements RepositoryFactory {
     }
 
     getCurrencies(): Observable<NetworkCurrencies> {
-        return of(OfflineNetworkCurrencies(this.networkType));
+        return of(OfflineNetworkCurrencies(this.genHash));
     }
 
     getEpochAdjustment(): Observable<number> {
@@ -135,11 +137,12 @@ export class OfflineRepositoryFactory implements RepositoryFactory {
     }
 
     getGenerationHash(): Observable<string> {
-        return of(OfflineGenerationHash[this.networkType]);
+        return of(OfflineGenerationHash[this.genHash]);
     }
 
     getNetworkType(): Observable<NetworkType> {
-        return of(this.networkType);
+        const networkType = getNetworkConfig(this.genHash).defaultNetworkType;
+        return of(networkType);
     }
 
     getNodePublicKey(): Observable<string | undefined> {

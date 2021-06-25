@@ -14,11 +14,8 @@
  *
  */
 // configuration
-import { appConfig } from '@/config';
+import { appConfig, defaultGenerationHashes, getNetworkConfig } from '@/config';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
-
-import { networkConfig } from '@/config';
-import { NetworkType } from 'symbol-sdk';
 
 const { MIN_PASSWORD_LENGTH } = appConfig.constants;
 
@@ -41,7 +38,7 @@ export const createValidationRuleSet = ({
         mosaicId: 'required|mosaicId',
         message: `maxMessage:${maxMessageSize}`,
         namespaceDuration: `required|min_value:${
-            minNamespaceDuration / networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.blockGenerationTargetTime
+            minNamespaceDuration / getNetworkConfig(defaultGenerationHashes.TEST_NET).networkConfigurationDefaults.blockGenerationTargetTime
         }|maxNamespaceDuration`,
         // remove symbol from regex when rest https://github.com/nemtech/catapult-rest/issues/631 fixed
         namespaceName: {
@@ -73,4 +70,4 @@ export const createValidationRuleSet = ({
 
 // TODO ValidationRuleset needs to be created when the network configuration is resolved, UI needs
 // to use the resolved ValidationResulset ATM rules are using the hardocded ones
-export const ValidationRuleset = createValidationRuleSet(networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults);
+export const ValidationRuleset = createValidationRuleSet(getNetworkConfig(defaultGenerationHashes.TEST_NET).networkConfigurationDefaults);

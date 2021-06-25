@@ -7,7 +7,7 @@ import { ProfileService } from '@/services/ProfileService';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { AppStore } from '@/app/AppStore';
 // configuration
-import { networkConfig, appConfig } from '@/config';
+import { appConfig, defaultGenerationHashes, getNetworkConfig } from '@/config';
 import {
     AddressValidator,
     AliasValidator,
@@ -25,7 +25,7 @@ import { PositiveDecimalNumberValidator } from './validators/PositiveDecimalNumb
 // TODO CustomValidationRules needs to be created when the network configuration is resolved, UI
 // needs to use the resolved CustomValidationRules
 // ATM rules are using the hardcoded file
-const currentNetwork: NetworkConfigurationModel = networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults;
+const currentNetwork: NetworkConfigurationModel = getNetworkConfig(defaultGenerationHashes.TEST_NET).networkConfigurationDefaults;
 const { MIN_PASSWORD_LENGTH, DECIMAL_SEPARATOR } = appConfig.constants;
 
 export class CustomValidationRules {

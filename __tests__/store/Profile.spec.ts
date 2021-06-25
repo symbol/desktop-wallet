@@ -16,7 +16,7 @@
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import ProfileStore from '@/store/Profile';
 import flushPromises from 'flush-promises';
-import { NetworkType } from 'symbol-sdk';
+import { defaultGenerationHashes } from '@/config';
 
 describe('store/Profile', () => {
     describe('action "RESET_STATE" should', () => {
@@ -59,7 +59,7 @@ describe('store/Profile', () => {
             // prepare
             const commit = jest.fn();
             const dispatch = jest.fn();
-            const model = { networkType: NetworkType.TEST_NET } as ProfileModel;
+            const model = { generationHash: defaultGenerationHashes.TEST_NET } as ProfileModel;
             // act
             await ProfileStore.actions.SET_CURRENT_PROFILE({ commit, dispatch }, model);
 
