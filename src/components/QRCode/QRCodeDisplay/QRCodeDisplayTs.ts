@@ -17,7 +17,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 import { QRCode } from 'symbol-qr-library';
 import { of, Observable } from 'rxjs';
 import { PropType } from 'vue/types/options';
-import { pluck, concatMap } from 'rxjs/operators';
+import { pluck, concatMap, catchError } from 'rxjs/operators';
 import { UIHelpers } from '@/core/utils/UIHelpers';
 // resources
 // @ts-ignore
@@ -27,10 +27,12 @@ import failureIcon from '@/views/resources/img/monitor/failure.png';
     subscriptions() {
         const qrCodeBase64$ = this.$watchAsObservable('qrCode', {
             immediate: true,
-        }).pipe(
-            pluck('newValue'),
-            concatMap((args) => (args instanceof QRCode ? args.toBase64() : of(failureIcon))),
-        );
+        })
+            .pipe(
+                pluck('newValue'),
+                concatMap((args) => (args instanceof QRCode ? args.toBase64() : of(failureIcon))),
+            )
+            .pipe(catchError(() => of(failureIcon)));
         return { qrCodeBase64$ };
     },
 })
@@ -61,6 +63,11 @@ export default class QRCodeDisplayTs extends Vue {
     })
     public showDownload: boolean;
 
+    @Prop({
+        default: true,
+    })
+    public showInvalid: boolean;
+
     /**
      * base64 representation of qrcode
      * @type Obervable<string>
@@ -69,5 +76,9 @@ export default class QRCodeDisplayTs extends Vue {
 
     public copyAsText() {
         UIHelpers.copyToClipboard(this.qrCode?.toJSON());
+    }
+
+    public get isValidQR() {
+        return this.qrCodeBase64$ !== failureIcon;
     }
 }

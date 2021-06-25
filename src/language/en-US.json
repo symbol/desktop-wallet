@@ -15,7 +15,7 @@
     "access_my_profile": "Access my profile",
     "access_trezor": "Access Trezor",
     "access_trezor_account": "Access your Trezor account",
-    "access_your_ledger_account": "Open your Ledger profile",
+    "access_your_ledger_account": "Create a Ledger profile",
     "account_address": "Address",
     "ACCOUNT_LINK": "Account link",
     "account_management": "My accounts",
@@ -250,7 +250,7 @@
     "error_incorrect_url": "This is not a valid URL",
     "error_invalid_password": "This password is invalid",
     "error_new_namespace_duration_max_value": "The new namespace duration cannot be greater than {maxValue}",
-    "error_new_password_format": "The password should contain at least one letter and one number.",
+    "error_new_password_format": "The password must contain at least one letter and one number.",
     "error_peer_connection_went_wrong": "Something went wrong. Connection to the node {peerUrl} timed out",
     "error_peer_unreachable": "This node is unreachable.",
     "error_profile_does_not_exist": "Profile does not exist",
@@ -1121,5 +1121,6 @@
     "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 account",
     "show_details": "Show details",
     "hide_details": "Hide details",
-    "transaction_signed": "Signed Successfully"
+    "transaction_signed": "Signed Successfully",
+    "tooltip_mosaic_view_more": "And {count} more..."
 }

@@ -29,11 +29,10 @@
                     <form class="centered" onsubmit="event.preventDefault()" @keyup.enter="submit">
                         <input v-model="cipher" v-validate="'required'" data-vv-name="cipher" style="display: none;" />
                         <ErrorTooltip field-name="password">
-                            <input
+                            <PasswordInput
                                 v-model.lazy="password"
                                 v-focus
                                 v-validate="validation.previousPassword"
-                                type="password"
                                 data-vv-name="password"
                                 :data-vv-as="$t('password')"
                             />

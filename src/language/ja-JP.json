@@ -1121,5 +1121,6 @@
     "optin_postlaunch_tx_nis_address": "オプトイン済みのNEM NIS1アカウント",
     "show_details": "詳細を表示",
     "hide_details": "隠す",
-    "transaction_signed": "正常に署名されました"
+    "transaction_signed": "正常に署名されました",
+    "tooltip_mosaic_view_more": "そしてさらに{count}..."
 }

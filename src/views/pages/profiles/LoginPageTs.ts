@@ -32,6 +32,8 @@ import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
 import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue';
+// @ts-ignore
+import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
 // configuration
 import { SettingService } from '@/services/SettingService';
 import { SettingsModel } from '@/core/database/entities/SettingsModel';
@@ -39,7 +41,6 @@ import { AccountService } from '@/services/AccountService';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
 import { officialIcons } from '@/views/resources/Images';
 import _ from 'lodash';
-
 @Component({
     computed: {
         ...mapGetters({
@@ -54,6 +55,7 @@ import _ from 'lodash';
         ValidationObserver,
         LanguageSelector,
         VideoBackground,
+        PasswordInput,
     },
 })
 export default class LoginPageTs extends Vue {

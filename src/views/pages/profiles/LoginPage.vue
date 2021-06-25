@@ -79,7 +79,7 @@
                                 rules="required|min:8"
                             >
                                 <ErrorTooltip field-name="password" :errors="errors">
-                                    <input
+                                    <PasswordInput
                                         v-model="formItems.password"
                                         v-focus
                                         :class="[!profilesClassifiedByGenerationHash ? 'un_click' : '']"
