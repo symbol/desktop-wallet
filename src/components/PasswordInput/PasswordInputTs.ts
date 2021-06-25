@@ -7,8 +7,6 @@ import PasswordInput from './PasswordInput.vue';
 })
 export default class PasswordInputTs extends Vue {
     @Prop({ default: '' })
-    public value: string;
-    @Prop({ default: '' })
     public placeholder: string;
     @Prop({ default: 'input-size input-style' })
     public className: string;

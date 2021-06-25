@@ -1,6 +1,5 @@
 <template>
     <input
-        :value="value"
         onselectstart="return false"
         onpaste="return false"
         onCopy="return false"
