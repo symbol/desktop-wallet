@@ -170,6 +170,6 @@ export function getNetworkConfig(generationHash?: string): NetworkConfig {
             return defaultTestnetNetworkConfig;
     }
 }
-const resolvedNetworkConfig: NetworkConfig = window['networkConfig'] || getNetworkConfig();
+const resolvedNetworkConfig: NetworkConfig = window['networkConfig'];
 console.log('networkConfig resolved!', resolvedNetworkConfig);
 export const networkConfig = resolvedNetworkConfig;
