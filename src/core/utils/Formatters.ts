@@ -99,4 +99,17 @@ export class Formatters {
         }
         return arr.join(delimiter);
     }
+
+    /**
+     * Checks current locale separator
+     * @private
+     * @return {string}
+     */
+    public static getDecimalSeparator(locale): string {
+        // testing against current locale to figure out separator
+        const numberWithDecimalSeparator = 1.1;
+        return Intl.NumberFormat(locale)
+            .formatToParts(numberWithDecimalSeparator)
+            .find((part) => part.type === 'decimal').value;
+    }
 }

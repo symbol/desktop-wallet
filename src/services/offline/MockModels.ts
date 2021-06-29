@@ -33,7 +33,8 @@ export const OfflineGenerationHash = {
     [NetworkType.MAIN_NET]: defaultGenerationHashes.MAIN_NET,
 };
 
-export const OfflineTransactionFees = new TransactionFees(84587, 100, 1136363, 0, 0);
+// use 100 as min fee multiplier for offline transaction.
+export const OfflineTransactionFees = new TransactionFees(84587, 100, 1136363, 0, 100);
 
 export const OfflineNodeInfo = (networkType: NetworkType) =>
     new NodeInfo('pubkey', OfflineGenerationHash[networkType], 3000, networkType, 0, [], 'host', 'name');
@@ -50,8 +51,8 @@ export const OfflineNetworkProperties = {
         new ChainProperties(
             true,
             true,
-            getNetworkConfig(defaultGenerationHashes.TEST_NET).networkConfigurationDefaults.currencyMosaicId,
-            getNetworkConfig(defaultGenerationHashes.TEST_NET).networkConfigurationDefaults.harvestingMosaicId,
+            '0x' + getNetworkConfig(defaultGenerationHashes.TEST_NET).networkConfigurationDefaults.currencyMosaicId,
+            '0x' + getNetworkConfig(defaultGenerationHashes.TEST_NET).networkConfigurationDefaults.harvestingMosaicId,
             getNetworkConfig(defaultGenerationHashes.TEST_NET).networkConfigurationDefaults.blockGenerationTargetTime + 's',
             '3000',
             '180',
@@ -89,9 +90,9 @@ export const OfflineNetworkProperties = {
         new ChainProperties(
             true,
             true,
-            getNetworkConfig(defaultGenerationHashes.MAIN_NET).networkConfigurationDefaults.currencyMosaicId,
-            getNetworkConfig(defaultGenerationHashes.MAIN_NET).networkConfigurationDefaults.harvestingMosaicId,
-            getNetworkConfig(defaultGenerationHashes.MAIN_NET).networkConfigurationDefaults.blockGenerationTargetTime + 's',
+            '0x' + getNetworkConfig(defaultGenerationHashes.MAIN_NET).networkConfigurationDefaults.currencyMosaicId,
+            '0x' + getNetworkConfig(defaultGenerationHashes.MAIN_NET).networkConfigurationDefaults.harvestingMosaicId,
+            '0x' + getNetworkConfig(defaultGenerationHashes.MAIN_NET).networkConfigurationDefaults.blockGenerationTargetTime + 's',
             '3000',
             '180',
             '5',
