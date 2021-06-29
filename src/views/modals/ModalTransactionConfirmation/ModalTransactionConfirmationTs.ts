@@ -437,7 +437,7 @@ export class ModalTransactionConfirmationTs extends Vue {
 
     private async ledgerAccountAggregateTransactionOnSigner(values) {
         const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount, multisigAccount, stageTransactions, maxFee } = values;
-        this.$store.dispatch('network/SET_TRANSACTION_DEADLINE', 0, { root: true });
+        this.$store.dispatch('network/SET_TRANSACTION_DEADLINE', { root: true });
         const deadline = this.transactionDeadline;
         const aggregate = this.command.calculateSuggestedMaxFee(
             AggregateTransaction.createComplete(

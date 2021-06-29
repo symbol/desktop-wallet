@@ -28,6 +28,7 @@ import {
     Account,
     PublicAccount,
     SignedTransaction,
+    Deadline,
 } from 'symbol-sdk';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
@@ -344,7 +345,13 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * @return {TransferTransaction[]}
      */
     protected getTransactions(): TransferTransaction[] {
-        this.createDeadline();
+        let deadline: Deadline;
+        if (this.$route.fullPath.indexOf('offline') !== -1) {
+            deadline = this.createOfflineDeadline();
+        } else {
+            this.createDeadline();
+            deadline = this.transactionDeadline;
+        }
         const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[];
         const mosaics = this.formItems.attachedMosaics
             .filter((attachment) => attachment.uid) // filter out null values
@@ -359,7 +366,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             );
         return [
             TransferTransaction.create(
-                this.transactionDeadline,
+                deadline,
                 this.instantiatedRecipient,
                 mosaics.length ? mosaics : [],
                 this.formItems.encryptMessage ? this.encyptedMessage : PlainMessage.create(this.formItems.messagePlain || ''),
@@ -569,7 +576,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     triggerChange() {
         if (AddressValidator.validate(this.formItems.recipientRaw)) {
             this.transactions = this.getTransactions();
-            this.transactionSize = this.transactions[0].size;
+            this.transactionSize = this.transactions && this.transactions[0].size;
             // avoid error
             if (this.transactions && this.transactions[0].deadline) {
                 const data: ITransactionEntry[] = [];
@@ -790,5 +797,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     public onSignedOfflineTransaction(signedTransaction: SignedTransaction) {
         this.$emit('txSigned', signedTransaction);
+    }
+    protected createOfflineDeadline(deadlineInHours = 2): Deadline {
+        return Deadline.create(this.epochAdjustment, deadlineInHours);
     }
 }
