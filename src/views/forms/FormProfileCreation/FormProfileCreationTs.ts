@@ -32,7 +32,8 @@ import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { AccountService } from '@/services/AccountService';
 import { networkConfig } from '@/config';
-
+// @ts-ignore
+import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
 /// end-region custom types
 
 @Component({
@@ -42,6 +43,7 @@ import { networkConfig } from '@/config';
         ErrorTooltip,
         FormWrapper,
         FormRow,
+        PasswordInput,
     },
     computed: {
         ...mapGetters({

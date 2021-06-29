@@ -33,6 +33,7 @@ import {
 // internal dependencies
 import { Formatters } from '@/core/utils/Formatters';
 import { TimeHelpers } from '@/core/utils/TimeHelpers';
+import { MosaicModel } from '@/core/database/entities/MosaicModel';
 // child components
 // @ts-ignore
 import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDisplay.vue';
@@ -48,6 +49,11 @@ import { DateTimeFormatter } from '@js-joda/core';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { TransactionStatus as TransactionStatusEnum } from '@/core/transactions/TransactionStatus';
 
+export interface TooltipMosaics {
+    name: string;
+    relativeAmount: string;
+}
+
 @Component({
     components: {
         ActionDisplay,
@@ -60,6 +66,7 @@ import { TransactionStatus as TransactionStatusEnum } from '@/core/transactions/
         currentProfile: 'profile/currentProfile',
         currentAccount: 'account/currentAccount',
         currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
+        balanceMosaics: 'mosaic/balanceMosaics',
     }),
 })
 export class TransactionRowTs extends Vue {
@@ -117,6 +124,11 @@ export class TransactionRowTs extends Vue {
      * @type {AggregateTransaction}
      */
     private aggregateTransactionDetails: AggregateTransaction;
+    /**
+     * Get balance mosaics info.
+     * @type {AggregateTransaction}
+     */
+    private balanceMosaics: MosaicModel[];
     /**
      * Checks wether transaction is signed
      * @type {boolean}
@@ -181,20 +193,29 @@ export class TransactionRowTs extends Vue {
         return this.view.isIncoming;
     }
 
+    public getMosaicsIcon(): string {
+        return officialIcons.mosaics;
+    }
+
+    public getEnvelopeIcon(): string {
+        return officialIcons.envelope;
+    }
+
     /**
-     * Returns the amount to be shown. The first mosaic or the paid fee.
+     * Returns the XYM amount to be shown.
      */
     public getAmount(): number {
         if (this.transaction.type === TransactionType.TRANSFER) {
-            // We may prefer XYM over other mosaic if XYM is 2nd+
             const transferTransaction = this.transaction as TransferTransaction;
-            const amount = (transferTransaction.mosaics.length && transferTransaction.mosaics[0].amount.compact()) || 0;
+            const amount = transferTransaction.mosaics.find((mosaic) => mosaic.id.equals(this.networkMosaic)).amount.compact() || 0;
+
             if (!this.isIncomingTransaction()) {
                 return -amount;
             }
             return amount;
         }
-        return undefined;
+
+        return 0;
     }
 
     /**
@@ -213,9 +234,8 @@ export class TransactionRowTs extends Vue {
      */
     public getAmountMosaicId(): MosaicId | NamespaceId | undefined {
         if (this.transaction.type === TransactionType.TRANSFER) {
-            // We may prefer XYM over other mosaic if XYM is 2nd+
             const transferTransaction = this.transaction as TransferTransaction;
-            return (transferTransaction.mosaics.length && transferTransaction.mosaics[0].id) || undefined;
+            return transferTransaction.mosaics.find((mosaic) => mosaic.id.equals(this.networkMosaic)).id || undefined;
         }
         return undefined;
     }
@@ -235,11 +255,7 @@ export class TransactionRowTs extends Vue {
         // Multisig account can not sign
 
         const currentPubAccount = AccountModel.getObjects(this.currentAccount).publicAccount;
-        if (
-            this.transaction instanceof AggregateTransaction &&
-            this.transaction.type === TransactionType.AGGREGATE_BONDED &&
-            !this.transaction.signedByAccount(currentPubAccount)
-        ) {
+        if (this.transaction instanceof AggregateTransaction && this.transaction.type === TransactionType.AGGREGATE_BONDED) {
             if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
                 this.transactionSigningFlag = false;
                 return;
@@ -248,6 +264,10 @@ export class TransactionRowTs extends Vue {
                 this.aggregateTransactionDetails !== undefined &&
                 this.aggregateTransactionDetails.transactionInfo?.hash == this.transaction.transactionInfo?.hash
             ) {
+                if (this.aggregateTransactionDetails.signedByAccount(currentPubAccount)) {
+                    this.transactionSigningFlag = false;
+                    return;
+                }
                 const cosignList = [];
                 const cosignerAddresses = this.aggregateTransactionDetails.innerTransactions.map((t) => t.signer?.address);
                 this.aggregateTransactionDetails.innerTransactions.forEach((t) => {
@@ -281,6 +301,92 @@ export class TransactionRowTs extends Vue {
         }
         return;
     }
+
+    /**
+     * Check the transaction included message.
+     * @returns boolean
+     */
+    public hasMessage(): boolean {
+        if (this.transaction.type === TransactionType.TRANSFER) {
+            const transferTransaction = this.transaction as TransferTransaction;
+            const payload = transferTransaction.message.payload;
+            return typeof payload === 'string' && payload.length > 0;
+        }
+        return false;
+    }
+
+    /**
+     * Check the transaction included network mosaic (XYM).
+     * @returns boolean
+     */
+    public hasNetworkMosaic(): boolean {
+        if (this.transaction.type === TransactionType.TRANSFER) {
+            const transferTransaction = this.transaction as TransferTransaction;
+
+            return transferTransaction.mosaics.filter((mosaic) => mosaic.id.equals(this.networkMosaic)).length > 0;
+        }
+        return false;
+    }
+
+    /**
+     * Check the transaction included Non network mosaic (XYM).
+     * @returns boolean
+     */
+    public hasNonNativeMosaic(): boolean {
+        if (this.transaction.type === TransactionType.TRANSFER) {
+            const transferTransaction = this.transaction as TransferTransaction;
+
+            return transferTransaction.mosaics.filter((mosaic) => !mosaic.id.equals(this.networkMosaic)).length > 0;
+        }
+        return false;
+    }
+
+    /**
+     * Gets mosaics list excluded network mosaics.
+     * @returns
+     */
+    public nonNativeMosaicList(): TooltipMosaics[] {
+        if (this.transaction.type === TransactionType.TRANSFER) {
+            const transferTransaction = this.transaction as TransferTransaction;
+
+            return transferTransaction.mosaics
+                .filter((mosaic) => !mosaic.id.equals(this.networkMosaic))
+                .map((mosaic) => {
+                    const mosaicInfo = this.balanceMosaics.find((mosaicInfo) => mosaicInfo.mosaicIdHex === mosaic.id.toHex());
+
+                    if (mosaicInfo) {
+                        return {
+                            name: mosaicInfo.name || mosaicInfo.mosaicIdHex,
+                            relativeAmount: Formatters.formatNumber(mosaic.amount.compact() / Math.pow(10, mosaicInfo.divisibility)),
+                        };
+                    } else {
+                        return {
+                            name: mosaic.id.toHex(),
+                            relativeAmount: Formatters.formatNumber(mosaic.amount.compact()),
+                        };
+                    }
+                });
+        }
+        return [];
+    }
+
+    /**
+     * Gets transaction message payload.
+     * @returns string
+     */
+    public get messagePayload(): string {
+        if (this.transaction.type === TransactionType.TRANSFER) {
+            const transferTransaction = this.transaction as TransferTransaction;
+
+            if (transferTransaction.message.payload.length > 40) {
+                return `${transferTransaction.message.payload.slice(0, 40)}...`;
+            }
+            return transferTransaction.message.payload;
+        }
+
+        return '';
+    }
+
     private get hasMissSignatures(): boolean {
         //merkleComponentHash ==='000000000000...' present that the transaction is still lack of signature
         return (
@@ -290,13 +396,19 @@ export class TransactionRowTs extends Vue {
         );
     }
 
+    /**
+     * Default set top 5 mosaics.
+     */
+    private get numberOfShowMosicsTooltips(): number {
+        return 5;
+    }
+
     @Watch('transaction', { immediate: true })
     private async fetchTransaction() {
         if (
             this.transaction instanceof AggregateTransaction &&
             this.transaction.type === TransactionType.AGGREGATE_BONDED &&
-            this.hasMissSignatures &&
-            !this.transaction.signedByAccount(AccountModel.getObjects(this.currentAccount).publicAccount)
+            this.hasMissSignatures
         ) {
             this.transactionSigningFlag = true;
             try {

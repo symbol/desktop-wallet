@@ -68,7 +68,7 @@ import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 // @ts-ignore
-import AccountSignerSelector from '@/components/AccountSignerSelector/AccountSignerSelector.vue';
+const AccountSignerSelector = () => import('@/components/AccountSignerSelector/AccountSignerSelector.vue');
 
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
@@ -353,6 +353,18 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             deadline = this.transactionDeadline;
         }
         const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[];
+
+        // Push network currency info for offline transaction format amount to absolute
+        if (mosaicsInfo.length === 0) {
+            mosaicsInfo.push({
+                mosaicIdHex: this.networkCurrency.mosaicIdHex,
+                divisibility: this.networkCurrency.divisibility,
+                name: this.networkCurrency.namespaceIdFullname,
+                isCurrencyMosaic: true,
+                balance: 0,
+            } as MosaicModel);
+        }
+
         const mosaics = this.formItems.attachedMosaics
             .filter((attachment) => attachment.uid) // filter out null values
             .map(
