@@ -11,7 +11,7 @@ import { networkConfig, appConfig } from '@/config';
 import {
     AddressValidator,
     AliasValidator,
-    MaxAmountValidator,
+    MaxRelativeAmountValidator,
     MaxDecimalsValidator,
     MaxMessageValidator,
     PublicKeyValidator,
@@ -51,9 +51,12 @@ export class CustomValidationRules {
             params: ['maxDecimalNumber'],
         });
 
-        extend('maxAmount', {
-            validate: (value) => MaxAmountValidator.validate(value),
-            message: (_fieldName: string, values: Values) => `${i18n.t('max_amount_error', values)}`,
+        extend('maxRelativeAmount', {
+            validate: (value, { maxRelativeAmount }: any) => {
+                return MaxRelativeAmountValidator.validate(value, maxRelativeAmount);
+            },
+            message: (_fieldName: string, values: Values) => `${i18n.t('max_amount_error', { ...values })}`,
+            params: ['maxRelativeAmount'],
         });
 
         extend('maxMessage', {

@@ -16,14 +16,14 @@
 import { Validator, staticImplements } from './Validator';
 
 @staticImplements<Validator>()
-export class MaxAmountValidator {
+export class MaxRelativeAmountValidator {
     /**
      * Validates the max amount of the mosaic supply. eg: 9,000,000,000
      * @static
      * @param {*} relativeAmount
      * @returns {boolean}
      */
-    public static validate(relativeAmount: string): boolean {
-        return Number(relativeAmount) <= 9_000_000_000;
+    public static validate(relativeAmount: string, maxRelativeAmount: number): boolean {
+        return Number(relativeAmount) <= maxRelativeAmount;
     }
 }
