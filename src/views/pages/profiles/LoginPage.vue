@@ -77,12 +77,11 @@
                                 rules="required|min:8"
                             >
                                 <ErrorTooltip field-name="password" :errors="errors">
-                                    <input
+                                    <PasswordInput
                                         v-model="formItems.password"
                                         v-focus
-                                        :class="[!profilesClassifiedByNetworkType ? 'un_click' : '']"
+                                        :class-name="[!profilesClassifiedByNetworkType ? 'un_click' : '']"
                                         :placeholder="$t('please_enter_your_account_password')"
-                                        type="password"
                                         :disabled="!profilesClassifiedByNetworkType || performingLogin"
                                     />
                                 </ErrorTooltip>
@@ -106,7 +105,7 @@
                                         }
                                     "
                                 >
-                                    {{ $t('create_a_new_account') }}?
+                                    {{ $t('create_a_new_account') }}
                                 </span>
                             </div>
                             <div v-if="formItems.hasHint && !!getPasswordHint().length" class="hint">

@@ -32,7 +32,8 @@ import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
 import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { AccountService } from '@/services/AccountService';
 import { networkConfig } from '@/config';
-
+// @ts-ignore
+import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
 /// end-region custom types
 
 @Component({
@@ -42,6 +43,7 @@ import { networkConfig } from '@/config';
         ErrorTooltip,
         FormWrapper,
         FormRow,
+        PasswordInput,
     },
     computed: {
         ...mapGetters({
@@ -176,6 +178,7 @@ export class FormProfileCreationTs extends Vue {
                 case 27904:
                     this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_opened_app');
                     return;
+                case 25871:
                 case 27264:
                     this.$store.dispatch('notification/ADD_ERROR', 'ledger_not_using_xym_app');
                     return;

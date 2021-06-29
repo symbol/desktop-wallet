@@ -23,6 +23,9 @@ export default class AccountLinks extends AccountMultisigGraphTs {}
         font-family: @symbolFont;
         font-size: @normalFont;
         color: @purpleDark;
+        white-space: pre-line;
+        line-height: 0.6;
+        padding: 6px 0;
     }
 }
 </style>

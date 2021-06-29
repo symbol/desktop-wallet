@@ -172,6 +172,7 @@
     "cosignature_qr_action_desc": "トランザクション詳細ページに進み、署名してください",
     "create_a_new_account": "プロファイルを新規作成",
     "create_a_new_profile": "プロファイルを新規作成",
+    "create_mnemonic_passphrase": "ニーモニックパスフレーズを作成する",
     "create_lock_check_pw_remind": "2つのパスワードが一致しません",
     "create_lock_pw_remind": "パスワード設定エラー",
     "create_lock_pw_txt_remind": "パスワードヒントのエラー",
@@ -546,7 +547,8 @@
     "import": "インポート",
     "import_address_book": "アドレス帳をインポート",
     "import_mnemonic": "ニーモニックのインポート",
-    "import_mnemonic_passphrase_create_profile": "ニーモニックパス語群をインポートしてアカウントを作成",
+    "import_profile": "プロファイルのインポート",
+    "import_mnemonic_passphrase": "ニーモニックパスフレーズをインポートする",
     "import_private_key": "秘密鍵のインポート",
     "import_private_key_account_successfully": "おめでとう！秘密鍵アカウントが正常にインポートされました。",
     "import_private_key_account_successfully_title_tips": "現在のプロファイルは秘密鍵から作成されています。他のアカウントを追加することはできません。快適な体験と旅をお楽しみください。",
@@ -984,6 +986,7 @@
     "transaction_descriptor_17220": "ネームスペースメタデータ",
     "transaction_descriptor_17230": "モザイクエイリアス",
     "transaction_descriptor_17232": "アカウント操作制限",
+    "transaction_descriptor_harvesting": "デリゲートハーベスティング",
     "transaction_details": "トランザクション詳細",
     "transaction_expired": "トランザクション期限切れ",
     "transaction_has_cosignature": "連署名の受信",
@@ -1118,5 +1121,7 @@
     "optin_postlaunch_tx_completed_amount": "受け取った枚数",
     "optin_postlaunch_tx_nis_address": "オプトイン済みのNEM NIS1アカウント",
     "show_details": "詳細を表示",
-    "hide_details": "隠す"
+    "hide_details": "隠す",
+    "transaction_signed": "正常に署名されました",
+    "tooltip_mosaic_view_more": "そしてさらに{count}..."
 }

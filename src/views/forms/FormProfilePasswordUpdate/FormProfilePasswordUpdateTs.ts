@@ -15,7 +15,7 @@
  */
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { Password, Crypto } from 'symbol-sdk';
+import { Password, Crypto, Account } from 'symbol-sdk';
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
 import { ProfileService } from '@/services/ProfileService';
@@ -33,7 +33,8 @@ import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
-
+// @ts-ignore
+import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
 @Component({
     components: {
         ValidationObserver,
@@ -42,6 +43,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
         FormWrapper,
         FormRow,
         ModalFormProfileUnlock,
+        PasswordInput,
     },
     computed: {
         ...mapGetters({

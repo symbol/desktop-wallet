@@ -211,10 +211,11 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     private activating = false;
     private feesConfig: {
-        median: number;
         fast: number;
+        median: number;
         slow: number;
         slowest: number;
+        free: number;
     };
     /**
      * Current account owned mosaics
@@ -268,7 +269,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 this.formItems.nodeModel = { nodePublicKey: '' } as NodeModel;
             }
         } else {
-            this.formItems.nodeModel = { nodePublicKey: '' } as NodeModel;
+            // Check account is belong to node operator.
+            this.formItems.nodeModel = this.currentSignerHarvestingModel?.selectedHarvestingNode
+                ? this.currentSignerHarvestingModel.selectedHarvestingNode
+                : ({ nodePublicKey: '' } as NodeModel);
         }
     }
 
