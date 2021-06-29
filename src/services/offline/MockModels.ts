@@ -33,7 +33,8 @@ export const OfflineGenerationHash = {
     [NetworkType.MAIN_NET]: networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.generationHash,
 };
 
-export const OfflineTransactionFees = new TransactionFees(84587, 100, 1136363, 0, 0);
+// use 100 as min fee multiplier for offline transaction.
+export const OfflineTransactionFees = new TransactionFees(84587, 100, 1136363, 0, 100);
 
 export const OfflineNodeInfo = (networkType: NetworkType) =>
     new NodeInfo('pubkey', OfflineGenerationHash[networkType], 3000, networkType, 0, [], 'host', 'name');
@@ -50,8 +51,8 @@ export const OfflineNetworkProperties = {
         new ChainProperties(
             true,
             true,
-            networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.currencyMosaicId,
-            networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.harvestingMosaicId,
+            '0x' + networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.currencyMosaicId,
+            '0x' + networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.harvestingMosaicId,
             networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.blockGenerationTargetTime + 's',
             '3000',
             '180',
@@ -89,8 +90,8 @@ export const OfflineNetworkProperties = {
         new ChainProperties(
             true,
             true,
-            networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.currencyMosaicId,
-            networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.harvestingMosaicId,
+            '0x' + networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.currencyMosaicId,
+            '0x' + networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.harvestingMosaicId,
             networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.blockGenerationTargetTime + 's',
             '3000',
             '180',
