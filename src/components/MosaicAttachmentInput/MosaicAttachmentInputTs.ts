@@ -25,6 +25,7 @@ import AmountInput from '@/components/AmountInput/AmountInput.vue';
 import ButtonRemove from '@/components/ButtonRemove/ButtonRemove.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
+import { Formatters } from '@/core/utils/Formatters';
 
 @Component({
     components: {
@@ -79,7 +80,7 @@ export class MosaicAttachmentInputTs extends Vue {
      */
     protected get chosenValue(): { mosaicHex: string; amount: string } {
         if (navigator.languages != undefined) {
-            const decimalSeparator = this.getDecimalSeparator(navigator.languages[0]);
+            const decimalSeparator = Formatters.getDecimalSeparator(navigator.languages[0]);
             if (decimalSeparator !== ',') {
                 this.mosaicAttachment.amount = this.mosaicAttachment.amount.replace(',', '');
             }
@@ -158,17 +159,5 @@ export class MosaicAttachmentInputTs extends Vue {
     @Watch('mosaicAttachment')
     public onMosaicAttachmentChange(mosaicAttachment: { mosaicHex: string; amount: string }) {
         this.relativeAmount = mosaicAttachment.amount;
-    }
-    /**
-     * Checks current locale separator
-     * @private
-     * @return {string}
-     */
-    private getDecimalSeparator(locale): string {
-        // testing against current locale to figure out separator
-        const numberWithDecimalSeparator = 1.1;
-        return Intl.NumberFormat(locale)
-            .formatToParts(numberWithDecimalSeparator)
-            .find((part) => part.type === 'decimal').value;
     }
 }
