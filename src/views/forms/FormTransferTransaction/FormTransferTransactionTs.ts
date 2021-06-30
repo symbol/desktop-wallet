@@ -586,7 +586,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
 
     triggerChange() {
-        if (AddressValidator.validate(this.formItems.recipientRaw)) {
+        this.createDeadline();
+        if (AddressValidator.validate(this.formItems.recipientRaw) && this.transactionDeadline) {
             this.transactions = this.getTransactions();
             this.transactionSize = this.transactions && this.transactions[0].size;
             // avoid error
