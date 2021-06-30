@@ -20,67 +20,47 @@ import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorag
 import { VersionedModel } from '@/core/database/entities/VersionedModel';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import { NodeModelStorage } from '@/core/database/storage/NodeModelStorage';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
+
+const fakeProfile: ProfileModel = {
+    profileName: 'fakeName',
+    generationHash: 'fakeGenHash',
+    hint: 'fakeHint',
+    networkType: NetworkType.TEST_NET,
+    password: 'fakePassword',
+    seed: 'fakeSeed',
+    accounts: [],
+    termsAndConditionsApproved: true,
+    selectedNodeUrlToConnect: 'fakeNode',
+};
+
+const fakeNode: NodeModel = {
+    url: 'fakeNodeUrl',
+    friendlyName: 'fakeNode',
+    isDefault: false,
+    networkType: NetworkType.TEST_NET,
+};
 
 describe('storage/ProfileModelStorage.spec ==>', () => {
     describe('constructor() should', () => {
-        test('Should upgrade testnet only on v8', () => {
+        test('Should save nodes by profile name', () => {
             const nodes = {
-                version: 8,
-                data: [
-                    {
-                        url: 'http://someMainnet.symbolblockchain.io:3000',
-                        friendlyName: 'ngl-someMainnet-403',
-                        isDefault: true,
-                        networkType: NetworkType.MAIN_NET,
-                        publicKey: 'EF1209DC3C42B6450BEF658D404252DF2E26784CECD35FAEB19D929AE030A198',
-                        nodePublicKey: 'B87704DB1310FC59C91A1858DBDCFC67289363C18A67E10AFC2DCD26458B5D47',
-                    },
-                    {
-                        url: 'http://someOldtestet.symbolblockchain.io:3000',
-                        friendlyName: 'ngl-someOldtestet-001',
-                        isDefault: true,
-                        networkType: NetworkType.TEST_NET,
-                    },
-                    {
-                        url: 'http://someOldtestet2.symbolblockchain.io:3000',
-                        friendlyName: 'ngl-someOldtestet2-002',
-                        isDefault: true,
-                        networkType: NetworkType.TEST_NET,
-                    },
-                    {
-                        url: 'http://somePrivate.symbolblockchain.io:3000',
-                        friendlyName: 'ngl-somePrivate-002',
-                        isDefault: true,
-                        networkType: NetworkType.PRIVATE_TEST,
-                    },
-                ],
+                version: 10,
+                data: {
+                    [fakeProfile.profileName]: [fakeNode],
+                },
             };
-            const delegate = new SimpleObjectStorage<VersionedModel<NodeModel[]>>(
+            const delegate = new SimpleObjectStorage<VersionedModel<Record<string, NodeModel[]>>>(
                 'node',
                 new ObjectStorageBackend({
                     node: JSON.stringify(nodes),
                 }),
             );
             const storage = new NodeModelStorage(delegate);
-            const migratedData = storage.get();
-            const expected = [
-                {
-                    url: 'http://someMainnet.symbolblockchain.io:3000',
-                    friendlyName: 'ngl-someMainnet-403',
-                    isDefault: true,
-                    networkType: NetworkType.MAIN_NET,
-                    publicKey: 'EF1209DC3C42B6450BEF658D404252DF2E26784CECD35FAEB19D929AE030A198',
-                    nodePublicKey: 'B87704DB1310FC59C91A1858DBDCFC67289363C18A67E10AFC2DCD26458B5D47',
-                },
-                {
-                    url: 'http://somePrivate.symbolblockchain.io:3000',
-                    friendlyName: 'ngl-somePrivate-002',
-                    isDefault: true,
-                    networkType: NetworkType.PRIVATE_TEST,
-                },
-            ];
-            expect(migratedData).toEqual(expected);
-            expect(delegate.get()).toEqual({ version: 9, data: migratedData });
+            const storedData = storage.get();
+            expect(storedData).toEqual({
+                [fakeProfile.profileName]: [fakeNode],
+            });
         });
     });
 });

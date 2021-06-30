@@ -18,6 +18,7 @@ import { NodeService } from '@/services/NodeService';
 import { toArray } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { instance, mock, when } from 'ts-mockito';
+import { ProfileModel } from '@/core/database/entities/ProfileModel';
 
 const nodeService = new NodeService();
 const realUrl = 'http://api-01.us-west-1.symboldev.network:3000';
@@ -45,9 +46,21 @@ when(mockRepoFactory.getEpochAdjustment()).thenReturn(of(1573430400));
 when(mockRepoFactory.getNetworkType()).thenReturn(of(NetworkType.MIJIN_TEST));
 const repositoryFactory = instance(mockRepoFactory);
 
+const fakeProfile: ProfileModel = {
+    profileName: 'fakeName',
+    generationHash: 'fakeGenHash',
+    hint: 'fakeHint',
+    networkType: NetworkType.TEST_NET,
+    password: 'fakePassword',
+    seed: 'fakeSeed',
+    accounts: [],
+    termsAndConditionsApproved: true,
+    selectedNodeUrlToConnect: 'fakeNode',
+};
+
 describe('services/NodeService', () => {
     test('getNodes', async () => {
-        const peers = await nodeService.getNodes(repositoryFactory, realUrl, NetworkType.TEST_NET).pipe(toArray()).toPromise();
+        const peers = await nodeService.getNodes(fakeProfile, repositoryFactory, realUrl).pipe(toArray()).toPromise();
         console.log(JSON.stringify(peers, null, 2));
     });
 });
