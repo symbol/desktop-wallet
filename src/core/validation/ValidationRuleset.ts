@@ -33,9 +33,7 @@ export const createValidationRuleSet = ({
         address: 'required|address|addressNetworkType:currentProfile',
         profilePassword: 'required|profilePassword',
         addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentProfile',
-        amount: `positiveDecimal|maxDecimals:${maxMosaicDivisibility}|maxRelativeAmount:${
-            maxMosaicAtomicUnits / Math.pow(10, maxMosaicDivisibility)
-        }`,
+        amount: `positiveDecimal|maxDecimals:${maxMosaicDivisibility}|maxRelativeAmount:${maxMosaicAtomicUnits}`,
         confirmPassword: 'required|confirmPassword:@newPassword',
         divisibility: 'required|min_value:0|max_value:6|integer',
         duration: `required|min_value:0|max_value:${maxMosaicDuration}`,
