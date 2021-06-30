@@ -77,11 +77,12 @@
                                 rules="required|min:8"
                             >
                                 <ErrorTooltip field-name="password" :errors="errors">
-                                    <PasswordInput
+                                    <input
                                         v-model="formItems.password"
                                         v-focus
-                                        :class-name="[!profilesClassifiedByNetworkType ? 'un_click' : '']"
+                                        :class="[!profilesClassifiedByNetworkType ? 'un_click' : '']"
                                         :placeholder="$t('please_enter_your_account_password')"
+                                        type="password"
                                         :disabled="!profilesClassifiedByNetworkType || performingLogin"
                                     />
                                 </ErrorTooltip>
