@@ -599,6 +599,7 @@
     "logout": "登出",
     "low_fee_warning_message": "少于建议费用的交易可能不会被接受并最终到期",
     "max_approval_amount_more_than_10": "最小删除账户审批数不可大于10",
+    "max_amount_error": "{_field_} 数量不可超过 {maxRelativeAmount}.",
     "max_decimal_number_error": "{_field_} 字段最多 {maxDecimalNumber} 位小数或更少。",
     "max_message_length_error": "{_field_} 栏位不得超过 {maxMessageNumber} 个字元",
     "positive_decimal_error": "只允许使用数字和\"{decimalSeparator}\"",
