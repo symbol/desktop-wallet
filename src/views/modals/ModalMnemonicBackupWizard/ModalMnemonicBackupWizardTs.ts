@@ -14,11 +14,7 @@
  *
  */
 import { Component, Vue } from 'vue-property-decorator';
-// @ts-ignore
-import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
 @Component({
-    components: {
-        PasswordInput,
-    },
+    components: {},
 })
 export class ModalMnemonicBackupWizardTs extends Vue {}
