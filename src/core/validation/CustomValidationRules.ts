@@ -52,11 +52,21 @@ export class CustomValidationRules {
         });
 
         extend('maxRelativeAmount', {
-            validate: (value, { maxRelativeAmount }: any) => {
+            validate: (value, { maxMosaicAtomicUnits, maxMosaicDivisibility }: any) => {
+                const maxRelativeAmount =
+                    maxMosaicDivisibility === 0 ? maxMosaicAtomicUnits : maxMosaicAtomicUnits / Math.pow(10, maxMosaicDivisibility);
                 return MaxRelativeAmountValidator.validate(value, maxRelativeAmount);
             },
-            message: (_fieldName: string, values: Values) => `${i18n.t('max_amount_error', { ...values })}`,
-            params: ['maxRelativeAmount'],
+            message: (_fieldName: string, values: Values) =>
+                `${i18n.t('max_amount_error', {
+                    ...values,
+                    maxRelativeAmount: `${
+                        values['maxMosaicAtomicUnits'] === 0
+                            ? values['maxMosaicAtomicUnits']
+                            : values['maxMosaicAtomicUnits'] / Math.pow(10, values['maxMosaicDivisibility'])
+                    }`,
+                })}`,
+            params: ['maxMosaicAtomicUnits', 'maxMosaicDivisibility'],
         });
 
         extend('maxMessage', {
