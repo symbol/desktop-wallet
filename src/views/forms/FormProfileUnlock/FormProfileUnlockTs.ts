@@ -97,7 +97,7 @@ export class FormProfileUnlockTs extends Vue {
 
     public mounted(): void {
         if (this.focus) {
-            this.$nextTick().then(() => (this.$refs['passwordInput'] as any).$el.focus());
+            this.$nextTick().then(() => (this.$refs['passwordInput'] as any).focus());
         }
     }
 
