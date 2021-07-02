@@ -27,11 +27,21 @@ extend('positiveDecimal', {
     message: () => i18n.t('positive_decimal_error', { decimalSeparator: appConfig.constants.DECIMAL_SEPARATOR }).toString(),
 });
 extend('maxRelativeAmount', {
-    validate: (value, { maxRelativeAmount }: any) => {
+    validate: (value, { maxMosaicAtomicUnits, maxMosaicDivisibility }: any) => {
+        const maxRelativeAmount =
+            maxMosaicDivisibility === 0 ? maxMosaicAtomicUnits : maxMosaicAtomicUnits / Math.pow(10, maxMosaicDivisibility);
         return MaxRelativeAmountValidator.validate(value, maxRelativeAmount);
     },
-    message: (_fieldName: string, values: Values) => `${i18n.t('max_amount_error', values)}`,
-    params: ['maxRelativeAmount'],
+    message: (_fieldName: string, values: Values) =>
+        `${i18n.t('max_amount_error', {
+            ...values,
+            maxRelativeAmount: `${
+                values['maxMosaicAtomicUnits'] === 0
+                    ? values['maxMosaicAtomicUnits']
+                    : values['maxMosaicAtomicUnits'] / Math.pow(10, values['maxMosaicDivisibility'])
+            }`,
+        })}`,
+    params: ['maxMosaicAtomicUnits', 'maxMosaicDivisibility'],
 });
 const localVue = createLocalVue();
 localVue.component('ValidationProvider', ValidationProvider);
@@ -100,6 +110,11 @@ describe('AmountInput', () => {
         expect(falseResult.valid).toBeFalsy();
         const rightResult = await validate('10.123456', rule);
         expect(rightResult.valid).toBeTruthy();
+
+        const falseResultMaxRelativeAmount = await validate('89999999990', rule);
+        expect(falseResultMaxRelativeAmount.valid).toBeFalsy();
+        const rightResultMaxRelativeAmount = await validate('8999999999', rule);
+        expect(rightResultMaxRelativeAmount.valid).toBeTruthy();
     });
     test("divisibility of the mosaic '534CD11F6D984B4B' is 5", async () => {
         wrapper2.setProps({
@@ -111,5 +126,10 @@ describe('AmountInput', () => {
         expect(falseResult.valid).toBeFalsy();
         const rightResult = await validate('10.12345', rule);
         expect(rightResult.valid).toBeTruthy();
+
+        const falseResultMaxRelativeAmount = await validate('899999999900', rule);
+        expect(falseResultMaxRelativeAmount.valid).toBeFalsy();
+        const rightResultMaxRelativeAmount = await validate('89999999990', rule);
+        expect(rightResultMaxRelativeAmount.valid).toBeTruthy();
     });
 });

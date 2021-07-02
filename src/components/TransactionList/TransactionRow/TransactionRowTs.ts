@@ -29,6 +29,7 @@ import {
     TransactionType,
     TransferTransaction,
     TransactionStatus,
+    MessageType,
 } from 'symbol-sdk';
 // internal dependencies
 import { Formatters } from '@/core/utils/Formatters';
@@ -378,10 +379,15 @@ export class TransactionRowTs extends Vue {
         if (this.transaction.type === TransactionType.TRANSFER) {
             const transferTransaction = this.transaction as TransferTransaction;
 
-            if (transferTransaction.message.payload.length > 40) {
-                return `${transferTransaction.message.payload.slice(0, 40)}...`;
+            if (transferTransaction.message.type === MessageType.EncryptedMessage) {
+                return `${this.$t('encrypted_message')}`;
+            } else {
+                if (transferTransaction.message.payload.length > 40) {
+                    return `${transferTransaction.message.payload.slice(0, 40)}...`;
+                }
+
+                return transferTransaction.message.payload;
             }
-            return transferTransaction.message.payload;
         }
 
         return '';
