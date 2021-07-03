@@ -84,7 +84,9 @@ import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/
             networkConfiguration: 'network/networkConfiguration',
             transactionFees: 'network/transactionFees',
             isOfflineMode: 'network/isOfflineMode',
-            transactionDeadline: 'network/transactionDeadlinee',
+            simpleTransactionDeadline: 'network/simpleTransactionDeadline',
+            aggregateTransactionDeadline: 'network/aggregateTransactionDeadline',
+            hashLockTransactionDeadline: 'network/hashLockTransactionDeadline',
         }),
     },
 })
@@ -182,7 +184,9 @@ export class ModalTransactionConfirmationTs extends Vue {
     protected transactionFees: TransactionFees;
 
     protected isOfflineMode: boolean;
-    private transactionDeadline: Deadline;
+    private simpleTransactionDeadline: Deadline;
+    private aggregateTransactionDeadline: Deadline;
+    private hashLockTransactionDeadline: Deadline;
     /**
      * Type the ValidationObserver refs
      * @type {{
@@ -222,6 +226,8 @@ export class ModalTransactionConfirmationTs extends Vue {
 
     public async mounted() {
         this.stagedTransactions = await this.command.resolveTransactions().toPromise();
+        // console.log(this.stagedTransactions);
+        // console.log(this.stagedTransactions[1].deadline.toLocalDateTime(this.networkConfiguration.epochAdjustment));
     }
     /**
      * Reset the form with properties
@@ -438,7 +444,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     private async ledgerAccountAggregateTransactionOnSigner(values) {
         const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount, multisigAccount, stageTransactions, maxFee } = values;
         this.$store.dispatch('network/SET_TRANSACTION_DEADLINE', { root: true });
-        const deadline = this.transactionDeadline;
+        const deadline = this.simpleTransactionDeadline;
         const aggregate = this.command.calculateSuggestedMaxFee(
             AggregateTransaction.createComplete(
                 deadline,
@@ -470,7 +476,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     private async ledgerAccountMultisigTransactionOnSigner(values) {
         const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount, multisigAccount, stageTransactions, maxFee } = values;
         await this.$store.dispatch('network/SET_TRANSACTION_DEADLINE', 48, { root: true });
-        const aggregateDeadline = this.transactionDeadline;
+        const aggregateDeadline = this.aggregateTransactionDeadline;
         const aggregate = this.command.calculateSuggestedMaxFee(
             AggregateTransaction.createBonded(
                 aggregateDeadline,
@@ -487,7 +493,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             });
 
         await this.$store.dispatch('network/SET_TRANSACTION_DEADLINE', 6, { root: true });
-        const hashLockDeadline = this.transactionDeadline;
+        const hashLockDeadline = this.hashLockTransactionDeadline;
 
         const hashLock = this.command.calculateSuggestedMaxFee(
             LockFundsTransaction.create(

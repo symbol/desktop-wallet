@@ -97,7 +97,9 @@ interface NetworkState {
     connectingToNodeInfo: ConnectingToNodeInfo;
     isOfflineMode: boolean;
     feesConfig: any;
-    transactionDeadline: Deadline;
+    simpleTransactionDeadline: Deadline;
+    aggregateTransactionDeadline: Deadline;
+    hashLockTransactionDeadline: Deadline;
 }
 
 const initialNetworkState: NetworkState = {
@@ -122,7 +124,9 @@ const initialNetworkState: NetworkState = {
     connectingToNodeInfo: undefined,
     isOfflineMode: false,
     feesConfig: undefined,
-    transactionDeadline: undefined,
+    simpleTransactionDeadline: undefined,
+    aggregateTransactionDeadline: undefined,
+    hashLockTransactionDeadline: undefined,
 };
 
 export default {
@@ -150,7 +154,9 @@ export default {
         connectingToNodeInfo: (state: NetworkState) => state.connectingToNodeInfo,
         isOfflineMode: (state: NetworkState) => state.isOfflineMode,
         feesConfig: (state: NetworkState) => state.feesConfig,
-        transactionDeadline: (state: NetworkState) => state.transactionDeadline,
+        simpleTransactionDeadline: (state: NetworkState) => state.simpleTransactionDeadline,
+        aggregateTransactionDeadline: (state: NetworkState) => state.aggregateTransactionDeadline,
+        hashLockTransactionDeadline: (state: NetworkState) => state.hashLockTransactionDeadline,
     },
     mutations: {
         setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -226,8 +232,14 @@ export default {
         setFeesConfig: (state: NetworkState, feesConfig: {}) => {
             Vue.set(state, 'feesConfig', feesConfig);
         },
-        transactionDeadline: (state: NetworkState, transactionDeadline: Deadline) => {
-            Vue.set(state, 'transactionDeadline', transactionDeadline);
+        simpleTransactionDeadline: (state: NetworkState, simpleTransactionDeadline: Deadline) => {
+            Vue.set(state, 'simpleTransactionDeadline', simpleTransactionDeadline);
+        },
+        aggregateTransactionDeadline: (state: NetworkState, aggregateTransactionDeadline: Deadline) => {
+            Vue.set(state, 'aggregateTransactionDeadline', aggregateTransactionDeadline);
+        },
+        hashLockTransactionDeadline: (state: NetworkState, hashLockTransactionDeadline: Deadline) => {
+            Vue.set(state, 'hashLockTransactionDeadline', hashLockTransactionDeadline);
         },
     },
     actions: {
@@ -263,7 +275,7 @@ export default {
             commit('setConnected', false);
             commit('connectingToNodeInfo', undefined);
             commit('setFeesConfig', undefined);
-            commit('transactionDeadline', undefined);
+            commit('simpleTransactionDeadline', undefined);
         },
 
         async CONNECT(
@@ -550,7 +562,22 @@ export default {
         async SET_TRANSACTION_DEADLINE({ commit, getters }, deadlineInHours = 2) {
             const repositoryFactory: RepositoryFactory = getters['repositoryFactory'] as RepositoryFactory;
             const deadline = await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime(deadlineInHours);
-            commit('transactionDeadline', deadline);
+            switch (deadlineInHours) {
+                case 2:
+                    commit('simpleTransactionDeadline', deadline);
+                    break;
+                case 6:
+                    commit('hashLockTransactionDeadline', deadline);
+                    break;
+                case 48 || 24:
+                    commit('aggregateTransactionDeadline', deadline);
+                    break;
+                case 0:
+                    commit('simpleTransactionDeadline', undefined);
+                    commit('hashLockTransactionDeadline', undefined);
+                    commit('aggregateTransactionDeadline', undefined);
+                    break;
+            }
             return deadline;
         },
         // TODO :: re-apply that behavior if red screen issue fixed

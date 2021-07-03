@@ -349,8 +349,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         if (this.$route.fullPath.indexOf('offline') !== -1) {
             deadline = this.createOfflineDeadline();
         } else {
-            this.createDeadline();
-            deadline = this.transactionDeadline;
+            deadline = !this.isMultisigMode() ? this.simpleTransactionDeadline : this.aggregateTransactionDeadline;
         }
         const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[];
 
@@ -586,8 +585,16 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
 
     triggerChange() {
-        this.createDeadline();
-        if (AddressValidator.validate(this.formItems.recipientRaw) && this.transactionDeadline) {
+        this.isMultisigMode() ? this.createDeadline(48) && this.createDeadline(6) : this.createDeadline(2);
+        console.log(
+            this.simpleTransactionDeadline && this.simpleTransactionDeadline.toLocalDateTime(this.epochAdjustment),
+            this.aggregateTransactionDeadline && this.aggregateTransactionDeadline.toLocalDateTime(this.epochAdjustment),
+            this.hashLockTransactionDeadline && this.hashLockTransactionDeadline.toLocalDateTime(this.epochAdjustment),
+        );
+        if (
+            AddressValidator.validate(this.formItems.recipientRaw) &&
+            (this.simpleTransactionDeadline || this.aggregateTransactionDeadline)
+        ) {
             this.transactions = this.getTransactions();
             this.transactionSize = this.transactions && this.transactions[0].size;
             // avoid error

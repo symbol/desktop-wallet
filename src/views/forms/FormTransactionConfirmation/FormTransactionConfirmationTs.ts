@@ -40,7 +40,9 @@ import { TransactionCommand } from '@/services/TransactionCommand';
     computed: {
         ...mapGetters({
             currentAccount: 'account/currentAccount',
-            transactionDeadline: 'network/transactionDeadline',
+            simpleTransactionDeadline: 'network/simpleTransactionDeadline',
+            aggregateTransactionDeadline: 'network/aggregateTransactionDeadline',
+            hashLockTransactionDeadline: 'network/hashLockTransactionDeadline',
         }),
     },
 })
@@ -49,7 +51,9 @@ export class FormTransactionConfirmationTs extends Vue {
         required: true,
     })
     public command: TransactionCommand;
-    private transactionDeadline: Deadline;
+    private simpleTransactionDeadline: Deadline;
+    private aggregateTransactionDeadline: Deadline;
+    private hashLockTransactionDeadline: Deadline;
     /**
      * Whether to hide submit button
      */

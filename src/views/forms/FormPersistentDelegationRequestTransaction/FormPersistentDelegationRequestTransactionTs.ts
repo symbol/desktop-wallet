@@ -31,6 +31,7 @@ import {
     Password,
     Crypto,
     TransactionType,
+    Deadline,
 } from 'symbol-sdk';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
@@ -396,7 +397,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 return this.toMultiSigAggregate(txs, maxFee, transactionSigner);
             } else {
                 this.createDeadline();
-                const deadline = this.transactionDeadline;
+                const deadline = this.simpleTransactionDeadline;
                 const aggregate = this.calculateSuggestedMaxFee(
                     AggregateTransaction.createComplete(
                         deadline,
@@ -418,7 +419,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     public toMultiSigAggregate(txs: Transaction[], maxFee, transactionSigner: TransactionSigner) {
         this.createDeadline(48);
-        const deadline = this.transactionDeadline;
+        const deadline = this.aggregateTransactionDeadline as Deadline;
         const aggregate = this.calculateSuggestedMaxFee(
             AggregateTransaction.createBonded(
                 deadline,
@@ -431,7 +432,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return transactionSigner.signTransaction(aggregate, this.generationHash).pipe(
             map((signedAggregateTransaction) => {
                 this.createDeadline(6);
-                const hashLockDeadline = this.transactionDeadline;
+                const hashLockDeadline = this.hashLockTransactionDeadline;
                 const hashLock = this.calculateSuggestedMaxFee(
                     LockFundsTransaction.create(
                         hashLockDeadline,
@@ -462,12 +463,12 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public getPersistentDelegationRequestTransaction(
         transactionSigner: TransactionSigner = this.tempTransactionSigner,
     ): Observable<Transaction[]> {
+        const deadlineInHours = this.isMultisigMode() ? 24 : 2;
         const maxFee = UInt64.fromUint(this.formItems.maxFee) || UInt64.fromUint(this.feesConfig.fast);
-        this.isMultisigMode() ? this.createDeadline(24) : this.createDeadline();
-
+        this.createDeadline(deadlineInHours);
         if (this.action !== HarvestingAction.STOP) {
             const persistentDelegationReqTx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-                this.transactionDeadline,
+                deadlineInHours === 2 ? this.simpleTransactionDeadline : this.aggregateTransactionDeadline,
                 this.remoteAccountPrivateKey || this.newRemoteAccount.privateKey,
                 this.vrfPrivateKey || this.newVrfKeyAccount.privateKey,
                 this.formItems.nodeModel.nodePublicKey,

@@ -162,7 +162,7 @@ export default {
                 return;
             }
             await dispatch('network/SET_TRANSACTION_DEADLINE', { root: true });
-            const deadline = rootGetters['network/transactionDeadline'] as Deadline;
+            const deadline = rootGetters['network/simpleTransactionDeadline'] as Deadline;
 
             const metadataService = new MetadataService();
             const metadataTransaction = await metadataService
