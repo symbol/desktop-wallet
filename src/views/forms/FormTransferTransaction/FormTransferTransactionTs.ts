@@ -517,7 +517,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                     id: new MosaicId(info.mosaicIdHex), // XXX resolve mosaicId from namespaceId
                     mosaicHex: info.mosaicIdHex, // XXX resolve mosaicId from namespaceId
                     name: info.name,
-                    amount: (mosaic.amount.compact() / Math.pow(10, info.divisibility)).toLocaleString(undefined, {
+                    amount: (Number(mosaic.amount.toString()) / Math.pow(10, info.divisibility)).toLocaleString(undefined, {
                         maximumFractionDigits: info.divisibility,
                     }),
                     uid: Math.floor(Math.random() * 10e6), // used to index dynamic inputs

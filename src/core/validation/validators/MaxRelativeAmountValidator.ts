@@ -14,6 +14,8 @@
  *
  */
 import { Validator, staticImplements } from './Validator';
+import { appConfig } from '@/config';
+const { DECIMAL_SEPARATOR } = appConfig.constants;
 
 @staticImplements<Validator>()
 export class MaxRelativeAmountValidator {
@@ -24,6 +26,9 @@ export class MaxRelativeAmountValidator {
      * @returns {boolean}
      */
     public static validate(relativeAmount: string, maxRelativeAmount: number): boolean {
-        return Number(relativeAmount) <= maxRelativeAmount;
+        // Check on the locale decimal separator.
+        return DECIMAL_SEPARATOR === ','
+            ? Number(relativeAmount.replace(DECIMAL_SEPARATOR, '.')) <= maxRelativeAmount
+            : Number(relativeAmount) <= maxRelativeAmount;
     }
 }
