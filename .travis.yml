@@ -27,7 +27,8 @@ jobs:
       script: npm run lint
       os: linux
 
-    - name: unit tests
+    - stage: test
+      name: unit tests
       script: npm run test
       os: linux
 
@@ -37,11 +38,11 @@ jobs:
       if: branch = env(DEV_BRANCH) AND type = push
       os: linux
 
-    - stage: alpha
-      script: npm run release:all
-      name: build desktop artifacts
-      if: branch = env(DEV_BRANCH) AND type = push
-      os: linux
+#     - stage: alpha
+#       script: npm run release:all
+#       name: build desktop artifacts
+#       if: branch = env(DEV_BRANCH) AND type = push
+#       os: linux
 
     - stage: release
       name: publish release docker
