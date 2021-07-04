@@ -586,14 +586,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     triggerChange() {
         this.isMultisigMode() ? this.createDeadline(48) && this.createDeadline(6) : this.createDeadline(2);
-        console.log(
-            this.simpleTransactionDeadline && this.simpleTransactionDeadline.toLocalDateTime(this.epochAdjustment),
-            this.aggregateTransactionDeadline && this.aggregateTransactionDeadline.toLocalDateTime(this.epochAdjustment),
-            this.hashLockTransactionDeadline && this.hashLockTransactionDeadline.toLocalDateTime(this.epochAdjustment),
-        );
         if (
             AddressValidator.validate(this.formItems.recipientRaw) &&
-            (this.simpleTransactionDeadline || this.aggregateTransactionDeadline)
+            ((!this.isMultisigMode() && this.simpleTransactionDeadline) ||
+                (this.isMultisigMode() && this.aggregateTransactionDeadline && this.hashLockTransactionDeadline))
         ) {
             this.transactions = this.getTransactions();
             this.transactionSize = this.transactions && this.transactions[0].size;

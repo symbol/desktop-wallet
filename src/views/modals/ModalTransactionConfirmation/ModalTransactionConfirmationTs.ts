@@ -226,8 +226,6 @@ export class ModalTransactionConfirmationTs extends Vue {
 
     public async mounted() {
         this.stagedTransactions = await this.command.resolveTransactions().toPromise();
-        // console.log(this.stagedTransactions);
-        // console.log(this.stagedTransactions[1].deadline.toLocalDateTime(this.networkConfiguration.epochAdjustment));
     }
     /**
      * Reset the form with properties
