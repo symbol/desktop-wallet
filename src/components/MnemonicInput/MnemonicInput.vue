@@ -15,6 +15,10 @@
             />
         </div>
         <ButtonCopyToClipboard v-if="showCopyButton" v-model="waitingCopyString" class="copy-button" />
+
+        <Button v-else type="text" class="copy-button" @click="handleClickPaste()">
+            {{ $t('mnemonic_paste') }}
+        </Button>
     </div>
 </template>
 <script lang="ts">

@@ -131,8 +131,15 @@ export class MnemonicInputTs extends Vue {
     }
 
     handlePaste(e: ClipboardEvent) {
-        console.log('paste');
         this.handleSeed(e.clipboardData.getData('text').toString());
+    }
+
+    /**
+     * @description: use for button click to paste.
+     */
+    async handleClickPaste() {
+        const text = await navigator.clipboard.readText();
+        this.handleSeed(text);
     }
 
     /**
