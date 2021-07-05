@@ -74,6 +74,13 @@ export class MnemonicInputTs extends Vue {
     }
 
     /**
+     * @description: show copy button if words array is max.
+     */
+    public get showCopyButton(): boolean {
+        return this.wordsArray.length >= 24;
+    }
+
+    /**
      * @description: add word to the wordsArray
      */
     addWord() {
@@ -124,6 +131,7 @@ export class MnemonicInputTs extends Vue {
     }
 
     handlePaste(e: ClipboardEvent) {
+        console.log('paste');
         this.handleSeed(e.clipboardData.getData('text').toString());
     }
 

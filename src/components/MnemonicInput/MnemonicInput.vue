@@ -14,7 +14,7 @@
                 @keydown.delete="deleteWord"
             />
         </div>
-        <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" />
+        <ButtonCopyToClipboard v-if="showCopyButton" v-model="waitingCopyString" class="copy-button" />
     </div>
 </template>
 <script lang="ts">
