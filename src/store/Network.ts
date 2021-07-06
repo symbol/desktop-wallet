@@ -276,6 +276,8 @@ export default {
             commit('connectingToNodeInfo', undefined);
             commit('setFeesConfig', undefined);
             commit('simpleTransactionDeadline', undefined);
+            commit('hashLockTransactionDeadline', undefined);
+            commit('aggregateTransactionDeadline', undefined);
         },
 
         async CONNECT(
