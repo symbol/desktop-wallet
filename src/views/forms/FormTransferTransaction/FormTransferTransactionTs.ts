@@ -67,7 +67,7 @@ import ProtectedPrivateKeyDisplay from '@/components/ProtectedPrivateKeyDisplay/
 // @ts-ignore
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 // @ts-ignore
-import AccountSignerSelector from '@/components/AccountSignerSelector/AccountSignerSelector.vue';
+const AccountSignerSelector = () => import('@/components/AccountSignerSelector/AccountSignerSelector.vue');
 
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
@@ -243,10 +243,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
     private plainMessage: string;
     private feesConfig: {
-        median: number;
         fast: number;
+        median: number;
         slow: number;
         slowest: number;
+        free: number;
     };
     private transactionSize: number = 0;
     /**
@@ -344,6 +345,18 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     protected getTransactions(): TransferTransaction[] {
         const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[];
+
+        // Push network currency info for offline transaction format amount to absolute
+        if (mosaicsInfo.length === 0) {
+            mosaicsInfo.push({
+                mosaicIdHex: this.networkCurrency.mosaicIdHex,
+                divisibility: this.networkCurrency.divisibility,
+                name: this.networkCurrency.namespaceIdFullname,
+                isCurrencyMosaic: true,
+                balance: 0,
+            } as MosaicModel);
+        }
+
         const mosaics = this.formItems.attachedMosaics
             .filter((attachment) => attachment.uid) // filter out null values
             .map(
@@ -497,7 +510,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                     id: new MosaicId(info.mosaicIdHex), // XXX resolve mosaicId from namespaceId
                     mosaicHex: info.mosaicIdHex, // XXX resolve mosaicId from namespaceId
                     name: info.name,
-                    amount: (mosaic.amount.compact() / Math.pow(10, info.divisibility)).toLocaleString(undefined, {
+                    amount: (Number(mosaic.amount.toString()) / Math.pow(10, info.divisibility)).toLocaleString(undefined, {
                         maximumFractionDigits: info.divisibility,
                     }),
                     uid: Math.floor(Math.random() * 10e6), // used to index dynamic inputs

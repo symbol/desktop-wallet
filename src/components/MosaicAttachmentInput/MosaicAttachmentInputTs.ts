@@ -25,6 +25,7 @@ import AmountInput from '@/components/AmountInput/AmountInput.vue';
 import ButtonRemove from '@/components/ButtonRemove/ButtonRemove.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
+import { Formatters } from '@/core/utils/Formatters';
 
 @Component({
     components: {
@@ -78,6 +79,12 @@ export class MosaicAttachmentInputTs extends Vue {
      * @type {{mosaicHex: string, amount: number}}
      */
     protected get chosenValue(): { mosaicHex: string; amount: string } {
+        if (navigator.languages != undefined) {
+            const decimalSeparator = Formatters.getDecimalSeparator(navigator.languages[0]);
+            if (decimalSeparator !== ',') {
+                this.mosaicAttachment.amount = this.mosaicAttachment.amount.replace(',', '');
+            }
+        }
         return this.mosaicAttachment;
     }
 

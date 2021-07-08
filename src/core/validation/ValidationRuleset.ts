@@ -33,7 +33,7 @@ export const createValidationRuleSet = ({
         address: 'required|address|addressNetworkType:currentProfile',
         profilePassword: 'required|profilePassword',
         addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentProfile',
-        amount: `positiveDecimal|maxDecimals:${maxMosaicDivisibility}`,
+        amount: `positiveDecimal|maxDecimals:${maxMosaicDivisibility}|maxRelativeAmount:${[maxMosaicAtomicUnits, maxMosaicDivisibility]}`,
         confirmPassword: 'required|confirmPassword:@newPassword',
         divisibility: 'required|min_value:0|max_value:6|integer',
         duration: `required|min_value:0|max_value:${maxMosaicDuration}`,
@@ -43,9 +43,10 @@ export const createValidationRuleSet = ({
         namespaceDuration: `required|min_value:${
             minNamespaceDuration / networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.blockGenerationTargetTime
         }|maxNamespaceDuration`,
+        // remove symbol from regex when rest https://github.com/nemtech/catapult-rest/issues/631 fixed
         namespaceName: {
             required: true,
-            regex: '^[a-z0-9]{1}[a-z0-9-_]{0,63}$',
+            regex: '^(?!symbol$)([a-z0-9]{1}[a-z0-9-_]{0,63})$',
         },
         subNamespaceName: {
             required: true,

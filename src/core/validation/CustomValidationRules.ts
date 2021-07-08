@@ -11,16 +11,17 @@ import { networkConfig, appConfig } from '@/config';
 import {
     AddressValidator,
     AliasValidator,
+    MaxRelativeAmountValidator,
     MaxDecimalsValidator,
     MaxMessageValidator,
     PublicKeyValidator,
+    PositiveDecimalNumberValidator,
     UrlValidator,
 } from './validators';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { Values } from 'vue-i18n';
-import { PositiveDecimalNumberValidator } from './validators/PositiveDecimalNumberValidator';
 
 // TODO CustomValidationRules needs to be created when the network configuration is resolved, UI
 // needs to use the resolved CustomValidationRules
@@ -48,6 +49,24 @@ export class CustomValidationRules {
             },
             message: (_fieldName: string, values: Values) => `${i18n.t('max_decimal_number_error', values)}`,
             params: ['maxDecimalNumber'],
+        });
+
+        extend('maxRelativeAmount', {
+            validate: (value, { maxMosaicAtomicUnits, maxMosaicDivisibility }: any) => {
+                const maxRelativeAmount =
+                    maxMosaicDivisibility === 0 ? maxMosaicAtomicUnits : maxMosaicAtomicUnits / Math.pow(10, maxMosaicDivisibility);
+                return MaxRelativeAmountValidator.validate(value, maxRelativeAmount);
+            },
+            message: (_fieldName: string, values: Values) =>
+                `${i18n.t('max_amount_error', {
+                    ...values,
+                    maxRelativeAmount: `${
+                        values['maxMosaicAtomicUnits'] === 0
+                            ? values['maxMosaicAtomicUnits']
+                            : values['maxMosaicAtomicUnits'] / Math.pow(10, values['maxMosaicDivisibility'])
+                    }`,
+                })}`,
+            params: ['maxMosaicAtomicUnits', 'maxMosaicDivisibility'],
         });
 
         extend('maxMessage', {

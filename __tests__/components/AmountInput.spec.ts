@@ -9,9 +9,8 @@ import flushPromises from 'flush-promises';
 import VueI18n, { Values } from 'vue-i18n';
 import i18n from '@/language/index';
 import { StandardValidationRules } from '@/core/validation/StandardValidationRules';
-import { MaxDecimalsValidator } from '@/core/validation/validators';
+import { MaxDecimalsValidator, PositiveDecimalNumberValidator, MaxRelativeAmountValidator } from '@/core/validation/validators';
 import { appConfig } from '@/config';
-import { PositiveDecimalNumberValidator } from '@/core/validation/validators/PositiveDecimalNumberValidator';
 
 StandardValidationRules.register();
 appConfig.constants.DECIMAL_SEPARATOR = '.';
@@ -26,6 +25,23 @@ extend('maxDecimals', {
 extend('positiveDecimal', {
     validate: (value) => PositiveDecimalNumberValidator.validate(value),
     message: () => i18n.t('positive_decimal_error', { decimalSeparator: appConfig.constants.DECIMAL_SEPARATOR }).toString(),
+});
+extend('maxRelativeAmount', {
+    validate: (value, { maxMosaicAtomicUnits, maxMosaicDivisibility }: any) => {
+        const maxRelativeAmount =
+            maxMosaicDivisibility === 0 ? maxMosaicAtomicUnits : maxMosaicAtomicUnits / Math.pow(10, maxMosaicDivisibility);
+        return MaxRelativeAmountValidator.validate(value, maxRelativeAmount);
+    },
+    message: (_fieldName: string, values: Values) =>
+        `${i18n.t('max_amount_error', {
+            ...values,
+            maxRelativeAmount: `${
+                values['maxMosaicAtomicUnits'] === 0
+                    ? values['maxMosaicAtomicUnits']
+                    : values['maxMosaicAtomicUnits'] / Math.pow(10, values['maxMosaicDivisibility'])
+            }`,
+        })}`,
+    params: ['maxMosaicAtomicUnits', 'maxMosaicDivisibility'],
 });
 const localVue = createLocalVue();
 localVue.component('ValidationProvider', ValidationProvider);
@@ -94,6 +110,11 @@ describe('AmountInput', () => {
         expect(falseResult.valid).toBeFalsy();
         const rightResult = await validate('10.123456', rule);
         expect(rightResult.valid).toBeTruthy();
+
+        const falseResultMaxRelativeAmount = await validate('89999999990', rule);
+        expect(falseResultMaxRelativeAmount.valid).toBeFalsy();
+        const rightResultMaxRelativeAmount = await validate('8999999999', rule);
+        expect(rightResultMaxRelativeAmount.valid).toBeTruthy();
     });
     test("divisibility of the mosaic '534CD11F6D984B4B' is 5", async () => {
         wrapper2.setProps({
@@ -105,5 +126,10 @@ describe('AmountInput', () => {
         expect(falseResult.valid).toBeFalsy();
         const rightResult = await validate('10.12345', rule);
         expect(rightResult.valid).toBeTruthy();
+
+        const falseResultMaxRelativeAmount = await validate('899999999900', rule);
+        expect(falseResultMaxRelativeAmount.valid).toBeFalsy();
+        const rightResultMaxRelativeAmount = await validate('89999999990', rule);
+        expect(rightResultMaxRelativeAmount.valid).toBeTruthy();
     });
 });

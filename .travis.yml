@@ -27,28 +27,31 @@ jobs:
       script: npm run lint
       os: linux
 
-    - name: unit tests
+    - stage: test
+      name: unit tests
       script: npm run test
       os: linux
 
     - stage: alpha
       name: publish alpha docker
-      script: /bin/sh travis/docker.sh
+      script: /bin/sh travis/docker.sh alpha
       if: branch = env(DEV_BRANCH) AND type = push
       os: linux
 
-    - script: npm run release:all
-      name: build desktop artifacts
-      if: branch = env(DEV_BRANCH) AND type = push
+#     - stage: alpha
+#       script: npm run release:all
+#       name: build desktop artifacts
+#       if: branch = env(DEV_BRANCH) AND type = push
+#       os: linux
+
+    - stage: release
+      name: publish release docker
+      script: /bin/sh travis/docker.sh release
+      if: tag IS present
       os: linux
 
     - stage: release
-      name: release docker
-      script: /bin/sh travis/docker.sh
-      if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
-      os: linux
-
-    - name: release desktop artifacts, tag and update version
+      name: release desktop artifacts, tag and update version
       script: /bin/sh travis/release.sh
       if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
       os: linux

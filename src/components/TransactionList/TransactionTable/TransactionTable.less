@@ -42,7 +42,6 @@
 
     .transaction-rows-outer-container {
         display: block;
-        position: relative;
         width: 100%;
         max-height: 100%;
     }
@@ -51,7 +50,6 @@
         display: grid;
         grid-auto-rows: @rowHeight;
         width: 100%;
-        position: relative;
     }
 
     .transaction-row-container:hover {
@@ -96,8 +94,19 @@
         }
 
         .amount-cell {
-            text-align: center;
+            text-align: right;
             font-family: @symbolFont;
+
+            .extend-icon-holder {
+                display: inline-flex;
+                padding: 0.05rem;
+                vertical-align: sub;
+
+                img {
+                    width: 0.2rem;
+                    height: 0.2rem;
+                }
+            }
         }
 
         .confirmation-cell {

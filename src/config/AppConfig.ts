@@ -14,6 +14,8 @@
  *
  */
 
+import { Formatters } from '@/core/utils/Formatters';
+
 export interface LanguageConfig {
     label: string;
     value: string;
@@ -46,7 +48,9 @@ const defaultAppConfig: AppConfig = {
         MIN_PASSWORD_LENGTH: 8,
         SEED_ACCOUNT_NAME_PREFIX: 'SeedWallet-',
         ANNOUNCE_TRANSACTION_TIMEOUT: 240000,
-        DECIMAL_SEPARATOR: Number('1.1').toLocaleString().substring(1, 2),
+        DECIMAL_SEPARATOR: navigator.languages
+            ? Formatters.getDecimalSeparator(navigator.languages[0])
+            : Number('1.1').toLocaleString().substring(1, 2),
     },
     languages: [
         { value: 'en-US', label: 'English' },

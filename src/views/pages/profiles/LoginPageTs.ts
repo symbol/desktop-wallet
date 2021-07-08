@@ -39,7 +39,6 @@ import { AccountService } from '@/services/AccountService';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
 import { officialIcons } from '@/views/resources/Images';
 import _ from 'lodash';
-
 @Component({
     computed: {
         ...mapGetters({

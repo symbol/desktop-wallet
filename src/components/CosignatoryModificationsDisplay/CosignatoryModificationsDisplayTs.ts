@@ -17,15 +17,16 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { NetworkType } from 'symbol-sdk';
+import { ValidationProvider } from 'vee-validate';
 
 // child components
-import { ValidationProvider } from 'vee-validate';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
 
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
-import { CosignatoryModifications } from '@/views/forms/FormMultisigAccountModificationTransaction/FormMultisigAccountModificationTransactionTs';
+// @ts-ignore
+import CosignatoryModifications from '@/views/forms/FormMultisigAccountModificationTransaction/FormMultisigAccountModificationTransactionTs';
 
 @Component({
     components: {

@@ -27,10 +27,8 @@ CURRENT_VERSION=$(npm run version --silent)
 echo "Creating image ${DOCKER_IMAGE_NAME}:${CURRENT_VERSION}"
 docker build -t "${DOCKER_IMAGE_NAME}:${CURRENT_VERSION}" .
 
-if [ "$TRAVIS_BRANCH" = "$DEV_BRANCH" ]
+if [ "$1" = "alpha" ]
 then
-    echo "Building for ${DEV_BRANCH} branch..."
-
     TIMESTAMP="$(date +%Y%m%d%H%M)"
     echo "Docker tagging alpha version"
     docker tag "${DOCKER_IMAGE_NAME}:${CURRENT_VERSION}" "${DOCKER_IMAGE_NAME}:${CURRENT_VERSION}-alpha"
@@ -41,9 +39,8 @@ then
     docker push "${DOCKER_IMAGE_NAME}:${CURRENT_VERSION}-alpha-${TIMESTAMP}"
 fi
 
-if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]
+if [ "$1" = "release" ]
 then
-    echo "Building for ${RELEASE_BRANCH} branch..."
     echo "Docker tagging release version"
     docker tag "${DOCKER_IMAGE_NAME}:${CURRENT_VERSION}" "${DOCKER_IMAGE_NAME}:release"
 

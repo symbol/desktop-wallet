@@ -3,6 +3,58 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.4][v1.0.4] - 7-Jul-2021
+
+### Milestone: Stabilize and bug fix
+
+#### Added
+
+- Added mosaic envelop icon and tooltips for transaction list
+- Added the possibility to check if aggregate transaction has to be signed without opening details
+- Added skip button for mnemonic confirmation on Testnet
+- Added minRemoval and minApproval values on the multisig tree
+
+#### Changed
+
+- Copy paste password on profile creation now is not accepted
+- Custom nodes now are assigned to a profile and not removed when switching between networks
+- Changed icon size and positions to make them more consistent
+- Changed QR code image for failure when transactions are too big
+
+#### Fixed
+
+- Fix input focus error on FormProfileUnlock
+- Fixed amount validation when sending big quantities
+- Fix encrypted message console error
+- Fixed fee multiplier for offline transaction mode
+- Fix transaction signing icon doesn't show up immediately after signing
+- Fixed ledger translation
+- Fixed account restrictions modal UI
+- Fix harvesting not showing 25% of the beneficiary 
+- Fix decimal separator causing problems between locales
+- Fixed copy paste password input
+- Fix harvesting node not showing while activated on different devices
+- Fixed Scanning a QR Code for a Transfer Transaction without Mosaics breaks the Wallet
+- Fix harvesting node not visible if connected to it
+- Removed redundant space in mosaics amount when imported from QR code with the prepared invoice
+- Fixed profile creation in Ledger caused some crashes
+- Fixed error covering import QR code button in offline mode
+- Fixed harvesting screen tabs not aligned and scrollable
+- Ordered fee selection option
+- Removed fee selector redundant caption for min fee multipliers
+- Fixed partial aggregate transactions disappearing when signing
+- Fixed unable to add new node when all nodes are offline
+- Fixed users could try changing symbol.xym properties
+- Fixed harvesting screen not showing correct status for node operators
+- Fixed when importing QR code for a transaction slow fee changed to slowest
+- Fixed the balance was sometimes not shown on wallet selection page
+- Fixed some form items were not aligned
+- Fixed duration of Namespace rental adds 1 day.
+- Fixed bug when entering amounts in offline mode.
+- Fixed when put max value transaction details are not presented
+- Other UI fixes
+- Other translations and wording fixes
+
 ## [1.0.3][v1.0.3] - 10-May-2021
 
 ### Milestone: Post-launch Opt-in

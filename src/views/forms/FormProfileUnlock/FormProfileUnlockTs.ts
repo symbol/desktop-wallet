@@ -28,7 +28,6 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 import { ProfileService } from '@/services/ProfileService';
-
 @Component({
     components: {
         ValidationProvider,

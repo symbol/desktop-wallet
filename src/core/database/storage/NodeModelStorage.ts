@@ -20,13 +20,13 @@ import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorag
 import { VersionedModel } from '@/core/database/entities/VersionedModel';
 import { NetworkType } from 'symbol-sdk';
 
-export class NodeModelStorage extends VersionedObjectStorage<NodeModel[]> {
+export class NodeModelStorage extends VersionedObjectStorage<Record<string, NodeModel[]>> {
     /**
      * Singleton instance as we want to run the migration just once
      */
     public static INSTANCE = new NodeModelStorage();
 
-    public constructor(delegate = new SimpleObjectStorage<VersionedModel<NodeModel[]>>('node')) {
+    public constructor(delegate = new SimpleObjectStorage<VersionedModel<Record<string, NodeModel[]>>>('node')) {
         super({
             delegate: delegate,
             migrations: [
@@ -63,6 +63,10 @@ export class NodeModelStorage extends VersionedObjectStorage<NodeModel[]> {
                     migrate: (data: NodeModel[]) => {
                         return data.filter((n) => n.networkType !== NetworkType.TEST_NET);
                     },
+                },
+                {
+                    description: 'Reset nodes for node storage fix (non backwards compatible)',
+                    migrate: () => undefined,
                 },
             ],
         });

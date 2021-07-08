@@ -108,6 +108,7 @@ export class PeerSelectorTs extends Vue {
     goSettings() {
         this.poptipVisible = false;
         this.$store.commit('profile/toggleSettings');
+        this.$store.commit('profile/toggleNetworkSettings', true);
     }
     onCloseNetworkModal() {
         this.$store.dispatch('network/SET_NETWORK_IS_NOT_MATCHING_PROFILE', false);
