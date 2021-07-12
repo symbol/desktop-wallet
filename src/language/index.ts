@@ -6,7 +6,7 @@ import Vue from 'vue';
 import zh_CN from '@/language/zh-CN.json';
 import en_US from '@/language/en-US.json';
 import ja_JP from '@/language/ja-JP.json';
-// import ru_RU from '@/language/ru-RU.json';
+import ru_RU from '@/language/ru-RU.json';
 
 // external translation messages
 import enValidationMessages from 'vee-validate/dist/locale/en.json';
@@ -20,7 +20,7 @@ const messages = {
     'en-US': { ...en_US, validation: enValidationMessages.messages },
     'zh-CN': { ...zh_CN, validation: zh_CNValidationMessages.messages },
     'ja-JP': { ...ja_JP, validation: jaValidationMessages.messages },
-    'ru-RU': { validation: ruValidationMessages.messages}
+    'ru-RU': { ...ru_RU, validation: ruValidationMessages.messages}
 };
 
 const navLang = navigator.language;
