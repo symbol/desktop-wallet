@@ -20,7 +20,7 @@ const messages = {
     'en-US': { ...en_US, validation: enValidationMessages.messages },
     'zh-CN': { ...zh_CN, validation: zh_CNValidationMessages.messages },
     'ja-JP': { ...ja_JP, validation: jaValidationMessages.messages },
-    'ru-RU': { ...ru_RU, validation: ruValidationMessages.messages}
+    'ru-RU': { ...ru_RU, validation: ruValidationMessages.messages },
 };
 
 const navLang = navigator.language;
