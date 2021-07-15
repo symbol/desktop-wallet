@@ -89,6 +89,8 @@ const initialState: HarvestingState = {
     pollingTrials: 1,
 };
 
+const harvestingService = new HarvestingService();
+
 export default {
     namespaced: true,
     state: initialState,
@@ -304,7 +306,6 @@ export default {
                 });
         },
         SET_CURRENT_SIGNER_HARVESTING_MODEL({ commit }, currentSignerAddress) {
-            const harvestingService = new HarvestingService();
             let harvestingModel = harvestingService.getHarvestingModel(currentSignerAddress);
             if (!harvestingModel) {
                 harvestingModel = { accountAddress: currentSignerAddress };
@@ -316,7 +317,6 @@ export default {
             { commit },
             { accountAddress, signedPersistentDelReqTxs }: { accountAddress: string; signedPersistentDelReqTxs: SignedTransaction[] },
         ) {
-            const harvestingService = new HarvestingService();
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateSignedPersistentDelReqTxs(harvestingModel, signedPersistentDelReqTxs);
             commit('currentSignerHarvestingModel', harvestingModel);
@@ -325,7 +325,6 @@ export default {
             { commit },
             { accountAddress, isPersistentDelReqSent }: { accountAddress: string; isPersistentDelReqSent: boolean },
         ) {
-            const harvestingService = new HarvestingService();
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateIsPersistentDelReqSent(harvestingModel, isPersistentDelReqSent);
             commit('currentSignerHarvestingModel', harvestingModel);
@@ -334,7 +333,6 @@ export default {
             { commit },
             { accountAddress, selectedHarvestingNode }: { accountAddress: string; selectedHarvestingNode: NodeModel },
         ) {
-            const harvestingService = new HarvestingService();
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateSelectedHarvestingNode(harvestingModel, selectedHarvestingNode);
             commit('currentSignerHarvestingModel', harvestingModel);
@@ -345,7 +343,6 @@ export default {
             { commit },
             { accountAddress, encRemotePrivateKey }: { accountAddress: string; encRemotePrivateKey: string },
         ) {
-            const harvestingService = new HarvestingService();
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateRemoteKey(harvestingModel, encRemotePrivateKey);
             commit('currentSignerHarvestingModel', harvestingModel);
@@ -358,7 +355,6 @@ export default {
                 newRemotePublicKey,
             }: { accountAddress: string; newEncRemotePrivateKey: string; newRemotePublicKey: string },
         ) {
-            const harvestingService = new HarvestingService();
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateNewAccountLinkKeyInfo(harvestingModel, {
                 newEncRemotePrivateKey,
@@ -370,7 +366,6 @@ export default {
             { commit },
             { accountAddress, encVrfPrivateKey }: { accountAddress: string; encVrfPrivateKey: string },
         ) {
-            const harvestingService = new HarvestingService();
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateVrfKey(harvestingModel, encVrfPrivateKey);
             commit('currentSignerHarvestingModel', harvestingModel);
@@ -383,7 +378,6 @@ export default {
                 newVrfPublicKey,
             }: { accountAddress: string; newEncVrfPrivateKey: string; newVrfPublicKey: string },
         ) {
-            const harvestingService = new HarvestingService();
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateNewAccountLinkKeyInfo(harvestingModel, { newEncVrfPrivateKey, newVrfPublicKey });
             commit('currentSignerHarvestingModel', harvestingModel);
@@ -392,7 +386,6 @@ export default {
             { commit },
             { accountAddress, delegatedHarvestingRequestFailed }: { accountAddress: string; delegatedHarvestingRequestFailed: boolean },
         ) {
-            const harvestingService = new HarvestingService();
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateDelegatedHarvestingRequestFailed(harvestingModel, delegatedHarvestingRequestFailed);
             commit('currentSignerHarvestingModel', harvestingModel);
