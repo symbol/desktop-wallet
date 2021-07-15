@@ -159,6 +159,12 @@ export default {
             let accountUnlocked = false;
 
             if (currentSignerHarvestingModel) {
+                // To verify local account key link info
+                dispatch('UPDATE_LOCAL_ACCOUNT_LINK_PRIVATE_KEY', {
+                    currentSignerAccountInfo,
+                    currentSignerHarvestingModel,
+                });
+
                 //find the node url from currentSignerHarvestingModel (localStorage)
                 const selectedNode = currentSignerHarvestingModel.selectedHarvestingNode;
                 // @ts-ignore
@@ -344,6 +350,22 @@ export default {
             harvestingService.updateRemoteKey(harvestingModel, encRemotePrivateKey);
             commit('currentSignerHarvestingModel', harvestingModel);
         },
+        UPDATE_NEW_REMOTE_KEY_INFO(
+            { commit },
+            {
+                accountAddress,
+                newEncRemotePrivateKey,
+                newRemotePublicKey,
+            }: { accountAddress: string; newEncRemotePrivateKey: string; newRemotePublicKey: string },
+        ) {
+            const harvestingService = new HarvestingService();
+            const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
+            harvestingService.updateNewAccountLinkKeyInfo(harvestingModel, {
+                newEncRemotePrivateKey,
+                newRemotePublicKey,
+            });
+            commit('currentSignerHarvestingModel', harvestingModel);
+        },
         UPDATE_VRF_ACCOUNT_PRIVATE_KEY(
             { commit },
             { accountAddress, encVrfPrivateKey }: { accountAddress: string; encVrfPrivateKey: string },
@@ -351,6 +373,19 @@ export default {
             const harvestingService = new HarvestingService();
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateVrfKey(harvestingModel, encVrfPrivateKey);
+            commit('currentSignerHarvestingModel', harvestingModel);
+        },
+        UPDATE_NEW_VRF_KEY_INFO(
+            { commit },
+            {
+                accountAddress,
+                newEncVrfPrivateKey,
+                newVrfPublicKey,
+            }: { accountAddress: string; newEncVrfPrivateKey: string; newVrfPublicKey: string },
+        ) {
+            const harvestingService = new HarvestingService();
+            const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
+            harvestingService.updateNewAccountLinkKeyInfo(harvestingModel, { newEncVrfPrivateKey, newVrfPublicKey });
             commit('currentSignerHarvestingModel', harvestingModel);
         },
         UPDATE_HARVESTING_REQUEST_STATUS(
@@ -361,6 +396,48 @@ export default {
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateDelegatedHarvestingRequestFailed(harvestingModel, delegatedHarvestingRequestFailed);
             commit('currentSignerHarvestingModel', harvestingModel);
+        },
+        UPDATE_LOCAL_ACCOUNT_LINK_PRIVATE_KEY(
+            { dispatch },
+            {
+                currentSignerAccountInfo,
+                currentSignerHarvestingModel,
+            }: { currentSignerAccountInfo: AccountInfo; currentSignerHarvestingModel: HarvestingModel },
+        ) {
+            const accountAddress = currentSignerAccountInfo.address.plain();
+
+            // If remote key link not exist from network or local not exist key
+            // Set local encRemotePrivateKey to null
+            if (!currentSignerAccountInfo.supplementalPublicKeys?.linked || !currentSignerHarvestingModel?.newRemotePublicKey) {
+                dispatch('UPDATE_REMOTE_ACCOUNT_PRIVATE_KEY', {
+                    accountAddress,
+                    encRemotePrivateKey: null,
+                });
+            }
+
+            if (currentSignerHarvestingModel.newRemotePublicKey === currentSignerAccountInfo.supplementalPublicKeys.linked?.publicKey) {
+                dispatch('UPDATE_REMOTE_ACCOUNT_PRIVATE_KEY', {
+                    accountAddress,
+                    encRemotePrivateKey:
+                        currentSignerHarvestingModel?.newEncRemotePrivateKey || currentSignerHarvestingModel?.encRemotePrivateKey,
+                });
+            }
+
+            // If vrf key link not exist from network or local not exist key
+            // Set local encVrfPrivateKey to null
+            if (!currentSignerAccountInfo.supplementalPublicKeys?.vrf || !currentSignerHarvestingModel?.newVrfPublicKey) {
+                dispatch('UPDATE_VRF_ACCOUNT_PRIVATE_KEY', {
+                    accountAddress,
+                    encVrfPrivateKey: null,
+                });
+            }
+
+            if (currentSignerHarvestingModel.newVrfPublicKey === currentSignerAccountInfo.supplementalPublicKeys.vrf?.publicKey) {
+                dispatch('UPDATE_VRF_ACCOUNT_PRIVATE_KEY', {
+                    accountAddress,
+                    encVrfPrivateKey: currentSignerHarvestingModel?.newEncVrfPrivateKey || currentSignerHarvestingModel?.encVrfPrivateKey,
+                });
+            }
         },
         /// end-region scoped actions
     },
