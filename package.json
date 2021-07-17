@@ -2,7 +2,7 @@
     "name": "symbol-desktop-wallet",
     "description": "Symbol Wallet",
     "homepage": "https://github.com/nemgrouplimited/symbol-desktop-wallet",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "repository": {
         "type": "git",
         "url": "https://github.com/nemgrouplimited/symbol-desktop-wallet.git"
@@ -44,7 +44,6 @@
         "@fortawesome/fontawesome-svg-core": "^1.2.34",
         "@fortawesome/free-solid-svg-icons": "^5.15.2",
         "@fortawesome/vue-fontawesome": "^2.0.2",
-        "@js-joda/core": "^3.2.0",
         "@ledgerhq/hw-transport-node-hid-noevents": "^5.41.0",
         "@ledgerhq/hw-transport-webusb": "^5.41.0",
         "animate.css": "^3.7.2",
@@ -61,7 +60,7 @@
         "request": "^2.88.0",
         "rss-parser": "^3.7.3",
         "rxjs": "^6.6.7",
-        "symbol-sdk": "file:../symbol-sdk-typescript-javascript/symbol-sdk-1.0.0.tgz",
+        "symbol-sdk": "1.0.0",
         "trezor-connect": "^7.0.5",
         "utf8": "^3.0.0",
         "vee-validate": "^3.2.3",
