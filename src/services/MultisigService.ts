@@ -144,7 +144,6 @@ export class MultisigService {
                     }
                 });
             });
-            console.log(tree);
             return tree;
         }
         return [];
