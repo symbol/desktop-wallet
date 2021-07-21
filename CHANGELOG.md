@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.5][v1.0.5] - 21-Jul-2021
+
+### Milestone: Minor bug fix
+
+#### Fixed
+
+- Not able unlink VRF key link for multisig account [#1435](https://github.com/symbol/symbol-desktop-wallet/issues/1435)
+- Corrupted profile with invalid mnemonic created [#1596](https://github.com/symbol/symbol-desktop-wallet/issues/1596)
+
 ## [1.0.4][v1.0.4] - 7-Jul-2021
 
 ### Milestone: Stabilize and bug fix
@@ -30,7 +39,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Fix transaction signing icon doesn't show up immediately after signing
 - Fixed ledger translation
 - Fixed account restrictions modal UI
-- Fix harvesting not showing 25% of the beneficiary 
+- Fix harvesting not showing 25% of the beneficiary
 - Fix decimal separator causing problems between locales
 - Fixed copy paste password input
 - Fix harvesting node not showing while activated on different devices
@@ -271,7 +280,7 @@ New Opt-In accounts created after this beta release will not be shown on Opt-In 
 
 #### Added
 
-- Added Account Restrictions feature (add and delete restrictions), includes the following types: 
+- Added Account Restrictions feature (add and delete restrictions), includes the following types:
   - Address Restrictions
   - Mosaic Restrictions
   - Operation(Transaction Type) Restrictions
@@ -295,7 +304,7 @@ New Opt-In accounts created after this beta release will not be shown on Opt-In 
 - Fixed overflow on Transaction Modal.
 - Fixed translation issues (especially Japaneese).
 - Improved multi-sig graph view on Account Details Page and Aliases display.
-- UI fixes 
+- UI fixes
   - Fixed unable to add json Address Book after attaching invalid format file issue.
   - Fixed select contact window issues.
   - Fixed fee selector is not visible issue on modify mosaic supply modal.
@@ -521,7 +530,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 - Fixed mosaic namespace resolution inside transfers (fixes #275)
 - Fixed hardcoded network configuration properties (fixes #140) (fixes #139)
-- Fixed private key import of duplicates (fixes #214) 
+- Fixed private key import of duplicates (fixes #214)
 - Fixed vue-router error logs (fixes #252)
 
 ## [v0.9.8][v0.9.8] -
@@ -539,7 +548,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 - Fixed wallet import in subwallet creation (fixes #214)
 
 
-## [v0.9.7][v0.9.7] - 06-Apr-2020 
+## [v0.9.7][v0.9.7] - 06-Apr-2020
 
 ### Milestone: [catapult-server@v0.9.3.2](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.2)
 
@@ -720,3 +729,5 @@ NOTE: We have known issues which have been logged into github and will look for 
 [v0.9.5-beta2]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta1...v0.9.5-beta2
 [v0.9.5-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.4-beta...v0.9.5-beta1
 [v0.9.4-beta]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.4-beta
+
+[v1.0.5]: https://github.com/symbol/symbol-desktop-wallet/releases/tag/v1.0.5
