@@ -1,5 +1,5 @@
 <template>
-    <div class="show-mnemonic">
+    <div v-click-focus class="show-mnemonic">
         <div v-for="(word, index) in wordsArray" :key="index" class="input-already">
             {{ word }}
         </div>
