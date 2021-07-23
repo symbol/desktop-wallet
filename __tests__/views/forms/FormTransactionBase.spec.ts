@@ -71,4 +71,17 @@ describe('FormTransactionBase', () => {
         // assert
         expect(mode).toBe(TransactionCommandMode.MULTISIGN);
     });
+
+    it('getTransactionCommandMode should return MULTISIGN if minApproval not exist', () => {
+        // arrange
+        wrapper.setData({
+            currentSignerMultisigInfo: {},
+        });
+
+        // act
+        const mode = vm.getTransactionCommandMode([]);
+
+        // assert
+        expect(mode).toBe(TransactionCommandMode.MULTISIGN);
+    });
 });
