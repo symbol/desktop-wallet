@@ -24,11 +24,14 @@ let wrapper;
 let vm;
 
 const focus = jest.fn();
+const clickFocus = jest.fn();
+
 beforeEach(() => {
     wrapper = shallowMount(MnemonicInput, {
         i18n,
         directives: {
             focus,
+            clickFocus,
         },
     });
     vm = wrapper.vm;
@@ -40,7 +43,6 @@ describe('MnemonicInput', () => {
         await wrapper.setData({
             wordsArray: Array.from({ length: 1 }, () => 'seed'),
         });
-
         // assert
         expect(vm.showCopyButton).toBe(false);
         expect(wrapper.findComponent(ButtonCopyToClipboard).exists()).toBe(false);
