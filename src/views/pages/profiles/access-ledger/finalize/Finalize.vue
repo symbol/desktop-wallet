@@ -20,7 +20,7 @@
                 <div class="jump-btn">
                     <button
                         class="solid-button button-style create-account-style"
-                        @click="$router.push({ name: 'profiles.importProfile.walletSelection' })"
+                        @click="$router.push({ name: 'profiles.accessLedger.walletSelection' })"
                     >
                         {{ $t('back') }}
                     </button>

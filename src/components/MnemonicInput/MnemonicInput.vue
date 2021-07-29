@@ -6,6 +6,7 @@
         <div class="mnemonic-input-container">
             <input
                 v-model="userInput"
+                v-focus
                 class="mnemonic-input"
                 type="text"
                 maxlength="50"
@@ -14,7 +15,11 @@
                 @keydown.delete="deleteWord"
             />
         </div>
-        <ButtonCopyToClipboard v-model="waitingCopyString" class="copy-button" />
+        <ButtonCopyToClipboard v-if="showCopyButton" v-model="waitingCopyString" class="right-bottom-button copy" />
+
+        <Button v-else type="text" class="right-bottom-button paste" @click="handleClickPaste()">
+            {{ $t('mnemonic_paste') }}
+        </Button>
     </div>
 </template>
 <script lang="ts">
