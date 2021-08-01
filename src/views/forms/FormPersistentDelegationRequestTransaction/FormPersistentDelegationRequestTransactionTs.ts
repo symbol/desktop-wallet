@@ -505,6 +505,9 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             );
         }
 
+        // pre-store selected harvesting node in local
+        this.saveHarvestingNode(accountAddress, this.formItems.nodeModel);
+
         if (this.action === HarvestingAction.ACTIVATE) {
             // announce the persistent Delegation Request
             return this.getPersistentDelegationRequestTransaction(transactionSigner).pipe(
@@ -569,10 +572,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                                 accountAddress,
                                 isPersistentDelReqSent: false,
                             });
-                            this.$store.dispatch('harvesting/UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
-                                accountAddress,
-                                selectedHarvestingNode: this.formItems.nodeModel,
-                            });
                         }
                     });
                 }),
@@ -618,10 +617,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                             isPersistentDelReqSent: false,
                         });
 
-                        this.$store.dispatch('harvesting/UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
-                            accountAddress,
-                            selectedHarvestingNode: this.formItems.nodeModel,
-                        });
                         Vue.set(this, 'linking', false);
                     }
                 }),
@@ -704,6 +699,20 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             accountAddress,
             newEncRemotePrivateKey,
             newRemotePublicKey,
+        });
+    }
+
+    public saveHarvestingNode(accountAddress: string, harvestingNode: NodeModel) {
+        this.$store.dispatch('harvesting/UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
+            accountAddress,
+            selectedHarvestingNode: harvestingNode,
+        });
+
+        // store annnounced harvesting node in local storage.
+        // it can be use when connection interrupt or waiting for co-signature.
+        this.$store.dispatch('harvesting/UPDATE_ACCOUNT_NEW_SELECTED_HARVESTING_NODE', {
+            accountAddress,
+            newSelectedHarvestingNode: harvestingNode,
         });
     }
     public updateHarvestingRequestStatus(accountAddress: string, delegatedHarvestingRequestFailed: boolean) {

@@ -20,6 +20,7 @@ export class HarvestingModel {
     public readonly accountAddress: string;
     public readonly isPersistentDelReqSent?: boolean;
     public readonly selectedHarvestingNode?: NodeModel;
+    public readonly newSelectedHarvestingNode?: NodeModel;
     public readonly encRemotePrivateKey?: string;
     public readonly newEncRemotePrivateKey?: string;
     public readonly newRemotePublicKey?: string;

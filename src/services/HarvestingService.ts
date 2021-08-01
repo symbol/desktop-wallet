@@ -75,6 +75,11 @@ export class HarvestingService {
     public updateSelectedHarvestingNode(harvestingModel: HarvestingModel, selectedHarvestingNode: NodeModel) {
         this.saveHarvestingModel(Object.assign(harvestingModel, { selectedHarvestingNode }));
     }
+
+    public updateNewSelectedHarvestingNode(harvestingModel: HarvestingModel, newSelectedHarvestingNode: NodeModel) {
+        this.saveHarvestingModel(Object.assign(harvestingModel, { newSelectedHarvestingNode }));
+    }
+
     public updateDelegatedHarvestingRequestFailed(harvestingModel: HarvestingModel, delegatedHarvestingRequestFailed: boolean) {
         this.saveHarvestingModel(Object.assign(harvestingModel, { delegatedHarvestingRequestFailed }));
     }

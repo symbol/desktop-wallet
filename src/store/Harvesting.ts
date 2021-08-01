@@ -167,6 +167,25 @@ export default {
                     currentSignerHarvestingModel,
                 });
 
+                const accountNodePublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.node?.publicKey;
+
+                // Update selectedHarvestingNode to empty, if account node public key not existing
+                if (!accountNodePublicKey) {
+                    dispatch('UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
+                        accountAddress: currentSignerHarvestingModel.accountAddress,
+                        selectedHarvestingNode: { nodePublicKey: '' } as NodeModel,
+                    });
+                } else {
+                    // if selectedHarvestingNode empty update with newSelectedHarvestingNode
+                    if (currentSignerHarvestingModel.selectedHarvestingNode.nodePublicKey === '') {
+                        const harvestingModel = harvestingService.getHarvestingModel(currentSignerHarvestingModel.accountAddress);
+                        dispatch('UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
+                            accountAddress: currentSignerHarvestingModel.accountAddress,
+                            selectedHarvestingNode: harvestingModel.newSelectedHarvestingNode,
+                        });
+                    }
+                }
+
                 //find the node url from currentSignerHarvestingModel (localStorage)
                 const selectedNode = currentSignerHarvestingModel.selectedHarvestingNode;
                 // @ts-ignore
@@ -338,6 +357,14 @@ export default {
             commit('currentSignerHarvestingModel', harvestingModel);
             harvestingService.updateDelegatedHarvestingRequestFailed(harvestingModel, false);
             commit('setPollingTrials', 1);
+        },
+        UPDATE_ACCOUNT_NEW_SELECTED_HARVESTING_NODE(
+            { commit },
+            { accountAddress, newSelectedHarvestingNode }: { accountAddress: string; newSelectedHarvestingNode: NodeModel },
+        ) {
+            const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
+            harvestingService.updateNewSelectedHarvestingNode(harvestingModel, newSelectedHarvestingNode);
+            commit('currentSignerHarvestingModel', harvestingModel);
         },
         UPDATE_REMOTE_ACCOUNT_PRIVATE_KEY(
             { commit },
