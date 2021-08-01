@@ -17,6 +17,7 @@ import HarvestingStore from '@/store/Harvesting';
 import { getTestAccount } from '@MOCKS/Accounts';
 import { HarvestingService } from '@/services/HarvestingService';
 import { Account, AccountInfo, NetworkType, UInt64, AccountType } from 'symbol-sdk';
+import { NodeModel } from '@/core/database/entities/NodeModel';
 
 let commit;
 let dispatch;
@@ -168,6 +169,24 @@ describe('store/Harvesting', () => {
             // Assert
             expect(commit).toHaveBeenCalledTimes(1);
             expect(commit).toHaveBeenNthCalledWith(1, 'currentSignerHarvestingModel', newVrfKeyInfo);
+        });
+    });
+    describe('action "UPDATE_ACCOUNT_NEW_SELECTED_HARVESTING_NODE" should', () => {
+        it('should update new selected harvesting node', () => {
+            // Arrange
+            const harvestingNode = {
+                accountAddress: mockAccount.address.plain(),
+                newSelectedHarvestingNode: {
+                    nodePublicKey: '0'.repeat(64),
+                } as NodeModel,
+            };
+
+            // Act
+            HarvestingStore.actions.UPDATE_ACCOUNT_NEW_SELECTED_HARVESTING_NODE({ commit }, harvestingNode);
+
+            // Assert
+            expect(commit).toHaveBeenCalledTimes(1);
+            expect(commit).toHaveBeenNthCalledWith(1, 'currentSignerHarvestingModel', harvestingNode);
         });
     });
 });

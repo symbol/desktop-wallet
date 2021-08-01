@@ -17,6 +17,7 @@
 import { HarvestingService } from '@/services/HarvestingService';
 import { Account } from 'symbol-sdk';
 import { getTestAccount } from '@MOCKS/Accounts';
+import { NodeModel } from '@/core/database/entities/NodeModel';
 
 let harvestingService: HarvestingService;
 let mockAccount: Account;
@@ -57,5 +58,17 @@ describe('Harvesting Service', () => {
 
         expect(harvestingModel.newEncRemotePrivateKey).toBe(newEncRemotePrivateKey);
         expect(harvestingModel.newRemotePublicKey).toBe(newRemotePublicKey);
+    });
+
+    it('should be able to update newSelectedHarvestingNode', () => {
+        const address = mockAccount.address.plain();
+        const newSelectedHarvestingNode = {
+            nodePublicKey: '0'.repeat(64),
+        } as NodeModel;
+
+        const harvestingModel = harvestingService.getHarvestingModel(address);
+        harvestingService.updateNewSelectedHarvestingNode(harvestingModel, newSelectedHarvestingNode);
+
+        expect(harvestingModel.newSelectedHarvestingNode).toBe(newSelectedHarvestingNode);
     });
 });
