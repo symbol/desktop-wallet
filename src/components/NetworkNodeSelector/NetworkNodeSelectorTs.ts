@@ -120,7 +120,7 @@ export class NetworkNodeSelectorTs extends Vue {
                 this.$emit('input', nodeModel);
                 const unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
                 let nodeOperatorAccount = false;
-                const remotePublicKey = this.currentSignerAccountInfo.supplementalPublicKeys?.linked?.publicKey;
+                const remotePublicKey = this.currentSignerAccountInfo?.supplementalPublicKeys?.linked?.publicKey;
 
                 if (unlockedAccounts) {
                     nodeOperatorAccount = unlockedAccounts?.some((publicKey) => publicKey === remotePublicKey);
