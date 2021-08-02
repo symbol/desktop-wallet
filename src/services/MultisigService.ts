@@ -105,44 +105,41 @@ export class MultisigService {
         return addressesFromNextLevel;
     }
     public getMultisigChildren(multisigAccountGraphInfo: MultisigAccountInfo[][]): string[] {
-        if (multisigAccountGraphInfo) {
-            const tree = [];
-            multisigAccountGraphInfo.forEach((level: MultisigAccountInfo[]) => {
-                const levelToMap = Symbol.iterator in Object(level) ? level : [].concat(level);
+        const tree = [];
+        multisigAccountGraphInfo.forEach((level: MultisigAccountInfo[]) => {
+            const levelToMap = Symbol.iterator in Object(level) ? level : [].concat(level);
 
-                levelToMap.forEach((entry: MultisigAccountInfo) => {
-                    // if current entry is not a multisig account
-                    if (entry.cosignatoryAddresses.length === 0) {
-                        tree.push({
-                            address: entry.accountAddress.plain(),
-                            children: [],
-                        });
-                    } else {
-                        // find the entry matching with address matching cosignatory address and update his children
-                        const updateRecursively = (address, object) => (obj) => {
-                            if (obj.address === address) {
-                                obj.children.push(object);
-                            } else if (obj.children !== undefined) {
-                                obj.children.forEach(updateRecursively(address, object));
-                            }
-                        };
-                        // @ts-ignore
-                        entry.cosignatoryAddresses.forEach((addressVal) => {
-                            tree.forEach(
-                                updateRecursively(addressVal['address'], {
-                                    // @ts-ignore
-                                    address: entry.accountAddress.plain(),
-                                    // @ts-ignore
-                                    children: [],
-                                }),
-                            );
-                        });
-                    }
-                });
+            levelToMap.forEach((entry: MultisigAccountInfo) => {
+                // if current entry is not a multisig account
+                if (entry.cosignatoryAddresses.length === 0) {
+                    tree.push({
+                        address: entry.accountAddress.plain(),
+                        children: [],
+                    });
+                } else {
+                    // find the entry matching with address matching cosignatory address and update his children
+                    const updateRecursively = (address, object) => (obj) => {
+                        if (obj.address === address) {
+                            obj.children.push(object);
+                        } else if (obj.children !== undefined) {
+                            obj.children.forEach(updateRecursively(address, object));
+                        }
+                    };
+                    // @ts-ignore
+                    entry.cosignatoryAddresses.forEach((addressVal) => {
+                        tree.forEach(
+                            updateRecursively(addressVal['address'], {
+                                // @ts-ignore
+                                address: entry.accountAddress.plain(),
+                                // @ts-ignore
+                                children: [],
+                            }),
+                        );
+                    });
+                }
             });
-            return tree;
-        }
-        return [];
+        });
+        return tree;
     }
     public getMultisigChildrenAddresses(multisigAccountGraphInfo: MultisigAccountInfo[][]) {
         const addresses = [];
