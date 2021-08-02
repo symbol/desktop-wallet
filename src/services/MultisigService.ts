@@ -108,13 +108,8 @@ export class MultisigService {
         if (multisigAccountGraphInfo && !!multisigAccountGraphInfo.length) {
             const tree = [];
             multisigAccountGraphInfo.forEach((level: MultisigAccountInfo[]) => {
-                let levelToMap = [];
+                const levelToMap = Symbol.iterator in Object(level) ? level : [].concat(level);
 
-                if (level && !level[0]) {
-                    levelToMap.push(level);
-                } else {
-                    levelToMap = level;
-                }
                 levelToMap.forEach((entry: MultisigAccountInfo) => {
                     if (!entry.cosignatoryAddresses.length) {
                         tree.push({
