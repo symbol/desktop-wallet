@@ -177,7 +177,7 @@ export default {
                     });
                 } else {
                     // if selectedHarvestingNode empty update with newSelectedHarvestingNode
-                    if (currentSignerHarvestingModel.selectedHarvestingNode.nodePublicKey === '') {
+                    if (currentSignerHarvestingModel.selectedHarvestingNode?.nodePublicKey === '') {
                         const harvestingModel = harvestingService.getHarvestingModel(currentSignerHarvestingModel.accountAddress);
                         dispatch('UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
                             accountAddress: currentSignerHarvestingModel.accountAddress,
