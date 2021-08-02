@@ -47,7 +47,7 @@ export class CommonHelpers {
             await this.sleep(interval);
         }
     }
-    public static parseObjectProperties(obj, parse) {
+    public static parseObjectProperties(obj, parse): void {
         for (const k in obj) {
             if (typeof obj[k] === 'object' && obj[k] !== null) {
                 this.parseObjectProperties(obj[k], parse);
