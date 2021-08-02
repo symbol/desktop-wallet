@@ -105,13 +105,14 @@ export class MultisigService {
         return addressesFromNextLevel;
     }
     public getMultisigChildren(multisigAccountGraphInfo: MultisigAccountInfo[][]): string[] {
-        if (multisigAccountGraphInfo && !!multisigAccountGraphInfo.length) {
+        if (multisigAccountGraphInfo) {
             const tree = [];
             multisigAccountGraphInfo.forEach((level: MultisigAccountInfo[]) => {
                 const levelToMap = Symbol.iterator in Object(level) ? level : [].concat(level);
 
                 levelToMap.forEach((entry: MultisigAccountInfo) => {
-                    if (!entry.cosignatoryAddresses.length) {
+                    // if current entry is not a multisig account
+                    if (entry.cosignatoryAddresses.length === 0) {
                         tree.push({
                             address: entry.accountAddress.plain(),
                             children: [],
@@ -121,7 +122,7 @@ export class MultisigService {
                         const updateRecursively = (address, object) => (obj) => {
                             if (obj.address === address) {
                                 obj.children.push(object);
-                            } else if (obj.children) {
+                            } else if (obj.children !== undefined) {
                                 obj.children.forEach(updateRecursively(address, object));
                             }
                         };
