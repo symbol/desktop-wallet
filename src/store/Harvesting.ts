@@ -353,7 +353,6 @@ export default {
             { commit },
             { accountAddress, selectedHarvestingNode }: { accountAddress: string; selectedHarvestingNode: NodeModel },
         ) {
-            console.log('selectedHarvestingNode :>> ', selectedHarvestingNode);
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateSelectedHarvestingNode(harvestingModel, selectedHarvestingNode);
             commit('currentSignerHarvestingModel', harvestingModel);
