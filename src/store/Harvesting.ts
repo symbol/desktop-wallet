@@ -168,9 +168,10 @@ export default {
                 });
 
                 const accountNodePublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.node?.publicKey;
+                const accountRemotePublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.linked?.publicKey;
 
-                // Update selectedHarvestingNode to empty, if account node public key not existing
-                if (!accountNodePublicKey) {
+                // Update selectedHarvestingNode to empty, if account node & remote public key not existing
+                if (!accountNodePublicKey && !accountRemotePublicKey) {
                     dispatch('UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
                         accountAddress: currentSignerHarvestingModel.accountAddress,
                         selectedHarvestingNode: { nodePublicKey: '' } as NodeModel,
@@ -352,6 +353,7 @@ export default {
             { commit },
             { accountAddress, selectedHarvestingNode }: { accountAddress: string; selectedHarvestingNode: NodeModel },
         ) {
+            console.log('selectedHarvestingNode :>> ', selectedHarvestingNode);
             const harvestingModel = harvestingService.getHarvestingModel(accountAddress);
             harvestingService.updateSelectedHarvestingNode(harvestingModel, selectedHarvestingNode);
             commit('currentSignerHarvestingModel', harvestingModel);
