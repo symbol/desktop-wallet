@@ -556,7 +556,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     onChangeRecipient() {
         // filter tags
         this.formItems.recipientRaw = FilterHelpers.stripFilter(this.formItems.recipientRaw);
-        if (Address.isValidRawAddress(this.formItems.recipientRaw)) {
+        if (AddressValidator.validate(this.formItems.recipientRaw)) {
             this.$store.dispatch('account/GET_RECIPIENT', Address.createFromRawAddress(this.formItems.recipientRaw)).then(() => {
                 if (!this.currentRecipient?.publicKey || /^0*$/.test(this.currentRecipient.publicKey)) {
                     this.resetEncryptedMessage();
