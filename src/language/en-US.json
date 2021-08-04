@@ -729,7 +729,7 @@
     "node_not_available_please_check_your_node_or_network_settings": "Node is not available. Please check your node or network settings.",
     "node_public_key_input": "Couldn't find the public key, please enter here or select another node",
     "node_publicKey": "Node Public Key",
-    "node_url": "Node url",
+    "node_url": "Node URL",
     "not_yet_open": "Not yet open",
     "notes_should_not_exceed_25_character": "Notes should not exceed 25 characters",
     "notification_new_aggregate_bonded": "A new aggregate partial transaction has been announced",
