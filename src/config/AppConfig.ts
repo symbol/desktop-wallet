@@ -59,7 +59,7 @@ const defaultAppConfig: AppConfig = {
         { value: 'ru-RU', label: 'Русский' },
     ],
     marketServerUrl: 'http://app.nemcn.io',
-    articlesFeedUrl: 'https://nemgrouplimited.github.io/symbol-news/',
+    articlesFeedUrl: 'https://symbol.github.io/symbol-rss-feeds/',
 };
 const resolvedAppConfig: AppConfig = window['appConfig'] || defaultAppConfig;
 console.log('appConfig resolved!', resolvedAppConfig);

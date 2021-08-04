@@ -82,7 +82,7 @@ module.exports = {
     },
     proxy: {
       '/nemflash': {
-        target: 'https://nemgrouplimited.github.io/symbol-news/',
+        target: 'https://symbol.github.io/symbol-rss-feeds/',
         ws: true,
         changeOrigin: true,
         pathRewrite: { '^/nemflash': '' }
