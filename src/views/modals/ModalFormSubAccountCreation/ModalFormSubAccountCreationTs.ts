@@ -39,7 +39,7 @@ import { LedgerService } from '@/services/LedgerService';
 import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import { AccountService } from '@/services/AccountService';
-import { PrivateKeyValidator } from "@/core/validation/validators";
+import { PrivateKeyValidator } from '@/core/validation/validators';
 
 @Component({
     components: {
