@@ -255,6 +255,7 @@
     "error_peer_unreachable": "This node is unreachable.",
     "error_profile_does_not_exist": "Profile does not exist",
     "error_too_many_seed_accounts": "You cannot create more than {maxSeedAccountsNumber} child accounts",
+    "error_private_key_already_exists": "An account with the provided private key already exists",
     "estimated_period_of_validity": "Estimated Period Of Validity",
     "estimated_rental_fee": "Estimated rental fee",
     "existing_profile": "Do you already have a profile?",

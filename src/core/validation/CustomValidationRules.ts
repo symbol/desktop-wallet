@@ -170,7 +170,7 @@ export class CustomValidationRules {
                     return false;
                 }
             },
-            message: (_fieldName: string, values: Values) => `${i18n.t(NotificationType.PROFILE_NAME_EXISTS_ERROR, values)}`,
+            message: (_fieldName: string, values: Values) => `${i18n.t(NotificationType.PRIVATE_KEY_INVALID_ERROR, values)}`,
         });
 
         extend('addressOrPublicKey', {

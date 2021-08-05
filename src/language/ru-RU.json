@@ -255,6 +255,7 @@
     "error_peer_unreachable": "Эта нода недоступна.",
     "error_profile_does_not_exist": "Профиль не существует",
     "error_too_many_seed_accounts": "Вы не можете создать больше, чем {maxSeedAccountsNumber} дочерних аккаунтов",
+    "error_private_key_already_exists": "Учетная запись с предоставленным закрытым ключом уже существует",
     "estimated_period_of_validity": "Предполагаемый срок действия",
     "estimated_rental_fee": "Ориентировочная комиссионая аренда",
     "existing_profile": "У вас уже есть профиль?",
