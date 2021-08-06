@@ -243,6 +243,7 @@
     "error_peer_unreachable": "此节点暂不可用",
     "error_profile_does_not_exist": "钱包不存在",
     "error_too_many_seed_accounts": "子帐户数量不能超过{maxSeedAccountsNumber}个",
+    "error_private_key_already_exists": "提供的私钥帐户已存在",
     "estimated_period_of_validity": "预估有效期",
     "estimated_rental_fee": "预估租金",
     "existing_profile": "已有账户",

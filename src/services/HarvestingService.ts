@@ -17,6 +17,16 @@ import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import { HarvestingModelStorage } from '@/core/database/storage/HarvestingModelStorage';
 
+export interface RemoteKeyInfo {
+    newEncRemotePrivateKey: string;
+    newRemotePublicKey: string;
+}
+
+export interface VrfKeyInfo {
+    newEncVrfPrivateKey: string;
+    newVrfPublicKey: string;
+}
+
 export class HarvestingService {
     private readonly harvestingStorage = HarvestingModelStorage.INSTANCE;
 
@@ -54,6 +64,10 @@ export class HarvestingService {
         this.saveHarvestingModel(Object.assign(harvestingModel, { encVrfPrivateKey }));
     }
 
+    public updateNewAccountLinkKeyInfo(harvestingModel: HarvestingModel, options: RemoteKeyInfo | VrfKeyInfo) {
+        this.saveHarvestingModel(Object.assign(harvestingModel, { ...options }));
+    }
+
     public updateIsPersistentDelReqSent(harvestingModel: HarvestingModel, isPersistentDelReqSent: boolean) {
         this.saveHarvestingModel(Object.assign(harvestingModel, { isPersistentDelReqSent }));
     }
@@ -61,6 +75,11 @@ export class HarvestingService {
     public updateSelectedHarvestingNode(harvestingModel: HarvestingModel, selectedHarvestingNode: NodeModel) {
         this.saveHarvestingModel(Object.assign(harvestingModel, { selectedHarvestingNode }));
     }
+
+    public updateNewSelectedHarvestingNode(harvestingModel: HarvestingModel, newSelectedHarvestingNode: NodeModel) {
+        this.saveHarvestingModel(Object.assign(harvestingModel, { newSelectedHarvestingNode }));
+    }
+
     public updateDelegatedHarvestingRequestFailed(harvestingModel: HarvestingModel, delegatedHarvestingRequestFailed: boolean) {
         this.saveHarvestingModel(Object.assign(harvestingModel, { delegatedHarvestingRequestFailed }));
     }
