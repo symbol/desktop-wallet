@@ -87,7 +87,7 @@
                 <FormProfileUnlock
                     :focus="false"
                     :is-loading="isCreatingAccount"
-                    :disabled="!isValidName || !isValidPrivateKey"
+                    :disabled="!isValidName || !isPrivateKeyValidOrNotRequired"
                     @success="onAccountUnlocked"
                 />
             </div>
