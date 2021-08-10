@@ -31,6 +31,11 @@ export class MultisigService {
         return [].concat(...this.getMultisigGraphArraySorted(multisigEntries)).map((item) => item); // flatten
     }
 
+    /**
+     * sort entries based on tree hierarchy from top to bottom
+     * @param {Map<number, MultisigAccountInfo[]>} multisigEnteries
+     * @returns {MultisigAccountInfo[]}  sorted multisig graph
+     */
     public static getMultisigGraphArraySorted(multisigEntries: Map<number, MultisigAccountInfo[]>): MultisigAccountInfo[][] {
         return [...multisigEntries.keys()]
             .sort((a, b) => b - a) // Get addresses from top to bottom
@@ -104,6 +109,12 @@ export class MultisigService {
         });
         return addressesFromNextLevel;
     }
+
+    /**
+     * creates a structred Tree object containing Current multisig account with children
+     * @param {MultisigAccountInfo[][]} multisigEnteries
+     * @returns {string[]} Array of string addresses
+     */
     public getMultisigChildren(multisigAccountGraphInfo: MultisigAccountInfo[][]): string[] {
         const tree = [];
         multisigAccountGraphInfo.forEach((level: MultisigAccountInfo[]) => {
@@ -141,8 +152,13 @@ export class MultisigService {
         });
         return tree;
     }
+
+    /**
+     * @param {MultisigAccountInfo[][]} multisigEnteries
+     * @returns {Address[]} Array of Addresses
+     */
     public getMultisigChildrenAddresses(multisigAccountGraphInfo: MultisigAccountInfo[][]) {
-        const addresses = [];
+        const addresses: Address[] = [];
 
         if (multisigAccountGraphInfo) {
             const mutlisigChildrenTree = this.getMultisigChildren(multisigAccountGraphInfo);
