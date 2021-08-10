@@ -417,7 +417,10 @@ export class ModalFormSubAccountCreationTs extends Vue {
             return undefined === knownAccounts.find((w) => this.formItems.name.toUpperCase() === w.name.toUpperCase());
         }
     }
-    public get isValidPrivateKey(): boolean {
-        return PrivateKeyValidator.validate(this.formItems.privateKey, this.currentProfile.networkType);
+    public get isPrivateKeyValidOrNotRequired(): boolean {
+        return (
+            PrivateKeyValidator.validate(this.formItems.privateKey, this.currentProfile.networkType) ||
+            this.formItems.type === 'child_account'
+        );
     }
 }
