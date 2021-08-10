@@ -105,6 +105,17 @@ export const multisigEntries2 = multisigAccountGraphInfoDTO2.multisigEntries.map
         ),
 );
 
+export const multisigEntries3 = multisigAccountGraphInfoDTO.multisigEntries.map(
+    (multisigAccountInfoDTO) =>
+        new MultisigAccountInfo(
+            1,
+            multisigAccountInfoDTO.multisig.accountAddress,
+            multisigAccountInfoDTO.multisig.minApproval,
+            multisigAccountInfoDTO.multisig.minRemoval,
+            [],
+            multisigAccountInfoDTO.multisig.multisigAddresses,
+        ),
+);
 const multisigAccounts = new Map<number, MultisigAccountInfo[]>();
 multisigAccounts.set(multisigAccountGraphInfoDTO.level, multisigEntries1);
 

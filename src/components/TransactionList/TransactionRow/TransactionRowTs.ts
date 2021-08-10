@@ -49,7 +49,6 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { TransactionStatus as TransactionStatusEnum } from '@/core/transactions/TransactionStatus';
 import { MultisigService } from '@/services/MultisigService';
-import moment from 'moment';
 
 export interface TooltipMosaics {
     name: string;
@@ -466,19 +465,13 @@ export class TransactionRowTs extends Vue {
         return this.explorerBaseUrl.replace(/\/+$/, '') + '/transactions/' + this.transaction.transactionInfo.hash;
     }
 
-    public get date() {
+    public get date(): string {
         if (this.transaction instanceof AggregateTransaction) {
-            return moment(
-                String(this.transaction.deadline.toLocalDateTime(this.networkConfiguration.epochAdjustment).minusHours(48)),
-            ).format('YYYY-MM-DD HH:mm:ss');
+            return TimeHelpers.getTransactionDate(this.transaction.deadline, 48, this.networkConfiguration.epochAdjustment);
         } else if (this.transaction.type === TransactionType.HASH_LOCK) {
-            return moment(
-                String(this.transaction.deadline.toLocalDateTime(this.networkConfiguration.epochAdjustment).minusHours(6)),
-            ).format('YYYY-MM-DD HH:mm:ss');
+            return TimeHelpers.getTransactionDate(this.transaction.deadline, 6, this.networkConfiguration.epochAdjustment);
         } else {
-            return moment(
-                String(this.transaction.deadline.toLocalDateTime(this.networkConfiguration.epochAdjustment).minusHours(2)),
-            ).format('YYYY-MM-DD HH:mm:ss');
+            return TimeHelpers.getTransactionDate(this.transaction.deadline, 2, this.networkConfiguration.epochAdjustment);
         }
     }
 }

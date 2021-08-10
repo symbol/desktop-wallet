@@ -413,8 +413,9 @@ export default {
                     .pipe(
                         map((g) => {
                             commit('multisigAccountGraph', g.multisigEntries);
-                            commit('multisigAccountGraphInfo', MultisigService.getMultisigInfoFromMultisigGraphInfo(g));
-                            return MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
+                            const infoFromGraph = MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
+                            commit('multisigAccountGraphInfo', infoFromGraph);
+                            return infoFromGraph;
                         }),
                         catchError(() => {
                             return of([]);

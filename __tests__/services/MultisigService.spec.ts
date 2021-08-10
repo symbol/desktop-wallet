@@ -14,14 +14,31 @@
  *
  */
 
-import { multisigEntries1, multisigEntries2, multisigGraphInfo1 } from '@MOCKS/multisigGraphInfo';
+import { multisigEntries1, multisigEntries2, multisigEntries3, multisigGraphInfo1 } from '@MOCKS/multisigGraphInfo';
 import { MultisigService } from '@/services/MultisigService';
 
 describe('services/MultisigService', () => {
+    const multisignService = new MultisigService();
+
     describe('getMultisigInfoFromMultisigGraphInfo() should', () => {
         test('return multisig info contained in a multisig graph', () => {
             const multisigsInfo = MultisigService.getMultisigInfoFromMultisigGraphInfo(multisigGraphInfo1);
             expect(multisigsInfo).toStrictEqual([...multisigEntries1, ...multisigEntries2]);
+        });
+    });
+
+    describe('getMultisigChildren() should', () => {
+        test('return multisigChildren', () => {
+            const multisigChildren = multisignService.getMultisigChildren([multisigEntries3]);
+            console.log(multisignService.getMultisigChildrenAddresses([multisigEntries3]));
+            expect(multisigChildren.length).toBe(1);
+        });
+    });
+
+    describe('getMultisigChildren() should', () => {
+        test('return empty array for multisigAccount', () => {
+            const multisigChildren = multisignService.getMultisigChildren([multisigEntries1]);
+            expect(multisigChildren.length).toBe(0);
         });
     });
 });
