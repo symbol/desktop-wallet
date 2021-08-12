@@ -30,7 +30,6 @@ describe('services/MultisigService', () => {
     describe('getMultisigChildren() should', () => {
         test('return multisigChildren', () => {
             const multisigChildren = multisignService.getMultisigChildren([multisigEntries3]);
-            console.log(multisignService.getMultisigChildrenAddresses([multisigEntries3]));
             expect(multisigChildren.length).toBe(1);
         });
     });
