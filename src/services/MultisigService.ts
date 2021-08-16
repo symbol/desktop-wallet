@@ -155,7 +155,6 @@ export class MultisigService {
 
     /**
      *  return array of multisig children addreses
-
      * @param {MultisigAccountInfo[][]} multisigEnteries
      * @returns {Address[]} Array of Addresses
      */
