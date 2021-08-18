@@ -31,10 +31,10 @@ describe('ButtonCopyToClipboard', () => {
         wrapper.find('Button').trigger('click');
         expect(UIHelpers.copyToClipboard).toBeCalledWith('123');
     });
-    test('Click on Button should call method "copyToClipboard" when prop "value" does not exists', () => {
+    test('Click on Button should not call method "copyToClipboard" when prop "value" does not exists', () => {
         UIHelpers.copyToClipboard = jest.fn();
         wrapper.setProps({ value: null });
         wrapper.find('Button').trigger('click');
-        expect(UIHelpers.copyToClipboard).toBeCalled();
+        expect(UIHelpers.copyToClipboard).not.toBeCalled();
     });
 });
