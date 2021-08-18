@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Address, PersistentHarvestingDelegationMessage, Transaction, TransactionType, TransferTransaction } from 'symbol-sdk';
 // @ts-ignore
 import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue';
@@ -55,6 +55,14 @@ export class ActionDisplayTs extends Vue {
     protected address: Address;
 
     /**
+     * Multisig Aggregate Transaction Signer
+     * @private
+     * @type {Address}
+     */
+    @Prop({ default: undefined })
+    private aggregateTransactionSenderAddress: Address;
+
+    /**
      * Whether the transaction needs a cosignature
      * // @TODO
      * @protected
@@ -62,6 +70,7 @@ export class ActionDisplayTs extends Vue {
      */
     protected needsCosignature: boolean = false;
 
+    protected hasAggregateBondedSigner: boolean = false;
     /**
      * Returns transaction type label
      */
@@ -71,5 +80,11 @@ export class ActionDisplayTs extends Vue {
         }
 
         return i18n.t(`transaction_descriptor_${this.transaction.type}${this.isOptinPayoutTransaction ? '_optin' : ''}`);
+    }
+    @Watch('aggregateTransactionSenderAddress', { immediate: true })
+    onSenderAddressChange() {
+        if (this.aggregateTransactionSenderAddress && this.aggregateTransactionSenderAddress.plain()) {
+            this.hasAggregateBondedSigner = true;
+        }
     }
 }

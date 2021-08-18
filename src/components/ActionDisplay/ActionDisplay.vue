@@ -1,13 +1,20 @@
 <template>
-    <div>
+    <div v-if="transaction.type">
         <div class="overflow_ellipsis">
-            <AddressDisplay v-if="transaction.type !== transactionType.TRANSFER" :address="transaction.signer.address" />
-            <AddressDisplay
-                v-if="transaction.type === transactionType.TRANSFER"
-                :address="
-                    address.plain() === transaction.signer.address.plain() ? transaction.recipientAddress : transaction.signer.address
-                "
-            />
+            <div v-if="transaction.type !== transactionType.TRANSFER">
+                <AddressDisplay
+                    v-if="hasAggregateBondedSigner && aggregateTransactionSenderAddress"
+                    :address="aggregateTransactionSenderAddress"
+                />
+                <AddressDisplay v-else :address="transaction.signer.address" />
+            </div>
+            <div v-else>
+                <AddressDisplay
+                    :address="
+                        address.plain() === transaction.signer.address.plain() ? transaction.recipientAddress : transaction.signer.address
+                    "
+                />
+            </div>
         </div>
         <div class="bottom overflow_ellipsis">
             <span>{{ getTransactionType() }}</span>

@@ -7,7 +7,16 @@
 
         <!-- SECOND COLUMN -->
         <div class="address-cell">
-            <ActionDisplay :transaction="transaction" :is-optin-payout-transaction="isOptinPayoutTransaction" />
+            <ActionDisplay
+                :transaction="transaction"
+                :is-optin-payout-transaction="isOptinPayoutTransaction"
+                :aggregate-transaction-sender-address="
+                    aggregateTransactionDetails &&
+                    aggregateTransactionDetails.innerTransactions &&
+                    !!aggregateTransactionDetails.innerTransactions.length &&
+                    aggregateTransactionDetails.innerTransactions[0].signer.address
+                "
+            />
         </div>
 
         <!-- THIRD COLUMN -->

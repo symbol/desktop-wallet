@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Address, NamespaceId } from 'symbol-sdk';
 
 @Component
@@ -45,13 +45,14 @@ export class AddressDisplayTs extends Vue {
      * Load transaction details
      * @return {Promise<void>}
      */
-    protected async loadDetails(): Promise<void> {
+    @Watch('address', { immediate: true })
+    async loadDetails(): Promise<void> {
         this.descriptor = '';
         if (!this.address) {
             return;
         }
         // in case of normal transfer, display pretty address
-        if (this.address instanceof Address) {
+        if (this.address && this.address instanceof Address) {
             const contact = await this.$store.dispatch('addressBook/RESOLVE_ADDRESS', this.address.plain());
             this.descriptor = contact ? contact.name : this.address.pretty();
         } else if (this.address instanceof NamespaceId) {

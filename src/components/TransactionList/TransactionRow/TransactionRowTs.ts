@@ -124,7 +124,7 @@ export class TransactionRowTs extends Vue {
      * Current transaction Details
      * @type {AggregateTransaction}
      */
-    private aggregateTransactionDetails: AggregateTransaction;
+    private aggregateTransactionDetails: AggregateTransaction = null;
     /**
      * Get balance mosaics info.
      * @type {AggregateTransaction}
@@ -412,11 +412,12 @@ export class TransactionRowTs extends Vue {
     @Watch('transaction', { immediate: true })
     private async fetchTransaction() {
         if (
-            this.transaction instanceof AggregateTransaction &&
-            this.transaction.type === TransactionType.AGGREGATE_BONDED &&
-            this.hasMissSignatures
+            (this.transaction instanceof AggregateTransaction &&
+                this.transaction.type === TransactionType.AGGREGATE_BONDED &&
+                this.hasMissSignatures) ||
+            this.transaction instanceof AggregateTransaction
         ) {
-            this.transactionSigningFlag = true;
+            this.transactionSigningFlag = this.hasMissSignatures ? true : false;
             try {
                 // first get the last status
                 const transactionStatus: TransactionStatus = (await this.$store.dispatch('transaction/FETCH_TRANSACTION_STATUS', {
