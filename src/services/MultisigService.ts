@@ -17,6 +17,7 @@ import { Address, MultisigAccountGraphInfo, MultisigAccountInfo, NetworkType } f
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { Signer } from '@/store/Account';
+import { CommonHelpers } from '@/core/utils/CommonHelpers';
 
 export class MultisigService {
     /**
@@ -30,6 +31,11 @@ export class MultisigService {
         return [].concat(...this.getMultisigGraphArraySorted(multisigEntries)).map((item) => item); // flatten
     }
 
+    /**
+     * sort entries based on tree hierarchy from top to bottom
+     * @param {Map<number, MultisigAccountInfo[]>} multisigEnteries
+     * @returns {MultisigAccountInfo[]}  sorted multisig graph
+     */
     public static getMultisigGraphArraySorted(multisigEntries: Map<number, MultisigAccountInfo[]>): MultisigAccountInfo[][] {
         return [...multisigEntries.keys()]
             .sort((a, b) => b - a) // Get addresses from top to bottom
@@ -104,6 +110,70 @@ export class MultisigService {
         return addressesFromNextLevel;
     }
 
+    /**
+     * creates a structred Tree object containing Current multisig account with children
+     * @param {MultisigAccountInfo[][]} multisigEnteries
+     * @returns {string[]} Array of string addresses
+     */
+    public getMultisigChildren(multisigAccountGraphInfo: MultisigAccountInfo[][]): string[] {
+        const tree = [];
+        if (multisigAccountGraphInfo) {
+            multisigAccountGraphInfo.forEach((level: MultisigAccountInfo[]) => {
+                const levelToMap = Symbol.iterator in Object(level) ? level : [].concat(level);
+
+                levelToMap.forEach((entry: MultisigAccountInfo) => {
+                    // if current entry is not a multisig account
+                    if (entry.cosignatoryAddresses.length === 0) {
+                        tree.push({
+                            address: entry.accountAddress.plain(),
+                            children: [],
+                        });
+                    } else {
+                        // find the entry matching with address matching cosignatory address and update his children
+                        const updateRecursively = (address, object) => (obj) => {
+                            if (obj.address === address) {
+                                obj.children.push(object);
+                            } else if (obj.children !== undefined) {
+                                obj.children.forEach(updateRecursively(address, object));
+                            }
+                        };
+                        // @ts-ignore
+                        entry.cosignatoryAddresses.forEach((addressVal) => {
+                            tree.forEach(
+                                updateRecursively(addressVal['address'], {
+                                    // @ts-ignore
+                                    address: entry.accountAddress.plain(),
+                                    // @ts-ignore
+                                    children: [],
+                                }),
+                            );
+                        });
+                    }
+                });
+            });
+        }
+        return tree;
+    }
+
+    /**
+     *  return array of multisig children addreses
+     * @param {MultisigAccountInfo[][]} multisigEnteries
+     * @returns {Address[]} Array of Addresses
+     */
+    public getMultisigChildrenAddresses(multisigAccountGraphInfo: MultisigAccountInfo[][]) {
+        const addresses: Address[] = [];
+
+        if (multisigAccountGraphInfo) {
+            const mutlisigChildrenTree = this.getMultisigChildren(multisigAccountGraphInfo);
+            if (mutlisigChildrenTree && mutlisigChildrenTree.length) {
+                // @ts-ignore
+                CommonHelpers.parseObjectProperties(mutlisigChildrenTree[0].children, (k, prop) => {
+                    addresses.push(Address.createFromRawAddress(prop));
+                });
+            }
+            return addresses;
+        }
+    }
     private getAccountLabel(address: Address, accounts: AccountModel[]): string {
         const account = accounts.find((wlt) => address.plain() === wlt.address);
         return (account && account.name) || address.plain();

@@ -35,6 +35,6 @@ describe('ButtonCopyToClipboard', () => {
         UIHelpers.copyToClipboard = jest.fn();
         wrapper.setProps({ value: null });
         wrapper.find('Button').trigger('click');
-        expect(UIHelpers.copyToClipboard).not.toBeCalled();
+        expect(UIHelpers.copyToClipboard).toBeCalled();
     });
 });
