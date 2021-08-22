@@ -13,51 +13,39 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue, Prop } from 'vue-property-decorator';
-
-// internal dependencies
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
-
-// child components
-import { ValidationProvider } from 'vee-validate';
-// @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
+import { Formatters } from '@/core/utils/Formatters';
+// child components
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
     components: {
-        ValidationProvider,
-        ErrorTooltip,
         FormRow,
     },
 })
-export class SupplyInputTs extends Vue {
+export class SupplyAmountTs extends Vue {
     /**
-     * Value bound to parent v-model
-     * @type {string}
+     * Supply Absolute Value
+     * @type {number}
      */
-    @Prop({ default: '' }) value: number;
+    @Prop({ default: 0 }) supply: number;
+
+    /**
+     * Divisibility Value
+     * @type {number}
+     */
+    @Prop({ default: 0 }) divisibility: number;
 
     /**
      * Form label
      * @type {string}
      */
-    @Prop({ default: 'supply_absolute' }) label: string;
-
-    /**
-     * Validation rules
-     * @var {ValidationRuleset}
-     */
-    public validationRules = ValidationRuleset;
+    @Prop({ default: 'supply' }) label: string;
 
     /// region computed properties getter/setter
-    public get chosenValue(): number {
-        return this.value;
-    }
-
-    public set chosenValue(amount: number) {
-        this.$emit('input', amount);
+    public get relativeValue(): string {
+        return Formatters.formatNumber(this.supply / Math.pow(10, this.divisibility), this.divisibility);
     }
     /// end-region computed properties getter/setter
 }
