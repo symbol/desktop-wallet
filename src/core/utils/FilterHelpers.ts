@@ -28,7 +28,7 @@ export class FilterHelpers {
 
         // removes tha '<' char at the end of the string to replicate PHP's behaviour
         let after = inputStr;
-        after = after.substring(after.length - 1) === '<' ? after.substring(0, after.length - 1) : after;
+        after = after && after.substring(after.length - 1) === '<' ? after.substring(0, after.length - 1) : after;
 
         // recursively remove tags to ensure that the returned string doesn't contain
         // forbidden tags after previous passes (e.g. '<<bait/>switch/>')

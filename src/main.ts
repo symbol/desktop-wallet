@@ -27,8 +27,7 @@ import 'vue-toastification/dist/index.css';
 // internal dependencies
 import { UIBootstrapper } from '@/app/UIBootstrapper';
 import { AppStore } from '@/app/AppStore';
-// @ts-ignore
-import i18n from '@/language/index.ts';
+import i18n from '@/language/index';
 import router from '@/router/AppRouter';
 import VueNumber from 'vue-number-animation';
 import { VeeValidateSetup } from '@/core/validation/VeeValidateSetup';
@@ -65,7 +64,6 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 /// directives
 Vue.directive('click-outside', clickOutsideDirective);
 /// end-region directives
-
 const app = new Vue({
     // @ts-ignore
     router,
