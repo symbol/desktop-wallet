@@ -52,7 +52,7 @@ export class AddressDisplayTs extends Vue {
             return;
         }
         // in case of normal transfer, display pretty address
-        if (this.address && this.address instanceof Address) {
+        if (this.address instanceof Address) {
             const contact = await this.$store.dispatch('addressBook/RESOLVE_ADDRESS', this.address.plain());
             this.descriptor = contact ? contact.name : this.address.pretty();
         } else if (this.address instanceof NamespaceId) {

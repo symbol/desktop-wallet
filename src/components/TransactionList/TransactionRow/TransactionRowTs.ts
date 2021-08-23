@@ -426,7 +426,7 @@ export class TransactionRowTs extends Vue {
                 this.hasMissSignatures) ||
             this.transaction instanceof AggregateTransaction
         ) {
-            this.transactionSigningFlag = this.hasMissSignatures ? true : false;
+            this.transactionSigningFlag = this.hasMissSignatures;
             try {
                 // first get the last status
                 const transactionStatus: TransactionStatus = (await this.$store.dispatch('transaction/FETCH_TRANSACTION_STATUS', {

@@ -70,6 +70,11 @@ export class ActionDisplayTs extends Vue {
      */
     protected needsCosignature: boolean = false;
 
+    /**
+     * Whether the transaction has a multisig Signer
+     * @protected
+     * @type {boolean}
+     */
     protected hasAggregateBondedSigner: boolean = false;
     /**
      * Returns transaction type label
@@ -81,6 +86,10 @@ export class ActionDisplayTs extends Vue {
 
         return i18n.t(`transaction_descriptor_${this.transaction.type}${this.isOptinPayoutTransaction ? '_optin' : ''}`);
     }
+
+    /**
+     * Watches aggregate transaction sender value
+     */
     @Watch('aggregateTransactionSenderAddress', { immediate: true })
     onSenderAddressChange() {
         if (this.aggregateTransactionSenderAddress && this.aggregateTransactionSenderAddress.plain()) {
