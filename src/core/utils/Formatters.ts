@@ -17,17 +17,17 @@ import { Address } from 'symbol-sdk';
 import { decode } from 'utf8';
 
 export class Formatters {
-    public static formatNumber = (number: number): string => {
+    public static formatNumber = (number: number, fractionDigits = 0): string => {
         if (number <= 1) {
             return `${number}`;
         }
         if (number === Number(number.toFixed(0))) {
-            return number.toLocaleString('en-US', { minimumFractionDigits: 0 });
+            return number.toLocaleString('en-US', { minimumFractionDigits: fractionDigits });
         }
 
         const stringOfNumber = `${number}`;
         const minimumFractionDigits = stringOfNumber.length - stringOfNumber.indexOf('.') - 1;
-        return number.toLocaleString('en-US', { minimumFractionDigits });
+        return number.toLocaleString('en-US', { minimumFractionDigits: fractionDigits || minimumFractionDigits });
     };
 
     public static formatAddress = function (address: string): string {
