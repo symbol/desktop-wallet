@@ -226,4 +226,14 @@ export class MaxFeeSelectorTs extends Vue {
             })
             .slice();
     }
+    /**
+     * Checks if user is navigated to offline transactions
+     */
+
+    get isOfflineTransaction(): boolean {
+        if (this.$route.fullPath === '/offlineTransaction/simple') {
+            return true;
+        }
+        return false;
+    }
 }
