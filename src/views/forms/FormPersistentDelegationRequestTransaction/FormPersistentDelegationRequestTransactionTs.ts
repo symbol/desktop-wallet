@@ -415,29 +415,49 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return this.isNodeKeyLinked && this.isVrfKeyLinked && this.isAccountKeyLinked;
     }
 
-    public toMultiSigAggregate(txs: Transaction[], maxFee, transactionSigner: TransactionSigner) {
-        const aggregate = this.calculateSuggestedMaxFee(
-            AggregateTransaction.createBonded(
-                Deadline.create(this.epochAdjustment, 48),
-                txs.map((t) => t.toAggregate(this.currentSignerAccount)),
-                this.networkType,
-                [],
-                maxFee,
-            ),
-        );
+    /**
+     * Signs Aggregate Transaction(s) (for a multi-sig account)
+     *
+     * When signing for a multi-sig account if the `requiredCosignatures` is 1 then
+     * the transaction type will be AGGREGATE_COMPLETE otherwise it will be AGGREGATE_BONDED.
+     */
+    public toMultiSigAggregate(txs: Transaction[], maxFee, transactionSigner: TransactionSigner): Observable<Transaction[]> {
+        const aggregateBondedOrComplete =
+            this.requiredCosignatures === 1
+                ? AggregateTransaction.createComplete(
+                      Deadline.create(this.epochAdjustment),
+                      txs.map((t) => t.toAggregate(this.currentSignerAccount)),
+                      this.networkType,
+                      [],
+                      maxFee,
+                  )
+                : AggregateTransaction.createBonded(
+                      Deadline.create(this.epochAdjustment, 48),
+                      txs.map((t) => t.toAggregate(this.currentSignerAccount)),
+                      this.networkType,
+                      [],
+                      maxFee,
+                  );
+
+        const aggregate = this.calculateSuggestedMaxFee(aggregateBondedOrComplete);
+
         return transactionSigner.signTransaction(aggregate, this.generationHash).pipe(
             map((signedAggregateTransaction) => {
-                const hashLock = this.calculateSuggestedMaxFee(
-                    LockFundsTransaction.create(
-                        Deadline.create(this.epochAdjustment, 6),
-                        new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
-                        UInt64.fromUint(5760),
-                        signedAggregateTransaction,
-                        this.networkType,
-                        maxFee,
-                    ),
-                );
-                return [hashLock, aggregate];
+                if (aggregate.type === TransactionType.AGGREGATE_BONDED) {
+                    const hashLock = this.calculateSuggestedMaxFee(
+                        LockFundsTransaction.create(
+                            Deadline.create(this.epochAdjustment, 6),
+                            new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
+                            UInt64.fromUint(5760),
+                            signedAggregateTransaction,
+                            this.networkType,
+                            maxFee,
+                        ),
+                    );
+                    return [hashLock, aggregate];
+                }
+                // AGGREGATE_COMPLETE
+                return [aggregate];
             }),
         );
     }
@@ -518,7 +538,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                         return of([]) as Observable<Observable<BroadcastResult>[]>;
                     }
                     if (this.isMultisigMode()) {
-                        return of([this.announceHashAndAggregateBonded(service, signedTransactions)]);
+                        return of([this.announceAggregate(service, signedTransactions)]);
                     } else {
                         return of(this.announceSimple(service, signedTransactions));
                     }
@@ -543,7 +563,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                         return of([]) as Observable<Observable<BroadcastResult>[]>;
                     }
                     if (this.isMultisigMode()) {
-                        return of([this.announceHashAndAggregateBonded(service, signedTransactions)]);
+                        return of([this.announceAggregate(service, signedTransactions)]);
                     } else {
                         return of(this.announceSimple(service, signedTransactions));
                     }
@@ -586,7 +606,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                     return of([]) as Observable<Observable<BroadcastResult>[]>;
                 }
                 if (this.isMultisigMode()) {
-                    return of([this.announceHashAndAggregateBonded(service, signedTransactions)]);
+                    return of([this.announceAggregate(service, signedTransactions)]);
                 } else {
                     return of(this.announceSimple(service, signedTransactions));
                 }
@@ -624,6 +644,22 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         );
     }
 
+    /**
+     * Announces Aggregate Transaction (for a multi-sig account)
+     *
+     * When announcing for a multi-sig account if the `requiredCosignatures` is 1 then
+     * the transaction type will be AGGREGATE_COMPLETE otherwise it will be AGGREGATE_BONDED.
+     */
+    private announceAggregate(
+        service: TransactionAnnouncerService,
+        signedTransactions: Observable<SignedTransaction>[],
+    ): Observable<BroadcastResult> {
+        if (signedTransactions?.length > 1) {
+            return this.announceHashAndAggregateBonded(service, signedTransactions);
+        }
+        return this.announceSimple(service, signedTransactions)[0];
+    }
+
     private announceHashAndAggregateBonded(
         service: TransactionAnnouncerService,
         signedTransactions: Observable<SignedTransaction>[],
@@ -652,11 +688,9 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             return transaction;
         }
         if (transaction instanceof AggregateTransaction) {
-            // @ts-ignore
             return transaction.setMaxFeeForAggregate(feeMultiplier, this.requiredCosignatures);
-        } else {
-            return transaction.setMaxFee(feeMultiplier);
         }
+        return transaction.setMaxFee(feeMultiplier);
     }
 
     private resolveFeeMultipler(transaction: Transaction): number | undefined {
@@ -708,7 +742,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             selectedHarvestingNode: harvestingNode,
         });
 
-        // store annnounced harvesting node in local storage.
+        // store announced harvesting node in local storage.
         // it can be use when connection interrupt or waiting for co-signature.
         this.$store.dispatch('harvesting/UPDATE_ACCOUNT_NEW_SELECTED_HARVESTING_NODE', {
             accountAddress,
@@ -793,11 +827,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         this.action = HarvestingAction.STOP;
         this.onSubmit();
     }
-
-    // public onSwap() {
-    //     this.action = HarvestingAction.SWAP;
-    //     this.onSubmit();
-    // }
 
     public onStartClick() {
         if (this.activePanel === 1) {

@@ -288,8 +288,8 @@ export class FormTransactionBase extends Vue {
 
     protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
         if (this.isMultisigMode()) {
-            // If min Approval equal one, we can announce it with AggregateComplete to skip the lock fees.
-            if (this.currentSignerMultisigInfo?.minApproval === 1) {
+            // If `requiredCosignatures` equals to one, we can announce it with AggregateComplete to skip the lock fees.
+            if (this.requiredCosignatures === 1) {
                 return TransactionCommandMode.AGGREGATE;
             }
 
