@@ -422,22 +422,11 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * the transaction type will be AGGREGATE_COMPLETE otherwise it will be AGGREGATE_BONDED.
      */
     public toMultiSigAggregate(txs: Transaction[], maxFee, transactionSigner: TransactionSigner): Observable<Transaction[]> {
+        const innerTxs = txs.map((t) => t.toAggregate(this.currentSignerAccount));
         const aggregateBondedOrComplete =
             this.requiredCosignatures === 1
-                ? AggregateTransaction.createComplete(
-                      Deadline.create(this.epochAdjustment),
-                      txs.map((t) => t.toAggregate(this.currentSignerAccount)),
-                      this.networkType,
-                      [],
-                      maxFee,
-                  )
-                : AggregateTransaction.createBonded(
-                      Deadline.create(this.epochAdjustment, 48),
-                      txs.map((t) => t.toAggregate(this.currentSignerAccount)),
-                      this.networkType,
-                      [],
-                      maxFee,
-                  );
+                ? AggregateTransaction.createComplete(Deadline.create(this.epochAdjustment), innerTxs, this.networkType, [], maxFee)
+                : AggregateTransaction.createBonded(Deadline.create(this.epochAdjustment, 48), innerTxs, this.networkType, [], maxFee);
 
         const aggregate = this.calculateSuggestedMaxFee(aggregateBondedOrComplete);
 
