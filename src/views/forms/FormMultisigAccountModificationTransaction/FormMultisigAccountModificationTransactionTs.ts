@@ -423,27 +423,31 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
      */
     protected get requiredCosignatures(): number {
         if (this.multisigOperationType === 'conversion') {
-            return this.addressAdditions.length;
+            return this.addressAdditions.length + 1;
         }
         // proceed if modification
 
-        // if nothing is changed in the form or minApprovalDelta != 0 then the default value will be existing minApproval
-        let requiredCosignatures = this.currentMultisigInfo.minApproval;
+        let requiredCosignatures = 1;
+
+        if (this.addressDeletions.length > 0) {
+            requiredCosignatures = this.currentMultisigInfo.minRemoval;
+        }
 
         if (this.addressAdditions.length > 0) {
             /*
-      this is an edge case, since the new additions signatures are mandatory, there might be a case
-      where all the existing cosignatories sign their parts before new additions do.
-      So in order to stay safe we are adding all the cosignatories including the new additions.
-      */
-            requiredCosignatures = this.currentMultisigInfo.cosignatoryAddresses.length + this.addressAdditions.length;
-        } else {
-            if (
-                (this.formItems.minRemovalDelta != 0 || this.addressDeletions.length > 0) &&
-                this.currentMultisigInfo.minRemoval > requiredCosignatures
-            ) {
-                requiredCosignatures = this.currentMultisigInfo.minRemoval;
-            }
+          this is an edge case, since the new additions signatures are mandatory, there might be a case
+          where all the existing cosignatories sign their parts before new additions do.
+          So in order to stay safe we are adding all the cosignatories including the new additions.
+          */
+            requiredCosignatures = Math.max(
+                this.currentMultisigInfo.cosignatoryAddresses.length + this.addressAdditions.length,
+                requiredCosignatures,
+            );
+        }
+
+        if (!this.addressDeletions.length && !this.addressAdditions.length) {
+            // only removal or approval changes, no address additions or deletions
+            requiredCosignatures = this.currentMultisigInfo.minApproval;
         }
 
         return requiredCosignatures;
