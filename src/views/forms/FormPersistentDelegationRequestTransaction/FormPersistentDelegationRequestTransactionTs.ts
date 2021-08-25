@@ -609,6 +609,14 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         );
     }
 
+    /**
+     * Signs and announces the transactions given
+     *
+     * @param {Transaction[]} transactions
+     * @param {TransactionSigner} transactionSigner
+     * @param {TransactionAnnouncerService} service
+     * @return {Observable<Observable<BroadcastResult>[]>}
+     */
     private signAndAnnounceTransactions(
         transactions: Transaction[],
         transactionSigner: TransactionSigner,
