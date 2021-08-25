@@ -418,6 +418,7 @@ export default {
                             return infoFromGraph;
                         }),
                         catchError(() => {
+                            commit('multisigAccountGraphInfo', []);
                             return of([]);
                         }),
                     )
@@ -495,7 +496,6 @@ export default {
             const currentSignerAddress: Address = getters.currentSignerAddress;
             const currentAccountAddress: Address = getters.currentAccountAddress;
             const knownAccounts: AccountModel[] = getters.knownAccounts;
-
             // avoid calls if no account set
             if (!currentAccount || !currentAccountAddress) {
                 return;
@@ -530,6 +530,7 @@ export default {
                         return MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
                     }),
                     catchError(() => {
+                        commit('multisigAccountGraphInfo', []);
                         return of([]);
                     }),
                 )

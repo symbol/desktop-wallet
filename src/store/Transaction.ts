@@ -297,7 +297,7 @@ export default {
             const multisignService = new MultisigService();
             let multisigChildrenAddresses = [];
             if (multisigAccountGraphInfo) {
-                multisigChildrenAddresses = multisignService.getMultisigChildrenAddresses(multisigAccountGraphInfo);
+                multisigChildrenAddresses = multisignService.getMultisigChildrenAddresses(multisigAccountGraphInfo).concat(currentSignerAddress);
             }
             subscriptions.push(
                 subscribeTransactions(
