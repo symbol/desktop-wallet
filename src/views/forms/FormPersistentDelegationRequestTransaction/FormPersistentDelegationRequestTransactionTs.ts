@@ -522,15 +522,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             return this.getPersistentDelegationRequestTransaction(transactionSigner).pipe(
                 flatMap((transactions) => {
                     Vue.set(this, 'activating', true);
-                    const signedTransactions = transactions.map((t) => transactionSigner.signTransaction(t, this.generationHash));
-                    if (!signedTransactions.length) {
-                        return of([]) as Observable<Observable<BroadcastResult>[]>;
-                    }
-                    if (this.isMultisigMode()) {
-                        return of([this.announceAggregate(service, signedTransactions)]);
-                    } else {
-                        return of(this.announceSimple(service, signedTransactions));
-                    }
+                    return this.signAndAnnounceTransactions(transactions, transactionSigner, service);
                 }),
                 tap((resArr) =>
                     resArr[0].subscribe((res) => {
@@ -547,15 +539,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         } else if (this.action === HarvestingAction.SINGLE_KEY) {
             return this.getSingleKeyLinkTransaction(this.type, transactionSigner).pipe(
                 flatMap((transactions) => {
-                    const signedTransactions = transactions.map((t) => transactionSigner.signTransaction(t, this.generationHash));
-                    if (!signedTransactions.length) {
-                        return of([]) as Observable<Observable<BroadcastResult>[]>;
-                    }
-                    if (this.isMultisigMode()) {
-                        return of([this.announceAggregate(service, signedTransactions)]);
-                    } else {
-                        return of(this.announceSimple(service, signedTransactions));
-                    }
+                    return this.signAndAnnounceTransactions(transactions, transactionSigner, service);
                 }),
                 tap((resArr) => {
                     resArr[0].subscribe((res) => {
@@ -590,15 +574,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return this.getKeyLinkTransactions(transactionSigner).pipe(
             flatMap((transactions) => {
                 Vue.set(this, 'linking', true);
-                const signedTransactions = transactions.map((t) => transactionSigner.signTransaction(t, this.generationHash));
-                if (!signedTransactions.length) {
-                    return of([]) as Observable<Observable<BroadcastResult>[]>;
-                }
-                if (this.isMultisigMode()) {
-                    return of([this.announceAggregate(service, signedTransactions)]);
-                } else {
-                    return of(this.announceSimple(service, signedTransactions));
-                }
+                return this.signAndAnnounceTransactions(transactions, transactionSigner, service);
             }),
             tap((resArr) =>
                 resArr[0].subscribe((res) => {
@@ -631,6 +607,21 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 }),
             ),
         );
+    }
+
+    private signAndAnnounceTransactions(
+        transactions: Transaction[],
+        transactionSigner: TransactionSigner,
+        service: TransactionAnnouncerService,
+    ): Observable<Observable<BroadcastResult>[]> {
+        const signedTransactions = transactions.map((t) => transactionSigner.signTransaction(t, this.generationHash));
+        if (!signedTransactions.length) {
+            return of([]) as Observable<Observable<BroadcastResult>[]>;
+        }
+        if (this.isMultisigMode()) {
+            return of([this.announceAggregate(service, signedTransactions)]);
+        }
+        return of(this.announceSimple(service, signedTransactions));
     }
 
     /**
