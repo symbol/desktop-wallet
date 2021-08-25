@@ -418,6 +418,7 @@ export default {
                             return infoFromGraph;
                         }),
                         catchError(() => {
+                            commit('multisigAccountGraphInfo', []);
                             return of([]);
                         }),
                     )
@@ -530,6 +531,7 @@ export default {
                         return MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
                     }),
                     catchError(() => {
+                        commit('multisigAccountGraphInfo', []);
                         return of([]);
                     }),
                 )
