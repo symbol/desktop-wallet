@@ -41,14 +41,10 @@ beforeEach(() => {
     vm = wrapper.vm;
 });
 
-describe('FormTransactionBase', () => {
-    it('getTransactionCommandMode should return AGGREGATE given minApproval equal 1', () => {
+describe('FormTransactionBase in multisig mode', () => {
+    it('getTransactionCommandMode should return AGGREGATE given requiredCosignatures equals to 1', () => {
         // arrange
-        wrapper.setData({
-            currentSignerMultisigInfo: {
-                minApproval: 1,
-            },
-        });
+        jest.spyOn(wrapper.vm, 'requiredCosignatures', 'get').mockReturnValue(1);
 
         // act
         const mode = vm.getTransactionCommandMode([]);
@@ -57,26 +53,9 @@ describe('FormTransactionBase', () => {
         expect(mode).toBe(TransactionCommandMode.AGGREGATE);
     });
 
-    it('getTransactionCommandMode should return MULTISIGN given minApproval equal 2', () => {
+    it('getTransactionCommandMode should return MULTISIGN given requiredCosignatures is greater than 1', () => {
         // arrange
-        wrapper.setData({
-            currentSignerMultisigInfo: {
-                minApproval: 2,
-            },
-        });
-
-        // act
-        const mode = vm.getTransactionCommandMode([]);
-
-        // assert
-        expect(mode).toBe(TransactionCommandMode.MULTISIGN);
-    });
-
-    it('getTransactionCommandMode should return MULTISIGN if minApproval not exist', () => {
-        // arrange
-        wrapper.setData({
-            currentSignerMultisigInfo: {},
-        });
+        jest.spyOn(wrapper.vm, 'requiredCosignatures', 'get').mockReturnValue(2);
 
         // act
         const mode = vm.getTransactionCommandMode([]);
