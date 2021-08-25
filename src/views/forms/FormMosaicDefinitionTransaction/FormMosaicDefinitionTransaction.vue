@@ -9,6 +9,8 @@
 
                 <DivisibilityInput v-model="formItems.divisibility" />
 
+                <SupplyAmount v-if="!isAggregate" :supply="formItems.supply" :divisibility="formItems.divisibility" />
+
                 <DurationInput
                     v-show="!formItems.permanent"
                     v-model="formItems.duration"

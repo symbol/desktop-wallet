@@ -39,7 +39,7 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { ValidationObserver } from 'vee-validate';
 import { Signer } from '@/store/Account';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
-import { TransactionCommand, TransactionCommandMode } from '@/services/TransactionCommand';
+import { TransactionCommandMode } from '@/services/TransactionCommand';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 // @ts-ignore
 import { Observable, of } from 'rxjs';
@@ -235,48 +235,6 @@ export class ModalTransactionConfirmationTs extends Vue {
      */
     protected getTransactions(): Transaction[] {
         throw new Error("Getter method 'getTransactions()' must be overloaded in derivate components.");
-    }
-    protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
-        if (this.isMultisigMode()) {
-            // If min Approval equal one, we can announce it with AggregateComplete to skip the lock fees.
-            if (this.currentSignerMultisigInfo?.minApproval === 1) {
-                return TransactionCommandMode.AGGREGATE;
-            }
-
-            return TransactionCommandMode.MULTISIGN;
-        }
-        if (transactions.length > 1) {
-            return TransactionCommandMode.AGGREGATE;
-        } else {
-            return TransactionCommandMode.SIMPLE;
-        }
-    }
-    public createTransactionCommand(): TransactionCommand {
-        const transactions = this.getTransactions();
-        const mode = this.getTransactionCommandMode(transactions);
-        return new TransactionCommand(
-            mode,
-            this.selectedSigner,
-            this.currentSignerPublicKey,
-            transactions,
-            this.networkMosaic,
-            this.generationHash,
-            this.networkType,
-            this.epochAdjustment,
-            this.networkConfiguration,
-            this.transactionFees,
-            this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures,
-        );
-    }
-    /**
-     * Setter for transactions that will be staged
-     * @param {Transaction[]} transactions
-     * @throws {Error} If not overloaded in derivate component
-     */
-    protected setTransactions(transactions: Transaction[]) {
-        //TODO do we need these methods?
-        const error = `setTransactions() must be overloaded. Call got ${transactions.length} transactions.`;
-        throw new Error(error);
     }
 
     /// region computed properties getter/setter

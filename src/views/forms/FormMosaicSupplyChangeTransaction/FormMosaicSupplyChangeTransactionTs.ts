@@ -43,6 +43,7 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 // @ts-ignore
 import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue';
+import { Formatters } from '@/core/utils/Formatters';
 
 @Component({
     components: {
@@ -146,7 +147,7 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
             return;
         }
         const relative = currentMosaicInfo.supply / Math.pow(10, currentMosaicInfo.divisibility);
-        return isNaN(relative) ? null : relative.toLocaleString();
+        return isNaN(relative) ? null : Formatters.formatNumber(relative, this.currentMosaicInfo.divisibility);
     }
 
     /**
@@ -179,7 +180,7 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
             return;
         }
         const relative = this.newMosaicAbsoluteSupply / Math.pow(10, this.currentMosaicInfo.divisibility);
-        return isNaN(relative) ? null : relative.toLocaleString();
+        return isNaN(relative) ? null : Formatters.formatNumber(relative, this.currentMosaicInfo.divisibility);
     }
 
     /**
