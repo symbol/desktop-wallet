@@ -967,7 +967,7 @@
     "signature": "署名",
     "signed_transaction_qr": "署名済みトランザクションQR",
     "signer_public_key": "署名者公開鍵",
-    "simple_transaction": "シンプルトランザクション",
+    "simple_transaction": "転送トランザクション",
     "simple_transfer_type": "シンプルトランザクション",
     "skip": "スキップ",
     "speed": "速度",
