@@ -70,14 +70,4 @@ export class TransactionListFiltersTs extends Vue {
     public downloadTransactions() {
         this.$emit('downloadTransactions');
     }
-
-    /**
-     * Hook called before the component is destroyed
-     */
-    beforeDestroy(): void {
-        // reset the selected signer if it is not the current account
-        if (this.currentAccount) {
-            this.onSignerSelectorChange(this.currentAccount.address);
-        }
-    }
 }

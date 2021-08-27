@@ -127,8 +127,10 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
         this.formItems.minApprovalDelta = !!this.minApprovalDelta ? this.minApprovalDelta : defaultMinApprovalDelta;
         this.formItems.minRemovalDelta = !!this.minRemovalDelta ? this.minRemovalDelta : defaultMinRemovalDelta;
         this.formItems.cosignatoryModifications = {};
-        if (!!this.currentAccount) {
-            this.formItems.signerAddress = this.currentAccount.address; // always select current account on form reset
+        if (!!this.selectedSigner) {
+            this.formItems.signerAddress = this.selectedSigner.address.plain();
+        } else if (!!this.currentAccount) {
+            this.formItems.signerAddress = this.currentAccount.address;
         }
 
         // - maxFee must be absolute
