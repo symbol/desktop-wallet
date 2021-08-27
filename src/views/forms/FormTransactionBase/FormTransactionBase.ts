@@ -182,25 +182,6 @@ export class FormTransactionBase extends Vue {
     }
 
     /**
-     * Hook called when the component is being destroyed (before)
-     * @return {void}
-     */
-    public async beforeDestroy() {
-        // reset the selected signer if it is not the current account
-        if (!this.currentAccount) {
-            return;
-        }
-
-        if (!this.selectedSigner.address.equals(Address.createFromRawAddress(this.currentAccount.address))) {
-            await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
-                address: Address.createFromRawAddress(this.currentAccount.address),
-                reset: false,
-                unsubscribeWS: true,
-            });
-        }
-    }
-
-    /**
      * Current signer's multisig accounts
      * @readonly
      * @type {{publicKey: string, label: string}[]}
