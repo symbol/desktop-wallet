@@ -3,6 +3,41 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## [1.0.6][v1.0.6] - 30-Aug-2021
+
+### Milestone: Stabilize and bug fix
+
+#### Added
+
+- Added Russian translation
+- Added support for signing multisig multilevel transactions
+- Added address next to alias in transaction confirmation screen for clarity
+- Added SupplyAmount component in the Create Mosaic Form
+
+#### Changed
+
+- Changing signer to a multi-sig account, it will be a 'sticky account' until getting changed again by user.
+
+#### Fixed
+
+- Use AggregateComplete if minimalApproval is 1
+- Fixed co-signor can not be removed
+- Fixed parent namespaces list update when current signer changed
+- Fixed low fees when average fee is zero
+- Prevent private key loss during Account key link transactions
+- Fixed news page broken link
+- Fixed aggregate transfer page default from value fixed
+- Fixed transfer transaction form unnecessarily getting reset after confirming multisig transaction
+- Fixed private key validation when adding new account into profile
+- Fixed no notification for cosigners when creating multisig
+- Fixed input focus after click on Paste
+- Fixed Ui/Ux issues
+- Fixed translation typos
+- Fixed multisig conversion tx required co-signatures
+- Fixed the supply formatting in the Supply Change Form
+- Fixed the supply column formatting in the Mosaic List
+
 ## [1.0.5][v1.0.5] - 21-Jul-2021
 
 ### Milestone: Minor bug fix
