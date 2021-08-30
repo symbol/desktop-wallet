@@ -22,12 +22,12 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 #### Fixed
 
 - Use AggregateComplete instead of AggregateBonded if minimalApproval is 1[#1344](https://github.com/symbol/symbol-desktop-wallet/issues/1344)
-- Fixed co-signor cannot be removed [#1646](https://github.com/symbol/desktop-wallet/issues/1646)
+- Fixed co-signer cannot be removed [#1646](https://github.com/symbol/desktop-wallet/issues/1646)
 - Fixed parent namespaces list update when current signer changed [#1587](https://github.com/symbol/desktop-wallet/issues/1587)
 - Fixed low fees when average fee is zero [#1609](https://github.com/symbol/desktop-wallet/pull/1609)
 - Prevent private key loss during Account key link transactions [#1476](https://github.com/symbol/symbol-desktop-wallet/issues/1476)
 - Fixed news page broken link [#1592](https://github.com/symbol/desktop-wallet/issues/1592)
-- Fixed Aggregate - by default empty From selector [#1666](https://github.com/symbol/desktop-wallet/issues/1666) 
+- Fixed Aggregate - by default empty From selector [#1666](https://github.com/symbol/desktop-wallet/issues/1666)
 - Fixed transfer transaction form unnecessarily getting reset after confirming multisig transaction [#1577](https://github.com/symbol/desktop-wallet/issues/1577)
 - Fixed private key validation when adding new account into profile [#1614](https://github.com/symbol/desktop-wallet/issues/1614)
 - Fixed no notification for cosigners when creating multisig [#1655](https://github.com/symbol/desktop-wallet/issues/1655)
@@ -767,3 +767,4 @@ NOTE: We have known issues which have been logged into github and will look for 
 [v0.9.4-beta]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.4-beta
 
 [v1.0.5]: https://github.com/symbol/symbol-desktop-wallet/releases/tag/v1.0.5
+[v1.0.6]: https://github.com/symbol/symbol-desktop-wallet/releases/tag/v1.0.6
