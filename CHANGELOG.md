@@ -10,33 +10,34 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 #### Added
 
-- Added Russian translation
-- Added support for signing multisig multilevel transactions
-- Added address next to alias in transaction confirmation screen for clarity
-- Added SupplyAmount component in the Create Mosaic Form
+- Added Russian translation [#1591](https://github.com/symbol/desktop-wallet/pull/1591)
+- Added support for signing multisig multilevel transactions [#1350](https://github.com/symbol/desktop-wallet/issues/1350)
+- Added address next to alias in transaction confirmation screen for clarity [#1151](https://github.com/symbol/desktop-wallet/issues/1151)
+- Added SupplyAmount component in the Create Mosaic Form [#1561](https://github.com/symbol/desktop-wallet/issues/1561)
 
 #### Changed
 
-- Changing signer to a multi-sig account, it will be a 'sticky account' until getting changed again by user.
+- Changing signer to a multi-sig account, it will be a 'sticky account' until getting changed again by user [#1664](https://github.com/symbol/desktop-wallet/issues/1664)
 
 #### Fixed
 
-- Use AggregateComplete if minimalApproval is 1
-- Fixed co-signor can not be removed
-- Fixed parent namespaces list update when current signer changed
-- Fixed low fees when average fee is zero
-- Prevent private key loss during Account key link transactions
-- Fixed news page broken link
-- Fixed aggregate transfer page default from value fixed
-- Fixed transfer transaction form unnecessarily getting reset after confirming multisig transaction
-- Fixed private key validation when adding new account into profile
-- Fixed no notification for cosigners when creating multisig
-- Fixed input focus after click on Paste
-- Fixed Ui/Ux issues
+- Use AggregateComplete if minimalApproval is 1 [#1344](https://github.com/symbol/symbol-desktop-wallet/issues/1344)
+- Fixed co-signor can not be removed [#1646](https://github.com/symbol/desktop-wallet/issues/1646)
+- Fixed parent namespaces list update when current signer changed [#1587](https://github.com/symbol/desktop-wallet/issues/1587)
+- Fixed low fees when average fee is zero [#1609](https://github.com/symbol/desktop-wallet/pull/1609)
+- Prevent private key loss during Account key link transactions [#1476](https://github.com/symbol/symbol-desktop-wallet/issues/1476)
+- Fixed news page broken link [#1592](https://github.com/symbol/desktop-wallet/issues/1592)
+- Fixed Aggregate - by default empty From selector [#1666](https://github.com/symbol/desktop-wallet/issues/1666) 
+- Fixed transfer transaction form unnecessarily getting reset after confirming multisig transaction [#1577](https://github.com/symbol/desktop-wallet/issues/1577)
+- Fixed private key validation when adding new account into profile [#1614](https://github.com/symbol/desktop-wallet/issues/1614)
+- Fixed no notification for cosigners when creating multisig [#1655](https://github.com/symbol/desktop-wallet/issues/1655)
+- Fixed Link is overlaid by warning on offline tx page [#1553](https://github.com/symbol/desktop-wallet/issues/1553)
+- Created sub-namespace - visible namespaces for other account if selected account is cosigner [#1587](https://github.com/symbol/desktop-wallet/issues/1587)
+- Fixed Mosaics list supply column formatting [#1650](https://github.com/symbol/desktop-wallet/issues/1650)
+- Fixed mosaic is not visible on Supply Change Transaction Page [#1644](https://github.com/symbol/desktop-wallet/issues/1644)
+- Fixed Ledger X - not able to sign transaction with 21 transfer txs [#1645](https://github.com/symbol/desktop-wallet/issues/1645)
 - Fixed translation typos
-- Fixed multisig conversion tx required co-signatures
-- Fixed the supply formatting in the Supply Change Form
-- Fixed the supply column formatting in the Mosaic List
+- Fixed UI/UX issues
 
 ## [1.0.5][v1.0.5] - 21-Jul-2021
 
