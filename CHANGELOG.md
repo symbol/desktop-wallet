@@ -17,12 +17,12 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 #### Changed
 
-- Changing signer to a multi-sig account, it will be a 'sticky account' until getting changed again by user [#1664](https://github.com/symbol/desktop-wallet/issues/1664)
+- Changing signer to a multi-sig account will stick until changed again by user [#1664](https://github.com/symbol/desktop-wallet/issues/1664)
 
 #### Fixed
 
-- Use AggregateComplete if minimalApproval is 1 [#1344](https://github.com/symbol/symbol-desktop-wallet/issues/1344)
-- Fixed co-signor can not be removed [#1646](https://github.com/symbol/desktop-wallet/issues/1646)
+- Use AggregateComplete instead of AggregateBonded if minimalApproval is 1[#1344](https://github.com/symbol/symbol-desktop-wallet/issues/1344)
+- Fixed co-signor cannot be removed [#1646](https://github.com/symbol/desktop-wallet/issues/1646)
 - Fixed parent namespaces list update when current signer changed [#1587](https://github.com/symbol/desktop-wallet/issues/1587)
 - Fixed low fees when average fee is zero [#1609](https://github.com/symbol/desktop-wallet/pull/1609)
 - Prevent private key loss during Account key link transactions [#1476](https://github.com/symbol/symbol-desktop-wallet/issues/1476)
