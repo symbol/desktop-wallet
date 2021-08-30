@@ -3,6 +3,43 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.6][v1.0.6] - 30-Aug-2021
+
+### Milestone: Stabilize and bug fix
+
+#### Added
+- Russian translation [#1591](https://github.com/symbol/desktop-wallet/pull/1591)
+
+#### Fixed
+- Could add address next to alias in confirmation screen for clarity. [#1151](https://github.com/symbol/desktop-wallet/issues/1151)
+- Multisig unnecessarily uses bonded aggregates & UI bug [#1344](https://github.com/symbol/symbol-desktop-wallet/issues/1344)
+- Co-signatory of a (2 of 3) multisig account cannot sign an aggregate bonded tx [#1350](https://github.com/symbol/desktop-wallet/issues/1350)
+- When importing a Mnemonic, there is a copy button where a person is supposed to paste their 24 words [#1474](https://github.com/symbol/symbol-desktop-wallet/issues/1474)
+- Problem activating delegated harvesting where all keys aren't linked [#1476](https://github.com/symbol/symbol-desktop-wallet/issues/1476)
+- Link is overlaid by warning on offline tx page [#1553](https://github.com/symbol/desktop-wallet/issues/1553)
+- Style fix Remove gray rectangle [#1557](https://github.com/symbol/symbol-desktop-wallet/issues/1557)
+- Naming issue. A Simple Transaction should be a Transfer Transaction [#1558](https://github.com/symbol/desktop-wallet/issues/1558)
+- Mosaic creation issue. Mosaic supply is unclear [#1561](https://github.com/symbol/desktop-wallet/issues/1561)
+- When preparing a tx and a previous tx is confirmed, the send fields on a new tx are reset. [#1577](https://github.com/symbol/desktop-wallet/issues/1577)
+- Create subnamespace - visible namespaces for other account if selected account is cosigner [#1587](https://github.com/symbol/desktop-wallet/issues/1587)
+- News feed doesn't work [#1592](https://github.com/symbol/desktop-wallet/issues/1592)
+- Fix fees low when average fee is zero [#1609](https://github.com/symbol/desktop-wallet/pull/1609)
+- Add account -> invalid error message when provided private key not valid [#1614](https://github.com/symbol/desktop-wallet/issues/1614)
+- Rename Url -> URL [#1616](https://github.com/symbol/desktop-wallet/issues/1616)
+- Ledger signing error v1.0.5 [#1620](https://github.com/symbol/desktop-wallet/issues/1620)
+- Harvesting - wrong node selected [#1622](https://github.com/symbol/desktop-wallet/issues/1622)
+- Unable to encrypt message when provided address is with dashes [#1629](https://github.com/symbol/desktop-wallet/issues/1629)
+- Mosaic is not visible on Supply Change Transaction Page [#1644](https://github.com/symbol/desktop-wallet/issues/1644)
+- Ledger X - not able to sign transaction with 21 transfer txs [#1645](https://github.com/symbol/desktop-wallet/issues/1645)
+- Sometimes co-signor can not be removed [#1646](https://github.com/symbol/desktop-wallet/issues/1646)
+- The same partial tx requests can be send a few times. [#1649](https://github.com/symbol/desktop-wallet/issues/1649)
+- Mosaics list - supply column formatting [#1650](https://github.com/symbol/desktop-wallet/issues/1650)
+- Multisig creation - no notification for cosigners when creating multisig [#1655](https://github.com/symbol/desktop-wallet/issues/1655)
+- Multisig preview. Multisig presented for regular account that is cosigner [#1659](https://github.com/symbol/desktop-wallet/issues/1659)
+- When changing to a multi-sig account, it will be a 'sticky account' until [#1664](https://github.com/symbol/desktop-wallet/issues/1664)
+- Aggregate - by default empty From selector [#1666](https://github.com/symbol/desktop-wallet/issues/1666)
+
+
 ## [1.0.5][v1.0.5] - 21-Jul-2021
 
 ### Milestone: Minor bug fix
@@ -731,3 +768,4 @@ NOTE: We have known issues which have been logged into github and will look for 
 [v0.9.4-beta]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.4-beta
 
 [v1.0.5]: https://github.com/symbol/symbol-desktop-wallet/releases/tag/v1.0.5
+[v1.0.6]: https://github.com/symbol/symbol-desktop-wallet/releases/tag/v1.0.6
