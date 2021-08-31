@@ -256,14 +256,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     protected resetForm(): void {
         this.showUnlockAccountModal = false;
-        this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentMosaicList());
-
         if (this.editMode) {
             return;
         }
-
-        // - reset attached mosaics
-        this.formItems.attachedMosaics = [];
 
         // - set default form values
         this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
@@ -278,6 +273,27 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         }
         this.formItems.recipient = !!this.recipient ? this.recipient : null;
 
+        this.formItems.messagePlain = this.message ? Formatters.hexToUtf8(this.message.payload) : '';
+        this.formItems.encryptMessage = false;
+        this.encyptedMessage = null;
+        // - maxFee must be absolute
+        this.formItems.maxFee = this.defaultFee;
+
+        // transaction details passed via router
+        this.importTransaction = this.$route.params.transaction || this.importedTransaction ? true : false;
+        this.resetMosaics(this.importTransaction);
+        this.triggerChange();
+    }
+
+    /**
+     * Resetting mosaics list when signer is changed
+     */
+    private resetMosaics(importedTransaction: boolean): void {
+        this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentMosaicList());
+        // - reset attached mosaics
+        this.formItems.attachedMosaics = [];
+        this.formItems.selectedMosaicHex = this.networkMosaic.toHex();
+
         const attachedMosaics: MosaicAttachment[] = [
             {
                 id: new MosaicId(this.networkCurrency.mosaicIdHex),
@@ -288,28 +304,18 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             },
         ];
 
-        this.formItems.messagePlain = this.message ? Formatters.hexToUtf8(this.message.payload) : '';
-        this.formItems.encryptMessage = false;
-        this.encyptedMessage = null;
-        // - maxFee must be absolute
-        this.formItems.maxFee = this.defaultFee;
-
-        // transaction details passed via router
-        this.importTransaction = this.$route.params.transaction || this.importedTransaction ? true : false;
-        if (this.importTransaction) {
+        if (importedTransaction) {
             this.setTransactions([!!this.importedTransaction ? this.importedTransaction : this.$route.params.transaction] as any);
             this.formItems.attachedMosaics.forEach((attachedMosaic) => {
                 this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
             });
             this.onChangeRecipient();
         } else {
-            // - set attachedMosaics and allocate slots
             attachedMosaics.forEach((attachedMosaic, index) => {
                 this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
                 Vue.set(this.formItems.attachedMosaics, index, attachedMosaic);
             });
         }
-        this.triggerChange();
     }
 
     /**
@@ -602,7 +608,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     @Watch('selectedSigner')
     onSelectedSignerChange() {
         this.formItems.signerAddress = this.selectedSigner.address.plain();
-        this.resetForm();
+        this.resetMosaics(false);
     }
 
     /**
