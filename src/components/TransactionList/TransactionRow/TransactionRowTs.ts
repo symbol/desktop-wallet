@@ -466,7 +466,7 @@ export class TransactionRowTs extends Vue {
     }
 
     public get date(): string {
-        if (this.transaction instanceof AggregateTransaction) {
+        if (this.transaction.type === TransactionType.AGGREGATE_BONDED) {
             return TimeHelpers.getTransactionDate(this.transaction.deadline, 48, this.networkConfiguration.epochAdjustment);
         } else if (this.transaction.type === TransactionType.HASH_LOCK) {
             return TimeHelpers.getTransactionDate(this.transaction.deadline, 6, this.networkConfiguration.epochAdjustment);
