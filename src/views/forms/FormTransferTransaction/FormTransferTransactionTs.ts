@@ -282,7 +282,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         // transaction details passed via router
         this.importTransaction = this.$route.params.transaction || this.importedTransaction ? true : false;
         this.resetMosaics(this.importTransaction);
-        this.triggerChange();
     }
 
     /**
@@ -316,6 +315,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                 Vue.set(this.formItems.attachedMosaics, index, attachedMosaic);
             });
         }
+        this.triggerChange();
     }
 
     /**
