@@ -281,13 +281,13 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
         // transaction details passed via router
         this.importTransaction = this.$route.params.transaction || this.importedTransaction ? true : false;
-        this.resetMosaics(this.importTransaction);
+        this.resetMosaicsAndTriggerChange(this.importTransaction);
     }
 
     /**
      * Resetting mosaics list when signer is changed
      */
-    private resetMosaics(importedTransaction: boolean): void {
+    private resetMosaicsAndTriggerChange(importedTransaction: boolean): void {
         this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentMosaicList());
         // - reset attached mosaics
         this.formItems.attachedMosaics = [];
@@ -608,7 +608,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     @Watch('selectedSigner')
     onSelectedSignerChange() {
         this.formItems.signerAddress = this.selectedSigner.address.plain();
-        this.resetMosaics(false);
+        this.resetMosaicsAndTriggerChange(false);
     }
 
     /**
