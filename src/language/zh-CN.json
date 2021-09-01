@@ -967,7 +967,7 @@
     "signature": "签名",
     "signed_transaction_qr": "已签署的交易QR码",
     "signer_public_key": "签名者公钥",
-    "simple_transaction": "转账交易",
+    "simple_transaction": "转账交易 ",
     "simple_transfer_type": "简单转移",
     "skip": "跳过",
     "speed": "产块速度",
