@@ -281,13 +281,17 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
         // transaction details passed via router
         this.importTransaction = this.$route.params.transaction || this.importedTransaction ? true : false;
-        this.resetMosaicsAndTriggerChange(this.importTransaction);
+        this.resetMosaics(this.importTransaction);
+        this.triggerChange();
     }
 
     /**
      * Resetting mosaics list when signer is changed
+     * @param {boolean} importedTransaction checks if transaction is imported
+     * @param {string} triggerChange checks if triggerChange() needs to be called
+     * @return {void}
      */
-    private resetMosaicsAndTriggerChange(importedTransaction: boolean): void {
+    private resetMosaics(importedTransaction: boolean, triggerChange = false): void {
         this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentMosaicList());
         // - reset attached mosaics
         this.formItems.attachedMosaics = [];
@@ -315,7 +319,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                 Vue.set(this.formItems.attachedMosaics, index, attachedMosaic);
             });
         }
-        this.triggerChange();
+        if (triggerChange) {
+            this.triggerChange();
+        }
     }
 
     /**
@@ -605,10 +611,13 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * Resetting the form when choosing a multisig signer and changing multisig signer
      * Is necessary to make the mosaic inputs reactive
      */
-    @Watch('selectedSigner')
+    @Watch('selectedSigner', { immediate: true })
     onSelectedSignerChange() {
-        this.formItems.signerAddress = this.selectedSigner.address.plain();
-        this.resetMosaicsAndTriggerChange(false);
+        const signerAddressChanged: boolean = this.formItems.signerAddress !== this.selectedSigner.address.plain();
+        if (signerAddressChanged) {
+            this.formItems.signerAddress = this.selectedSigner.address.plain();
+            this.resetMosaics(false, true);
+        }
     }
 
     /**
