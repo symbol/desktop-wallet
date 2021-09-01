@@ -429,10 +429,10 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
         }
         // proceed if modification
 
-        let requiredCosignatures = 1;
+        let reqCosignatures = 1;
 
         if (this.addressDeletions.length > 0) {
-            requiredCosignatures = this.currentMultisigInfo.minRemoval;
+            reqCosignatures = this.multisigRequiredCosignaturesForRemoval;
         }
 
         if (this.addressAdditions.length > 0) {
@@ -441,18 +441,38 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
           where all the existing cosignatories sign their parts before new additions do.
           So in order to stay safe we are adding all the cosignatories including the new additions.
           */
-            requiredCosignatures = Math.max(
+            reqCosignatures = Math.max(
                 this.currentMultisigInfo.cosignatoryAddresses.length + this.addressAdditions.length,
-                requiredCosignatures,
+                reqCosignatures,
             );
         }
 
         if (!this.addressDeletions.length && !this.addressAdditions.length) {
             // only removal or approval changes, no address additions or deletions
-            requiredCosignatures = this.currentMultisigInfo.minApproval;
+            reqCosignatures = this.multisigRequiredCosignatures;
         }
 
-        return requiredCosignatures;
+        return reqCosignatures;
+    }
+
+    /**
+        multilevel multisig calculates `max(minRemoval)` in the tree from selectedSigner to currentAccount
+     */
+    private get multisigRequiredCosignaturesForRemoval(): number {
+        // travel every level from current account to the current signer in the tree and return the max minRemoval found
+        if (this.multisigAccountGraphInfo?.length < 2) {
+            // it is not a multilevel multisig then return current minRemoval
+            return this.currentSignerMultisigInfo?.minRemoval || 0;
+        }
+        let maxOfMinRemovals = 1;
+        for (let inx = 0; inx < this.multisigAccountGraphInfo.length; inx++) {
+            const currentLevel: MultisigAccountInfo = this.multisigAccountGraphInfo[inx];
+            maxOfMinRemovals = Math.max(currentLevel.minRemoval, maxOfMinRemovals);
+            if (currentLevel.accountAddress.plain() === this.selectedSigner.address.plain()) {
+                break;
+            }
+        }
+        return maxOfMinRemovals;
     }
 
     /**

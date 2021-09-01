@@ -45,6 +45,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
             transactionFees: 'network/transactionFees',
             isOfflineMode: 'network/isOfflineMode',
             multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
+            multisigAccountGraph: 'account/multisigAccountGraph',
         }),
     },
 })
@@ -139,7 +140,9 @@ export class FormTransactionBase extends Vue {
 
     protected isOfflineMode: boolean;
 
-    private multisigAccountGraphInfo: MultisigAccountInfo[];
+    protected multisigAccountGraphInfo: MultisigAccountInfo[];
+
+    protected multisigAccountGraph: MultisigAccountInfo[][];
 
     /**
      * Type the ValidationObserver refs
@@ -308,21 +311,23 @@ export class FormTransactionBase extends Vue {
         return this.isMultisigMode() ? this.multisigRequiredCosignatures : this.selectedSigner.requiredCosignatures;
     }
 
-    private get multisigRequiredCosignatures(): number {
-        // travel every level from current account to the current signer in the tree and return the max minApproval found
+    /**
+     * travel every level from current account to the current signer in the tree and return the max minApproval found
+     */
+    protected get multisigRequiredCosignatures(): number {
         if (this.multisigAccountGraphInfo?.length < 2) {
             // it is not a multilevel multisig then return current minApproval
-            return this.currentSignerMultisigInfo.minApproval;
+            return this.currentSignerMultisigInfo?.minApproval || 0;
         }
-        let maxOfminApprovals = 1;
+        let maxOfMinApprovals = 1;
         for (let inx = 0; inx < this.multisigAccountGraphInfo.length; inx++) {
             const currentLevel: MultisigAccountInfo = this.multisigAccountGraphInfo[inx];
-            maxOfminApprovals = Math.max(currentLevel.minApproval, maxOfminApprovals);
+            maxOfMinApprovals = Math.max(currentLevel.minApproval, maxOfMinApprovals);
             if (currentLevel.accountAddress.plain() === this.selectedSigner.address.plain()) {
                 break;
             }
         }
-        return maxOfminApprovals;
+        return maxOfMinApprovals;
     }
 
     /**
