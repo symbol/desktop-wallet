@@ -44,6 +44,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
             networkConfiguration: 'network/networkConfiguration',
             transactionFees: 'network/transactionFees',
             isOfflineMode: 'network/isOfflineMode',
+            multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
         }),
     },
 })
@@ -137,6 +138,8 @@ export class FormTransactionBase extends Vue {
     protected transactionFees: TransactionFees;
 
     protected isOfflineMode: boolean;
+
+    private multisigAccountGraphInfo: MultisigAccountInfo[];
 
     /**
      * Type the ValidationObserver refs
@@ -302,7 +305,24 @@ export class FormTransactionBase extends Vue {
     }
 
     protected get requiredCosignatures() {
-        return this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures;
+        return this.isMultisigMode() ? this.multisigRequiredCosignatures : this.selectedSigner.requiredCosignatures;
+    }
+
+    private get multisigRequiredCosignatures(): number {
+        // travel every level from current account to the current signer in the tree and return the max minApproval found
+        if (this.multisigAccountGraphInfo?.length < 2) {
+            // it is not a multilevel multisig then return current minApproval
+            return this.currentSignerMultisigInfo.minApproval;
+        }
+        let maxOfminApprovals = 1;
+        for (let inx = 0; inx < this.multisigAccountGraphInfo.length; inx++) {
+            const currentLevel: MultisigAccountInfo = this.multisigAccountGraphInfo[inx];
+            maxOfminApprovals = Math.max(currentLevel.minApproval, maxOfminApprovals);
+            if (currentLevel.accountAddress.plain() === this.selectedSigner.address.plain()) {
+                break;
+            }
+        }
+        return maxOfminApprovals;
     }
 
     /**
