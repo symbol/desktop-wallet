@@ -612,13 +612,16 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * Is necessary to make the mosaic inputs reactive
      */
     public async onChangeSigner(address: string) {
-        await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
-            address: Address.createFromRawAddress(address),
-            reset: false,
-            unsubscribeWS: false,
-        });
-        this.formItems.signerAddress = this.selectedSigner.address.plain();
-        this.resetMosaicsAndTriggerChange(false, true);
+        const signerChanged: boolean = this.formItems.signerAddress !== this.selectedSigner.address.plain();
+        if (signerChanged) {
+            await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
+                address: Address.createFromRawAddress(address),
+                reset: false,
+                unsubscribeWS: false,
+            });
+            this.formItems.signerAddress = this.selectedSigner.address.plain();
+            this.resetMosaicsAndTriggerChange(false, true);
+        }
     }
 
     /**

@@ -249,18 +249,6 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     }
 
     /**
-     * Resetting the form when choosing a multisig signer and changing multisig signer
-     * Is necessary to make the mosaic inputs reactive
-     */
-    @Watch('selectedSigner')
-    onSelectedSignerChange() {
-        this.formItems.signerAddress = this.selectedSigner.address.plain();
-        if (this.isMultisigMode()) {
-            this.resetForm();
-        }
-    }
-
-    /**
      * Hook called when a signer is selected.
      * Overriden to update the namespaces owned when the current signer changed
      *
@@ -268,10 +256,14 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
      * @param {string} address
      */
     public async onChangeSigner(address: string) {
-        await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
-            address: Address.createFromRawAddress(address),
-            reset: true, // need to make a namespaces API call when the current signer changes
-            unsubscribeWS: false,
-        });
+        const signerChanged: boolean = this.formItems.signerAddress !== this.selectedSigner.address.plain();
+        if (signerChanged) {
+            await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
+                address: Address.createFromRawAddress(address),
+                reset: true, // need to make a namespaces API call when the current signer changes
+                unsubscribeWS: false,
+            });
+            this.resetForm();
+        }
     }
 }
