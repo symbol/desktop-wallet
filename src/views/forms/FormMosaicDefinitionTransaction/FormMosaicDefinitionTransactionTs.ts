@@ -38,6 +38,8 @@ import SupplyInput from '@/components/SupplyInput/SupplyInput.vue';
 // @ts-ignore
 import DivisibilityInput from '@/components/DivisibilityInput/DivisibilityInput.vue';
 // @ts-ignore
+import SupplyAmount from '@/components/SupplyAmount/SupplyAmount.vue';
+// @ts-ignore
 import DurationInput from '@/components/DurationInput/DurationInput.vue';
 // @ts-ignore
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue';
@@ -56,6 +58,7 @@ import RentalFee from '@/components/RentalFees/RentalFee.vue';
         SignerSelector,
         SupplyInput,
         DivisibilityInput,
+        SupplyAmount,
         DurationInput,
         ModalTransactionConfirmation,
         MaxFeeAndSubmit,

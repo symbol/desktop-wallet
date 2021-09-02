@@ -18,6 +18,7 @@ import { AssetTableService, TableField } from './AssetTableService';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { MosaicService } from '@/services/MosaicService';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
+import { Formatters } from '@/core/utils/Formatters';
 
 export class MosaicTableService extends AssetTableService {
     constructor(
@@ -65,7 +66,7 @@ export class MosaicTableService extends AssetTableService {
                 return {
                     hexId: mosaicInfo.mosaicIdHex,
                     name: mosaicInfo.name || 'N/A',
-                    supply: mosaicInfo.supply.toLocaleString(),
+                    supply: Formatters.formatNumber(mosaicInfo.supply / Math.pow(10, mosaicInfo.divisibility), mosaicInfo.divisibility),
                     balance: (mosaicInfo.balance || 0) / Math.pow(10, mosaicInfo.divisibility),
                     expiration: expiration,
                     divisibility: mosaicInfo.divisibility,

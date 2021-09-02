@@ -70,6 +70,7 @@ export class AppRouter extends Router {
      * @param {string} [parentRouteName]
      * @returns {AppRoute[]}
      */
+    // @ts-ignore
     public getRoutes(parentRouteName?: string): AppRoute[] {
         const parentRoute = this.getParentRoute(parentRouteName);
         if (!parentRoute) {

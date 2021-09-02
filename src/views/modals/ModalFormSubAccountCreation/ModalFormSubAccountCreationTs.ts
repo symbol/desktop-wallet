@@ -39,6 +39,7 @@ import { LedgerService } from '@/services/LedgerService';
 import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import { AccountService } from '@/services/AccountService';
+import { PrivateKeyValidator } from '@/core/validation/validators';
 
 @Component({
     components: {
@@ -415,5 +416,11 @@ export class ModalFormSubAccountCreationTs extends Vue {
             const knownAccounts = Object.values(this.accountService.getKnownAccounts(this.currentProfile.accounts));
             return undefined === knownAccounts.find((w) => this.formItems.name.toUpperCase() === w.name.toUpperCase());
         }
+    }
+    public get isPrivateKeyValidOrNotRequired(): boolean {
+        return (
+            PrivateKeyValidator.validate(this.formItems.privateKey, this.currentProfile.networkType) ||
+            this.formItems.type === 'child_account'
+        );
     }
 }

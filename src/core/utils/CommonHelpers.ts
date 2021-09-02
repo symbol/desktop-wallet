@@ -47,4 +47,18 @@ export class CommonHelpers {
             await this.sleep(interval);
         }
     }
+    /**
+     * Traverses the tree object to pick addresses strings.
+     * @param {array} array of multisig children
+     * @param {parse} function to parse tree and pick children addresses
+     */
+    public static parseObjectProperties(obj: [], parse): void {
+        for (const k in obj) {
+            if (typeof obj[k] === 'object' && obj[k] !== null) {
+                this.parseObjectProperties(obj[k], parse);
+            } else if (Object.prototype.hasOwnProperty.call(obj, k)) {
+                parse(k, obj[k]);
+            }
+        }
+    }
 }

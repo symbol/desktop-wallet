@@ -618,7 +618,16 @@ export default {
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const networkRepository = repositoryFactory.createNetworkRepository();
             networkRepository.getTransactionFees().subscribe((fees: TransactionFees) => {
-                commit('transactionFees', fees);
+                commit(
+                    'transactionFees',
+                    new TransactionFees(
+                        fees.averageFeeMultiplier < fees.minFeeMultiplier ? fees.minFeeMultiplier : fees.averageFeeMultiplier,
+                        fees.medianFeeMultiplier < fees.minFeeMultiplier ? fees.minFeeMultiplier : fees.medianFeeMultiplier,
+                        fees.highestFeeMultiplier,
+                        fees.lowestFeeMultiplier,
+                        fees.minFeeMultiplier,
+                    ),
+                );
             });
         },
     },

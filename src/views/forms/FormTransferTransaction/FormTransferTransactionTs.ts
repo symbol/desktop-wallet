@@ -266,13 +266,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.formItems.attachedMosaics = [];
 
         // - set default form values
-        if (this.isAggregate) {
-            if (this.isMounted) {
-                this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
-            }
-        } else {
-            this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
-        }
+        this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
 
         this.formItems.selectedMosaicHex = this.networkMosaic.toHex();
         // default currentAccount Address to recipientRaw
@@ -556,7 +550,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     onChangeRecipient() {
         // filter tags
         this.formItems.recipientRaw = FilterHelpers.stripFilter(this.formItems.recipientRaw);
-        if (Address.isValidRawAddress(this.formItems.recipientRaw)) {
+        if (AddressValidator.validate(this.formItems.recipientRaw)) {
             this.$store.dispatch('account/GET_RECIPIENT', Address.createFromRawAddress(this.formItems.recipientRaw)).then(() => {
                 if (!this.currentRecipient?.publicKey || /^0*$/.test(this.currentRecipient.publicKey)) {
                     this.resetEncryptedMessage();
@@ -608,9 +602,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     @Watch('selectedSigner')
     onSelectedSignerChange() {
         this.formItems.signerAddress = this.selectedSigner.address.plain();
-        if (this.isMultisigMode()) {
-            this.resetForm();
-        }
+        this.resetForm();
     }
 
     /**

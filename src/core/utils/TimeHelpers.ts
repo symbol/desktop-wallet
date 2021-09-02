@@ -14,7 +14,8 @@
  *
  */
 
-import { DtoMapping } from 'symbol-sdk';
+import { Deadline, DtoMapping } from 'symbol-sdk';
+import moment from 'moment';
 
 export class TimeHelpers {
     public static addZero = function (number: number): string {
@@ -152,4 +153,15 @@ export class TimeHelpers {
         const nextMonthFirstDay = new Date(date.getFullYear(), nextMonth, 1);
         return new Date(Number(nextMonthFirstDay));
     };
+    /**
+     * Returns Transaction date String
+     * @param {Deadline} transactionDeadline
+     * @param {number} deadlineInHours based on transaction type
+     * @return {string}
+     */
+    public static getTransactionDate(transactionDeadline: Deadline, deadlineInHours: number, epochAdjustment: number) {
+        return moment(String(transactionDeadline.toLocalDateTime(epochAdjustment).minusHours(deadlineInHours))).format(
+            'YYYY-MM-DD HH:mm:ss',
+        );
+    }
 }

@@ -127,8 +127,10 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
         this.formItems.minApprovalDelta = !!this.minApprovalDelta ? this.minApprovalDelta : defaultMinApprovalDelta;
         this.formItems.minRemovalDelta = !!this.minRemovalDelta ? this.minRemovalDelta : defaultMinRemovalDelta;
         this.formItems.cosignatoryModifications = {};
-        if (!!this.currentAccount) {
-            this.formItems.signerAddress = this.currentAccount.address; // always select current account on form reset
+        if (!!this.selectedSigner) {
+            this.formItems.signerAddress = this.selectedSigner.address.plain();
+        } else if (!!this.currentAccount) {
+            this.formItems.signerAddress = this.currentAccount.address;
         }
 
         // - maxFee must be absolute
@@ -423,30 +425,54 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
      */
     protected get requiredCosignatures(): number {
         if (this.multisigOperationType === 'conversion') {
-            return this.addressAdditions.length;
+            return this.addressAdditions.length + 1;
         }
         // proceed if modification
 
-        // if nothing is changed in the form or minApprovalDelta != 0 then the default value will be existing minApproval
-        let requiredCosignatures = this.currentMultisigInfo.minApproval;
+        let reqCosignatures = 1;
+
+        if (this.addressDeletions.length > 0) {
+            reqCosignatures = this.multisigRequiredCosignaturesForRemoval;
+        }
 
         if (this.addressAdditions.length > 0) {
             /*
-      this is an edge case, since the new additions signatures are mandatory, there might be a case
-      where all the existing cosignatories sign their parts before new additions do.
-      So in order to stay safe we are adding all the cosignatories including the new additions.
-      */
-            requiredCosignatures = this.currentMultisigInfo.cosignatoryAddresses.length + this.addressAdditions.length;
-        } else {
-            if (
-                (this.formItems.minRemovalDelta != 0 || this.addressDeletions.length > 0) &&
-                this.currentMultisigInfo.minRemoval > requiredCosignatures
-            ) {
-                requiredCosignatures = this.currentMultisigInfo.minRemoval;
-            }
+          this is an edge case, since the new additions signatures are mandatory, there might be a case
+          where all the existing cosignatories sign their parts before new additions do.
+          So in order to stay safe we are adding all the cosignatories including the new additions.
+          */
+            reqCosignatures = Math.max(
+                this.currentMultisigInfo.cosignatoryAddresses.length + this.addressAdditions.length,
+                reqCosignatures,
+            );
         }
 
-        return requiredCosignatures;
+        if (!this.addressDeletions.length && !this.addressAdditions.length) {
+            // only removal or approval changes, no address additions or deletions
+            reqCosignatures = this.multisigRequiredCosignatures;
+        }
+
+        return reqCosignatures;
+    }
+
+    /**
+        multilevel multisig calculates `max(minRemoval)` in the tree from selectedSigner to currentAccount
+     */
+    private get multisigRequiredCosignaturesForRemoval(): number {
+        // travel every level from current account to the current signer in the tree and return the max minRemoval found
+        if (this.multisigAccountGraphInfo?.length <= 2) {
+            // it is not a multilevel multisig then return current minRemoval
+            return this.currentSignerMultisigInfo?.minRemoval || 0;
+        }
+        let maxOfMinRemovals = 1;
+        for (let inx = 0; inx < this.multisigAccountGraphInfo.length; inx++) {
+            const currentLevel: MultisigAccountInfo = this.multisigAccountGraphInfo[inx];
+            maxOfMinRemovals = Math.max(currentLevel.minRemoval, maxOfMinRemovals);
+            if (currentLevel.accountAddress.plain() === this.selectedSigner.address.plain()) {
+                break;
+            }
+        }
+        return maxOfMinRemovals;
     }
 
     /**

@@ -44,6 +44,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
             networkConfiguration: 'network/networkConfiguration',
             transactionFees: 'network/transactionFees',
             isOfflineMode: 'network/isOfflineMode',
+            multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
         }),
     },
 })
@@ -138,6 +139,8 @@ export class FormTransactionBase extends Vue {
 
     protected isOfflineMode: boolean;
 
+    protected multisigAccountGraphInfo: MultisigAccountInfo[];
+
     /**
      * Type the ValidationObserver refs
      * @type {{
@@ -179,25 +182,6 @@ export class FormTransactionBase extends Vue {
      */
     protected createDeadline(): Deadline {
         return Deadline.create(this.epochAdjustment);
-    }
-
-    /**
-     * Hook called when the component is being destroyed (before)
-     * @return {void}
-     */
-    public async beforeDestroy() {
-        // reset the selected signer if it is not the current account
-        if (!this.currentAccount) {
-            return;
-        }
-
-        if (!this.selectedSigner.address.equals(Address.createFromRawAddress(this.currentAccount.address))) {
-            await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
-                address: Address.createFromRawAddress(this.currentAccount.address),
-                reset: false,
-                unsubscribeWS: true,
-            });
-        }
     }
 
     /**
@@ -288,6 +272,11 @@ export class FormTransactionBase extends Vue {
 
     protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
         if (this.isMultisigMode()) {
+            // If `requiredCosignatures` equals to one, we can announce it with AggregateComplete to skip the lock fees.
+            if (this.requiredCosignatures === 1) {
+                return TransactionCommandMode.AGGREGATE;
+            }
+
             return TransactionCommandMode.MULTISIGN;
         }
         if (transactions.length > 1) {
@@ -316,7 +305,26 @@ export class FormTransactionBase extends Vue {
     }
 
     protected get requiredCosignatures() {
-        return this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures;
+        return this.isMultisigMode() ? this.multisigRequiredCosignatures : this.selectedSigner.requiredCosignatures;
+    }
+
+    /**
+     * travel every level from current account to the current signer in the tree and return the max minApproval found
+     */
+    protected get multisigRequiredCosignatures(): number {
+        if (this.multisigAccountGraphInfo?.length <= 2) {
+            // it is not a multilevel multisig then return current minApproval
+            return this.currentSignerMultisigInfo?.minApproval || 0;
+        }
+        let maxOfMinApprovals = 1;
+        for (let inx = 0; inx < this.multisigAccountGraphInfo.length; inx++) {
+            const currentLevel: MultisigAccountInfo = this.multisigAccountGraphInfo[inx];
+            maxOfMinApprovals = Math.max(currentLevel.minApproval, maxOfMinApprovals);
+            if (currentLevel.accountAddress.plain() === this.selectedSigner.address.plain()) {
+                break;
+            }
+        }
+        return maxOfMinApprovals;
     }
 
     /**
