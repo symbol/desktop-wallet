@@ -27,15 +27,19 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Fixed low fees when average fee is zero [#1609](https://github.com/symbol/desktop-wallet/pull/1609)
 - Prevent private key loss during Account key link transactions [#1476](https://github.com/symbol/symbol-desktop-wallet/issues/1476)
 - Fixed news page broken link [#1592](https://github.com/symbol/desktop-wallet/issues/1592)
-- Fixed Aggregate - by default empty From selector [#1666](https://github.com/symbol/desktop-wallet/issues/1666)
 - Fixed transfer transaction form unnecessarily getting reset after confirming multisig transaction [#1577](https://github.com/symbol/desktop-wallet/issues/1577)
 - Fixed private key validation when adding new account into profile [#1614](https://github.com/symbol/desktop-wallet/issues/1614)
 - Fixed no notification for cosigners when creating multisig [#1655](https://github.com/symbol/desktop-wallet/issues/1655)
 - Fixed Link is overlaid by warning on offline tx page [#1553](https://github.com/symbol/desktop-wallet/issues/1553)
 - Created sub-namespace - visible namespaces for other account if selected account is cosigner [#1587](https://github.com/symbol/desktop-wallet/issues/1587)
-- Fixed Mosaics list supply column formatting [#1650](https://github.com/symbol/desktop-wallet/issues/1650)
 - Fixed mosaic is not visible on Supply Change Transaction Page [#1644](https://github.com/symbol/desktop-wallet/issues/1644)
 - Fixed Ledger X - not able to sign transaction with 21 transfer txs [#1645](https://github.com/symbol/desktop-wallet/issues/1645)
+- Fixed Mosaics list supply column formatting [#1650](https://github.com/symbol/desktop-wallet/issues/1650)
+- Fixed Aggregate - by default empty From selector [#1666](https://github.com/symbol/desktop-wallet/issues/1666)
+- Fixed Multisig account transfer view - mosaics not visible [#1675](https://github.com/symbol/desktop-wallet/issues/1675)
+- Fixed Multilevel multisig - complete instead of bonded [#1676](https://github.com/symbol/desktop-wallet/issues/1676)
+- Fixed Aggregate complete - invalid date of send transaction [#1677](https://github.com/symbol/desktop-wallet/issues/1677)
+- Fixed Mosaics - not able to edit supply or link alias for mosaic owned by multisig [#1679](https://github.com/symbol/desktop-wallet/issues/1679)
 - Fixed translation typos
 - Fixed UI/UX issues
 
