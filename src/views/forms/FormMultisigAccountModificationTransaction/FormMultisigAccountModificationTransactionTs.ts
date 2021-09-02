@@ -460,7 +460,7 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
      */
     private get multisigRequiredCosignaturesForRemoval(): number {
         // travel every level from current account to the current signer in the tree and return the max minRemoval found
-        if (this.multisigAccountGraphInfo?.length < 2) {
+        if (this.multisigAccountGraphInfo?.length <= 2) {
             // it is not a multilevel multisig then return current minRemoval
             return this.currentSignerMultisigInfo?.minRemoval || 0;
         }
