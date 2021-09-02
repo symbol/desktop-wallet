@@ -527,8 +527,9 @@ export default {
                     map((g) => {
                         // sorted array to be represented in multisig tree
                         commit('multisigAccountGraph', g.multisigEntries);
-                        commit('multisigAccountGraphInfo', MultisigService.getMultisigGraphArraySorted(g.multisigEntries));
-                        return MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
+                        const infoFromGraph = MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
+                        commit('multisigAccountGraphInfo', infoFromGraph);
+                        return infoFromGraph;
                     }),
                     catchError(() => {
                         commit('multisigAccountGraphInfo', []);
