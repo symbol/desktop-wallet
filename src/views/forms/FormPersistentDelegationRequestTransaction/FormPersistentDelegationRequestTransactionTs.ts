@@ -170,8 +170,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     private tempTransactionSigner: TransactionSigner;
     private tempAccount: Account;
-    public vrfPrivateKeyTemp: string;
-    public remotePrivateKeyTemp: string;
+    public vrfPrivateKeyTemp: string = '';
+    public remotePrivateKeyTemp: string = '';
 
     /**
      * Panel tab management getters/setters
@@ -238,7 +238,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * @var {string}
      */
     private type: string;
-    private password: string;
+    private password: string = '';
     private linkIcon: string = officialIcons.publicChain;
     private linking = false;
     private showModalImportKey: boolean = false;
@@ -710,13 +710,13 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public saveVrfKey(accountAddress: string, encVrfPrivateKey: string) {
         this.$store.dispatch('harvesting/UPDATE_VRF_ACCOUNT_PRIVATE_KEY', { accountAddress, encVrfPrivateKey });
     }
-    public saveVrfKeyInfo(accountAddress: string, newEncVrfPrivateKey: string, newVrfPublicKey) {
+    public saveVrfKeyInfo(accountAddress: string, newEncVrfPrivateKey: string, newVrfPublicKey: string) {
         this.$store.dispatch('harvesting/UPDATE_NEW_VRF_KEY_INFO', { accountAddress, newEncVrfPrivateKey, newVrfPublicKey });
     }
     public saveRemoteKey(accountAddress: string, encRemotePrivateKey: string) {
         this.$store.dispatch('harvesting/UPDATE_REMOTE_ACCOUNT_PRIVATE_KEY', { accountAddress, encRemotePrivateKey });
     }
-    public saveRemoteKeyInfo(accountAddress: string, newEncRemotePrivateKey: string, newRemotePublicKey) {
+    public saveRemoteKeyInfo(accountAddress: string, newEncRemotePrivateKey: string, newRemotePublicKey: string) {
         this.$store.dispatch('harvesting/UPDATE_NEW_REMOTE_KEY_INFO', {
             accountAddress,
             newEncRemotePrivateKey,

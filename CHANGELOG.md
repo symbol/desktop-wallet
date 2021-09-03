@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
-## [1.0.6][v1.0.6] - 03-Sep-2021
+## [1.0.6][v1.0.6] - 06-Sep-2021
 
 ### Milestone: Stabilize and bug fix
 
@@ -40,6 +40,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Fixed Multilevel multisig - complete instead of bonded [#1676](https://github.com/symbol/desktop-wallet/issues/1676)
 - Fixed Aggregate complete - invalid date of send transaction [#1677](https://github.com/symbol/desktop-wallet/issues/1677)
 - Fixed Mosaics - not able to edit supply or link alias for mosaic owned by multisig [#1679](https://github.com/symbol/desktop-wallet/issues/1679)
+- Fixed Ledger harvesting - VRF and Remote private keys not saved [#1692](https://github.com/symbol/desktop-wallet/issues/1692)
 - Fixed translation typos
 - Fixed UI/UX issues
 
