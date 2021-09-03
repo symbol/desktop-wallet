@@ -578,26 +578,8 @@ export class ModalTransactionConfirmationTs extends Vue {
     private async ledgerAccDelHarvestKeyOnStop(values) {
         const accountAddress = this.command.currentSignerHarvestingModel.accountAddress;
 
-        // store new vrf Key info in local
-        if (this.command?.vrfPrivateKeyTemp) {
-            this.saveVrfKeyInfo(
-                accountAddress,
-                Crypto.encrypt(this.command.newVrfKeyAccount.privateKey, this.command.password),
-                this.command.newVrfKeyAccount.publicKey,
-            );
-        }
-
-        // store new remote Key info in local
-        if (this.command?.remotePrivateKeyTemp) {
-            this.saveRemoteKeyInfo(
-                accountAddress,
-                Crypto.encrypt(this.command.newRemoteAccount.privateKey, this.command.password),
-                this.command.newRemoteAccount.publicKey,
-            );
-        }
-
-        // // pre-store selected harvesting node in local
-        this.saveHarvestingNode(accountAddress, this.command.formItems.nodeModel);
+        // pre store vrf and remote Key in local
+        this.preStoreHarvestingKeyInfo(accountAddress);
 
         const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount } = values;
         const keyUnLinkAggregateCompleteTransaction = this.stagedTransactions[0];
@@ -762,26 +744,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     private async ledgerAccMultisigDelHarvestKeyOnStop(values) {
         const accountAddress = this.command.currentSignerHarvestingModel.accountAddress;
 
-        // store new vrf Key info in local
-        if (this.command.vrfPrivateKeyTemp) {
-            this.saveVrfKeyInfo(
-                accountAddress,
-                Crypto.encrypt(this.command.newVrfKeyAccount.privateKey, this.command.password),
-                this.command.newVrfKeyAccount.publicKey,
-            );
-        }
-
-        // store new remote Key info in local
-        if (this.command.remotePrivateKeyTemp) {
-            this.saveRemoteKeyInfo(
-                accountAddress,
-                Crypto.encrypt(this.command.newRemoteAccount.privateKey, this.command.password),
-                this.command.newRemoteAccount.publicKey,
-            );
-        }
-
-        // // pre-store selected harvesting node in local
-        this.saveHarvestingNode(accountAddress, this.command.formItems.nodeModel);
+        this.preStoreHarvestingKeyInfo(accountAddress);
 
         const { ledgerService, currentPath, ledgerAccount } = values;
 
@@ -957,5 +920,32 @@ export class ModalTransactionConfirmationTs extends Vue {
             accountAddress,
             newSelectedHarvestingNode: harvestingNode,
         });
+    }
+
+    /**
+     * Pre store harvesting key info in local;
+     * @param accountAddress
+     */
+    private preStoreHarvestingKeyInfo(accountAddress: string): void {
+        // store new vrf Key info in local
+        if (this.command?.vrfPrivateKeyTemp) {
+            this.saveVrfKeyInfo(
+                accountAddress,
+                Crypto.encrypt(this.command.newVrfKeyAccount.privateKey, this.command.password),
+                this.command.newVrfKeyAccount.publicKey,
+            );
+        }
+
+        // store new remote Key info in local
+        if (this.command?.remotePrivateKeyTemp) {
+            this.saveRemoteKeyInfo(
+                accountAddress,
+                Crypto.encrypt(this.command.newRemoteAccount.privateKey, this.command.password),
+                this.command.newRemoteAccount.publicKey,
+            );
+        }
+
+        // // pre-store selected harvesting node in local
+        this.saveHarvestingNode(accountAddress, this.command.formItems.nodeModel);
     }
 }
