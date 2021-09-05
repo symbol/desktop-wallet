@@ -22,16 +22,7 @@ import { RESTService } from '@/services/RESTService';
 import * as _ from 'lodash';
 import { of, Subscription } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import {
-    AccountInfo,
-    AccountNames,
-    Address,
-    IListener,
-    MultisigAccountInfo,
-    NetworkType,
-    PublicAccount,
-    RepositoryFactory,
-} from 'symbol-sdk';
+import { AccountInfo, AccountNames, Address, IListener, MultisigAccountInfo, PublicAccount, RepositoryFactory } from 'symbol-sdk';
 import Vue from 'vue';
 // internal dependencies
 import { $eventBus } from '../events';
@@ -492,7 +483,6 @@ export default {
         },
 
         async LOAD_ACCOUNT_INFO({ commit, getters, rootGetters, dispatch }) {
-            const networkType: NetworkType = rootGetters['network/networkType'];
             const currentAccount: AccountModel = getters.currentAccount;
             const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
             const currentSignerAddress: Address = getters.currentSignerAddress;
