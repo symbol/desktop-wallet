@@ -53,7 +53,9 @@ export type Signer = {
     label: string;
     address: Address;
     multisig: boolean;
-    requiredCosignatures: number;
+    requiredCosigApproval: number;
+    requiredCosigRemoval?: number;
+    parentSigners?: Signer[];
 };
 
 // Account state typing
@@ -532,6 +534,7 @@ export default {
                         return infoFromGraph;
                     }),
                     catchError(() => {
+                        commit('multisigAccountGraph', []);
                         commit('multisigAccountGraphInfo', []);
                         return of([]);
                     }),
@@ -550,11 +553,9 @@ export default {
             }
 
             const signers = new MultisigService().getSigners(
-                networkType,
                 knownAccounts,
-                currentAccount,
-                currentAccountMultisigInfo,
-                multisigAccountsInfo,
+                Address.createFromRawAddress(currentAccount.address),
+                getters.multisigAccountGraph,
             );
 
             const knownAddresses = _.uniqBy(
