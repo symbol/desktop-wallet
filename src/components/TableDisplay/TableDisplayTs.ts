@@ -79,7 +79,7 @@ import { PageInfo } from '@/store/Transaction';
             currentConfirmedPage: 'namespace/currentConfirmedPage',
             attachedMetadataList: 'metadata/accountMetadataList',
             networkConfiguration: 'network/networkConfiguration',
-            signers: 'account/signers',
+            currentAccountSigner: 'account/currentAccountSigner',
             currentSigner: 'account/currentSigner',
             isFetchingNamespaces: 'namespace/isFetchingNamespaces',
             isFetchingMosaics: 'mosaic/isFetchingMosaics',
@@ -134,9 +134,9 @@ export class TableDisplayTs extends Vue {
     private currentSigner: Signer;
 
     /**
-     * current signers
+     * current account signer
      */
-    public signers: Signer[];
+    public currentAccountSigner: Signer;
 
     public isFetchingNamespaces: boolean;
 

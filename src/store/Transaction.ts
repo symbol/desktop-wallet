@@ -226,14 +226,10 @@ export default {
                     state.filterOptions = new TransactionFilterOptionsState();
                 }
             }
-
-            state.filteredTransactions = TransactionFilterService.filter(state, currentSignerAddress);
-            if (!!multisigAddresses.length) {
-                multisigAddresses.forEach((address) => {
-                    state.filteredTransactions = [...state.filteredTransactions, ...TransactionFilterService.filter(state, address)];
-                });
-                state.filteredTransactions = TransactionFilterService.filter(state, currentSignerAddress);
-            }
+            state.filteredTransactions = TransactionFilterService.filter(
+                state,
+                !!multisigAddresses.length ? multisigAddresses : currentSignerAddress,
+            );
         },
     },
     actions: {
@@ -328,20 +324,42 @@ export default {
                     ),
                 );
                 if (!!multisigChildrenAddresses.length) {
-                    multisigChildrenAddresses.forEach((address) => {
-                        subscriptions.push(
-                            subscribeTransactions(
-                                TransactionGroupState.partial,
-                                transactionRepository.search({
-                                    group: TransactionGroup.Partial,
-                                    address: address,
-                                    pageSize: 100,
-                                    pageNumber: 1, // not paginating
-                                    order: Order.Desc,
-                                }),
-                            ),
-                        );
-                    });
+                    const multisigTransactions: Observable<Page<Transaction>>[] = multisigChildrenAddresses.map((address) =>
+                        transactionRepository.search({
+                            group: TransactionGroup.Partial,
+                            address: address,
+                            pageSize: 100,
+                            pageNumber: 1, // not paginating
+                            order: Order.Desc,
+                        }),
+                    );
+                    const combinedCallback = combineLatest(multisigTransactions).pipe(
+                        map((txs) =>
+                            txs.reduce((prev, curr) => {
+                                if (prev) {
+                                    const mergedData = [...prev.data];
+                                    // merging 2 arrays without duplicates
+                                    for (const tx of curr.data) {
+                                        if (
+                                            tx.transactionInfo.hash &&
+                                            !prev.data.some((prevTx) => tx.transactionInfo.hash === prevTx.transactionInfo.hash)
+                                        ) {
+                                            mergedData.push(tx);
+                                        }
+                                    }
+                                    return {
+                                        data: mergedData,
+                                        pageSize: mergedData.length,
+                                        pageNumber: prev.pageNumber,
+                                        isLastPage: prev.isLastPage,
+                                    };
+                                }
+                                return curr;
+                            }),
+                        ),
+                    );
+
+                    subscriptions.push(subscribeTransactions(TransactionGroupState.partial, combinedCallback));
                 }
             }
             combineLatest(subscriptions).subscribe({

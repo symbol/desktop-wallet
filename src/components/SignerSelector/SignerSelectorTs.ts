@@ -19,6 +19,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import FormRow from '@/components/FormRow/FormRow.vue';
 import { Signer } from '@/store/Account';
 
+export class SignerItem {
+    constructor(public parent: boolean, public signer: Signer, public level: number) {}
+}
+
 @Component({
     components: { FormRow },
 })
@@ -33,9 +37,9 @@ export class SignerSelectorTs extends Vue {
     value: string;
 
     @Prop({
-        default: () => [],
+        default: () => null,
     })
-    signers: Signer[];
+    rootSigner: Signer;
 
     @Prop({
         default: 'sender',
@@ -53,6 +57,14 @@ export class SignerSelectorTs extends Vue {
     disabled: boolean;
 
     /// region computed properties getter/setter
+
+    /**
+     * Emit value change
+     */
+    set chosenSigner(newValue: string) {
+        this.$emit('input', newValue);
+    }
+
     /**
      * Value set by the parent component
      * @type {string}
@@ -62,11 +74,28 @@ export class SignerSelectorTs extends Vue {
     }
 
     /**
-     * Emit value change
+     * @returns {SignerItem[]} multisig parent signers
      */
-    set chosenSigner(newValue: string) {
-        this.$emit('input', newValue);
+    get multisigSigners(): SignerItem[] {
+        return this.getParentSignerItems(this.rootSigner, 0);
     }
 
+    /**
+     * Starts with the given signer, traverse multisig(parent) signers recursively and returns flat signer tree
+     * @param {Signer} signer
+     * @param {number} level
+     * @returns {SignerItem[]} Signer tree as a list
+     */
+    public getParentSignerItems(signer: Signer, level: number): SignerItem[] {
+        if (!signer?.parentSigners) {
+            return [];
+        }
+        const signerItems: SignerItem[] = [];
+        for (const parentSigner of signer.parentSigners) {
+            signerItems.push(new SignerItem(parentSigner.parentSigners?.length > 0, parentSigner, level));
+            signerItems.push(...this.getParentSignerItems(parentSigner, level + 1));
+        }
+        return signerItems;
+    }
     /// end-region computed properties getter/setter
 }

@@ -32,7 +32,7 @@ import { Address } from 'symbol-sdk';
     computed: {
         ...mapGetters({
             currentAccount: 'account/currentAccount',
-            signers: 'account/signers',
+            currentAccountSigner: 'account/currentAccountSigner',
         }),
     },
 })
@@ -44,9 +44,9 @@ export class TransactionListFiltersTs extends Vue {
     protected currentAccount: AccountModel;
 
     /**
-     * current signers
+     * current account signer
      */
-    public signers: Signer[];
+    public currentAccountSigner: Signer;
 
     /**
      * Hook called when the signer selector has changed

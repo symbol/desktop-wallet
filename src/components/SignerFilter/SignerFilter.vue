@@ -2,10 +2,15 @@
     <div class="transaction-filter">
         <Select v-model="selectedSigner" size="large" prefix="ios-home" @input="onSignerChange">
             <Icon slot="prefix" type="ios-people" size="0" />
-            <OptionGroup label="Multisig accounts">
-                <Option v-for="item in signers" :key="item.address.plain()" :value="item.address.plain()">
-                    {{ item.multisig ? $t('label_postfix_multisig') : '' }}
-                    {{ item.label }}
+            <Option :key="rootSigner.address.plain()" :value="rootSigner.address.plain()">
+                {{ rootSigner.label }}
+            </Option>
+            <OptionGroup v-if="multisigSigners.length" label="Multisig accounts">
+                <Option v-for="item in multisigSigners" :key="item.signer.address.plain()" :value="item.signer.address.plain()">
+                    <span :style="`display: inline-block; width: 0.1rem; margin-left: ${item.level * 0.1}rem;`">
+                        <em v-if="item.parent" class="ivu-icon ivu-icon-ios-arrow-down"></em>
+                    </span>
+                    {{ $t('label_postfix_multisig') + item.signer.label }}
                 </Option>
             </OptionGroup>
         </Select>
@@ -45,5 +50,6 @@ export default class SignerFilter extends SignerFilterTs {}
     width: auto !important;
     left: unset !important;
     right: 0.4rem !important;
+    min-width: 2.6rem !important;
 }
 </style>

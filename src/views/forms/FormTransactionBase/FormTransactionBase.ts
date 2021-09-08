@@ -33,6 +33,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
             defaultFee: 'app/defaultFee',
             currentAccount: 'account/currentAccount',
             selectedSigner: 'account/currentSigner',
+            currentAccountSigner: 'account/currentAccountSigner',
             currentSignerPublicKey: 'account/currentSignerPublicKey',
             currentSignerAddress: 'account/currentSignerAddress',
             currentSignerMultisigInfo: 'account/currentSignerMultisigInfo',
@@ -129,6 +130,8 @@ export class FormTransactionBase extends Vue {
     public currentSigner: PublicAccount;
 
     public signers: Signer[];
+
+    public currentAccountSigner: Signer;
 
     public networkCurrency: NetworkCurrencyModel;
 

@@ -10,8 +10,8 @@
                         <span v-show="assetType === 'mosaic'" style="margin-left: 0.1rem;">{{ $t('show_expired_mosaics') }}</span>
                         <span v-show="assetType === 'namespace'" style="margin-left: 0.1rem;">{{ $t('show_expired_namespaces') }}</span>
                     </Checkbox>
-                    <div v-if="signers.length > 1" style="min-width: 2rem;">
-                        <SignerFilter :signers="signers" @signer-change="onSignerSelectorChange" />
+                    <div v-if="currentAccountSigner.parentSigners" style="min-width: 2rem;">
+                        <SignerFilter :root-signer="currentAccountSigner" @signer-change="onSignerSelectorChange" />
                     </div>
                     <ButtonRefresh v-if="assetType !== 'metadata'" :size="24" @click="onRefresh" />
                 </div>

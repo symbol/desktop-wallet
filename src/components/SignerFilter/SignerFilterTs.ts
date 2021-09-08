@@ -1,6 +1,7 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Signer } from '@/store/Account';
 import { mapGetters } from 'vuex';
+import { SignerItem } from '../SignerSelector/SignerSelectorTs';
 
 @Component({
     computed: {
@@ -10,8 +11,8 @@ import { mapGetters } from 'vuex';
     },
 })
 export class SignerFilterTs extends Vue {
-    @Prop({ default: [] })
-    public signers: Signer[];
+    @Prop({ default: null })
+    public rootSigner?: Signer;
 
     /**
      * Selected signer from the store
@@ -23,15 +24,25 @@ export class SignerFilterTs extends Vue {
     public selectedSigner: string = '';
 
     created() {
-        if (this.signers?.length > 0) {
-            const signer: Signer[] = this.signers.filter((s) => s.address.plain() === this.currentSigner.address.plain());
-            if (signer.length) {
-                this.selectedSigner = signer[0].address.plain();
-            } else {
-                this.selectedSigner = this.signers[0].address.plain();
-            }
-        }
+        this.selectedSigner = this.currentSigner.address.plain();
     }
+
+    get multisigSigners(): SignerItem[] {
+        return this.getParentSignerItems(this.rootSigner, 0);
+    }
+
+    public getParentSignerItems(signer: Signer, level: number): SignerItem[] {
+        if (!signer?.parentSigners) {
+            return [];
+        }
+        const signerItems: SignerItem[] = [];
+        for (const parentSigner of signer.parentSigners) {
+            signerItems.push(new SignerItem(parentSigner.parentSigners?.length > 0, parentSigner, level));
+            signerItems.push(...this.getParentSignerItems(parentSigner, level + 1));
+        }
+        return signerItems;
+    }
+
     /**
      * onAddressChange
      */

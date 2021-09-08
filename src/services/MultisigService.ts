@@ -84,19 +84,25 @@ export class MultisigService {
         };
 
         const parentSigners: Signer[] = [];
-        for (const parentSignerAddress of currentMultisigAccountInfo?.multisigAddresses || []) {
-            parentSigners.push(
-                ...this.getSigners(
-                    knownAccounts,
-                    parentSignerAddress,
-                    multisigAccountGraph,
-                    level - 1,
-                    currentSigner.requiredCosigApproval,
-                    currentSigner.requiredCosigRemoval,
-                ),
+        if (currentMultisigAccountInfo?.multisigAddresses) {
+            for (const parentSignerAddress of currentMultisigAccountInfo.multisigAddresses) {
+                parentSigners.push(
+                    ...this.getSigners(
+                        knownAccounts,
+                        parentSignerAddress,
+                        multisigAccountGraph,
+                        level - 1,
+                        currentSigner.requiredCosigApproval,
+                        currentSigner.requiredCosigRemoval,
+                    ),
+                );
+            }
+
+            // filter the first parents
+            currentSigner.parentSigners = parentSigners.filter((ps) =>
+                currentMultisigAccountInfo.multisigAddresses.some((msa) => msa.equals(ps.address)),
             );
         }
-        currentSigner.parentSigners = parentSigners;
         return [currentSigner, ...parentSigners];
     }
 
@@ -168,51 +174,4 @@ export class MultisigService {
         const account = accounts.find((wlt) => address.plain() === wlt.address);
         return (account && account.name) || address.plain();
     }
-
-    // public getMinApprovalInMultisigTree(
-    //     multisigAccountGraphInfo: MultisigAccountInfo[][],
-    //     currentAccount: string,
-    //     selectedSigner: string,
-    //     level = multisigAccountGraphInfo.length
-    // ): number {
-    //     // 1. find the leaves non-multisig accounts and grap the currentAccount
-    //     // 2. run recursive algorithm for each multisigAddresses found
-
-    //     if (multisigAccountGraphInfo) {
-    //         multisigAccountGraphInfo.forEach((level: MultisigAccountInfo[]) => {
-    //             const levelToMap = Symbol.iterator in Object(level) ? level : [...level];
-
-    //             levelToMap.forEach((entry: MultisigAccountInfo) => {
-    //                 // if current entry is not a multisig account
-    //                 if (entry.cosignatoryAddresses.length === 0) {
-    //                     tree.push({
-    //                         address: entry.accountAddress.plain(),
-    //                         children: [],
-    //                     });
-    //                 } else {
-    //                     // find the entry matching with address matching cosignatory address and update his children
-    //                     const updateRecursively = (address, object) => (obj) => {
-    //                         if (obj.address === address) {
-    //                             obj.children.push(object);
-    //                         } else if (obj.children !== undefined) {
-    //                             obj.children.forEach(updateRecursively(address, object));
-    //                         }
-    //                     };
-    //                     // @ts-ignore
-    //                     entry.cosignatoryAddresses.forEach((addressVal) => {
-    //                         tree.forEach(
-    //                             updateRecursively(addressVal['address'], {
-    //                                 // @ts-ignore
-    //                                 address: entry.accountAddress.plain(),
-    //                                 // @ts-ignore
-    //                                 children: [],
-    //                             }),
-    //                         );
-    //                     });
-    //                 }
-    //             });
-    //         });
-    //     }
-    //     return tree;
-    // }
 }

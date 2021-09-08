@@ -10,7 +10,7 @@ beforeEach(() => {
     wrapper = getComponent(
         TransactionListFilters,
         { account: AccountStore, transaction: TransactionStore },
-        { currentAccount: null, signers: [] },
+        { currentAccount: null, currentAccountSigner: {}, signers: [] },
         {},
         {},
     );
