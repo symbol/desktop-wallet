@@ -313,7 +313,6 @@ export class FormTransactionBase extends Vue {
      * travel every level from current account to the current signer in the tree and return the max minApproval found
      */
     protected get multisigRequiredCosignatures(): number {
-        // console.log(this.multisigAccountGraphInfo, this.currentSignerMultisigInfo);
         if (this.multisigAccountGraphInfo?.length <= 2) {
             // it is not a multilevel multisig then return current minApproval
             return this.currentSignerMultisigInfo?.minApproval || 0;
