@@ -4,7 +4,7 @@
             <div class="table-title-container section-title">
                 <div class="user-operation">
                     <div v-if="currentAccountSigner.parentSigners" style="min-width: 2rem;">
-                        <SignerFilter :root-signer="currentAccountSigner" @signer-change="onSignerSelectorChange" />
+                        <SignerListFilter :root-signer="currentAccountSigner" @signer-change="onSignerSelectorChange" />
                     </div>
                     <span class="table-filter-item-container" @click="doRefresh">
                         <Icon :class="{ 'animation-rotate': isRefreshing }" type="ios-sync" />

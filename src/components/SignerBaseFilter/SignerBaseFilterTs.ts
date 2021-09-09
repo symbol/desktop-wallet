@@ -1,8 +1,10 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Signer } from '@/store/Account';
 import { mapGetters } from 'vuex';
-import { SignerItem } from '../SignerSelector/SignerSelectorTs';
 
+export class SignerItem {
+    constructor(public parent: boolean, public signer: Signer, public level: number) {}
+}
 @Component({
     computed: {
         ...mapGetters({
@@ -10,7 +12,7 @@ import { SignerItem } from '../SignerSelector/SignerSelectorTs';
         }),
     },
 })
-export class SignerFilterTs extends Vue {
+export class SignerBaseFilterTs extends Vue {
     @Prop({ default: null })
     public rootSigner?: Signer;
 
@@ -23,7 +25,7 @@ export class SignerFilterTs extends Vue {
 
     public selectedSigner: string = '';
 
-    created() {
+    public created() {
         this.selectedSigner = this.currentSigner.address.plain();
     }
 
@@ -51,7 +53,7 @@ export class SignerFilterTs extends Vue {
     }
 
     @Watch('currentSigner', { immediate: true })
-    onCurrentSignerChange() {
+    public onCurrentSignerChange() {
         this.selectedSigner = this.currentSigner.address.plain();
     }
 }

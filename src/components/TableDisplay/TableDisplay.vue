@@ -11,7 +11,7 @@
                         <span v-show="assetType === 'namespace'" style="margin-left: 0.1rem;">{{ $t('show_expired_namespaces') }}</span>
                     </Checkbox>
                     <div v-if="currentAccountSigner.parentSigners" style="min-width: 2rem;">
-                        <SignerFilter :root-signer="currentAccountSigner" @signer-change="onSignerSelectorChange" />
+                        <SignerListFilter :root-signer="currentAccountSigner" @signer-change="onSignerSelectorChange" />
                     </div>
                     <ButtonRefresh v-if="assetType !== 'metadata'" :size="24" @click="onRefresh" />
                 </div>

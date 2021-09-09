@@ -4,7 +4,7 @@
             <TransactionStatusFilter />
         </div>
         <div v-if="currentAccountSigner.parentSigners" class="transaction-list-filter-container">
-            <SignerFilter :root-signer="currentAccountSigner" @signer-change="onSignerSelectorChange" />
+            <SignerListFilter :root-signer="currentAccountSigner" @signer-change="onSignerSelectorChange" />
         </div>
         <div class="button-refresh-container">
             <ButtonRefresh @click="refresh" />

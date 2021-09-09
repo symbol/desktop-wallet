@@ -53,7 +53,7 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { Signer } from '@/store/Account';
 // @ts-ignore
-import SignerFilter from '@/components/SignerFilter/SignerFilter.vue';
+import SignerListFilter from '@/components/SignerListFilter/SignerListFilter.vue';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
 // @ts-ignore
 import ModalMetadataUpdate from '@/views/modals/ModalMetadataUpdate/ModalMetadataUpdate.vue';
@@ -66,7 +66,7 @@ import { PageInfo } from '@/store/Transaction';
         FormExtendNamespaceDurationTransaction,
         FormMosaicSupplyChangeTransaction,
         ModalMetadataDisplay,
-        SignerFilter,
+        SignerListFilter,
         ButtonAdd,
         ModalMetadataUpdate,
         ButtonRefresh,
