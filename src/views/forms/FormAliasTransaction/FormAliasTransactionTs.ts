@@ -114,6 +114,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
      * @protected
      * @type {('mosaic' | 'address')}
      */
+    //@ts-ignore
     protected aliasTargetType: 'mosaic' | 'address' = this.aliasTarget instanceof Address ? 'address' : 'mosaic';
 
     /**
@@ -211,13 +212,14 @@ export class FormAliasTransactionTs extends FormTransactionBase {
      * @see {FormTransactionBase}
      * @return {AliasTransaction[]}
      */
-    protected getTransactions(): AliasTransaction[] {
+    protected async getTransactions(): Promise<AliasTransaction[]> {
+        const deadline = await this.createDeadline();
         const namespaceId = new NamespaceId(this.formItems.namespaceFullName);
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
         if (this.aliasTargetType === 'address') {
             return [
                 AddressAliasTransaction.create(
-                    this.createDeadline(),
+                    deadline,
                     this.formItems.aliasAction,
                     namespaceId,
                     Address.createFromRawAddress(this.formItems.aliasTarget),
@@ -228,7 +230,7 @@ export class FormAliasTransactionTs extends FormTransactionBase {
         } else {
             return [
                 MosaicAliasTransaction.create(
-                    this.createDeadline(),
+                    deadline,
                     this.formItems.aliasAction,
                     namespaceId,
                     new MosaicId(this.formItems.aliasTarget),

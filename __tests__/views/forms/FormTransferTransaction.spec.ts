@@ -125,8 +125,7 @@ describe('FormTransferTransaction', () => {
         });
 
         // act
-        const tx = vm.getTransactions();
-
+        const tx = await vm.getTransactions();
         // assert
         expect(Number(amount) * Math.pow(10, networkMock.currency.divisibility)).toBe(tx[0].mosaics[0].amount.compact());
     });

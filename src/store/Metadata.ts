@@ -14,7 +14,7 @@
  *
  */
 
-import { Address, Deadline, MetadataType, Transaction, UInt64 } from 'symbol-sdk';
+import { Address, DeadlineService, MetadataType, Transaction, UInt64 } from 'symbol-sdk';
 import * as _ from 'lodash';
 import Vue from 'vue';
 
@@ -155,19 +155,19 @@ export default {
         async RESOLVE_METADATA_TRANSACTIONS({ commit, rootGetters }, metadataType: MetadataType) {
             const currentSignerAddress = rootGetters['account/currentSignerAddress'];
             const repositoryFactory = rootGetters['network/repositoryFactory'];
-            const epochAdjustment = rootGetters['network/epochAdjustment'];
             const networkType = rootGetters['network/networkType'];
             const metadataForm: MetadataFormState = rootGetters['metadata/metadataForm'];
 
             if (!currentSignerAddress) {
                 return;
             }
+            const deadline = await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime();
 
             const metadataService = new MetadataService();
             const metadataTransaction = await metadataService
                 .metadataTransactionObserver(
                     repositoryFactory,
-                    Deadline.create(epochAdjustment),
+                    deadline,
                     networkType,
                     currentSignerAddress,
                     metadataForm.targetAddress,

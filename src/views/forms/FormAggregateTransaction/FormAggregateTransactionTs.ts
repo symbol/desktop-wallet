@@ -103,7 +103,8 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
     public networkType: NetworkType;
 
     public currentAccount: AccountModel;
-
+    public command: TransactionCommand;
+    private aggregateSubmitFlag: boolean = false;
     public mounted(): void {
         this.createTransaction(this.$route.name);
     }
@@ -177,26 +178,26 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
      * on click save transaction, it should be added to the store
      */
     public async onSaveTransaction(value) {
-        if (value) {
+        if (value && !this.preparingTransactions && this.currentSelectedTransaction) {
             await this.$store.dispatch('aggregateTransaction/ON_SAVE_TRANSACTION', {
                 title: this.currentSelectedTransaction['title'],
                 formItems: value,
                 component: this.currentSelectedTransaction['component'],
             });
-            this.createTransaction(this.$route.name);
         }
     }
     /**
      * create transfer transaction
      */
-    private createTransferTx(tx: {}): TransferTransaction {
+    private async createTransferTx(tx: {}): Promise<TransferTransaction> {
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
         this.formItems.recipientRaw = tx['formItems']['recipientRaw'];
         const signer = PublicAccount.createFromPublicKey(tx['formItems']['signerPublicKey'], this.networkType);
         let t: TransferTransaction;
+        const deadline = await this.createDeadline();
         if (signer.address.plain() !== this.currentAccount.address) {
             t = TransferTransaction.create(
-                this.createDeadline(),
+                deadline,
                 this.instantiatedRecipient,
                 // @ts-ignore
                 !tx['formItems']['mosaics'].length ? [] : tx['formItems']['mosaics'],
@@ -210,7 +211,7 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
             );
         } else {
             t = TransferTransaction.create(
-                this.createDeadline(),
+                deadline,
                 this.instantiatedRecipient,
                 // @ts-ignore
                 !tx['formItems']['mosaics'].length ? [] : tx['formItems']['mosaics'],
@@ -226,7 +227,7 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
     /**
      * create mosaic definition transaction
      */
-    private createMosaicTx(tx: {}): MosaicDefinitionTransaction {
+    private async createMosaicTx(tx: {}): Promise<MosaicDefinitionTransaction> {
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
         //const publicAccount = PublicAccount.createFromPublicKey(this.selectedSigner.publicKey, this.networkType)
         const randomNonce = MosaicNonce.createRandom();
@@ -236,8 +237,9 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
         if (tx['formItems']['permanent'] == true) {
             tx['formItems']['duration'] == 0;
         }
+        const deadline = await this.createDeadline();
         return MosaicDefinitionTransaction.create(
-            this.createDeadline(),
+            deadline,
             randomNonce,
             mosaicId,
             MosaicFlags.create(tx['formItems']['supplyMutable'], tx['formItems']['transferable'], this['formItems']['restrictable']),
@@ -247,21 +249,22 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
             maxFee,
         );
     }
-    private createMosaicSupplyTx(tx: {}): MosaicSupplyChangeTransaction {
+    private async createMosaicSupplyTx(tx: {}): Promise<MosaicSupplyChangeTransaction> {
         const maxFee = UInt64.fromUint(tx['formItems']['maxFee']);
         const action = tx['formItems']['action'] == 1 ? MosaicSupplyChangeAction.Increase : MosaicSupplyChangeAction.Decrease;
         const mosaicId = new MosaicId(tx['formItems']['mosaicHexId']);
         const delta = UInt64.fromUint(tx['formItems']['delta']);
-        return MosaicSupplyChangeTransaction.create(this.createDeadline(), mosaicId, action, delta, this.networkType, maxFee);
+        const deadline = await this.createDeadline();
+        return MosaicSupplyChangeTransaction.create(deadline, mosaicId, action, delta, this.networkType, maxFee);
     }
     /**
      * create root namespace transaction
      */
-    private CreateRootNameSpaceTx(tx: {}): NamespaceRegistrationTransaction {
+    private async CreateRootNameSpaceTx(tx: {}): Promise<NamespaceRegistrationTransaction> {
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
-
+        const deadline = await this.createDeadline();
         return NamespaceRegistrationTransaction.createRootNamespace(
-            this.createDeadline(),
+            deadline,
             tx['formItems']['newNamespaceName'],
             UInt64.fromUint(tx['formItems']['duration']),
             this.networkType,
@@ -308,9 +311,9 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
     /**
      * clear aggregate transactions list after initiating the transaction
      */
-    public onConfirmationSuccess() {
+    public async onConfirmationSuccess() {
         this.$store.dispatch('aggregateTransaction/CLEAR_AGGREGATE_TRANSACTIONS_LIST');
-        this.resetForm();
+        await this.resetForm();
     }
 
     protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
@@ -340,33 +343,40 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
      * @see {FormTransactionBase}
      * @return {Transaction[]}
      */
-    protected getTransactions(): Transaction[] {
-        const aggregateTransactions = [];
-        if (this.simpleAggregateTransaction.length > 0) {
-            this.simpleAggregateTransaction.map((tx) => {
-                let transaction: Transaction;
+    protected async getTransactions(): Promise<Transaction[]> {
+        const aggregateTransactions = [] as Transaction[];
+        for (let tx = 0; tx < this.simpleAggregateTransaction.length; tx++) {
+            let transaction: Transaction = undefined;
+            // @ts-ignore
+            if (this.simpleAggregateTransaction[tx]['title'].indexOf(`${this.$t('simple_transaction')}`) !== -1) {
+                transaction = await this.createTransferTx(this.simpleAggregateTransaction[tx]);
                 // @ts-ignore
-                if (tx['title'].indexOf(`${this.$t('simple_transaction')}`) !== -1) {
-                    transaction = this.createTransferTx(tx);
-                    // @ts-ignore
-                } else if (tx['title'].indexOf(`${this.$t('mosaic_transaction')}`) !== -1) {
-                    transaction = this.createMosaicTx(tx);
-                    // @ts-ignore
-                } else if (tx['title'].indexOf(`${this.$t('mosaic_supply_transaction')}`) !== -1) {
-                    transaction = this.createMosaicSupplyTx(tx);
-                } else {
-                    transaction = this.CreateRootNameSpaceTx(tx);
-                }
-                aggregateTransactions.push(transaction);
-            });
+            } else if (this.simpleAggregateTransaction[tx]['title'].indexOf(`${this.$t('mosaic_transaction')}`) !== -1) {
+                transaction = await this.createMosaicTx(this.simpleAggregateTransaction[tx]);
+                // @ts-ignore
+            } else if (this.simpleAggregateTransaction[tx]['title'].indexOf(`${this.$t('mosaic_supply_transaction')}`) !== -1) {
+                transaction = await this.createMosaicSupplyTx(this.simpleAggregateTransaction[tx]);
+            } else {
+                transaction = await this.CreateRootNameSpaceTx(this.simpleAggregateTransaction[tx]);
+            }
+            aggregateTransactions.push(transaction);
         }
         return aggregateTransactions;
     }
+    /**
+     * Returns promise of Transaction Command
+     * @private
+     * @returns {Promise<TransactionCommand>}
+     */
 
-    public onSubmit(): TransactionCommand {
-        this.command = this.createTransactionCommand();
-        this.onShowConfirmationModal();
-        return this.command;
+    private async Submit(): Promise<TransactionCommand> {
+        this.aggregateSubmitFlag = true;
+        this.command = await this.createTransactionCommand();
+        if (!!this.command.stageTransactions.length && !this.preparingTransactions) {
+            this.onShowConfirmationModal();
+            this.aggregateSubmitFlag = false;
+            return this.command;
+        }
     }
 
     public parentRouteName = 'aggregate';

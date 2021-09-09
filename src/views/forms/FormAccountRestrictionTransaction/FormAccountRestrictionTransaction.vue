@@ -57,6 +57,7 @@
                         v-model="formItems.maxFee"
                         :submit-button-text="submitButtonText"
                         :submit-button-classes="submitButtonClasses"
+                        :loading="preparingTransactions"
                         @button-clicked="handleSubmit(onSubmit)"
                     />
                 </form>

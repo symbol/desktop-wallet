@@ -65,6 +65,7 @@
                         v-if="!isAggregate"
                         v-model="formItems.maxFee"
                         :disable-submit="currentAccount.isMultisig"
+                        :loading="preparingTransactions"
                         @button-clicked="handleSubmit(onSubmit)"
                     />
                     <div v-else-if="!hideSave" class="ml-2" style="text-align: right;">

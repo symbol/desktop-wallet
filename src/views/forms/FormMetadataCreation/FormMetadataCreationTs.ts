@@ -240,7 +240,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
      * get transactions
      * @see {FormTransactionBase}
      */
-    public getTransactions() {
+    public async getTransactions() {
         return this.metadataTransactions;
     }
 
@@ -252,7 +252,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         await this.persistFormState();
 
         // - open signature modal
-        this.command = this.createTransactionCommand();
+        this.command = await this.createTransactionCommand();
         this.onShowConfirmationModal();
     }
 

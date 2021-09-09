@@ -171,18 +171,18 @@ export class FormAccountRestrictionTransactionTs extends FormTransactionBase {
      * Getter for transactions that will be staged
      * @throws {Error} If not overloaded in derivate component
      */
-    protected getTransactions(): Transaction[] {
-        return [this.createTransaction(this.restrictionTxType)];
+    protected async getTransactions(): Promise<Transaction[]> {
+        return [await this.createTransaction(this.restrictionTxType)];
     }
 
-    private createTransaction(restrictionTxType: AccountRestrictionTxType): Transaction {
+    private async createTransaction(restrictionTxType: AccountRestrictionTxType): Promise<Transaction> {
         switch (this.restrictionTxType) {
             case AccountRestrictionTxType.ADDRESS: {
                 const toBeAdded = this.isDeleteMode ? [] : [this.instantiatedRecipient];
                 const toBeDeleted = this.isDeleteMode ? [this.instantiatedRecipient] : [];
-
+                const deadline = await this.createDeadline();
                 return AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-                    this.createDeadline(),
+                    deadline,
                     RestrictionFlagMapping.toRestrictionFlag(
                         restrictionTxType,
                         this.formItems.direction,
@@ -197,9 +197,9 @@ export class FormAccountRestrictionTransactionTs extends FormTransactionBase {
             case AccountRestrictionTxType.MOSAIC: {
                 const toBeAdded = this.isDeleteMode ? [] : [new MosaicId(this.formItems.mosaicIdRaw)];
                 const toBeDeleted = this.isDeleteMode ? [new MosaicId(this.formItems.mosaicIdRaw)] : [];
-
+                const deadline = await this.createDeadline();
                 return AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
-                    this.createDeadline(),
+                    deadline,
                     RestrictionFlagMapping.toRestrictionFlag(
                         restrictionTxType,
                         this.formItems.direction,
@@ -214,9 +214,9 @@ export class FormAccountRestrictionTransactionTs extends FormTransactionBase {
             case AccountRestrictionTxType.TRANSACTION_TYPE: {
                 const toBeAdded = this.isDeleteMode ? [] : [this.formItems.transactionType];
                 const toBeDeleted = this.isDeleteMode ? [this.formItems.transactionType] : [];
-
+                const deadline = await this.createDeadline();
                 return AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-                    this.createDeadline(),
+                    deadline,
                     RestrictionFlagMapping.toRestrictionFlag(
                         restrictionTxType,
                         this.formItems.direction,

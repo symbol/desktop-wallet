@@ -151,10 +151,11 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
      * @see {FormTransactionBase}
      * @return {MultisigAccountModificationTransaction[]}
      */
-    protected getTransactions(): MultisigAccountModificationTransaction[] {
+    protected async getTransactions(): Promise<MultisigAccountModificationTransaction[]> {
+        const deadline = await this.createDeadline();
         return [
             MultisigAccountModificationTransaction.create(
-                this.createDeadline(),
+                deadline,
                 this.formItems.minApprovalDelta,
                 this.formItems.minRemovalDelta,
                 this.addressAdditions,
@@ -400,8 +401,8 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
      * @override
      * @return { TransactionCommand }
      */
-    public createTransactionCommand(): TransactionCommand {
-        const transactions = this.getTransactions();
+    public async createTransactionCommand(): Promise<TransactionCommand> {
+        const transactions = await this.getTransactions();
         const mode = this.getTransactionCommandMode(transactions);
         return new TransactionCommand(
             mode,

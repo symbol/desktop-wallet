@@ -87,6 +87,7 @@
                 <MaxFeeAndSubmit
                     v-model="formItems.maxFee"
                     :disable-submit="!hasFormAnyChanges"
+                    :loading="preparingTransactions"
                     @button-clicked="
                         hideSubmit ? '' : handleSubmit(onSubmit);
                         showErrorNotification();

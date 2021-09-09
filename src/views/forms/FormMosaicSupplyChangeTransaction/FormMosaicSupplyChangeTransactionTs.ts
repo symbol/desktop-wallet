@@ -213,10 +213,11 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
      * @see {FormTransactionBase}
      * @return {Transaction[]}
      */
-    protected getTransactions(): Transaction[] {
+    protected async getTransactions(): Promise<Transaction[]> {
+        const deadline = await this.createDeadline();
         return [
             MosaicSupplyChangeTransaction.create(
-                this.createDeadline(),
+                deadline,
                 new MosaicId(this.formItems.mosaicHexId),
                 this.formItems.action,
                 UInt64.fromUint(this.formItems.delta),
@@ -251,8 +252,8 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
             .map(({ mosaicIdHex }) => mosaicIdHex);
     }
 
-    public emitToAggregate() {
-        if (this.getTransactions().length > 0) {
+    public async emitToAggregate() {
+        if ((await this.getTransactions()).length > 0) {
             this.$emit('txInput', this.formItems);
         }
     }

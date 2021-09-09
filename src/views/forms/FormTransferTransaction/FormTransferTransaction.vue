@@ -73,22 +73,26 @@
                         :calculated-recommended-fee="calculatedRecommendedFee"
                         :disable-submit="currentAccount.isMultisig"
                         :size="transactionSize"
+                        :loading="preparingTransactions"
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
                     />
                     <div v-else-if="!hideSave" class="ml-2" style="text-align: right;">
-                        <button
-                            type="submit"
+                        <Button
                             class="save-button centered-button button-style inverted-button"
                             :disabled="currentAccount.isMultisig"
+                            :loading="preparingTransactions || loadingTransactions"
                             @click="emitToAggregate"
                         >
                             {{ $t('save') }}
-                        </button>
+                        </Button>
                     </div>
 
                     <!-- Transaction URI display-->
-                    <FormRow v-if="transactions && transactions.length > 0" class="transaction-uri-display-row">
+                    <FormRow
+                        v-if="formItems.recipientRaw && transactions && transactions[0] && !isAggregate"
+                        class="transaction-uri-display-row"
+                    >
                         <template v-slot:inputs>
                             <TransactionUriDisplay :transaction="transactions[0]" />
                         </template>

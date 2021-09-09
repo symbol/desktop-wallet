@@ -28,6 +28,7 @@ import {
     Account,
     PublicAccount,
     SignedTransaction,
+    Deadline,
 } from 'symbol-sdk';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
@@ -77,6 +78,7 @@ import { FilterHelpers } from '@/core/utils/FilterHelpers';
 import { TransactionCommand } from '@/services/TransactionCommand';
 import { appConfig } from '@/config';
 import { NotificationType } from '@/core/utils/NotificationType';
+import { from } from 'rxjs';
 const { DECIMAL_SEPARATOR } = appConfig.constants;
 
 export interface MosaicAttachment {
@@ -250,11 +252,13 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         free: number;
     };
     private transactionSize: number = 0;
+
+    private loadingTransactions: boolean = false;
     /**
      * Reset the form with properties
      * @return {void}
      */
-    protected resetForm(): void {
+    protected resetForm() {
         this.showUnlockAccountModal = false;
         this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentMosaicList());
 
@@ -309,7 +313,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
                 Vue.set(this.formItems.attachedMosaics, index, attachedMosaic);
             });
         }
-        this.triggerChange();
     }
 
     /**
@@ -337,7 +340,17 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * @see {FormTransactionBase}
      * @return {TransferTransaction[]}
      */
-    protected getTransactions(): TransferTransaction[] {
+    protected async getTransactions(): Promise<TransferTransaction[]> {
+        let deadline: Deadline = null;
+        if (this.$route.fullPath.indexOf('offline') !== -1) {
+            deadline = this.createOfflineDeadline();
+        } else {
+            if (!this.isMultisigMode()) {
+                deadline = await this.createDeadline(2);
+            } else {
+                deadline = await this.createDeadline(48);
+            }
+        }
         const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[];
 
         // Push network currency info for offline transaction format amount to absolute
@@ -364,7 +377,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             );
         return [
             TransferTransaction.create(
-                this.createDeadline(),
+                deadline,
                 this.instantiatedRecipient,
                 mosaics.length ? mosaics : [],
                 this.formItems.encryptMessage ? this.encyptedMessage : PlainMessage.create(this.formItems.messagePlain || ''),
@@ -473,7 +486,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * @protected
      * @param {number} inputIndex
      */
-    protected onDeleteMosaicInput(index: number): void {
+    protected async onDeleteMosaicInput(index: number): Promise<void> {
         // unset mosaic input slot
         this.mosaicInputsManager.unsetSlot(index);
 
@@ -482,7 +495,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         Vue.set(this.formItems.attachedMosaics, indexToUpdate, { uid: null });
         // delete the last one in order to re-render the list
         this.formItems.attachedMosaics.pop();
-        this.triggerChange();
+        await this.triggerChange();
     }
 
     /**
@@ -517,7 +530,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      *  Hook called when adding a new mosaic attachment input
      * @protected
      */
-    protected addMosaicAttachmentInput(): void {
+    protected async addMosaicAttachmentInput(): Promise<void> {
         if (!this.mosaicInputsManager.hasFreeSlots()) {
             return;
         }
@@ -534,7 +547,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             uid,
         });
 
-        this.triggerChange();
+        await this.triggerChange();
     }
 
     /**
@@ -550,7 +563,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     onChangeRecipient() {
         // filter tags
         this.formItems.recipientRaw = FilterHelpers.stripFilter(this.formItems.recipientRaw);
-        if (AddressValidator.validate(this.formItems.recipientRaw)) {
+        if (!!this.formItems.recipientRaw.length && AddressValidator.validate(this.formItems.recipientRaw)) {
             this.$store.dispatch('account/GET_RECIPIENT', Address.createFromRawAddress(this.formItems.recipientRaw)).then(() => {
                 if (!this.currentRecipient?.publicKey || /^0*$/.test(this.currentRecipient.publicKey)) {
                     this.resetEncryptedMessage();
@@ -565,15 +578,16 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     /**
      * Handler when changing max fee
      */
-    onChangeMaxFee() {
+    async onChangeMaxFee() {
         if (this.formItems.recipientRaw && this.formItems.recipientRaw !== '') {
             this.triggerChange();
         }
     }
 
-    triggerChange() {
+    async triggerChange() {
         if (AddressValidator.validate(this.formItems.recipientRaw)) {
-            this.transactions = this.getTransactions();
+            this.loadingTransactions = true;
+            this.transactions = await this.getTransactions();
             this.transactionSize = this.transactions[0].size;
             // avoid error
             if (this.transactions) {
@@ -593,6 +607,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             this.resetDynamicFees();
             this.resetEncryptedMessage();
         }
+        this.loadingTransactions = false;
     }
 
     /**
@@ -706,10 +721,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     /**
      * Calculates the dynamic fees based on the txs size
      * */
-    private calculateDynamicFees() {
-        this.createTransactionCommandForFee(this.feesConfig.median)
-            .getTotalMaxFee()
-            .subscribe((val) => (this.calculatedRecommendedFee = val.compact()));
+    private async calculateDynamicFees() {
+        from(await (await this.createTransactionCommandForFee(this.feesConfig.median)).getTotalMaxFee()).subscribe(
+            (val) => (this.calculatedRecommendedFee = val.compact()),
+        );
     }
 
     /**
@@ -717,8 +732,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * for the given dynamic fee (Recommended/Highest)
      * @param {number} maxFee
      */
-    private createTransactionCommandForFee(maxFee: number): TransactionCommand {
-        const transactions = this.getTransactions().map((t) => {
+    private async createTransactionCommandForFee(maxFee: number): Promise<TransactionCommand> {
+        const transactions = (await this.getTransactions()).map((t) => {
             //@ts-ignore
             t.maxFee = UInt64.fromUint(maxFee);
             return t;
@@ -793,5 +808,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     public onSignedOfflineTransaction(signedTransaction: SignedTransaction) {
         this.$emit('txSigned', signedTransaction);
+    }
+    protected createOfflineDeadline(deadlineInHours = 2): Deadline {
+        return Deadline.create(this.epochAdjustment, deadlineInHours);
     }
 }

@@ -141,6 +141,7 @@ export class FormTransactionBase extends Vue {
 
     protected multisigAccountGraphInfo: MultisigAccountInfo[];
 
+    public preparingTransactions: boolean = false;
     /**
      * Type the ValidationObserver refs
      * @type {{
@@ -180,8 +181,8 @@ export class FormTransactionBase extends Vue {
     /**
      * it creates the deadlines for the transactions.
      */
-    protected createDeadline(): Deadline {
-        return Deadline.create(this.epochAdjustment);
+    protected async createDeadline(deadlineInHours = 2): Promise<Deadline> {
+        return await this.$store.dispatch('network/GET_TRANSACTION_DEADLINE', deadlineInHours);
     }
 
     /**
@@ -233,7 +234,7 @@ export class FormTransactionBase extends Vue {
      * Getter for transactions that will be staged
      * @throws {Error} If not overloaded in derivate component
      */
-    protected getTransactions(): Transaction[] {
+    protected async getTransactions(): Promise<Transaction[]> {
         throw new Error("Getter method 'getTransactions()' must be overloaded in derivate components.");
     }
 
@@ -286,8 +287,8 @@ export class FormTransactionBase extends Vue {
         }
     }
 
-    public createTransactionCommand(): TransactionCommand {
-        const transactions = this.getTransactions();
+    public async createTransactionCommand(): Promise<TransactionCommand> {
+        const transactions = await this.getTransactions();
         const mode = this.getTransactionCommandMode(transactions);
         return new TransactionCommand(
             mode,
@@ -312,6 +313,7 @@ export class FormTransactionBase extends Vue {
      * travel every level from current account to the current signer in the tree and return the max minApproval found
      */
     protected get multisigRequiredCosignatures(): number {
+        // console.log(this.multisigAccountGraphInfo, this.currentSignerMultisigInfo);
         if (this.multisigAccountGraphInfo?.length <= 2) {
             // it is not a multilevel multisig then return current minApproval
             return this.currentSignerMultisigInfo?.minApproval || 0;
@@ -331,9 +333,10 @@ export class FormTransactionBase extends Vue {
      * Process form input
      * @return {void}
      */
-    public onSubmit() {
-        // - open signature modal
-        this.command = this.createTransactionCommand();
+    public async onSubmit() {
+        Vue.set(this, 'preparingTransactions', true);
+        this.command = await this.createTransactionCommand();
+        Vue.set(this, 'preparingTransactions', false);
         this.onShowConfirmationModal();
     }
 

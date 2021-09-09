@@ -138,7 +138,8 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
      * @see {FormTransactionBase}
      * @return {TransferTransaction[]}
      */
-    protected getTransactions(): Transaction[] {
+    protected async getTransactions(): Promise<Transaction[]> {
+        const deadline = await this.createDeadline();
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
         //const publicAccount = PublicAccount.createFromPublicKey(this.selectedSigner.publicKey, this.networkType)
         const randomNonce = MosaicNonce.createRandom();
@@ -149,7 +150,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
             this.formItems.duration = 0;
         }
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            this.createDeadline(),
+            deadline,
             randomNonce,
             mosaicId,
             MosaicFlags.create(this.formItems.supplyMutable, this.formItems.transferable, this.formItems.restrictable),
@@ -159,7 +160,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
             maxFee,
         );
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            this.createDeadline(),
+            deadline,
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(this.formItems.supply),
@@ -197,8 +198,8 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     /**
      * emit formItems values to aggregate transaction form to be saved in storage
      */
-    public emitToAggregate() {
-        if (this.getTransactions().length > 0) {
+    public async emitToAggregate() {
+        if ((await this.getTransactions()).length > 0) {
             this.$emit('txInput', this.formItems);
         }
     }

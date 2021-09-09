@@ -13,14 +13,14 @@
                     :fast-fee="fastFee"
                 />
                 <div v-if="!hideSubmit" class="ml-2">
-                    <button
-                        type="submit"
+                    <Button
                         :class="'centered-button button-style submit-button ' + submitButtonClasses"
                         :disabled="disableSubmit"
+                        :loading="loading"
                         @click="$emit('button-clicked')"
                     >
                         {{ $t(submitButtonText) }}
-                    </button>
+                    </Button>
                 </div>
             </div>
         </template>
@@ -75,6 +75,9 @@ export default class MaxFeeAndSubmit extends Vue {
      * Submit button classes
      */
     @Prop({ default: 'inverted-button' }) submitButtonClasses: string;
+
+    @Prop({ default: false }) loading: boolean;
+
     @Prop({
         default: 0,
     })

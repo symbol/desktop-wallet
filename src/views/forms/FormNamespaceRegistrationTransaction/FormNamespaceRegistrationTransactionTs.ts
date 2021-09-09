@@ -155,9 +155,9 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
      * @see {FormTransactionBase}
      * @return {Transaction[]}
      */
-    protected getTransactions(): Transaction[] {
+    protected async getTransactions(): Promise<Transaction[]> {
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
-        const deadline = this.createDeadline();
+        const deadline = await this.createDeadline();
         if (NamespaceRegistrationType.RootNamespace === this.formItems.registrationType) {
             return [
                 NamespaceRegistrationTransaction.createRootNamespace(
@@ -228,8 +228,8 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
     /**
      * emit formItems values to aggregate transaction form to be saved in storage
      */
-    public emitToAggregate() {
-        if (this.getTransactions().length > 0) {
+    public async emitToAggregate() {
+        if ((await this.getTransactions()).length > 0) {
             this.$emit('txInput', this.formItems);
         }
     }

@@ -40,6 +40,7 @@ import {
     RepositoryFactory,
     RepositoryFactoryHttp,
     TransactionFees,
+    DeadlineService,
 } from 'symbol-sdk';
 import Vue from 'vue';
 // internal dependencies
@@ -537,6 +538,11 @@ export default {
             const nodeRepository = repositoryFactory.createNodeRepository();
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
             commit('peerNodes', _.uniqBy(peerNodes, 'host'));
+        },
+        async GET_TRANSACTION_DEADLINE({ getters }, deadlineInHours = 2) {
+            const repositoryFactory: RepositoryFactory = getters['repositoryFactory'] as RepositoryFactory;
+            const deadline = await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime(deadlineInHours);
+            return deadline;
         },
         // TODO :: re-apply that behavior if red screen issue fixed
         // load nodes that eligible for delegate harvesting

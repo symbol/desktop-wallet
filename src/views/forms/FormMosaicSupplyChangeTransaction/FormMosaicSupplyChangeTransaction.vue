@@ -96,6 +96,7 @@
                         type="submit"
                         class="save-button centered-button button-style inverted-button"
                         :disabled="currentAccount.isMultisig || !formItems.mosaicHexId || formItems.action == null"
+                        :loading="preparingTransactions"
                         @click="emitToAggregate"
                     >
                         {{ $t('save') }}

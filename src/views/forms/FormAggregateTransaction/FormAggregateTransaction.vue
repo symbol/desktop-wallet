@@ -67,15 +67,15 @@
                                 @button-clicked="handleSubmit(onClickSendAggregate)"
                             />
                             <div class="send-button">
-                                <button
+                                <Button
                                     class="full-width-centered-button button-style inverted-button fat-button"
                                     style="cursor: pointer;"
-                                    type="submit"
                                     :disabled="!simpleAggregateTransaction.length"
-                                    @click="handleSubmit(onSubmit)"
+                                    :loading="preparingTransactions || aggregateSubmitFlag"
+                                    @click="handleSubmit(Submit)"
                                 >
                                     {{ $t('aggregate_send') }}
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     </form>
@@ -85,6 +85,7 @@
                 v-if="hasConfirmationModal"
                 :command="command"
                 :visible="hasConfirmationModal"
+                :loading="preparingTransactions"
                 @success="onConfirmationSuccess"
                 @error="onConfirmationError"
                 @close="onConfirmationCancel"

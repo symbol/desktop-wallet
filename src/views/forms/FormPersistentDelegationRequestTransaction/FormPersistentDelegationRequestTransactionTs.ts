@@ -25,7 +25,6 @@ import {
     AccountInfo,
     AggregateTransaction,
     PublicAccount,
-    Deadline,
     LockFundsTransaction,
     Mosaic,
     SignedTransaction,
@@ -63,7 +62,7 @@ import { ValidationProvider } from 'vee-validate';
 
 import { HarvestingStatus } from '@/store/Harvesting';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
-import { Observable, of } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { flatMap, map, tap } from 'rxjs/operators';
 import { BroadcastResult } from '@/core/transactions/BroadcastResult';
 import { NodeModel } from '@/core/database/entities/NodeModel';
@@ -295,14 +294,14 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     /**
      * To get singleKeyTransaction
      */
-    protected getSingleKeyLinkTransaction(type?: string, transactionSigner = this.tempTransactionSigner): Observable<Transaction[]> {
+    protected async getSingleKeyLinkTransaction(type?: string, transactionSigner = this.tempTransactionSigner): Promise<Transaction[]> {
         const maxFee = UInt64.fromUint(this.formItems.maxFee) || UInt64.fromUint(this.feesConfig.fast);
 
         let transaction: Transaction;
         switch (type) {
             case 'account':
                 this.remotePrivateKeyTemp = this.newRemoteAccount?.privateKey;
-                transaction = this.createAccountKeyLinkTx(
+                transaction = await this.createAccountKeyLinkTx(
                     this.isAccountKeyLinked
                         ? this.currentSignerAccountInfo.supplementalPublicKeys.linked?.publicKey
                         : this.newRemoteAccount.publicKey,
@@ -312,7 +311,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 break;
             case 'vrf':
                 this.vrfPrivateKeyTemp = this.newVrfKeyAccount?.privateKey;
-                transaction = this.createVrfKeyLinkTx(
+                transaction = await this.createVrfKeyLinkTx(
                     this.isVrfKeyLinked
                         ? this.currentSignerAccountInfo.supplementalPublicKeys.vrf?.publicKey
                         : this.newVrfKeyAccount.publicKey,
@@ -321,7 +320,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 );
                 break;
             case 'node':
-                transaction = this.createNodeKeyLinkTx(
+                transaction = await this.createNodeKeyLinkTx(
                     this.isNodeKeyLinked
                         ? this.currentSignerAccountInfo.supplementalPublicKeys.node?.publicKey
                         : this.formItems.nodeModel.nodePublicKey,
@@ -332,12 +331,12 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
         return this.isMultisigMode()
             ? this.toMultiSigAggregate([transaction], maxFee, transactionSigner)
-            : of([this.calculateSuggestedMaxFee(transaction)]);
+            : of([this.calculateSuggestedMaxFee(transaction)]).toPromise();
     }
     /**
      * To get all the key link transactions
      */
-    protected getKeyLinkTransactions(transactionSigner = this.tempTransactionSigner): Observable<Transaction[]> {
+    protected async getKeyLinkTransactions(transactionSigner = this.tempTransactionSigner): Promise<Transaction[]> {
         const maxFee = UInt64.fromUint(this.formItems.maxFee) || UInt64.fromUint(this.feesConfig.fast);
         const txs: Transaction[] = [];
 
@@ -348,7 +347,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
          SWAP =>  unlink(linked) + link all (new keys)
          */
         if (this.isAccountKeyLinked && !this.currentSignerHarvestingModel?.encRemotePrivateKey) {
-            const accountUnlinkTx = this.createAccountKeyLinkTx(
+            const accountUnlinkTx = await this.createAccountKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys?.linked.publicKey,
                 LinkAction.Unlink,
                 maxFee,
@@ -356,7 +355,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             txs.push(accountUnlinkTx);
         }
         if (this.isVrfKeyLinked && !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
-            const vrfUnlinkTx = this.createVrfKeyLinkTx(
+            const vrfUnlinkTx = await this.createVrfKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys?.vrf.publicKey,
                 LinkAction.Unlink,
                 maxFee,
@@ -364,7 +363,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             txs.push(vrfUnlinkTx);
         }
         if (this.isNodeKeyLinked) {
-            const nodeUnLinkTx = this.createNodeKeyLinkTx(
+            const nodeUnLinkTx = await this.createNodeKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys?.node.publicKey,
                 LinkAction.Unlink,
                 maxFee,
@@ -374,16 +373,16 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
         if (this.action !== HarvestingAction.STOP) {
             if (!this.isAccountKeyLinked || !this.currentSignerHarvestingModel?.encRemotePrivateKey) {
-                const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
+                const accountKeyLinkTx = await this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(accountKeyLinkTx);
             }
             if (!this.isVrfKeyLinked || !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
-                const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
+                const vrfKeyLinkTx = await this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(vrfKeyLinkTx);
             }
 
             if (!this.isNodeKeyLinked) {
-                const nodeLinkTx = this.createNodeKeyLinkTx(this.formItems.nodeModel.nodePublicKey, LinkAction.Link, maxFee);
+                const nodeLinkTx = await this.createNodeKeyLinkTx(this.formItems.nodeModel.nodePublicKey, LinkAction.Link, maxFee);
                 txs.push(nodeLinkTx);
             }
         }
@@ -396,19 +395,20 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             if (this.isMultisigMode()) {
                 return this.toMultiSigAggregate(txs, maxFee, transactionSigner);
             } else {
+                const deadline = await this.createDeadline();
                 const aggregate = this.calculateSuggestedMaxFee(
                     AggregateTransaction.createComplete(
-                        Deadline.create(this.epochAdjustment),
+                        deadline,
                         txs.map((t) => t.toAggregate(this.currentSignerAccount)),
                         this.networkType,
                         [],
                         maxFee,
                     ),
                 );
-                return of([aggregate]);
+                return of([aggregate]).toPromise();
             }
         }
-        return of([]);
+        return of([]).toPromise();
     }
 
     public get isAllKeysLinked(): boolean {
@@ -421,34 +421,37 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * When signing for a multi-sig account if the `requiredCosignatures` is 1 then
      * the transaction type will be AGGREGATE_COMPLETE otherwise it will be AGGREGATE_BONDED.
      */
-    public toMultiSigAggregate(txs: Transaction[], maxFee, transactionSigner: TransactionSigner): Observable<Transaction[]> {
+    public async toMultiSigAggregate(txs: Transaction[], maxFee, transactionSigner: TransactionSigner): Promise<Transaction[]> {
         const innerTxs = txs.map((t) => t.toAggregate(this.currentSignerAccount));
         const aggregateBondedOrComplete =
             this.requiredCosignatures === 1
-                ? AggregateTransaction.createComplete(Deadline.create(this.epochAdjustment), innerTxs, this.networkType, [], maxFee)
-                : AggregateTransaction.createBonded(Deadline.create(this.epochAdjustment, 48), innerTxs, this.networkType, [], maxFee);
+                ? AggregateTransaction.createComplete(await this.createDeadline(), innerTxs, this.networkType, [], maxFee)
+                : AggregateTransaction.createBonded(await this.createDeadline(48), innerTxs, this.networkType, [], maxFee);
 
         const aggregate = this.calculateSuggestedMaxFee(aggregateBondedOrComplete);
-
-        return transactionSigner.signTransaction(aggregate, this.generationHash).pipe(
-            map((signedAggregateTransaction) => {
-                if (aggregate.type === TransactionType.AGGREGATE_BONDED) {
-                    const hashLock = this.calculateSuggestedMaxFee(
-                        LockFundsTransaction.create(
-                            Deadline.create(this.epochAdjustment, 6),
-                            new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
-                            UInt64.fromUint(5760),
-                            signedAggregateTransaction,
-                            this.networkType,
-                            maxFee,
-                        ),
-                    );
-                    return [hashLock, aggregate];
-                }
-                // AGGREGATE_COMPLETE
-                return [aggregate];
-            }),
-        );
+        const deadline = await this.createDeadline(6);
+        return transactionSigner
+            .signTransaction(aggregate, this.generationHash)
+            .pipe(
+                map((signedAggregateTransaction) => {
+                    if (aggregate.type === TransactionType.AGGREGATE_BONDED) {
+                        const hashLock = this.calculateSuggestedMaxFee(
+                            LockFundsTransaction.create(
+                                deadline,
+                                new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
+                                UInt64.fromUint(5760),
+                                signedAggregateTransaction,
+                                this.networkType,
+                                maxFee,
+                            ),
+                        );
+                        return [hashLock, aggregate];
+                    }
+                    // AGGREGATE_COMPLETE
+                    return [aggregate];
+                }),
+            )
+            .toPromise();
     }
 
     public decryptKeys(password?: Password) {
@@ -463,13 +466,15 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return (this.password = password.value);
     }
 
-    public getPersistentDelegationRequestTransaction(
+    public async getPersistentDelegationRequestTransaction(
         transactionSigner: TransactionSigner = this.tempTransactionSigner,
-    ): Observable<Transaction[]> {
+    ): Promise<Transaction[]> {
+        const deadlineInHours = this.isMultisigMode() ? 24 : 2;
         const maxFee = UInt64.fromUint(this.formItems.maxFee) || UInt64.fromUint(this.feesConfig.fast);
+        const deadline = await this.createDeadline(deadlineInHours);
         if (this.action !== HarvestingAction.STOP) {
             const persistentDelegationReqTx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-                Deadline.create(this.epochAdjustment, this.isMultisigMode() ? 24 : 2),
+                deadline,
                 this.remoteAccountPrivateKey || this.newRemoteAccount.privateKey,
                 this.vrfPrivateKey || this.newVrfKeyAccount.privateKey,
                 this.formItems.nodeModel.nodePublicKey,
@@ -479,21 +484,24 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
             return this.isMultisigMode()
                 ? this.toMultiSigAggregate([persistentDelegationReqTx], maxFee, transactionSigner)
-                : of([this.calculateSuggestedMaxFee(persistentDelegationReqTx)]);
+                : of([this.calculateSuggestedMaxFee(persistentDelegationReqTx)]).toPromise();
         }
-        return of([]);
+        return of([]).toPromise();
     }
 
-    public resolveTransactions(): Observable<Transaction[]> {
+    public async resolveTransactions(): Promise<Transaction[]> {
         if (this.action === HarvestingAction.ACTIVATE) {
-            return this.getPersistentDelegationRequestTransaction();
+            return await this.getPersistentDelegationRequestTransaction();
         } else if (this.action === HarvestingAction.SINGLE_KEY) {
-            return this.getSingleKeyLinkTransaction(this.type);
+            return await this.getSingleKeyLinkTransaction(this.type);
         } else {
-            return this.getKeyLinkTransactions();
+            return await this.getKeyLinkTransactions();
         }
     }
-    public announce(service: TransactionAnnouncerService, transactionSigner: TransactionSigner): Observable<Observable<BroadcastResult>[]> {
+    public async announce(
+        service: TransactionAnnouncerService,
+        transactionSigner: TransactionSigner,
+    ): Promise<Observable<Observable<BroadcastResult>[]>> {
         const accountAddress = this.currentSignerHarvestingModel.accountAddress;
 
         // store new vrf Key info in local
@@ -519,7 +527,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
         if (this.action === HarvestingAction.ACTIVATE) {
             // announce the persistent Delegation Request
-            return this.getPersistentDelegationRequestTransaction(transactionSigner).pipe(
+            return from(this.getPersistentDelegationRequestTransaction(transactionSigner)).pipe(
                 flatMap((transactions) => {
                     Vue.set(this, 'activating', true);
                     return this.signAndAnnounceTransactions(transactions, transactionSigner, service);
@@ -537,7 +545,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 ),
             );
         } else if (this.action === HarvestingAction.SINGLE_KEY) {
-            return this.getSingleKeyLinkTransaction(this.type, transactionSigner).pipe(
+            return from(this.getSingleKeyLinkTransaction(this.type, transactionSigner)).pipe(
                 flatMap((transactions) => {
                     return this.signAndAnnounceTransactions(transactions, transactionSigner, service);
                 }),
@@ -571,10 +579,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             );
         }
         // announce the keyLink txs and save the vrf and remote private keys encrypted to the storage
-        return this.getKeyLinkTransactions(transactionSigner).pipe(
+        return from(await this.getKeyLinkTransactions(transactionSigner)).pipe(
             flatMap((transactions) => {
                 Vue.set(this, 'linking', true);
-                return this.signAndAnnounceTransactions(transactions, transactionSigner, service);
+                return this.signAndAnnounceTransactions([transactions], transactionSigner, service);
             }),
             tap((resArr) =>
                 resArr[0].subscribe((res) => {
@@ -741,14 +749,14 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         this.$store.dispatch('harvesting/UPDATE_HARVESTING_REQUEST_STATUS', { accountAddress, delegatedHarvestingRequestFailed });
     }
 
-    private createAccountKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): AccountKeyLinkTransaction {
-        return AccountKeyLinkTransaction.create(this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
+    private async createAccountKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): Promise<AccountKeyLinkTransaction> {
+        return AccountKeyLinkTransaction.create(await this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
     }
-    private createVrfKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): VrfKeyLinkTransaction {
-        return VrfKeyLinkTransaction.create(this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
+    private async createVrfKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): Promise<VrfKeyLinkTransaction> {
+        return VrfKeyLinkTransaction.create(await this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
     }
-    private createNodeKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): NodeKeyLinkTransaction {
-        return NodeKeyLinkTransaction.create(this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
+    private async createNodeKeyLinkTx(publicKey: string, linkAction: LinkAction, maxFee: UInt64): Promise<NodeKeyLinkTransaction> {
+        return NodeKeyLinkTransaction.create(await this.createDeadline(), publicKey, linkAction, this.networkType, maxFee);
     }
 
     /**
@@ -891,7 +899,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
     }
 
-    public onSubmit() {
+    public async onSubmit() {
         if (
             !this.allKeysLinked &&
             !this.formItems.nodeModel.nodePublicKey.length &&

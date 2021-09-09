@@ -57,7 +57,7 @@
                 </FormRow>
                 <RentalFee :rental-type="'root-namespace'" :duration="formItems.duration"></RentalFee>
 
-                <MaxFeeAndSubmit v-model="formItems.maxFee" @button-clicked="handleSubmit(onSubmit)" />
+                <MaxFeeAndSubmit v-model="formItems.maxFee" :loading="preparingTransactions" @button-clicked="handleSubmit(onSubmit)" />
             </form>
         </ValidationObserver>
         <ModalTransactionConfirmation

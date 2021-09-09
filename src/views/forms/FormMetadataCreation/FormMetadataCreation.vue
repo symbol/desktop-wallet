@@ -115,6 +115,7 @@
                     <MaxFeeAndSubmit
                         v-model="formItems.maxFee"
                         :disable-submit="!hasFormAnyChanges"
+                        :loading="preparingTransactions"
                         @button-clicked="handleSubmit(onSubmit)"
                     />
                 </form>

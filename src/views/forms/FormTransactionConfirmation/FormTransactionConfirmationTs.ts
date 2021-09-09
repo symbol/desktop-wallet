@@ -69,7 +69,7 @@ export class FormTransactionConfirmationTs extends Vue {
     public stagedTransactions: Transaction[] = [];
 
     public async mounted() {
-        this.stagedTransactions = await this.command.resolveTransactions().toPromise();
+        this.stagedTransactions = await this.command.resolveTransactions();
     }
 
     /// region computed properties getter/setter
@@ -115,7 +115,7 @@ export class FormTransactionConfirmationTs extends Vue {
     public async onSigner(transactionSigner: TransactionSigner): Promise<void> {
         // - log about unlock success
         // - get transaction stage config
-        const announcements = await this.command.announce(new TransactionAnnouncerService(this.$store), transactionSigner).toPromise();
+        const announcements = await this.command.announce(new TransactionAnnouncerService(this.$store), transactionSigner);
         announcements.forEach((announcement) => {
             announcement.subscribe((res) => {
                 if (!res.success) {

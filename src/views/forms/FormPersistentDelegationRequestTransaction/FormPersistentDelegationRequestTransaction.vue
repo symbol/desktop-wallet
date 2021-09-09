@@ -296,6 +296,7 @@
             :message="$t('encrypt_ledger_keys_on_sign')"
             @close="hasLedgerAccountUnlockModal = false"
         />
+        <Spin v-if="preparingTransactions" size="large" fix class="absolute"></Spin>
         <ModalTransactionConfirmation
             v-if="hasConfirmationModal"
             :delegated="true"

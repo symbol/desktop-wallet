@@ -27,7 +27,6 @@ import {
     Address,
     SignedTransaction,
     AggregateTransaction,
-    Deadline,
     LockFundsTransaction,
     Mosaic,
     UInt64,
@@ -47,7 +46,6 @@ import { AccountService } from '@/services/AccountService';
 import { LedgerService } from '@/services/LedgerService';
 
 // internal dependencies
-import { NodeModel } from '@/core/database/entities/NodeModel';
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { LedgerHarvestingMode } from '@/store/Harvesting';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
@@ -58,6 +56,7 @@ import TransactionDetails from '@/components/TransactionDetails/TransactionDetai
 import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue';
 // @ts-ignore
 import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue';
+import { NodeModel } from '@/core/database/entities/NodeModel';
 
 @Component({
     components: {
@@ -98,6 +97,11 @@ export class ModalTransactionConfirmationTs extends Vue {
         default: false,
     })
     public visible: boolean;
+
+    @Prop({
+        default: false,
+    })
+    public loading: boolean;
 
     @Prop({
         required: true,
@@ -221,7 +225,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     }
 
     public async mounted() {
-        this.stagedTransactions = await this.command.resolveTransactions().toPromise();
+        this.stagedTransactions = await this.command.resolveTransactions();
     }
     /**
      * Reset the form with properties
@@ -274,6 +278,9 @@ export class ModalTransactionConfirmationTs extends Vue {
      * Error notification handler
      */
     private errorNotificationHandler(error: any) {
+        if (!error) {
+            return;
+        }
         if (error.message && error.message.includes('cannot open device with path')) {
             error.errorCode = 'ledger_connected_other_app';
         }
@@ -400,9 +407,10 @@ export class ModalTransactionConfirmationTs extends Vue {
 
     private async ledgerAccountAggregateTransactionOnSigner(values) {
         const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount, multisigAccount, stageTransactions, maxFee } = values;
+        const deadline = await this.$store.dispatch('network/GET_TRANSACTION_DEADLINE', { root: true });
         const aggregate = this.command.calculateSuggestedMaxFee(
             AggregateTransaction.createComplete(
-                Deadline.create(this.epochAdjustment),
+                deadline,
                 stageTransactions.map((t) => t.toAggregate(multisigAccount)),
                 this.networkType,
                 [],
@@ -430,9 +438,10 @@ export class ModalTransactionConfirmationTs extends Vue {
 
     private async ledgerAccountMultisigTransactionOnSigner(values) {
         const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount, multisigAccount, stageTransactions, maxFee } = values;
+        const aggregateDeadline = await this.$store.dispatch('network/GET_TRANSACTION_DEADLINE', 48, { root: true });
         const aggregate = this.command.calculateSuggestedMaxFee(
             AggregateTransaction.createBonded(
-                Deadline.create(this.epochAdjustment, 48),
+                aggregateDeadline,
                 stageTransactions.map((t) => t.toAggregate(multisigAccount)),
                 this.networkType,
                 [],
@@ -444,9 +453,10 @@ export class ModalTransactionConfirmationTs extends Vue {
             .then((signedAggregateTransaction) => {
                 return signedAggregateTransaction;
             });
+        const hashLockDeadline = await this.$store.dispatch('network/GET_TRANSACTION_DEADLINE', 6, { root: true });
         const hashLock = this.command.calculateSuggestedMaxFee(
             LockFundsTransaction.create(
-                Deadline.create(this.epochAdjustment, 6),
+                hashLockDeadline,
                 new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
                 UInt64.fromUint(5760),
                 signedAggregateTransaction,
@@ -463,7 +473,7 @@ export class ModalTransactionConfirmationTs extends Vue {
         // - notify about successful transaction announce
         this.onConfirmationSuccess();
         const service = new TransactionAnnouncerService(this.$store);
-        const announcements = await of(this.command.announceHashAndAggregateBonded(service, signedTransactions));
+        const announcements = await this.command.announceHashAndAggregateBonded(service, signedTransactions);
         announcements.forEach((announcement) => {
             announcement.subscribe((res) => {
                 if (!res.success) {
@@ -854,11 +864,9 @@ export class ModalTransactionConfirmationTs extends Vue {
                     });
                 });
             } else {
-                const announcements = await this.command
-                    .announce(new TransactionAnnouncerService(this.$store), transactionSigner)
-                    .toPromise();
+                const announcements = await this.command.announce(new TransactionAnnouncerService(this.$store), transactionSigner);
                 announcements.forEach((announcement) => {
-                    announcement.subscribe((res) => {
+                    of(announcement).subscribe((res) => {
                         if (!res.success) {
                             this.errorNotificationHandler(res.error);
                         }
