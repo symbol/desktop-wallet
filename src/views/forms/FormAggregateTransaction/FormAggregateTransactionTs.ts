@@ -345,19 +345,19 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
      */
     protected async getTransactions(): Promise<Transaction[]> {
         const aggregateTransactions = [] as Transaction[];
-        for (let tx = 0; tx < this.simpleAggregateTransaction.length; tx++) {
+        for (const tx of this.simpleAggregateTransaction) {
             let transaction: Transaction = undefined;
             // @ts-ignore
-            if (this.simpleAggregateTransaction[tx]['title'].indexOf(`${this.$t('simple_transaction')}`) !== -1) {
-                transaction = await this.createTransferTx(this.simpleAggregateTransaction[tx]);
+            if (tx['title'].indexOf(`${this.$t('simple_transaction')}`) !== -1) {
+                transaction = await this.createTransferTx(tx);
                 // @ts-ignore
-            } else if (this.simpleAggregateTransaction[tx]['title'].indexOf(`${this.$t('mosaic_transaction')}`) !== -1) {
-                transaction = await this.createMosaicTx(this.simpleAggregateTransaction[tx]);
+            } else if (tx['title'].indexOf(`${this.$t('mosaic_transaction')}`) !== -1) {
+                transaction = await this.createMosaicTx(tx);
                 // @ts-ignore
-            } else if (this.simpleAggregateTransaction[tx]['title'].indexOf(`${this.$t('mosaic_supply_transaction')}`) !== -1) {
-                transaction = await this.createMosaicSupplyTx(this.simpleAggregateTransaction[tx]);
+            } else if (tx['title'].indexOf(`${this.$t('mosaic_supply_transaction')}`) !== -1) {
+                transaction = await this.createMosaicSupplyTx(tx);
             } else {
-                transaction = await this.CreateRootNameSpaceTx(this.simpleAggregateTransaction[tx]);
+                transaction = await this.CreateRootNameSpaceTx(tx);
             }
             aggregateTransactions.push(transaction);
         }

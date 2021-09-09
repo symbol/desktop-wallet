@@ -491,11 +491,11 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     public async resolveTransactions(): Promise<Transaction[]> {
         if (this.action === HarvestingAction.ACTIVATE) {
-            return await this.getPersistentDelegationRequestTransaction();
+            return this.getPersistentDelegationRequestTransaction();
         } else if (this.action === HarvestingAction.SINGLE_KEY) {
-            return await this.getSingleKeyLinkTransaction(this.type);
+            return this.getSingleKeyLinkTransaction(this.type);
         } else {
-            return await this.getKeyLinkTransactions();
+            return this.getKeyLinkTransactions();
         }
     }
     public async announce(

@@ -182,7 +182,7 @@ export class FormTransactionBase extends Vue {
      * it creates the deadlines for the transactions.
      */
     protected async createDeadline(deadlineInHours = 2): Promise<Deadline> {
-        return await this.$store.dispatch('network/GET_TRANSACTION_DEADLINE', deadlineInHours);
+        return this.$store.dispatch('network/GET_TRANSACTION_DEADLINE', deadlineInHours);
     }
 
     /**
