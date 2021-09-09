@@ -541,8 +541,7 @@ export default {
         },
         async GET_TRANSACTION_DEADLINE({ getters }, deadlineInHours = 2) {
             const repositoryFactory: RepositoryFactory = getters['repositoryFactory'] as RepositoryFactory;
-            const deadline = await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime(deadlineInHours);
-            return deadline;
+            return await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime(deadlineInHours);
         },
         // TODO :: re-apply that behavior if red screen issue fixed
         // load nodes that eligible for delegate harvesting

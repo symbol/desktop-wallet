@@ -77,19 +77,19 @@ export class TransactionCommand {
     }
 
     public async announce(service: TransactionAnnouncerService, account: TransactionSigner): Promise<Observable<BroadcastResult>[]> {
-        return of(await this.resolveTransactions(account))
+        return from(await this.resolveTransactions(account))
             .pipe(
                 flatMap((transactions) => {
-                    const signedTransactions = transactions.map((t) => account.signTransaction(t, this.generationHash));
+                    const signedTransactions = [transactions].map((t) => account.signTransaction(t, this.generationHash));
                     if (!signedTransactions.length) {
-                        return of([]);
+                        return from([]);
                     }
                     if (this.mode == TransactionCommandMode.MULTISIGN) {
-                        return of([this.announceHashAndAggregateBonded(service, signedTransactions)]);
+                        return from([this.announceHashAndAggregateBonded(service, signedTransactions)]);
                     } else if (this.mode == TransactionCommandMode.CHAINED_BINARY) {
-                        return of([this.announceChainedBinary(service, signedTransactions)]);
+                        return from([this.announceChainedBinary(service, signedTransactions)]);
                     } else {
-                        return of(this.announceSimple(service, signedTransactions));
+                        return from(this.announceSimple(service, signedTransactions));
                     }
                 }),
             )
@@ -147,57 +147,55 @@ export class TransactionCommand {
         if (!this.stageTransactions || !this.stageTransactions.length) {
             return from([]).toPromise();
         }
-        if (this.stageTransactions && this.stageTransactions.length) {
-            const maxFee = this.stageTransactions.sort((a, b) => a.maxFee.compare(b.maxFee))[0].maxFee;
-            if (this.mode === TransactionCommandMode.SIMPLE || this.mode === TransactionCommandMode.CHAINED_BINARY) {
-                return of(this.stageTransactions.map((t) => this.calculateSuggestedMaxFee(t))).toPromise();
+        const maxFee = this.stageTransactions.sort((a, b) => a.maxFee.compare(b.maxFee))[0].maxFee;
+        if (this.mode === TransactionCommandMode.SIMPLE || this.mode === TransactionCommandMode.CHAINED_BINARY) {
+            return of(this.stageTransactions.map((t) => this.calculateSuggestedMaxFee(t))).toPromise();
+        } else {
+            const currentSigner = PublicAccount.createFromPublicKey(this.signerPublicKey, this.networkType);
+            if (this.mode === TransactionCommandMode.AGGREGATE) {
+                const aggregateDeadline = await this.createDeadline();
+                const aggregate = this.calculateSuggestedMaxFee(
+                    AggregateTransaction.createComplete(
+                        aggregateDeadline,
+                        this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
+                        this.networkType,
+                        [],
+                        maxFee,
+                    ),
+                );
+                return of([aggregate]).toPromise();
             } else {
-                const currentSigner = PublicAccount.createFromPublicKey(this.signerPublicKey, this.networkType);
-                if (this.mode === TransactionCommandMode.AGGREGATE) {
-                    const aggregateDeadline = await this.createDeadline();
-                    const aggregate = this.calculateSuggestedMaxFee(
-                        AggregateTransaction.createComplete(
-                            aggregateDeadline,
-                            this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
-                            this.networkType,
-                            [],
-                            maxFee,
-                        ),
-                    );
-                    return of([aggregate]).toPromise();
-                } else {
-                    // use attached signer (multisig account) if exists
-                    const signedInnerTransactions = this.stageTransactions.map((t) => {
-                        return t.signer === undefined ? t.toAggregate(currentSigner) : t.toAggregate(t.signer);
-                    });
-                    const bondedDeadline = await this.createDeadline(48);
-                    const aggregate = this.calculateSuggestedMaxFee(
-                        AggregateTransaction.createBonded(bondedDeadline, signedInnerTransactions, this.networkType, [], maxFee),
-                    );
-                    const hashLockDeadline = await this.createDeadline(6);
+                // use attached signer (multisig account) if exists
+                const signedInnerTransactions = this.stageTransactions.map((t) => {
+                    return t.signer === undefined ? t.toAggregate(currentSigner) : t.toAggregate(t.signer);
+                });
+                const bondedDeadline = await this.createDeadline(48);
+                const aggregate = this.calculateSuggestedMaxFee(
+                    AggregateTransaction.createBonded(bondedDeadline, signedInnerTransactions, this.networkType, [], maxFee),
+                );
+                const hashLockDeadline = await this.createDeadline(6);
 
-                    return account
-                        .signTransaction(aggregate, this.generationHash)
-                        .pipe(
-                            map((signedAggregateTransaction) => {
-                                const hashLock = this.calculateSuggestedMaxFee(
-                                    LockFundsTransaction.create(
-                                        hashLockDeadline,
-                                        new Mosaic(
-                                            this.networkMosaic,
-                                            UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate),
-                                        ),
-                                        UInt64.fromUint(5760),
-                                        signedAggregateTransaction,
-                                        this.networkType,
-                                        maxFee,
+                return account
+                    .signTransaction(aggregate, this.generationHash)
+                    .pipe(
+                        map((signedAggregateTransaction) => {
+                            const hashLock = this.calculateSuggestedMaxFee(
+                                LockFundsTransaction.create(
+                                    hashLockDeadline,
+                                    new Mosaic(
+                                        this.networkMosaic,
+                                        UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate),
                                     ),
-                                );
-                                return [hashLock, aggregate];
-                            }),
-                        )
-                        .toPromise();
-                }
+                                    UInt64.fromUint(5760),
+                                    signedAggregateTransaction,
+                                    this.networkType,
+                                    maxFee,
+                                ),
+                            );
+                            return [hashLock, aggregate];
+                        }),
+                    )
+                    .toPromise();
             }
         }
     }
@@ -244,8 +242,7 @@ export class TransactionCommand {
         return undefined;
     }
     private async createDeadline(deadlineInHours = 2): Promise<Deadline> {
-        const repositoryFactory: RepositoryFactory = AppStore.getters['network/repositoryFactory'] as RepositoryFactory;
-        const deadline = await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime(deadlineInHours);
-        return deadline;
+        const repositoryFactory: RepositoryFactory = AppStore.getters['network/repositoryFactory'];
+        return await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime(deadlineInHours);
     }
 }
