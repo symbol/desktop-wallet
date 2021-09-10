@@ -33,6 +33,7 @@
                             :is-first-item="index === 0"
                             @input-changed="onMosaicInputChange"
                             @input-deleted="onDeleteMosaicInput"
+                            @enough-balance="onCheckBalance"
                         />
                     </div>
 
@@ -71,7 +72,7 @@
                         :hide-submit="hideSubmit"
                         :submit-button-text="submitButtonText"
                         :calculated-recommended-fee="calculatedRecommendedFee"
-                        :disable-submit="currentAccount.isMultisig"
+                        :disable-submit="currentAccount.isMultisig || !enoughBalance"
                         :size="transactionSize"
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
@@ -80,7 +81,7 @@
                         <button
                             type="submit"
                             class="save-button centered-button button-style inverted-button"
-                            :disabled="currentAccount.isMultisig"
+                            :disabled="currentAccount.isMultisig || !enoughBalance"
                             @click="emitToAggregate"
                         >
                             {{ $t('save') }}

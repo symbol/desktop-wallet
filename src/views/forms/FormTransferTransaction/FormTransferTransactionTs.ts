@@ -250,6 +250,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         free: number;
     };
     private transactionSize: number = 0;
+
+    private enoughBalance: boolean = false;
     /**
      * Reset the form with properties
      * @return {void}
@@ -776,6 +778,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         }
 
         this.isMounted = true;
+    }
+    // checks if account balance is enough to make a transaction
+    onCheckBalance(enoughBalance: boolean): void {
+        this.enoughBalance = enoughBalance;
     }
     /**
      * watch title to change form items on select different transactions

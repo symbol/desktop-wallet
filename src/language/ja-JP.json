@@ -1126,5 +1126,6 @@
     "welcome_to_symbol": "ようこそ Symbol へ",
     "word": "文字",
     "ws_connection_failed": "ウォレットは、シンボルチェーン上のアカウントのアクティビティを監視できません。別のノードを選択してみてください。",
-    "x_seconds": "{seconds} 秒"
+    "x_seconds": "{seconds} 秒",
+    "not_enough_balance": "バランスが悪い"
 }
