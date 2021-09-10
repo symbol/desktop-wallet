@@ -30,7 +30,6 @@
     height: 100%;
     grid-template-columns: 100%;
     grid-template-rows: @headerHeight calc(100% - @headerHeight);
-    overflow-y: auto;
 
     .transaction-table-columns {
         grid-template-columns: 4% 45% 15% 17% 19%;
@@ -44,6 +43,7 @@
         display: block;
         width: 100%;
         max-height: 100%;
+        overflow-y: auto;
     }
 
     .transaction-rows-inner-container {
