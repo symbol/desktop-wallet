@@ -387,4 +387,9 @@ export class FormMetadataCreationTs extends FormTransactionBase {
             this.updateFormItems(this.value);
         }
     }
+
+    public async onMetadataSignerChanged(address: string) {
+        this.onChangeSigner(address);
+        this.formItems.targetId = '';
+    }
 }
