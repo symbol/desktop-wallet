@@ -70,6 +70,11 @@ export class MosaicAttachmentInputTs extends Vue {
     @Prop({ default: true }) isShowDelete: boolean;
 
     /**
+     * detects if user is in offline/online mode
+     */
+    @Prop({ default: false }) isOffline: boolean;
+
+    /**
      * whether to show the label accord to isFirstItem
      */
     @Prop({ default: true }) isFirstItem: boolean;

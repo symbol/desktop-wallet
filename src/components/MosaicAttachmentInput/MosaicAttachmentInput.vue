@@ -11,6 +11,7 @@
                     v-model="relativeAmount"
                     :mosaic-hex="chosenValue.mosaicHex"
                     class="ml-2"
+                    :is-offline="isOffline"
                     @input="onChangeAmount"
                     @enough-balance="onCheckBalance"
                 />

@@ -43,6 +43,7 @@ import { NetworkType } from 'symbol-sdk';
 export class AmountInputTs extends Vue {
     @Prop({ default: '' }) value: string;
     @Prop({ default: '' }) mosaicHex: string;
+    @Prop({ default: false }) isOffline: boolean;
     /**
      * Currently active account's balances
      * @var {Mosaic[]}
@@ -81,12 +82,16 @@ export class AmountInputTs extends Vue {
         this.$emit('input', amount);
     }
     /// end-region computed properties getter/setter
-    public get TotalAvailableAmount() {
+
+    // It gets toatal available amount on account from selected mosaic
+    public get totalAvailableAmount() {
         const selectedMosaic = this.balanceMosaics.find((m) => m.mosaicIdHex === this.mosaicHex);
         return selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility);
     }
+
+    // checks if entered amount greater than current balance
     public get isAmountGreaterThanBalance() {
-        this.$emit('enough-balance', this.TotalAvailableAmount > Number(this.relativeValue));
-        return this.TotalAvailableAmount < Number(this.relativeValue);
+        this.$emit('enough-balance', this.totalAvailableAmount > Number(this.relativeValue));
+        return this.totalAvailableAmount < Number(this.relativeValue);
     }
 }

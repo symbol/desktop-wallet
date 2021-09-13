@@ -10,8 +10,10 @@
     >
         <ErrorTooltip :errors="errors">
             <input v-model="relativeValue" class="input-style amount-input-size" type="text" />
-            <input v-model="TotalAvailableAmount" class="input-style total-amount-input-size" :disabled="true" />
-            <p v-if="isAmountGreaterThanBalance" style="color: red;">{{ $t('not_enough_balance') }}</p>
+            <div v-if="!isOffline">
+                <input v-model="totalAvailableAmount" class="input-style total-amount-input-size" :disabled="true" />
+                <p v-if="isAmountGreaterThanBalance" style="color: red;">{{ $t('not_enough_balance') }}</p>
+            </div>
         </ErrorTooltip>
     </ValidationProvider>
 </template>
