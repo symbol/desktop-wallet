@@ -22,7 +22,7 @@ const messages = {
     'en-US': { ...en_US, validation: enValidationMessages.messages },
     'zh-CN': { ...zh_CN, validation: zh_CNValidationMessages.messages },
     'ja-JP': { ...ja_JP, validation: jaValidationMessages.messages },
-    'ko-KR': {...ko_KR, validation: koValidationMessages},
+    'ko-KR': { ...ko_KR, validation: koValidationMessages },
     'ru-RU': { ...ru_RU, validation: ruValidationMessages.messages },
 };
 
