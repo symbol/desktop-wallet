@@ -4,7 +4,12 @@
             <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
                 <form onsubmit="event.preventDefault()">
                     <!-- Transaction signer selector -->
-                    <SignerSelector v-model="formItems.signerAddress" :signers="signers" :disabled="isDeleteMode" @input="onChangeSigner" />
+                    <SignerSelector
+                        v-model="formItems.signerAddress"
+                        :root-signer="currentAccountSigner"
+                        :disabled="isDeleteMode"
+                        @input="onChangeSigner"
+                    />
 
                     <RestrictionDirectionInput v-model="formItems.direction" :disabled="isDeleteMode || directionDisabled" />
 

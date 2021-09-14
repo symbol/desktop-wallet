@@ -3,8 +3,8 @@
         <div class="upper-section-container">
             <div class="table-title-container section-title">
                 <div class="user-operation">
-                    <div v-if="signers.length > 1" style="min-width: 2rem;">
-                        <SignerFilter :signers="signers" @signer-change="onSignerSelectorChange" />
+                    <div v-if="currentAccountSigner.parentSigners" style="min-width: 2rem;">
+                        <SignerListFilter :root-signer="currentAccountSigner" @signer-change="onSignerSelectorChange" />
                     </div>
                     <span class="table-filter-item-container" @click="doRefresh">
                         <Icon :class="{ 'animation-rotate': isRefreshing }" type="ios-sync" />

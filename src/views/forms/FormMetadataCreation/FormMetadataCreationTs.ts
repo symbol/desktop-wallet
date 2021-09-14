@@ -233,7 +233,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         if (!this.selectedSigner.multisig && this.formItems.signerAddress !== this.getTargetAddress().plain()) {
             return 1;
         }
-        return this.selectedSigner.multisig ? this.multisigRequiredCosignatures : this.selectedSigner.requiredCosignatures;
+        return this.selectedSigner.requiredCosigApproval;
     }
 
     /**

@@ -37,7 +37,7 @@
                         </div>
 
                         <!-- Transaction signer selector -->
-                        <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
+                        <SignerSelector v-model="formItems.signerAddress" :root-signer="currentAccountSigner" @input="onChangeSigner" />
 
                         <NetworkNodeSelector
                             v-model="formItems.nodeModel"

@@ -22,16 +22,7 @@ import { RESTService } from '@/services/RESTService';
 import * as _ from 'lodash';
 import { of, Subscription } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import {
-    AccountInfo,
-    AccountNames,
-    Address,
-    IListener,
-    MultisigAccountInfo,
-    NetworkType,
-    PublicAccount,
-    RepositoryFactory,
-} from 'symbol-sdk';
+import { AccountInfo, AccountNames, Address, IListener, MultisigAccountInfo, PublicAccount, RepositoryFactory } from 'symbol-sdk';
 import Vue from 'vue';
 // internal dependencies
 import { $eventBus } from '../events';
@@ -53,7 +44,9 @@ export type Signer = {
     label: string;
     address: Address;
     multisig: boolean;
-    requiredCosignatures: number;
+    requiredCosigApproval: number;
+    requiredCosigRemoval?: number;
+    parentSigners?: Signer[];
 };
 
 // Account state typing
@@ -66,6 +59,7 @@ interface AccountState {
     multisigAccountGraphInfo: MultisigAccountInfo[];
     isCosignatoryMode: boolean;
     signers: Signer[];
+    currentAccountSigner: Signer;
     currentSigner: Signer;
     currentSignerAddress: Address;
     currentSignerPublicKey: string;
@@ -95,6 +89,7 @@ const accountState: AccountState = {
     currentAccountAliases: [],
     isCosignatoryMode: false,
     signers: [],
+    currentAccountSigner: null,
     currentSigner: null,
     currentSignerAddress: null,
     currentSignerPublicKey: null,
@@ -127,6 +122,7 @@ export default {
             return state.currentAccount;
         },
         signers: (state: AccountState): Signer[] => state.signers,
+        currentAccountSigner: (state: AccountState): Signer => state.currentAccountSigner,
         currentSigner: (state: AccountState): Signer => state.currentSigner,
         currentAccountAddress: (state: AccountState) => state.currentAccountAddress,
         knownAddresses: (state: AccountState) => state.knownAddresses,
@@ -175,6 +171,9 @@ export default {
         },
         signers: (state: AccountState, signers: Signer[]) => {
             state.signers = signers;
+        },
+        currentAccountSigner: (state: AccountState, currentAccountSigner: Signer) => {
+            state.currentAccountSigner = currentAccountSigner;
         },
         currentSignerAddress: (state: AccountState, signerAddress) => {
             state.currentSignerAddress = signerAddress;
@@ -364,8 +363,8 @@ export default {
             });
 
             if (reset) {
-                dispatch('transaction/RESET_TRANSACTIONS', {}, { root: true });
-                dispatch('restriction/RESET_ACCOUNT_RESTRICTIONS', {}, { root: true });
+                await dispatch('transaction/RESET_TRANSACTIONS', {}, { root: true });
+                await dispatch('restriction/RESET_ACCOUNT_RESTRICTIONS', {}, { root: true });
             }
 
             const currentAccountAddress = Address.createFromRawAddress(currentAccount.address);
@@ -376,13 +375,6 @@ export default {
             commit('isCosignatoryMode', !currentSignerAddress.equals(currentAccountAddress));
             commit('knownAccounts', knownAccounts);
 
-            // Upgrade
-            dispatch('namespace/SIGNER_CHANGED', {}, { root: true });
-            dispatch('mosaic/SIGNER_CHANGED', {}, { root: true });
-            dispatch('transaction/SIGNER_CHANGED', {}, { root: true });
-            dispatch('metadata/SIGNER_CHANGED', {}, { root: true });
-            dispatch('harvesting/SET_CURRENT_SIGNER_HARVESTING_MODEL', currentSignerAddress.plain(), { root: true });
-            dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS', {}, { root: true });
             // open / close websocket connections
 
             if (reset) {
@@ -418,6 +410,7 @@ export default {
                             return infoFromGraph;
                         }),
                         catchError(() => {
+                            commit('multisigAccountGraph', []);
                             commit('multisigAccountGraphInfo', []);
                             return of([]);
                         }),
@@ -426,6 +419,14 @@ export default {
                 const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
                 commit('currentSignerMultisigInfo', currentSignerMultisigInfo);
             }
+
+            // Upgrade
+            dispatch('namespace/SIGNER_CHANGED', {}, { root: true });
+            dispatch('mosaic/SIGNER_CHANGED', {}, { root: true });
+            dispatch('transaction/SIGNER_CHANGED', {}, { root: true });
+            dispatch('metadata/SIGNER_CHANGED', {}, { root: true });
+            dispatch('harvesting/SET_CURRENT_SIGNER_HARVESTING_MODEL', currentSignerAddress.plain(), { root: true });
+            dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS', {}, { root: true });
 
             if (unsubscribeWS) {
                 if (previousSignerAddress) {
@@ -490,7 +491,6 @@ export default {
         },
 
         async LOAD_ACCOUNT_INFO({ commit, getters, rootGetters, dispatch }) {
-            const networkType: NetworkType = rootGetters['network/networkType'];
             const currentAccount: AccountModel = getters.currentAccount;
             const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
             const currentSignerAddress: Address = getters.currentSignerAddress;
@@ -532,6 +532,7 @@ export default {
                         return infoFromGraph;
                     }),
                     catchError(() => {
+                        commit('multisigAccountGraph', []);
                         commit('multisigAccountGraphInfo', []);
                         return of([]);
                     }),
@@ -550,11 +551,9 @@ export default {
             }
 
             const signers = new MultisigService().getSigners(
-                networkType,
                 knownAccounts,
-                currentAccount,
-                currentAccountMultisigInfo,
-                multisigAccountsInfo,
+                Address.createFromRawAddress(currentAccount.address),
+                getters.multisigAccountGraph,
             );
 
             const knownAddresses = _.uniqBy(
@@ -566,6 +565,10 @@ export default {
             commit(
                 'currentSigner',
                 signers.find((s) => s.address.equals(currentSignerAddress)),
+            );
+            commit(
+                'currentAccountSigner',
+                signers.find((s) => s.address.equals(currentAccountAddress)),
             );
             commit('signers', signers);
             commit('multisigAccountsInfo', multisigAccountsInfo);
