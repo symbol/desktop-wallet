@@ -46,7 +46,6 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
             transactionFees: 'network/transactionFees',
             isOfflineMode: 'network/isOfflineMode',
             multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
-            multisigAccountGraph: 'account/multisigAccountGraph',
         }),
     },
 })
@@ -144,8 +143,6 @@ export class FormTransactionBase extends Vue {
     protected isOfflineMode: boolean;
 
     protected multisigAccountGraphInfo: MultisigAccountInfo[];
-
-    protected multisigAccountGraph: MultisigAccountInfo[][];
 
     /**
      * Type the ValidationObserver refs
