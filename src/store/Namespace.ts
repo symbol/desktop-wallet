@@ -141,15 +141,15 @@ export default {
 
         async GET_LINKED_ADDRESS({ commit, rootGetters }, namespaceId: NamespaceId) {
             const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
-            const getLinkedAccountPromise = repositoryFactory
+            repositoryFactory
                 .createNamespaceRepository()
                 .getLinkedAddress(namespaceId)
                 .toPromise()
+                .then((linkedAddress) => {
+                    commit('linkedAddress', linkedAddress);
+                    return linkedAddress;
+                })
                 .catch(() => commit('linkedAddress', null));
-            const linkedAddress = await getLinkedAccountPromise;
-
-            commit('linkedAddress', linkedAddress);
-            return linkedAddress;
         },
 
         SIGNER_CHANGED({ commit, rootGetters, getters }) {
