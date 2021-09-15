@@ -16,7 +16,7 @@
 // @ts-ignore
 import ButtonAdd from '@/components/ButtonAdd/ButtonAdd';
 // @ts-ignore
-import SignerFilter from '@/components/SignerFilter/SignerFilter.vue';
+import SignerListFilter from '@/components/SignerListFilter/SignerListFilter.vue';
 // @ts-ignore
 import { TableAssetType } from '@/components/TableDisplay/TableAssetType';
 // @ts-ignore
@@ -60,7 +60,7 @@ export type AccountRestrictionTableField = {
         FormExtendNamespaceDurationTransaction,
         FormMosaicSupplyChangeTransaction,
         ModalMetadataDisplay,
-        SignerFilter,
+        SignerListFilter,
         ButtonAdd,
         ModalMetadataUpdate,
     },

@@ -233,7 +233,7 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         if (!this.selectedSigner.multisig && this.formItems.signerAddress !== this.getTargetAddress().plain()) {
             return 1;
         }
-        return this.selectedSigner.multisig ? this.multisigRequiredCosignatures : this.selectedSigner.requiredCosignatures;
+        return this.selectedSigner.requiredCosigApproval;
     }
 
     /**
@@ -386,5 +386,10 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         if (this.editMode && this.value) {
             this.updateFormItems(this.value);
         }
+    }
+
+    public async onMetadataSignerChanged(address: string) {
+        this.onChangeSigner(address);
+        this.formItems.targetId = '';
     }
 }

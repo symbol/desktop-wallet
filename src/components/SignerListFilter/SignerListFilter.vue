@@ -1,20 +1,9 @@
 <template>
-    <div class="transaction-filter">
-        <Select v-model="selectedSigner" size="large" prefix="ios-home" @input="onSignerChange">
-            <Icon slot="prefix" type="ios-people" size="0" />
-            <OptionGroup label="Multisig accounts">
-                <Option v-for="item in signers" :key="item.address.plain()" :value="item.address.plain()">
-                    {{ item.multisig ? $t('label_postfix_multisig') : '' }}
-                    {{ item.label }}
-                </Option>
-            </OptionGroup>
-        </Select>
-    </div>
+    <SignerBaseFilter :root-signer="rootSigner" @signer-change="onListSignerChange" />
 </template>
 <script lang="ts">
-// @ts-ignore
-import { SignerFilterTs } from './SignerFilterTs';
-export default class SignerFilter extends SignerFilterTs {}
+import { SignerListFilterTs } from './SignerListFilterTs';
+export default class SignerListFilter extends SignerListFilterTs {}
 </script>
 <style lang="less" scoped>
 @import '../../views/resources/css/variables.less';
@@ -45,5 +34,6 @@ export default class SignerFilter extends SignerFilterTs {}
     width: auto !important;
     left: unset !important;
     right: 0.4rem !important;
+    min-width: 2.6rem !important;
 }
 </style>

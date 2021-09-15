@@ -152,13 +152,8 @@ export default {
                 .catch(() => commit('linkedAddress', null));
         },
 
-        SIGNER_CHANGED({ commit, rootGetters, getters }) {
-            const namespaces: NamespaceModel[] = getters['namespaces'];
-            const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
-            if (!currentSignerAddress) {
-                return;
-            }
-            commit('namespaces', { namespaces, currentSignerAddress });
+        SIGNER_CHANGED({ dispatch }) {
+            dispatch('LOAD_NAMESPACES');
         },
 
         async RESOLVE_NAME({ commit, getters, rootGetters }, namespaceId: NamespaceId): Promise<string> {

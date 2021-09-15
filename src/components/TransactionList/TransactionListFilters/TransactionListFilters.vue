@@ -3,8 +3,8 @@
         <div class="transaction-list-filter-container">
             <TransactionStatusFilter />
         </div>
-        <div v-if="signers.length > 1" class="transaction-list-filter-container">
-            <SignerFilter :signers="signers" @signer-change="onSignerSelectorChange" />
+        <div v-if="currentAccountSigner.parentSigners" class="transaction-list-filter-container">
+            <SignerListFilter :root-signer="currentAccountSigner" @signer-change="onSignerSelectorChange" />
         </div>
         <div class="button-refresh-container">
             <ButtonRefresh @click="refresh" />
