@@ -779,10 +779,14 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
         this.isMounted = true;
     }
-    // checks if account balance is enough to make a transaction
+
+    /**
+     * checks if account balance is enough to make a transaction
+     */
     onCheckBalance(enoughBalance: boolean): void {
         this.enoughBalance = enoughBalance;
     }
+
     /**
      * watch title to change form items on select different transactions
      */
