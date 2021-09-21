@@ -250,7 +250,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         free: number;
     };
     private transactionSize: number = 0;
-
+    /**
+     * Defines whether the user has enough balnance
+     */
     private enoughBalance: boolean = false;
     /**
      * Reset the form with properties
@@ -781,7 +783,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
 
     /**
-     * checks if account balance is enough to make a transaction
+     * Called when balance needs to be checked to check if a user is able to make a transaction
      */
     onCheckBalance(enoughBalance: boolean): void {
         this.enoughBalance = enoughBalance;
