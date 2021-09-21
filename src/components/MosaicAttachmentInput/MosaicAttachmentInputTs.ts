@@ -70,7 +70,7 @@ export class MosaicAttachmentInputTs extends Vue {
     @Prop({ default: true }) isShowDelete: boolean;
 
     /**
-     * detects if user is in offline/online mode
+     * True if the user is in offline mode
      */
     @Prop({ default: false }) isOffline: boolean;
 
