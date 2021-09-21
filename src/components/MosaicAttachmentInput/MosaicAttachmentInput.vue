@@ -11,7 +11,9 @@
                     v-model="relativeAmount"
                     :mosaic-hex="chosenValue.mosaicHex"
                     class="ml-2"
+                    :is-offline="isOffline"
                     @input="onChangeAmount"
+                    @enough-balance="onCheckBalance"
                 />
                 <div v-show="isShowDelete" class="delete-mosaic-container">
                     <span class="delete-mosaic-icon" @click="$emit('input-deleted', uid)" />

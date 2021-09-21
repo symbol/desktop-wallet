@@ -1126,5 +1126,6 @@
     "welcome_to_symbol": "Добро пожаловать в Symbol",
     "word": "Слово",
     "ws_connection_failed": "Кошелек не может отслеживать действия вашего аккаунта в цепочке Symbol. Пожалуйста, попробуйте выбрать другую ноду.",
-    "x_seconds": "{seconds}s."
+    "x_seconds": "{seconds}s.",
+    "not_enough_balance": "не хватает баланса"
 }

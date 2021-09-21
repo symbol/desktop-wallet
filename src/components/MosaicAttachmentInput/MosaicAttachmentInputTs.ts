@@ -70,6 +70,11 @@ export class MosaicAttachmentInputTs extends Vue {
     @Prop({ default: true }) isShowDelete: boolean;
 
     /**
+     * True if the user is in offline mode
+     */
+    @Prop({ default: false }) isOffline: boolean;
+
+    /**
      * whether to show the label accord to isFirstItem
      */
     @Prop({ default: true }) isFirstItem: boolean;
@@ -159,5 +164,12 @@ export class MosaicAttachmentInputTs extends Vue {
     @Watch('mosaicAttachment')
     public onMosaicAttachmentChange(mosaicAttachment: { mosaicHex: string; amount: string }) {
         this.relativeAmount = mosaicAttachment.amount;
+    }
+
+    /**
+     * Emits balance checker event (`enough-balance`)
+     */
+    onCheckBalance(flag: boolean): void {
+        this.$emit('enough-balance', flag);
     }
 }

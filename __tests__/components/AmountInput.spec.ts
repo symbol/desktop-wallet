@@ -53,6 +53,9 @@ const mosaicModule = {
         mosaics: () => {
             return mosaicsMock;
         },
+        balanceMosaics: () => {
+            return mosaicsMock;
+        },
     },
 };
 const store = new Vuex.Store({
