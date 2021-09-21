@@ -89,7 +89,7 @@ export class AmountInputTs extends Vue {
         return selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility);
     }
 
-    // checks if entered amount greater than current balance
+    // Checks if the entered amount is greater than the current balance
     public get isAmountGreaterThanBalance() {
         this.$emit('enough-balance', this.totalAvailableAmount > Number(this.relativeValue));
         return this.totalAvailableAmount < Number(this.relativeValue);
