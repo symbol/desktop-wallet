@@ -740,7 +740,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             this.networkType,
             this.networkConfiguration,
             this.transactionFees,
-            this.currentSignerMultisigInfo ? this.currentSignerMultisigInfo.minApproval : this.selectedSigner.requiredCosignatures,
+            this.selectedSigner.requiredCosigApproval,
         );
     }
 

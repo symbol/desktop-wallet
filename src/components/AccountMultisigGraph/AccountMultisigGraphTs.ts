@@ -42,7 +42,7 @@ export class AccountMultisigGraphTs extends Vue {
     public knownAccounts: AccountModel[];
 
     get multisigGraphTree(): any[] {
-        if (this.multisigAccountGraphInfo) {
+        if (this.multisigAccountGraphInfo?.size) {
             return this.getMultisigDisplayGraph(this.multisigAccountGraphInfo);
         }
         return [];

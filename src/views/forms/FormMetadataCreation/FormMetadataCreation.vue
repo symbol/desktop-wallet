@@ -6,9 +6,9 @@
                     <SignerSelector
                         v-if="!editMode"
                         v-model="formItems.signerAddress"
-                        :signers="signers"
+                        :root-signer="currentAccountSigner"
                         label="form_label_by_account"
-                        @input="onChangeSigner"
+                        @input="onMetadataSignerChanged"
                     />
                     <FormRow v-else>
                         <template v-slot:label> {{ $t('form_label_by_account') }}: </template>
