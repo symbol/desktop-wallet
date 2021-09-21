@@ -388,8 +388,12 @@ export class FormMetadataCreationTs extends FormTransactionBase {
         }
     }
 
+    /**
+     * Hook called when a signer is changed.
+     * @param {string} address
+     */
     public async onMetadataSignerChanged(address: string) {
-        this.onChangeSigner(address);
+        await this.onChangeSigner(address);
         this.formItems.targetId = '';
     }
 }

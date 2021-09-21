@@ -611,17 +611,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * Resetting the form when choosing a multisig signer and changing multisig signer
      * Is necessary to make the mosaic inputs reactive
      */
-    public async onChangeSigner(address: string) {
-        const signerChanged: boolean = this.formItems.signerAddress !== this.selectedSigner.address.plain();
-        if (signerChanged) {
-            await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
-                address: Address.createFromRawAddress(address),
-                reset: false,
-                unsubscribeWS: false,
-            });
-            this.formItems.signerAddress = this.selectedSigner.address.plain();
-            this.resetMosaicsAndTriggerChange(false, true);
-        }
+    public async signerChanged(address: string) {
+        await this.onChangeSigner(address);
+        this.formItems.signerAddress = this.selectedSigner.address.plain();
+        this.resetMosaicsAndTriggerChange(false, true);
     }
 
     /**

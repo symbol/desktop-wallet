@@ -15,7 +15,6 @@
  */
 // external dependencies
 import {
-    Address,
     MosaicDefinitionTransaction,
     MosaicFlags,
     MosaicId,
@@ -223,15 +222,8 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
      * Resetting the form when choosing a multisig signer and changing multisig signer
      * Is necessary to make the mosaic inputs reactive
      */
-    public async onChangeSigner(address: string) {
-        const signerChanged: boolean = this.formItems.signerAddress !== this.selectedSigner.address.plain();
-        if (signerChanged) {
-            await this.$store.dispatch('account/SET_CURRENT_SIGNER', {
-                address: Address.createFromRawAddress(address),
-                reset: true, // need to make a namespaces API call when the current signer changes
-                unsubscribeWS: false,
-            });
-            this.resetForm();
-        }
+    public async signerChanged(address: string) {
+        await this.onChangeSigner(address);
+        this.resetForm();
     }
 }
