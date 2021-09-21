@@ -167,7 +167,7 @@ export class MosaicAttachmentInputTs extends Vue {
     }
 
     /**
-     * emits balance checker event
+     * Emits balance checker event (`enough-balance`)
      */
     onCheckBalance(flag: boolean): void {
         this.$emit('enough-balance', flag);
