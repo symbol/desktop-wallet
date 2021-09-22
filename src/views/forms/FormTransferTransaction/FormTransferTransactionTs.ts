@@ -806,4 +806,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     public onSignedOfflineTransaction(signedTransaction: SignedTransaction) {
         this.$emit('txSigned', signedTransaction);
     }
+    async beforeUpdate() {
+        const signerChanged: boolean = this.formItems.signerAddress !== this.selectedSigner.address.plain();
+        if (signerChanged) {
+            await this.signerChanged(this.selectedSigner.address.plain());
+        }
+    }
 }
