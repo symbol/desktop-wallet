@@ -281,8 +281,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
         // transaction details passed via router
         this.importTransaction = this.$route.params.transaction || this.importedTransaction ? true : false;
-        this.resetMosaicsAndTriggerChange(this.importTransaction);
-        this.triggerChange();
+        this.resetMosaicsAndTriggerChange(this.importTransaction, true);
     }
 
     /**
