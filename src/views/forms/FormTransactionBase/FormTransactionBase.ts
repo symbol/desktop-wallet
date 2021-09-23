@@ -180,6 +180,7 @@ export class FormTransactionBase extends Vue {
      */
     public async created() {
         this.$store.dispatch('network/LOAD_TRANSACTION_FEES');
+        this.$store.dispatch('network/SET_CLIENT_SERVER_TIME_DIFFERENCE');
         this.resetForm();
     }
 
