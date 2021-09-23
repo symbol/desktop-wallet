@@ -162,12 +162,17 @@ export default {
             if (!currentSignerAddress) {
                 return;
             }
-
+            const localServerTimeDiff = rootGetters['network/clientServerTimeDifference'];
             const metadataService = new MetadataService();
+            const deadline = Deadline.create(epochAdjustment);
             const metadataTransaction = await metadataService
                 .metadataTransactionObserver(
                     repositoryFactory,
-                    Deadline.create(epochAdjustment),
+                    Deadline.createFromAdjustedValue(
+                        localServerTimeDiff >= 0
+                            ? deadline.adjustedValue + this.clientServerTimeDifference
+                            : deadline.adjustedValue - this.clientServerTimeDifference,
+                    ),
                     networkType,
                     currentSignerAddress,
                     metadataForm.targetAddress,

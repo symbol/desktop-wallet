@@ -85,6 +85,7 @@ import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/
             networkConfiguration: 'network/networkConfiguration',
             transactionFees: 'network/transactionFees',
             isOfflineMode: 'network/isOfflineMode',
+            clientServerTimeDifference: 'network/clientServerTimeDifference',
         }),
     },
 })
@@ -219,6 +220,7 @@ export class ModalTransactionConfirmationTs extends Vue {
     protected isMultisigMode(): boolean {
         return this.isCosignatoryMode === true;
     }
+    private clientServerTimeDifference: number;
 
     public async mounted() {
         this.stagedTransactions = await this.command.resolveTransactions().toPromise();
@@ -402,7 +404,7 @@ export class ModalTransactionConfirmationTs extends Vue {
         const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount, multisigAccount, stageTransactions, maxFee } = values;
         const aggregate = this.command.calculateSuggestedMaxFee(
             AggregateTransaction.createComplete(
-                Deadline.create(this.epochAdjustment),
+                this.createDeadline(),
                 stageTransactions.map((t) => t.toAggregate(multisigAccount)),
                 this.networkType,
                 [],
@@ -432,7 +434,7 @@ export class ModalTransactionConfirmationTs extends Vue {
         const { ledgerService, currentPath, isOptinLedgerWallet, ledgerAccount, multisigAccount, stageTransactions, maxFee } = values;
         const aggregate = this.command.calculateSuggestedMaxFee(
             AggregateTransaction.createBonded(
-                Deadline.create(this.epochAdjustment, 48),
+                this.createDeadline(48),
                 stageTransactions.map((t) => t.toAggregate(multisigAccount)),
                 this.networkType,
                 [],
@@ -446,7 +448,7 @@ export class ModalTransactionConfirmationTs extends Vue {
             });
         const hashLock = this.command.calculateSuggestedMaxFee(
             LockFundsTransaction.create(
-                Deadline.create(this.epochAdjustment, 6),
+                this.createDeadline(6),
                 new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
                 UInt64.fromUint(5760),
                 signedAggregateTransaction,
@@ -947,5 +949,12 @@ export class ModalTransactionConfirmationTs extends Vue {
 
         // // pre-store selected harvesting node in local
         this.saveHarvestingNode(accountAddress, this.command.formItems.nodeModel);
+    }
+    protected createDeadline(deadlineInHours = 2): Deadline {
+        const deadline = Deadline.create(this.epochAdjustment, deadlineInHours);
+        if (this.clientServerTimeDifference >= 0) {
+            return Deadline.createFromAdjustedValue(deadline.adjustedValue + this.clientServerTimeDifference);
+        }
+        return Deadline.createFromAdjustedValue(deadline.adjustedValue - this.clientServerTimeDifference);
     }
 }

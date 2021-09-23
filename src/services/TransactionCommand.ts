@@ -34,6 +34,7 @@ import { Observable, of } from 'rxjs';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
 import { BroadcastResult } from '@/core/transactions/BroadcastResult';
 import { flatMap, map } from 'rxjs/operators';
+import { AppStore } from '@/app/AppStore';
 
 export enum TransactionCommandMode {
     SIMPLE = 'SIMPLE',
@@ -143,7 +144,7 @@ export class TransactionCommand {
             if (this.mode === TransactionCommandMode.AGGREGATE) {
                 const aggregate = this.calculateSuggestedMaxFee(
                     AggregateTransaction.createComplete(
-                        Deadline.create(this.epochAdjustment),
+                        this.createDeadline(this.epochAdjustment),
                         this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
                         this.networkType,
                         [],
@@ -222,5 +223,13 @@ export class TransactionCommand {
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         return undefined;
+    }
+    protected createDeadline(deadlineInHours = 2): Deadline {
+        const deadline = Deadline.create(this.epochAdjustment, deadlineInHours);
+        const clientServerTimeDifference = AppStore.getters['network/clientServerTimeDifference'];
+        if (clientServerTimeDifference >= 0) {
+            return Deadline.createFromAdjustedValue(deadline.adjustedValue + clientServerTimeDifference);
+        }
+        return Deadline.createFromAdjustedValue(deadline.adjustedValue - clientServerTimeDifference);
     }
 }
