@@ -256,14 +256,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     protected resetForm(): void {
         this.showUnlockAccountModal = false;
-        this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentMosaicList());
-
         if (this.editMode) {
             return;
         }
-
-        // - reset attached mosaics
-        this.formItems.attachedMosaics = [];
 
         // - set default form values
         this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
@@ -278,6 +273,29 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         }
         this.formItems.recipient = !!this.recipient ? this.recipient : null;
 
+        this.formItems.messagePlain = this.message ? Formatters.hexToUtf8(this.message.payload) : '';
+        this.formItems.encryptMessage = false;
+        this.encyptedMessage = null;
+        // - maxFee must be absolute
+        this.formItems.maxFee = this.defaultFee;
+
+        // transaction details passed via router
+        this.importTransaction = this.$route.params.transaction || this.importedTransaction ? true : false;
+        this.resetMosaicsAndTriggerChange(this.importTransaction, true);
+    }
+
+    /**
+     * Resetting mosaics list when signer is changed
+     * @param {boolean} importedTransaction checks if transaction is imported
+     * @param {string} triggerChange checks if triggerChange() needs to be called
+     * @return {void}
+     */
+    private resetMosaicsAndTriggerChange(importedTransaction: boolean, triggerChange = false): void {
+        this.mosaicInputsManager = MosaicInputsManager.initialize(this.currentMosaicList());
+        // - reset attached mosaics
+        this.formItems.attachedMosaics = [];
+        this.formItems.selectedMosaicHex = this.networkMosaic.toHex();
+
         const attachedMosaics: MosaicAttachment[] = [
             {
                 id: new MosaicId(this.networkCurrency.mosaicIdHex),
@@ -288,28 +306,21 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             },
         ];
 
-        this.formItems.messagePlain = this.message ? Formatters.hexToUtf8(this.message.payload) : '';
-        this.formItems.encryptMessage = false;
-        this.encyptedMessage = null;
-        // - maxFee must be absolute
-        this.formItems.maxFee = this.defaultFee;
-
-        // transaction details passed via router
-        this.importTransaction = this.$route.params.transaction || this.importedTransaction ? true : false;
-        if (this.importTransaction) {
+        if (importedTransaction) {
             this.setTransactions([!!this.importedTransaction ? this.importedTransaction : this.$route.params.transaction] as any);
             this.formItems.attachedMosaics.forEach((attachedMosaic) => {
                 this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
             });
             this.onChangeRecipient();
         } else {
-            // - set attachedMosaics and allocate slots
             attachedMosaics.forEach((attachedMosaic, index) => {
                 this.mosaicInputsManager.setSlot(attachedMosaic.mosaicHex, attachedMosaic.uid);
                 Vue.set(this.formItems.attachedMosaics, index, attachedMosaic);
             });
         }
-        this.triggerChange();
+        if (triggerChange) {
+            this.triggerChange();
+        }
     }
 
     /**
@@ -599,10 +610,10 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      * Resetting the form when choosing a multisig signer and changing multisig signer
      * Is necessary to make the mosaic inputs reactive
      */
-    @Watch('selectedSigner')
-    onSelectedSignerChange() {
+    public async signerChanged(address: string) {
+        await this.onChangeSigner(address);
         this.formItems.signerAddress = this.selectedSigner.address.plain();
-        this.resetForm();
+        this.resetMosaicsAndTriggerChange(false, true);
     }
 
     /**
@@ -793,5 +804,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
      */
     public onSignedOfflineTransaction(signedTransaction: SignedTransaction) {
         this.$emit('txSigned', signedTransaction);
+    }
+    async beforeUpdate() {
+        const signerChanged: boolean = this.formItems.signerAddress !== this.selectedSigner.address.plain();
+        if (signerChanged) {
+            await this.signerChanged(this.selectedSigner.address.plain());
+        }
     }
 }
