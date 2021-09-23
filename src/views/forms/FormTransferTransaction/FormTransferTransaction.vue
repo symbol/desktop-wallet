@@ -73,7 +73,7 @@
                         :hide-submit="hideSubmit"
                         :submit-button-text="submitButtonText"
                         :calculated-recommended-fee="calculatedRecommendedFee"
-                        :disable-submit="currentAccount.isMultisig || (!enoughBalance && !isOfflineMode)"
+                        :disable-submit="currentAccount.isMultisig || (!isBalanceEnough && !isOfflineMode)"
                         :size="transactionSize"
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
@@ -82,7 +82,7 @@
                         <button
                             type="submit"
                             class="save-button centered-button button-style inverted-button"
-                            :disabled="currentAccount.isMultisig || !enoughBalance"
+                            :disabled="currentAccount.isMultisig || !isBalanceEnough"
                             @click="emitToAggregate"
                         >
                             {{ $t('save') }}
