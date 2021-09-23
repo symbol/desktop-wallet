@@ -46,6 +46,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
             transactionFees: 'network/transactionFees',
             isOfflineMode: 'network/isOfflineMode',
             multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
+            clientServerTimeDifference: 'network/clientServerTimeDifference',
         }),
     },
 })
@@ -144,6 +145,8 @@ export class FormTransactionBase extends Vue {
 
     protected multisigAccountGraphInfo: MultisigAccountInfo[];
 
+    private clientServerTimeDifference: number;
+
     /**
      * Type the ValidationObserver refs
      * @type {{
@@ -184,7 +187,11 @@ export class FormTransactionBase extends Vue {
      * it creates the deadlines for the transactions.
      */
     protected createDeadline(): Deadline {
-        return Deadline.create(this.epochAdjustment);
+        const deadline = Deadline.create(this.epochAdjustment);
+        if (this.clientServerTimeDifference >= 0) {
+            return Deadline.createFromAdjustedValue(deadline.adjustedValue + this.clientServerTimeDifference);
+        }
+        return Deadline.createFromAdjustedValue(deadline.adjustedValue - this.clientServerTimeDifference);
     }
 
     /**
