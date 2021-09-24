@@ -547,13 +547,22 @@ export default {
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
             commit('peerNodes', _.uniqBy(peerNodes, 'host'));
         },
+        // set current difference between server and local time
         async SET_CLIENT_SERVER_TIME_DIFFERENCE({ getters, commit }) {
-            const repositoryFactory: RepositoryFactory = getters['repositoryFactory'] as RepositoryFactory;
-            const epochAdjustment = getters['epochAdjustment'];
-            const serverDeadline = await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime();
-            const localDeadline = Deadline.create(epochAdjustment);
-            const adjustedDifference = serverDeadline.adjustedValue - localDeadline.adjustedValue;
-            commit('setClientServerTimeDifference', adjustedDifference);
+            const isOffline = getters['isOfflineMode'];
+            // using server time for online transactions
+            if (!isOffline) {
+                const repositoryFactory: RepositoryFactory = getters['repositoryFactory'] as RepositoryFactory;
+                const epochAdjustment = getters['epochAdjustment'];
+                const serverDeadline = await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime();
+                const localDeadline = Deadline.create(epochAdjustment);
+                const adjustedDifference = serverDeadline.adjustedValue - localDeadline.adjustedValue;
+                commit('setClientServerTimeDifference', adjustedDifference);
+            }
+            // using local time in offline transactions
+            else {
+                commit('setClientServerTimeDifference', 0);
+            }
         },
         // TODO :: re-apply that behavior if red screen issue fixed
         // load nodes that eligible for delegate harvesting

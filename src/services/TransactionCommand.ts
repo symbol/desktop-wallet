@@ -144,7 +144,7 @@ export class TransactionCommand {
             if (this.mode === TransactionCommandMode.AGGREGATE) {
                 const aggregate = this.calculateSuggestedMaxFee(
                     AggregateTransaction.createComplete(
-                        this.createDeadline(this.epochAdjustment),
+                        this.createDeadline(),
                         this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
                         this.networkType,
                         [],
