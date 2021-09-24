@@ -189,10 +189,7 @@ export class FormTransactionBase extends Vue {
      */
     protected createDeadline(deadlineInHours = 2): Deadline {
         const deadline = Deadline.create(this.epochAdjustment, deadlineInHours);
-        if (this.clientServerTimeDifference >= 0) {
-            return Deadline.createFromAdjustedValue(deadline.adjustedValue + this.clientServerTimeDifference);
-        }
-        return Deadline.createFromAdjustedValue(deadline.adjustedValue - this.clientServerTimeDifference);
+        return Deadline.createFromAdjustedValue(deadline.adjustedValue + this.clientServerTimeDifference);
     }
 
     /**
