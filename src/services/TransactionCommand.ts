@@ -159,19 +159,13 @@ export class TransactionCommand {
                 });
 
                 const aggregate = this.calculateSuggestedMaxFee(
-                    AggregateTransaction.createBonded(
-                        Deadline.create(this.epochAdjustment, 48),
-                        signedInnerTransactions,
-                        this.networkType,
-                        [],
-                        maxFee,
-                    ),
+                    AggregateTransaction.createBonded(this.createDeadline(48), signedInnerTransactions, this.networkType, [], maxFee),
                 );
                 return account.signTransaction(aggregate, this.generationHash).pipe(
                     map((signedAggregateTransaction) => {
                         const hashLock = this.calculateSuggestedMaxFee(
                             LockFundsTransaction.create(
-                                Deadline.create(this.epochAdjustment, 6),
+                                this.createDeadline(6),
                                 new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
                                 UInt64.fromUint(5760),
                                 signedAggregateTransaction,
