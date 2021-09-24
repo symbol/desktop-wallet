@@ -950,11 +950,9 @@ export class ModalTransactionConfirmationTs extends Vue {
         // // pre-store selected harvesting node in local
         this.saveHarvestingNode(accountAddress, this.command.formItems.nodeModel);
     }
+
     protected createDeadline(deadlineInHours = 2): Deadline {
         const deadline = Deadline.create(this.epochAdjustment, deadlineInHours);
-        if (this.clientServerTimeDifference >= 0) {
-            return Deadline.createFromAdjustedValue(deadline.adjustedValue + this.clientServerTimeDifference);
-        }
-        return Deadline.createFromAdjustedValue(deadline.adjustedValue - this.clientServerTimeDifference);
+        return Deadline.createFromAdjustedValue(deadline.adjustedValue + this.clientServerTimeDifference);
     }
 }

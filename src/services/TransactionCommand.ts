@@ -224,12 +224,10 @@ export class TransactionCommand {
         }
         return undefined;
     }
+
     protected createDeadline(deadlineInHours = 2): Deadline {
         const deadline = Deadline.create(this.epochAdjustment, deadlineInHours);
         const clientServerTimeDifference = AppStore.getters['network/clientServerTimeDifference'];
-        if (clientServerTimeDifference >= 0) {
-            return Deadline.createFromAdjustedValue(deadline.adjustedValue + clientServerTimeDifference);
-        }
-        return Deadline.createFromAdjustedValue(deadline.adjustedValue - clientServerTimeDifference);
+        return Deadline.createFromAdjustedValue(deadline.adjustedValue + clientServerTimeDifference);
     }
 }

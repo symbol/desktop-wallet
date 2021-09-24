@@ -168,11 +168,7 @@ export default {
             const metadataTransaction = await metadataService
                 .metadataTransactionObserver(
                     repositoryFactory,
-                    Deadline.createFromAdjustedValue(
-                        localServerTimeDiff >= 0
-                            ? deadline.adjustedValue + this.clientServerTimeDifference
-                            : deadline.adjustedValue - this.clientServerTimeDifference,
-                    ),
+                    Deadline.createFromAdjustedValue(deadline.adjustedValue + localServerTimeDiff),
                     networkType,
                     currentSignerAddress,
                     metadataForm.targetAddress,
