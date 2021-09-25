@@ -11,6 +11,7 @@ import i18n from '@/language/index';
 import { StandardValidationRules } from '@/core/validation/StandardValidationRules';
 import { MaxDecimalsValidator, PositiveDecimalNumberValidator, MaxRelativeAmountValidator } from '@/core/validation/validators';
 import { appConfig } from '@/config';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 StandardValidationRules.register();
 appConfig.constants.DECIMAL_SEPARATOR = '.';
@@ -58,9 +59,18 @@ const mosaicModule = {
         },
     },
 };
+
+const networkModule = {
+    namespaced: true,
+    getters: {
+        networkConfiguration: () => new NetworkConfigurationModel(),
+    },
+};
+
 const store = new Vuex.Store({
     modules: {
         mosaic: mosaicModule,
+        network: networkModule,
     },
 });
 const options = {
