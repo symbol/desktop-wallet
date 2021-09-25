@@ -88,10 +88,13 @@ export class AmountInputTs extends Vue {
         const selectedMosaic = this.balanceMosaics.find((m) => m.mosaicIdHex === this.mosaicHex);
         return selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility);
     }
+    private useMaximumBalance() {
+        const roundedValue = this.round(this.totalAvailableAmount).toString();
+        this.relativeValue = roundedValue;
+        this.$emit('input', roundedValue);
+    }
 
-    // Checks if the entered amount is greater than the current balance
-    public get isAmountGreaterThanBalance() {
-        this.$emit('enough-balance', this.totalAvailableAmount > Number(this.relativeValue));
-        return this.totalAvailableAmount < Number(this.relativeValue);
+    private round(num) {
+        return Math.floor(num * 100) / 100;
     }
 }

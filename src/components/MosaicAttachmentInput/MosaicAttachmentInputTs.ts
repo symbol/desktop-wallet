@@ -165,11 +165,4 @@ export class MosaicAttachmentInputTs extends Vue {
     public onMosaicAttachmentChange(mosaicAttachment: { mosaicHex: string; amount: string }) {
         this.relativeAmount = mosaicAttachment.amount;
     }
-
-    /**
-     * Emits balance checker event (`enough-balance`)
-     */
-    onCheckBalance(flag: boolean): void {
-        this.$emit('enough-balance', flag);
-    }
 }

@@ -1127,5 +1127,6 @@
     "word": "文字",
     "ws_connection_failed": "ウォレットはSymbolチェーン上のアカウントに関するアクティビティを監視できません。別のノードを選択してみてください。",
     "x_seconds": "{seconds} 秒",
-    "not_enough_balance": "バランスが悪い"
+    "not_enough_balance": "バランスが悪い",
+    "use_max_value": "最大値を使用"
 }

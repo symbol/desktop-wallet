@@ -1127,5 +1127,6 @@
     "word": "Word",
     "ws_connection_failed": "The wallet cannot monitor the activities of your account on the Symbol chain. Please try selecting a different node.",
     "x_seconds": "{seconds}s.",
-    "not_enough_balance": "Not enough balance"
+    "not_enough_balance": "Not enough balance",
+    "use_max_value": "Use maximum value"
 }
