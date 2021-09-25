@@ -11,7 +11,7 @@
         <ErrorTooltip :errors="errors">
             <input v-model="relativeValue" class="input-style amount-input-size" type="text" />
             <Button
-                v-if="!isOffline"
+                v-if="!isOffline && !isAggregate"
                 type="text"
                 :title="$t('use_max_value')"
                 class="input-style total-amount-input-size"
@@ -21,6 +21,12 @@
                 <Icon type="ios-information-circle-outline" />
                 {{ totalAvailableAmount }}
             </Button>
+            <input
+                v-if="!isOffline && isAggregate"
+                v-model="totalAvailableAmount"
+                class="input-style total-amount-input-size"
+                :disabled="true"
+            />
         </ErrorTooltip>
     </ValidationProvider>
 </template>

@@ -32,6 +32,8 @@
                             :is-show-delete="index > 0 && index === formItems.attachedMosaics.length - 1"
                             :is-first-item="index === 0"
                             :is-offline="isOfflineMode"
+                            :selected-fee-value="selectedFeeValue"
+                            :is-aggregate="isAggregate"
                             @input-changed="onMosaicInputChange"
                             @input-deleted="onDeleteMosaicInput"
                         />
@@ -76,6 +78,7 @@
                         :size="transactionSize"
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
+                        @selected-fee="onSelectFeeValue"
                     />
                     <div v-else-if="!hideSave" class="ml-2" style="text-align: right;">
                         <button

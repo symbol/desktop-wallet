@@ -70,7 +70,6 @@ export class CustomValidationRules {
         });
         extend('amountBalanceChecker', {
             validate: (value, args: any) => {
-                console.log(Number(value), Number(args[0]), JSON.parse(args[1]));
                 return Number(value) <= Number(args[0]) && !JSON.parse(args[1]);
             },
             message: () => `${i18n.t('not_enough_balance')}`,

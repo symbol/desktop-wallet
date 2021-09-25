@@ -250,6 +250,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         free: number;
     };
     private transactionSize: number = 0;
+
+    private selectedFeeValue: number = 0;
     /**
      * Reset the form with properties
      * @return {void}
@@ -777,6 +779,11 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             this.$emit('txInput', this.formItems);
         }
     }
+
+    public onSelectFeeValue(val) {
+        this.selectedFeeValue = val;
+    }
+
     mounted() {
         if (this.isAggregate && this.value) {
             Object.assign(this.formItems, this.value);

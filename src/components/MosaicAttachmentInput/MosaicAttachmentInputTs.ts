@@ -78,6 +78,9 @@ export class MosaicAttachmentInputTs extends Vue {
      * whether to show the label accord to isFirstItem
      */
     @Prop({ default: true }) isFirstItem: boolean;
+    @Prop({ default: 0 }) selectedFeeValue: number;
+    @Prop({ default: false }) isAggregate: boolean;
+
     /**
      * Updated value to sync with the parent formItems
      * @protected

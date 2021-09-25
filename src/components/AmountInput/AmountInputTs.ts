@@ -44,6 +44,8 @@ export class AmountInputTs extends Vue {
     @Prop({ default: '' }) value: string;
     @Prop({ default: '' }) mosaicHex: string;
     @Prop({ default: false }) isOffline: boolean;
+    @Prop({ default: 0 }) selectedFeeValue: number;
+    @Prop({ default: false }) isAggregate: boolean;
     /**
      * Currently active account's balances
      * @var {Mosaic[]}
@@ -64,6 +66,7 @@ export class AmountInputTs extends Vue {
     public networkType: NetworkType;
 
     created() {
+        console.log(this.isAggregate);
         // update validation rule to reflect correct mosaic divisibility
         const chosenMosaic = this.mosaics.find((mosaic) => this.mosaicHex === mosaic.mosaicIdHex);
         const networkConfigurationDefaults = networkConfig[this.networkType || NetworkType.TEST_NET].networkConfigurationDefaults;
@@ -86,7 +89,7 @@ export class AmountInputTs extends Vue {
     // It gets the total available amount of the selected mosaic on the account
     public get totalAvailableAmount() {
         const selectedMosaic = this.balanceMosaics.find((m) => m.mosaicIdHex === this.mosaicHex);
-        return selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility);
+        return (selectedMosaic.balance - this.selectedFeeValue) / Math.pow(10, selectedMosaic.divisibility);
     }
     private useMaximumBalance() {
         const roundedValue = this.round(this.totalAvailableAmount).toString();
