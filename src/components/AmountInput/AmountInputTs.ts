@@ -26,6 +26,7 @@ import { mapGetters } from 'vuex';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { networkConfig } from '@/config';
 import { NetworkType } from 'symbol-sdk';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 @Component({
     components: {
@@ -37,6 +38,7 @@ import { NetworkType } from 'symbol-sdk';
             mosaics: 'mosaic/mosaics',
             networkType: 'network/networkType',
             balanceMosaics: 'mosaic/balanceMosaics',
+            networkConfiguration: 'network/networkConfiguration',
         }),
     },
 })
@@ -65,6 +67,8 @@ export class AmountInputTs extends Vue {
 
     public networkType: NetworkType;
 
+    public networkConfiguration: NetworkConfigurationModel;
+
     created() {
         console.log(this.isAggregate);
         // update validation rule to reflect correct mosaic divisibility
@@ -89,7 +93,10 @@ export class AmountInputTs extends Vue {
     // It gets the total available amount of the selected mosaic on the account
     public get totalAvailableAmount() {
         const selectedMosaic = this.balanceMosaics.find((m) => m.mosaicIdHex === this.mosaicHex);
-        return (selectedMosaic.balance - this.selectedFeeValue) / Math.pow(10, selectedMosaic.divisibility);
+        if (selectedMosaic.mosaicIdHex === this.networkConfiguration.currencyMosaicId) {
+            return (selectedMosaic.balance - this.selectedFeeValue) / Math.pow(10, selectedMosaic.divisibility);
+        }
+        return selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility);
     }
     private useMaximumBalance() {
         const roundedValue = this.round(this.totalAvailableAmount).toString();
