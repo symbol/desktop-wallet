@@ -90,7 +90,7 @@ export class AmountInputTs extends Vue {
     }
     /// end-region computed properties getter/setter
 
-    // It gets the total available amount of the selected mosaic on the account
+    // get the total available amount of the selected mosaic on the account
     public get totalAvailableAmount() {
         const selectedMosaic = this.balanceMosaics.find((m) => m.mosaicIdHex === this.mosaicHex);
         if (selectedMosaic.mosaicIdHex === this.networkConfiguration.currencyMosaicId) {
@@ -98,13 +98,10 @@ export class AmountInputTs extends Vue {
         }
         return selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility);
     }
+    // use maximum balance as amount input
     private useMaximumBalance() {
-        const roundedValue = this.round(this.totalAvailableAmount).toString();
+        const roundedValue = this.totalAvailableAmount.toString();
         this.relativeValue = roundedValue;
         this.$emit('input', roundedValue);
-    }
-
-    private round(num) {
-        return Math.floor(num * 100) / 100;
     }
 }
