@@ -4,7 +4,7 @@
         mode="lazy"
         vid="amount"
         :name="$t('amount')"
-        :rules="`${validationRules.amount}|amountBalanceChecker:${[totalAvailableAmount, isOffline]}`"
+        :rules="validationRules.amount"
         tag="div"
         class="inputs-container"
     >
@@ -27,6 +27,7 @@
                 class="input-style total-amount-input-size"
                 :disabled="true"
             />
+            <p v-if="!validAmount" class="warning-label">{{ $t('not_enough_balance') }}</p>
         </ErrorTooltip>
     </ValidationProvider>
 </template>

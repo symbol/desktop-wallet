@@ -27,6 +27,7 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { networkConfig } from '@/config';
 import { NetworkType } from 'symbol-sdk';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
+import { MaxAmountValidator } from '@/core/validation/validators';
 
 @Component({
     components: {
@@ -39,6 +40,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
             networkType: 'network/networkType',
             balanceMosaics: 'mosaic/balanceMosaics',
             networkConfiguration: 'network/networkConfiguration',
+            isCosignatoryMode: 'account/isCosignatoryMode',
         }),
     },
 })
@@ -68,9 +70,9 @@ export class AmountInputTs extends Vue {
     public networkType: NetworkType;
 
     public networkConfiguration: NetworkConfigurationModel;
-
+    private validAmount: boolean = true;
+    public isCosignatoryMode: boolean;
     created() {
-        console.log(this.isAggregate);
         // update validation rule to reflect correct mosaic divisibility
         const chosenMosaic = this.mosaics.find((mosaic) => this.mosaicHex === mosaic.mosaicIdHex);
         const networkConfigurationDefaults = networkConfig[this.networkType || NetworkType.TEST_NET].networkConfigurationDefaults;
@@ -82,6 +84,7 @@ export class AmountInputTs extends Vue {
 
     /// region computed properties getter/setter
     public get relativeValue(): string {
+        this.validAmount = MaxAmountValidator.validate(this.value, [this.totalAvailableAmount, this.isOffline]);
         return this.value;
     }
 
@@ -93,8 +96,11 @@ export class AmountInputTs extends Vue {
     // get the total available amount of the selected mosaic on the account
     public get totalAvailableAmount() {
         const selectedMosaic = this.balanceMosaics.find((m) => m.mosaicIdHex === this.mosaicHex);
+        const balance = this.isCosignatoryMode
+            ? selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility)
+            : (selectedMosaic.balance - this.selectedFeeValue) / Math.pow(10, selectedMosaic.divisibility);
         if (selectedMosaic.mosaicIdHex === this.networkConfiguration.currencyMosaicId) {
-            return (selectedMosaic.balance - this.selectedFeeValue) / Math.pow(10, selectedMosaic.divisibility);
+            return balance;
         }
         return selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility);
     }

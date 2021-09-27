@@ -68,13 +68,6 @@ export class CustomValidationRules {
                 })}`,
             params: ['maxMosaicAtomicUnits', 'maxMosaicDivisibility'],
         });
-        extend('amountBalanceChecker', {
-            validate: (value, args: any) => {
-                return Number(value) <= Number(args[0]) && !JSON.parse(args[1]);
-            },
-            message: () => `${i18n.t('not_enough_balance')}`,
-        });
-
         extend('maxMessage', {
             validate: (value, args: any) => {
                 const { maxMessageNumber } = args;
