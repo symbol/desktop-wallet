@@ -32,6 +32,8 @@ import _ from 'lodash';
 import { Subscription } from 'rxjs';
 import {
     BlockInfo,
+    Deadline,
+    DeadlineService,
     IListener,
     Listener,
     NetworkType,
@@ -95,6 +97,7 @@ interface NetworkState {
     connectingToNodeInfo: ConnectingToNodeInfo;
     isOfflineMode: boolean;
     feesConfig: any;
+    clientServerTimeDifference: number;
 }
 
 const initialNetworkState: NetworkState = {
@@ -119,6 +122,7 @@ const initialNetworkState: NetworkState = {
     connectingToNodeInfo: undefined,
     isOfflineMode: false,
     feesConfig: undefined,
+    clientServerTimeDifference: undefined,
 };
 
 export default {
@@ -146,6 +150,7 @@ export default {
         connectingToNodeInfo: (state: NetworkState) => state.connectingToNodeInfo,
         isOfflineMode: (state: NetworkState) => state.isOfflineMode,
         feesConfig: (state: NetworkState) => state.feesConfig,
+        clientServerTimeDifference: (state: NetworkState) => state.clientServerTimeDifference,
     },
     mutations: {
         setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -220,6 +225,9 @@ export default {
             Vue.set(state, 'connectingToNodeInfo', connectingToNodeInfo),
         setFeesConfig: (state: NetworkState, feesConfig: {}) => {
             Vue.set(state, 'feesConfig', feesConfig);
+        },
+        setClientServerTimeDifference: (state: NetworkState, clientServerTimeDifference: number) => {
+            Vue.set(state, 'clientServerTimeDifference', clientServerTimeDifference);
         },
     },
     actions: {
@@ -404,6 +412,7 @@ export default {
                 nodes.find((n) => n.url === networkModel.url),
             );
             commit('setConnected', true);
+            await dispatch('SET_CLIENT_SERVER_TIME_DIFFERENCE');
             commit('connectingToNodeInfo', {
                 isTryingToConnect: false,
             });
@@ -537,6 +546,23 @@ export default {
             const nodeRepository = repositoryFactory.createNodeRepository();
             const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
             commit('peerNodes', _.uniqBy(peerNodes, 'host'));
+        },
+        // set current difference between server and local time
+        async SET_CLIENT_SERVER_TIME_DIFFERENCE({ getters, commit }) {
+            const isOffline = getters['isOfflineMode'];
+            // using server time for online transactions
+            if (!isOffline) {
+                const repositoryFactory: RepositoryFactory = getters['repositoryFactory'] as RepositoryFactory;
+                const epochAdjustment = getters['epochAdjustment'];
+                const serverDeadline = await (await DeadlineService.create(repositoryFactory)).createDeadlineUsingServerTime();
+                const localDeadline = Deadline.create(epochAdjustment);
+                const adjustedDifference = serverDeadline.adjustedValue - localDeadline.adjustedValue;
+                commit('setClientServerTimeDifference', adjustedDifference);
+            }
+            // using local time in offline transactions
+            else {
+                commit('setClientServerTimeDifference', 0);
+            }
         },
         // TODO :: re-apply that behavior if red screen issue fixed
         // load nodes that eligible for delegate harvesting

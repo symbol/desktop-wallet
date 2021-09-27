@@ -34,6 +34,7 @@ import { Observable, of } from 'rxjs';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
 import { BroadcastResult } from '@/core/transactions/BroadcastResult';
 import { flatMap, map } from 'rxjs/operators';
+import { AppStore } from '@/app/AppStore';
 
 export enum TransactionCommandMode {
     SIMPLE = 'SIMPLE',
@@ -143,7 +144,7 @@ export class TransactionCommand {
             if (this.mode === TransactionCommandMode.AGGREGATE) {
                 const aggregate = this.calculateSuggestedMaxFee(
                     AggregateTransaction.createComplete(
-                        Deadline.create(this.epochAdjustment),
+                        this.createDeadline(),
                         this.stageTransactions.map((t) => t.toAggregate(currentSigner)),
                         this.networkType,
                         [],
@@ -158,19 +159,13 @@ export class TransactionCommand {
                 });
 
                 const aggregate = this.calculateSuggestedMaxFee(
-                    AggregateTransaction.createBonded(
-                        Deadline.create(this.epochAdjustment, 48),
-                        signedInnerTransactions,
-                        this.networkType,
-                        [],
-                        maxFee,
-                    ),
+                    AggregateTransaction.createBonded(this.createDeadline(48), signedInnerTransactions, this.networkType, [], maxFee),
                 );
                 return account.signTransaction(aggregate, this.generationHash).pipe(
                     map((signedAggregateTransaction) => {
                         const hashLock = this.calculateSuggestedMaxFee(
                             LockFundsTransaction.create(
-                                Deadline.create(this.epochAdjustment, 6),
+                                this.createDeadline(6),
                                 new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
                                 UInt64.fromUint(5760),
                                 signedAggregateTransaction,
@@ -222,5 +217,11 @@ export class TransactionCommand {
             return fees || this.networkConfiguration.defaultDynamicFeeMultiplier;
         }
         return undefined;
+    }
+
+    protected createDeadline(deadlineInHours = 2): Deadline {
+        const deadline = Deadline.create(this.epochAdjustment, deadlineInHours);
+        const clientServerTimeDifference = AppStore.getters['network/clientServerTimeDifference'];
+        return Deadline.createFromAdjustedValue(deadline.adjustedValue + clientServerTimeDifference);
     }
 }
