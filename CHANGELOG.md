@@ -24,7 +24,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Fixed multilevel multisig behavior when account is a cosigner of multiple trees [#1687](https://github.com/symbol/desktop-wallet/issues/1687)
 - Fixed partial transactions aren't shown correctly [#1697](https://github.com/symbol/desktop-wallet/issues/1697)
 - Fixed mosaic/namespace metadata listing on signer change [#1668](https://github.com/symbol/desktop-wallet/issues/1668)[#1669](https://github.com/symbol/desktop-wallet/issues/1669)[#1670](https://github.com/symbol/desktop-wallet/issues/1670)
-- Fixed infinite rest calls when transaction sent to expired namespace alias [1695](https://github.com/symbol/desktop-wallet/issues/1695)
+- Fixed infinite REST calls when a transaction is sent to an expired namespace alias [1695](https://github.com/symbol/desktop-wallet/issues/1695)
 - Reload mosaics only when signer is changed in transaction form [#1684](https://github.com/symbol/desktop-wallet/issues/1684)
 - Fixed form resetting when a transaction is confirmed [#1683](https://github.com/symbol/desktop-wallet/issues/1683)
 - Fixed axios dependency alert issue
