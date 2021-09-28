@@ -19,7 +19,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 #### Fixed
 - Fixed Aggregate bonded - Failure_Core_Future_Deadline issue [#1490](https://github.com/symbol/desktop-wallet/issues/1490)
 - Fixed multisig account owned mosaic actions visibility [#1679](https://github.com/symbol/desktop-wallet/issues/1679)
-- Fixed Ledger harvesting VRf and Remote keys not being saved [#1692](https://github.com/symbol/desktop-wallet/issues/1692)
+- Fixed Ledger harvesting VRF and Remote keys not being saved [#1692](https://github.com/symbol/desktop-wallet/issues/1692)
 - Fixed pagination in transaction history [#1652](https://github.com/symbol/desktop-wallet/issues/1652)
 - Fixed multilevel multisig behavior when account is a cosigner of multiple trees [#1687](https://github.com/symbol/desktop-wallet/issues/1687)
 - Fixed partial transactions aren't shown correctly [#1697](https://github.com/symbol/desktop-wallet/issues/1697)
