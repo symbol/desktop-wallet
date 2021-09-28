@@ -27,7 +27,7 @@
                 class="input-style total-amount-input-size"
                 :disabled="true"
             />
-            <p v-if="!validAmount" class="warning-label">{{ $t('not_enough_balance') }}</p>
+            <p v-if="isNumber && !validAmount" class="warning-label">{{ $t('not_enough_balance') }}</p>
         </ErrorTooltip>
     </ValidationProvider>
 </template>

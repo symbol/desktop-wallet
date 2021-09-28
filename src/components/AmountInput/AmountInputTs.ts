@@ -69,9 +69,11 @@ export class AmountInputTs extends Vue {
 
     public networkType: NetworkType;
 
-    public networkConfiguration: NetworkConfigurationModel;
+    private networkConfiguration: NetworkConfigurationModel;
     private validAmount: boolean = true;
-    public isCosignatoryMode: boolean;
+    private isCosignatoryMode: boolean;
+    private isNumber: boolean = true;
+
     created() {
         // update validation rule to reflect correct mosaic divisibility
         const chosenMosaic = this.mosaics.find((mosaic) => this.mosaicHex === mosaic.mosaicIdHex);
@@ -84,6 +86,7 @@ export class AmountInputTs extends Vue {
 
     /// region computed properties getter/setter
     public get relativeValue(): string {
+        this.isNumber = !isNaN(parseInt(this.value));
         this.validAmount = MaxAmountValidator.validate(this.value, [this.totalAvailableAmount, this.isOffline]);
         return this.value;
     }
