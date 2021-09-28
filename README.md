@@ -1,6 +1,6 @@
 # Symbol Desktop Wallet
 
-[![Build Status](https://travis-ci.com/nemgrouplimited/symbol-desktop-wallet.svg?branch=main)](https://travis-ci.com/nemgrouplimited/symbol-desktop-wallet)
+[![Build Status](https://travis-ci.com/symbol/desktop-wallet.svg?branch=main)](https://travis-ci.com/symbol/desktop-wallet)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Cross-platform client for Symbol to manage accounts, mosaics, namespaces, and issue transactions.
@@ -9,7 +9,7 @@ Cross-platform client for Symbol to manage accounts, mosaics, namespaces, and is
 
 Symbol Desktop Wallet is available for Mac, Windows, and as a web application.
 
-1. Download Symbol Desktop Wallet from the [releases section](https://github.com/nemgrouplimited/symbol-desktop-wallet/releases).
+1. Download Symbol Desktop Wallet from the [releases section](https://github.com/symbol/desktop-wallet/releases).
 
 2. Launch the executable file and follow the installation instructions.
 
@@ -24,7 +24,7 @@ Symbol CLI require **Node.js 10 or 12 LTS** to execute.
 1. Clone the project.
 
 ```
-git clone https://github.com/nemgrouplimited/symbol-desktop-wallet.git
+git clone https://github.com/symbol/desktop-wallet.git
 ```
 
 2. Install the dependencies.
@@ -46,7 +46,7 @@ npm run dev
 Use the following available resources to get help:
 
 - [Symbol Documentation][docs]
-- Join the community [slack group (#sig-client)][slack] 
+- Join the community [discord group][discord], [slack group (#sig-client)][slack] 
 - If you found a bug, [open a new issue][issues]
 
 ## Contributing
@@ -60,7 +60,8 @@ Copyright 2018-present NEM
 
 Licensed under the [Apache License 2.0](LICENSE)
 
-[self]: https://github.com/nemgrouplimited/symbol-desktop-wallet
+[self]: https://github.com/symbol/desktop-wallet
 [docs]: https://nemtech.github.io
-[issues]: https://github.com/nemgrouplimited/symbol-desktop-wallet/issues
+[issues]: https://github.com/symbol/desktop-wallet/issues
+[discord]: https://discord.gg/xymcity
 [slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
