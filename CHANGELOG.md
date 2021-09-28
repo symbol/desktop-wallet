@@ -26,7 +26,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Fixed mosaic/namespace metadata listing on signer change [#1668](https://github.com/symbol/desktop-wallet/issues/1668)[#1669](https://github.com/symbol/desktop-wallet/issues/1669)[#1670](https://github.com/symbol/desktop-wallet/issues/1670)
 - Fixed infinite rest calls when transaction sent to expired namespace alias [1695](https://github.com/symbol/desktop-wallet/issues/1695)
 - Reload mosaics only when signer is changed in transaction form [#1684](https://github.com/symbol/desktop-wallet/issues/1684)
-- Fixed form is resetting when a transaction is confirmed [#1683](https://github.com/symbol/desktop-wallet/issues/1684)
+- Fixed form is resetting when a transaction is confirmed [#1683](https://github.com/symbol/desktop-wallet/issues/1683)
 - Fixed axios dependency alert issue
 - Improved Japanese language translation
 - Updated README.md
