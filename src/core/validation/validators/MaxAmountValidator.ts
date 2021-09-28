@@ -18,7 +18,7 @@ import { Validator, staticImplements } from './Validator';
 @staticImplements<Validator>()
 export class MaxAmountValidator {
     /**
-     * Validates the max bytes of message
+     * Validates the max amount to be sent in transaction
      * @static
      * @param {*} value
      * @param {Array} args
