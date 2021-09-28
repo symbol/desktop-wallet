@@ -87,6 +87,7 @@ export class AmountInputTs extends Vue {
     /// region computed properties getter/setter
     public get relativeValue(): string {
         this.isNumber = !isNaN(parseInt(this.value));
+
         this.validAmount = MaxAmountValidator.validate(this.value, [this.totalAvailableAmount, this.isOffline]);
         return this.value;
     }
@@ -99,13 +100,17 @@ export class AmountInputTs extends Vue {
     // get the total available amount of the selected mosaic on the account
     public get totalAvailableAmount() {
         const selectedMosaic = this.balanceMosaics.find((m) => m.mosaicIdHex === this.mosaicHex);
+        const currentMosaicBalance = selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility);
         const balance = this.isCosignatoryMode
-            ? selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility)
+            ? currentMosaicBalance
             : (selectedMosaic.balance - this.selectedFeeValue) / Math.pow(10, selectedMosaic.divisibility);
+        if (currentMosaicBalance == 0 || balance <= 0) {
+            return 0;
+        }
         if (selectedMosaic.mosaicIdHex === this.networkConfiguration.currencyMosaicId) {
             return balance;
         }
-        return selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility);
+        return currentMosaicBalance;
     }
     // use maximum balance as amount input
     private useMaximumBalance() {
