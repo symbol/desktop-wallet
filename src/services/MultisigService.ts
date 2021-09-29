@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Address, MultisigAccountGraphInfo, MultisigAccountInfo, NetworkType } from 'symbol-sdk';
+import { Address, MultisigAccountGraphInfo, MultisigAccountInfo } from 'symbol-sdk';
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { Signer } from '@/store/Account';
@@ -44,70 +44,66 @@ export class MultisigService {
     }
 
     public getSigners(
-        networkType: NetworkType,
         knownAccounts: AccountModel[],
-        currentAccount: AccountModel,
-        currentAccountMultisigInfo: MultisigAccountInfo | undefined,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        multisigAccountsInfo: MultisigAccountInfo[] | undefined,
+        currentAccountAddress: Address,
+        multisigAccountGraph?: Map<number, MultisigAccountInfo[]>,
+        level?: number,
+        childMinApproval?: number,
+        childMinRemoval?: number,
     ): Signer[] {
-        if (!currentAccount) {
+        if (!currentAccountAddress || (level && !multisigAccountGraph.get(level))) {
             return [];
         }
-        const self: Signer[] = [
-            {
-                address: Address.createFromRawAddress(currentAccount.address),
-                label: currentAccount.name,
-                multisig: currentAccountMultisigInfo && currentAccountMultisigInfo.isMultisig(),
-                requiredCosignatures: (currentAccountMultisigInfo && currentAccountMultisigInfo.minApproval) || 0,
-            },
-        ];
 
-        if (!currentAccountMultisigInfo) {
-            return self;
-        }
+        // find the current account in the graph
+        let currentMultisigAccountInfo: MultisigAccountInfo;
 
-        // check if other child multisig accounts are already cosigners of other accounts and add their children multisig as signers if any to the main cosignatory account
-        let addedSignerFromMutlisigAccounts: Signer[] = [].concat(self);
-        multisigAccountsInfo.map((entry) => {
-            if (
-                (entry.minApproval > 0 || entry.minRemoval > 0) &&
-                entry.multisigAddresses.length > 0 &&
-                entry.cosignatoryAddresses.some((value) => value.equals(Address.createFromRawAddress(currentAccount.address)))
-            ) {
-                entry.multisigAddresses.map((address) => {
-                    if (!addedSignerFromMutlisigAccounts.some((val) => val.address.equals(address))) {
-                        return (addedSignerFromMutlisigAccounts = addedSignerFromMutlisigAccounts.concat([
-                            {
-                                address: address,
-                                multisig: true,
-                                label: this.getAccountLabel(address, knownAccounts),
-                                requiredCosignatures: (currentAccountMultisigInfo && currentAccountMultisigInfo.minApproval) || 0,
-                            },
-                        ]));
+        if (level === undefined) {
+            for (const [l, levelAccounts] of multisigAccountGraph) {
+                for (const levelAccount of levelAccounts) {
+                    if (levelAccount.accountAddress.equals(currentAccountAddress)) {
+                        currentMultisigAccountInfo = levelAccount;
+                        level = l;
+                        break;
                     }
-                });
+                }
             }
-        });
+        } else {
+            for (const levelAccount of multisigAccountGraph.get(level)) {
+                if (levelAccount.accountAddress.equals(currentAccountAddress)) {
+                    currentMultisigAccountInfo = levelAccount;
+                }
+            }
+        }
+        const currentSigner: Signer = {
+            address: currentAccountAddress,
+            label: this.getAccountLabel(currentAccountAddress, knownAccounts),
+            multisig: currentMultisigAccountInfo?.isMultisig() || false,
+            requiredCosigApproval: Math.max(childMinApproval || 0, currentMultisigAccountInfo?.minApproval || 0),
+            requiredCosigRemoval: Math.max(childMinRemoval || 0, currentMultisigAccountInfo?.minRemoval || 0),
+        };
 
-        // check for next level signers and add them to the main cosignatory as signers if any
-        let addressesFromNextLevel: Signer[] = [].concat(addedSignerFromMutlisigAccounts);
-        multisigAccountsInfo.map((term) => {
-            if (
-                !term.accountAddress.equals(Address.createFromRawAddress(currentAccount.address)) &&
-                !addressesFromNextLevel.find((val) => val.address.equals(term.accountAddress))
-            ) {
-                return (addressesFromNextLevel = addressesFromNextLevel.concat([
-                    {
-                        address: term.accountAddress,
-                        multisig: !!term.cosignatoryAddresses.length,
-                        label: this.getAccountLabel(term.accountAddress, knownAccounts),
-                        requiredCosignatures: (currentAccountMultisigInfo && term.minApproval) || 0,
-                    },
-                ]));
+        const parentSigners: Signer[] = [];
+        if (currentMultisigAccountInfo?.multisigAddresses) {
+            for (const parentSignerAddress of currentMultisigAccountInfo.multisigAddresses) {
+                parentSigners.push(
+                    ...this.getSigners(
+                        knownAccounts,
+                        parentSignerAddress,
+                        multisigAccountGraph,
+                        level - 1,
+                        currentSigner.requiredCosigApproval,
+                        currentSigner.requiredCosigRemoval,
+                    ),
+                );
             }
-        });
-        return addressesFromNextLevel;
+
+            // filter the first parents
+            currentSigner.parentSigners = parentSigners.filter((ps) =>
+                currentMultisigAccountInfo.multisigAddresses.some((msa) => msa.equals(ps.address)),
+            );
+        }
+        return [currentSigner, ...parentSigners];
     }
 
     /**
@@ -174,6 +170,27 @@ export class MultisigService {
             return addresses;
         }
     }
+
+    /**
+     * Checks if the given address in the given multisignature tree
+     * @param multisigAccountGraph Multisig tree structure
+     * @param address Address to search in the tree
+     * @returns
+     */
+    public static isAddressInMultisigTree(multisigAccountGraph: Map<number, MultisigAccountInfo[]>, address: string): boolean {
+        for (const [l, levelAccounts] of multisigAccountGraph) {
+            for (const levelAccount of levelAccounts) {
+                if (
+                    levelAccount.accountAddress.plain() === address ||
+                    levelAccount.cosignatoryAddresses?.some((c) => c.plain() === address)
+                ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private getAccountLabel(address: Address, accounts: AccountModel[]): string {
         const account = accounts.find((wlt) => address.plain() === wlt.address);
         return (account && account.name) || address.plain();

@@ -1,6 +1,6 @@
 <template>
     <div class="transaction-list-options-container">
-        <div v-if="signers && signers.length > 1">
+        <div v-if="currentAccountSigner.parentSigners">
             <div v-if="!showSignerSelector" class="show-signer-selector">
                 <span @click="showSignerSelector = true">
                     {{ $t('see_transactions_other_account') }}
@@ -9,7 +9,7 @@
             <SignerSelector
                 v-else
                 v-model="formItems.currentSignerPubicKey"
-                :signers="signers"
+                :root-signer="currentAccountSigner"
                 :no-label="true"
                 @input="onSignerSelectorChange"
             />

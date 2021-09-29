@@ -3,7 +3,7 @@
         <FormWrapper class="namespace-transaction-form-wrapper">
             <ValidationObserver v-slot="{ handleSubmit }" ref="observer" slim>
                 <form onsubmit="event.preventDefault()" class="form-container mt-3 create-namespace-form">
-                    <SignerSelector v-model="formItems.signerAddress" :signers="signers" @input="onChangeSigner" />
+                    <SignerSelector v-model="formItems.signerAddress" :root-signer="currentAccountSigner" @input="signerChanged" />
                     <FormRow>
                         <template v-slot:label> {{ $t('form_label_registration_type') }}: </template>
                         <template v-slot:inputs>

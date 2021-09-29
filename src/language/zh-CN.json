@@ -1126,5 +1126,8 @@
     "welcome_to_symbol": "欢迎使用Symbol",
     "word": "字",
     "ws_connection_failed": "钱包无法监视您在Symbol链上的帐户活动。请尝试选择其他节点。",
-    "x_seconds": "{seconds}秒"
+    "x_seconds": "{seconds}秒",
+    "transaction_cosignature_warning_unknown_cosigner": "您即将签署的交易不是您创建的。",
+    "transaction_cosignature_warning_dont_sign": "不知道交易来源的千万不要签！",
+    "transaction_cosignature_warning_proceed": "我理解并请继续。"
 }

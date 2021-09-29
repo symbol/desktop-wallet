@@ -13,8 +13,8 @@
                     <SignerSelector
                         v-if="!hideSigner && !isOfflineMode"
                         v-model="formItems.signerAddress"
-                        :signers="signers"
-                        @input="onChangeSigner"
+                        :root-signer="currentAccountSigner"
+                        @input="signerChanged"
                     />
                     <AccountSignerSelector v-if="!hideSigner && isOfflineMode" />
 

@@ -25,7 +25,6 @@ import {
     AccountInfo,
     AggregateTransaction,
     PublicAccount,
-    Deadline,
     LockFundsTransaction,
     Mosaic,
     SignedTransaction,
@@ -398,7 +397,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             } else {
                 const aggregate = this.calculateSuggestedMaxFee(
                     AggregateTransaction.createComplete(
-                        Deadline.create(this.epochAdjustment),
+                        this.createDeadline(),
                         txs.map((t) => t.toAggregate(this.currentSignerAccount)),
                         this.networkType,
                         [],
@@ -425,8 +424,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         const innerTxs = txs.map((t) => t.toAggregate(this.currentSignerAccount));
         const aggregateBondedOrComplete =
             this.requiredCosignatures === 1
-                ? AggregateTransaction.createComplete(Deadline.create(this.epochAdjustment), innerTxs, this.networkType, [], maxFee)
-                : AggregateTransaction.createBonded(Deadline.create(this.epochAdjustment, 48), innerTxs, this.networkType, [], maxFee);
+                ? AggregateTransaction.createComplete(this.createDeadline(), innerTxs, this.networkType, [], maxFee)
+                : AggregateTransaction.createBonded(this.createDeadline(48), innerTxs, this.networkType, [], maxFee);
 
         const aggregate = this.calculateSuggestedMaxFee(aggregateBondedOrComplete);
 
@@ -435,7 +434,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 if (aggregate.type === TransactionType.AGGREGATE_BONDED) {
                     const hashLock = this.calculateSuggestedMaxFee(
                         LockFundsTransaction.create(
-                            Deadline.create(this.epochAdjustment, 6),
+                            this.createDeadline(6),
                             new Mosaic(this.networkMosaic, UInt64.fromNumericString(this.networkConfiguration.lockedFundsPerAggregate)),
                             UInt64.fromUint(5760),
                             signedAggregateTransaction,
@@ -469,7 +468,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         const maxFee = UInt64.fromUint(this.formItems.maxFee) || UInt64.fromUint(this.feesConfig.fast);
         if (this.action !== HarvestingAction.STOP) {
             const persistentDelegationReqTx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-                Deadline.create(this.epochAdjustment, this.isMultisigMode() ? 24 : 2),
+                this.createDeadline(this.isMultisigMode() ? 24 : 2),
                 this.remoteAccountPrivateKey || this.newRemoteAccount.privateKey,
                 this.vrfPrivateKey || this.newVrfKeyAccount.privateKey,
                 this.formItems.nodeModel.nodePublicKey,

@@ -24,9 +24,9 @@ export class TransactionFilterService {
     /**
      * Filters transactions depends on selected filter options.
      * @param state for extracting transactions filter options and list filtered by group.
-     * @param currentSignerAddress selected signer address
+     * @param currentSignerAddress selected signer address(es)
      */
-    public static filter(state: TransactionState, currentSignerAddress: string): Transaction[] {
+    public static filter(state: TransactionState, currentSignerAddress: string | string[]): Transaction[] {
         const { filterOptions, transactions, confirmedTransactions, unconfirmedTransactions, partialTransactions } = state;
         if (!filterOptions.isFilterShouldBeApplied) {
             return [...transactions];
@@ -62,8 +62,9 @@ export class TransactionFilterService {
     private static filterByRecepient(
         transactions: Transaction[],
         filterOptions: TransactionFilterOptionsState,
-        currentSignerAddress: string,
+        currentSignerAddress: string | string[],
     ): Transaction[] {
+        const filteringAddresses = [].concat(currentSignerAddress);
         const recepientFilterOptions = [filterOptions.isSentSelected, filterOptions.isReceivedSelected];
         const areAllShouldBeShown: boolean = recepientFilterOptions.every((option) => !option);
         if (areAllShouldBeShown) {
@@ -81,12 +82,12 @@ export class TransactionFilterService {
             if ((transaction as any).recipientAddress && (transaction as any).recipientAddress.address) {
                 if (filterOptions.isSentSelected) {
                     if ((transaction as any).signer) {
-                        return (transaction as any).signer.address.plain() === currentSignerAddress;
+                        return filteringAddresses.some((address) => (transaction as any).signer.address.plain() === address);
                     }
                 }
 
                 if (filterOptions.isReceivedSelected) {
-                    return (transaction as any).recipientAddress.address === currentSignerAddress;
+                    return filteringAddresses.some((address) => (transaction as any).recipientAddress.address === address);
                 }
             }
         });

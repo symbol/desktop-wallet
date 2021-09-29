@@ -23,7 +23,12 @@
                     </template>
 
                     <template v-slot:inputs>
-                        <SignerSelector v-model="formItems.signerAddress" :signers="signers" :no-label="true" @input="onChangeSigner" />
+                        <SignerSelector
+                            v-model="formItems.signerAddress"
+                            :root-signer="currentAccountSigner"
+                            :no-label="true"
+                            @input="onChangeSigner"
+                        />
                     </template>
                 </FormRow>
 
