@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [1.0.7][v1.0.7] - 30-Sep-2021
+
+### Milestone: Stabilize and bug fix
+
+#### Added
+
+- Added accessible terms and privacy policy links[#814](https://github.com/symbol/desktop-wallet/issues/814) 
+
+#### Changed
+- Disable Ledger profile menu item in browser version [#1590](https://github.com/symbol/desktop-wallet/issues/1590)
+- Enhanced signer selector UI/UX [#1688](https://github.com/symbol/desktop-wallet/issues/1688)
+
+#### Fixed
+- Fixed aggregate bonded announced by third party address issue [#1719](https://github.com/symbol/desktop-wallet/issues/1719)
+- Fixed aggregate bonded - Failure_Core_Future_Deadline issue [#1490](https://github.com/symbol/desktop-wallet/issues/1490)
+- Fixed multisig account owned mosaic actions visibility [#1679](https://github.com/symbol/desktop-wallet/issues/1679)
+- Fixed Ledger harvesting VRF and Remote keys not being saved [#1692](https://github.com/symbol/desktop-wallet/issues/1692)
+- Fixed pagination in transaction history [#1652](https://github.com/symbol/desktop-wallet/issues/1652)
+- Fixed multilevel multisig behavior when account is a cosigner of multiple trees [#1687](https://github.com/symbol/desktop-wallet/issues/1687)
+- Fixed partial transactions aren't shown correctly [#1697](https://github.com/symbol/desktop-wallet/issues/1697)
+- Fixed mosaic/namespace metadata listing on signer change [#1668](https://github.com/symbol/desktop-wallet/issues/1668)[#1669](https://github.com/symbol/desktop-wallet/issues/1669)[#1670](https://github.com/symbol/desktop-wallet/issues/1670)
+- Fixed infinite REST calls when a transaction is sent to an expired namespace alias [1695](https://github.com/symbol/desktop-wallet/issues/1695)
+- Reload mosaics only when signer is changed in transaction form [#1684](https://github.com/symbol/desktop-wallet/issues/1684)
+- Fixed form resetting when a transaction is confirmed [#1683](https://github.com/symbol/desktop-wallet/issues/1683)
+- Fixed axios dependency alert issue
+- Improved Japanese language translation
+- Updated README.md
+
 ## [1.0.6][v1.0.6] - 06-Sep-2021
 
 ### Milestone: Stabilize and bug fix
