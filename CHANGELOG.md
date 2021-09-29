@@ -17,7 +17,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Enhanced signer selector UI/UX [#1688](https://github.com/symbol/desktop-wallet/issues/1688)
 
 #### Fixed
-- Fixed Aggregate bonded - Failure_Core_Future_Deadline issue [#1490](https://github.com/symbol/desktop-wallet/issues/1490)
+- Fixed aggregate bonded announced by third party address issue [#1719](https://github.com/symbol/desktop-wallet/issues/1719)
+- Fixed aggregate bonded - Failure_Core_Future_Deadline issue [#1490](https://github.com/symbol/desktop-wallet/issues/1490)
 - Fixed multisig account owned mosaic actions visibility [#1679](https://github.com/symbol/desktop-wallet/issues/1679)
 - Fixed Ledger harvesting VRF and Remote keys not being saved [#1692](https://github.com/symbol/desktop-wallet/issues/1692)
 - Fixed pagination in transaction history [#1652](https://github.com/symbol/desktop-wallet/issues/1652)
