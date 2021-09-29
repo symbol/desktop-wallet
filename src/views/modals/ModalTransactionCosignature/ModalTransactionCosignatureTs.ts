@@ -133,9 +133,9 @@ export class ModalTransactionCosignatureTs extends Vue {
     public expired: boolean = false;
 
     /**
-     * Whether transaction is initiated by multisig parent
+     * Whether to hide unknown cosigner warning
      */
-    public initiatedByMsigCosigner = false;
+    public hideCosignerWarning = false;
 
     public wantToProceed = false;
 
@@ -234,10 +234,6 @@ export class ModalTransactionCosignatureTs extends Vue {
             const mutlisigChildrenTree = multisignService.getMultisigChildren(this.multisigAccountGraphInfo);
             const mutlisigChildren = multisignService.getMultisigChildrenAddresses(this.multisigAccountGraphInfo);
 
-            this.initiatedByMsigCosigner =
-                mutlisigChildrenTree &&
-                MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, this.transaction.signer.address.plain());
-
             this.transaction.innerTransactions.forEach((t) => {
                 if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {
                     cosignList.push(...(t as MultisigAccountModificationTransaction).addressAdditions);
@@ -256,6 +252,16 @@ export class ModalTransactionCosignatureTs extends Vue {
                     }
                 }
             });
+            const msigAccModificationCurrentAddressAdded =
+                this.transaction.innerTransactions?.length === 1 &&
+                this.transaction.innerTransactions[0].type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION &&
+                (this.transaction.innerTransactions[0] as MultisigAccountModificationTransaction).addressAdditions.some(
+                    (addr) => addr.plain() === this.currentAccount.address,
+                );
+            this.hideCosignerWarning =
+                msigAccModificationCurrentAddressAdded ||
+                (this.multisigAccountGraph &&
+                    MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, this.transaction.signer.address.plain()));
 
             if (cosignList.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
                 return true;

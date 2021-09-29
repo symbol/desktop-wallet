@@ -53,20 +53,17 @@
                         <div class="explain">
                             <span class="subtitle">{{ $t('transaction_needs_cosignature') }}</span>
                             <p>{{ $t('transaction_needs_cosignature_explain') }}</p>
-                            <span v-if="!initiatedByMsigCosigner" class="warning">
+                            <span v-if="!hideCosignerWarning" class="warning">
                                 <Alert type="warning" show-icon>
-                                    <div class="warning-row">
-                                        <span class="emphasis"
-                                            >You are about to sign a transaction which was not created by you or a known cosigner.</span
-                                        >
-                                        Please review the details carefully!
+                                    <div class="warning-row emphasis">
+                                        {{ $t('transaction_cosignature_warning_unknown_cosigner') }}
                                     </div>
                                     <div class="warning-row">
-                                        Do not sign if you do not know the origin of the transaction.
+                                        {{ $t('transaction_cosignature_warning_dont_sign') }}
                                     </div>
                                     <div class="inputs-container emphasis">
                                         <Checkbox v-model="wantToProceed">
-                                            {{ `I understand and want to proceed.` }}
+                                            {{ $t('transaction_cosignature_warning_proceed') }}
                                         </Checkbox>
                                     </div>
                                 </Alert>
@@ -76,7 +73,7 @@
                         <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
                         <FormProfileUnlock
                             v-else
-                            :disabled="!initiatedByMsigCosigner && !wantToProceed"
+                            :disabled="!hideCosignerWarning && !wantToProceed"
                             @success="onAccountUnlocked"
                             @error="onError"
                         />
