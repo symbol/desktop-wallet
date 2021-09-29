@@ -65,6 +65,7 @@ import { MultisigService } from '@/services/MultisigService';
             generationHash: 'network/generationHash',
             currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
             multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
+            multisigAccountGraph: 'account/multisigAccountGraph',
         }),
     },
 })
@@ -124,10 +125,19 @@ export class ModalTransactionCosignatureTs extends Vue {
      */
     public currentAccountMultisigInfo: MultisigAccountInfo;
 
+    public multisigAccountGraph: Map<number, MultisigAccountInfo[]>;
+
     /**
      * Whether transaction has expired
      */
     public expired: boolean = false;
+
+    /**
+     * Whether transaction is initiated by multisig parent
+     */
+    public initiatedByMsigCosigner = false;
+
+    public wantToProceed = false;
 
     /// region computed properties
     /**
@@ -223,6 +233,10 @@ export class ModalTransactionCosignatureTs extends Vue {
             const multisignService = new MultisigService();
             const mutlisigChildrenTree = multisignService.getMultisigChildren(this.multisigAccountGraphInfo);
             const mutlisigChildren = multisignService.getMultisigChildrenAddresses(this.multisigAccountGraphInfo);
+
+            this.initiatedByMsigCosigner =
+                mutlisigChildrenTree &&
+                MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, this.transaction.signer.address.plain());
 
             this.transaction.innerTransactions.forEach((t) => {
                 if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {

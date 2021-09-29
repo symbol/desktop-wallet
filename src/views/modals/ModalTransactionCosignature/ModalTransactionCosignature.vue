@@ -53,10 +53,33 @@
                         <div class="explain">
                             <span class="subtitle">{{ $t('transaction_needs_cosignature') }}</span>
                             <p>{{ $t('transaction_needs_cosignature_explain') }}</p>
+                            <span v-if="!initiatedByMsigCosigner" class="warning">
+                                <Alert type="warning" show-icon>
+                                    <div class="warning-row">
+                                        <span class="emphasis"
+                                            >You are about to sign a transaction which was not created by you or a known cosigner.</span
+                                        >
+                                        Please review the details carefully!
+                                    </div>
+                                    <div class="warning-row">
+                                        Do not sign if you do not know the origin of the transaction.
+                                    </div>
+                                    <div class="inputs-container emphasis">
+                                        <Checkbox v-model="wantToProceed">
+                                            {{ `I understand and want to proceed.` }}
+                                        </Checkbox>
+                                    </div>
+                                </Alert>
+                            </span>
                         </div>
 
                         <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
-                        <FormProfileUnlock v-else @success="onAccountUnlocked" @error="onError" />
+                        <FormProfileUnlock
+                            v-else
+                            :disabled="!initiatedByMsigCosigner && !wantToProceed"
+                            @success="onAccountUnlocked"
+                            @error="onError"
+                        />
                     </div>
                 </div>
                 <div v-else-if="expired">
