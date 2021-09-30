@@ -61,7 +61,7 @@ Copyright 2018-present NEM
 Licensed under the [Apache License 2.0](LICENSE)
 
 [self]: https://github.com/symbol/desktop-wallet
-[docs]: https://nemtech.github.io
+[docs]: https://docs.symbolplatform.com
 [issues]: https://github.com/symbol/desktop-wallet/issues
 [discord]: https://discord.gg/xymcity
 [slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
