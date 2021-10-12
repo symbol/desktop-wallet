@@ -1129,5 +1129,6 @@
     "x_seconds": "{seconds}s.",
     "transaction_cosignature_warning_dont_sign": "Do not sign if you do not know the origin of the transaction.",
     "transaction_cosignature_warning_unknown_cosigner": "You are about to sign a transaction that was not created by you.",
-    "transaction_cosignature_warning_proceed": "I understand and wish to proceed."
+    "transaction_cosignature_warning_proceed": "I understand and wish to proceed.",
+    "amount_value_cannot_start_with_zero": "Amount value cannot start with 0"
 }

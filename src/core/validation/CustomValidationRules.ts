@@ -22,6 +22,7 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { Values } from 'vue-i18n';
+import { StartsWithZeroValidator } from './validators/StartswithZeroValidator';
 
 // TODO CustomValidationRules needs to be created when the network configuration is resolved, UI
 // needs to use the resolved CustomValidationRules
@@ -82,7 +83,10 @@ export class CustomValidationRules {
             validate: (value) => PositiveDecimalNumberValidator.validate(value),
             message: () => i18n.t('positive_decimal_error', { decimalSeparator: DECIMAL_SEPARATOR }).toString(),
         });
-
+        extend('startsWithZero', {
+            validate: (value) => StartsWithZeroValidator.validate(value),
+            message: () => i18n.t('amount_value_cannot_start_with_zero').toString(),
+        });
         extend('addressOrAlias', {
             validate: async (value) => {
                 const isValidAddress = AddressValidator.validate(value);

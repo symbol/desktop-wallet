@@ -11,6 +11,7 @@ import i18n from '@/language/index';
 import { StandardValidationRules } from '@/core/validation/StandardValidationRules';
 import { MaxDecimalsValidator, PositiveDecimalNumberValidator, MaxRelativeAmountValidator } from '@/core/validation/validators';
 import { appConfig } from '@/config';
+import { StartsWithZeroValidator } from '@/core/validation/validators/StartswithZeroValidator';
 
 StandardValidationRules.register();
 appConfig.constants.DECIMAL_SEPARATOR = '.';
@@ -25,6 +26,10 @@ extend('maxDecimals', {
 extend('positiveDecimal', {
     validate: (value) => PositiveDecimalNumberValidator.validate(value),
     message: () => i18n.t('positive_decimal_error', { decimalSeparator: appConfig.constants.DECIMAL_SEPARATOR }).toString(),
+});
+extend('startsWithZero', {
+    validate: (value) => StartsWithZeroValidator.validate(value),
+    message: () => i18n.t('amount_value_cannot_start_with_zero').toString(),
 });
 extend('maxRelativeAmount', {
     validate: (value, { maxMosaicAtomicUnits, maxMosaicDivisibility }: any) => {
