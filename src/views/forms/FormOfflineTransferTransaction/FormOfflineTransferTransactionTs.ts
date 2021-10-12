@@ -139,7 +139,7 @@ export class FormOfflineTransferTransactionTs extends Vue {
      * Hook called when the page is mounted
      * @return {void}
      */
-    public created() {
+    public async created() {
         // filter out invalid profiles
         this.profiles = this.profileService.getProfiles().filter((p) => p.accounts.length > 0);
 
@@ -155,7 +155,7 @@ export class FormOfflineTransferTransactionTs extends Vue {
 
         // accounts available, iterate to first profile
         this.formItems.currentProfileName = this.profiles[0].profileName;
-        this.onProfileNameChange();
+        await this.onProfileNameChange();
     }
 
     /**
