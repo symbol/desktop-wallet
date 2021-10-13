@@ -44,6 +44,8 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
 // @ts-ignore
 import MosaicSelector from '@/components/MosaicSelector/MosaicSelector.vue';
 import { Formatters } from '@/core/utils/Formatters';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
+import { MosaicService } from '@/services/MosaicService';
 
 @Component({
     components: {
@@ -60,7 +62,14 @@ import { Formatters } from '@/core/utils/Formatters';
         MaxFeeAndSubmit,
         MosaicSelector,
     },
-    computed: { ...mapGetters({ mosaics: 'mosaic/mosaics', holdMosaics: 'mosaic/holdMosaics' }) },
+    computed: {
+        ...mapGetters({
+            mosaics: 'mosaic/mosaics',
+            holdMosaics: 'mosaic/holdMosaics',
+            currentHeight: 'network/currentHeight',
+            networkConfiguration: 'network/networkConfiguration',
+        }),
+    },
 })
 export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
     /**
@@ -104,6 +113,16 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
      * @protected
      */
     protected MosaicSupplyChangeAction = MosaicSupplyChangeAction;
+
+    /**
+     * Current network block height
+     */
+    private currentHeight: number;
+    /**
+     * Network Configs
+     * @protected
+     */
+    public networkConfiguration: NetworkConfigurationModel;
 
     /**
      * Form items
@@ -248,6 +267,14 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
     get ownedTargetHexIds(): string[] {
         return this.holdMosaics
             .filter((m) => m.ownerRawPlain === this.currentAccount.address && m.supplyMutable)
+            .filter((entry) => {
+                const expiration = MosaicService.getExpiration(
+                    entry,
+                    this.currentHeight,
+                    this.networkConfiguration.blockGenerationTargetTime,
+                );
+                return expiration !== 'expired';
+            })
             .map(({ mosaicIdHex }) => mosaicIdHex);
     }
 
