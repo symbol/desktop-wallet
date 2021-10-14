@@ -65,6 +65,7 @@ import { MultisigService } from '@/services/MultisigService';
             generationHash: 'network/generationHash',
             currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
             multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
+            multisigAccountGraph: 'account/multisigAccountGraph',
         }),
     },
 })
@@ -124,10 +125,19 @@ export class ModalTransactionCosignatureTs extends Vue {
      */
     public currentAccountMultisigInfo: MultisigAccountInfo;
 
+    public multisigAccountGraph: Map<number, MultisigAccountInfo[]>;
+
     /**
      * Whether transaction has expired
      */
     public expired: boolean = false;
+
+    /**
+     * Whether to hide unknown cosigner warning
+     */
+    public hideCosignerWarning = false;
+
+    public wantToProceed = false;
 
     /// region computed properties
     /**
@@ -221,8 +231,7 @@ export class ModalTransactionCosignatureTs extends Vue {
             const cosignList = [];
 
             const multisignService = new MultisigService();
-            const mutlisigChildrenTree = multisignService.getMultisigChildren(this.multisigAccountGraphInfo);
-            const mutlisigChildren = multisignService.getMultisigChildrenAddresses(this.multisigAccountGraphInfo);
+            const multisigChildrenAddresses = multisignService.getMultisigChildrenAddresses(this.multisigAccountGraphInfo);
 
             this.transaction.innerTransactions.forEach((t) => {
                 if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {
@@ -242,17 +251,25 @@ export class ModalTransactionCosignatureTs extends Vue {
                     }
                 }
             });
+            const msigAccModificationCurrentAddressAdded =
+                this.transaction.innerTransactions?.length === 1 &&
+                this.transaction.innerTransactions[0].type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION &&
+                (this.transaction.innerTransactions[0] as MultisigAccountModificationTransaction).addressAdditions.some((addr) =>
+                    [this.currentAccount.address, ...multisigChildrenAddresses.map((a) => a.plain())].some((msa) => msa === addr.plain()),
+                ); // to check if any of the added addresses in this current account's multisig tree
+            this.hideCosignerWarning =
+                msigAccModificationCurrentAddressAdded ||
+                (this.multisigAccountGraph &&
+                    MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, this.transaction.signer.address.plain()));
 
-            if (cosignList.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
+            if (cosignList.some((m) => this.currentAccount.address === m.plain())) {
                 return true;
             }
-            const cosignRequired = cosignerAddresses.find((c) => {
+            const cosignRequired = [...cosignList, ...cosignerAddresses].find((c) => {
                 if (c) {
                     return (
                         c.plain() === this.currentAccount.address ||
-                        (this.currentAccountMultisigInfo &&
-                            this.currentAccountMultisigInfo.multisigAddresses.find((m) => c.equals(m)) !== undefined) ||
-                        (mutlisigChildrenTree && mutlisigChildren.some((address) => address.equals(c)))
+                        (this.multisigAccountGraph && MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, c.plain()))
                     );
                 }
                 return false;

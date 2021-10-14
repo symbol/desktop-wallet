@@ -1128,5 +1128,8 @@
     "ws_connection_failed": "ウォレットはSymbolチェーン上のアカウントに関するアクティビティを監視できません。別のノードを選択してみてください。",
     "x_seconds": "{seconds} 秒",
     "not_enough_balance": "バランスが悪い",
-    "use_max_value": "最大値を使用"
+    "use_max_value": "最大値を使用",
+    "transaction_cosignature_warning_unknown_cosigner": "この署名を求めるトランザクションはあなたが作成したものではありません",
+    "transaction_cosignature_warning_dont_sign": "心当たりがなければ署名しないでください",
+    "transaction_cosignature_warning_proceed": "確認しましたので署名に同意します"
 }

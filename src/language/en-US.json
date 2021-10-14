@@ -1128,5 +1128,8 @@
     "ws_connection_failed": "The wallet cannot monitor the activities of your account on the Symbol chain. Please try selecting a different node.",
     "x_seconds": "{seconds}s.",
     "not_enough_balance": "Not enough balance",
-    "use_max_value": "Use maximum value"
+    "use_max_value": "Use maximum value",
+    "transaction_cosignature_warning_dont_sign": "Do not sign if you do not know the origin of the transaction.",
+    "transaction_cosignature_warning_unknown_cosigner": "You are about to sign a transaction that was not created by you.",
+    "transaction_cosignature_warning_proceed": "I understand and wish to proceed."
 }
