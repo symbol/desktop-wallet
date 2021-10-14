@@ -11,6 +11,9 @@
                     v-model="relativeAmount"
                     :mosaic-hex="chosenValue.mosaicHex"
                     class="ml-2"
+                    :is-offline="isOffline"
+                    :selected-fee-value="selectedFeeValue"
+                    :is-aggregate="isAggregate"
                     @input="onChangeAmount"
                 />
                 <div v-show="isShowDelete" class="delete-mosaic-container">
