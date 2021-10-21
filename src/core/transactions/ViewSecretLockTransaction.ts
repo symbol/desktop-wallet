@@ -26,7 +26,6 @@ export class ViewSecretLockTransaction extends TransactionView<SecretLockTransac
      * Displayed items
      */
     protected resolveDetailItems(): TransactionDetailItem[] {
-        console.log(this.transaction.mosaic);
         const attachedMosaic: AttachedMosaic = {
             id: this.transaction.mosaic.id,
             mosaicHex: this.transaction.mosaic.id.toHex(),
