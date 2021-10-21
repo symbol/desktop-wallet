@@ -36,6 +36,7 @@ import {
     AccountOperationRestrictionTransaction,
     PersistentHarvestingDelegationMessage,
     SecretLockTransaction,
+    SecretProofTransaction,
 } from 'symbol-sdk';
 import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction';
 import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction';
@@ -59,6 +60,7 @@ import { ViewAccountMosaicRestrictionTransaction } from './ViewAccountMosaicRest
 import { ViewAccountOperationRestrictionTransaction } from './ViewAccountOperationRestrictionTransaction';
 import { ViewHarvestingTransaction } from './ViewHarvestingTransaction';
 import { ViewSecretLockTransaction } from './ViewSecretLockTransaction';
+import { ViewSecretProofTransaction } from './ViewSecretProofTransaction';
 
 /**
  * Transaction view factory.
@@ -77,7 +79,6 @@ export class TransactionViewFactory {
             case TransactionType.AGGREGATE_COMPLETE:
             case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
             case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
-            case TransactionType.SECRET_PROOF:
                 return new ViewUnknownTransaction($store, transaction);
             /// end-region XXX views for transaction types not yet implemented
             case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
@@ -122,6 +123,8 @@ export class TransactionViewFactory {
                 return new ViewAccountKeyLinkTransaction($store, transaction as AccountKeyLinkTransaction);
             case TransactionType.SECRET_LOCK:
                 return new ViewSecretLockTransaction($store, transaction as SecretLockTransaction);
+            case TransactionType.SECRET_PROOF:
+                return new ViewSecretProofTransaction($store, transaction as SecretProofTransaction);
             default:
                 throw new Error(`View not implemented for transaction type '${transaction.type}'`);
         }

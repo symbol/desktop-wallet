@@ -14,32 +14,19 @@
  *
  */
 // external dependencies
-import { SecretLockTransaction } from 'symbol-sdk';
+import { SecretProofTransaction } from 'symbol-sdk';
 // internal dependencies
 import { TransactionView } from './TransactionView';
-import { AttachedMosaic } from '@/services/MosaicService';
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
 
-// eslint-disable-next-line max-len
-export class ViewSecretLockTransaction extends TransactionView<SecretLockTransaction> {
+export class ViewSecretProofTransaction extends TransactionView<SecretProofTransaction> {
     /**
      * Displayed items
      */
     protected resolveDetailItems(): TransactionDetailItem[] {
-        console.log(this.transaction.mosaic);
-        const attachedMosaic: AttachedMosaic = {
-            id: this.transaction.mosaic.id,
-            mosaicHex: this.transaction.mosaic.id.toHex(),
-            amount: this.transaction.mosaic.amount.compact(),
-        };
         return [
             { key: 'transfer_target', value: this.transaction.recipientAddress, isAddress: true },
-            {
-                key: `mosaics`,
-                value: attachedMosaic,
-                isMosaic: true,
-            },
-            { key: 'duration', value: this.transaction.duration.compact() },
+            { key: 'deadline', value: this.transaction.deadline },
             {
                 key: 'secret',
                 value: this.transaction.secret,
@@ -47,6 +34,10 @@ export class ViewSecretLockTransaction extends TransactionView<SecretLockTransac
             {
                 key: 'lock_hash_algorithm',
                 value: this.transaction.hashAlgorithm,
+            },
+            {
+                key: 'proof',
+                value: this.transaction.proof,
             },
         ];
     }
