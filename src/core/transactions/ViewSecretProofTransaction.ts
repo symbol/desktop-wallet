@@ -14,7 +14,7 @@
  *
  */
 // external dependencies
-import { SecretProofTransaction } from 'symbol-sdk';
+import { LockHashAlgorithm, SecretProofTransaction } from 'symbol-sdk';
 // internal dependencies
 import { TransactionView } from './TransactionView';
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
@@ -33,7 +33,12 @@ export class ViewSecretProofTransaction extends TransactionView<SecretProofTrans
             },
             {
                 key: 'lock_hash_algorithm',
-                value: this.transaction.hashAlgorithm,
+                value:
+                    this.transaction.hashAlgorithm === LockHashAlgorithm.Op_Sha3_256
+                        ? 'SHA3-256'
+                        : this.transaction.hashAlgorithm === LockHashAlgorithm.Op_Hash_256
+                        ? 'HASH-256'
+                        : 'HASH-160',
             },
             {
                 key: 'proof',

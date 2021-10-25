@@ -14,7 +14,7 @@
  *
  */
 // external dependencies
-import { SecretLockTransaction } from 'symbol-sdk';
+import { LockHashAlgorithm, SecretLockTransaction } from 'symbol-sdk';
 // internal dependencies
 import { TransactionView } from './TransactionView';
 import { AttachedMosaic } from '@/services/MosaicService';
@@ -45,7 +45,12 @@ export class ViewSecretLockTransaction extends TransactionView<SecretLockTransac
             },
             {
                 key: 'lock_hash_algorithm',
-                value: this.transaction.hashAlgorithm,
+                value:
+                    this.transaction.hashAlgorithm === LockHashAlgorithm.Op_Sha3_256
+                        ? 'SHA3-256'
+                        : this.transaction.hashAlgorithm === LockHashAlgorithm.Op_Hash_256
+                        ? 'HASH-256'
+                        : 'HASH-160',
             },
         ];
     }
