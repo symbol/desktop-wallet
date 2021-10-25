@@ -779,6 +779,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             this.$emit('txInput', this.formItems);
         }
     }
+    /**
+     * on select fee
+     */
     public onSelectFeeValue(val) {
         this.selectedFeeValue = val;
     }

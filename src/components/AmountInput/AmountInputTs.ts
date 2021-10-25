@@ -97,7 +97,7 @@ export class AmountInputTs extends Vue {
     }
     /// end-region computed properties getter/setter
 
-    // get the total available amount of the selected mosaic on the account
+    // get the total available amount for the selected mosaic on the account
     public get totalAvailableAmount() {
         const selectedMosaic = this.balanceMosaics.find((m) => m.mosaicIdHex === this.mosaicHex);
         const currentMosaicBalance = selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility);
