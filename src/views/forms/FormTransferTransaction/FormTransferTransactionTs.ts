@@ -777,7 +777,9 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             this.$emit('txInput', this.formItems);
         }
     }
-    mounted() {
+    async created() {
+        this.$store.dispatch('network/LOAD_TRANSACTION_FEES');
+        this.$store.dispatch('network/SET_CLIENT_SERVER_TIME_DIFFERENCE');
         if (this.isAggregate && this.value) {
             Object.assign(this.formItems, this.value);
             if (this.formItems.attachedMosaics.length) {
