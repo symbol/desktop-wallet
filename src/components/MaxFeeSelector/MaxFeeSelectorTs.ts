@@ -164,7 +164,11 @@ export class MaxFeeSelectorTs extends Vue {
      * @type {number}
      */
     get chosenMaxFee(): number {
-        return typeof this.value === 'number' ? this.value : typeof this.value === 'string' ? Number(this.value) : this.defaultFee;
+        const chosenFee =
+            typeof this.value === 'number' ? this.value : typeof this.value === 'string' ? Number(this.value) : this.defaultFee;
+        const selectedValue = this.feesCalculated.find((fee) => fee.maxFee === chosenFee).calculatedFee;
+        this.$emit('value', selectedValue);
+        return chosenFee;
     }
 
     /**
@@ -193,7 +197,7 @@ export class MaxFeeSelectorTs extends Vue {
     /**
      * Returns the sorted fees (including the calculated fees)
      */
-    public get feesCalculated(): { label: string; maxFee: number }[] {
+    public get feesCalculated(): { label: string; maxFee: number; calculatedFee: number }[] {
         return this.fees
             .map((i) => {
                 if (i.maxFee === this.feesConfig.median) {
