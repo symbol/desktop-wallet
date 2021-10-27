@@ -1130,6 +1130,7 @@
     "transaction_cosignature_warning_unknown_cosigner": "Вы собираетесь подписать транзакцию, созданную не вами.",
     "transaction_cosignature_warning_dont_sign": "Не подписывайте транзакцию, если вы не знаете её происхождение!",
     "transaction_cosignature_warning_proceed": "Я понимаю и хочу продолжить.",
+    "lock_hash_algorithm": "алгоритм хеширования",
     "not_enough_balance": "не хватает баланса",
     "use_max_value": "Используйте максимальное значение"
 }
