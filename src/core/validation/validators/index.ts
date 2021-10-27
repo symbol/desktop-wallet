@@ -11,3 +11,4 @@ export * from './PrivateKeyValidator';
 export * from './UrlValidator';
 export * from './Validator';
 export * from './PositiveDecimalNumberValidator';
+export * from './MaxAmountValidator';

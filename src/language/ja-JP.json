@@ -1130,5 +1130,7 @@
     "transaction_cosignature_warning_unknown_cosigner": "この署名を求めるトランザクションはあなたが作成したものではありません",
     "transaction_cosignature_warning_dont_sign": "心当たりがなければ署名しないでください",
     "transaction_cosignature_warning_proceed": "確認しましたので署名に同意します",
-    "amount_value_cannot_start_with_zero": "金額の値を0から始めることはできません"
+    "amount_value_cannot_start_with_zero": "金額の値を0から始めることはできません",
+    "not_enough_balance": "バランスが悪い",
+    "use_max_value": "最大値を使用"
 }

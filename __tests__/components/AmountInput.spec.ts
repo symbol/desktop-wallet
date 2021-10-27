@@ -12,6 +12,7 @@ import { StandardValidationRules } from '@/core/validation/StandardValidationRul
 import { MaxDecimalsValidator, PositiveDecimalNumberValidator, MaxRelativeAmountValidator } from '@/core/validation/validators';
 import { appConfig } from '@/config';
 import { StartsWithZeroValidator } from '@/core/validation/validators/StartswithZeroValidator';
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 StandardValidationRules.register();
 appConfig.constants.DECIMAL_SEPARATOR = '.';
@@ -58,11 +59,23 @@ const mosaicModule = {
         mosaics: () => {
             return mosaicsMock;
         },
+        balanceMosaics: () => {
+            return mosaicsMock;
+        },
     },
 };
+
+const networkModule = {
+    namespaced: true,
+    getters: {
+        networkConfiguration: () => new NetworkConfigurationModel(),
+    },
+};
+
 const store = new Vuex.Store({
     modules: {
         mosaic: mosaicModule,
+        network: networkModule,
     },
 });
 const options = {
