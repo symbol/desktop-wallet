@@ -154,7 +154,6 @@ export class NetworkNodeSelectorTs extends Vue {
 
         // remove the duplicate item in array.
         this.customNodeData = [...new Set(this.filteredNodes.map((n) => n.host).concat(staticNodesUrls))];
-        // console.log(this.customNodeData)
         if (this.customNodeData.includes(currentNodeUrl) && !this.value.url) {
             this.fetchNodePublicKey(currentNodeUrl);
         }
