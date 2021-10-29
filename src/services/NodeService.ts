@@ -24,10 +24,10 @@ import { NodeModelStorage } from '@/core/database/storage/NodeModelStorage';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import fetch from 'node-fetch';
 
-const requestNodes = async (networkType): Promise<[]> => {
+const requestNodes = async (networkType, searchCriteria?: { nodeFilter: string; limit: number }): Promise<[]> => {
     const url = appConfig.statisticServiceUrls.find((url) => url.key === networkType).value;
     return new Promise((resolve) => {
-        fetch(url)
+        fetch(url + '?filter=' + searchCriteria.nodeFilter + '&limit=' + searchCriteria.limit)
             .then((response) => response.json())
             .then((responseData) => {
                 resolve(responseData);
@@ -78,7 +78,11 @@ export class NodeService {
     }
 
     public async loadNodesFromStatisticService(networkType: NetworkType): Promise<NodeModel[]> {
-        const data = await requestNodes(networkType);
+        const nodeSearchCriteria = {
+            nodeFilter: 'suggested',
+            limit: 30,
+        };
+        const data = await requestNodes(networkType, nodeSearchCriteria);
         return data.map((n) => {
             // @ts-ignore
             const isHttps = n.apiStatus?.isHttpsEnabled || false;
