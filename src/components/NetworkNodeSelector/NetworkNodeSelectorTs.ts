@@ -20,7 +20,6 @@ import { networkConfig } from '@/config';
     },
     computed: {
         ...mapGetters({
-            repositoryFactory: 'network/repositoryFactory',
             peerNodes: 'network/peerNodes',
             networkType: 'network/networkType',
             currentProfile: 'profile/currentProfile',

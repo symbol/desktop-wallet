@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { feesConfig, networkConfig } from '@/config';
+import { feesConfig } from '@/config';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { NetworkModel } from '@/core/database/entities/NetworkModel';
 import { NodeModel } from '@/core/database/entities/NodeModel';
@@ -301,7 +301,8 @@ export default {
                 }
                 return;
             } else {
-                let nodesList = [...networkConfig[networkType].nodes];
+                const nodeService = new NodeService();
+                let nodesList = await nodeService.loadNodesFromStatisticService(networkType);
                 let nodeFound = false,
                     progressCurrentNodeInx = 0;
                 const numOfNodes = nodesList.length;
@@ -372,9 +373,8 @@ export default {
             const nodeService = new NodeService();
             const oldGenerationHash = getters['generationHash'];
             const networkType = networkModel.networkType;
-            const getNodesPromise = nodeService.getNodes(currentProfile, repositoryFactory, networkModel.url).toPromise();
+            const nodes = await nodeService.getNodes(currentProfile, repositoryFactory, networkModel.url);
             const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getChainInfo().toPromise();
-            const nodes = await getNodesPromise;
             const currentHeight = (await getBlockchainHeightPromise).height.compact();
             const networkListener = repositoryFactory.createListener();
 
@@ -528,7 +528,7 @@ export default {
             const nodeService = new NodeService();
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
 
-            const knownNodes = await nodeService.getNodes(currentProfile, repositoryFactory, peerUrl).toPromise();
+            const knownNodes = await nodeService.getNodes(currentProfile, repositoryFactory, peerUrl);
             commit('knowNodes', knownNodes);
         },
 

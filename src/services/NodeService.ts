@@ -15,15 +15,29 @@
  */
 
 import { NetworkType, NodeInfo, RepositoryFactory } from 'symbol-sdk';
-import { Observable } from 'rxjs';
 import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { map, tap } from 'rxjs/operators';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import * as _ from 'lodash';
-import { networkConfig } from '@/config';
+import { appConfig } from '@/config';
 import { NodeModelStorage } from '@/core/database/storage/NodeModelStorage';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import fetch from 'node-fetch';
 
+const requestNodes = async (networkType): Promise<[]> => {
+    const url = appConfig.statisticServiceUrls.find((url) => url.key === networkType).value;
+    return new Promise((resolve) => {
+        fetch(url)
+            .then((response) => response.json())
+            .then((responseData) => {
+                resolve(responseData);
+                console.log(responseData);
+            })
+            .catch((e) => {
+                throw e;
+            });
+    });
+};
 /**
  * The service in charge of loading and caching anything related to Node and Peers from Rest.
  * The cache is done by storing the payloads in SimpleObjectStorage.
@@ -34,36 +48,49 @@ export class NodeService {
      */
     private readonly storage = NodeModelStorage.INSTANCE;
 
-    public getKnowNodesOnly(profile: ProfileModel): NodeModel[] {
-        return _.uniqBy(this.loadNodes(profile).concat(this.loadStaticNodes(profile.networkType)), 'url').filter(
+    public async getKnowNodesOnly(profile: ProfileModel): Promise<NodeModel[]> {
+        return _.uniqBy(this.loadNodes(profile).concat(await this.loadNodesFromStatisticService(profile.networkType)), 'url').filter(
             (n) => n.networkType === profile.networkType,
         );
     }
 
-    public getNodes(profile: ProfileModel, repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string): Observable<NodeModel[]> {
-        const storedNodes = this.getKnowNodesOnly(profile);
+    public async getNodes(profile: ProfileModel, repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string): Promise<NodeModel[]> {
+        const storedNodes = await this.getKnowNodesOnly(profile);
         const nodeRepository = repositoryFactory.createNodeRepository();
-
-        return nodeRepository.getNodeInfo().pipe(
-            map((dto: NodeInfo) =>
-                this.createNodeModel(
-                    repositoryFactoryUrl,
-                    profile.networkType,
-                    dto.friendlyName,
-                    undefined,
-                    dto.publicKey,
-                    dto.nodePublicKey,
+        return nodeRepository
+            .getNodeInfo()
+            .pipe(
+                map((dto: NodeInfo) =>
+                    this.createNodeModel(
+                        repositoryFactoryUrl,
+                        profile.networkType,
+                        dto.friendlyName,
+                        undefined,
+                        dto.publicKey,
+                        dto.nodePublicKey,
+                    ),
                 ),
-            ),
-            ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl, profile.networkType)),
-            map((currentNode) => _.uniqBy([currentNode, ...storedNodes], 'url')),
-            tap((p) => this.saveNodes(profile, p)),
-        );
+                ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl, profile.networkType)),
+                map((currentNode) => _.uniqBy([currentNode, ...storedNodes], 'url')),
+                tap((p) => this.saveNodes(profile, p)),
+            )
+            .toPromise();
     }
 
-    private loadStaticNodes(networkType: NetworkType): NodeModel[] {
-        return networkConfig[networkType].nodes.map((n) => {
-            return this.createNodeModel(n.url, networkType, n.friendlyName, true);
+    public async loadNodesFromStatisticService(networkType: NetworkType): Promise<NodeModel[]> {
+        const data = await requestNodes(networkType);
+        return data.map((n) => {
+            // @ts-ignore
+            const isHttps = n.apiStatus?.isHttpsEnabled || false;
+            //@ts-ignore
+            const url = isHttps ? 'https://' + n.host + ':3001' : 'http://' + n.host + ':3000';
+            // @ts-ignore
+            const friendlyName = n.friendlyName;
+            // @ts-ignore
+            const publicKey = n.publicKey;
+            // @ts-ignore
+            const nodePublicKey = n.apiStatus?.nodePublicKey;
+            return this.createNodeModel(url, networkType, friendlyName, true, publicKey, nodePublicKey);
         });
     }
 
@@ -75,14 +102,7 @@ export class NodeService {
         publicKey?: string,
         nodePublicKey?: string,
     ): NodeModel {
-        return new NodeModel(
-            url,
-            friendlyName || '',
-            isDefault || !!networkConfig[networkType].nodes.find((n) => n.url === url),
-            networkType,
-            publicKey,
-            nodePublicKey,
-        );
+        return new NodeModel(url, friendlyName || '', isDefault, networkType, publicKey, nodePublicKey);
     }
 
     private loadNodes(profile: ProfileModel): NodeModel[] {
