@@ -31,7 +31,6 @@ const requestNodes = async (networkType, searchCriteria?: { nodeFilter: string; 
             .then((response) => response.json())
             .then((responseData) => {
                 resolve(responseData);
-                console.log(responseData);
             })
             .catch((e) => {
                 throw e;
