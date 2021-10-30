@@ -142,7 +142,7 @@ export class NetworkNodeSelectorTs extends Vue {
 
     public async created() {
         // add selected nodes
-        const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect.replace(/http:|:3000|\//g, '');
+        const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect.replace(/http:|https:|:3000|:3001|\//g, '');
 
         await this.$store.dispatch('network/LOAD_PEER_NODES');
 
