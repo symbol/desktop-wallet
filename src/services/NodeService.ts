@@ -19,19 +19,19 @@ import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { map, tap } from 'rxjs/operators';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import * as _ from 'lodash';
-import { appConfig } from '@/config';
+import { networkConfig } from '@/config';
 import { NodeModelStorage } from '@/core/database/storage/NodeModelStorage';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import fetch from 'node-fetch';
 
 const requestNodes = async (networkType, searchCriteria?: { nodeFilter: string; limit: number }): Promise<[]> => {
-    const url = appConfig.statisticServiceUrls.find((url) => url.key === networkType).value;
+    const url =
+        networkConfig[networkType].statisticServiceUrl + 'nodes?filter=' + searchCriteria.nodeFilter + '&limit=' + searchCriteria.limit;
     return new Promise((resolve) => {
-        fetch(url + '?filter=' + searchCriteria.nodeFilter + '&limit=' + searchCriteria.limit)
+        fetch(url)
             .then((response) => response.json())
             .then((responseData) => {
                 resolve(responseData);
-                console.log(responseData);
             })
             .catch((e) => {
                 throw e;
@@ -94,6 +94,7 @@ export class NodeService {
             const publicKey = n.publicKey;
             // @ts-ignore
             const nodePublicKey = n.apiStatus?.nodePublicKey;
+            // @ts-ignore
             return this.createNodeModel(url, networkType, friendlyName, true, publicKey, nodePublicKey);
         });
     }
@@ -106,7 +107,7 @@ export class NodeService {
         publicKey?: string,
         nodePublicKey?: string,
     ): NodeModel {
-        return new NodeModel(url, friendlyName || '', isDefault, networkType, publicKey, nodePublicKey);
+        return new NodeModel(url, friendlyName, isDefault, networkType, publicKey, nodePublicKey);
     }
 
     private loadNodes(profile: ProfileModel): NodeModel[] {

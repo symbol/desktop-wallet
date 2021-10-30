@@ -15,7 +15,6 @@
  */
 
 import { Formatters } from '@/core/utils/Formatters';
-import { NetworkType } from 'symbol-sdk';
 
 export interface LanguageConfig {
     label: string;
@@ -40,7 +39,6 @@ export interface AppConfig {
     };
     title: string;
     marketServerUrl: string;
-    statisticServiceUrls: StatisticUrlsConfig[];
 }
 
 const defaultAppConfig: AppConfig = {
@@ -65,10 +63,6 @@ const defaultAppConfig: AppConfig = {
     ],
     marketServerUrl: 'http://app.nemcn.io',
     articlesFeedUrl: 'https://symbol.github.io/symbol-rss-feeds/',
-    statisticServiceUrls: [
-        // { key: NetworkType.MAIN_NET, value: 'http://sym-testnet-services-alb-1057885927.us-east-1.elb.amazonaws.com/nodes' },
-        { key: NetworkType.TEST_NET, value: ' http://testnet.symbol.services/nodes' },
-    ],
 };
 const resolvedAppConfig: AppConfig = window['appConfig'] || defaultAppConfig;
 console.log('appConfig resolved!', resolvedAppConfig);
