@@ -107,9 +107,6 @@ describe('storage/ProfileModelStorage.spec ==>', () => {
                 },
             };
 
-            expect(
-                defaultTestnetNetworkConfig.nodes.find((n) => n.url === migratedData.someTestnetProfile.selectedNodeUrlToConnect),
-            ).toBeDefined();
             expect(migratedData).toEqual(expected);
             expect(delegate.get()).toEqual({ version: 8, data: migratedData });
         });

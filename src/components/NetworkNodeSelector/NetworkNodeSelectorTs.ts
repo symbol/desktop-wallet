@@ -12,7 +12,6 @@ import { URLHelpers } from '@/core/utils/URLHelpers';
 import { AccountInfo, NetworkType, NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
-import { networkConfig } from '@/config';
 @Component({
     components: {
         FormWrapper,
@@ -142,18 +141,13 @@ export class NetworkNodeSelectorTs extends Vue {
     }
 
     public async created() {
-        // add static hardcoded nodes to harvesting list
-        const staticNodesUrls = [];
-        networkConfig[this.networkType].nodes.map((node) => staticNodesUrls.push(node.url.replace(/http:|:3000|\//g, '')));
-
         // add selected nodes
         const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect.replace(/http:|:3000|\//g, '');
-        staticNodesUrls.push(currentNodeUrl);
 
         await this.$store.dispatch('network/LOAD_PEER_NODES');
 
         // remove the duplicate item in array.
-        this.customNodeData = [...new Set(this.filteredNodes.map((n) => n.host).concat(staticNodesUrls))];
+        this.customNodeData = [...new Set(this.filteredNodes.map((n) => n.host).concat(currentNodeUrl))];
         if (this.customNodeData.includes(currentNodeUrl) && !this.value.url) {
             this.fetchNodePublicKey(currentNodeUrl);
         }

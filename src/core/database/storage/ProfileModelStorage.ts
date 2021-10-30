@@ -17,7 +17,6 @@
 import { VersionedObjectStorage } from '@/core/database/backends/VersionedObjectStorage';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { defaultTestnetNetworkConfig } from '@/config';
-import * as _ from 'lodash';
 import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
 import { VersionedModel } from '@/core/database/entities/VersionedModel';
 
@@ -93,7 +92,7 @@ export class ProfileModelStorage extends VersionedObjectStorage<Record<string, P
                                 modified[name] = {
                                     ...modified[name],
                                     generationHash: defaultTestnetNetworkConfig.networkConfigurationDefaults.generationHash,
-                                    selectedNodeUrlToConnect: _.sample(defaultTestnetNetworkConfig.nodes).url, // Random url.
+                                    selectedNodeUrlToConnect: 'http://ngl-dual-001.testnet.symboldev.network:3000', // Random url.
                                 };
                             }
                         });
