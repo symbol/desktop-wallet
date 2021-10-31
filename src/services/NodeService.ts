@@ -34,7 +34,8 @@ const requestNodes = async (networkType, searchCriteria?: { nodeFilter: string; 
                 resolve(responseData);
             })
             .catch((e) => {
-                throw e;
+                console.log(e);
+                resolve(undefined);
             });
     });
 };
@@ -48,14 +49,21 @@ export class NodeService {
      */
     private readonly storage = NodeModelStorage.INSTANCE;
 
-    public async getKnowNodesOnly(profile: ProfileModel): Promise<NodeModel[]> {
-        return _.uniqBy(this.loadNodes(profile).concat(await this.loadNodesFromStatisticService(profile.networkType)), 'url').filter(
-            (n) => n.networkType === profile.networkType,
-        );
+    public async getKnowNodesOnly(profile: ProfileModel, isOffline: boolean): Promise<NodeModel[]> {
+        const statisticsNodes = !isOffline ? await this.loadNodesFromStatisticService(profile.networkType) : [];
+        const profileNode = this.loadNodes(profile);
+        return !isOffline && statisticsNodes
+            ? _.uniqBy(profileNode.concat(statisticsNodes), 'url').filter((n) => n.networkType === profile.networkType)
+            : _.uniqBy(profileNode, 'url').filter((n) => n.networkType === profile.networkType);
     }
 
-    public async getNodes(profile: ProfileModel, repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string): Promise<NodeModel[]> {
-        const storedNodes = await this.getKnowNodesOnly(profile);
+    public async getNodes(
+        profile: ProfileModel,
+        repositoryFactory: RepositoryFactory,
+        repositoryFactoryUrl: string,
+        isOffline: boolean,
+    ): Promise<NodeModel[]> {
+        const storedNodes = await this.getKnowNodesOnly(profile, isOffline);
         const nodeRepository = repositoryFactory.createNodeRepository();
         return nodeRepository
             .getNodeInfo()
@@ -77,26 +85,32 @@ export class NodeService {
             .toPromise();
     }
 
-    public async loadNodesFromStatisticService(networkType: NetworkType): Promise<NodeModel[]> {
+    public async loadNodesFromStatisticService(networkType: NetworkType, isOffline?: boolean): Promise<NodeModel[]> {
         const nodeSearchCriteria = {
             nodeFilter: 'suggested',
             limit: 30,
         };
-        const data = await requestNodes(networkType, nodeSearchCriteria);
-        return data.map((n) => {
-            // @ts-ignore
-            const isHttps = n.apiStatus?.isHttpsEnabled || false;
-            //@ts-ignore
-            const url = isHttps ? 'https://' + n.host + ':3001' : 'http://' + n.host + ':3000';
-            // @ts-ignore
-            const friendlyName = n.friendlyName;
-            // @ts-ignore
-            const publicKey = n.publicKey;
-            // @ts-ignore
-            const nodePublicKey = n.apiStatus?.nodePublicKey;
-            // @ts-ignore
-            return this.createNodeModel(url, networkType, friendlyName, true, publicKey, nodePublicKey);
-        });
+        if (!isOffline && navigator.onLine) {
+            const data = await requestNodes(networkType, nodeSearchCriteria);
+            if (!data) {
+                return undefined;
+            }
+            return data.map((n) => {
+                // @ts-ignore
+                const isHttps = n.apiStatus?.isHttpsEnabled || false;
+                //@ts-ignore
+                const url = isHttps ? 'https://' + n.host + ':3001' : 'http://' + n.host + ':3000';
+                // @ts-ignore
+                const friendlyName = n.friendlyName;
+                // @ts-ignore
+                const publicKey = n.publicKey;
+                // @ts-ignore
+                const nodePublicKey = n.apiStatus?.nodePublicKey;
+                // @ts-ignore
+                return this.createNodeModel(url, networkType, friendlyName, true, publicKey, nodePublicKey);
+            });
+        }
+        return undefined;
     }
 
     private createNodeModel(
@@ -110,7 +124,7 @@ export class NodeService {
         return new NodeModel(url, friendlyName, isDefault, networkType, publicKey, nodePublicKey);
     }
 
-    private loadNodes(profile: ProfileModel): NodeModel[] {
+    public loadNodes(profile: ProfileModel): NodeModel[] {
         const allProfileNodes = this.storage.get() || {};
         return allProfileNodes[profile.profileName] || [];
     }

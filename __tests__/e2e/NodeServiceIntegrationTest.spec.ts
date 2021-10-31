@@ -59,7 +59,7 @@ const fakeProfile: ProfileModel = {
 
 describe('services/NodeService', () => {
     test('getNodes', async () => {
-        const peers = await nodeService.getNodes(fakeProfile, repositoryFactory, realUrl);
+        const peers = await nodeService.getNodes(fakeProfile, repositoryFactory, realUrl, true);
         console.log(JSON.stringify(peers, null, 2));
     });
 });

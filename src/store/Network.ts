@@ -302,7 +302,8 @@ export default {
                 return;
             } else {
                 const nodeService = new NodeService();
-                let nodesList = await nodeService.loadNodesFromStatisticService(networkType);
+                const statisticsServiceNodes = !isOffline ? await nodeService.loadNodesFromStatisticService(networkType) : undefined;
+                let nodesList = statisticsServiceNodes || nodeService.loadNodes(currentProfile);
                 let nodeFound = false,
                     progressCurrentNodeInx = 0;
                 const numOfNodes = nodesList.length;
@@ -369,11 +370,12 @@ export default {
         },
         async CONNECT_TO_A_VALID_NODE({ getters, commit, dispatch, rootGetters }, networkModelResult: any) {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
+            const isOffline = getters['isOfflineMode'];
             const { networkModel, repositoryFactory } = networkModelResult;
             const nodeService = new NodeService();
             const oldGenerationHash = getters['generationHash'];
             const networkType = networkModel.networkType;
-            const nodes = await nodeService.getNodes(currentProfile, repositoryFactory, networkModel.url);
+            const nodes = await nodeService.getNodes(currentProfile, repositoryFactory, networkModel.url, isOffline);
             const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getChainInfo().toPromise();
             const currentHeight = (await getBlockchainHeightPromise).height.compact();
             const networkListener = repositoryFactory.createListener();
@@ -523,12 +525,12 @@ export default {
             commit('removePeer', { peerUrl, profile });
         },
 
-        async UPDATE_PEER({ commit, rootGetters }, peerUrl) {
+        async UPDATE_PEER({ commit, rootGetters, getters }, peerUrl) {
             const repositoryFactory = new RepositoryFactoryHttp(peerUrl);
             const nodeService = new NodeService();
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
-
-            const knownNodes = await nodeService.getNodes(currentProfile, repositoryFactory, peerUrl);
+            const isOffline = getters['isOfflineMode'];
+            const knownNodes = await nodeService.getNodes(currentProfile, repositoryFactory, peerUrl, isOffline);
             commit('knowNodes', knownNodes);
         },
 
