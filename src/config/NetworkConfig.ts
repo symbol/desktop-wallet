@@ -81,7 +81,7 @@ export const defaultTestnetNetworkConfig: NetworkConfig = {
 export const defaultMainnetNetworkConfig: NetworkConfig = {
     explorerUrl: 'http://explorer.symbolblockchain.io/',
     faucetUrl: 'http://faucet.mainnet.symboldev.network/',
-    statisticServiceUrl: 'https://mainnet.symbol.services/',
+    statisticServiceUrl: 'https://symbol.services/',
     defaultNetworkType: 104,
     networkConfigurationDefaults: {
         maxMosaicDivisibility: 6,
