@@ -426,7 +426,9 @@ export default {
             dispatch('transaction/SIGNER_CHANGED', {}, { root: true });
             dispatch('metadata/SIGNER_CHANGED', {}, { root: true });
             dispatch('harvesting/SET_CURRENT_SIGNER_HARVESTING_MODEL', currentSignerAddress.plain(), { root: true });
-            dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS', {}, { root: true });
+            if (navigator.onLine) {
+                dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS', {}, { root: true });
+            }
 
             if (unsubscribeWS) {
                 if (previousSignerAddress) {
