@@ -5,7 +5,12 @@
         </template>
         <template v-slot:inputs>
             <div v-if="rootSigner.parentSigners" class="select-container">
-                <SignerBaseFilter :root-signer="rootSigner" @signer-change="onSignerSelectorChange" />
+                <SignerBaseFilter
+                    :root-signer="rootSigner"
+                    :is-aggregate="isAggregate"
+                    :chosen-signer="chosenSigner"
+                    @signer-change="onSignerSelectorChange"
+                />
             </div>
             <div v-else class="signer-selector-single-signer-container">
                 <span>
