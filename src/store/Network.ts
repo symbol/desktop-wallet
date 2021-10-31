@@ -302,7 +302,7 @@ export default {
                 return;
             } else {
                 const nodeService = new NodeService();
-                const statisticsServiceNodes = !isOffline ? await nodeService.loadNodesFromStatisticService(networkType) : undefined;
+                const statisticsServiceNodes = !isOffline ? await nodeService.getNodesFromStatisticService(networkType) : undefined;
                 let nodesList = statisticsServiceNodes || nodeService.loadNodes(currentProfile);
                 let nodeFound = false,
                     progressCurrentNodeInx = 0;

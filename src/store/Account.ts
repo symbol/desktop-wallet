@@ -17,6 +17,7 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { MultisigService } from '@/services/MultisigService';
+import { NodeService } from '@/services/NodeService';
 import { ProfileService } from '@/services/ProfileService';
 import { RESTService } from '@/services/RESTService';
 import * as _ from 'lodash';
@@ -426,7 +427,10 @@ export default {
             dispatch('transaction/SIGNER_CHANGED', {}, { root: true });
             dispatch('metadata/SIGNER_CHANGED', {}, { root: true });
             dispatch('harvesting/SET_CURRENT_SIGNER_HARVESTING_MODEL', currentSignerAddress.plain(), { root: true });
-            if (navigator.onLine) {
+            const networkType = rootGetters['network/networkType'];
+            const nodeService = new NodeService();
+            const nodes = await nodeService.getNodesFromStatisticService(networkType);
+            if (nodes && nodes.length && navigator.onLine) {
                 dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS', {}, { root: true });
             }
 

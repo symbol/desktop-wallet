@@ -49,8 +49,8 @@ export class NodeService {
      */
     private readonly storage = NodeModelStorage.INSTANCE;
 
-    public async getKnowNodesOnly(profile: ProfileModel, isOffline: boolean): Promise<NodeModel[]> {
-        const statisticsNodes = !isOffline ? await this.loadNodesFromStatisticService(profile.networkType) : [];
+    public async getKnownNodesOnly(profile: ProfileModel, isOffline: boolean): Promise<NodeModel[]> {
+        const statisticsNodes = !isOffline ? await this.getNodesFromStatisticService(profile.networkType) : [];
         const profileNode = this.loadNodes(profile);
         return !isOffline && statisticsNodes
             ? _.uniqBy(profileNode.concat(statisticsNodes), 'url').filter((n) => n.networkType === profile.networkType)
@@ -63,7 +63,7 @@ export class NodeService {
         repositoryFactoryUrl: string,
         isOffline: boolean,
     ): Promise<NodeModel[]> {
-        const storedNodes = await this.getKnowNodesOnly(profile, isOffline);
+        const storedNodes = await this.getKnownNodesOnly(profile, isOffline);
         const nodeRepository = repositoryFactory.createNodeRepository();
         return nodeRepository
             .getNodeInfo()
@@ -85,7 +85,7 @@ export class NodeService {
             .toPromise();
     }
 
-    public async loadNodesFromStatisticService(networkType: NetworkType, isOffline?: boolean): Promise<NodeModel[]> {
+    public async getNodesFromStatisticService(networkType: NetworkType, isOffline?: boolean): Promise<NodeModel[]> {
         const nodeSearchCriteria = {
             nodeFilter: 'suggested',
             limit: 30,
@@ -96,10 +96,8 @@ export class NodeService {
                 return undefined;
             }
             return data.map((n) => {
-                // @ts-ignore
-                const isHttps = n.apiStatus?.isHttpsEnabled || false;
                 //@ts-ignore
-                const url = isHttps ? 'https://' + n.host + ':3001' : 'http://' + n.host + ':3000';
+                const url = n.apiStatus?.restGatewayUrl;
                 // @ts-ignore
                 const friendlyName = n.friendlyName;
                 // @ts-ignore

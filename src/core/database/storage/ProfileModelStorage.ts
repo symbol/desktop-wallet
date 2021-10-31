@@ -92,7 +92,7 @@ export class ProfileModelStorage extends VersionedObjectStorage<Record<string, P
                                 modified[name] = {
                                     ...modified[name],
                                     generationHash: defaultTestnetNetworkConfig.networkConfigurationDefaults.generationHash,
-                                    selectedNodeUrlToConnect: 'http://ngl-dual-001.testnet.symboldev.network:3000', // Random url.
+                                    selectedNodeUrlToConnect: 'http://localhost:3000',
                                 };
                             }
                         });
