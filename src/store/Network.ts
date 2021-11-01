@@ -385,7 +385,9 @@ export default {
                         progressCurrentNodeIndex: numOfNodes,
                         progressTotalNumOfNodes: numOfNodes,
                     });
-                    await dispatch('notification/ADD_ERROR', NotificationType.NODE_CONNECTION_ERROR, { root: true });
+                    if (!isOffline) {
+                        await dispatch('notification/ADD_ERROR', NotificationType.NODE_CONNECTION_ERROR, { root: true });
+                    }
                 }
             }
         },

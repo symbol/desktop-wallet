@@ -989,7 +989,7 @@
     "supply_absolute": "Supply Units",
     "supply_can_not_less_than_0": "Supply cannot be less than 0",
     "swap": "Swap",
-    "symbol_node_cannot_connect": "Cannot connect to the Symbol node",
+    "symbol_node_cannot_connect": "Unable to connect to any Symbol node",
     "tab_accounts_accounts": "My accounts",
     "tab_accounts_addressbook": "My contacts",
     "tab_harvesting_delegated_harvesting": "Delegated harvesting",
