@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [1.0.8][v1.0.8] - 1-Nov-2021
+
+### Milestone: Stabilize and bug fix
+
+#### Added
+- Added secret lock and secret proof transaction to transaction details[#1726](https://github.com/symbol/desktop-wallet/issues/1726)
+- Added new button for transfer transaction input allows users to use maximum value in wallet.
+
+#### Changed
+- Improved mosaic input in transfer transaction form [#1562](https://github.com/symbol/desktop-wallet/issues/1562)
+- Removed news section [#1752](https://github.com/symbol/desktop-wallet/issues/1752)
+- Removed hardcoded node urls [#1735](https://github.com/symbol/desktop-wallet/issues/1735)
+- Changed faucet and explorer urls.
+
+#### Fixed
+- Fixed multisig multilevel account creation.
+- Fixed aggregate transactions builder issue [#1748](https://github.com/symbol/desktop-wallet/issues/1748)
+
 ## [1.0.7][v1.0.7] - 30-Sep-2021
 
 ### Milestone: Stabilize and bug fix
