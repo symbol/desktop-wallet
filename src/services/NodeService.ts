@@ -81,7 +81,7 @@ export class NodeService {
                 tap((p) => this.saveNodes(profile, p)),
             )
             .toPromise()
-            .then((val) => _.uniqBy(val.concat([...statisticsNodes]), 'url'));
+            .then((val) => (statisticsNodes && statisticsNodes.length ? _.uniqBy(val.concat([...statisticsNodes]), 'url') : val));
     }
 
     public async getNodesFromStatisticService(networkType: NetworkType, isOffline?: boolean): Promise<NodeModel[]> {
