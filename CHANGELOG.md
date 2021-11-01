@@ -15,7 +15,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 #### Changed
 - Improved mosaic input in transfer transaction form [#1562](https://github.com/symbol/desktop-wallet/issues/1562)
 - Removed news section [#1752](https://github.com/symbol/desktop-wallet/issues/1752)
-- Removed hardcoded node urls [#1735](https://github.com/symbol/desktop-wallet/issues/1735)
+- Removed hardcoded nodes urls [#1735](https://github.com/symbol/desktop-wallet/issues/1735)
 - Changed faucet and explorer urls.
 
 #### Fixed
