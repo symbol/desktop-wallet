@@ -16,7 +16,7 @@
 // external dependencies
 import { mapGetters } from 'vuex';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { MosaicId, NamespaceId } from 'symbol-sdk';
+import { MosaicId, NamespaceId, NetworkType } from 'symbol-sdk';
 // internal dependencies
 // configuration
 // child components
@@ -24,7 +24,7 @@ import { MosaicId, NamespaceId } from 'symbol-sdk';
 import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
+import { networkConfig } from '@/config';
 
 @Component({
     components: { AmountDisplay },
@@ -32,7 +32,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
         ...mapGetters({
             mosaics: 'mosaic/mosaics',
             networkCurrency: 'mosaic/networkCurrency',
-            networkConfiguration: 'network/networkConfiguration',
+            networkType: 'network/networkType',
         }),
     },
 })
@@ -71,7 +71,7 @@ export class MosaicAmountDisplayTs extends Vue {
 
     private networkCurrency: NetworkCurrencyModel;
 
-    private networkConfiguration: NetworkConfigurationModel;
+    private networkType: NetworkType;
 
     /// region computed properties getter/setter
 
@@ -99,7 +99,7 @@ export class MosaicAmountDisplayTs extends Vue {
         // TODO improve how to resolve the mosaic id when the known value is a namespace id.
         // Note that if the transaction is old, the namespace id of the mosaic may have been expired!
         const mosaic = this.mosaics.find((m) => m.mosaicIdHex === this.id.toHex());
-        return mosaic ? mosaic.divisibility : this.networkConfiguration.maxMosaicDivisibility;
+        return mosaic ? mosaic.divisibility : networkConfig[this.networkType].maxMosaicDivisibility;
     }
 
     public get amount(): number {

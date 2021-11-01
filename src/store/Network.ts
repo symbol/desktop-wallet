@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { feesConfig, networkConfig } from '@/config';
+import { feesConfig } from '@/config';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { NetworkModel } from '@/core/database/entities/NetworkModel';
 import { NodeModel } from '@/core/database/entities/NodeModel';
@@ -185,35 +185,56 @@ export default {
             Vue.set(state, 'networkIsNotMatchingProfile', networkIsNotMatchingProfile);
         },
 
-        addPeer: (state: NetworkState, { peerUrl, profile }) => {
-            const knowNodes: NodeModel[] = state.knowNodes;
-            const existNode = knowNodes.find((p: NodeModel) => p.url === peerUrl);
+        addPeer: async (state: NetworkState, { peerUrl, profile }) => {
+            const nodeService = new NodeService();
+            const savedNodes: NodeModel[] = nodeService.getKnownNodesOnly(profile);
+            const existNode = savedNodes.find((p: NodeModel) => p.url === peerUrl);
             if (existNode) {
                 return;
             }
-            const newNodes = [...knowNodes, new NodeModel(peerUrl, '', false, state.networkType)];
-            new NodeService().saveNodes(profile, newNodes);
-            Vue.set(state, 'knowNodes', newNodes);
+            const newNodes = [...savedNodes, new NodeModel(peerUrl, '', false, state.networkType)];
+            nodeService.saveNodes(profile, newNodes);
+            const knownNodes = await nodeService.getNodes(
+                profile,
+                state.repositoryFactory,
+                profile.selectedNodeUrlToConnect,
+                state.isOfflineMode,
+            );
+            Vue.set(state, 'knowNodes', knownNodes);
         },
-        removePeer: (state: NetworkState, { peerUrl, profile }) => {
+        removePeer: async (state: NetworkState, { peerUrl, profile }) => {
             const knowNodes: NodeModel[] = state.knowNodes;
             const toBeDeleted = knowNodes.find((p: NodeModel) => p.url === peerUrl);
             if (!toBeDeleted) {
                 return;
             }
             const newNodes = knowNodes.filter((n) => n !== toBeDeleted);
-            new NodeService().saveNodes(profile, newNodes);
-            Vue.set(state, 'knowNodes', newNodes);
+            const nodeService = new NodeService();
+            nodeService.saveNodes(profile, newNodes);
+            const knownNodes = await nodeService.getNodes(
+                profile,
+                state.repositoryFactory,
+                profile.selectedNodeUrlToConnect,
+                state.isOfflineMode,
+            );
+            Vue.set(state, 'knowNodes', knownNodes);
         },
-        updateNode: (state: NetworkState, { node, profile }) => {
+        updateNode: async (state: NetworkState, { node, profile }) => {
             const knowNodes: NodeModel[] = state.knowNodes;
             const toBeUpdated = knowNodes.find((p: NodeModel) => p.url === node.url);
             if (!toBeUpdated) {
                 return;
             }
             const newNodes = knowNodes.map((n) => (n.url === node.url ? node : n));
-            new NodeService().saveNodes(profile, newNodes);
-            Vue.set(state, 'knowNodes', newNodes);
+            const nodeService = new NodeService();
+            nodeService.saveNodes(profile, newNodes);
+            const knownNodes = await nodeService.getNodes(
+                profile,
+                state.repositoryFactory,
+                profile.selectedNodeUrlToConnect,
+                state.isOfflineMode,
+            );
+            Vue.set(state, 'knowNodes', knownNodes);
         },
         subscriptions: (state: NetworkState, data) => Vue.set(state, 'subscriptions', data),
         addSubscriptions: (state: NetworkState, payload) => {
@@ -301,7 +322,9 @@ export default {
                 }
                 return;
             } else {
-                let nodesList = [...networkConfig[networkType].nodes];
+                const nodeService = new NodeService();
+                const statisticsServiceNodes = !isOffline ? await nodeService.getNodesFromStatisticService(networkType) : undefined;
+                let nodesList = statisticsServiceNodes || nodeService.loadNodes(currentProfile);
                 let nodeFound = false,
                     progressCurrentNodeInx = 0;
                 const numOfNodes = nodesList.length;
@@ -362,19 +385,21 @@ export default {
                         progressCurrentNodeIndex: numOfNodes,
                         progressTotalNumOfNodes: numOfNodes,
                     });
-                    await dispatch('notification/ADD_ERROR', NotificationType.NODE_CONNECTION_ERROR, { root: true });
+                    if (!isOffline) {
+                        await dispatch('notification/ADD_ERROR', NotificationType.NODE_CONNECTION_ERROR, { root: true });
+                    }
                 }
             }
         },
         async CONNECT_TO_A_VALID_NODE({ getters, commit, dispatch, rootGetters }, networkModelResult: any) {
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
+            const isOffline = getters['isOfflineMode'];
             const { networkModel, repositoryFactory } = networkModelResult;
             const nodeService = new NodeService();
             const oldGenerationHash = getters['generationHash'];
             const networkType = networkModel.networkType;
-            const getNodesPromise = nodeService.getNodes(currentProfile, repositoryFactory, networkModel.url).toPromise();
+            const nodes = await nodeService.getNodes(currentProfile, repositoryFactory, networkModel.url, isOffline);
             const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getChainInfo().toPromise();
-            const nodes = await getNodesPromise;
             const currentHeight = (await getBlockchainHeightPromise).height.compact();
             const networkListener = repositoryFactory.createListener();
 
@@ -523,12 +548,12 @@ export default {
             commit('removePeer', { peerUrl, profile });
         },
 
-        async UPDATE_PEER({ commit, rootGetters }, peerUrl) {
+        async UPDATE_PEER({ commit, rootGetters, getters }, peerUrl) {
             const repositoryFactory = new RepositoryFactoryHttp(peerUrl);
             const nodeService = new NodeService();
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
-
-            const knownNodes = await nodeService.getNodes(currentProfile, repositoryFactory, peerUrl).toPromise();
+            const isOffline = getters['isOfflineMode'];
+            const knownNodes = await nodeService.getNodes(currentProfile, repositoryFactory, peerUrl, isOffline);
             commit('knowNodes', knownNodes);
         },
 
