@@ -51,8 +51,8 @@ export interface NetworkConfig {
 }
 
 export const defaultTestnetNetworkConfig: NetworkConfig = {
-    explorerUrl: 'http://explorer.testnet.symboldev.network/',
-    faucetUrl: 'http://faucet.testnet.symboldev.network/',
+    explorerUrl: 'https://testnet.symbol.fyi/',
+    faucetUrl: 'https://testnet.symbol.tools/',
     statisticServiceUrl: 'https://testnet.symbol.services/',
     defaultNetworkType: 152,
     networkConfigurationDefaults: {
@@ -79,8 +79,8 @@ export const defaultTestnetNetworkConfig: NetworkConfig = {
 };
 
 export const defaultMainnetNetworkConfig: NetworkConfig = {
-    explorerUrl: 'http://explorer.symbolblockchain.io/',
-    faucetUrl: 'http://faucet.mainnet.symboldev.network/',
+    explorerUrl: 'https://symbol.fyi/',
+    faucetUrl: 'https://faucet.mainnet.symboldev.network/',
     statisticServiceUrl: 'https://symbol.services/',
     defaultNetworkType: 104,
     networkConfigurationDefaults: {
