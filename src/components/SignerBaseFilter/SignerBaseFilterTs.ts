@@ -16,6 +16,15 @@ export class SignerBaseFilterTs extends Vue {
     @Prop({ default: null })
     public rootSigner?: Signer;
 
+    @Prop({
+        default: false,
+    })
+    isAggregate: boolean;
+
+    @Prop({
+        default: '',
+    })
+    chosenSigner: string;
     /**
      * Selected signer from the store
      * @protected
@@ -26,7 +35,11 @@ export class SignerBaseFilterTs extends Vue {
     public selectedSigner: string = '';
 
     public created() {
-        this.selectedSigner = this.currentSigner.address.plain();
+        if (this.isAggregate && this.chosenSigner) {
+            this.selectedSigner = this.chosenSigner;
+        } else {
+            this.selectedSigner = this.currentSigner.address.plain();
+        }
     }
 
     get multisigSigners(): SignerItem[] {

@@ -14,6 +14,7 @@
                         v-if="!hideSigner && !isOfflineMode"
                         v-model="formItems.signerAddress"
                         :root-signer="currentAccountSigner"
+                        :is-aggregate="isAggregate"
                         @input="signerChanged"
                     />
                     <AccountSignerSelector v-if="!hideSigner && isOfflineMode" />

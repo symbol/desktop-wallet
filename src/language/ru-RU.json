@@ -1131,6 +1131,7 @@
     "transaction_cosignature_warning_dont_sign": "Не подписывайте транзакцию, если вы не знаете её происхождение!",
     "transaction_cosignature_warning_proceed": "Я понимаю и хочу продолжить.",
     "amount_value_cannot_start_with_zero": "Значение суммы не может начинаться с 0",
+    "lock_hash_algorithm": "алгоритм хеширования",
     "not_enough_balance": "не хватает баланса",
     "use_max_value": "Используйте максимальное значение"
 }
