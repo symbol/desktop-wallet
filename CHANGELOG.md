@@ -10,7 +10,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 #### Added
 - Added secret lock and secret proof transaction to transaction details[#1726](https://github.com/symbol/desktop-wallet/issues/1726)
-- Added new button for transfer transaction input allows users to use maximum value in wallet.
+- Added a new button for transfer transaction input allows users to use maximum value in the wallet.
 
 #### Changed
 - Improved mosaic input in transfer transaction form [#1562](https://github.com/symbol/desktop-wallet/issues/1562)
