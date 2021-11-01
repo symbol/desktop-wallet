@@ -240,6 +240,9 @@ export default class AccountSelectionTs extends Vue {
                 };
             } else {
                 this.$store.dispatch('notification/ADD_ERROR', 'symbol_node_cannot_connect');
+                this.addressBalanceMap = {
+                    ...this.mapBalanceByAddress(undefined, this.networkMosaic, this.addressesList),
+                };
                 return;
             }
         } catch (error) {
@@ -291,6 +294,9 @@ export default class AccountSelectionTs extends Vue {
                 };
             } else {
                 this.$store.dispatch('notification/ADD_ERROR', 'symbol_node_cannot_connect');
+                this.optInAddressBalanceMap = {
+                    ...this.mapBalanceByAddress(undefined, this.networkMosaic, optInAddresses),
+                };
                 return;
             }
         } catch (error) {

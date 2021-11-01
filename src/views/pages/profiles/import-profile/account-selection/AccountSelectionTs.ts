@@ -246,6 +246,9 @@ export default class AccountSelectionTs extends Vue {
                     ...this.mapBalanceByAddress(accountsInfo, this.networkMosaic, optInAddresses),
                 };
             } else {
+                this.optInAddressBalanceMap = {
+                    ...this.mapBalanceByAddress(undefined, this.networkMosaic, optInAddresses),
+                };
                 this.$store.dispatch('notification/ADD_ERROR', 'symbol_node_cannot_connect');
                 return;
             }
