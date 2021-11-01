@@ -80,7 +80,7 @@ export const defaultTestnetNetworkConfig: NetworkConfig = {
 
 export const defaultMainnetNetworkConfig: NetworkConfig = {
     explorerUrl: 'https://symbol.fyi/',
-    faucetUrl: 'http://faucet.mainnet.symboldev.network/',
+    faucetUrl: 'https://faucet.mainnet.symboldev.network/',
     statisticServiceUrl: 'https://symbol.services/',
     defaultNetworkType: 104,
     networkConfigurationDefaults: {
