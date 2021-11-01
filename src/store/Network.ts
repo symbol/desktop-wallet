@@ -185,35 +185,56 @@ export default {
             Vue.set(state, 'networkIsNotMatchingProfile', networkIsNotMatchingProfile);
         },
 
-        addPeer: (state: NetworkState, { peerUrl, profile }) => {
-            const knowNodes: NodeModel[] = state.knowNodes;
-            const existNode = knowNodes.find((p: NodeModel) => p.url === peerUrl);
+        addPeer: async (state: NetworkState, { peerUrl, profile }) => {
+            const nodeService = new NodeService();
+            const savedNodes: NodeModel[] = nodeService.getKnownNodesOnly(profile);
+            const existNode = savedNodes.find((p: NodeModel) => p.url === peerUrl);
             if (existNode) {
                 return;
             }
-            const newNodes = [...knowNodes, new NodeModel(peerUrl, '', false, state.networkType)];
-            new NodeService().saveNodes(profile, newNodes);
-            Vue.set(state, 'knowNodes', newNodes);
+            const newNodes = [...savedNodes, new NodeModel(peerUrl, '', false, state.networkType)];
+            nodeService.saveNodes(profile, newNodes);
+            const knownNodes = await nodeService.getNodes(
+                profile,
+                state.repositoryFactory,
+                profile.selectedNodeUrlToConnect,
+                state.isOfflineMode,
+            );
+            Vue.set(state, 'knowNodes', knownNodes);
         },
-        removePeer: (state: NetworkState, { peerUrl, profile }) => {
+        removePeer: async (state: NetworkState, { peerUrl, profile }) => {
             const knowNodes: NodeModel[] = state.knowNodes;
             const toBeDeleted = knowNodes.find((p: NodeModel) => p.url === peerUrl);
             if (!toBeDeleted) {
                 return;
             }
             const newNodes = knowNodes.filter((n) => n !== toBeDeleted);
-            new NodeService().saveNodes(profile, newNodes);
-            Vue.set(state, 'knowNodes', newNodes);
+            const nodeService = new NodeService();
+            nodeService.saveNodes(profile, newNodes);
+            const knownNodes = await nodeService.getNodes(
+                profile,
+                state.repositoryFactory,
+                profile.selectedNodeUrlToConnect,
+                state.isOfflineMode,
+            );
+            Vue.set(state, 'knowNodes', knownNodes);
         },
-        updateNode: (state: NetworkState, { node, profile }) => {
+        updateNode: async (state: NetworkState, { node, profile }) => {
             const knowNodes: NodeModel[] = state.knowNodes;
             const toBeUpdated = knowNodes.find((p: NodeModel) => p.url === node.url);
             if (!toBeUpdated) {
                 return;
             }
             const newNodes = knowNodes.map((n) => (n.url === node.url ? node : n));
-            new NodeService().saveNodes(profile, newNodes);
-            Vue.set(state, 'knowNodes', newNodes);
+            const nodeService = new NodeService();
+            nodeService.saveNodes(profile, newNodes);
+            const knownNodes = await nodeService.getNodes(
+                profile,
+                state.repositoryFactory,
+                profile.selectedNodeUrlToConnect,
+                state.isOfflineMode,
+            );
+            Vue.set(state, 'knowNodes', knownNodes);
         },
         subscriptions: (state: NetworkState, data) => Vue.set(state, 'subscriptions', data),
         addSubscriptions: (state: NetworkState, payload) => {

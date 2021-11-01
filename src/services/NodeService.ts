@@ -49,21 +49,19 @@ export class NodeService {
      */
     private readonly storage = NodeModelStorage.INSTANCE;
 
-    public async getKnownNodesOnly(profile: ProfileModel, isOffline: boolean): Promise<NodeModel[]> {
-        const statisticsNodes = !isOffline ? await this.getNodesFromStatisticService(profile.networkType) : [];
+    public getKnownNodesOnly(profile: ProfileModel): NodeModel[] {
         const profileNode = this.loadNodes(profile);
-        return !isOffline && statisticsNodes
-            ? _.uniqBy(profileNode.concat(statisticsNodes), 'url').filter((n) => n.networkType === profile.networkType)
-            : _.uniqBy(profileNode, 'url').filter((n) => n.networkType === profile.networkType);
+        return _.uniqBy(profileNode, 'url').filter((n) => n.networkType === profile.networkType);
     }
 
     public async getNodes(
         profile: ProfileModel,
         repositoryFactory: RepositoryFactory,
         repositoryFactoryUrl: string,
-        isOffline: boolean,
+        isOffline?: boolean,
     ): Promise<NodeModel[]> {
-        const storedNodes = await this.getKnownNodesOnly(profile, isOffline);
+        const storedNodes = this.getKnownNodesOnly(profile);
+        const statisticsNodes = !isOffline ? await this.getNodesFromStatisticService(profile.networkType) : [];
         const nodeRepository = repositoryFactory.createNodeRepository();
         return nodeRepository
             .getNodeInfo()
@@ -82,7 +80,8 @@ export class NodeService {
                 map((currentNode) => _.uniqBy([currentNode, ...storedNodes], 'url')),
                 tap((p) => this.saveNodes(profile, p)),
             )
-            .toPromise();
+            .toPromise()
+            .then((val) => _.uniqBy(val.concat([...statisticsNodes]), 'url'));
     }
 
     public async getNodesFromStatisticService(networkType: NetworkType, isOffline?: boolean): Promise<NodeModel[]> {
