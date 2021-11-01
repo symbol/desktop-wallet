@@ -52,7 +52,7 @@ export interface NetworkConfig {
 
 export const defaultTestnetNetworkConfig: NetworkConfig = {
     explorerUrl: 'https://testnet.symbol.fyi/',
-    faucetUrl: 'http://testnet.symbol.tools/',
+    faucetUrl: 'https://testnet.symbol.tools/',
     statisticServiceUrl: 'https://testnet.symbol.services/',
     defaultNetworkType: 152,
     networkConfigurationDefaults: {
