@@ -45,7 +45,7 @@ describe('storage/ProfileModelStorage.spec ==>', () => {
     describe('constructor() should', () => {
         test('Should save nodes by profile name', () => {
             const nodes = {
-                version: 10,
+                version: 11,
                 data: {
                     [fakeProfile.profileName]: [fakeNode],
                 },

@@ -12,7 +12,6 @@ import { URLHelpers } from '@/core/utils/URLHelpers';
 import { AccountInfo, NetworkType, NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
-import { networkConfig } from '@/config';
 @Component({
     components: {
         FormWrapper,
@@ -20,7 +19,6 @@ import { networkConfig } from '@/config';
     },
     computed: {
         ...mapGetters({
-            repositoryFactory: 'network/repositoryFactory',
             peerNodes: 'network/peerNodes',
             networkType: 'network/networkType',
             currentProfile: 'profile/currentProfile',
@@ -134,6 +132,7 @@ export class NetworkNodeSelectorTs extends Vue {
         } catch (error) {
             this.$store.dispatch('notification/ADD_ERROR', NotificationType.INVALID_NODE);
             console.log(error);
+            this.filteredData = this.customNodeData;
             Vue.set(this, 'showInputPublicKey', true);
             throw new Error('Node_connection_failed');
         } finally {
@@ -142,19 +141,13 @@ export class NetworkNodeSelectorTs extends Vue {
     }
 
     public async created() {
-        // add static hardcoded nodes to harvesting list
-        const staticNodesUrls = [];
-        networkConfig[this.networkType].nodes.map((node) => staticNodesUrls.push(node.url.replace(/http:|:3000|\//g, '')));
-
         // add selected nodes
-        const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect.replace(/http:|:3000|\//g, '');
-        staticNodesUrls.push(currentNodeUrl);
+        const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect.replace(/http:|https:|:3000|:3001|\//g, '');
 
         await this.$store.dispatch('network/LOAD_PEER_NODES');
 
         // remove the duplicate item in array.
-        this.customNodeData = [...new Set(this.filteredNodes.map((n) => n.host).concat(staticNodesUrls))];
-
+        this.customNodeData = [...new Set(this.filteredNodes.map((n) => n.host).concat(currentNodeUrl))];
         if (this.customNodeData.includes(currentNodeUrl) && !this.value.url) {
             this.fetchNodePublicKey(currentNodeUrl);
         }

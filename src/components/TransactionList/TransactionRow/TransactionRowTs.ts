@@ -68,7 +68,7 @@ export interface TooltipMosaics {
         currentAccount: 'account/currentAccount',
         currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
         balanceMosaics: 'mosaic/balanceMosaics',
-        multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
+        multisigAccountGraph: 'account/multisigAccountGraph',
     }),
 })
 export class TransactionRowTs extends Vue {
@@ -137,7 +137,7 @@ export class TransactionRowTs extends Vue {
      */
     private transactionSigningFlag: boolean = false;
 
-    private multisigAccountGraphInfo: MultisigAccountInfo[][];
+    public multisigAccountGraph: Map<number, MultisigAccountInfo[]>;
 
     /// region computed properties getter/setter
     public get view(): TransactionView<Transaction> {
@@ -275,9 +275,6 @@ export class TransactionRowTs extends Vue {
                 }
                 const cosignList = [];
                 const cosignerAddresses = this.aggregateTransactionDetails.innerTransactions.map((t) => t.signer?.address);
-                const multisignService = new MultisigService();
-                const mutlisigChildrenTree = multisignService.getMultisigChildren(this.multisigAccountGraphInfo);
-                const mutlisigChildren = multisignService.getMultisigChildrenAddresses(this.multisigAccountGraphInfo);
 
                 this.aggregateTransactionDetails.innerTransactions.forEach((t) => {
                     if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {
@@ -292,13 +289,12 @@ export class TransactionRowTs extends Vue {
                     this.transactionSigningFlag = true;
                     return;
                 }
-                const cosignRequired = cosignerAddresses.find((c) => {
+                const cosignRequired = [...cosignList, ...cosignerAddresses].find((c) => {
                     if (c) {
-                        return (this.transactionSigningFlag =
+                        return (
                             c.plain() === this.currentAccount.address ||
-                            (this.currentAccountMultisigInfo &&
-                                this.currentAccountMultisigInfo.multisigAddresses.find((m) => c.equals(m)) !== undefined) ||
-                            (mutlisigChildrenTree && mutlisigChildren.some((address) => address.equals(c))));
+                            (this.multisigAccountGraph && MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, c.plain()))
+                        );
                     }
                     this.transactionSigningFlag = false;
                     return;

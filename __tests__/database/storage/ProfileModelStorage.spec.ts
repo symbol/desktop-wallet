@@ -20,7 +20,6 @@ import { ObjectStorageBackend } from '@/core/database/backends/ObjectStorageBack
 import { SimpleObjectStorage } from '@/core/database/backends/SimpleObjectStorage';
 import { VersionedModel } from '@/core/database/entities/VersionedModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
-import { defaultTestnetNetworkConfig } from '@/config';
 
 describe('storage/ProfileModelStorage.spec ==>', () => {
     describe('constructor() should', () => {
@@ -107,9 +106,6 @@ describe('storage/ProfileModelStorage.spec ==>', () => {
                 },
             };
 
-            expect(
-                defaultTestnetNetworkConfig.nodes.find((n) => n.url === migratedData.someTestnetProfile.selectedNodeUrlToConnect),
-            ).toBeDefined();
             expect(migratedData).toEqual(expected);
             expect(delegate.get()).toEqual({ version: 8, data: migratedData });
         });

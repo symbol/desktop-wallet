@@ -14,6 +14,7 @@
                         v-if="!hideSigner && !isOfflineMode"
                         v-model="formItems.signerAddress"
                         :root-signer="currentAccountSigner"
+                        :is-aggregate="isAggregate"
                         @input="signerChanged"
                     />
                     <AccountSignerSelector v-if="!hideSigner && isOfflineMode" />
@@ -31,6 +32,9 @@
                             :uid="attachedMosaic.uid"
                             :is-show-delete="index > 0 && index === formItems.attachedMosaics.length - 1"
                             :is-first-item="index === 0"
+                            :is-offline="isOfflineMode"
+                            :selected-fee-value="selectedFeeValue"
+                            :is-aggregate="isAggregate"
                             @input-changed="onMosaicInputChange"
                             @input-deleted="onDeleteMosaicInput"
                         />
@@ -73,6 +77,7 @@
                         :calculated-recommended-fee="calculatedRecommendedFee"
                         :disable-submit="currentAccount.isMultisig"
                         :size="transactionSize"
+                        @selected-fee="onSelectFeeValue"
                         @button-clicked="handleSubmit(onSubmit)"
                         @input="onChangeMaxFee"
                     />

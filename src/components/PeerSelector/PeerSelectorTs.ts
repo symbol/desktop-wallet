@@ -18,7 +18,6 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
-import * as _ from 'lodash';
 //@ts-ignore
 import ModalNetworkNotMatchingProfile from '@/views/modals/ModalNetworkNotMatchingProfile/ModalNetworkNotMatchingProfile.vue';
 
@@ -79,11 +78,7 @@ export class PeerSelectorTs extends Vue {
 
     /// region computed properties getter/setter
     get peersList(): NodeModel[] {
-        return _.sortBy(
-            this.knowNodes,
-            (a) => a.isDefault !== true,
-            (a) => a.url,
-        );
+        return this.knowNodes;
     }
 
     get networkTypeText(): string {

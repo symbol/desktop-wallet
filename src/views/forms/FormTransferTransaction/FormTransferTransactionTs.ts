@@ -250,6 +250,8 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         free: number;
     };
     private transactionSize: number = 0;
+
+    private selectedFeeValue: number = 0;
     /**
      * Reset the form with properties
      * @return {void}
@@ -777,7 +779,16 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             this.$emit('txInput', this.formItems);
         }
     }
-    mounted() {
+    /**
+     * on select fee
+     */
+    public onSelectFeeValue(val) {
+        this.selectedFeeValue = val;
+    }
+
+    async created() {
+        this.$store.dispatch('network/LOAD_TRANSACTION_FEES');
+        this.$store.dispatch('network/SET_CLIENT_SERVER_TIME_DIFFERENCE');
         if (this.isAggregate && this.value) {
             Object.assign(this.formItems, this.value);
             if (this.formItems.attachedMosaics.length) {

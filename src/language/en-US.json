@@ -989,7 +989,7 @@
     "supply_absolute": "Supply Units",
     "supply_can_not_less_than_0": "Supply cannot be less than 0",
     "swap": "Swap",
-    "symbol_node_cannot_connect": "Cannot connect to the Symbol node",
+    "symbol_node_cannot_connect": "Unable to connect to any Symbol node",
     "tab_accounts_accounts": "My accounts",
     "tab_accounts_addressbook": "My contacts",
     "tab_harvesting_delegated_harvesting": "Delegated harvesting",
@@ -1129,5 +1129,8 @@
     "x_seconds": "{seconds}s.",
     "transaction_cosignature_warning_dont_sign": "Do not sign if you do not know the origin of the transaction.",
     "transaction_cosignature_warning_unknown_cosigner": "You are about to sign a transaction that was not created by you.",
-    "transaction_cosignature_warning_proceed": "I understand and wish to proceed."
+    "transaction_cosignature_warning_proceed": "I understand and wish to proceed.",
+    "lock_hash_algorithm": "Hash Algorithm",
+    "not_enough_balance": "Not enough balance",
+    "use_max_value": "Use maximum value"
 }
