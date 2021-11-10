@@ -20,7 +20,6 @@ export interface LanguageConfig {
     label: string;
     value: string;
 }
-
 export interface AppConfig {
     languages: LanguageConfig[];
     articlesFeedUrl: string;

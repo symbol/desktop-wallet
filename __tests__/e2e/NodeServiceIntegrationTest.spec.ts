@@ -15,7 +15,6 @@
  */
 import { NetworkType, NodeInfo, NodeRepository, RepositoryFactory, RoleType } from 'symbol-sdk';
 import { NodeService } from '@/services/NodeService';
-import { toArray } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { instance, mock, when } from 'ts-mockito';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
@@ -60,7 +59,7 @@ const fakeProfile: ProfileModel = {
 
 describe('services/NodeService', () => {
     test('getNodes', async () => {
-        const peers = await nodeService.getNodes(fakeProfile, repositoryFactory, realUrl).pipe(toArray()).toPromise();
+        const peers = await nodeService.getNodes(fakeProfile, repositoryFactory, realUrl, true);
         console.log(JSON.stringify(peers, null, 2));
     });
 });

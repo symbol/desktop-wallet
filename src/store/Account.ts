@@ -17,6 +17,7 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { MultisigService } from '@/services/MultisigService';
+import { NodeService } from '@/services/NodeService';
 import { ProfileService } from '@/services/ProfileService';
 import { RESTService } from '@/services/RESTService';
 import * as _ from 'lodash';
@@ -428,8 +429,14 @@ export default {
             dispatch('metadata/SIGNER_CHANGED', {}, { root: true });
             if (!isOffline) {
                 dispatch('harvesting/SET_CURRENT_SIGNER_HARVESTING_MODEL', currentSignerAddress.plain(), { root: true });
-                dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS', {}, { root: true });
+                const networkType = rootGetters['network/networkType'];
+                const nodeService = new NodeService();
+                const nodes = await nodeService.getNodesFromStatisticService(networkType);
+                if (nodes && nodes.length && navigator.onLine) {
+                    dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS', {}, { root: true });
+                }
             }
+
             if (unsubscribeWS) {
                 if (previousSignerAddress) {
                     await dispatch('UNSUBSCRIBE', previousSignerAddress);

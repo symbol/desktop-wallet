@@ -68,6 +68,10 @@ export class NodeModelStorage extends VersionedObjectStorage<Record<string, Node
                     description: 'Reset nodes for node storage fix (non backwards compatible)',
                     migrate: () => undefined,
                 },
+                {
+                    description: 'Reset nodes to load from statistics service',
+                    migrate: () => undefined,
+                },
             ],
         });
     }
