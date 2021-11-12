@@ -340,10 +340,16 @@ export default {
                     nodeNetworkModelResult = await networkService
                         .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline)
                         .toPromise();
+                    const webSocket = new WebSocket(nodeNetworkModelResult.repositoryFactory.createListener().url);
+                    let websocketConnection: boolean = false;
+                    webSocket.onmessage = function (e) {
+                        websocketConnection = e.toString().indexOf('failed') !== -1;
+                    };
                     if (
                         nodeNetworkModelResult &&
                         nodeNetworkModelResult.repositoryFactory &&
-                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType &&
+                        websocketConnection
                     ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
