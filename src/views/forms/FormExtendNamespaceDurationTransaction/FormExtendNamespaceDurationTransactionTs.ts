@@ -117,6 +117,6 @@ export class FormExtendNamespaceDurationTransactionTs extends FormNamespaceRegis
     }
 
     async mounted() {
-        this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES');
+        await this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES');
     }
 }

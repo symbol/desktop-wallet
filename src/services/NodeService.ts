@@ -49,6 +49,9 @@ export class NodeService {
         const storedNodes = this.getKnownNodesOnly(profile);
         const statisticsNodes = !isOffline ? await this.getNodesFromStatisticService(profile.networkType) : [];
         const nodeRepository = repositoryFactory.createNodeRepository();
+        const nodeWsUrl =
+            storedNodes.find((n) => n.url === repositoryFactoryUrl)?.wsUrl ||
+            statisticsNodes.find((n) => n.url === repositoryFactoryUrl)?.wsUrl;
         return nodeRepository
             .getNodeInfo()
             .pipe(
@@ -60,6 +63,7 @@ export class NodeService {
                         undefined,
                         dto.publicKey,
                         dto.nodePublicKey,
+                        nodeWsUrl,
                     ),
                 ),
                 ObservableHelpers.defaultLast(this.createNodeModel(repositoryFactoryUrl, profile.networkType)),
@@ -83,7 +87,7 @@ export class NodeService {
         };
         if (!isOffline && navigator.onLine) {
             try {
-                const nodeInfos = await this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNodes(
+                let nodeInfos = await this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNodes(
                     nodeSearchCriteria.nodeFilter,
                     nodeSearchCriteria.limit,
                     nodeSearchCriteria.ssl,
@@ -91,6 +95,7 @@ export class NodeService {
                 if (!nodeInfos) {
                     return undefined;
                 }
+                nodeInfos = nodeInfos.filter((n) => n.apiStatus?.webSocket?.isAvailable);
                 return nodeInfos.map((n) =>
                     this.createNodeModel(
                         n.apiStatus?.restGatewayUrl,
