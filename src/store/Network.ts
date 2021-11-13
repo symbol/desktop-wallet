@@ -311,10 +311,13 @@ export default {
                     progressTotalNumOfNodes: 1,
                 });
                 nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType, isOffline).toPromise();
+                const wsUrl = nodeNetworkModelResult.repositoryFactory.createListener().url;
+                const wsConnectionStatus = networkService.checkWebsocketConnection(wsUrl);
                 if (
                     nodeNetworkModelResult &&
                     nodeNetworkModelResult.networkModel &&
-                    nodeNetworkModelResult.networkModel.networkType === networkType
+                    nodeNetworkModelResult.networkModel.networkType === networkType &&
+                    wsConnectionStatus
                 ) {
                     await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                 } else {
@@ -340,16 +343,13 @@ export default {
                     nodeNetworkModelResult = await networkService
                         .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline)
                         .toPromise();
-                    const webSocket = new WebSocket(nodeNetworkModelResult.repositoryFactory.createListener().url);
-                    let websocketConnection: boolean = false;
-                    webSocket.onmessage = function (e) {
-                        websocketConnection = e.toString().indexOf('failed') !== -1;
-                    };
+                    const wsUrl = nodeNetworkModelResult.repositoryFactory.createListener().url;
+                    const wsConnectionStatus = networkService.checkWebsocketConnection(wsUrl);
                     if (
                         nodeNetworkModelResult &&
                         nodeNetworkModelResult.repositoryFactory &&
                         nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType &&
-                        websocketConnection
+                        wsConnectionStatus
                     ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;

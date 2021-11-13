@@ -168,4 +168,23 @@ export class NetworkService {
                   websocketInjected: WebSocket,
               });
     }
+    /**
+     * It checks if a node has Websocket functioning properly to subscribe.
+     * @param url the url.
+     */
+    public checkWebsocketConnection(url: string): boolean {
+        const webSocket = new WebSocket(url);
+        let websocketConnectionStatus: boolean = false;
+        webSocket.onmessage = function (e) {
+            websocketConnectionStatus = e.toString().indexOf('failed') !== -1;
+        };
+        // trying port 3000 if the node has :3001 opened but failed to subscribe to WS.
+        if (!websocketConnectionStatus && url.indexOf(':3001') !== -1) {
+            const webSocketHttp = new WebSocket(url.replace(':3001', ':3000'));
+            webSocketHttp.onmessage = function (e) {
+                websocketConnectionStatus = e.toString().indexOf('failed') !== -1;
+            };
+        }
+        return websocketConnectionStatus;
+    }
 }
