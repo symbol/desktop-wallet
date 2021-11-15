@@ -173,7 +173,7 @@ export class NetworkService {
      * It checks if a node has Websocket functioning properly to subscribe.
      * @param url the url.
      */
-    public async checkWebsocketConnection(url: string, isOffline: boolean) {
+    public async checkWebsocketConnection(url: string) {
         const webSocket = new WebSocket(url);
         let websocketConnectionStatus: boolean = false;
         webSocket.onmessage = function (e) {

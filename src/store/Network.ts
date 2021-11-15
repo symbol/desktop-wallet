@@ -315,13 +315,13 @@ export default {
                 let wsConnection = undefined;
                 if (navigator.onLine && !isOffline) {
                     wsUrl = nodeNetworkModelResult.repositoryFactory.createListener().url;
-                    wsConnection = await networkService.checkWebsocketConnection(wsUrl, isOffline);
+                    wsConnection = await networkService.checkWebsocketConnection(wsUrl);
                     if (!wsConnection.status && wsConnection.sslNode) {
                         nodeNetworkModelResult = await networkService
                             .getNetworkModel(newCandidateUrl.replace('https', 'http').replace('3001', '3000'), networkType, isOffline)
                             .toPromise();
                         wsUrl = nodeNetworkModelResult.repositoryFactory.createListener().url;
-                        wsConnection = await networkService.checkWebsocketConnection(wsUrl, isOffline);
+                        wsConnection = await networkService.checkWebsocketConnection(wsUrl);
                     }
                 }
                 if (
@@ -357,9 +357,9 @@ export default {
                         .toPromise();
                     let wsUrl = undefined;
                     let wsConnection = undefined;
-                    if (navigator.onLine  && !isOffline) {
+                    if (navigator.onLine && !isOffline) {
                         wsUrl = nodeNetworkModelResult.repositoryFactory.createListener().url;
-                        wsConnection = await networkService.checkWebsocketConnection(wsUrl, isOffline);
+                        wsConnection = await networkService.checkWebsocketConnection(wsUrl);
                         if (!wsConnection.status && wsConnection.sslNode) {
                             nodeNetworkModelResult = await networkService
                                 .getNetworkModel(
@@ -369,7 +369,7 @@ export default {
                                 )
                                 .toPromise();
                             wsUrl = nodeNetworkModelResult.repositoryFactory.createListener().url;
-                            wsConnection = await networkService.checkWebsocketConnection(wsUrl, isOffline);
+                            wsConnection = await networkService.checkWebsocketConnection(wsUrl);
                         }
                     }
                     if (
