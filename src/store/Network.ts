@@ -311,13 +311,25 @@ export default {
                     progressTotalNumOfNodes: 1,
                 });
                 nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType, isOffline).toPromise();
-                const wsUrl = nodeNetworkModelResult.repositoryFactory.createListener().url;
-                const wsConnectionStatus = networkService.checkWebsocketConnection(wsUrl);
+                let wsUrl = undefined;
+                let wsConnection = undefined;
+                if (navigator.onLine && !isOffline) {
+                    wsUrl = nodeNetworkModelResult.repositoryFactory.createListener().url;
+                    wsConnection = await networkService.checkWebsocketConnection(wsUrl, isOffline);
+                    if (!wsConnection.status && wsConnection.sslNode) {
+                        nodeNetworkModelResult = await networkService
+                            .getNetworkModel(newCandidateUrl.replace('https', 'http').replace('3001', '3000'), networkType, isOffline)
+                            .toPromise();
+                        wsUrl = nodeNetworkModelResult.repositoryFactory.createListener().url;
+                        wsConnection = await networkService.checkWebsocketConnection(wsUrl, isOffline);
+                    }
+                }
                 if (
                     nodeNetworkModelResult &&
                     nodeNetworkModelResult.networkModel &&
                     nodeNetworkModelResult.networkModel.networkType === networkType &&
-                    wsConnectionStatus
+                    wsConnection &&
+                    wsConnection.status
                 ) {
                     await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                 } else {
@@ -343,13 +355,29 @@ export default {
                     nodeNetworkModelResult = await networkService
                         .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline)
                         .toPromise();
-                    const wsUrl = nodeNetworkModelResult.repositoryFactory.createListener().url;
-                    const wsConnectionStatus = networkService.checkWebsocketConnection(wsUrl);
+                    let wsUrl = undefined;
+                    let wsConnection = undefined;
+                    if (navigator.onLine  && !isOffline) {
+                        wsUrl = nodeNetworkModelResult.repositoryFactory.createListener().url;
+                        wsConnection = await networkService.checkWebsocketConnection(wsUrl, isOffline);
+                        if (!wsConnection.status && wsConnection.sslNode) {
+                            nodeNetworkModelResult = await networkService
+                                .getNetworkModel(
+                                    currentProfile.selectedNodeUrlToConnect.replace('https', 'http').replace('3001', '3000'),
+                                    networkType,
+                                    isOffline,
+                                )
+                                .toPromise();
+                            wsUrl = nodeNetworkModelResult.repositoryFactory.createListener().url;
+                            wsConnection = await networkService.checkWebsocketConnection(wsUrl, isOffline);
+                        }
+                    }
                     if (
                         nodeNetworkModelResult &&
                         nodeNetworkModelResult.repositoryFactory &&
                         nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType &&
-                        wsConnectionStatus
+                        wsConnection &&
+                        wsConnection.status
                     ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;

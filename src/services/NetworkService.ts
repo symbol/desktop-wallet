@@ -25,6 +25,7 @@ import { combineLatest, defer, EMPTY, from, Observable } from 'rxjs';
 import { catchError, flatMap, map, tap } from 'rxjs/operators';
 import { NetworkConfiguration, NetworkType, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk';
 import { OfflineRepositoryFactory } from '@/services/offline/OfflineRepositoryFactory';
+import { CommonHelpers } from '@/core/utils/CommonHelpers';
 
 /**
  * The service in charge of loading and caching anything related to Network from Rest.
@@ -172,19 +173,14 @@ export class NetworkService {
      * It checks if a node has Websocket functioning properly to subscribe.
      * @param url the url.
      */
-    public checkWebsocketConnection(url: string): boolean {
+    public async checkWebsocketConnection(url: string, isOffline: boolean) {
         const webSocket = new WebSocket(url);
         let websocketConnectionStatus: boolean = false;
         webSocket.onmessage = function (e) {
-            websocketConnectionStatus = e.toString().indexOf('failed') !== -1;
+            // @ts-ignore
+            websocketConnectionStatus = e.currentTarget.readyState == 1;
         };
-        // trying port 3000 if the node has :3001 opened but failed to subscribe to WS.
-        if (!websocketConnectionStatus && url.indexOf(':3001') !== -1) {
-            const webSocketHttp = new WebSocket(url.replace(':3001', ':3000'));
-            webSocketHttp.onmessage = function (e) {
-                websocketConnectionStatus = e.toString().indexOf('failed') !== -1;
-            };
-        }
-        return websocketConnectionStatus;
+        await CommonHelpers.sleep(2000);
+        return { status: websocketConnectionStatus, sslNode: url.indexOf(':3001') !== -1 };
     }
 }
