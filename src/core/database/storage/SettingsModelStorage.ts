@@ -84,6 +84,10 @@ export class SettingsModelStorage extends VersionedObjectStorage<Record<string, 
                     description: 'Reset for fees update.',
                     migrate: () => undefined,
                 },
+                {
+                    description: 'Reset for explorer url update.',
+                    migrate: () => undefined,
+                },
             ],
         });
     }

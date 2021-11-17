@@ -17,12 +17,14 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { mapGetters } from 'vuex';
+import { networkConfig } from '@/config';
+import { NetworkType } from 'symbol-sdk';
 
 @Component({
     computed: {
         ...mapGetters({
-            explorerBaseUrl: 'app/explorerUrl',
             faucetBaseUrl: 'app/faucetUrl',
+            networkType: 'network/networkType',
         }),
     },
 })
@@ -35,14 +37,13 @@ export class AccountLinksTs extends Vue {
     @Prop({ default: '' }) link: string;
     @Prop({ default: '' }) icon: string;
 
-    public explorerBaseUrl: string;
     public faucetBaseUrl: string;
-
+    private networkType: NetworkType;
     /// region computed properties getter/setter
     /// end-region computed properties getter/setter
 
     public get explorerUrl() {
-        return this.explorerBaseUrl.replace(/\/+$/, '') + '/accounts/' + this.account.address;
+        return networkConfig[this.networkType].explorerUrl.replace(/\/+$/, '') + '/accounts/' + this.account.address;
     }
 
     public get faucetUrl() {

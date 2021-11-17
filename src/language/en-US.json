@@ -940,7 +940,7 @@
     "sender": "From",
     "set_account_name": "Enter a profile name",
     "set_default_explorer": "The URL entered is not valid, a default URL has been set for you.",
-    "set_explorer_link": "Explorer URL",
+    "form_label_explorer_link": "Explorer URL",
     "set_network_type": "Select a network type",
     "SET_UP": "Node selection",
     "settings": "Settings",

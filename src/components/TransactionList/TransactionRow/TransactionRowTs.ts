@@ -49,6 +49,7 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { TransactionStatus as TransactionStatusEnum } from '@/core/transactions/TransactionStatus';
 import { MultisigService } from '@/services/MultisigService';
+import { networkConfig } from '@/config';
 
 export interface TooltipMosaics {
     name: string;
@@ -62,7 +63,6 @@ export interface TooltipMosaics {
     },
     computed: mapGetters({
         networkMosaic: 'mosaic/networkMosaic',
-        explorerBaseUrl: 'app/explorerUrl',
         networkConfiguration: 'network/networkConfiguration',
         currentProfile: 'profile/currentProfile',
         currentAccount: 'account/currentAccount',
@@ -83,11 +83,6 @@ export class TransactionRowTs extends Vue {
      * @var {string}
      */
     public currentProfile: ProfileModel;
-
-    /**
-     * Explorer base path
-     */
-    protected explorerBaseUrl: string;
 
     /**
      * Network mosaic id
@@ -458,7 +453,11 @@ export class TransactionRowTs extends Vue {
      * Returns the explorer url
      */
     public get explorerUrl() {
-        return this.explorerBaseUrl.replace(/\/+$/, '') + '/transactions/' + this.transaction.transactionInfo.hash;
+        return (
+            networkConfig[this.currentProfile.networkType].explorerUrl.replace(/\/+$/, '') +
+            '/transactions/' +
+            this.transaction.transactionInfo.hash
+        );
     }
 
     public get date(): string {

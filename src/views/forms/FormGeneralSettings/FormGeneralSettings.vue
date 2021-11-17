@@ -26,8 +26,6 @@
                         </template>
                     </FormRow>
 
-                    <ExplorerUrlSetter v-model="formItems.explorerUrl" :auto-submit="false" @on-change="onChange" />
-
                     <FormRow>
                         <template v-slot:label> {{ $t('form_label_language') }}: </template>
                         <template v-slot:inputs>
@@ -38,6 +36,15 @@
                                     :default-form-style="true"
                                     @on-change="onChange"
                                 />
+                            </div>
+                        </template>
+                    </FormRow>
+
+                    <FormRow>
+                        <template v-slot:label> {{ $t('form_label_explorer_link') }}: </template>
+                        <template v-slot:inputs>
+                            <div class="inputs-container select-container">
+                                {{ formItems.explorerUrl }}
                             </div>
                         </template>
                     </FormRow>

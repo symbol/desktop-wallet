@@ -17,7 +17,6 @@ import { SettingsModel } from '@/core/database/entities/SettingsModel';
 
 import { feesConfig } from '@/config';
 import { appConfig } from '@/config';
-import { networkConfig } from '@/config';
 import i18n from '@/language';
 import { SettingsModelStorage } from '@/core/database/storage/SettingsModelStorage';
 import { NetworkType } from 'symbol-sdk';
@@ -31,28 +30,28 @@ export class SettingService {
      */
     private readonly storage = SettingsModelStorage.INSTANCE;
 
-    public getProfileSettings(profileName: string, networkType: NetworkType): SettingsModel {
+    public getProfileSettings(profileName: string): SettingsModel {
         const storedData = this.storage.get() || {};
         return {
-            ...this.createDefaultSettingsModel(profileName, networkType),
+            ...this.createDefaultSettingsModel(profileName),
             ...(storedData[profileName] || {}),
         };
     }
 
-    public changeProfileSettings(profileName: string, newConfigs: any, networkType: NetworkType): SettingsModel {
+    public changeProfileSettings(profileName: string, newConfigs: any): SettingsModel {
         const storedData = this.storage.get() || {};
         storedData[profileName] = {
-            ...this.getProfileSettings(profileName, networkType),
+            ...this.getProfileSettings(profileName),
             ...newConfigs,
         };
         this.storage.set(storedData);
         return storedData[profileName];
     }
 
-    public createDefaultSettingsModel(profileName: string, networkType: NetworkType): SettingsModel {
+    public createDefaultSettingsModel(profileName: string): SettingsModel {
         const browserLocale = i18n.locale;
         const language = appConfig.languages.find((l) => l.value == browserLocale) ? browserLocale : appConfig.languages[0].value;
-        return new SettingsModel(profileName, language, feesConfig.slowest, '', networkConfig[networkType].explorerUrl);
+        return new SettingsModel(profileName, language, feesConfig.slowest, '');
     }
 
     public deleteProfileSettings(profileName: string): void {
