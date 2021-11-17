@@ -94,6 +94,7 @@ export class NodeService {
                         true,
                         n.publicKey,
                         n.apiStatus?.nodePublicKey,
+                        n.apiStatus.webSocket.url,
                     ),
                 );
             } catch (error) {
@@ -105,11 +106,11 @@ export class NodeService {
 
     private async getNodeModelByMethod(
         networkType: NetworkType,
-        nodeGetter: (string) => Promise<NodeApiNodeInfo>,
-        param: string,
+        nodeGetter: (param: string) => Promise<NodeApiNodeInfo>,
+        paramValue: string,
     ): Promise<NodeModel> {
         try {
-            const nodeInfo = await nodeGetter(param);
+            const nodeInfo = await nodeGetter(paramValue);
             if (!nodeInfo) {
                 return undefined;
             }
@@ -120,6 +121,7 @@ export class NodeService {
                 true,
                 nodeInfo.publicKey,
                 nodeInfo.apiStatus?.nodePublicKey,
+                nodeInfo.apiStatus?.webSocket?.url,
             );
         } catch (error) {
             // proceed to return
@@ -164,8 +166,9 @@ export class NodeService {
         isDefault: boolean | undefined = undefined,
         publicKey?: string,
         nodePublicKey?: string,
+        wsUrl?: string,
     ): NodeModel {
-        return new NodeModel(url, friendlyName, isDefault, networkType, publicKey, nodePublicKey);
+        return new NodeModel(url, friendlyName, isDefault, networkType, publicKey, nodePublicKey, wsUrl);
     }
 
     public loadNodes(profile: ProfileModel): NodeModel[] {

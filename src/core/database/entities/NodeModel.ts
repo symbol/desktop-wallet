@@ -32,5 +32,6 @@ export class NodeModel {
         public readonly networkType: NetworkType,
         public readonly publicKey?: string,
         public nodePublicKey?: string,
+        public readonly wsUrl?: string,
     ) {}
 }
