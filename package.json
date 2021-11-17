@@ -60,6 +60,7 @@
         "rss-parser": "^3.7.3",
         "rxjs": "^6.6.7",
         "symbol-sdk": "^1.0.2-alpha-202108061451",
+        "symbol-statistics-service-typescript-fetch-client": "1.1.2-alpha-202111170848",
         "trezor-connect": "^7.0.5",
         "utf8": "^3.0.0",
         "vee-validate": "^3.2.3",
