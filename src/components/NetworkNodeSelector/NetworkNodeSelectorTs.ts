@@ -9,7 +9,7 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 import FormRow from '@/components/FormRow/FormRow.vue';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import { URLHelpers } from '@/core/utils/URLHelpers';
-import { AccountInfo, NetworkType, NodeInfo, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
+import { NetworkType, RepositoryFactoryHttp } from 'symbol-sdk';
 import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { NodeService } from '@/services/NodeService';
@@ -23,13 +23,10 @@ import { NodeService } from '@/services/NodeService';
             peerNodes: 'network/peerNodes',
             networkType: 'network/networkType',
             currentProfile: 'profile/currentProfile',
-            currentSignerAccountInfo: 'account/currentSignerAccountInfo',
         }),
     },
 })
 export class NetworkNodeSelectorTs extends Vue {
-    @Prop({ default: () => [RoleType.PeerNode, RoleType.VotingNode] }) includeRoles: number[];
-
     @Prop()
     value: NodeModel;
 
@@ -52,7 +49,7 @@ export class NetworkNodeSelectorTs extends Vue {
     })
     missingKeys: boolean;
 
-    public peerNodes: NodeInfo[];
+    public peerNodes: NodeModel[];
     public isFetchingNodeInfo = false;
     public networkType: NetworkType;
     /**
@@ -73,7 +70,7 @@ export class NetworkNodeSelectorTs extends Vue {
     public currentProfile: ProfileModel;
 
     private hideList: boolean = false;
-    private currentSignerAccountInfo: AccountInfo;
+
     /**
      * Checks if the given node is eligible for harvesting
      * @protected
@@ -85,18 +82,10 @@ export class NetworkNodeSelectorTs extends Vue {
         }
 
         // first check it in peer nodes
-        const peerNode = this.filteredNodes.find((p) => p.host === url);
+        const peerNode = this.peerNodes.find((p) => p.url === url);
         if (peerNode && peerNode?.nodePublicKey) {
-            const nodeModel = new NodeModel(
-                url,
-                peerNode.friendlyName,
-                false,
-                this.networkType,
-                peerNode.publicKey,
-                peerNode.nodePublicKey,
-            );
             Vue.set(this, 'showInputPublicKey', false);
-            this.$emit('input', nodeModel);
+            this.$emit('input', peerNode);
             return;
         }
         this.isFetchingNodeInfo = true;
@@ -117,16 +106,6 @@ export class NetworkNodeSelectorTs extends Vue {
                 );
                 Vue.set(this, 'showInputPublicKey', false);
                 this.$emit('input', nodeModel);
-                const unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
-                let nodeOperatorAccount = false;
-                const remotePublicKey = this.currentSignerAccountInfo?.supplementalPublicKeys?.linked?.publicKey;
-
-                if (unlockedAccounts) {
-                    nodeOperatorAccount = unlockedAccounts?.some((publicKey) => publicKey === remotePublicKey);
-                }
-                if (this.isAccountKeyLinked && this.isVrfKeyLinked && (this.missingKeys || nodeOperatorAccount)) {
-                    this.$store.dispatch('harvesting/FETCH_STATUS', [url, nodeModel]);
-                }
             } else {
                 Vue.set(this, 'showInputPublicKey', true);
             }
@@ -145,7 +124,6 @@ export class NetworkNodeSelectorTs extends Vue {
         const nodeModel = await new NodeService().getNodeFromStatisticServiceByNodePublicKey(networkType, nodePublicKey);
         if (nodeModel) {
             this.formNodeUrl = nodeModel.url;
-            this.formNodePublicKey = nodeModel.nodePublicKey;
             Vue.set(this, 'showInputPublicKey', false);
             this.$emit('input', nodeModel);
         } else {
@@ -159,12 +137,13 @@ export class NetworkNodeSelectorTs extends Vue {
             this.fetchAndSetNodeModel(this.networkType, this.value.nodePublicKey);
         }
         // add selected nodes
-        const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect.replace(/http:|https:|:3000|:3001|\//g, '');
+        const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect;
 
         await this.$store.dispatch('network/LOAD_PEER_NODES');
 
         // remove the duplicate item in array.
-        this.customNodeData = [...new Set(this.filteredNodes.map((n) => n.host).concat(currentNodeUrl))];
+        this.customNodeData = [...new Set(this.peerNodes.map((n) => n.url).concat(currentNodeUrl))];
+        this.filteredData = this.customNodeData;
     }
 
     @Watch('value', { immediate: true })
@@ -215,19 +194,6 @@ export class NetworkNodeSelectorTs extends Vue {
         }
     }
 
-    protected get filteredNodes() {
-        if (this.includeRoles && this.includeRoles.length > 0) {
-            // exclude nodes that doesn't support harvesting
-            return this.peerNodes.filter(
-                (node) => node.roles?.some((role) => this.isIncluded(role)) && node.networkIdentifier === this.networkType,
-            );
-        }
-        return this.peerNodes;
-    }
-
-    private isIncluded(role: RoleType) {
-        return this.includeRoles?.some((includedRole) => includedRole === role);
-    }
     get nodeExistsInList() {
         return this.filteredData.includes(this.customNodeUrl);
     }

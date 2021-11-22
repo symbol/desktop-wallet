@@ -93,7 +93,7 @@ interface NetworkState {
     transactionFees: TransactionFees;
     rentalFeeEstimation: RentalFees;
     networkIsNotMatchingProfile: boolean;
-    peerNodes: NodeInfo[];
+    peerNodes: NodeModel[];
     connectingToNodeInfo: ConnectingToNodeInfo;
     isOfflineMode: boolean;
     feesConfig: any;
@@ -241,7 +241,7 @@ export default {
             const subscriptions = state.subscriptions;
             Vue.set(state, 'subscriptions', [...subscriptions, payload]);
         },
-        peerNodes: (state: NetworkState, peerNodes: NodeInfo[]) => Vue.set(state, 'peerNodes', peerNodes),
+        peerNodes: (state: NetworkState, peerNodes: NodeModel[]) => Vue.set(state, 'peerNodes', peerNodes),
         connectingToNodeInfo: (state: NetworkState, connectingToNodeInfo: ConnectingToNodeInfo) =>
             Vue.set(state, 'connectingToNodeInfo', connectingToNodeInfo),
         setFeesConfig: (state: NetworkState, feesConfig: {}) => {
@@ -566,12 +566,14 @@ export default {
 
             dispatch('SET_CURRENT_PEER', networkService.getDefaultUrl());
         },
-        async LOAD_PEER_NODES({ commit, rootGetters }) {
-            const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
-            const nodeRepository = repositoryFactory.createNodeRepository();
-            const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
-            commit('peerNodes', _.uniqBy(peerNodes, 'host'));
+
+        async LOAD_PEER_NODES({ commit, getters }) {
+            const nodeService = new NodeService();
+            const networkType = getters['networkType'];
+            const isOffline = getters['isOfflineMode'];
+            commit('peerNodes', _.uniqBy(await nodeService.getNodesFromStatisticService(networkType, 100, isOffline), 'url'));
         },
+
         // set current difference between server and local time
         async SET_CLIENT_SERVER_TIME_DIFFERENCE({ getters, commit }) {
             const isOffline = getters['isOfflineMode'];
@@ -589,48 +591,7 @@ export default {
                 commit('setClientServerTimeDifference', 0);
             }
         },
-        // TODO :: re-apply that behavior if red screen issue fixed
-        // load nodes that eligible for delegate harvesting
-        // async LOAD_HARVESTING_PEERS({ commit, getters }) {
-        //     const peerNodes = getters.peerNodes;
-        //     peerNodes.forEach(async (node: NodeInfo) => {
-        //         await setTimeout(async () => {
-        //             try {
-        //                 const nodeUrl = URLHelpers.getNodeUrl(node.host);
-        //                 const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
-        //                 const nodeRepository = repositoryFactory.createNodeRepository();
-        //                 const unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
-        //                 const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
 
-        //                 if (unlockedAccounts) {
-        //                     let validNodeInfo: NodeInfo;
-        //                     let harvestingPeers: NodeInfo[];
-        //                     // in case nodeInfo missing host
-        //                     if (!nodeInfo.host) {
-        //                         validNodeInfo = new NodeInfo(
-        //                             nodeInfo.publicKey,
-        //                             nodeInfo.networkGenerationHashSeed,
-        //                             nodeInfo.port,
-        //                             nodeInfo.networkIdentifier,
-        //                             nodeInfo.version,
-        //                             nodeInfo.roles,
-        //                             node.host,
-        //                             nodeInfo.friendlyName,
-        //                             nodeInfo.nodePublicKey,
-        //                         );
-        //                         harvestingPeers = [validNodeInfo, ...getters.harvestingPeerNodes];
-        //                     } else {
-        //                         harvestingPeers = [nodeInfo, ...getters.harvestingPeerNodes];
-        //                     }
-        //                     // update harvesting peers
-        //                     commit('harvestingPeerNodes', _.uniqBy(harvestingPeers, 'host'));
-        //                 }
-        //             } catch (err) {
-        //                 console.error('Harvesting not enabled', err);
-        //             }
-        //         }, 500);
-        //     });
-        // },
         /**
          * Websocket API
          */
