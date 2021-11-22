@@ -15,15 +15,10 @@
                             <p v-if="harvestingStatus === 'INACTIVE'">
                                 {{ $t('harvesting_delegated_description') }}
                             </p>
-                            <p v-if="harvestingStatus === 'INACTIVE' && !isActivatedFromAnotherDevice">
+                            <p v-if="harvestingStatus === 'INACTIVE'">
                                 {{ $t('harvesting_node_selection') }}
                                 <a :href="allNodeListUrl" target="_blank"> {{ $t('open_explorer_node_list') }} </a>
                             </p>
-                            <Alert
-                                :visible="isActivatedFromAnotherDevice"
-                                type="danger"
-                                :value="$t('harvesting_activated_from_another_device')"
-                            />
                             <Alert
                                 :visible="harvestingStatus === 'KEYS_LINKED' && isPublicAndPrivateKeysLinked"
                                 type="warning"
@@ -51,7 +46,7 @@
                             <template v-slot:label> {{ $t('fee') }}: </template>
                             <template v-slot:inputs>
                                 <MaxFeeSelector v-model="formItems.maxFee" :show-fee-label="false" />
-                                <span v-if="LowFeeValue" class="fee-warning">
+                                <span v-if="lowFeeValue" class="fee-warning">
                                     <Icon type="ios-warning-outline" />
                                     {{ $t('low_fee_warning_message') }}
                                 </span>
@@ -119,7 +114,6 @@
                                 type="warning"
                                 :value="$t('remote_keys_linked')"
                             />
-                            <Alert :visible="isActivatedFromAnotherDevice" type="warning" :value="$t('harvesting_status_not_detected')" />
                         </div>
                         <!-- <FormRow class="form-warning-row" v-if="harvestingStatus !== 'INACTIVE'">
                             <template v-slot:inputs>
@@ -264,7 +258,7 @@
                                 <template v-slot:label> {{ $t('fee') }}: </template>
                                 <template v-slot:inputs>
                                     <MaxFeeSelector v-model="formItems.maxFee" :show-fee-label="false" />
-                                    <span v-if="LowFeeValue" class="fee-warning">
+                                    <span v-if="lowFeeValue" class="fee-warning">
                                         <Icon type="ios-warning-outline" />
                                         {{ $t('low_fee_warning_message') }}
                                     </span>

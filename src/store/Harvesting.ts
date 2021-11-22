@@ -17,12 +17,14 @@ import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import { URLHelpers } from '@/core/utils/URLHelpers';
 import { HarvestingService } from '@/services/HarvestingService';
+import { NodeService } from '@/services/NodeService';
 import { PageInfo } from '@/store/Transaction';
 import { map, reduce } from 'rxjs/operators';
 import {
     AccountInfo,
     Address,
     BalanceChangeReceipt,
+    NetworkType,
     Order,
     ReceiptPaginationStreamer,
     ReceiptType,
@@ -149,7 +151,7 @@ export default {
         SET_POLLING_TRIALS({ commit }, pollingTrials) {
             commit('setPollingTrials', pollingTrials);
         },
-        async FETCH_STATUS({ commit, rootGetters, dispatch }, node?: []) {
+        async FETCH_STATUS({ commit, rootGetters, dispatch }, node?: [string, NodeModel]) {
             const currentSignerAccountInfo: AccountInfo = rootGetters['account/currentSignerAccountInfo'];
             // reset
             let status: HarvestingStatus;
@@ -189,20 +191,29 @@ export default {
 
                 //find the node url from currentSignerHarvestingModel (localStorage)
                 const selectedNode = currentSignerHarvestingModel.selectedHarvestingNode;
-                // @ts-ignore
-                const harvestingNodeUrl = selectedNode?.url || (node && !!node.length ? node[0] : '');
+                const remotePublicKey = currentSignerAccountInfo.supplementalPublicKeys?.linked?.publicKey;
+                const nodeService = new NodeService();
+                const networkType: NetworkType = rootGetters['network/networkType'];
+                // try to find owned node with currentSignerAccountInfo.publicKey
+                let nodeInfo = await nodeService.getNodeFromStatisticServiceByPublicKey(networkType, currentSignerAccountInfo.publicKey);
+                const linkedNodePublicKey = currentSignerAccountInfo.supplementalPublicKeys?.node;
+                // try to find a linked node if it is not an owned node
+                if (!nodeInfo && linkedNodePublicKey) {
+                    nodeInfo = await nodeService.getNodeFromStatisticServiceByNodePublicKey(networkType, linkedNodePublicKey.publicKey);
+                }
                 let unlockedAccounts: string[] = [];
 
+                // set the harvesting node url, first try linked or owned node url if not available try stored url info and lastly the passed parameter node[0]
+                const harvestingNodeUrl = nodeInfo?.url || selectedNode?.url || (node && !!node.length ? node[0] : '');
                 if (harvestingNodeUrl) {
                     const repositoryFactory = new RepositoryFactoryHttp(URLHelpers.getNodeUrl(harvestingNodeUrl));
                     const nodeRepository = repositoryFactory.createNodeRepository();
                     try {
                         unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
                     } catch (error) {
-                        //proceed
+                        // proceed
                     }
                 }
-                const remotePublicKey = currentSignerAccountInfo.supplementalPublicKeys?.linked?.publicKey;
                 accountUnlocked = unlockedAccounts?.some((publicKey) => publicKey === remotePublicKey);
             }
             const allKeysLinked =
@@ -218,7 +229,6 @@ export default {
                         ? HarvestingStatus.FAILED
                         : HarvestingStatus.INPROGRESS_ACTIVATION
                     : HarvestingStatus.KEYS_LINKED;
-                // @ts-ignore
                 if (status === HarvestingStatus.ACTIVE && node && node[1]) {
                     // @ts-ignore
                     dispatch('UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {

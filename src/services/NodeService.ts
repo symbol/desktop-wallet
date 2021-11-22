@@ -111,19 +111,19 @@ export class NodeService {
     ): Promise<NodeModel> {
         try {
             const nodeInfo = await nodeGetter(paramValue);
-            if (!nodeInfo) {
-                return undefined;
+            if (nodeInfo) {
+                return this.createNodeModel(
+                    nodeInfo.apiStatus?.restGatewayUrl,
+                    networkType,
+                    nodeInfo.friendlyName,
+                    true,
+                    nodeInfo.publicKey,
+                    nodeInfo.apiStatus?.nodePublicKey,
+                    nodeInfo.apiStatus?.webSocket?.url,
+                );
             }
-            return this.createNodeModel(
-                nodeInfo.apiStatus?.restGatewayUrl,
-                networkType,
-                nodeInfo.friendlyName,
-                true,
-                nodeInfo.publicKey,
-                nodeInfo.apiStatus?.nodePublicKey,
-                nodeInfo.apiStatus?.webSocket?.url,
-            );
         } catch (error) {
+            console.log(error);
             // proceed to return
         }
         return undefined;
@@ -137,7 +137,7 @@ export class NodeService {
         if (!isOffline && navigator.onLine) {
             return this.getNodeModelByMethod(
                 networkType,
-                this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNode,
+                (pKey) => this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNode(pKey),
                 publicKey,
             );
         }
@@ -152,7 +152,8 @@ export class NodeService {
         if (!isOffline && navigator.onLine) {
             return this.getNodeModelByMethod(
                 networkType,
-                this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNodeByNodePublicKey,
+                (npKey) =>
+                    this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNodeByNodePublicKey(npKey),
                 nodePublicKey,
             );
         }
