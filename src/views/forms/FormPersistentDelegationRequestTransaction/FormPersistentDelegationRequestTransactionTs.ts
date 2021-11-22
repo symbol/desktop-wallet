@@ -259,7 +259,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 this.currentSignerAccountInfo.publicKey,
             );
             if (nodeInfo) {
-                this.formItems.nodeModel = { nodePublicKey: nodeInfo.publicKey } as NodeModel;
+                this.formItems.nodeModel = { nodePublicKey: nodeInfo.nodePublicKey } as NodeModel;
             } else {
                 this.formItems.nodeModel = { nodePublicKey: '' } as NodeModel;
             }

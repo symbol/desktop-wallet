@@ -37,7 +37,6 @@ import {
     IListener,
     Listener,
     NetworkType,
-    NodeInfo,
     RentalFees,
     RepositoryFactory,
     RepositoryFactoryHttp,
