@@ -70,11 +70,16 @@ export class NodeService {
             .then((val) => (statisticsNodes && statisticsNodes.length ? _.uniqBy(val.concat([...statisticsNodes]), 'url') : val));
     }
 
-    public async getNodesFromStatisticService(networkType: NetworkType, limit = 30, isOffline?: boolean): Promise<NodeModel[]> {
+    public async getNodesFromStatisticService(
+        networkType: NetworkType,
+        limit = 30,
+        sslOnly = true,
+        isOffline?: boolean,
+    ): Promise<NodeModel[]> {
         const nodeSearchCriteria = {
             nodeFilter: NodeListFilter.Suggested,
             limit,
-            ssl: true,
+            ...(sslOnly ? { ssl: sslOnly } : {}),
         };
         if (!isOffline && navigator.onLine) {
             try {
