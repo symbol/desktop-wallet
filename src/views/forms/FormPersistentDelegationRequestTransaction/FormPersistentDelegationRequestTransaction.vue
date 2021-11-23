@@ -110,7 +110,7 @@
                                 {{ $t('delegated_harvesting_keys_info') }}
                             </span>
                             <Alert
-                                :visible="isVrfKeyLinked && isAccountKeyLinked && !isNodeKeyLinked"
+                                :visible="isVrfKeyLinked && isAccountKeyLinked && !isNodeKeyLinked && !getNodeOperatorPublicKey()"
                                 type="warning"
                                 :value="$t('remote_keys_linked')"
                             />

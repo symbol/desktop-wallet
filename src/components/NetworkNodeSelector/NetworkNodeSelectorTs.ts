@@ -164,7 +164,7 @@ export class NetworkNodeSelectorTs extends Vue {
         this.hideList = false;
         this.customNodeUrl = newInput;
         if (newInput) {
-            this.filteredData = this.customNodeData.filter((n) => n.toLowerCase().startsWith(newInput.toLowerCase()));
+            this.filteredData = this.customNodeData.filter((n) => n.toLowerCase().includes(newInput.toLowerCase()));
         }
         if (!this.formNodeUrl) {
             this.filteredData = this.customNodeData;

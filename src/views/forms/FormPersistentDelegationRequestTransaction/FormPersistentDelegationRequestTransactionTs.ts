@@ -254,16 +254,17 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             this.formItems.nodeModel = { nodePublicKey: this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey } as NodeModel;
         } else {
             // Check account is belong to node operator.
-            const nodeInfo = await new NodeService().getNodeFromStatisticServiceByPublicKey(
-                this.networkType,
-                this.currentSignerAccountInfo.publicKey,
-            );
-            if (nodeInfo) {
-                this.formItems.nodeModel = { nodePublicKey: nodeInfo.nodePublicKey } as NodeModel;
-            } else {
-                this.formItems.nodeModel = { nodePublicKey: '' } as NodeModel;
-            }
+            const nodeOperatorPublicKey = await this.getNodeOperatorPublicKey();
+            this.formItems.nodeModel = { nodePublicKey: nodeOperatorPublicKey ? nodeOperatorPublicKey : '' } as NodeModel;
         }
+    }
+
+    public async getNodeOperatorPublicKey() {
+        const nodeInfo = await new NodeService().getNodeFromStatisticServiceByPublicKey(
+            this.networkType,
+            this.currentSignerAccountInfo.publicKey,
+        );
+        return nodeInfo?.nodePublicKey;
     }
 
     @Watch('formItems.nodeModel', { immediate: true })
