@@ -139,7 +139,7 @@ export class NodeService {
         publicKey: string,
         isOffline?: boolean,
     ): Promise<NodeModel> {
-        if (!isOffline && navigator.onLine) {
+        if (!isOffline && navigator.onLine && publicKey) {
             return this.getNodeModelByMethod(
                 networkType,
                 (pKey) => this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNode(pKey),
@@ -154,7 +154,7 @@ export class NodeService {
         nodePublicKey: string,
         isOffline?: boolean,
     ): Promise<NodeModel> {
-        if (!isOffline && navigator.onLine) {
+        if (!isOffline && navigator.onLine && nodePublicKey) {
             return this.getNodeModelByMethod(
                 networkType,
                 (npKey) =>
