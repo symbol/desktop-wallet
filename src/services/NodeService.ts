@@ -70,11 +70,16 @@ export class NodeService {
             .then((val) => (statisticsNodes && statisticsNodes.length ? _.uniqBy(val.concat([...statisticsNodes]), 'url') : val));
     }
 
-    public async getNodesFromStatisticService(networkType: NetworkType, isOffline?: boolean): Promise<NodeModel[]> {
+    public async getNodesFromStatisticService(
+        networkType: NetworkType,
+        limit = 30,
+        sslOnly = true,
+        isOffline?: boolean,
+    ): Promise<NodeModel[]> {
         const nodeSearchCriteria = {
             nodeFilter: NodeListFilter.Suggested,
-            limit: 30,
-            ssl: true,
+            limit,
+            ...(sslOnly ? { ssl: sslOnly } : {}),
         };
         if (!isOffline && navigator.onLine) {
             try {
@@ -111,19 +116,19 @@ export class NodeService {
     ): Promise<NodeModel> {
         try {
             const nodeInfo = await nodeGetter(paramValue);
-            if (!nodeInfo) {
-                return undefined;
+            if (nodeInfo) {
+                return this.createNodeModel(
+                    nodeInfo.apiStatus?.restGatewayUrl,
+                    networkType,
+                    nodeInfo.friendlyName,
+                    true,
+                    nodeInfo.publicKey,
+                    nodeInfo.apiStatus?.nodePublicKey,
+                    nodeInfo.apiStatus?.webSocket?.url,
+                );
             }
-            return this.createNodeModel(
-                nodeInfo.apiStatus?.restGatewayUrl,
-                networkType,
-                nodeInfo.friendlyName,
-                true,
-                nodeInfo.publicKey,
-                nodeInfo.apiStatus?.nodePublicKey,
-                nodeInfo.apiStatus?.webSocket?.url,
-            );
         } catch (error) {
+            console.log(error);
             // proceed to return
         }
         return undefined;
@@ -134,10 +139,10 @@ export class NodeService {
         publicKey: string,
         isOffline?: boolean,
     ): Promise<NodeModel> {
-        if (!isOffline && navigator.onLine) {
+        if (!isOffline && navigator.onLine && publicKey) {
             return this.getNodeModelByMethod(
                 networkType,
-                this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNode,
+                (pKey) => this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNode(pKey),
                 publicKey,
             );
         }
@@ -149,10 +154,11 @@ export class NodeService {
         nodePublicKey: string,
         isOffline?: boolean,
     ): Promise<NodeModel> {
-        if (!isOffline && navigator.onLine) {
+        if (!isOffline && navigator.onLine && nodePublicKey) {
             return this.getNodeModelByMethod(
                 networkType,
-                this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNodeByNodePublicKey,
+                (npKey) =>
+                    this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNodeByNodePublicKey(npKey),
                 nodePublicKey,
             );
         }

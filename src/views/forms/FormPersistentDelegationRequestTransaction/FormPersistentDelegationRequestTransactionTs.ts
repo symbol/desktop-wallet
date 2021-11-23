@@ -86,6 +86,7 @@ import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
 import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
+import { NodeService } from '@/services/NodeService';
 
 export enum HarvestingAction {
     START = 1,
@@ -197,17 +198,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
     }
 
-    public get isActivatedFromAnotherDevice(): boolean {
-        if (!this.currentSignerAccountInfo || !this.currentSignerAccountInfo.supplementalPublicKeys) {
-            return false;
-        }
-        return (
-            !this.formItems.nodeModel.url &&
-            ((!this.currentSignerHarvestingModel.encRemotePrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.linked) ||
-                (!this.currentSignerHarvestingModel.encVrfPrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.vrf))
-        );
-    }
-
     private activating = false;
     private feesConfig: {
         fast: number;
@@ -258,30 +248,31 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     @Watch('currentSignerAccountInfo', { immediate: true })
-    private currentSignerWatch() {
+    private async currentSignerWatch() {
         this.formItems.signerAddress = this.signerAddress || this.currentSignerAccountInfo?.address.plain();
         if (this.isNodeKeyLinked) {
-            this.formItems.nodeModel.nodePublicKey = this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey;
-            if (this.currentSignerHarvestingModel?.selectedHarvestingNode) {
-                this.formItems.nodeModel = this.currentSignerHarvestingModel.selectedHarvestingNode;
-            } else {
-                this.formItems.nodeModel = { nodePublicKey: '' } as NodeModel;
-            }
+            this.formItems.nodeModel = { nodePublicKey: this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey } as NodeModel;
         } else {
             // Check account is belong to node operator.
-            this.formItems.nodeModel = this.currentSignerHarvestingModel?.selectedHarvestingNode
-                ? this.currentSignerHarvestingModel.selectedHarvestingNode
-                : ({ nodePublicKey: '' } as NodeModel);
+            const nodeOperatorPublicKey = await this.getNodeOperatorPublicKey();
+            this.formItems.nodeModel = { nodePublicKey: nodeOperatorPublicKey ? nodeOperatorPublicKey : '' } as NodeModel;
         }
+    }
+
+    public async getNodeOperatorPublicKey() {
+        const nodeInfo = await new NodeService().getNodeFromStatisticServiceByPublicKey(
+            this.networkType,
+            this.currentSignerAccountInfo?.publicKey,
+        );
+        return nodeInfo?.nodePublicKey;
     }
 
     @Watch('formItems.nodeModel', { immediate: true })
     private nodeModelChanged() {
         if (
-            this.isActivatedFromAnotherDevice &&
             this.formItems.nodeModel &&
             this.formItems.nodeModel.url &&
-            this.formItems.nodeModel.nodePublicKey === this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey
+            this.formItems.nodeModel.nodePublicKey === this.currentSignerAccountInfo?.supplementalPublicKeys?.node?.publicKey
         ) {
             const accountAddress = this.currentSignerHarvestingModel.accountAddress;
             this.$store.dispatch('harvesting/UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
@@ -951,7 +942,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
         return true;
     }
-    private get LowFeeValue() {
+    private get lowFeeValue() {
         return this.formItems.maxFee === 0 || this.formItems.maxFee === 1 || this.formItems.maxFee === 5;
     }
 }
