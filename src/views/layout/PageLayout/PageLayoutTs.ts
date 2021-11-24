@@ -53,6 +53,7 @@ import { ConnectingToNodeInfo } from '@/store/Network';
 import i18n from '@/language';
 import { HarvestingStatus } from '@/store/Harvesting';
 import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
+import { networkConfig } from '@/config';
 
 @Component({
     components: {
@@ -78,7 +79,6 @@ import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
             currentProfile: 'profile/currentProfile',
             isCosignatoryMode: 'account/isCosignatoryMode',
             currentAccount: 'account/currentAccount',
-            explorerBaseUrl: 'app/explorerUrl',
             faucetBaseUrl: 'app/faucetUrl',
             connectingToNodeInfo: 'network/connectingToNodeInfo',
             pollingTrials: 'harvesting/pollingTrials',
@@ -144,11 +144,6 @@ export class PageLayoutTs extends Vue {
      * @var {AccountModel}
      */
     public currentAccount: AccountModel;
-    /**
-     * Explorer base url
-     * @var {string}
-     */
-    public explorerBaseUrl: string;
     /**
      * Faucet base url
      * @var {string}
@@ -232,9 +227,8 @@ export class PageLayoutTs extends Vue {
     }
 
     public get explorerUrl() {
-        return this.currentAccount
-            ? this.explorerBaseUrl.replace(/\/+$/, '') + '/accounts/' + this.currentAccount.address
-            : this.explorerBaseUrl;
+        const explorerUrl = networkConfig[this.currentProfile.networkType].explorerUrl;
+        return this.currentAccount ? explorerUrl.replace(/\/+$/, '') + '/accounts/' + this.currentAccount.address : explorerUrl;
     }
 
     public get faucetUrl() {

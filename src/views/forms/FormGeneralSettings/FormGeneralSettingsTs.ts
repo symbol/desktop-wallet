@@ -26,8 +26,6 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
 // @ts-ignore
-import ExplorerUrlSetter from '@/components/ExplorerUrlSetter/ExplorerUrlSetter.vue';
-// @ts-ignore
 import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue';
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
@@ -41,6 +39,8 @@ import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalF
 import FormLabel from '@/components/FormLabel/FormLabel.vue';
 import { SettingsModel } from '@/core/database/entities/SettingsModel';
 import { AccountModel } from '@/core/database/entities/AccountModel';
+import { NetworkType } from 'symbol-sdk';
+import { networkConfig } from '@/config';
 
 @Component({
     components: {
@@ -49,7 +49,6 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
         ErrorTooltip,
         FormWrapper,
         FormRow,
-        ExplorerUrlSetter,
         LanguageSelector,
         MaxFeeSelector,
         AccountSelectorField,
@@ -61,6 +60,7 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
         ...mapGetters({
             settings: 'app/settings',
             knownAccounts: 'account/knownAccounts',
+            networkType: 'network/networkType',
         }),
     },
 })
@@ -92,7 +92,7 @@ export class FormGeneralSettingsTs extends Vue {
         explorerUrl: '',
         defaultAccount: '',
     };
-
+    private networkType: NetworkType;
     /**
      * Indicates if form has no changes and button should be disabled.
      */
@@ -110,8 +110,8 @@ export class FormGeneralSettingsTs extends Vue {
     }
 
     public resetForm() {
-        this.formItems = { ...this.settings };
-
+        Object.assign(this.formItems, this.settings);
+        this.formItems.explorerUrl = networkConfig[this.networkType].explorerUrl;
         if (!this.settings.defaultAccount && this.knownAccounts.length) {
             this.formItems.defaultAccount = this.knownAccounts[0].id;
         }

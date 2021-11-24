@@ -940,7 +940,7 @@
     "sender": "Отправитель",
     "set_account_name": "Введите имя профиля",
     "set_default_explorer": "Введенный URL недействителен, для вас был установлен URL по умолчанию.",
-    "set_explorer_link": "Эксплорер URL",
+    "form_label_explorer_link": "Эксплорер URL",
     "set_network_type": "Выберите тип сети",
     "SET_UP": "Выбор ноды",
     "settings": "Настройки",
