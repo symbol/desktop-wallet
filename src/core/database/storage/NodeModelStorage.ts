@@ -72,6 +72,10 @@ export class NodeModelStorage extends VersionedObjectStorage<Record<string, Node
                     description: 'Reset nodes to load from statistics service',
                     migrate: () => undefined,
                 },
+                {
+                    description: 'Reset nodes for websocket url update',
+                    migrate: () => undefined,
+                },
             ],
         });
     }

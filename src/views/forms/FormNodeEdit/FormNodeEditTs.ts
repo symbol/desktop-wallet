@@ -100,6 +100,9 @@ export class FormNodeEditTs extends Vue {
             }
             this.formItems.networkType = NetworkType[networkModel.networkType];
             this.formItems.networkHash = networkModel.generationHash;
+        } catch (err) {
+            console.error(err);
+            return this.$store.dispatch('notification/ADD_ERROR', this.$t(NotificationType.INVALID_NODE));
         } finally {
             this.isGettingNodeInfo = false;
         }
