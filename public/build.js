@@ -98,7 +98,7 @@ const template = [
       {
         label: 'Learn More',
         click: function () {
-          electron.shell.openExternal('https://github.com/nemgrouplimited/symbol-desktop-wallet')
+          electron.shell.openExternal('https://github.com/symbol/desktop-wallet')
         },
       },
       {

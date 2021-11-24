@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021 (https://nem.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -227,7 +227,6 @@ export class TransactionRowTs extends Vue {
      * Returns the color of the balance
      */
     public getAmountColor(): string {
-        // https://github.com/nemfoundation/nem2-desktop-account/issues/879
         if (this.transaction.type === TransactionType.TRANSFER) {
             return this.isIncomingTransaction() ? 'green' : 'red';
         }
