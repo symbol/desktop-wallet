@@ -53,7 +53,7 @@ const appInfoState: AppInfoState = {
     hasControlsDisabled: false,
     controlsDisabledMessage: '',
     faucetUrl: undefined,
-    settings: settingService.getProfileSettings(ANON_PROFILE_NAME, NetworkType.TEST_NET), // TODO how to fix here? why static?
+    settings: settingService.getProfileSettings(ANON_PROFILE_NAME), // TODO how to fix here? why static?
 };
 
 export default {
@@ -69,7 +69,6 @@ export default {
         loadingDisableCloseButton: (state: AppInfoState) => state.loadingDisableCloseButton,
         shouldDisableControls: (state: AppInfoState) => state.hasControlsDisabled,
         controlsDisabledMessage: (state: AppInfoState) => state.controlsDisabledMessage,
-        explorerUrl: (state: AppInfoState) => state.settings.explorerUrl,
         settings: (state: AppInfoState) => state.settings,
         faucetUrl: (state: AppInfoState) => state.faucetUrl,
         defaultFee: (state: AppInfoState) => state.settings.defaultFee,
@@ -139,12 +138,8 @@ export default {
             }
             const currentProfile = rootGetters['profile/currentProfile'];
             const profileName = (currentProfile && currentProfile.profileName) || ANON_PROFILE_NAME;
-            commit('settings', settingService.changeProfileSettings(profileName, settingsModel, currentProfile.networkType));
+            commit('settings', settingService.changeProfileSettings(profileName, settingsModel));
             commit('faucetUrl', networkConfig[currentProfile.networkType].faucetUrl);
-        },
-
-        SET_EXPLORER_URL({ dispatch }, explorerUrl: string) {
-            dispatch('SET_SETTINGS', { explorerUrl });
         },
 
         SET_LANGUAGE({ dispatch }, language: string) {
