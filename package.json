@@ -105,7 +105,7 @@
         "babel-preset-env": "^1.7.0",
         "bufferutil": "^4.0.1",
         "cross-env": "^5.1.1",
-        "electron": "11.1.0",
+        "electron": "^11.5.0",
         "electron-builder": "22.9.1",
         "electron-notarize": "1.0.0",
         "electron-packager": "15.2.0",
@@ -139,7 +139,12 @@
         "typescript": "^3.7.2",
         "utf-8-validate": "^5.0.2",
         "vue-jest": "^3.0.5",
-        "vue-template-compiler": "^2.6.10"
+        "vue-template-compiler": "^2.6.10",
+        "tar": ">=6.1.9",    
+        "json-schema": ">=0.4.0",
+        "nth-check": ">=2.0.1",
+        "gsap": ">=3.6.0",
+        "node-notifier": ">=8.0.1"
     },
     "resolutions": {
         "@babel/preset-env": "7.5.5"
