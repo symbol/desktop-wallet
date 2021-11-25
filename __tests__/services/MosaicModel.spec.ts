@@ -20,7 +20,7 @@ describe('services/MosaicData', () => {
     describe('serialization', () => {
         test('canSerializeDeserialize', () => {
             // act
-            const address = Address.createFromEncoded('917E7E29A01014C2F3000000000000000000000000000000');
+            const address = Address.createFromEncoded('98090DC48CAE2D6FBF2F9B44CB09DFC2365076550BE017CA');
 
             const id = new MosaicId('85BBEA6CC462B244');
             const mosaicInfo = new MosaicInfo(
@@ -31,7 +31,7 @@ describe('services/MosaicData', () => {
                 new UInt64([1, 0]), // height
                 PublicAccount.createFromPublicKey(
                     'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.TEST_NET,
                 ).address,
                 1, // revision
                 MosaicFlags.create(true, true, true),
