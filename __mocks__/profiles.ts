@@ -21,7 +21,7 @@ const TEST_PROFILES = {
         generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
         profileName: 'profile1',
         hint: 'password is password',
-        networkType: NetworkType.MIJIN_TEST,
+        networkType: NetworkType.TEST_NET,
         password: '0b831096cf25adbd7324ad2dbb3d99a829b40b53c6f76dd50fb2ef56fceded2f2kixTXdr/q/ci5PPwWVCiA==',
         accounts: "['WalletsModel2']",
         seed:
