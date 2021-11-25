@@ -1132,5 +1132,6 @@
     "transaction_cosignature_warning_proceed": "我理解并请继续。",
     "lock_hash_algorithm": "哈希算法",
     "not_enough_balance": "余额不足",
-    "use_maximum_value": "使用最大值"
+    "use_maximum_value": "使用最大值",
+    "amount_value_cannot_start_with_zero": "金额值不能以 0 开头"
 }

@@ -1132,5 +1132,6 @@
     "transaction_cosignature_warning_proceed": "Я понимаю и хочу продолжить.",
     "lock_hash_algorithm": "алгоритм хеширования",
     "not_enough_balance": "не хватает баланса",
-    "use_max_value": "Используйте максимальное значение"
+    "use_max_value": "Используйте максимальное значение",
+    "amount_value_cannot_start_with_zero": "Значение суммы не может начинаться с 0"
 }
