@@ -101,16 +101,14 @@ export class AmountInputTs extends Vue {
     public get totalAvailableAmount() {
         const selectedMosaic = this.balanceMosaics.find((m) => m.mosaicIdHex === this.mosaicHex);
         const currentMosaicBalance = selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility);
-        const balance = this.isCosignatoryMode
-            ? currentMosaicBalance
-            : (selectedMosaic.balance - this.selectedFeeValue) / Math.pow(10, selectedMosaic.divisibility);
-        if (currentMosaicBalance == 0 || balance <= 0) {
+        const balance =
+            this.isCosignatoryMode || selectedMosaic.mosaicIdHex !== this.networkConfiguration.currencyMosaicId
+                ? currentMosaicBalance
+                : (selectedMosaic.balance - this.selectedFeeValue) / Math.pow(10, selectedMosaic.divisibility);
+        if (balance <= 0) {
             return 0;
         }
-        if (selectedMosaic.mosaicIdHex === this.networkConfiguration.currencyMosaicId) {
-            return balance;
-        }
-        return currentMosaicBalance;
+        return balance;
     }
     // use maximum balance as amount input
     private useMaximumBalance() {
