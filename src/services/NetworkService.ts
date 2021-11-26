@@ -25,7 +25,7 @@ import { combineLatest, defer, EMPTY, from, Observable } from 'rxjs';
 import { catchError, flatMap, map, tap } from 'rxjs/operators';
 import { NetworkConfiguration, NetworkType, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk';
 import { OfflineRepositoryFactory } from '@/services/offline/OfflineRepositoryFactory';
-import { CommonHelpers } from '@/core/utils/CommonHelpers';
+
 /**
  * The service in charge of loading and caching anything related to Network from Rest.
  * The cache is done by storing the payloads in SimpleObjectStorage.
@@ -56,12 +56,11 @@ export class NetworkService {
         nodeUrl: string,
         defaultNetworkType: NetworkType = NetworkType.TEST_NET,
         isOffline = false,
-        nodeWsUrl?: string,
     ): Observable<{
         networkModel: NetworkModel;
         repositoryFactory: RepositoryFactory;
     }> {
-        return from(this.createRepositoryFactory(nodeUrl, isOffline, defaultNetworkType, nodeWsUrl)).pipe(
+        return from(this.createRepositoryFactory(nodeUrl, isOffline, defaultNetworkType)).pipe(
             flatMap(({ url, repositoryFactory }) => {
                 return repositoryFactory.getGenerationHash().pipe(
                     flatMap((generationHash) => {
@@ -111,10 +110,9 @@ export class NetworkService {
         url: string,
         isOffline = false,
         networkType = NetworkType.TEST_NET,
-        nodeWsUrl?: string,
     ): Observable<{ url: string; repositoryFactory: RepositoryFactory }> {
         // console.log(`Testing ${url}`);
-        const repositoryFactory = NetworkService.createRepositoryFactory(url, isOffline, networkType, nodeWsUrl);
+        const repositoryFactory = NetworkService.createRepositoryFactory(url, isOffline, networkType);
         return defer(() => {
             return repositoryFactory.getGenerationHash();
         }).pipe(
@@ -157,35 +155,16 @@ export class NetworkService {
     public reset(generationHash: string) {
         this.storage.remove(generationHash);
     }
-    /**
-     * It checks if a node has Websocket functioning properly to subscribe.
-     * @param url the url.
-     * @param timeout number
-     */
-    public async checkWebsocketConnection(url: string, timeout: number): Promise<boolean> {
-        const webSocket = new WebSocket(url);
-        let websocketConnectionStatus: boolean = false;
-        webSocket.onmessage = function (e: any) {
-            websocketConnectionStatus = e.currentTarget.readyState == 1;
-        };
-        await CommonHelpers.sleep(timeout);
-        return websocketConnectionStatus;
-    }
 
     /**
      * It creates the RepositoryFactory used to build the http repository/clients and listeners.
      * @param url the url.
      */
-    public static createRepositoryFactory(
-        url: string,
-        isOffline: boolean = false,
-        networkType = NetworkType.TEST_NET,
-        nodeWsUrl?: string,
-    ): RepositoryFactory {
+    public static createRepositoryFactory(url: string, isOffline: boolean = false, networkType = NetworkType.TEST_NET): RepositoryFactory {
         return isOffline
             ? new OfflineRepositoryFactory(networkType)
             : new RepositoryFactoryHttp(url, {
-                  websocketUrl: nodeWsUrl || URLHelpers.httpToWsUrl(url) + '/ws',
+                  websocketUrl: URLHelpers.httpToWsUrl(url) + '/ws',
                   websocketInjected: WebSocket,
               });
     }
