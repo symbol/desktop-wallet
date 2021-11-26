@@ -75,9 +75,11 @@
                                 class="inputs-create-container select-container"
                             >
                                 <ErrorTooltip :errors="errors">
-                                    <PasswordInput
+                                    <input
                                         ref="passwordInput"
                                         v-model="formItems.password"
+                                        class="input-size input-style"
+                                        type="password"
                                         :placeholder="$t('please_enter_your_account_password')"
                                     />
                                 </ErrorTooltip>
@@ -97,8 +99,10 @@
                                 class="inputs-create-container items-container"
                             >
                                 <ErrorTooltip :errors="errors">
-                                    <PasswordInput
+                                    <input
                                         v-model="formItems.passwordAgain"
+                                        class="input-size input-style"
+                                        type="password"
                                         data-vv-name="confirmPassword"
                                         :placeholder="$t('please_enter_your_new_password_again')"
                                     />
