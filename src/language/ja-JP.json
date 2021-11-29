@@ -1133,5 +1133,7 @@
     "lock_hash_algorithm": "ハッシュアルゴリズム",
     "not_enough_balance": "十分な残高がありません",
     "use_max_value": "最大値を使用",
-    "amount_value_cannot_start_with_zero": "総量を 0 から入力することはできません"
+    "amount_value_cannot_start_with_zero": "金額の値を0から始めることはできません",
+    "new_version_available": "シンボルウォレットの新しいバージョンが利用可能になりました！",
+    "download_now": " ダウンロード中"
 }

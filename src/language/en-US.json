@@ -1133,5 +1133,7 @@
     "lock_hash_algorithm": "Hash Algorithm",
     "not_enough_balance": "Not enough balance",
     "use_max_value": "Use maximum value",
-    "amount_value_cannot_start_with_zero": "Amount value cannot start with 0"
+    "amount_value_cannot_start_with_zero": "Amount value cannot start with 0",
+    "new_version_available": "A new version of Symbol wallet is available!",
+    "download_now": " Download now"
 }

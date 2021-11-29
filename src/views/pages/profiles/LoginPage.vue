@@ -9,6 +9,12 @@
                 <img class="language_icon" :src="require('@/views/resources/img/login/language.svg')" alt="" />
                 <LanguageSelector />
             </div>
+
+            <div v-if="versionCheckerObject && !latestVersionInUse" class="update-box" role="alert">
+                <strong>{{ $t('new_version_available') }}</strong>
+                <a :href="downloadUrl" target="_blank" class="download-text-color">{{ $t('download_now') }}</a>
+            </div>
+
             <ValidationObserver v-slot="{ handleSubmit }" slim>
                 <form onsubmit="event.preventDefault()">
                     <div class="welcome-box">
