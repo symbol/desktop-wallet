@@ -23,6 +23,7 @@ export interface LanguageConfig {
 export interface AppConfig {
     languages: LanguageConfig[];
     articlesFeedUrl: string;
+    repositoryDataUrl: string;
     constants: {
         EVENTS_THROTTLING_TIME: number;
         MAX_REMOTE_ACCOUNT_CHECKS: number;
@@ -60,6 +61,7 @@ const defaultAppConfig: AppConfig = {
     ],
     marketServerUrl: 'http://app.nemcn.io',
     articlesFeedUrl: 'https://symbol.github.io/symbol-rss-feeds/',
+    repositoryDataUrl: 'https://api.github.com/repos/symbol/desktop-wallet/releases/latest',
 };
 const resolvedAppConfig: AppConfig = window['appConfig'] || defaultAppConfig;
 console.log('appConfig resolved!', resolvedAppConfig);

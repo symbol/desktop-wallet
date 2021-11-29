@@ -39,6 +39,7 @@ import { AccountService } from '@/services/AccountService';
 import { NetworkTypeHelper } from '@/core/utils/NetworkTypeHelper';
 import { officialIcons } from '@/views/resources/Images';
 import _ from 'lodash';
+import { VersionCheckerService, LatestVersionObject } from '@/services/VersionCheckerService';
 @Component({
     computed: {
         ...mapGetters({
@@ -59,7 +60,9 @@ export default class LoginPageTs extends Vue {
      * Display the application version. This is injected in the app when built.
      */
     public packageVersion = process.env.PACKAGE_VERSION || '0';
-
+    public versionCheckerObject: LatestVersionObject = null;
+    public downloadUrl: string = '';
+    public latestVersionInUse: boolean = true;
     /**
      * All known profiles
      */
@@ -111,6 +114,20 @@ export default class LoginPageTs extends Vue {
     protected get profileNames(): string[] {
         return this.profiles.map((p) => p.profileName);
     }
+
+    public async mounted() {
+        if (navigator.onLine) {
+            const versionControlService = new VersionCheckerService();
+            this.versionCheckerObject = await versionControlService.getNewerVersionTag();
+            if (!this.versionCheckerObject) {
+                this.latestVersionInUse = true;
+            } else {
+                this.downloadUrl = this.versionCheckerObject.downloadUrl;
+                this.latestVersionInUse = false;
+            }
+        }
+    }
+
     /**
      * Hook called when the page is mounted
      * @return {void}
