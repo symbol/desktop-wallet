@@ -169,7 +169,7 @@ export class CustomValidationRules {
         extend('privateKey', {
             validate(value) {
                 try {
-                    Account.createFromPrivateKey(value, NetworkType.MIJIN_TEST);
+                    Account.createFromPrivateKey(value, NetworkType.TEST_NET);
                     return true;
                 } catch (e) {
                     return false;

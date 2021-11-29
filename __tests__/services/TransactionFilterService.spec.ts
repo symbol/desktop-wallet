@@ -19,7 +19,7 @@ import { getTestAccount } from '@MOCKS/Accounts';
 import { TransferTransaction } from 'symbol-sdk';
 
 const currentSigner = getTestAccount('remoteTestnet');
-const recepient = getTestAccount('remoteMijin');
+const recepient = getTestAccount('remoteTestnet2');
 const sentTransaction = {
     signer: currentSigner,
     recipientAddress: {

@@ -49,17 +49,6 @@ describe('storage/ProfileModelStorage.spec ==>', () => {
                         termsAndConditionsApproved: false,
                         selectedNodeUrlToConnect: 'http://api-01.us-west-1.testnet.symboldev.network:3000',
                     },
-                    somePrivateNetwork: {
-                        profileName: 'somePrivateNetwork',
-                        accounts: ['1a', '2b', '3c'],
-                        seed: 'SomeSeed3',
-                        password: 'myPassword3',
-                        hint: '',
-                        networkType: NetworkType.PRIVATE_TEST,
-                        generationHash: 'AAAADA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
-                        termsAndConditionsApproved: false,
-                        selectedNodeUrlToConnect: 'http://private.network:3000',
-                    },
                 },
             };
             const delegate = new SimpleObjectStorage<VersionedModel<Record<string, ProfileModel>>>(
@@ -93,17 +82,6 @@ describe('storage/ProfileModelStorage.spec ==>', () => {
                     termsAndConditionsApproved: false,
                     selectedNodeUrlToConnect: migratedData.someTestnetProfile.selectedNodeUrlToConnect,
                 },
-                somePrivateNetwork: {
-                    profileName: 'somePrivateNetwork',
-                    accounts: ['1a', '2b', '3c'],
-                    seed: 'SomeSeed3',
-                    password: 'myPassword3',
-                    hint: '',
-                    networkType: NetworkType.PRIVATE_TEST,
-                    generationHash: 'AAAADA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
-                    termsAndConditionsApproved: false,
-                    selectedNodeUrlToConnect: 'http://private.network:3000',
-                },
             };
 
             expect(migratedData).toEqual(expected);
@@ -135,17 +113,6 @@ describe('storage/ProfileModelStorage.spec ==>', () => {
                         generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
                         termsAndConditionsApproved: false,
                         selectedNodeUrlToConnect: 'http://api-01.testnet.symboldev.network:3000',
-                    },
-                    somePrivateNetwork: {
-                        profileName: 'somePrivateNetwork',
-                        accounts: ['1a', '2b', '3c'],
-                        seed: 'SomeSeed3',
-                        password: 'myPassword3',
-                        hint: '',
-                        networkType: NetworkType.PRIVATE_TEST,
-                        generationHash: '3B5E1FA6445653C971A50687E75E6D09FB30481055E3990C84B25E9222DC1155',
-                        termsAndConditionsApproved: false,
-                        selectedNodeUrlToConnect: 'http://private.network:3000',
                     },
                 },
             };

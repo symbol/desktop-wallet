@@ -58,7 +58,7 @@ when(mockRepoFactory.createAccountRepository()).thenReturn(accountRepository);
 
 when(mockRepoFactory.getEpochAdjustment()).thenReturn(of(1573430400));
 when(mockRepoFactory.getGenerationHash()).thenReturn(of('Some Gen Hash'));
-when(mockRepoFactory.getNetworkType()).thenReturn(of(NetworkType.MIJIN_TEST));
+when(mockRepoFactory.getNetworkType()).thenReturn(of(NetworkType.TEST_NET));
 when(mockRepoFactory.getCurrencies()).thenReturn(of(NetworkCurrencies.PUBLIC));
 const repositoryFactory = instance(mockRepoFactory);
 

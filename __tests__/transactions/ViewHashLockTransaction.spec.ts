@@ -28,7 +28,7 @@ describe('transactions/ViewHashLockTransaction', () => {
             const aggregateTransaction = AggregateTransaction.createBonded(
                 Deadline.create(epochAdjustment, 48),
                 [],
-                NetworkType.MIJIN_TEST,
+                NetworkType.TEST_NET,
                 [],
             );
             const signedTransaction = getTestAccount('cosigner1').sign(aggregateTransaction, generationHash);
@@ -37,7 +37,7 @@ describe('transactions/ViewHashLockTransaction', () => {
                 NetworkCurrencies.PUBLIC.currency.createRelative(10),
                 UInt64.fromUint(5760),
                 signedTransaction,
-                NetworkType.MIJIN_TEST,
+                NetworkType.TEST_NET,
             );
             const networkConfig = new NetworkConfigurationModel();
             Object.assign(networkConfig, { epochAdjustment: 1573430400 });
