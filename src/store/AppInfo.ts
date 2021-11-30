@@ -28,7 +28,6 @@ import _ from 'lodash';
 
 const Lock = AwaitLock.create();
 const settingService = new SettingService();
-const ANON_PROFILE_NAME = '';
 
 interface AppInfoState {
     initialized: false;
@@ -53,7 +52,7 @@ const appInfoState: AppInfoState = {
     hasControlsDisabled: false,
     controlsDisabledMessage: '',
     faucetUrl: undefined,
-    settings: settingService.getProfileSettings(ANON_PROFILE_NAME), // TODO how to fix here? why static?
+    settings: undefined,
 };
 
 export default {
@@ -62,17 +61,17 @@ export default {
     getters: {
         getInitialized: (state: AppInfoState) => state.initialized,
         currentTimezone: (state: AppInfoState) => state.timezone,
-        language: (state: AppInfoState) => state.settings.language,
+        language: (state: AppInfoState) => state.settings?.language,
         languages: (state: AppInfoState) => state.languages,
         shouldShowLoadingOverlay: (state: AppInfoState) => state.hasLoadingOverlay,
         loadingOverlayMessage: (state: AppInfoState) => state.loadingOverlayMessage,
         loadingDisableCloseButton: (state: AppInfoState) => state.loadingDisableCloseButton,
         shouldDisableControls: (state: AppInfoState) => state.hasControlsDisabled,
         controlsDisabledMessage: (state: AppInfoState) => state.controlsDisabledMessage,
-        settings: (state: AppInfoState) => state.settings,
+        settings: (state: AppInfoState) => state.settings || undefined,
         faucetUrl: (state: AppInfoState) => state.faucetUrl,
-        defaultFee: (state: AppInfoState) => state.settings.defaultFee,
-        defaultAccount: (state: AppInfoState) => state.settings.defaultAccount,
+        defaultFee: (state: AppInfoState) => state.settings?.defaultFee,
+        defaultAccount: (state: AppInfoState) => state.settings?.defaultAccount,
     },
     mutations: {
         setInitialized: (state: AppInfoState, initialized) => {
@@ -137,7 +136,7 @@ export default {
                 }
             }
             const currentProfile = rootGetters['profile/currentProfile'];
-            const profileName = (currentProfile && currentProfile.profileName) || ANON_PROFILE_NAME;
+            const profileName = (currentProfile && currentProfile.profileName) || '';
             commit('settings', settingService.changeProfileSettings(profileName, settingsModel));
             commit('faucetUrl', networkConfig[currentProfile.networkType].faucetUrl);
         },
