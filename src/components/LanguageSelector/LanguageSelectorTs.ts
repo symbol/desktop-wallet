@@ -62,6 +62,6 @@ export class LanguageSelectorTs extends Vue {
         this.$emit('input', this.language);
     }
     created() {
-        this.language = this.currentLanguage;
+        this.language = this.currentLanguage || this.languageList[0].value;
     }
 }
