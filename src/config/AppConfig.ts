@@ -35,7 +35,7 @@ export interface AppConfig {
         DECIMAL_SEPARATOR: string;
     };
     title: string;
-    marketServerUrl: string;
+    offlineNodeModelUrl: string;
 }
 
 const defaultAppConfig: AppConfig = {
@@ -59,9 +59,9 @@ const defaultAppConfig: AppConfig = {
         { value: 'ko-KR', label: '한국어' },
         { value: 'ru-RU', label: 'Русский' },
     ],
-    marketServerUrl: 'http://app.nemcn.io',
     articlesFeedUrl: 'https://symbol.github.io/symbol-rss-feeds/',
     repositoryDataUrl: 'https://api.github.com/repos/symbol/desktop-wallet/releases/latest',
+    offlineNodeModelUrl: 'https://localhost:3000',
 };
 const resolvedAppConfig: AppConfig = window['appConfig'] || defaultAppConfig;
 console.log('appConfig resolved!', resolvedAppConfig);
