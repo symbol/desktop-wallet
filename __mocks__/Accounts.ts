@@ -1,5 +1,5 @@
 /*
- * (C) Symbol Contributors 2021 (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ const TEST_ACCOUNTS = {
         networkType: NetworkType.TEST_NET,
         privateKey: '803040D4A33983C4B233C6C2054A24B9C655E8CAC6C06AECCED56B8FE424FF2B',
     },
-    remoteTestnet2: {
+    remoteTestnetRecipient: {
         networkType: NetworkType.TEST_NET,
         privateKey: '893040D4A33983C4B233C6C2054A24B9C655E8CAC6C06AECCED56B8FE424FF2B',
     },
