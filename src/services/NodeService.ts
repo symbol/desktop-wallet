@@ -19,7 +19,7 @@ import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { map, tap } from 'rxjs/operators';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import * as _ from 'lodash';
-import { networkConfig } from '@/config';
+import { appConfig, networkConfig } from '@/config';
 import { NodeModelStorage } from '@/core/database/storage/NodeModelStorage';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import fetch from 'node-fetch';
@@ -204,5 +204,12 @@ export class NodeService {
                 basePath: statisticsServiceUrl,
             }),
         );
+    }
+    /**
+     * Creates offline mock node model for offline transaction
+     * @param {networkType} NetworkType
+     */
+    public createOfflineNodeModel(networkType: NetworkType): NodeModel {
+        return this.createNodeModel(appConfig.offlineNodeModelUrl, networkType, 'offlineNodeMock', undefined, undefined, undefined);
     }
 }

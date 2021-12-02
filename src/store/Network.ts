@@ -379,7 +379,14 @@ export default {
                         nodesList = nodesList.filter((n) => n.url !== currentProfile.selectedNodeUrlToConnect);
                     }
                 }
-
+                if (!nodesList.length && isOffline) {
+                    const knownNodes = nodeService.getKnownNodesOnly(currentProfile);
+                    if (!knownNodes.length) {
+                        nodesList.push(nodeService.createOfflineNodeModel(currentProfile.networkType));
+                    } else {
+                        nodesList = knownNodes;
+                    }
+                }
                 // try other nodes randomly if not found yet
                 while (!nodeFound && nodesList.length) {
                     const inx = Math.floor(Math.random() * nodesList.length);
