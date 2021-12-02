@@ -192,20 +192,22 @@ export class FormAggregateTransactionTs extends FormTransactionBase {
     private createTransferTx(tx: {}): TransferTransaction {
         const maxFee = UInt64.fromUint(this.formItems.maxFee);
         this.formItems.recipientRaw = tx['formItems']['recipientRaw'];
-        const signer = PublicAccount.createFromPublicKey(tx['formItems']['signerPublicKey'], this.networkType);
+        const signer = tx['formItems']['signerPublicKey']
+            ? PublicAccount.createFromPublicKey(tx['formItems']['signerPublicKey'], this.networkType)
+            : undefined;
         const t: TransferTransaction = TransferTransaction.create(
             this.createDeadline(),
             this.instantiatedRecipient,
-            // @ts-ignore
             !tx['formItems']['mosaics'].length ? [] : tx['formItems']['mosaics'],
             tx['formItems']['encryptMessage']
                 ? tx['formItems']['encyptedMessage']
                 : PlainMessage.create(tx['formItems']['messagePlain'] || ''),
             this.networkType,
             maxFee,
-            '',
+            undefined,
             signer,
         );
+
         return t;
     }
     /**
