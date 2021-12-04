@@ -78,7 +78,7 @@ describe('storage/ProfileModelStorage.spec ==>', () => {
                     password: 'myPassword',
                     hint: '',
                     networkType: NetworkType.TEST_NET,
-                    generationHash: '3B5E1FA6445653C971A50687E75E6D09FB30481055E3990C84B25E9222DC1155',
+                    generationHash: '7FCCD304802016BEBBCD342A332F91FF1F3BB5E902988B352697BE245F48E836',
                     termsAndConditionsApproved: false,
                     selectedNodeUrlToConnect: migratedData.someTestnetProfile.selectedNodeUrlToConnect,
                 },
