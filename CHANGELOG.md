@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [1.0.9][v1.0.9] - 10-Dec-2021
+### Milestone: Stabilize and bug fix
+
+#### Added
+- Added OpenAPI client integration [#1776](https://github.com/symbol/desktop-wallet/pull/1776)
+- Added Korean language [#1794](https://github.com/symbol/desktop-wallet/pull/1794)
+- Show update warning when users are on old versions [#1393](https://github.com/symbol/desktop-wallet/issues/1393)
+
+#### Changed
+- Used OpenAPI client for statistics-service API calls [#1777](https://github.com/symbol/desktop-wallet/pull/1777)
+- Updated symbol-sdk version to 1.0.3 [#1756](https://github.com/symbol/desktop-wallet/pull/1756)
+- Replaced old explorer URL with the new one [#1766](https://github.com/symbol/desktop-wallet/pull/1766)
+- Harvesting page improvements: find node by `nodePublicKey` from statistics service instead of local storage, multi-device operation support [#1781](https://github.com/symbol/desktop-wallet/pull/1781)
+#### Fixed
+- Fixed outdated README [#1764](https://github.com/symbol/desktop-wallet/issues/1764)
+- Fixed login error when selected node is broken or Websocket is failing. [#1767](https://github.com/symbol/desktop-wallet/issues/1767)
+- Fixed transfer form shows not enough balance [#1771](https://github.com/symbol/desktop-wallet/issues/1771)
+- Fixed expired mosaic is visible on supply change transaction page [#1663](https://github.com/symbol/desktop-wallet/issues/1663)
+- Fixed leading zeros are ignored if there is no decimal point [#1730](https://github.com/symbol/desktop-wallet/issues/1730)
+- Fixed offline transactions page ERROR_EMPTY_RESPONSE error [#1674](https://github.com/symbol/desktop-wallet/issues/1674)
+- Allowed pasting option in password fields [#1780](https://github.com/symbol/desktop-wallet/issues/1780)
+- Fixed non-ability of initializing an aggregate with a single transaction [#1803](https://github.com/symbol/desktop-wallet/issues/1803)
+- Removed NxL and nemfoundation references [#1761](https://github.com/symbol/desktop-wallet/issues/1761)
+- Updated translations
+
 ## [1.0.8][v1.0.8] - 1-Nov-2021
 
 ### Milestone: Stabilize and bug fix
