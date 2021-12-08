@@ -584,8 +584,7 @@ export default {
             commit('currentSignerMultisigInfo', currentSignerMultisigInfo);
 
             // REMOTE CALL
-            const getAccountsInfoPromise = repositoryFactory.createAccountRepository().getAccountsInfo(knownAddresses).toPromise();
-            const accountsInfo = await getAccountsInfoPromise;
+            const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(knownAddresses).toPromise();
 
             commit('accountsInfo', accountsInfo);
 

@@ -149,7 +149,7 @@ export class NetworkNodeSelectorTs extends Vue {
     @Watch('value', { immediate: true })
     protected async valueWatcher(newVal: NodeModel, oldVal: NodeModel) {
         if (newVal?.nodePublicKey) {
-            if (!oldVal || newVal?.nodePublicKey !== oldVal?.nodePublicKey) {
+            if (!oldVal || newVal?.url !== oldVal?.url) {
                 await this.fetchAndSetNodeModel(this.networkType, newVal.nodePublicKey);
             }
         } else {

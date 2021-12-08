@@ -248,14 +248,23 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     @Watch('currentSignerAccountInfo', { immediate: true })
-    private async currentSignerWatch() {
-        this.formItems.signerAddress = this.signerAddress || this.currentSignerAccountInfo?.address.plain();
+    private async currentSignerAccountInfoWatch(newVal: AccountInfo, oldVal: AccountInfo) {
+        if (
+            newVal &&
+            oldVal &&
+            newVal?.publicKey === oldVal?.publicKey &&
+            newVal.supplementalPublicKeys.node?.publicKey === oldVal.supplementalPublicKeys.node?.publicKey
+        ) {
+            // no interesting changes
+            return;
+        }
+        this.formItems.signerAddress = this.signerAddress || newVal?.address.plain();
         if (this.isNodeKeyLinked) {
-            this.formItems.nodeModel = { nodePublicKey: this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey } as NodeModel;
+            this.formItems.nodeModel = { nodePublicKey: newVal?.supplementalPublicKeys.node.publicKey } as NodeModel;
         } else {
-            // Check account is belong to node operator.
+            // Check account belongs to a node operator.
             const nodeOperatorPublicKey = await this.getNodeOperatorPublicKey();
-            this.formItems.nodeModel = { nodePublicKey: nodeOperatorPublicKey ? nodeOperatorPublicKey : '' } as NodeModel;
+            this.formItems.nodeModel = { nodePublicKey: nodeOperatorPublicKey ?? '' } as NodeModel;
         }
     }
 
