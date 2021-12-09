@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM Foundation (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ describe('storage/ProfileModelStorage.spec ==>', () => {
     describe('constructor() should', () => {
         test('Should save nodes by profile name', () => {
             const nodes = {
-                version: 11,
+                version: 12,
                 data: {
                     [fakeProfile.profileName]: [fakeNode],
                 },

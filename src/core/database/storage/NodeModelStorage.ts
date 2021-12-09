@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,6 +70,10 @@ export class NodeModelStorage extends VersionedObjectStorage<Record<string, Node
                 },
                 {
                     description: 'Reset nodes to load from statistics service',
+                    migrate: () => undefined,
+                },
+                {
+                    description: 'Reset nodes for websocket url update',
                     migrate: () => undefined,
                 },
             ],

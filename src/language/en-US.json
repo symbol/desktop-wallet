@@ -172,7 +172,7 @@
     "continue": "Continue",
     "copy_failed": "Copy failed",
     "copy_mnemonic": "Copy mnemonic",
-    "copyright": "Copyright © 2021 NEM Software",
+    "copyright": "Copyright © Symbol Contributors 2021",
     "cosign_transaction": "Cosign transaction",
     "cosignatory_of": "Cosignatory of",
     "cosignature_added": "Cosignature received",
@@ -940,7 +940,7 @@
     "sender": "From",
     "set_account_name": "Enter a profile name",
     "set_default_explorer": "The URL entered is not valid, a default URL has been set for you.",
-    "set_explorer_link": "Explorer URL",
+    "form_label_explorer_link": "Explorer URL",
     "set_network_type": "Select a network type",
     "SET_UP": "Node selection",
     "settings": "Settings",
@@ -1132,5 +1132,8 @@
     "transaction_cosignature_warning_proceed": "I understand and wish to proceed.",
     "lock_hash_algorithm": "Hash Algorithm",
     "not_enough_balance": "Not enough balance",
-    "use_max_value": "Use maximum value"
+    "use_max_value": "Use maximum value",
+    "amount_value_cannot_start_with_zero": "Amount value cannot start with 0",
+    "new_version_available": "A new version of Symbol wallet is available!",
+    "download_now": " Download now"
 }

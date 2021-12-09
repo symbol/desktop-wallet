@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import { getTestAccount } from '@MOCKS/Accounts';
 import { TransferTransaction } from 'symbol-sdk';
 
 const currentSigner = getTestAccount('remoteTestnet');
-const recepient = getTestAccount('remoteMijin');
+const recepient = getTestAccount('remoteTestnetRecipient');
 const sentTransaction = {
     signer: currentSigner,
     recipientAddress: {

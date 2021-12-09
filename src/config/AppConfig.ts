@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ export interface LanguageConfig {
 export interface AppConfig {
     languages: LanguageConfig[];
     articlesFeedUrl: string;
+    repositoryDataUrl: string;
     constants: {
         EVENTS_THROTTLING_TIME: number;
         MAX_REMOTE_ACCOUNT_CHECKS: number;
@@ -34,7 +35,7 @@ export interface AppConfig {
         DECIMAL_SEPARATOR: string;
     };
     title: string;
-    marketServerUrl: string;
+    offlineNodeModelUrl: string;
 }
 
 const defaultAppConfig: AppConfig = {
@@ -55,10 +56,12 @@ const defaultAppConfig: AppConfig = {
         { value: 'en-US', label: 'English' },
         { value: 'zh-CN', label: '中文' },
         { value: 'ja-JP', label: '日本語' },
+        { value: 'ko-KR', label: '한국어' },
         { value: 'ru-RU', label: 'Русский' },
     ],
-    marketServerUrl: 'http://app.nemcn.io',
     articlesFeedUrl: 'https://symbol.github.io/symbol-rss-feeds/',
+    repositoryDataUrl: 'https://api.github.com/repos/symbol/desktop-wallet/releases/latest',
+    offlineNodeModelUrl: 'https://localhost:3000',
 };
 const resolvedAppConfig: AppConfig = window['appConfig'] || defaultAppConfig;
 console.log('appConfig resolved!', resolvedAppConfig);

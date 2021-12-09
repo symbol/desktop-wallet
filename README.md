@@ -15,8 +15,6 @@ Symbol Desktop Wallet is available for Mac, Windows, and as a web application.
 
 3. Create a profile. Remember to save the mnemonic somewhere safe (offline).
 
-**NOTE**: This program is currently in development and only available for the Symbol test network. Do not use it for other purposes.
-
 ## Building instructions
 
 Symbol CLI require **Node.js 10 or 12 LTS** to execute.

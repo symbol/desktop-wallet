@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -349,6 +349,7 @@ export default {
             if (!address) {
                 throw new Error('Address must be provided when calling account/SET_CURRENT_SIGNER!');
             }
+            const isOffline: boolean = rootGetters['network/isOfflineMode'];
             const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
             const currentAccount: AccountModel = getters.currentAccount;
             const previousSignerAddress: Address = getters.currentSignerAddress;
@@ -426,14 +427,15 @@ export default {
             dispatch('mosaic/SIGNER_CHANGED', {}, { root: true });
             dispatch('transaction/SIGNER_CHANGED', {}, { root: true });
             dispatch('metadata/SIGNER_CHANGED', {}, { root: true });
-            dispatch('harvesting/SET_CURRENT_SIGNER_HARVESTING_MODEL', currentSignerAddress.plain(), { root: true });
-            const networkType = rootGetters['network/networkType'];
-            const nodeService = new NodeService();
-            const nodes = await nodeService.getNodesFromStatisticService(networkType);
-            if (nodes && nodes.length && navigator.onLine) {
-                dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS', {}, { root: true });
+            if (!isOffline) {
+                dispatch('harvesting/SET_CURRENT_SIGNER_HARVESTING_MODEL', currentSignerAddress.plain(), { root: true });
+                const networkType = rootGetters['network/networkType'];
+                const nodeService = new NodeService();
+                const nodes = await nodeService.getNodesFromStatisticService(networkType);
+                if (nodes && nodes.length && navigator.onLine) {
+                    dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS', {}, { root: true });
+                }
             }
-
             if (unsubscribeWS) {
                 if (previousSignerAddress) {
                     await dispatch('UNSUBSCRIBE', previousSignerAddress);
@@ -582,8 +584,7 @@ export default {
             commit('currentSignerMultisigInfo', currentSignerMultisigInfo);
 
             // REMOTE CALL
-            const getAccountsInfoPromise = repositoryFactory.createAccountRepository().getAccountsInfo(knownAddresses).toPromise();
-            const accountsInfo = await getAccountsInfoPromise;
+            const accountsInfo = await repositoryFactory.createAccountRepository().getAccountsInfo(knownAddresses).toPromise();
 
             commit('accountsInfo', accountsInfo);
 

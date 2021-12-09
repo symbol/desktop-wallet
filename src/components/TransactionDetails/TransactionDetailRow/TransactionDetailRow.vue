@@ -50,27 +50,24 @@ import PaidFeeDisplay from '@/components/PaidFeeDisplay/PaidFeeDisplay.vue';
 // @ts-ignore
 import MessageDisplay from '@/components/MessageDisplay/MessageDisplay.vue';
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
+import { NetworkType } from 'symbol-sdk';
+import { networkConfig } from '@/config';
 
 @Component({
     components: { MosaicAmountDisplay, AddressDisplay, PaidFeeDisplay, MessageDisplay },
-    computed: mapGetters({ explorerBaseUrl: 'app/explorerUrl' }),
+    computed: mapGetters({ networkType: 'network/networkType' }),
 })
 export default class TransactionDetailRow extends Vue {
     @Prop({ required: true }) item: TransactionDetailItem;
-
+    private networkType: NetworkType;
     private get label(): string {
         return (this.item && this.item.key) || '';
     }
     /**
-     * Explorer base path
-     */
-    protected explorerBaseUrl: string;
-
-    /**
      * Returns the explorer url
      */
     public get explorerUrl() {
-        return this.explorerBaseUrl.replace(/\/+$/, '') + '/transactions/' + this.item.value;
+        return networkConfig[this.networkType].explorerUrl.replace(/\/+$/, '') + '/transactions/' + this.item.value;
     }
 }
 </script>

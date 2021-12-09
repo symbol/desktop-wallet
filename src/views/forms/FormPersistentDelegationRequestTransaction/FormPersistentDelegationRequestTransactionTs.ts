@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,6 +86,8 @@ import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
 import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
+import { NodeService } from '@/services/NodeService';
+import { feesConfig as defaultFeesConfig } from '@/config';
 
 export enum HarvestingAction {
     START = 1,
@@ -148,7 +150,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public formItems = {
         nodeModel: { nodePublicKey: '' } as NodeModel,
         signerAddress: '',
-        maxFee: 1,
+        maxFee: defaultFeesConfig.slow, // default: slow fee
     };
     private accountsInfo: AccountInfo[];
 
@@ -195,17 +197,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         } else {
             this.activeIndex = panel;
         }
-    }
-
-    public get isActivatedFromAnotherDevice(): boolean {
-        if (!this.currentSignerAccountInfo || !this.currentSignerAccountInfo.supplementalPublicKeys) {
-            return false;
-        }
-        return (
-            !this.formItems.nodeModel.url &&
-            ((!this.currentSignerHarvestingModel.encRemotePrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.linked) ||
-                (!this.currentSignerHarvestingModel.encVrfPrivateKey && !!this.currentSignerAccountInfo.supplementalPublicKeys.vrf))
-        );
     }
 
     private activating = false;
@@ -258,30 +249,43 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     @Watch('currentSignerAccountInfo', { immediate: true })
-    private currentSignerWatch() {
-        this.formItems.signerAddress = this.signerAddress || this.currentSignerAccountInfo?.address.plain();
-        if (this.isNodeKeyLinked) {
-            this.formItems.nodeModel.nodePublicKey = this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey;
-            if (this.currentSignerHarvestingModel?.selectedHarvestingNode) {
-                this.formItems.nodeModel = this.currentSignerHarvestingModel.selectedHarvestingNode;
-            } else {
-                this.formItems.nodeModel = { nodePublicKey: '' } as NodeModel;
-            }
-        } else {
-            // Check account is belong to node operator.
-            this.formItems.nodeModel = this.currentSignerHarvestingModel?.selectedHarvestingNode
-                ? this.currentSignerHarvestingModel.selectedHarvestingNode
-                : ({ nodePublicKey: '' } as NodeModel);
+    private async currentSignerAccountInfoWatch(newVal: AccountInfo, oldVal: AccountInfo) {
+        if (
+            newVal &&
+            oldVal &&
+            newVal?.publicKey === oldVal?.publicKey &&
+            newVal.supplementalPublicKeys.node?.publicKey === oldVal.supplementalPublicKeys.node?.publicKey
+        ) {
+            // we are only interested in the following changes so we are ignoring the rest
+            // 1. Signer change (when the user changes the signer, we need to update the form and the harvesting status)
+            // 2. Same signer but signer account has updates regarding the linked node publicKey (linked node changed)
+            return;
         }
+        this.formItems.signerAddress = this.signerAddress || newVal?.address.plain();
+        if (this.isNodeKeyLinked) {
+            this.formItems.nodeModel = { nodePublicKey: newVal?.supplementalPublicKeys.node.publicKey } as NodeModel;
+        } else {
+            // Check account belongs to a node operator.
+            const nodeOperatorPublicKey = await this.getNodeOperatorPublicKey();
+            this.formItems.nodeModel = { nodePublicKey: nodeOperatorPublicKey ?? '' } as NodeModel;
+        }
+        this.$store.dispatch('harvesting/FETCH_STATUS');
+    }
+
+    public async getNodeOperatorPublicKey() {
+        const nodeInfo = await new NodeService().getNodeFromStatisticServiceByPublicKey(
+            this.networkType,
+            this.currentSignerAccountInfo?.publicKey,
+        );
+        return nodeInfo?.nodePublicKey;
     }
 
     @Watch('formItems.nodeModel', { immediate: true })
     private nodeModelChanged() {
         if (
-            this.isActivatedFromAnotherDevice &&
             this.formItems.nodeModel &&
             this.formItems.nodeModel.url &&
-            this.formItems.nodeModel.nodePublicKey === this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey
+            this.formItems.nodeModel.nodePublicKey === this.currentSignerAccountInfo?.supplementalPublicKeys?.node?.publicKey
         ) {
             const accountAddress = this.currentSignerHarvestingModel.accountAddress;
             this.$store.dispatch('harvesting/UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {
@@ -951,7 +955,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
         return true;
     }
-    private get LowFeeValue() {
+    private get lowFeeValue() {
         return this.formItems.maxFee === 0 || this.formItems.maxFee === 1 || this.formItems.maxFee === 5;
     }
 }

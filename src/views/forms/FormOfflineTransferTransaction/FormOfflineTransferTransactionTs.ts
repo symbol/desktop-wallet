@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-present NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,7 +139,7 @@ export class FormOfflineTransferTransactionTs extends Vue {
      * Hook called when the page is mounted
      * @return {void}
      */
-    public created() {
+    public async created() {
         // filter out invalid profiles
         this.profiles = this.profileService.getProfiles().filter((p) => p.accounts.length > 0);
 
@@ -155,7 +155,7 @@ export class FormOfflineTransferTransactionTs extends Vue {
 
         // accounts available, iterate to first profile
         this.formItems.currentProfileName = this.profiles[0].profileName;
-        this.onProfileNameChange();
+        await this.onProfileNameChange();
     }
 
     /**
@@ -199,7 +199,7 @@ export class FormOfflineTransferTransactionTs extends Vue {
 
         const settingService = new SettingService();
 
-        const settings: SettingsModel = settingService.getProfileSettings(currentProfileName, profile.networkType);
+        const settings: SettingsModel = settingService.getProfileSettings(currentProfileName);
 
         const knownAccounts: AccountModel[] = this.accountService.getKnownAccounts(profile.accounts);
 

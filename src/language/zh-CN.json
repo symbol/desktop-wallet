@@ -172,7 +172,7 @@
     "continue": "继续",
     "copy_failed": "复制失败",
     "copy_mnemonic": "复制助记词",
-    "copyright": "版权所有©2021 NEM软件",
+    "copyright": "版权所有 © Symbol 贡献者 2021",
     "cosign_transaction": "联合签署交易",
     "cosignatory_of": "共同签字人",
     "cosignature_added": "已接收联署",
@@ -940,7 +940,7 @@
     "sender": "发送者",
     "set_account_name": "设置账户名",
     "set_default_explorer": "输入的url不合法，已为您设置默认url",
-    "set_explorer_link": "默认区块浏览器",
+    "form_label_explorer_link": "默认区块浏览器",
     "set_network_type": "设置网络类型",
     "SET_UP": "节点选择",
     "settings": "设置",
@@ -1132,5 +1132,8 @@
     "transaction_cosignature_warning_proceed": "我理解并请继续。",
     "lock_hash_algorithm": "哈希算法",
     "not_enough_balance": "余额不足",
-    "use_maximum_value": "使用最大值"
+    "use_maximum_value": "使用最大值",
+    "amount_value_cannot_start_with_zero": "金额值不能以 0 开头",
+    "new_version_available": "新版本的 Symbol 钱包可用!",
+    "download_now": " 现在就下载"
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -210,9 +210,10 @@
 
     .switch-language-container {
         float: right;
-        z-index: 10000;
+        z-index: 10001;
         margin: 0.2rem;
         display: flex;
+        position: relative;
         align-items: center;
 
         > img {
@@ -346,6 +347,24 @@
         left: 0.2rem;
         bottom: 0.2rem;
         z-index: 3;
+    }
+    .update-box {
+        background-color: #ffffcc;
+        position: relative;
+        margin-top: 0.05rem;
+        text-align: center;
+        height: 0.3rem;
+        width: 100%;
+        display: inline-block;
+        font-size: larger;
+        line-height: 0.3rem;
+        z-index: 10000;
+    }
+
+    .download-text-color {
+        position: relative;
+        color: @primary;
+        z-index: 10000;
     }
 }
 

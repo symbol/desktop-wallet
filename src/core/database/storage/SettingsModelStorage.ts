@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,6 +82,10 @@ export class SettingsModelStorage extends VersionedObjectStorage<Record<string, 
                 },
                 {
                     description: 'Reset for fees update.',
+                    migrate: () => undefined,
+                },
+                {
+                    description: 'Reset for explorer url update.',
                     migrate: () => undefined,
                 },
             ],

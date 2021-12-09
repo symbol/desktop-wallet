@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -117,6 +117,6 @@ export class FormExtendNamespaceDurationTransactionTs extends FormNamespaceRegis
     }
 
     async mounted() {
-        this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES');
+        await this.$store.dispatch('network/REST_NETWORK_RENTAL_FEES');
     }
 }

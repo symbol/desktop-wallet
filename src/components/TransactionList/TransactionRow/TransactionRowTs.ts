@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { TransactionStatus as TransactionStatusEnum } from '@/core/transactions/TransactionStatus';
 import { MultisigService } from '@/services/MultisigService';
+import { networkConfig } from '@/config';
 
 export interface TooltipMosaics {
     name: string;
@@ -62,7 +63,6 @@ export interface TooltipMosaics {
     },
     computed: mapGetters({
         networkMosaic: 'mosaic/networkMosaic',
-        explorerBaseUrl: 'app/explorerUrl',
         networkConfiguration: 'network/networkConfiguration',
         currentProfile: 'profile/currentProfile',
         currentAccount: 'account/currentAccount',
@@ -83,11 +83,6 @@ export class TransactionRowTs extends Vue {
      * @var {string}
      */
     public currentProfile: ProfileModel;
-
-    /**
-     * Explorer base path
-     */
-    protected explorerBaseUrl: string;
 
     /**
      * Network mosaic id
@@ -227,7 +222,6 @@ export class TransactionRowTs extends Vue {
      * Returns the color of the balance
      */
     public getAmountColor(): string {
-        // https://github.com/nemfoundation/nem2-desktop-account/issues/879
         if (this.transaction.type === TransactionType.TRANSFER) {
             return this.isIncomingTransaction() ? 'green' : 'red';
         }
@@ -458,7 +452,11 @@ export class TransactionRowTs extends Vue {
      * Returns the explorer url
      */
     public get explorerUrl() {
-        return this.explorerBaseUrl.replace(/\/+$/, '') + '/transactions/' + this.transaction.transactionInfo.hash;
+        return (
+            networkConfig[this.currentProfile.networkType].explorerUrl.replace(/\/+$/, '') +
+            '/transactions/' +
+            this.transaction.transactionInfo.hash
+        );
     }
 
     public get date(): string {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,6 @@ import { NotificationType } from '@/core/utils/NotificationType';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountService } from '@/services/AccountService';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
-// @ts-ignore
-import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
 @Component({
     components: {
         ValidationObserver,
@@ -43,7 +41,6 @@ import PasswordInput from '@/components/PasswordInput/PasswordInput.vue';
         FormWrapper,
         FormRow,
         ModalFormProfileUnlock,
-        PasswordInput,
     },
     computed: {
         ...mapGetters({

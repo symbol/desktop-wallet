@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ export interface NetworkConfig {
 export const defaultTestnetNetworkConfig: NetworkConfig = {
     explorerUrl: 'https://testnet.symbol.fyi/',
     faucetUrl: 'https://testnet.symbol.tools/',
-    statisticServiceUrl: 'https://testnet.symbol.services/',
+    statisticServiceUrl: 'https://testnet.symbol.services',
     defaultNetworkType: 152,
     networkConfigurationDefaults: {
         maxMosaicDivisibility: 6,
@@ -69,19 +69,19 @@ export const defaultTestnetNetworkConfig: NetworkConfig = {
         maxCosignedAccountsPerAccount: 25,
         maxMessageSize: 1024,
         maxMosaicAtomicUnits: 8999999999000000,
-        currencyMosaicId: '091F837E059AE13C',
-        harvestingMosaicId: '091F837E059AE13C',
+        currencyMosaicId: '3A8416DB2D53B6C8',
+        harvestingMosaicId: '3A8416DB2D53B6C8',
         defaultDynamicFeeMultiplier: 100,
-        epochAdjustment: 1616694977,
+        epochAdjustment: 1637848847,
         totalChainImportance: 7842928625000000,
-        generationHash: '3B5E1FA6445653C971A50687E75E6D09FB30481055E3990C84B25E9222DC1155',
+        generationHash: '7FCCD304802016BEBBCD342A332F91FF1F3BB5E902988B352697BE245F48E836',
     },
 };
 
 export const defaultMainnetNetworkConfig: NetworkConfig = {
     explorerUrl: 'https://symbol.fyi/',
     faucetUrl: 'https://faucet.mainnet.symboldev.network/',
-    statisticServiceUrl: 'https://symbol.services/',
+    statisticServiceUrl: 'https://symbol.services',
     defaultNetworkType: 104,
     networkConfigurationDefaults: {
         maxMosaicDivisibility: 6,

@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [1.0.9][v1.0.9] - 10-Dec-2021
+### Milestone: Stabilize and bug fix
+
+#### Added
+- Added OpenAPI client integration [#1776](https://github.com/symbol/desktop-wallet/pull/1776)
+- Added Korean language [#1794](https://github.com/symbol/desktop-wallet/pull/1794)
+- Show update warning when users are on old versions [#1393](https://github.com/symbol/desktop-wallet/issues/1393)
+
+#### Changed
+- Used OpenAPI client for statistics-service API calls [#1777](https://github.com/symbol/desktop-wallet/pull/1777)
+- Updated symbol-sdk version to 1.0.3 [#1756](https://github.com/symbol/desktop-wallet/pull/1756)
+- Replaced old explorer URL with the new one [#1766](https://github.com/symbol/desktop-wallet/pull/1766)
+- Harvesting page improvements: find node by `nodePublicKey` from statistics service instead of local storage, multi-device operation support [#1781](https://github.com/symbol/desktop-wallet/pull/1781)
+#### Fixed
+- Fixed outdated README [#1764](https://github.com/symbol/desktop-wallet/issues/1764)
+- Fixed login error when selected node is broken or Websocket is failing. [#1767](https://github.com/symbol/desktop-wallet/issues/1767)
+- Fixed transfer form shows not enough balance [#1771](https://github.com/symbol/desktop-wallet/issues/1771)
+- Fixed expired mosaic is visible on supply change transaction page [#1663](https://github.com/symbol/desktop-wallet/issues/1663)
+- Fixed leading zeros are ignored if there is no decimal point [#1730](https://github.com/symbol/desktop-wallet/issues/1730)
+- Fixed offline transactions page ERROR_EMPTY_RESPONSE error [#1674](https://github.com/symbol/desktop-wallet/issues/1674)
+- Allowed pasting option in password fields [#1780](https://github.com/symbol/desktop-wallet/issues/1780)
+- Fixed non-ability of initializing an aggregate with a single transaction [#1803](https://github.com/symbol/desktop-wallet/issues/1803)
+- Removed NxL and nemfoundation references [#1761](https://github.com/symbol/desktop-wallet/issues/1761)
+- Updated translations
+
 ## [1.0.8][v1.0.8] - 1-Nov-2021
 
 ### Milestone: Stabilize and bug fix
@@ -67,11 +92,11 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 #### Fixed
 
-- Use AggregateComplete instead of AggregateBonded if minimalApproval is 1[#1344](https://github.com/symbol/symbol-desktop-wallet/issues/1344)
+- Use AggregateComplete instead of AggregateBonded if minimalApproval is 1[#1344](https://github.com/symbol/desktop-wallet/issues/1344)
 - Fixed co-signer cannot be removed [#1646](https://github.com/symbol/desktop-wallet/issues/1646)
 - Fixed parent namespaces list update when current signer changed [#1587](https://github.com/symbol/desktop-wallet/issues/1587)
 - Fixed low fees when average fee is zero [#1609](https://github.com/symbol/desktop-wallet/pull/1609)
-- Prevent private key loss during Account key link transactions [#1476](https://github.com/symbol/symbol-desktop-wallet/issues/1476)
+- Prevent private key loss during Account key link transactions [#1476](https://github.com/symbol/desktop-wallet/issues/1476)
 - Fixed news page broken link [#1592](https://github.com/symbol/desktop-wallet/issues/1592)
 - Fixed transfer transaction form unnecessarily getting reset after confirming multisig transaction [#1577](https://github.com/symbol/desktop-wallet/issues/1577)
 - Fixed private key validation when adding new account into profile [#1614](https://github.com/symbol/desktop-wallet/issues/1614)
@@ -96,8 +121,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 #### Fixed
 
-- Not able unlink VRF key link for multisig account [#1435](https://github.com/symbol/symbol-desktop-wallet/issues/1435)
-- Corrupted profile with invalid mnemonic created [#1596](https://github.com/symbol/symbol-desktop-wallet/issues/1596)
+- Not able unlink VRF key link for multisig account [#1435](https://github.com/symbol/desktop-wallet/issues/1435)
+- Corrupted profile with invalid mnemonic created [#1596](https://github.com/symbol/desktop-wallet/issues/1596)
 
 ## [1.0.4][v1.0.4] - 7-Jul-2021
 
@@ -191,7 +216,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [1.0.1][1.0.1] - 29-Mar-2021
 
-### Milestone: [catapult-server@v1.0.0.0](https://github.com/nemtech/catapult-server/releases/tag/v1.0.0.0)
+### Milestone: [catapult-server@v1.0.0.0](https://github.com/symbol/catapult-server/releases/tag/v1.0.0.0)
 
 #### Changed
 
@@ -200,20 +225,20 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [1.0.0][1.0.0] - 15-Mar-2021
 
-### Milestone: [catapult-server@v1.0.0.0](https://github.com/nemtech/catapult-server/releases/tag/v1.0.0.0)
+### Milestone: [catapult-server@v1.0.0.0](https://github.com/symbol/catapult-server/releases/tag/v1.0.0.0)
 
 - Symbol mainnet launch release.
 
 ## [0.15.1][0.15.1] - 13-Mar-2021
 
-### Milestone: [catapult-server@v1.0.0.0](https://github.com/nemtech/catapult-server/releases/tag/v1.0.0.0)
+### Milestone: [catapult-server@v1.0.0.0](https://github.com/symbol/catapult-server/releases/tag/v1.0.0.0)
 
 - Pre Symbol launch release.
 - Updated experimental Symbol mainnet node with final Opt In balances
 
 ## [0.15.0][0.15.0] - 11-Mar-2021
 
-### Milestone: [catapult-server@v0.10.0.8](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.8)
+### Milestone: [catapult-server@v0.10.0.8](https://github.com/symbol/catapult-server/releases/tag/v0.10.0.8)
 
 - Preview version for Symbol Mainnet.
 - Support read-only experimental Symbol Mainnet node for Symbol Opt-In accounts & balances preview (Valid Opt-In only).
@@ -225,7 +250,7 @@ New Opt-In accounts created after this beta release will not be shown on Opt-In 
 
 ## [0.14.1][v0.14.1] - 18-Feb-2021
 
-### Milestone: [catapult-server@v0.10.0.7](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.7)
+### Milestone: [catapult-server@v0.10.0.7](https://github.com/symbol/catapult-server/releases/tag/v0.10.0.7)
 
 #### Added
 
@@ -261,7 +286,7 @@ New Opt-In accounts created after this beta release will not be shown on Opt-In 
 
 ## [0.14.0][v0.14.0] - 08-Feb-2021
 
-### Milestone: [catapult-server@v0.10.0.6](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.6)
+### Milestone: [catapult-server@v0.10.0.6](https://github.com/symbol/catapult-client/releases/tag/v0.10.0.6)
 
 **This version only works with the latest testnet (0.10.0.6), it is not backward compatible.**
 
@@ -313,7 +338,7 @@ New Opt-In accounts created after this beta release will not be shown on Opt-In 
 
 ## [0.13.8][v0.13.8] - 19-Jan-2021
 
-### Milestone: [catapult-server@v0.10.0.5](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.5)
+### Milestone: [catapult-server@v0.10.0.5](https://github.com/symbol/catapult-client/releases/tag/v0.10.0.5)
 
 **This version only works with latest testnet (0.10.0.5), it is not backward compatible.**
 #### Fixed
@@ -324,7 +349,7 @@ New Opt-In accounts created after this beta release will not be shown on Opt-In 
 
 ## [0.13.7][v0.13.7] - 14-Jan-2021
 
-### Milestone: [catapult-server@v0.10.0.5](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.5)
+### Milestone: [catapult-server@v0.10.0.5](https://github.com/symbol/catapult-client/releases/tag/v0.10.0.5)
 
 #### Added
 - Add URL validation procedure to the web-contents-created callback to avoid remote code execution attacks.
@@ -363,7 +388,7 @@ New Opt-In accounts created after this beta release will not be shown on Opt-In 
 
 ## [0.13.6][v0.13.6] - 11-Dec-2020
 
-### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+### Milestone: [catapult-server@v0.10.x](https://github.com/symbol/catapult-client/releases/tag/v0.10.0.4)
 
 #### Added
 
@@ -398,7 +423,7 @@ New Opt-In accounts created after this beta release will not be shown on Opt-In 
   - Fixed empty window after logout issue.
 ## [0.13.5][v0.13.5] - 18-Nov-2020
 
-### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+### Milestone: [catapult-server@v0.10.x](https://github.com/symbol/catapult-client/releases/tag/v0.10.0.4)
 
 #### Added
 
@@ -440,7 +465,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [0.13.4][v0.13.4] - 11-Nov-2020
 
-### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+### Milestone: [catapult-server@v0.10.x](https://github.com/symbol/catapult-server/releases/tag/v0.10.0.4)
 
 #### Fixed
 
@@ -450,7 +475,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [0.13.3][v0.13.3] - 09-Nov-2020
 
-### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+### Milestone: [catapult-server@v0.10.x](https://github.com/symbol/catapult-server/releases/tag/v0.10.0.4)
 
 #### Added
 
@@ -488,7 +513,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [0.13.2][v0.13.2] - 02-Nov-2020
 
-### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.4)
+### Milestone: [catapult-server@v0.10.x](https://github.com/symbol/catapult-server/releases/tag/v0.10.0.4)
 
 #### Added
 
@@ -525,7 +550,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [0.13.0][v0.13.0] - 25-Sep-2020
 
-### Milestone: [catapult-server@v0.10.x](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0)
+### Milestone: [catapult-server@v0.10.x](https://github.com/symbol/catapult-server/releases/tag/v0.10.0)
 
 #### Changes
 
@@ -541,7 +566,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [0.12.0][v0.12.0] - 16-Jul-2020
 
-### Milestone: [catapult-server@v0.9.6.3](https://github.com/nemtech/catapult-server/releases/tag/v0.9.6.3)
+### Milestone: [catapult-server@v0.9.6.3](https://github.com/symbol/catapult-server/releases/tag/v0.9.6.3)
 
 #### Added
 
@@ -559,7 +584,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [0.11.0][v0.11.0] - 24-Jun-2020
 
-### Milestone: [catapult-server@v0.9.5.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.5.1)
+### Milestone: [catapult-server@v0.9.5.1](https://github.com/symbol/catapult-server/releases/tag/v0.9.5.1)
 
 #### Added
 
@@ -581,7 +606,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [0.10.0][v0.10.0] - 27-May-2020
 
-### Milestone: [catapult-server@v0.9.5.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.5.1)
+### Milestone: [catapult-server@v0.9.5.1](https://github.com/symbol/catapult-server/releases/tag/v0.9.5.1)
 
 #### Added
 
@@ -601,7 +626,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [v0.9.9][v0.9.9]
 
-### Milestone: [catapult-server@v0.9.4.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.4.1)
+### Milestone: [catapult-server@v0.9.4.1](https://github.com/symbol/catapult-server/releases/tag/v0.9.4.1)
 
 #### Added
 
@@ -622,7 +647,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [v0.9.8][v0.9.8] -
 
-### Milestone: [catapult-server@v0.9.3.2](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.2)
+### Milestone: [catapult-server@v0.9.3.2](https://github.com/symbol/catapult-server/releases/tag/v0.9.3.2)
 
 ### [v0.9.8-beta1][v0.9.8-beta1] - 17-Apr-2020
 
@@ -637,7 +662,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [v0.9.7][v0.9.7] - 06-Apr-2020
 
-### Milestone: [catapult-server@v0.9.3.2](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.2)
+### Milestone: [catapult-server@v0.9.3.2](https://github.com/symbol/catapult-server/releases/tag/v0.9.3.2)
 
 ### [v0.9.7-beta1][v0.9.7-beta1] - 06-Apr-2020
 
@@ -658,7 +683,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [v0.9.6][v0.9.6] - 21-Mar-2020
 
-### Milestone: [catapult-server@v0.9.3.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1)
+### Milestone: [catapult-server@v0.9.3.1](https://github.com/symbol/catapult-server/releases/tag/v0.9.3.1)
 
 ### [v0.9.6-beta2][v0.9.6-beta2] - 21-Mar-2020
 
@@ -702,7 +727,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [v0.9.5][v0.9.5] - 11-Mar-2020
 
-### Milestone: [catapult-server@v0.9.3.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.3.1)
+### Milestone: [catapult-server@v0.9.3.1](https://github.com/symbol/catapult-server/releases/tag/v0.9.3.1)
 
 ### [v0.9.5-beta6][v0.9.5-beta6] - 11-Mar-2020
 
@@ -767,7 +792,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 
 ## [v0.9.4-beta][v0.9.4-beta] - 25-Feb-2020
 
-### Milestone: [catapult-server@v0.9.2.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.2.1)
+### Milestone: [catapult-server@v0.9.2.1](https://github.com/symbol/catapult-server/releases/tag/v0.9.2.1)
 
 #### Added
 
@@ -792,30 +817,30 @@ NOTE: We have known issues which have been logged into github and will look for 
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
 
-[v0.13.6]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.5...v0.13.6
-[v0.13.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.4...v0.13.5
-[v0.13.4]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.3...v0.13.4
-[v0.13.3]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.3...v0.13.3
-[v0.13.2]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.13.0...v0.13.2
-[v0.13.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.11.0...v0.13.0
-[v0.12.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.11.0...v0.12.0
-[v0.11.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.10.0...v0.11.0
-[v0.10.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.9...v0.10.0
-[v0.9.9]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.8-beta1...v0.9.9
-[v0.9.8]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.8-beta1
-[v0.9.8-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.7-beta1...v0.9.8-beta1
-[v0.9.7]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.7-beta1
-[v0.9.7-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.6...v0.9.7-beta1
-[v0.9.6]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.6-beta2
-[v0.9.6-beta2]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.6-beta1...v0.9.6-beta2
-[v0.9.6-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta6...v0.9.6-beta1
-[v0.9.5]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.5-beta6
-[v0.9.5-beta6]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta5...v0.9.5-beta6
-[v0.9.5-beta5]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta4...v0.9.5-beta5
-[v0.9.5-beta4]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta2...v0.9.5-beta4
-[v0.9.5-beta2]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.5-beta1...v0.9.5-beta2
-[v0.9.5-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.4-beta...v0.9.5-beta1
-[v0.9.4-beta]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.4-beta
+[v0.13.6]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.5...v0.13.6
+[v0.13.5]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.4...v0.13.5
+[v0.13.4]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.3...v0.13.4
+[v0.13.3]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.3...v0.13.3
+[v0.13.2]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.0...v0.13.2
+[v0.13.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.11.0...v0.13.0
+[v0.12.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.11.0...v0.12.0
+[v0.11.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.10.0...v0.11.0
+[v0.10.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.9...v0.10.0
+[v0.9.9]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.8-beta1...v0.9.9
+[v0.9.8]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.8-beta1
+[v0.9.8-beta1]: https://github.com/symbol/desktop-wallet/compare/v0.9.7-beta1...v0.9.8-beta1
+[v0.9.7]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.7-beta1
+[v0.9.7-beta1]: https://github.com/symbol/desktop-wallet/compare/v0.9.6...v0.9.7-beta1
+[v0.9.6]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.6-beta2
+[v0.9.6-beta2]: https://github.com/symbol/desktop-wallet/compare/v0.9.6-beta1...v0.9.6-beta2
+[v0.9.6-beta1]: https://github.com/symbol/desktop-wallet/compare/v0.9.5-beta6...v0.9.6-beta1
+[v0.9.5]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.5-beta6
+[v0.9.5-beta6]: https://github.com/symbol/desktop-wallet/compare/v0.9.5-beta5...v0.9.5-beta6
+[v0.9.5-beta5]: https://github.com/symbol/desktop-wallet/compare/v0.9.5-beta4...v0.9.5-beta5
+[v0.9.5-beta4]: https://github.com/symbol/desktop-wallet/compare/v0.9.5-beta2...v0.9.5-beta4
+[v0.9.5-beta2]: https://github.com/symbol/desktop-wallet/compare/v0.9.5-beta1...v0.9.5-beta2
+[v0.9.5-beta1]: https://github.com/symbol/desktop-wallet/compare/v0.9.4-beta...v0.9.5-beta1
+[v0.9.4-beta]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.4-beta
 
-[v1.0.5]: https://github.com/symbol/symbol-desktop-wallet/releases/tag/v1.0.5
-[v1.0.6]: https://github.com/symbol/symbol-desktop-wallet/releases/tag/v1.0.6
+[v1.0.5]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.5
+[v1.0.6]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.6

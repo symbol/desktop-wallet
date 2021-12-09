@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,6 +62,6 @@ export class LanguageSelectorTs extends Vue {
         this.$emit('input', this.language);
     }
     created() {
-        this.language = this.currentLanguage;
+        this.language = this.currentLanguage || this.languageList[0].value;
     }
 }

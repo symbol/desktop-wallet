@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,10 @@ export const createValidationRuleSet = ({
         address: 'required|address|addressNetworkType:currentProfile',
         profilePassword: 'required|profilePassword',
         addressOrAlias: 'required|addressOrAlias|addressOrAliasNetworkType:currentProfile',
-        amount: `positiveDecimal|maxDecimals:${maxMosaicDivisibility}|maxRelativeAmount:${[maxMosaicAtomicUnits, maxMosaicDivisibility]}`,
+        amount: `positiveDecimal|startsWithZero|maxDecimals:${maxMosaicDivisibility}|maxRelativeAmount:${[
+            maxMosaicAtomicUnits,
+            maxMosaicDivisibility,
+        ]}`,
         confirmPassword: 'required|confirmPassword:@newPassword',
         divisibility: 'required|min_value:0|max_value:6|integer',
         duration: `required|min_value:0|max_value:${maxMosaicDuration}`,

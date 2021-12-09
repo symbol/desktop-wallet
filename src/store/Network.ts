@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ import {
     IListener,
     Listener,
     NetworkType,
-    NodeInfo,
     RentalFees,
     RepositoryFactory,
     RepositoryFactoryHttp,
@@ -93,7 +92,7 @@ interface NetworkState {
     transactionFees: TransactionFees;
     rentalFeeEstimation: RentalFees;
     networkIsNotMatchingProfile: boolean;
-    peerNodes: NodeInfo[];
+    peerNodes: NodeModel[];
     connectingToNodeInfo: ConnectingToNodeInfo;
     isOfflineMode: boolean;
     feesConfig: any;
@@ -241,7 +240,7 @@ export default {
             const subscriptions = state.subscriptions;
             Vue.set(state, 'subscriptions', [...subscriptions, payload]);
         },
-        peerNodes: (state: NetworkState, peerNodes: NodeInfo[]) => Vue.set(state, 'peerNodes', peerNodes),
+        peerNodes: (state: NetworkState, peerNodes: NodeModel[]) => Vue.set(state, 'peerNodes', peerNodes),
         connectingToNodeInfo: (state: NetworkState, connectingToNodeInfo: ConnectingToNodeInfo) =>
             Vue.set(state, 'connectingToNodeInfo', connectingToNodeInfo),
         setFeesConfig: (state: NetworkState, feesConfig: {}) => {
@@ -310,11 +309,28 @@ export default {
                     progressCurrentNodeIndex: 1,
                     progressTotalNumOfNodes: 1,
                 });
-                nodeNetworkModelResult = await networkService.getNetworkModel(newCandidateUrl, networkType, isOffline).toPromise();
+                const nodeService = new NodeService();
+                const statisticsServiceNodes = !isOffline ? await nodeService.getNodesFromStatisticService(networkType) : undefined;
+                const nodesList = statisticsServiceNodes || nodeService.loadNodes(currentProfile);
+
+                const nodeWsUrl = nodesList.find((n) => n.url === newCandidateUrl)?.wsUrl;
+                nodeNetworkModelResult = await networkService
+                    .getNetworkModel(newCandidateUrl, networkType, isOffline, nodeWsUrl)
+                    .toPromise();
+                let websocketConnectionStatus = false;
+                if (nodeNetworkModelResult && navigator.onLine && !isOffline) {
+                    websocketConnectionStatus = await networkService.checkWebsocketConnection(
+                        nodeNetworkModelResult.repositoryFactory.websocketUrl,
+                        2000,
+                    );
+                }
                 if (
                     nodeNetworkModelResult &&
+                    nodeNetworkModelResult.repositoryFactory &&
+                    nodeNetworkModelResult.repositoryFactory.websocketUrl &&
                     nodeNetworkModelResult.networkModel &&
-                    nodeNetworkModelResult.networkModel.networkType === networkType
+                    nodeNetworkModelResult.networkModel.networkType === networkType &&
+                    websocketConnectionStatus
                 ) {
                     await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                 } else {
@@ -331,19 +347,30 @@ export default {
 
                 // trying already saved one
                 if (currentProfile && currentProfile.selectedNodeUrlToConnect) {
+                    const nodeWsUrl = nodesList.find((n) => n.url === currentProfile.selectedNodeUrlToConnect)?.wsUrl;
                     commit('connectingToNodeInfo', {
                         isTryingToConnect: true,
                         tryingToConnectNodeUrl: currentProfile.selectedNodeUrlToConnect,
                         progressCurrentNodeIndex: ++progressCurrentNodeInx,
                         progressTotalNumOfNodes: numOfNodes,
                     });
+                    let websocketConnectionStatus = false;
                     nodeNetworkModelResult = await networkService
-                        .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline)
+                        .getNetworkModel(currentProfile.selectedNodeUrlToConnect, networkType, isOffline, nodeWsUrl)
                         .toPromise();
+                    if (nodeNetworkModelResult && navigator.onLine && !isOffline) {
+                        websocketConnectionStatus = await networkService.checkWebsocketConnection(
+                            nodeNetworkModelResult.repositoryFactory.websocketUrl,
+                            2000,
+                        );
+                    }
                     if (
                         nodeNetworkModelResult &&
                         nodeNetworkModelResult.repositoryFactory &&
-                        nodeNetworkModelResult.networkModel.networkType === currentProfile.networkType
+                        nodeNetworkModelResult.repositoryFactory.websocketUrl &&
+                        nodeNetworkModelResult.networkModel &&
+                        nodeNetworkModelResult.networkModel.networkType === networkType &&
+                        websocketConnectionStatus
                     ) {
                         await dispatch('CONNECT_TO_A_VALID_NODE', nodeNetworkModelResult);
                         nodeFound = true;
@@ -352,7 +379,14 @@ export default {
                         nodesList = nodesList.filter((n) => n.url !== currentProfile.selectedNodeUrlToConnect);
                     }
                 }
-
+                if (!nodesList.length && isOffline) {
+                    const knownNodes = nodeService.getKnownNodesOnly(currentProfile);
+                    if (!knownNodes.length) {
+                        nodesList.push(nodeService.createOfflineNodeModel(currentProfile.networkType));
+                    } else {
+                        nodesList = knownNodes;
+                    }
+                }
                 // try other nodes randomly if not found yet
                 while (!nodeFound && nodesList.length) {
                     const inx = Math.floor(Math.random() * nodesList.length);
@@ -566,12 +600,14 @@ export default {
 
             dispatch('SET_CURRENT_PEER', networkService.getDefaultUrl());
         },
-        async LOAD_PEER_NODES({ commit, rootGetters }) {
-            const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
-            const nodeRepository = repositoryFactory.createNodeRepository();
-            const peerNodes: NodeInfo[] = await nodeRepository.getNodePeers().toPromise();
-            commit('peerNodes', _.uniqBy(peerNodes, 'host'));
+
+        async LOAD_PEER_NODES({ commit, getters }) {
+            const nodeService = new NodeService();
+            const networkType = getters['networkType'];
+            const isOffline = getters['isOfflineMode'];
+            commit('peerNodes', _.uniqBy(await nodeService.getNodesFromStatisticService(networkType, 100, false, isOffline), 'url'));
         },
+
         // set current difference between server and local time
         async SET_CLIENT_SERVER_TIME_DIFFERENCE({ getters, commit }) {
             const isOffline = getters['isOfflineMode'];
@@ -589,48 +625,7 @@ export default {
                 commit('setClientServerTimeDifference', 0);
             }
         },
-        // TODO :: re-apply that behavior if red screen issue fixed
-        // load nodes that eligible for delegate harvesting
-        // async LOAD_HARVESTING_PEERS({ commit, getters }) {
-        //     const peerNodes = getters.peerNodes;
-        //     peerNodes.forEach(async (node: NodeInfo) => {
-        //         await setTimeout(async () => {
-        //             try {
-        //                 const nodeUrl = URLHelpers.getNodeUrl(node.host);
-        //                 const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
-        //                 const nodeRepository = repositoryFactory.createNodeRepository();
-        //                 const unlockedAccounts = await nodeRepository.getUnlockedAccount().toPromise();
-        //                 const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
 
-        //                 if (unlockedAccounts) {
-        //                     let validNodeInfo: NodeInfo;
-        //                     let harvestingPeers: NodeInfo[];
-        //                     // in case nodeInfo missing host
-        //                     if (!nodeInfo.host) {
-        //                         validNodeInfo = new NodeInfo(
-        //                             nodeInfo.publicKey,
-        //                             nodeInfo.networkGenerationHashSeed,
-        //                             nodeInfo.port,
-        //                             nodeInfo.networkIdentifier,
-        //                             nodeInfo.version,
-        //                             nodeInfo.roles,
-        //                             node.host,
-        //                             nodeInfo.friendlyName,
-        //                             nodeInfo.nodePublicKey,
-        //                         );
-        //                         harvestingPeers = [validNodeInfo, ...getters.harvestingPeerNodes];
-        //                     } else {
-        //                         harvestingPeers = [nodeInfo, ...getters.harvestingPeerNodes];
-        //                     }
-        //                     // update harvesting peers
-        //                     commit('harvestingPeerNodes', _.uniqBy(harvestingPeers, 'host'));
-        //                 }
-        //             } catch (err) {
-        //                 console.error('Harvesting not enabled', err);
-        //             }
-        //         }, 500);
-        //     });
-        // },
         /**
          * Websocket API
          */

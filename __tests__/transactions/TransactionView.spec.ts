@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 NEM (https://nem.io)
+ * (C) Symbol Contributors 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ const transfer = TransferTransaction.create(
     new NamespaceId('alias'),
     [],
     PlainMessage.create('test-message'),
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
 );
 const networkConfig = new NetworkConfigurationModel();
 Object.assign(networkConfig, { epochAdjustment: 1573430400 });
