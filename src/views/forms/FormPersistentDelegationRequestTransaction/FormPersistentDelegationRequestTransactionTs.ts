@@ -87,6 +87,7 @@ import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
 import { NodeService } from '@/services/NodeService';
+import { feesConfig as defaultFeesConfig } from '@/config';
 
 export enum HarvestingAction {
     START = 1,
@@ -149,7 +150,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public formItems = {
         nodeModel: { nodePublicKey: '' } as NodeModel,
         signerAddress: '',
-        maxFee: 5, // default: slow fee
+        maxFee: defaultFeesConfig.slow, // default: slow fee
     };
     private accountsInfo: AccountInfo[];
 
