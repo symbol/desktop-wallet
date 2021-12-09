@@ -1135,5 +1135,12 @@
     "use_maximum_value": "使用最大值",
     "amount_value_cannot_start_with_zero": "金额值不能以 0 开头",
     "new_version_available": "新版本的 Symbol 钱包可用!",
-    "download_now": " 现在就下载"
+    "download_now": " 现在就下载",
+    "tab_contact_black_list": "黑名单",
+    "tab_contact_white_list": "白名单",
+    "black_list_contact_confirmation_message": "您确定要将 \"{contactName}\" 列入黑名单吗？",
+    "white_list_contact_confirmation_message": "您确定要将 \"{contactName}\" 列入白名单吗？",
+    "black_list_contact_confirmation_title": "黑名单联系人",
+    "white_list_contact_confirmation_title": "白名单联系人",
+    "blacklisted_transactions": "显示列入黑名单的交易"
 }

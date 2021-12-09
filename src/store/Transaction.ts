@@ -37,6 +37,7 @@ import * as _ from 'lodash';
 import { AwaitLock } from './AwaitLock';
 import { TransactionFilterService } from '@/services/TransactionFilterService';
 import { MultisigService } from '@/services/MultisigService';
+import { IContact } from 'symbol-address-book';
 const Lock = AwaitLock.create();
 
 export enum TransactionGroupState {
@@ -140,6 +141,7 @@ export interface TransactionState {
     partialTransactions: Transaction[];
     filterOptions: TransactionFilterOptionsState;
     currentConfirmedPage: PageInfo;
+    isBlackListFilterActivated: boolean;
 }
 
 const transactionState: TransactionState = {
@@ -152,6 +154,7 @@ const transactionState: TransactionState = {
     partialTransactions: [],
     filterOptions: new TransactionFilterOptionsState(),
     currentConfirmedPage: { pageNumber: 1, isLastPage: false },
+    isBlackListFilterActivated: false,
 };
 export default {
     namespaced: true,
@@ -168,6 +171,7 @@ export default {
         confirmedTransactions: (state: TransactionState) => state.confirmedTransactions,
         unconfirmedTransactions: (state: TransactionState) => state.unconfirmedTransactions,
         partialTransactions: (state: TransactionState) => state.partialTransactions,
+        isBlackListFilterActivated: (state: TransactionState) => state.isBlackListFilterActivated,
     },
     mutations: {
         setInitialized: (state: TransactionState, initialized: boolean) => {
@@ -175,6 +179,9 @@ export default {
         },
         isFetchingTransactions: (state: TransactionState, isFetchingTransactions: boolean) => {
             state.isFetchingTransactions = isFetchingTransactions;
+        },
+        isBlackListFilterActivated: (state: TransactionState, isBlackListFilterActivated: boolean) => {
+            state.isBlackListFilterActivated = isBlackListFilterActivated;
         },
         confirmedTransactions: (
             state: TransactionState,
@@ -217,7 +224,14 @@ export default {
                 currentSignerAddress,
                 multisigAddresses = [],
                 shouldFilterOptionChange = true,
-            }: { filterOption?: FilterOption; currentSignerAddress: string; multisigAddresses: []; shouldFilterOptionChange: boolean },
+                BlackListedContacts = [],
+            }: {
+                filterOption?: FilterOption;
+                currentSignerAddress: string;
+                multisigAddresses: [];
+                shouldFilterOptionChange: boolean;
+                BlackListedContacts?: IContact[];
+            },
         ) => {
             if (shouldFilterOptionChange) {
                 if (filterOption) {
@@ -229,6 +243,7 @@ export default {
             state.filteredTransactions = TransactionFilterService.filter(
                 state,
                 !!multisigAddresses.length ? multisigAddresses : currentSignerAddress,
+                BlackListedContacts,
             );
         },
     },

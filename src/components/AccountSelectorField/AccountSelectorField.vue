@@ -9,7 +9,7 @@
             <img v-if="showIcon" slot="prefix" class="navbar-icon" src="@/views/resources/img/navbar/account.svg" />
             <!-- Adding :transfer="true" breaks the style and moves the dropdown to the document root -->
             <Option v-for="{ id, name } in currentAccounts" :key="id" :value="id">
-                {{ truncate(name) }}
+                {{ commonHelpers.truncate(name) }}
             </Option>
         </Select>
     </div>

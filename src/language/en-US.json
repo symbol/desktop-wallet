@@ -1135,5 +1135,12 @@
     "use_max_value": "Use maximum value",
     "amount_value_cannot_start_with_zero": "Amount value cannot start with 0",
     "new_version_available": "A new version of Symbol wallet is available!",
-    "download_now": " Download now"
+    "download_now": " Download now",
+    "tab_contact_black_list": "Blacklist",
+    "tab_contact_white_list": "Whitelist",
+    "black_list_contact_confirmation_message": "Are you sure you want to blacklist \"{contactName}\"?",
+    "white_list_contact_confirmation_message": "Are you sure you want to whitelist \"{contactName}\"?",
+    "black_list_contact_confirmation_title": "Blacklist contact",
+    "white_list_contact_confirmation_title": "Whitelist contact",
+    "blacklisted_transactions": "Show blacklisted transactions"
 }

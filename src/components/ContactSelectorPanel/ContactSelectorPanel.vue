@@ -1,18 +1,50 @@
 <template>
     <div class="account-selector-panel">
         <div v-auto-scroll="'active-background'" class="account-switch-body-container scroll">
-            <div
-                v-for="(item, index) in allContacts"
-                :key="index"
-                :class="['account-tile', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
-                @click="selectedContactId = item.id"
-            >
-                <div class="mosaic_data">
-                    <span class="img_container">
-                        <img v-if="isActiveContact(item)" src="@/views/resources/img/symbol/XYMCoin.png" alt />
-                        <img v-else src="@/views/resources/img/symbol/XYMCoin.png" class="grayed-xym-logo" />
-                    </span>
-                    <span class="mosaic_name">{{ item.name }}</span>
+            <NavigationLinks
+                :direction="'horizontal'"
+                :items="panelItems"
+                :current-item-index="activePanel"
+                translation-prefix="tab_contact_"
+                @selected="(i) => (activePanel = i)"
+            />
+            <div v-if="activePanel == 1">
+                <div
+                    v-for="(item, index) in blackListedContacts"
+                    :key="index"
+                    :class="['account-tile', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
+                    @click="selectedContactId = item.id"
+                >
+                    <div class="mosaic_data">
+                        <span class="img_container">
+                            <img v-if="isActiveContact(item)" src="@/views/resources/img/icons/malicious-actor.svg" alt />
+                            <img v-else src="@/views/resources/img/icons/malicious-actor.svg" class="grayed-xym-logo" alt />
+                        </span>
+                        <span class="mosaic_name">
+                            <p class="bold-text">{{ item.name }}</p>
+                            <p>{{ commonHelpers.truncate(item.address) }}</p>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div v-else>
+                <div
+                    v-for="(item, index) in whiteListedContacts"
+                    :key="index"
+                    :class="['account-tile', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
+                    @click="selectedContactId = item.id"
+                >
+                    <div class="mosaic_data">
+                        <span class="img_container">
+                            <img v-if="isActiveContact(item)" src="@/views/resources/img/icons/whitelisted_contact.svg" alt />
+                            <img v-else src="@/views/resources/img/icons/whitelisted_contact.svg" class="grayed-xym-logo" alt />
+                        </span>
+                        <span class="mosaic_name">
+                            <p class="bold-text">{{ item.name }}</p>
+                            <p>{{ commonHelpers.truncate(item.address) }}</p>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

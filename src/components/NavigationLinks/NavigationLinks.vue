@@ -8,7 +8,11 @@
             "
         >
             <span
-                :class="['nav-item', index === currentItemIndex ? 'active-item' : 'inactive-item', index === 0 ? '' : 'border']"
+                :class="[
+                    'nav-item',
+                    index === currentItemIndex ? activeLinkCssClass : inactiveLinkCssClass,
+                    index === 0 ? '' : borderCssClass,
+                ]"
                 @click="$emit('selected', index)"
             >
                 {{ $t(translationPrefix + item.toLowerCase()) }}

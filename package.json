@@ -33,11 +33,11 @@
         "node-hid:prebuild-install:lin": "export npm_config_platform=linux && npm run node-hid:prebuild-install",
         "version": "echo $npm_package_version"
     },
-    "author": "NEM Group <support@nem.group>",
+    "author": "The Symbol Syndicate <contributors@symbol.dev>",
     "contributors": [
         {
-            "name": "NEM Group",
-            "email": "support@nem.group"
+            "name": "The Symbol Syndicate",
+            "email": "contributors@symbol.dev"
         }
     ],
     "dependencies": {
@@ -117,34 +117,34 @@
         "eslint-plugin-vue": "^6.1.2",
         "flush-promises": "^1.0.2",
         "google-fonts-webpack-plugin": "^0.4.4",
+        "gsap": ">=3.6.0",
         "identity-obj-proxy": "^3.0.0",
         "jest": "^25.2.6",
+        "json-schema": ">=0.4.0",
         "less": "^3.0.4",
         "less-loader": "^4.1.0",
         "moment-timezone": "^0.5.26",
+        "node-notifier": ">=8.0.1",
         "node-pre-gyp": "^0.13.0",
         "npm-build-zip": "^1.0.2",
+        "nth-check": ">=2.0.1",
         "postcss-import": "^12.0.1",
         "postcss-pxtorem": "^4.0.1",
         "prettier": "2.0.5",
         "rimraf": "^3.0.2",
-        "symbol-address-book": "^1.0.0",
+        "symbol-address-book": "^1.0.1",
         "symbol-hd-wallets": "0.14.1-alpha-202103051108",
         "symbol-openapi-typescript-fetch-client": "^1.0.0",
         "symbol-paper-wallets": "^1.0.2",
         "symbol-qr-library": "0.14.1-alpha-202103081047",
         "symbol-uri-scheme": "0.6.0",
+        "tar": ">=6.1.9",
         "ts-jest": "^25.3.0",
         "ts-mockito": "^2.6.1",
         "typescript": "^3.7.2",
         "utf-8-validate": "^5.0.2",
         "vue-jest": "^3.0.5",
-        "vue-template-compiler": "^2.6.10",
-        "tar": ">=6.1.9",
-        "json-schema": ">=0.4.0",
-        "nth-check": ">=2.0.1",
-        "gsap": ">=3.6.0",
-        "node-notifier": ">=8.0.1"
+        "vue-template-compiler": "^2.6.10"
     },
     "resolutions": {
         "@babel/preset-env": "7.5.5"

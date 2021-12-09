@@ -1126,5 +1126,12 @@
     "welcome_to_symbol": "Symbol에 오신걸 환영합니다",
     "word": "단어",
     "ws_connection_failed": "Symbol 체인에서 계좌의 활동들을 모니터링 할 수 없습니다. 다른 노드를 선택해주세요.",
-    "x_seconds": "{seconds}s."
+    "x_seconds": "{seconds}s.",
+    "tab_contact_black_list": "블랙리스트",
+    "tab_contact_white_list": "화이트리스트",
+    "black_list_contact_confirmation_message": "\"{contactName}\" 을(를) 허용하시겠습니까?",
+    "white_list_contact_confirmation_message": "\"{contactName}\" 을(를) 허용하시겠습니까?",
+    "black_list_contact_confirmation_title": "블랙리스트 연락처",
+    "white_list_contact_confirmation_title": "화이트리스트 연락처",
+    "blacklisted_transactions": "블랙리스트 거래 표시"
 }

@@ -66,6 +66,7 @@ export class FormContactCreationTs extends Vue {
     public formItems = {
         name: '',
         address: '',
+        isBlackListed: false,
     };
 
     /**
@@ -102,6 +103,7 @@ export class FormContactCreationTs extends Vue {
         this.$store.dispatch('addressBook/ADD_CONTACT', {
             name: this.formItems.name,
             address: address.plain(),
+            isBlackListed: this.formItems.isBlackListed,
         });
         this.$emit('submit');
     }

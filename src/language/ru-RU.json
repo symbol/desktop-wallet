@@ -1135,5 +1135,12 @@
     "use_max_value": "Используйте максимальное значение",
     "amount_value_cannot_start_with_zero": "Значение суммы не может начинаться с 0",
     "new_version_available": "Доступна новая версия кошелька Symbol!",
-    "download_now": " скачать сейчас"
+    "download_now": " скачать сейчас",
+    "tab_contact_black_list": "черный список",
+    "tab_contact_white_list": "белый список",
+    "black_list_contact_confirmation_message": "Вы действительно хотите внести \"{contactName}\" в черный список?",
+    "white_list_contact_confirmation_message": "Вы действительно хотите внести \"{contactName}\" в белый список?",
+    "black_list_contact_confirmation_title": "черный список контактов",
+    "white_list_contact_confirmation_title": "белый список контактов",
+    "blacklisted_transactions": "показать транзакции в черном списке"
 }

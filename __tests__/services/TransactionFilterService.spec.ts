@@ -43,12 +43,13 @@ const transactionState: TransactionState = {
     partialTransactions: [],
     filterOptions: new TransactionFilterOptionsState(),
     currentConfirmedPage: { pageNumber: 1, isLastPage: false },
+    isBlackListFilterActivated: false,
 };
 
 describe('services/TransactionFilterService', () => {
     describe('filter()', () => {
         test('should return all with all selected/unselected', async (done) => {
-            const result = TransactionFilterService.filter(transactionState, currentSigner.address.plain());
+            const result = TransactionFilterService.filter(transactionState, currentSigner.address.plain(), []);
 
             transactionState.filterOptions.isSentSelected = true;
             transactionState.filterOptions.isUnconfirmedSelected = true;

@@ -1135,5 +1135,12 @@
     "use_max_value": "最大値を使用",
     "amount_value_cannot_start_with_zero": "金額の値を0から始めることはできません",
     "new_version_available": "シンボルウォレットの新しいバージョンが利用可能になりました！",
-    "download_now": " ダウンロード中"
+    "download_now": " ダウンロード中",
+    "tab_contact_black_list": "ブラックリスト",
+    "tab_contact_white_list": "ホワイトリスト",
+    "black_list_contact_confirmation_message": "\"{contactName}\" をブラックリストに登録してもよろしいですか？",
+    "white_list_contact_confirmation_message": "\"{contactName}\" をホワイトリストに登録してもよろしいですか？",
+    "black_list_contact_confirmation_title": "ブラックリストの連絡先",
+    "white_list_contact_confirmation_title": "ホワイトリストの連絡先",
+    "blacklisted_transactions": "ブラックリストに登録されたトランザクションを表示する"
 }

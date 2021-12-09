@@ -18,6 +18,7 @@ import { mapGetters } from 'vuex';
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { AccountService } from '@/services/AccountService';
+import { CommonHelpers } from '@/core/utils/CommonHelpers';
 
 @Component({
     computed: {
@@ -65,7 +66,7 @@ export class AccountSelectorFieldTs extends Vue {
      * @var {AccountService}
      */
     public readonly accountService: AccountService = new AccountService();
-
+    public readonly commonHelpers = CommonHelpers;
     /// region computed properties getter/setter
     public get currentAccountIdentifier(): string {
         if (this.value) {
@@ -95,20 +96,6 @@ export class AccountSelectorFieldTs extends Vue {
 
     public get currentAccounts(): AccountModel[] {
         return this.knownAccounts;
-    }
-
-    /**
-     * Truncates the account name if it is too long
-     * @protected
-     * @param {string} str
-     * @returns {string}
-     */
-    protected truncate(str: string): string {
-        const maxStringLength = 15;
-        if (str.length <= maxStringLength) {
-            return str;
-        }
-        return `${str.substring(0, 9)}...${str.substring(str.length - 3)}`;
     }
 
     /// end-region computed properties getter/setter

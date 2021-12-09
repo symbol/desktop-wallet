@@ -35,6 +35,7 @@ import { PageInfo } from '@/store/Transaction';
 // @ts-ignore
 import Pagination from '@/components/Pagination/Pagination.vue';
 import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerService';
+import { AddressBook } from 'symbol-address-book';
 
 @Component({
     components: {
@@ -53,6 +54,8 @@ import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerServ
             filteredTransactions: 'transaction/filteredTransactions',
             generationHash: 'network/generationHash',
             currentConfirmedPage: 'transaction/currentConfirmedPage',
+            addressBook: 'addressBook/getAddressBook',
+            isBlackListFilterActivated: 'transaction/isBlackListFilterActivated',
         }),
     },
 })
@@ -113,6 +116,18 @@ export class TransactionListTs extends Vue {
      * @var {Transaction}
      */
     public activeTransaction: Transaction = null;
+
+    /**
+     * AddressBook
+     * @var {AddressBook}
+     */
+    public addressBook: AddressBook;
+
+    /**
+     * isBlackList Transaction filter activated
+     * @var {boolean}
+     */
+    public isBlackListFilterActivated: boolean;
 
     /**
      * Active bonded transaction (in-modal)
@@ -208,7 +223,15 @@ export class TransactionListTs extends Vue {
      * @return {Transaction[]}
      */
     public getTransactions(): Transaction[] {
-        return this.paginationType === 'pagination' ? this.getCurrentPageTransactions() : this.filteredTransactions;
+        const transactions = this.paginationType === 'pagination' ? this.getCurrentPageTransactions() : this.filteredTransactions;
+        const blackListedContacts = this.addressBook.getBlackListedContacts();
+        if (this.isBlackListFilterActivated) {
+            return transactions;
+        } else {
+            return transactions.filter(
+                (transaction) => !blackListedContacts.some((contact) => contact.address === transaction.signer?.address.plain()),
+            );
+        }
     }
 
     public get hasDetailModal(): boolean {

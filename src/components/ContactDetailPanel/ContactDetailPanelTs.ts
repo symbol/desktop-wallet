@@ -14,7 +14,7 @@
  *
  */
 // external dependencies
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // child components
 // @ts-ignore
@@ -64,6 +64,7 @@ export class ContactDetailPanelTs extends Vue {
      */
     public validationRules = ValidationRuleset;
 
+    public showBlackWhiteListConfirmModal = false;
     public saveProperty(propName: string) {
         return (newVal: string) => {
             if (propName === 'address') {
@@ -85,8 +86,25 @@ export class ContactDetailPanelTs extends Vue {
         this.showDeleteConfirmModal = val;
     }
 
+    public get showBlackWhiteListModal() {
+        return this.showBlackWhiteListConfirmModal;
+    }
+    public set showBlackWhiteListModal(val: boolean) {
+        this.showBlackWhiteListConfirmModal = val;
+    }
+
     public removeContact() {
         this.$store.dispatch('addressBook/REMOVE_CONTACT', this.selectedContact.id);
         this.showDeleteConfirmModal = false;
+    }
+
+    public BlackListWhiteListContact() {
+        this.selectedContact.isBlackListed = !this.selectedContact?.isBlackListed;
+        this.$store.dispatch('addressBook/UPDATE_CONTACT', { id: this.selectedContact.id, contact: this.selectedContact });
+        this.showBlackWhiteListModal = false;
+    }
+    @Watch('addressBook', { immediate: true })
+    onContactListChange() {
+        return;
     }
 }
