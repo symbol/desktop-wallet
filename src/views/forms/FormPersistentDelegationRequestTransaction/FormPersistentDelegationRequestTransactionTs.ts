@@ -256,7 +256,9 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             newVal?.publicKey === oldVal?.publicKey &&
             newVal.supplementalPublicKeys.node?.publicKey === oldVal.supplementalPublicKeys.node?.publicKey
         ) {
-            // no interesting changes
+            // we are only interested in the following changes so we are ignoring the rest
+            // 1. Signer change (when the user changes the signer, we need to update the form and the harvesting status)
+            // 2. Same signer but signer account has updates regarding the linked node publicKey (linked node changed)
             return;
         }
         this.formItems.signerAddress = this.signerAddress || newVal?.address.plain();
