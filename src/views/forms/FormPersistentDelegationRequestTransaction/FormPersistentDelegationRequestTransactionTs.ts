@@ -266,6 +266,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             const nodeOperatorPublicKey = await this.getNodeOperatorPublicKey();
             this.formItems.nodeModel = { nodePublicKey: nodeOperatorPublicKey ?? '' } as NodeModel;
         }
+        this.$store.dispatch('harvesting/FETCH_STATUS');
     }
 
     public async getNodeOperatorPublicKey() {
