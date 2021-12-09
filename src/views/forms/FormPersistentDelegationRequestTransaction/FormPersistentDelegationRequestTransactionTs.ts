@@ -149,7 +149,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public formItems = {
         nodeModel: { nodePublicKey: '' } as NodeModel,
         signerAddress: '',
-        maxFee: 1,
+        maxFee: 5, // default: slow fee
     };
     private accountsInfo: AccountInfo[];
 
