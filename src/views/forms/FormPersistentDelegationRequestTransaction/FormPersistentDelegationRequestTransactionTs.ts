@@ -87,6 +87,7 @@ import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
 import { NodeService } from '@/services/NodeService';
+import { feesConfig as defaultFeesConfig } from '@/config';
 
 export enum HarvestingAction {
     START = 1,
@@ -149,7 +150,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public formItems = {
         nodeModel: { nodePublicKey: '' } as NodeModel,
         signerAddress: '',
-        maxFee: 1,
+        maxFee: defaultFeesConfig.slow, // default: slow fee
     };
     private accountsInfo: AccountInfo[];
 
@@ -248,15 +249,27 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     @Watch('currentSignerAccountInfo', { immediate: true })
-    private async currentSignerWatch() {
-        this.formItems.signerAddress = this.signerAddress || this.currentSignerAccountInfo?.address.plain();
-        if (this.isNodeKeyLinked) {
-            this.formItems.nodeModel = { nodePublicKey: this.currentSignerAccountInfo?.supplementalPublicKeys.node.publicKey } as NodeModel;
-        } else {
-            // Check account is belong to node operator.
-            const nodeOperatorPublicKey = await this.getNodeOperatorPublicKey();
-            this.formItems.nodeModel = { nodePublicKey: nodeOperatorPublicKey ? nodeOperatorPublicKey : '' } as NodeModel;
+    private async currentSignerAccountInfoWatch(newVal: AccountInfo, oldVal: AccountInfo) {
+        if (
+            newVal &&
+            oldVal &&
+            newVal?.publicKey === oldVal?.publicKey &&
+            newVal.supplementalPublicKeys.node?.publicKey === oldVal.supplementalPublicKeys.node?.publicKey
+        ) {
+            // we are only interested in the following changes so we are ignoring the rest
+            // 1. Signer change (when the user changes the signer, we need to update the form and the harvesting status)
+            // 2. Same signer but signer account has updates regarding the linked node publicKey (linked node changed)
+            return;
         }
+        this.formItems.signerAddress = this.signerAddress || newVal?.address.plain();
+        if (this.isNodeKeyLinked) {
+            this.formItems.nodeModel = { nodePublicKey: newVal?.supplementalPublicKeys.node.publicKey } as NodeModel;
+        } else {
+            // Check account belongs to a node operator.
+            const nodeOperatorPublicKey = await this.getNodeOperatorPublicKey();
+            this.formItems.nodeModel = { nodePublicKey: nodeOperatorPublicKey ?? '' } as NodeModel;
+        }
+        this.$store.dispatch('harvesting/FETCH_STATUS');
     }
 
     public async getNodeOperatorPublicKey() {
