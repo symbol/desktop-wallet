@@ -4,13 +4,26 @@ import TransactionListFilters from '@/components/TransactionList/TransactionList
 import { getComponent } from '@MOCKS/Components';
 import AccountStore from '@/store/Account';
 import TransactionStore from '@/store/Transaction';
+import AddressBookStore from '@/store/AddressBook';
+import { AddressBook, IContact } from 'symbol-address-book';
+import { getTestAccount } from '@MOCKS/Accounts';
 let wrapper;
 let vm;
+import { addressBookMock } from '@MOCKS/AddressBookMock';
+const currentSigner = getTestAccount('remoteTestnet');
+const isBlackListFilterActivated = false;
+
 beforeEach(() => {
     wrapper = getComponent(
         TransactionListFilters,
-        { account: AccountStore, transaction: TransactionStore },
-        { currentAccount: null, currentAccountSigner: {}, signers: [] },
+        { account: AccountStore, transaction: TransactionStore, addressBook: AddressBookStore },
+        {
+            currentAccount: null,
+            currentAccountSigner: currentSigner,
+            addressBook: addressBookMock,
+            isBlackListFilterActivated: isBlackListFilterActivated,
+            signers: [],
+        },
         {},
         {},
     );
@@ -25,8 +38,21 @@ describe('TransactionListFilters', () => {
         vm.onSignerSelectorChange('TAD5BAHLOIXCRRB6GU2H72HPXMBBVAEUQRYPHBY');
         expect(vm.$store.dispatch).toBeCalledWith('account/SET_CURRENT_SIGNER', { address: addr, reset: true, unsubscribeWS: false });
     });
+
     test("should not call the 'account/SET_CURRENT_SIGNER' without address", () => {
         vm.onSignerSelectorChange();
         expect(vm.$store.dispatch).not.toBeCalled();
+    });
+
+    test("should call 'transaction/filterTransactions' with blacklisted contacts", () => {
+        vm.onSelectBlackListed();
+        expect(vm.$store.commit).toBeCalledWith('transaction/filterTransactions', {
+            filterOption: null,
+            currentSignerAddress: currentSigner.address.plain(),
+            multisigAddresses: [],
+            shouldFilterOptionChange: true,
+            BlackListedContacts: addressBookMock.getBlackListedContacts(),
+        });
+        expect(vm.$store.commit).toBeCalledWith('transaction/isBlackListFilterActivated', !isBlackListFilterActivated);
     });
 });

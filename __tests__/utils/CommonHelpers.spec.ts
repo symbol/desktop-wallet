@@ -32,4 +32,15 @@ describe('utils/CommonHelpers', () => {
             expect(addresses.length).toBe(2);
         });
     });
+
+    describe('truncate(address)', () => {
+        test('returns truncated string', () => {
+            const address = Address.createFromRawAddress('TAD5BAHLOIXCRRB6GU2H72HPXMBBVAEUQRYPHBY');
+            const truncatedAddress = CommonHelpers.truncate(address.plain());
+            const string = 'string';
+            expect(truncatedAddress.length).toBe(15);
+            expect(truncatedAddress.substring(truncatedAddress.length - 6)).toEqual('...HBY');
+            expect(CommonHelpers.truncate(string).length).toBe(6);
+        });
+    });
 });

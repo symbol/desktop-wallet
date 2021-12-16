@@ -89,6 +89,7 @@ export class ContactDetailPanelTs extends Vue {
     public get showBlackWhiteListModal() {
         return this.showBlackWhiteListConfirmModal;
     }
+
     public set showBlackWhiteListModal(val: boolean) {
         this.showBlackWhiteListConfirmModal = val;
     }
@@ -98,11 +99,12 @@ export class ContactDetailPanelTs extends Vue {
         this.showDeleteConfirmModal = false;
     }
 
-    public BlackListWhiteListContact() {
+    public ToggleBlackListContact() {
         this.selectedContact.isBlackListed = !this.selectedContact?.isBlackListed;
         this.$store.dispatch('addressBook/UPDATE_CONTACT', { id: this.selectedContact.id, contact: this.selectedContact });
         this.showBlackWhiteListModal = false;
     }
+
     @Watch('addressBook', { immediate: true })
     onContactListChange() {
         return;

@@ -82,9 +82,14 @@ export class TransactionListFiltersTs extends Vue {
     public downloadTransactions() {
         this.$emit('downloadTransactions');
     }
-    onSelectBlackListed() {
-        const blackListed = this.addressBook.getBlackListedContacts();
+
+    /**
+     * Hook called when user want to filter transactions with blacklisted addresses
+     * @protected
+     */
+    protected onSelectBlackListed() {
         if (!this.isBlackListFilterActivated) {
+            const blackListed = this.addressBook.getBlackListedContacts();
             this.$store.commit('transaction/filterTransactions', {
                 filterOption: null,
                 currentSignerAddress: this.currentAccountSigner.address.plain(),
