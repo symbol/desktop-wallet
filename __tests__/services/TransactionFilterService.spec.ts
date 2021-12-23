@@ -21,7 +21,7 @@ import { addressBookMock } from '@MOCKS/AddressBookMock';
 import { IContact } from 'symbol-address-book';
 
 const currentSigner = getTestAccount('remoteTestnet');
-const recepient = getTestAccount('remoteTestnetRecipient');
+const recipient = getTestAccount('remoteTestnetRecipient');
 const sentTransaction = {
     signer: currentSigner,
     recipientAddress: {
@@ -29,9 +29,9 @@ const sentTransaction = {
     },
 };
 const receivedTransaction = {
-    signer: recepient,
+    signer: recipient,
     recipientAddress: {
-        address: currentSigner.address.plain(),
+        address: recipient.address.plain(),
     },
 };
 
@@ -106,7 +106,7 @@ describe('services/TransactionFilterService', () => {
             transactionState.filterOptions.isReceivedSelected = true;
             const result = TransactionFilterService.filter(transactionState, currentSigner.address.plain());
 
-            expect(result.length).toBe(2);
+            expect(result.length).toBe(1);
             done();
         });
 
@@ -114,7 +114,7 @@ describe('services/TransactionFilterService', () => {
             const addressBook = addressBookMock;
             const contact1: IContact = {
                 id: '5c9093c7-2da2-476e-bc28-87f24a83cd23',
-                address: recepient.address.plain(),
+                address: recipient.address.plain(),
                 name: 'BlackListed',
                 phone: '+34 000000000',
                 isBlackListed: true,

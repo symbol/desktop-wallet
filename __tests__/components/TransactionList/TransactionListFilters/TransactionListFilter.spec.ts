@@ -5,7 +5,6 @@ import { getComponent } from '@MOCKS/Components';
 import AccountStore from '@/store/Account';
 import TransactionStore from '@/store/Transaction';
 import AddressBookStore from '@/store/AddressBook';
-import { AddressBook, IContact } from 'symbol-address-book';
 import { getTestAccount } from '@MOCKS/Accounts';
 let wrapper;
 let vm;
@@ -54,5 +53,28 @@ describe('TransactionListFilters', () => {
             BlackListedContacts: addressBookMock.getBlackListedContacts(),
         });
         expect(vm.$store.commit).toBeCalledWith('transaction/isBlackListFilterActivated', !isBlackListFilterActivated);
+    });
+
+    test("should call 'transaction/filterTransactions'", () => {
+        wrapper = getComponent(
+            TransactionListFilters,
+            { account: AccountStore, transaction: TransactionStore, addressBook: AddressBookStore },
+            {
+                currentAccount: null,
+                currentAccountSigner: currentSigner,
+                addressBook: addressBookMock,
+                isBlackListFilterActivated: true,
+                signers: [],
+            },
+            {},
+            {},
+        );
+        vm = wrapper.vm as TransactionListFilters;
+        vm.onSelectBlackListed();
+        expect(vm.$store.commit).toBeCalledWith('transaction/filterTransactions', {
+            currentSignerAddress: currentSigner.address.plain(),
+            filterOption: null,
+        });
+        expect(vm.$store.commit).toBeCalledWith('transaction/isBlackListFilterActivated', false);
     });
 });
