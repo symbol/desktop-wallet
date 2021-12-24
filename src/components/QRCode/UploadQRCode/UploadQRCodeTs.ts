@@ -74,7 +74,7 @@ export default class UploadQRCodeTs extends Vue {
     invalidType: boolean = false;
 
     public $refs!: {
-        qrcodeCapture: QrcodeCapture;
+        qrcodeCapture: any;
     };
 
     /**
