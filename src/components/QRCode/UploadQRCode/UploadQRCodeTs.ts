@@ -18,6 +18,7 @@ import { QrcodeCapture, QrcodeDropZone, QrcodeStream } from 'vue-qrcode-reader';
 import { QRCodeType } from 'symbol-qr-library';
 import { mapGetters } from 'vuex';
 
+declare type QrCapturer = typeof QrcodeCapture;
 @Component({
     components: { QrcodeCapture, QrcodeDropZone, QrcodeStream },
     computed: {
@@ -74,7 +75,7 @@ export default class UploadQRCodeTs extends Vue {
     invalidType: boolean = false;
 
     public $refs!: {
-        qrcodeCapture: any;
+        qrcodeCapture: QrCapturer;
     };
 
     /**
