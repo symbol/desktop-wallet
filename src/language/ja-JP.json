@@ -216,7 +216,7 @@
     "delete_contact_confirmation_title": "連絡先を削除しますか？",
     "delete_profile": "プロファイルの削除",
     "delete_profile_confirmation_checkbox": "はい、このプロファイルを削除します。",
-    "delete_profile_confirmation_message": "バックアップせずにプロファイルを削除することはお勧めできません。資産を紛失する可能性があります。本当に \"{profileName}\" を削除しますか？",
+    "delete_profile_confirmation_message": "バックアップせずにプロファイルを削除することは推奨できません。資産を紛失する可能性があります。本当に \"{profileName}\" を削除しますか？",
     "delete_profile_confirmation_title": "プロファイルの削除",
     "delta": "変化数",
     "description": "説明",
@@ -1133,7 +1133,7 @@
     "lock_hash_algorithm": "ハッシュアルゴリズム",
     "not_enough_balance": "十分な残高がありません",
     "use_max_value": "最大値を使用",
-    "amount_value_cannot_start_with_zero": "金額の値を0から始めることはできません",
-    "new_version_available": "シンボルウォレットの新しいバージョンが利用可能になりました！",
+    "amount_value_cannot_start_with_zero": "総量の値は0から始められません",
+    "new_version_available": "新バージョンのSymbolウォレットがリリースされています！",
     "download_now": " ダウンロード中"
 }
