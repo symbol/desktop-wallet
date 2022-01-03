@@ -248,6 +248,7 @@
     "enter_your_private_key": "개인키를 입력해주세요",
     "error_account_name_already_exists": "해당 계좌 이름은 이미 존재합니다. 계좌 이름은 고유해야합니다.",
     "error_contact_already_exists": "해당 연락처는 이미 존재합니다.",
+    "error_contact_does_not_match_profile": "이 연락처는 프로필 네트워크 유형과 일치하지 않습니다.",
     "error_delete_all_peers": "모든 노드를 삭제할 수 없습니다.",
     "error_incorrect_field": "{_field_} 입력이 잘못되었습니다.",
     "error_incorrect_url": "정확한 URL이 아닙니다.",

@@ -248,6 +248,7 @@
     "enter_your_private_key": "Введите свой приватный ключ",
     "error_account_name_already_exists": "Это имя аккаунта уже существует. Пожалуйста, введите уникальное имя учетной записи.",
     "error_contact_already_exists": "Этот контакт уже существует.",
+    "error_contact_does_not_match_profile": "Этот контакт не соответствует типу сети профиля.",
     "error_delete_all_peers": "Вы не можете удалить все ноды",
     "error_incorrect_field": "{_field_} поле неверно.",
     "error_incorrect_url": "Это недействительный URL",

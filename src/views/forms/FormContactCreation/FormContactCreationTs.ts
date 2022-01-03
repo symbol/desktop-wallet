@@ -91,6 +91,12 @@ export class FormContactCreationTs extends Vue {
      */
     public onSubmit() {
         const address = Address.createFromRawAddress(this.formItems.address);
+
+        if (address.networkType !== this.currentProfile.networkType) {
+            this.$store.dispatch('notification/ADD_ERROR', this.$t('error_contact_does_not_match_profile'));
+            return;
+        }
+
         const contacts = this.addressBook.getAllContacts();
         const isSameAddress = contacts.some((contact) => contact.address === address.plain());
 
