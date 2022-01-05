@@ -15,12 +15,12 @@
                     :class="['account-tile', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
                     @click="selectedContactId = item.id"
                 >
-                    <div class="mosaic_data">
+                    <div class="contact_data">
                         <span class="img_container">
                             <img v-if="isActiveContact(item)" src="@/views/resources/img/icons/malicious-actor.svg" alt />
                             <img v-else src="@/views/resources/img/icons/malicious-actor.svg" class="grayed-xym-logo" alt />
                         </span>
-                        <span class="mosaic_name">
+                        <span class="contact_name">
                             <p class="bold-text">{{ item.name }}</p>
                             <p>{{ commonHelpers.truncate(item.address) }}</p>
                         </span>
@@ -35,12 +35,12 @@
                     :class="['account-tile', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
                     @click="selectedContactId = item.id"
                 >
-                    <div class="mosaic_data">
+                    <div class="contact_data">
                         <span class="img_container">
                             <img v-if="isActiveContact(item)" src="@/views/resources/img/icons/whitelisted_contact.svg" alt />
                             <img v-else src="@/views/resources/img/icons/whitelisted_contact.svg" class="grayed-xym-logo" alt />
                         </span>
-                        <span class="mosaic_name">
+                        <span class="contact_name">
                             <p class="bold-text">{{ item.name }}</p>
                             <p>{{ commonHelpers.truncate(item.address) }}</p>
                         </span>

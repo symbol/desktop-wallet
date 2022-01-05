@@ -67,7 +67,6 @@
         &.active-item-contact {
             color: @primary;
             font-family: @symbolFontSemiBold;
-            border-bottom: 0.1em #fe10ff solid;
         }
         &.inactive-item {
             color: @grayLight;
@@ -78,8 +77,13 @@
             color: @grayLight;
             font-family: @symbolFont;
             font-weight: 500;
-            border-bottom: 0.1em #e4dce6 solid;
         }
+    }
+    .inactive-border {
+        border-bottom: 2px #e4dce6 solid;
+    }
+    .active-border {
+        border-bottom: 2px #fe10ff solid;
     }
     .border {
         border-left: 2px solid @primary;
@@ -102,4 +106,12 @@
         margin-left: 50%;
         bottom: 0;
     }
+}
+.line {
+    border-bottom: 2px solid #e4dce6;
+    height: 0.4rem !important;
+}
+
+.contact-header-font-size {
+    font-size: 0.15rem !important;
 }

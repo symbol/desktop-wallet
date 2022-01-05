@@ -1,5 +1,14 @@
 <template>
-    <div :class="['symbol-tab-container', direction === 'horizontal' ? 'horizontal' : 'vertical']">
+    <div
+        :class="[
+            'symbol-tab-container',
+            direction === 'horizontal'
+                ? translationPrefix === 'tab_contact_'
+                    ? ['horizontal', 'line', 'contact-header-font-size']
+                    : 'horizontal'
+                : 'vertical',
+        ]"
+    >
         <div
             v-for="(item, index) in items"
             :key="index"

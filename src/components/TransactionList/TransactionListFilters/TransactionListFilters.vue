@@ -18,12 +18,15 @@
         </div>
         <div class="button-download-container">
             <Tooltip :content="$t('blacklisted_transactions')" placement="top" :transfer="true">
-                <a
-                    :class="{ 'malicious-download-clicked': isBlackListFilterActivated, 'button-download': !isBlackListFilterActivated }"
-                    class="button-download-a"
-                    @click="onSelectBlackListed"
-                >
-                    <img src="@/views/resources/img/icons/malicious-actor.svg" alt />
+                <a class="button-download" @click="onSelectBlackListed">
+                    <img
+                        :src="
+                            isBlackListFilterActivated
+                                ? require('@/views/resources/img/icons/malicious-actor.svg')
+                                : require('@/views/resources/img/icons/malicious_actor_1.svg')
+                        "
+                        alt
+                    />
                 </a>
             </Tooltip>
         </div>
