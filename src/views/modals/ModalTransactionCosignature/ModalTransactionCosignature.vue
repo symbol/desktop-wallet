@@ -51,29 +51,90 @@
                     </div>
                     <div v-else>
                         <div class="explain">
-                            <span class="subtitle">{{ $t('transaction_needs_cosignature') }}</span>
-                            <p>{{ $t('transaction_needs_cosignature_explain') }}</p>
                             <span v-if="!hideCosignerWarning" class="warning">
-                                <Alert type="warning" show-icon>
-                                    <div class="warning-row emphasis">
-                                        {{ $t('transaction_cosignature_warning_unknown_cosigner') }}
+                                <div
+                                    :class="
+                                        transactionAccepted
+                                            ? ['box-position-size', 'box-section-accepted']
+                                            : ['box-position-size', 'box-section']
+                                    "
+                                >
+                                    <img
+                                        :class="!transactionAccepted ? ['img-position', 'img-pad'] : 'img-position'"
+                                        :src="require('@/views/resources/img/icons/Signature.svg')"
+                                        alt
+                                    />
+                                    <span v-if="!transactionAccepted && !transactionRejected" class="txt-position">{{
+                                        $t('transaction_needs_cosignature')
+                                    }}</span>
+
+                                    <div v-if="transactionAccepted" class="warning-txt-position">
+                                        <span class="txt-position">
+                                            You are about to sign this transaction. Please review carefully.
+                                        </span>
+                                        <br />
+                                        <span class="txt-position">
+                                            Sign it only if you understand it. Otherwise, it can lead to the loss of all of your funds..
+                                        </span>
                                     </div>
-                                    <div class="warning-row">
-                                        {{ $t('transaction_cosignature_warning_dont_sign') }}
-                                    </div>
-                                    <div class="inputs-container emphasis">
-                                        <Checkbox v-model="wantToProceed">
+                                    <div v-if="transactionAccepted">
+                                        <Checkbox
+                                            v-if="transactionAccepted"
+                                            v-model="wantToProceed"
+                                            class="warning-txt-position warning-txt-checkbox"
+                                        >
                                             {{ $t('transaction_cosignature_warning_proceed') }}
                                         </Checkbox>
                                     </div>
-                                </Alert>
+                                    <span v-if="transactionRejected" class="txt-position">{{ 'Blacklist this address' }}</span>
+                                    <br />
+                                    <input
+                                        v-if="transactionRejected"
+                                        v-model="contactName"
+                                        v-focus
+                                        class="input-size input-style contact-input"
+                                        :placeholder="$t('form_label_new_contact_name')"
+                                        type="text"
+                                    />
+                                    <br />
+                                    <Button
+                                        v-if="transactionRejected"
+                                        class="button-style inverted-button right-side-button action-button-style rejected-button"
+                                        html-type="submit"
+                                        @click="blackListContact"
+                                    >
+                                        {{ $t('tab_contact_black_list') }}
+                                    </Button>
+                                    <div v-if="!transactionAccepted && !transactionRejected" class="position-button">
+                                        <Button
+                                            class="button-style inverted-button right-side-button action-button-style"
+                                            html-type="submit"
+                                            @click="
+                                                transactionAccepted = false;
+                                                transactionRejected = true;
+                                            "
+                                        >
+                                            {{ $t('label_reject') }}
+                                        </Button>
+                                        <Button
+                                            class="button-style inverted-button right-side-button action-button-style"
+                                            html-type="submit"
+                                            @click="
+                                                transactionAccepted = true;
+                                                transactionRejected = false;
+                                            "
+                                        >
+                                            {{ $t('label_accept') }}
+                                        </Button>
+                                    </div>
+                                </div>
                             </span>
                         </div>
-
                         <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
                         <FormProfileUnlock
-                            v-else
+                            v-if="!isUsingHardwareWallet && transactionAccepted"
                             :disabled="!hideCosignerWarning && !wantToProceed"
+                            :is-signature-modal-opened="true"
                             @success="onAccountUnlocked"
                             @error="onError"
                         />

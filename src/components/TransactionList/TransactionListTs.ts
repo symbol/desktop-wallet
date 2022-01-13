@@ -36,6 +36,10 @@ import { PageInfo } from '@/store/Transaction';
 import Pagination from '@/components/Pagination/Pagination.vue';
 import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerService';
 import { AddressBook } from 'symbol-address-book';
+// @ts-ignore
+import ModalAddedToBlacklistPopup from '@/views/modals/ModalAddedToBlacklistPopup/ModalAddedToBlacklistPopup.vue';
+// @ts-ignore
+import ModalAddNewContact from '@/views/modals/ModalAddNewContact/ModalAddNewContact.vue';
 
 @Component({
     components: {
@@ -46,6 +50,8 @@ import { AddressBook } from 'symbol-address-book';
         TransactionTable,
         ModalTransactionExport,
         Pagination,
+        ModalAddedToBlacklistPopup,
+        ModalAddNewContact,
     },
     computed: {
         ...mapGetters({
@@ -168,6 +174,12 @@ export class TransactionListTs extends Vue {
     public currentConfirmedPage: PageInfo;
 
     public timeIntervals: any[] = [];
+
+    public transactionSignerAddress: string = '';
+
+    public showBlackListPopup: boolean = false;
+
+    public showAddContactModal: boolean = true;
 
     public getEmptyMessage() {
         return 'no_data_transactions';
@@ -304,6 +316,10 @@ export class TransactionListTs extends Vue {
         this.$router.push({ name: 'dashboard.index' });
     }
 
+    onCloseContactModal() {
+        this.showAddContactModal = false;
+    }
+
     /**
      * Hook called at each page change
      */
@@ -359,5 +375,13 @@ export class TransactionListTs extends Vue {
 
     public downloadTransactions() {
         this.hasTransactionExportModal = true;
+    }
+
+    public onBlackListContact() {
+        this.showBlackListPopup = true;
+    }
+
+    public onSignerAddress(signerAddress) {
+        this.transactionSignerAddress = signerAddress;
     }
 }

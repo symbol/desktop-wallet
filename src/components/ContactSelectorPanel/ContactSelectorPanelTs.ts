@@ -57,6 +57,7 @@ import { CommonHelpers } from '@/core/utils/CommonHelpers';
         ...mapGetters({
             addressBook: 'addressBook/getAddressBook',
             selectedContact: 'addressBook/getSelectedContact',
+            isBlackListedSelected: 'addressBook/getBlackListedContactsSelected',
         }),
     },
 })
@@ -79,7 +80,7 @@ export class ContactSelectorPanelTs extends Vue {
     public hasImportProfileModal: boolean = false;
     public panelItems = ['white_list', 'black_list'];
     public commonHelpers = CommonHelpers;
-
+    public isBlackListedSelected: boolean;
     public get allContacts(): IContact[] {
         return this.addressBook.getAllContacts();
     }
@@ -123,6 +124,12 @@ export class ContactSelectorPanelTs extends Vue {
 
     public downloadAddressBook() {
         UIHelpers.downloadBytesAsFile(this.addressBook.toJSON(), `address-book.json`, 'application/json');
+    }
+
+    mounted() {
+        if (this.isBlackListedSelected) {
+            this.activeIndex = 1;
+        }
     }
 
     /// end-region computed properties getter/setter

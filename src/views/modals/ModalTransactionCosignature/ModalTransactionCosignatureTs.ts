@@ -49,6 +49,7 @@ import { AccountService } from '@/services/AccountService';
 import { LedgerService } from '@/services/LedgerService';
 import { AccountMetadataTransaction } from 'symbol-sdk';
 import { MultisigService } from '@/services/MultisigService';
+import { AddressBook } from 'symbol-address-book';
 @Component({
     components: {
         TransactionDetails,
@@ -66,6 +67,7 @@ import { MultisigService } from '@/services/MultisigService';
             currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
             multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
             multisigAccountGraph: 'account/multisigAccountGraph',
+            addressBook: 'addressBook/getAddressBook',
         }),
     },
 })
@@ -138,7 +140,10 @@ export class ModalTransactionCosignatureTs extends Vue {
     public hideCosignerWarning = false;
 
     public wantToProceed = false;
-
+    public addressBook: AddressBook;
+    private transactionRejected: boolean = false;
+    private transactionAccepted: boolean = false;
+    private contactName: string = '';
     /// region computed properties
     /**
      * Visibility state
@@ -384,6 +389,9 @@ export class ModalTransactionCosignatureTs extends Vue {
     public onAccountUnlocked({ account }: { account: Account }) {
         // - log about unlock success
         this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.');
+        if (!this.addressExists) {
+            this.$emit('signer-address', this.transaction.signer.address.plain());
+        }
         return this.onSigner(new AccountTransactionSigner(account));
     }
 
@@ -456,5 +464,31 @@ export class ModalTransactionCosignatureTs extends Vue {
      */
     public onError(error: string) {
         this.$emit('error', error);
+    }
+
+    get addressExists() {
+        const addressExists: boolean = this.addressBook.getContactByAddress(this.transaction.signer.address.plain()) !== undefined;
+        return addressExists;
+    }
+
+    public blackListContact() {
+        const contacts = this.addressBook.getAllContacts();
+        const isSameAddress = contacts.some((contact) => contact.address === this.transaction.signer.address.plain());
+
+        if (isSameAddress) {
+            this.$store.dispatch('notification/ADD_ERROR', this.$t('error_contact_already_exists'));
+            return;
+        }
+
+        this.$store.dispatch('addressBook/ADD_CONTACT', {
+            name: this.contactName,
+            address: this.transaction.signer.address.plain(),
+            isBlackListed: true,
+        });
+        this.show = false;
+        this.$emit('blacklist');
+        if (!this.addressExists) {
+            this.$emit('signer-address', this.transaction.signer.address.plain());
+        }
     }
 }

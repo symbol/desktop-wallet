@@ -28,12 +28,14 @@ type AddressBookState = {
     initialized: boolean;
     addressBook: AddressBook;
     selectedContact: IContact;
+    isBlackListedSelected: boolean;
 };
 
 const addressBookState: AddressBookState = {
     initialized: false,
     addressBook: null,
     selectedContact: null,
+    isBlackListedSelected: false,
 };
 
 /**
@@ -46,6 +48,7 @@ export default {
         getInitialized: (state: AddressBookState) => state.initialized,
         getAddressBook: (state: AddressBookState) => state.addressBook,
         getSelectedContact: (state: AddressBookState): IContact => state.selectedContact,
+        getBlackListedContactsSelected: (state: AddressBookState) => state.isBlackListedSelected,
     },
     mutations: {
         setInitialized: (state: AddressBookState, initialized: boolean) => {
@@ -58,6 +61,9 @@ export default {
         setSelectedContact: (state: AddressBookState, selectedContact: IContact) => {
             Vue.set(state, 'selectedContact', selectedContact);
             // state.selectedContact = selectedContact;
+        },
+        setBlackListedContactsSelected: (state: AddressBookState, isBlackListedSelected: boolean) => {
+            state.isBlackListedSelected = isBlackListedSelected;
         },
     },
     actions: {

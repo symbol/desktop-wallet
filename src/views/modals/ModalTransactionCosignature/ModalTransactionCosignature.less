@@ -3,7 +3,7 @@
 /deep/.modal-transaction-cosignature {
     .transaction-details-content {
         position: relative;
-        min-height: 2rem;
+        min-height: 6.2rem;
 
         .explain {
             padding: 0.2rem;
@@ -19,12 +19,10 @@
                 padding-top: 0.2rem;
                 text-align: justify;
             }
-            .warning-row {
-                margin-bottom: 0.1rem;
-            }
             .emphasis {
-                color: @primary;
+                color: @whiteDark;
                 font-weight: @boldest;
+                padding-left: 1.4rem;
             }
 
             .warning .ivu-alert-icon {
@@ -54,4 +52,65 @@
 .clear-staged-transactions {
     font-size: @smallFont;
     cursor: pointer;
+}
+
+.box-position-size {
+    left: -0.3rem;
+    width: 12.06rem;
+    min-height: 2.27rem;
+    right: 0;
+    position: absolute;
+    display: block;
+}
+
+.box-section {
+    background-color: #44004e;
+}
+
+.box-section-accepted {
+    background-color: #f89903;
+}
+
+.action-button-style {
+    z-index: 100001;
+    background: white !important;
+    color: #44004e;
+    width: 2rem;
+}
+
+.img-pad {
+    margin-bottom: 0.2rem;
+}
+
+.img-position {
+    width: 0.4rem;
+    height: 0.4rem;
+    margin-left: 1.1rem;
+}
+
+.txt-position {
+    margin-left: -0.4rem;
+    color: white;
+    font-weight: @boldest;
+}
+
+.warning-txt-position {
+    margin-left: 1.55rem;
+}
+
+.warning-txt-checkbox {
+    font-weight: bold;
+    margin-left: 1.15rem;
+}
+
+.position-button {
+    padding-left: 1rem;
+}
+.contact-input {
+    background: white;
+    margin-left: 1.1rem;
+    margin-bottom: 0.05rem;
+}
+.rejected-button {
+    margin-left: 1.1rem;
 }
