@@ -1143,5 +1143,15 @@
     "white_list_contact_confirmation_message": "您确定要将 \"{contactName}\" 列入白名单吗？",
     "black_list_contact_confirmation_title": "黑名单联系人",
     "white_list_contact_confirmation_title": "白名单联系人",
-    "blacklisted_transactions": "显示列入黑名单的交易"
+    "blacklisted_transactions": "显示列入黑名单的交易",
+    "see_blacklist_label": "查看黑名单",
+    "added_to_blacklist": "加入黑名单",
+    "blacklist_popup_description": "您的黑名单可以让您保存已知诈骗者的加密货币地址。这些地址将被自动阻止。",
+    "add_contact_popup_text1": "成功!",
+    "add_contact_popup_text2": "网络签名确认的交易。",
+    "add_contact_popup_text3": "在资源管理器中显示",
+    "add_contact_popup_text4": "检测到新地址",
+    "add_contact_popup_text5": "您的通讯录可以让您保存您经常使用的加密货币地址。添加地址后，您不必每次需要时都手动输入，也不会出现那么多安全确认屏幕。",
+    "label_accept": "接受",
+    "label_reject": "拒绝"
 }

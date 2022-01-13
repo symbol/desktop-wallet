@@ -1143,5 +1143,15 @@
     "white_list_contact_confirmation_message": "\"{contactName}\" をホワイトリストに登録してもよろしいですか？",
     "black_list_contact_confirmation_title": "ブラックリストの連絡先",
     "white_list_contact_confirmation_title": "ホワイトリストの連絡先",
-    "blacklisted_transactions": "ブラックリストに登録されたトランザクションを表示する"
+    "blacklisted_transactions": "ブラックリストに登録されたトランザクションを表示する",
+    "see_blacklist_label": "ブラックリストを参照",
+    "added_to_blacklist": "ブラックリストに追加",
+    "blacklist_popup_description": "ブラックリストを使用すると、既知の詐欺師である暗号通貨アドレスを保存できます。これらのアドレスは自動的にブロックされます。",
+    "add_contact_popup_text1": "成功!",
+    "add_contact_popup_text2": "トランザクションはネットワークによって署名および確認されました。",
+    "add_contact_popup_text3": "エクスプローラーに表示",
+    "add_contact_popup_text4": "新しいアドレスが検出されました",
+    "add_contact_popup_text5": "アドレスブックを使用すると、頻繁に使用する暗号通貨アドレスを保存できます。アドレスを追加すると、必要なたびに手動で入力する必要がなくなり、セキュリティ確認画面が少なくなります。",
+    "label_accept": "受け入れる",
+    "label_reject": "拒絶"
 }
