@@ -132,7 +132,7 @@
                         </div>
                         <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
                         <FormProfileUnlock
-                            v-else
+                            v-if="(!isUsingHardwareWallet && transactionAccepted) || hideCosignerWarning"
                             :disabled="!hideCosignerWarning && !wantToProceed"
                             :is-signature-modal-opened="true"
                             @success="onAccountUnlocked"
