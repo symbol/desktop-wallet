@@ -50,8 +50,8 @@
                         </div>
                     </div>
                     <div v-else>
-                        <div class="explain">
-                            <span v-if="!hideCosignerWarning" class="warning">
+                        <div v-if="!hideCosignerWarning" class="explain">
+                            <span class="warning">
                                 <div
                                     :class="
                                         transactionAccepted
@@ -132,7 +132,7 @@
                         </div>
                         <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
                         <FormProfileUnlock
-                            v-if="(!isUsingHardwareWallet && transactionAccepted) || hideCosignerWarning"
+                            v-else-if="transactionAccepted || hideCosignerWarning"
                             :disabled="!hideCosignerWarning && !wantToProceed"
                             :is-signature-modal-opened="true"
                             @success="onAccountUnlocked"
