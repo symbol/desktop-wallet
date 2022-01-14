@@ -263,7 +263,7 @@ export class ModalTransactionCosignatureTs extends Vue {
                     [this.currentAccount.address, ...multisigChildrenAddresses.map((a) => a.plain())].some((msa) => msa === addr.plain()),
                 ); // to check if any of the added addresses in this current account's multisig tree
             this.hideCosignerWarning =
-                msigAccModificationCurrentAddressAdded ||
+                // msigAccModificationCurrentAddressAdded ||
                 (this.multisigAccountGraph &&
                     MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, this.transaction.signer.address.plain()));
 
