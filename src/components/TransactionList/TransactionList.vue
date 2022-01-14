@@ -24,7 +24,7 @@
             :transaction-hash="aggregateTransactionHash"
             @close="onCloseCosignatureModal"
             @blacklist="onBlackListContact"
-            @signer-address="onSignerAddress"
+            @transaction-signed-successfully="onTransactionSigned"
         />
         <ModalTransactionExport
             v-if="hasTransactionExportModal"
@@ -36,6 +36,7 @@
             v-if="transactionSignerAddress !== '' && !hasCosignatureModal && showAddContactModal"
             :visible="true"
             :signer-address="transactionSignerAddress"
+            :transaction-hash="transactionHash"
             @close="onCloseContactModal"
         />
         <div v-if="showBlackListPopup" class="blacklist-box">

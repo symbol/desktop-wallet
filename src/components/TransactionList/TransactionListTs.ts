@@ -177,6 +177,8 @@ export class TransactionListTs extends Vue {
 
     public transactionSignerAddress: string = '';
 
+    public transactionHash: string = '';
+
     public showBlackListPopup: boolean = false;
 
     public showAddContactModal: boolean = true;
@@ -381,7 +383,8 @@ export class TransactionListTs extends Vue {
         this.showBlackListPopup = true;
     }
 
-    public onSignerAddress(signerAddress) {
-        this.transactionSignerAddress = signerAddress;
+    public onTransactionSigned(value) {
+        this.transactionSignerAddress = value[0];
+        this.transactionHash = value[1];
     }
 }

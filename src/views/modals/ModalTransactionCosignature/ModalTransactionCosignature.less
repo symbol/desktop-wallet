@@ -75,7 +75,8 @@
     z-index: 100001;
     background: white !important;
     color: #44004e;
-    width: 2rem;
+    width: 2.3rem;
+    height: 0.4rem !important;
 }
 
 .img-pad {
@@ -85,32 +86,56 @@
 .img-position {
     width: 0.4rem;
     height: 0.4rem;
-    margin-left: 1.1rem;
+    margin-left: 0.7rem;
 }
 
 .txt-position {
-    margin-left: -0.4rem;
+    margin-left: -0.35rem;
     color: white;
     font-weight: @boldest;
 }
 
 .warning-txt-position {
-    margin-left: 1.55rem;
+    margin-left: 1.2rem;
 }
 
 .warning-txt-checkbox {
     font-weight: bold;
-    margin-left: 1.15rem;
+    margin-left: 0.9rem;
+    font-family: @symbolFontBold;
+}
+
+.warning-txt {
+    font-family: @symbolFontBold;
+    color: black;
 }
 
 .position-button {
-    padding-left: 1rem;
+    padding-left: 0.63rem;
 }
+
 .contact-input {
     background: white;
-    margin-left: 1.1rem;
+    margin-left: 0.74rem;
     margin-bottom: 0.05rem;
+    width: 2.3rem;
+    height: 0.4rem !important;
 }
+
 .rejected-button {
-    margin-left: 1.1rem;
+    margin-left: 0.74rem;
+    width: 2.3rem;
+    height: 0.4rem !important;
+    font-weight: @symbolFontBold;
+}
+
+/deep/.ivu-checkbox-inner {
+    background: white !important;
+    box-shadow: 0px 2px 4px @primary;
+    border-radius: 2px;
+    border: none;
+}
+
+/deep/.ivu-checkbox-inner::after {
+    border-color: black;
 }

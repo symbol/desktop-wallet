@@ -24,7 +24,7 @@
                 ]"
                 @click="$emit('selected', index)"
             >
-                {{ $t(translationPrefix + item.toLowerCase()) }}
+                <p :class="index === currentItemIndex ? activeBorder : inActiveBorder">{{ $t(translationPrefix + item.toLowerCase()) }}</p>
             </span>
         </div>
     </div>

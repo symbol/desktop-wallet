@@ -9,10 +9,14 @@ export class NavigationLinksTs extends Vue {
     private activeLinkCssClass: string[] = ['active-item'];
     private inactiveLinkCssClass: string[] = ['inactive-item'];
     private borderCssClass: string = 'border';
+    private activeBorder: string = '';
+    private inActiveBorder: string = '';
     created() {
         if (this.translationPrefix === 'tab_contact_') {
-            this.activeLinkCssClass = ['active-item-contact', 'active-border', 'contact-header-font-size'];
-            this.inactiveLinkCssClass = ['inactive-item-contact', 'inactive-border', 'contact-header-font-size'];
+            this.activeLinkCssClass = ['active-item-contact', 'contact-header-font-size'];
+            this.inactiveLinkCssClass = ['inactive-item-contact', 'contact-header-font-size'];
+            this.activeBorder = 'active-border';
+            this.inActiveBorder = 'inactive-border';
             this.borderCssClass = '';
         }
     }

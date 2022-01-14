@@ -36,6 +36,10 @@ export class ModalAddNewContactTs extends Vue {
         default: '',
     })
     signerAddress: string;
+    @Prop({
+        default: '',
+    })
+    transactionHash: string;
     public contactName: string = '';
     public contactNote: string = '';
     public addressBook: AddressBook;
@@ -83,7 +87,7 @@ export class ModalAddNewContactTs extends Vue {
     }
 
     public get explorerUrl() {
-        return networkConfig[this.networkType].explorerUrl.replace(/\/+$/, '') + '/accounts/' + this.signerAddress;
+        return networkConfig[this.networkType].explorerUrl.replace(/\/+$/, '') + '/transactions/' + this.transactionHash;
     }
 
     public onSubmit() {

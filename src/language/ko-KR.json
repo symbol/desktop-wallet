@@ -1062,7 +1062,7 @@
     "transaction_details": "트랜잭션 세부정보",
     "transaction_expired": "트랜잭션이 만료되었습니다",
     "transaction_has_cosignature": "공동서명(들) 수신",
-    "transaction_needs_cosignature": "공동서명(들) 대기 중인 트랜잭션",
+    "transaction_needs_cosignature": "거래에 서명이 필요합니다.",
     "transaction_needs_cosignature_explain": "해당 다중서명 트랜잭션은 승인도기 위해서 여러개의 서명이 필요합니다. 비밀번호를 입력하여 서명을 등록해주세요.",
     "transaction_needs_cosignature_explain_signed": "해당 트랜잭션이 승인되기 위해서 공동 서명자의 다중서명이 필요합니다. 이미 트랜잭션을 위해 공동 서명을 전송 했다면, 다른 공동서명이 승인 되기를 기다려주세요.QR 코드를 다운로드하고 공동 서명자에게 QR 코드를 전달하여 더욱 쉽게 접근할 수 있도록 해주세요.",
     "transaction_qr_action_desc": "다음을 클릭해 전송 페이지 세부 정보 화면을 열 수 있습니다.",
@@ -1128,6 +1128,9 @@
     "word": "단어",
     "ws_connection_failed": "Symbol 체인에서 계좌의 활동들을 모니터링 할 수 없습니다. 다른 노드를 선택해주세요.",
     "x_seconds": "{seconds}s.",
+    "transaction_cosignature_warning_dont_sign": "이해한 경우에만 서명하십시오. 그렇지 않으면 모든 자금이 손실될 수 있습니다.",
+    "transaction_cosignature_warning_unknown_cosigner": "이 거래에 서명하려고 합니다. 신중하게 검토하시기 바랍니다.",
+    "transaction_cosignature_warning_proceed": "이해 했어요",
     "tab_contact_black_list": "블랙리스트",
     "tab_contact_white_list": "화이트리스트",
     "black_list_contact_confirmation_message": "\"{contactName}\" 을(를) 허용하시겠습니까?",
@@ -1139,10 +1142,11 @@
     "added_to_blacklist": "블랙리스트에 추가됨",
     "blacklist_popup_description": "블랙리스트를 사용하면 알려진 사기꾼의 암호화폐 주소를 저장할 수 있습니다. 이 주소는 자동으로 차단됩니다.",
     "add_contact_popup_text1": "성공!",
-    "add_contact_popup_text2": "네트워크에서 서명되고 확인된 트랜잭션입니다.",
+    "add_contact_popup_text2": "거래가 성공적으로 서명되었습니다. 네트워크에서 확인 대기 중입니다.",
     "add_contact_popup_text3": " 탐색기에 표시",
     "add_contact_popup_text4": "새 주소가 감지되었습니다",
     "add_contact_popup_text5": "Y주소록을 사용하면 자주 사용하는 암호화폐 주소를 저장할 수 있습니다. 주소를 추가한 후에는 필요할 때마다 수동으로 입력할 필요가 없으며 보안 확인 화면이 많지 않습니다.",
-    "label_accept": "수락",
-    "label_reject": "거부"
+    "label_accept": "수락...",
+    "label_reject": "거부",
+    "blacklist_address_text": "이 주소를 차단 목록에 추가"
 }

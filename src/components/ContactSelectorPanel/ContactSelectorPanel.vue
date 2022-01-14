@@ -22,7 +22,7 @@
                         </span>
                         <span class="contact_name">
                             <p class="bold-text">{{ item.name }}</p>
-                            <p>{{ commonHelpers.truncate(item.address) }}</p>
+                            <p class="address">{{ commonHelpers.truncate(item.address) }}</p>
                         </span>
                     </div>
                 </div>
@@ -42,14 +42,14 @@
                         </span>
                         <span class="contact_name">
                             <p class="bold-text">{{ item.name }}</p>
-                            <p>{{ commonHelpers.truncate(item.address) }}</p>
+                            <p class="address">{{ commonHelpers.truncate(item.address) }}</p>
                         </span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="account-switch-footer-container">
+        <div class="account-switch-footer-container bottom-buttons">
             <span type="button" class="add-account pointer button" @click="hasAddAccountModal = true">
                 <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" />
                 {{ $t('add_contact') }}

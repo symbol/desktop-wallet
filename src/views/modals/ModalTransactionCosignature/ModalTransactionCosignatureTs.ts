@@ -390,7 +390,10 @@ export class ModalTransactionCosignatureTs extends Vue {
         // - log about unlock success
         this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.');
         if (!this.addressExists) {
-            this.$emit('signer-address', this.transaction.signer.address.plain());
+            this.$emit('transaction-signed-successfully', [
+                this.transaction.signer.address.plain(),
+                this.transaction.transactionInfo?.hash,
+            ]);
         }
         return this.onSigner(new AccountTransactionSigner(account));
     }

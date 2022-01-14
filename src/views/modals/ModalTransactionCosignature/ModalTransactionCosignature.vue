@@ -70,23 +70,19 @@
 
                                     <div v-if="transactionAccepted" class="warning-txt-position">
                                         <span class="txt-position">
-                                            You are about to sign this transaction. Please review carefully.
+                                            {{ $t('transaction_cosignature_warning_unknown_cosigner') }}
                                         </span>
                                         <br />
                                         <span class="txt-position">
-                                            Sign it only if you understand it. Otherwise, it can lead to the loss of all of your funds..
+                                            {{ $t('transaction_cosignature_warning_dont_sign') }}
                                         </span>
                                     </div>
                                     <div v-if="transactionAccepted">
-                                        <Checkbox
-                                            v-if="transactionAccepted"
-                                            v-model="wantToProceed"
-                                            class="warning-txt-position warning-txt-checkbox"
-                                        >
-                                            {{ $t('transaction_cosignature_warning_proceed') }}
+                                        <Checkbox v-if="transactionAccepted" v-model="wantToProceed" class="warning-txt-checkbox">
+                                            <span class="warning-txt">{{ $t('transaction_cosignature_warning_proceed') }}</span>
                                         </Checkbox>
                                     </div>
-                                    <span v-if="transactionRejected" class="txt-position">{{ 'Blacklist this address' }}</span>
+                                    <span v-if="transactionRejected" class="txt-position">{{ $t('blacklist_address_text') }}</span>
                                     <br />
                                     <input
                                         v-if="transactionRejected"

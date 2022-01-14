@@ -137,7 +137,6 @@
     justify-content: space-between;
     align-content: center;
     align-items: center;
-    border-bottom: 0.01rem solid @line;
     position: relative;
     color: @purpleDark;
     font-family: @symbolFontLight;
@@ -183,13 +182,14 @@
         top: 0;
         left: 0.4rem;
         width: 1.8rem;
-        font-size: @bigFont;
-        font-weight: 400;
-        overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         padding-left: 0.1rem;
-
+        font-size: 13px;
+        line-height: 120%;
+        font-family: @symbolFontBold;
+        letter-spacing: -0.02em;
+        margin: 5px 0px;
         .active-background {
             color: @black;
         }
@@ -245,5 +245,19 @@
     overflow: auto;
 }
 .bold-text {
-    font-weight: 1000 !important;
+    font-size: 13px;
+    line-height: 120%;
+}
+.address {
+    font-family: @symbolFont;
+    font-size: 12px;
+    line-height: 120%;
+    letter-spacing: -0.02em;
+    color: #886791;
+    margin: 5px 0px;
+}
+.bottom-buttons {
+    position: absolute;
+    white-space: nowrap;
+    bottom: 0.1rem;
 }
