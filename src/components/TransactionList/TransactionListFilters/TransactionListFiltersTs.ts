@@ -94,8 +94,8 @@ export class TransactionListFiltersTs extends Vue {
                 filterOption: null,
                 currentSignerAddress: this.currentAccountSigner.address.plain(),
                 multisigAddresses: [],
-                shouldFilterOptionChange: true,
-                BlackListedContacts: blackListed,
+                shouldFilterOptionChange: false,
+                blacklistedContacts: blackListed,
             });
         } else {
             this.$store.commit('transaction/filterTransactions', {

@@ -40,6 +40,7 @@ import { AddressBook } from 'symbol-address-book';
 import ModalAddedToBlacklistPopup from '@/views/modals/ModalAddedToBlacklistPopup/ModalAddedToBlacklistPopup.vue';
 // @ts-ignore
 import ModalAddNewContact from '@/views/modals/ModalAddNewContact/ModalAddNewContact.vue';
+import { Signer } from '@/store/Account';
 
 @Component({
     components: {
@@ -62,6 +63,7 @@ import ModalAddNewContact from '@/views/modals/ModalAddNewContact/ModalAddNewCon
             currentConfirmedPage: 'transaction/currentConfirmedPage',
             addressBook: 'addressBook/getAddressBook',
             isBlackListFilterActivated: 'transaction/isBlackListFilterActivated',
+            currentAccountSigner: 'account/currentAccountSigner',
         }),
     },
 })
@@ -182,6 +184,8 @@ export class TransactionListTs extends Vue {
     public showBlackListPopup: boolean = false;
 
     public showAddContactModal: boolean = true;
+
+    public currentAccountSigner: Signer;
 
     public getEmptyMessage() {
         return 'no_data_transactions';
@@ -386,5 +390,16 @@ export class TransactionListTs extends Vue {
     public onTransactionSigned(value) {
         this.transactionSignerAddress = value[0];
         this.transactionHash = value[1];
+    }
+
+    /**
+     * Reset blacklist transaction filter
+     */
+    destroyed() {
+        this.$store.commit('transaction/isBlackListFilterActivated', false);
+        this.$store.commit('transaction/filterTransactions', {
+            filterOption: null,
+            currentSignerAddress: this.currentAccountSigner.address.plain(),
+        });
     }
 }

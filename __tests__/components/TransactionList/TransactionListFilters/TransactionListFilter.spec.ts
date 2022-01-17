@@ -49,8 +49,8 @@ describe('TransactionListFilters', () => {
             filterOption: null,
             currentSignerAddress: currentSigner.address.plain(),
             multisigAddresses: [],
-            shouldFilterOptionChange: true,
-            BlackListedContacts: addressBookMock.getBlackListedContacts(),
+            shouldFilterOptionChange: false,
+            blacklistedContacts: addressBookMock.getBlackListedContacts(),
         });
         expect(vm.$store.commit).toBeCalledWith('transaction/isBlackListFilterActivated', !isBlackListFilterActivated);
     });
