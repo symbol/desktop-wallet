@@ -34,21 +34,11 @@ const receivedTransaction = {
         address: recipient.address.plain(),
     },
 };
-const receivedTransaction2 = {
-    signer: recipient,
-    recipientAddress: {
-        address: currentSigner.address.plain(),
-    },
-};
 
 const transactionState: TransactionState = {
     initialized: false,
     isFetchingTransactions: false,
-    transactions: [
-        (sentTransaction as unknown) as TransferTransaction,
-        (receivedTransaction as unknown) as TransferTransaction,
-        (receivedTransaction2 as unknown) as TransferTransaction,
-    ],
+    transactions: [(sentTransaction as unknown) as TransferTransaction, (receivedTransaction as unknown) as TransferTransaction],
     filteredTransactions: [],
     confirmedTransactions: [(sentTransaction as unknown) as TransferTransaction],
     unconfirmedTransactions: [(receivedTransaction as unknown) as TransferTransaction],
@@ -67,7 +57,7 @@ describe('services/TransactionFilterService', () => {
             transactionState.filterOptions.isUnconfirmedSelected = true;
             transactionState.filterOptions.isPartialSelected = true;
 
-            expect(result.length).toBe(3);
+            expect(result.length).toBe(2);
             done();
         });
 
@@ -116,7 +106,7 @@ describe('services/TransactionFilterService', () => {
             transactionState.filterOptions.isReceivedSelected = true;
             const result = TransactionFilterService.filter(transactionState, currentSigner.address.plain());
 
-            expect(result.length).toBe(2);
+            expect(result.length).toBe(1);
             done();
         });
 
@@ -155,7 +145,7 @@ describe('services/TransactionFilterService', () => {
 
             result = TransactionFilterService.filter(transactionState, currentSigner.address.plain());
 
-            expect(result.length).toBe(3);
+            expect(result.length).toBe(2);
             done();
         });
     });

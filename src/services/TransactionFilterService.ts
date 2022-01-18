@@ -30,7 +30,8 @@ export class TransactionFilterService {
     public static filter(
         state: TransactionState,
         currentSignerAddress: string | string[],
-        blacklistedContacts: IContact[] = undefined,
+        blacklistedContacts: IContact[] = [],
+        blacklistFilterActivated: boolean = false,
     ): Transaction[] {
         const { filterOptions, transactions, confirmedTransactions, unconfirmedTransactions, partialTransactions } = state;
         if (!filterOptions.isFilterShouldBeApplied && !blacklistedContacts) {
@@ -54,8 +55,9 @@ export class TransactionFilterService {
                 result = result.concat(confirmedTransactions);
             }
         }
-        if (blacklistedContacts) {
-            result = this.filterByBlackListedContacts(transactions, blacklistedContacts);
+        console.log(blacklistedContacts, blacklistFilterActivated);
+        if (blacklistedContacts && blacklistFilterActivated) {
+            return this.filterByBlackListedContacts(transactions, blacklistedContacts);
         }
         return this.filterByRecepient(result, filterOptions, currentSignerAddress);
     }

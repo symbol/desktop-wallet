@@ -224,13 +224,13 @@ export default {
                 currentSignerAddress,
                 multisigAddresses = [],
                 shouldFilterOptionChange = true,
-                BlackListedContacts = undefined,
+                blacklistedContacts = [] || undefined,
             }: {
                 filterOption?: FilterOption;
                 currentSignerAddress: string;
                 multisigAddresses: [];
                 shouldFilterOptionChange: boolean;
-                BlackListedContacts?: IContact[];
+                blacklistedContacts?: IContact[];
             },
         ) => {
             if (shouldFilterOptionChange) {
@@ -240,16 +240,17 @@ export default {
                     state.filterOptions = new TransactionFilterOptionsState();
                 }
             }
-            if (BlackListedContacts == undefined) {
+            if (state.isBlackListFilterActivated) {
                 state.filteredTransactions = TransactionFilterService.filter(
                     state,
                     !!multisigAddresses.length ? multisigAddresses : currentSignerAddress,
+                    blacklistedContacts,
+                    state.isBlackListFilterActivated,
                 );
             } else {
                 state.filteredTransactions = TransactionFilterService.filter(
                     state,
                     !!multisigAddresses.length ? multisigAddresses : currentSignerAddress,
-                    BlackListedContacts,
                 );
             }
         },
