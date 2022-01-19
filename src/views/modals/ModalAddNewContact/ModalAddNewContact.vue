@@ -32,7 +32,13 @@
 
             <span class="title address-detected"> {{ $t('add_contact_popup_text4') }}</span>
             <br />
-            <input v-focus class="input-size input-style inputs-style" :placeholder="signerAddress" :disabled="true" type="text" />
+            <input
+                v-focus
+                class="input-size input-style inputs-style disabled-label"
+                :placeholder="signerAddress"
+                :disabled="true"
+                type="text"
+            />
             <input
                 v-model="contactName"
                 v-focus

@@ -224,7 +224,7 @@ export default {
                 currentSignerAddress,
                 multisigAddresses = [],
                 shouldFilterOptionChange = true,
-                blacklistedContacts = [] || undefined,
+                blacklistedContacts = [],
             }: {
                 filterOption?: FilterOption;
                 currentSignerAddress: string;

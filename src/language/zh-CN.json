@@ -1154,5 +1154,5 @@
     "add_contact_popup_text5": "您的通讯录可以让您保存您经常使用的加密货币地址。添加地址后，您不必每次需要时都手动输入，也不会出现那么多安全确认屏幕。",
     "label_accept": "接受...",
     "label_reject": "拒绝",
-    "blacklist_address_text": "将此地址列入黑名单"
+    "blacklist_address_text": "将此地址列入黑名单?"
 }

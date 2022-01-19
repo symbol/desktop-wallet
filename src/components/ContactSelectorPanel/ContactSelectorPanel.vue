@@ -12,7 +12,7 @@
                 <div
                     v-for="(item, index) in blackListedContacts"
                     :key="index"
-                    :class="['account-tile', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
+                    :class="['contact-title', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
                     @click="selectedContactId = item.id"
                 >
                     <div class="contact_data">
@@ -22,7 +22,7 @@
                         </span>
                         <span class="contact_name">
                             <p class="bold-text">{{ item.name }}</p>
-                            <p class="address">{{ commonHelpers.truncate(item.address) }}</p>
+                            <p class="address">{{ item.address }}</p>
                         </span>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                 <div
                     v-for="(item, index) in whiteListedContacts"
                     :key="index"
-                    :class="['account-tile', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
+                    :class="['contact-title', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
                     @click="selectedContactId = item.id"
                 >
                     <div class="contact_data">
@@ -42,7 +42,7 @@
                         </span>
                         <span class="contact_name">
                             <p class="bold-text">{{ item.name }}</p>
-                            <p class="address">{{ commonHelpers.truncate(item.address) }}</p>
+                            <p class="address">{{ item.address }}</p>
                         </span>
                     </div>
                 </div>
