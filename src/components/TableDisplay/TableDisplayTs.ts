@@ -362,6 +362,8 @@ export class TableDisplayTs extends Vue {
      * @returns {void}
      */
     private async refresh(): Promise<void> {
+        // load metadata list for all types of assets
+        await this.$store.dispatch('metadata/LOAD_METADATA_LIST');
         switch (this.assetType) {
             case TableAssetType.Mosaic:
                 await this.$store.dispatch('mosaic/LOAD_MOSAICS');
@@ -369,10 +371,6 @@ export class TableDisplayTs extends Vue {
 
             case TableAssetType.Namespace:
                 await this.$store.dispatch('namespace/LOAD_NAMESPACES');
-                break;
-
-            case TableAssetType.Metadata:
-                await this.$store.dispatch('metadata/LOAD_METADATA_LIST');
                 break;
         }
     }

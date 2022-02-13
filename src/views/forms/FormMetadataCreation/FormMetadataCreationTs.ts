@@ -362,13 +362,12 @@ export class FormMetadataCreationTs extends FormTransactionBase {
     }
 
     set chosenValue(newValue: string) {
-        this.chosenKeyValue = newValue;
-        const currentItem = this.metadataList.find((item) => item.metadataId === this.chosenKeyValue);
+        const currentItem = this.metadataList.find((item) => item.scopedMetadataKey === newValue);
         this.updateFormItems(currentItem);
     }
 
     get chosenValue(): string {
-        return this.chosenKeyValue;
+        return this.formItems.scopedKey;
     }
 
     private updateFormItems(selectedItem: MetadataModel) {

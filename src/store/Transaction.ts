@@ -518,9 +518,12 @@ export default {
 
             // add actions to the dispatcher according to the transaction types
             if (
-                [TransactionType.NAMESPACE_REGISTRATION, TransactionType.MOSAIC_ALIAS, TransactionType.ADDRESS_ALIAS].some((a) =>
-                    transactionTypes.some((b) => b === a),
-                )
+                [
+                    TransactionType.NAMESPACE_REGISTRATION,
+                    TransactionType.MOSAIC_ALIAS,
+                    TransactionType.ADDRESS_ALIAS,
+                    TransactionType.NAMESPACE_METADATA,
+                ].some((a) => transactionTypes.some((b) => b === a))
             ) {
                 dispatch('namespace/LOAD_NAMESPACES', {}, { root: true });
             }
