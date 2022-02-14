@@ -141,7 +141,11 @@ export class ModalTransactionCosignatureTs extends Vue {
 
     public wantToProceed = false;
     public addressBook: AddressBook;
-    private transactionRejected: boolean = false;
+    private showFormUnkownAddressOptions: boolean = false;
+    private showFormUnkownAddressRejected: boolean = false;
+    private showFormUnkownAddressAccepted: boolean = false;
+    private showFormWhitelistedAddress: boolean = false;
+    private showFormBlacklistedAddress: boolean = false;
     private transactionAccepted: boolean = false;
     private contactName: string = '';
     /// region computed properties
@@ -160,6 +164,14 @@ export class ModalTransactionCosignatureTs extends Vue {
         if (!val) {
             this.$emit('close');
         }
+    }
+
+    public get showForm() {
+        return this.showFormUnkownAddressOptions ||
+            this.showFormUnkownAddressRejected ||
+            this.showFormUnkownAddressAccepted ||
+            this.showFormWhitelistedAddress ||
+            this.showFormBlacklistedAddress;
     }
 
     /**
@@ -373,6 +385,21 @@ export class ModalTransactionCosignatureTs extends Vue {
         }
 
         this.isLoading = false;
+        this.showCosignatureForm();
+    }
+
+    showCosignatureForm() {
+        const signerAddressContactStatus = this.getSignerAddressContactStatus();
+
+        if (signerAddressContactStatus === 'white_list') {
+            this.showFormWhitelistedAddress = true;
+        }
+        else if (signerAddressContactStatus === 'black_list') {
+            this.showFormBlacklistedAddress = true;
+        }
+        else if (signerAddressContactStatus === 'unknown') {
+            this.showFormUnkownAddressOptions = true;
+        }
     }
 
     /**
@@ -469,9 +496,51 @@ export class ModalTransactionCosignatureTs extends Vue {
         this.$emit('error', error);
     }
 
-    get addressExists() {
-        const addressExists: boolean = this.addressBook.getContactByAddress(this.transaction.signer.address.plain()) !== undefined;
+    get addressExists(): boolean {
+        const addressExists = this.addressBook.getContactByAddress(this.transaction.signer.address.plain()) !== undefined;
         return addressExists;
+    }
+
+    public getSignerAddressContactStatus(): 'white_list' | 'black_list' | 'unknown' {
+        const signerAddress = this.transaction.signer.address.plain();
+        const contacts = this.addressBook.getAllContacts();
+        const signerConstact = contacts.find(contact => contact.address === signerAddress);
+
+        if (!signerConstact) {
+            return 'unknown';
+        }
+
+        if (signerConstact.isBlackListed) {
+            return 'black_list';
+        }
+
+        return 'white_list';
+    }
+
+    public reject() {
+        this.showFormUnkownAddressOptions = false;
+        this.showFormUnkownAddressRejected = true;
+    }
+
+    public accept() {
+        this.showFormUnkownAddressOptions = false;
+        this.showFormUnkownAddressAccepted = true;
+        this.wantToProceed = false;
+    }
+
+    public backToOptions() {
+        this.showFormUnkownAddressOptions = true;
+        this.showFormUnkownAddressRejected = false;
+        this.showFormUnkownAddressAccepted = false;
+    }
+
+    public proceedToSign() {
+        this.showFormUnkownAddressOptions = false;
+        this.showFormUnkownAddressRejected = false;
+        this.showFormUnkownAddressAccepted = false;
+        this.showFormWhitelistedAddress = false;
+        this.showFormBlacklistedAddress = false;
+        this.transactionAccepted = true;
     }
 
     public blackListContact() {
