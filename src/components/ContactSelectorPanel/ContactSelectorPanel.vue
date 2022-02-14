@@ -15,14 +15,12 @@
                     :class="['contact-title', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
                     @click="selectedContactId = item.id"
                 >
-                    <div class="contact_data">
-                        <span class="img_container">
-                            <img v-if="isActiveContact(item)" src="@/views/resources/img/icons/malicious-actor.svg" alt />
-                            <img v-else src="@/views/resources/img/icons/malicious-actor.svg" class="grayed-xym-logo" alt />
-                        </span>
-                        <span class="contact_name">
-                            <p class="bold-text">{{ item.name }}</p>
-                            <p class="address">{{ item.address }}</p>
+                    <div class="contact-item">
+                        <img v-if="isActiveContact(item)" src="@/views/resources/img/icons/malicious-actor.svg" alt />
+                        <img v-else src="@/views/resources/img/icons/malicious-actor.svg" class="contact-icon-inactive" alt />
+                        <span class="contact-info">
+                            <p class="trunc-text">{{ item.name }}</p>
+                            <p class="trunc-text address">{{ item.address }}</p>
                         </span>
                     </div>
                 </div>
@@ -35,14 +33,12 @@
                     :class="['contact-title', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
                     @click="selectedContactId = item.id"
                 >
-                    <div class="contact_data">
-                        <span class="img_container">
+                    <div class="contact-item">
                             <img v-if="isActiveContact(item)" src="@/views/resources/img/icons/whitelisted_contact.svg" alt />
-                            <img v-else src="@/views/resources/img/icons/whitelisted_contact.svg" class="grayed-xym-logo" alt />
-                        </span>
-                        <span class="contact_name">
-                            <p class="bold-text">{{ item.name }}</p>
-                            <p class="address">{{ item.address }}</p>
+                            <img v-else src="@/views/resources/img/icons/whitelisted_contact.svg" class="contact-icon-inactive" alt />
+                        <span class="contact-info">
+                            <p class="trunc-text">{{ item.name }}</p>
+                            <p class="trunc-text address">{{ item.address }}</p>
                         </span>
                     </div>
                 </div>

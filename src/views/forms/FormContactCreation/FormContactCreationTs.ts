@@ -89,7 +89,7 @@ export class FormContactCreationTs extends Vue {
      * Submit action asks for account unlock
      * @return {void}
      */
-    public onSubmit() {
+    public onSubmit(type: 'white_list' | 'black_list') {
         const address = Address.createFromRawAddress(this.formItems.address);
 
         if (address.networkType !== this.currentProfile.networkType) {
@@ -109,7 +109,7 @@ export class FormContactCreationTs extends Vue {
         this.$store.dispatch('addressBook/ADD_CONTACT', {
             name: this.formItems.name,
             address: address.plain(),
-            isBlackListed: this.formItems.isBlackListed,
+            isBlackListed: type === 'black_list',
         });
         this.$emit('submit');
     }

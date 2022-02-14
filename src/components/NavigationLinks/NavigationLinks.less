@@ -64,28 +64,25 @@
             color: @primary;
             font-family: @symbolFontSemiBold;
         }
-        &.active-item-contact {
-            color: @primary;
-            font-family: @symbolFontSemiBold;
-        }
         &.inactive-item {
             color: @grayLight;
             font-family: @symbolFont;
             font-weight: 500;
         }
-        &.inactive-item-contact {
-            color: @grayLight;
-            font-family: @symbolFont;
-            font-weight: 500;
+        &.active-item-contact, &.inactive-item-contact {
+            color: #000;
+            font-family: @symbolFontSemiBold;
+            padding: 0;
+            margin-left: 0.2rem;
         }
     }
     .inactive-border {
-        border-bottom: 2px #e4dce6 solid;
-        padding-bottom: 0.05rem;
+        border-bottom: 3px transparent solid;
+        padding: 0 0.5em 0.5em;
     }
     .active-border {
-        border-bottom: 2px #fe10ff solid;
-        padding-bottom: 0.05rem;
+        border-bottom: 3px #fe10ff solid;
+        padding: 0 0.5em 0.5em;
     }
     .border {
         border-left: 2px solid @primary;
@@ -110,11 +107,15 @@
     }
 }
 .line {
-    border-bottom: 2px solid #e4dce6;
-    height: 0.4rem !important;
-    padding-bottom: 0.44rem;
+    border-bottom: 3px solid #F1F2F7;
+    height: 3px !important;
+    padding-bottom: 0.46rem;
 }
 
 .contact-header-font-size {
-    font-size: 0.15rem !important;
+    font-size: 0.13rem !important;
+}
+
+.smaller-tab-offset {
+    padding-left: 0.2rem;
 }

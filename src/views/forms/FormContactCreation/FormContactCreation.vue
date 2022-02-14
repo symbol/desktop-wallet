@@ -52,9 +52,17 @@
                                     class="button-style inverted-button pl-2 pr-2"
                                     type="submit"
                                     :disabled="isButtonDisabled"
-                                    @click="handleSubmit(onSubmit)"
+                                    @click="handleSubmit(onSubmit('white_list'))"
                                 >
-                                    {{ $t('confirm') }}
+                                    {{ $t('tab_contact_white_list') }}
+                                </button>
+                                <button
+                                    class="button-style danger-button pl-2 pr-2 ml-2"
+                                    type="submit"
+                                    :disabled="isButtonDisabled"
+                                    @click="handleSubmit(onSubmit('black_list'))"
+                                >
+                                    {{ $t('tab_contact_black_list') }}
                                 </button>
                             </div>
                         </template>
