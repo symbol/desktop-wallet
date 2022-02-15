@@ -140,13 +140,13 @@ export class ModalTransactionCosignatureTs extends Vue {
     public hideCosignerWarning = false;
 
     public wantToProceed = false;
+    public wantToUnblock = false;
     public addressBook: AddressBook;
     private showFormUnkownAddressOptions: boolean = false;
     private showFormUnkownAddressRejected: boolean = false;
     private showFormUnkownAddressAccepted: boolean = false;
-    private showFormWhitelistedAddress: boolean = false;
+    private showFormSign: boolean = false;
     private showFormBlacklistedAddress: boolean = false;
-    private transactionAccepted: boolean = false;
     private contactName: string = '';
     /// region computed properties
     /**
@@ -166,12 +166,23 @@ export class ModalTransactionCosignatureTs extends Vue {
         }
     }
 
-    public get showForm() {
+    public get showWarningForm() {
         return this.showFormUnkownAddressOptions ||
             this.showFormUnkownAddressRejected ||
             this.showFormUnkownAddressAccepted ||
-            this.showFormWhitelistedAddress ||
             this.showFormBlacklistedAddress;
+    }
+
+    public get signerAddress(): string | null {
+        return this.transaction?.signer?.address.plain() || null;
+    }
+
+    public get signerContactName(): string | null {
+        if (!this.signerAddress) {
+            return null;
+        }
+
+        return this.addressBook.getContactByAddress(this.signerAddress)?.name || null;
     }
 
     /**
@@ -392,7 +403,7 @@ export class ModalTransactionCosignatureTs extends Vue {
         const signerAddressContactStatus = this.getSignerAddressContactStatus();
 
         if (signerAddressContactStatus === 'white_list') {
-            this.showFormWhitelistedAddress = true;
+            this.showFormSign = true;
         }
         else if (signerAddressContactStatus === 'black_list') {
             this.showFormBlacklistedAddress = true;
@@ -538,9 +549,8 @@ export class ModalTransactionCosignatureTs extends Vue {
         this.showFormUnkownAddressOptions = false;
         this.showFormUnkownAddressRejected = false;
         this.showFormUnkownAddressAccepted = false;
-        this.showFormWhitelistedAddress = false;
         this.showFormBlacklistedAddress = false;
-        this.transactionAccepted = true;
+        this.showFormSign = true;
     }
 
     public blackListContact() {
@@ -562,5 +572,15 @@ export class ModalTransactionCosignatureTs extends Vue {
         if (!this.addressExists) {
             this.$emit('signer-address', this.transaction.signer.address.plain());
         }
+    }
+
+    public unblockContact() {
+        const contact = this.addressBook.getContactByAddress(this.signerAddress);
+        
+        if (contact) {
+            this.$store.dispatch('addressBook/REMOVE_CONTACT', contact.id);
+        }
+
+        this.show = false;
     }
 }

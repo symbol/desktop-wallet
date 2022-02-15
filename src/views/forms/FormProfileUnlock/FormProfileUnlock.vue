@@ -1,10 +1,6 @@
 <template>
     <FormWrapper class="account-unlock-container" :whitelisted="true">
-        <form
-            action="processSubmit"
-            onsubmit="event.preventDefault()"
-            :class="isSignatureModalOpened ? ['form-line-container', 'form-password-margin '] : ['form-line-container', 'mt-3']"
-        >
+        <form action="processSubmit" onsubmit="event.preventDefault()" class="form-line-container mt-3">
             <FormRow>
                 <template v-slot:label> {{ $t('form_label_password') }}: </template>
                 <template v-slot:inputs>

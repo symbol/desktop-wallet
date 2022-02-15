@@ -54,11 +54,17 @@
     cursor: pointer;
 }
 
-.address-book-panel {
+.warning {
     position: absolute;
     left: -0.3rem;
     right: -0.3rem;
-    
+    height: 3rem;
+}
+
+.address-book-panel {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
 
     min-height: 200px;
     background: #44004E;
@@ -66,20 +72,43 @@
     padding: 18.67px 80px 42.67px;
 
     .icon {
-        width: 0.3rem;
-        height: 0.3rem;
+        width: 0.25rem;
+        height: 0.25rem;
     }
 
     .title-text {
         margin-bottom: 0.1rem;
-        max-width: 4rem;
+        max-width: 4.5rem;
+    }
+
+    .blocked-address {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        background: #fff;
+        color: #000;
+        border-radius: 6px;
+        height: 0.35rem;
+        padding: 0 0.1rem;
+        font-size: @bigFont;
+        font-family: @symbolFontMedium;
+        margin-right: 0.08rem;
+        margin-bottom: 0.08rem;
+
+        &:first-of-type {
+            width: 0.35rem;
+            height: 0.35rem;
+        }
     }
 
     .button {
         background: white;
-        color: #44004e;
-        width: 2.3rem;
-        height: 0.4rem !important;
+        color: #000;
+        width: 2.4rem;
+        height: 0.36rem !important;
+        font-size: @smallFont;
+        margin-left: 0.08rem;
+
 
         &:first-of-type {
             margin-left: 0;
@@ -98,23 +127,24 @@
     }
 
     .input {
+        display: block;
         background: white;
-        margin-left: 0.74rem;
-        margin-bottom: 0.05rem;
-        width: 2.3rem;
-        height: 0.4rem !important;
+        margin-left: 0.08rem;
+        margin-bottom: 0.08rem;
+        width: 2.4rem;
+        height: 0.36rem !important;
+
+        &:first-of-type {
+            margin-left: 0;
+        }
     }
 
     .checkbox {
         display: block;
         margin-bottom: 0.1rem;
-        color: #44004e;
+        color: #000;
         font-weight: @bolder;
     }
-}
-
-.bg-info {
-
 }
 
 .bg-warning {
@@ -123,10 +153,22 @@
 
 .bg-danger {
     background: #959595;
+
+    .title-text {
+        max-width: 3.4rem;
+    }
+
+    .checkbox {
+        color: #fff;
+    }
+}
+.inline {
+    display: inline-flex;
 }
 
-/deep/.ivu-checkbox-input {
-    top: 4px !important;
+/deep/.ivu-checkbox {
+    margin-top: 2px;
+    margin-left: 2px;
 }
 
 /deep/.ivu-checkbox-checked {
