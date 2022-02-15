@@ -136,13 +136,18 @@ export abstract class TransactionView<T extends Transaction> {
                     .toLocalDate()} ${this.transaction.deadline.toLocalDateTime(this.epochAdjustment).toLocalTime()}`,
             },
             {
-                key: 'signature',
-                value: this.transaction.signature,
+                key: 'signer',
+                value: (this.transaction.signer?.address.plain()),
+                isAddress: true,
             },
             {
                 key: 'signer_public_key',
                 value: (this.transaction.signer && this.transaction.signer.publicKey) || undefined,
             },
+            {
+                key: 'signature',
+                value: this.transaction.signature,
+            },    
         ].filter((pair) => pair.value);
     }
 
