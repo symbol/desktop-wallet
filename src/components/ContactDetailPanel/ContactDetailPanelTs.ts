@@ -48,7 +48,7 @@ import { Address } from 'symbol-sdk';
             selectedContact: 'addressBook/getSelectedContact',
         }),
         address: function () {
-            return Address.createFromRawAddress(this.selectedContact.address).pretty();
+            return Address.createFromRawAddress(this.selectedContact.address).plain();
         },
     },
 })

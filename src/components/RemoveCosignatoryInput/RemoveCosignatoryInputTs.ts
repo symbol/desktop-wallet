@@ -73,6 +73,6 @@ export class RemoveCosignatoryInputTs extends Vue {
      * @returns {string}
      */
     protected getAddressFromPublicKey(publicKey: string): string {
-        return Address.createFromPublicKey(publicKey, this.networkType).pretty();
+        return Address.createFromPublicKey(publicKey, this.networkType).plain();
     }
 }

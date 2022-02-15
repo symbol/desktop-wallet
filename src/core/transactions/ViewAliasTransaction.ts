@@ -36,7 +36,7 @@ export class ViewAliasTransaction extends TransactionView<MosaicAliasTransaction
         }
         const displayName = namespaceId.fullName ? `${namespaceId.fullName} (${namespaceId.toHex()})` : namespaceId.toHex();
         const targetKey = aliasTarget instanceof Address ? 'address' : 'mosaic';
-        const targetValue = aliasTarget instanceof Address ? aliasTarget.pretty() : aliasTarget.toHex();
+        const targetValue = aliasTarget instanceof Address ? aliasTarget.plain() : aliasTarget.toHex();
         const aliasAction = this.transaction.aliasAction;
         return [
             { key: 'namespace', value: displayName },
