@@ -59,6 +59,9 @@ export class AddressDisplayTs extends Vue {
             const namespaceName = await this.$store.dispatch('namespace/RESOLVE_NAME', this.address);
             const linkedAddress = await this.$store.dispatch('namespace/GET_LINKED_ADDRESS', this.address);
             this.descriptor = linkedAddress && this.showAddress ? `${namespaceName} (${linkedAddress.pretty()})` : namespaceName;
+        } else if (typeof this.address === 'string') {
+            const contact = await this.$store.dispatch('addressBook/RESOLVE_ADDRESS', this.address);
+            this.descriptor = contact ? contact.name : this.address;
         }
     }
 }

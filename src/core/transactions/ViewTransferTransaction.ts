@@ -102,7 +102,7 @@ export class ViewTransferTransaction extends TransactionView<TransferTransaction
         });
 
         return [
-            { key: 'sender', value: this.sender },
+            { key: 'sender', value: this.sender, isAddress: true },
             { key: 'transfer_target', value: this.transaction.recipientAddress, isAddress: true },
             ...mosaicItems,
             {

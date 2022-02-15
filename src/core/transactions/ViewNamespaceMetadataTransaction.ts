@@ -29,9 +29,9 @@ export class ViewNamespaceMetadataTransaction extends TransactionView<NamespaceM
     protected resolveDetailItems(): TransactionDetailItem[] {
         const metadataValue = Formatters.hexToUtf8(this.transaction.value);
         return [
-            { key: 'sender', value: this.transaction.signer.address.pretty() },
+            { key: 'sender', value: this.transaction.signer.address.pretty(), isAddress: true },
             // @ts-ignore
-            { key: 'target', value: this.transaction.targetAddress.pretty() },
+            { key: 'target', value: this.transaction.targetAddress.pretty(), isAddress: true },
             { key: 'namespace', value: this.transaction.targetNamespaceId.toHex() },
             { key: 'scopedMetadataKey', value: this.transaction.scopedMetadataKey.toHex() },
             { key: 'value', value: metadataValue },

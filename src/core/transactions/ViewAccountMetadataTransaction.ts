@@ -30,9 +30,9 @@ export class ViewAccountMetadataTransaction extends TransactionView<AccountMetad
     protected resolveDetailItems(): TransactionDetailItem[] {
         const metadataValue = Formatters.hexToUtf8(this.transaction.value);
         return [
-            { key: 'sender', value: this.transaction.signer.address.pretty() },
+            { key: 'sender', value: this.transaction.signer.address.pretty(), isAddress: true },
             // @ts-ignore
-            { key: 'target', value: this.transaction.targetAddress.pretty() },
+            { key: 'target', value: this.transaction.targetAddress.pretty(), isAddress: true },
             { key: 'scopedMetadataKey', value: this.transaction.scopedMetadataKey.toHex() },
             { key: 'value', value: metadataValue },
             { key: 'valueSizeDelta', value: this.transaction.valueSizeDelta },

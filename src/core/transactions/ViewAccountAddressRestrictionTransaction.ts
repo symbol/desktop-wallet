@@ -39,7 +39,7 @@ export class ViewAccountAddressRestrictionTransaction extends TransactionView<Ac
      */
     protected resolveDetailItems(): TransactionDetailItem[] {
         return [
-            { key: 'sender', value: this.sender },
+            { key: 'sender', value: this.sender, isAddress: true },
             // @ts-ignore
             {
                 key: 'Restriction Additions',
