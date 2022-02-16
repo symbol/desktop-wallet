@@ -34,8 +34,8 @@
                     @click="selectedContactId = item.id"
                 >
                     <div class="contact-item">
-                            <img v-if="isActiveContact(item)" src="@/views/resources/img/icons/whitelisted_contact.svg" alt />
-                            <img v-else src="@/views/resources/img/icons/whitelisted_contact.svg" class="contact-icon-inactive" alt />
+                        <img v-if="isActiveContact(item)" src="@/views/resources/img/icons/whitelisted_contact.svg" alt />
+                        <img v-else src="@/views/resources/img/icons/whitelisted_contact.svg" class="contact-icon-inactive" alt />
                         <span class="contact-info">
                             <p class="trunc-text">{{ item.name }}</p>
                             <p class="trunc-text address">{{ item.address }}</p>
@@ -62,10 +62,7 @@
                 </span>
             </div>
 
-            <div
-                class="account-switch-header-right-container"
-                @click="hasImportProfileModal = true"
-            >
+            <div class="account-switch-header-right-container" @click="hasImportProfileModal = true">
                 <span type="button" class="action-button pointer button" @click="hasImportProfileModal = true">
                     <img src="@/views/resources/img/navbar/import.svg" class="icon-left-button" />
                     {{ $t('import_address_book') }}

@@ -27,7 +27,7 @@ export class ViewVotingKeyLinkTransaction extends TransactionView<VotingKeyLinkT
             {
                 key: 'linked_account_address',
                 value: Address.createFromPublicKey(this.transaction.linkedPublicKey, this.transaction.networkType).plain(),
-                isAddress: true
+                isAddress: true,
             },
             { key: 'link_action', value: this.transaction.linkAction == LinkAction.Link ? i18n.t('link') : i18n.t('unlink') },
             { key: 'linked_public_key', value: this.transaction.linkedPublicKey },

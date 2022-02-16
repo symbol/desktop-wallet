@@ -137,7 +137,7 @@ export abstract class TransactionView<T extends Transaction> {
             },
             {
                 key: 'signer',
-                value: (this.transaction.signer?.address.plain()),
+                value: this.transaction.signer?.address.plain(),
                 isAddress: true,
             },
             {
@@ -147,7 +147,7 @@ export abstract class TransactionView<T extends Transaction> {
             {
                 key: 'signature',
                 value: this.transaction.signature,
-            },    
+            },
         ].filter((pair) => pair.value);
     }
 

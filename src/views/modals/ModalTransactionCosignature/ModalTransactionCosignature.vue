@@ -52,7 +52,10 @@
                     <div v-else>
                         <div v-if="!hideCosignerWarning" class="explain">
                             <span v-if="showWarningForm" class="warning">
-                                <div class="address-book-panel" :class="{'bg-warning': showFormUnkownAddressAccepted, 'bg-danger': showFormBlacklistedAddress}">
+                                <div
+                                    class="address-book-panel"
+                                    :class="{ 'bg-warning': showFormUnkownAddressAccepted, 'bg-danger': showFormBlacklistedAddress }"
+                                >
                                     <div v-if="showFormUnkownAddressOptions">
                                         <img class="icon" :src="require('@/views/resources/img/icons/Signature.svg')" alt />
                                         <div class="title-text">{{ $t('transaction_needs_cosignature') }}</div>
@@ -89,12 +92,9 @@
                                             html-type="submit"
                                             @click="blackListContact"
                                         >
-                                            {{ $t('tab_contact_black_list') }}
+                                            {{ $t('button_block_contact') }}
                                         </Button>
-                                        <div 
-                                            class="button-plain" 
-                                            @click="backToOptions"
-                                        >
+                                        <div class="button-plain" @click="backToOptions">
                                             {{ $t('back') }}
                                         </div>
                                     </div>
@@ -112,10 +112,7 @@
                                         >
                                             {{ $t('sign') }}
                                         </Button>
-                                        <div 
-                                            class="button-plain" 
-                                            @click="backToOptions"
-                                        >
+                                        <div class="button-plain" @click="backToOptions">
                                             {{ $t('back') }}
                                         </div>
                                     </div>
@@ -124,9 +121,7 @@
                                             <div class="blocked-address">
                                                 <img class="icon" :src="require('@/views/resources/img/icons/malicious_actor_1.svg')" alt />
                                             </div>
-                                            <div class="blocked-address">
-                                                {{ signerContactName }} ({{ signerAddress }})
-                                            </div>
+                                            <div class="blocked-address">{{ signerContactName }} ({{ signerAddress }})</div>
                                         </div>
                                         <div class="title-text">{{ $t('transaction_cosignature_warning_blocked_cosigner') }}</div>
                                         <Checkbox v-model="wantToUnblock" class="checkbox">
@@ -138,7 +133,7 @@
                                             html-type="submit"
                                             @click="unblockContact"
                                         >
-                                            {{ $t('unblock') }}
+                                            {{ $t('button_unblock_contact') }}
                                         </Button>
                                     </div>
                                 </div>

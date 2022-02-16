@@ -23,7 +23,7 @@ import { networkConfig } from '@/config';
         ...mapGetters({
             networkType: 'network/networkType',
         }),
-    }
+    },
 })
 export class AddressDisplayTs extends Vue {
     @Prop({

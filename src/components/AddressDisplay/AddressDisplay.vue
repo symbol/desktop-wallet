@@ -8,7 +8,7 @@
             <a class="link" target="_blank" :href="explorerUrl">{{ $t('accounts_view_explorer_description') }}</a>
         </div>
     </Poptip>
-    
+
     <span v-else>{{ descriptor }}</span>
 </template>
 

@@ -1133,7 +1133,9 @@
     "transaction_cosignature_warning_proceed": "I understand",
     "transaction_cosignature_warning_blocked_cosigner": "You have blocked this contact, if you wish to accept this transaction, please unblock this contact from your address book",
     "transaction_cosignature_checkbox_unblock": "I understand the risks",
-    "unblock": "Unblock",
+    "button_add_contact": "Add",
+    "button_block_contact": "Block",
+    "button_unblock_contact": "Unblock",
     "lock_hash_algorithm": "Hash Algorithm",
     "not_enough_balance": "Not enough balance",
     "use_max_value": "Use maximum value",
@@ -1157,5 +1159,5 @@
     "add_contact_popup_text5": "Your address book lets you save cryptocurrency addresses that you use frequently. After you add an address, you won’t have to manually enter it every time it's required and will not have as many security confirmation screens.",
     "label_accept": "Accept...",
     "label_reject": "Reject",
-    "blacklist_address_text": "Blacklist this address?"
+    "blacklist_address_text": "Block this address?"
 }
