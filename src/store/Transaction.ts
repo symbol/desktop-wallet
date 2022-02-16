@@ -456,8 +456,8 @@ export default {
             });
         },
 
-        ADD_TRANSACTION(
-            { commit, getters, rootGetters },
+        async ADD_TRANSACTION(
+            { commit, getters, rootGetters, dispatch },
             { group, transaction }: { group: TransactionGroupState; transaction: Transaction },
         ) {
             if (!group) {
@@ -481,7 +481,7 @@ export default {
                     refresh: true,
                     pageInfo: getters['currentConfirmedPage'],
                 });
-
+                await dispatch('LOAD_TRANSACTIONS');
                 commit('setAllTransactions');
                 commit('filterTransactions', {
                     filterOption: null,

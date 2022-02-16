@@ -79,9 +79,16 @@
 
 .input {
     background: #fff;
-    border: 1px solid #dcdcdc;
+    border: 1px solid @grayDark;
     width: 100%;
     height: 0.45rem;
     padding: 0.1rem;
     border-radius: @buttonBorderRadius;
+
+    &:disabled {
+        border-color: @grayLight;
+        color: @black;
+        font-family: @symbolFontSemiBold;
+        font-size: @minimumFont;
+    }
 }

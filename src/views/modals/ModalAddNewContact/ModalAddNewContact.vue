@@ -37,7 +37,7 @@
             <input
                 v-focus
                 class="control input"
-                :placeholder="signerAddress"
+                v-model="signerAddress"
                 :disabled="true"
                 type="text"
             />
