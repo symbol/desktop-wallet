@@ -85,6 +85,7 @@
                                         />
                                         <Button
                                             class="button-style inverted-button right-side-button button"
+                                            :disabled="!contactName"
                                             html-type="submit"
                                             @click="blackListContact"
                                         >
