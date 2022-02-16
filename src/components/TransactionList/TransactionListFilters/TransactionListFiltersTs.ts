@@ -105,5 +105,6 @@ export class TransactionListFiltersTs extends Vue {
                 currentSignerAddress: this.currentAccountSigner.address.plain(),
             });
         }
+        this.refresh();
     }
 }

@@ -393,6 +393,7 @@ export default {
                         currentSignerAddress: currentSignerAddress.plain(),
                         multisigAddresses: multisigChildrenAddresses,
                         shouldFilterOptionChange: false,
+                        blacklistedContacts: rootGetters['addressBook/getAddressBook'].getBlackListedContacts(),
                     });
                     commit('isFetchingTransactions', false);
                 },
@@ -487,6 +488,7 @@ export default {
                     currentSignerAddress: currentSignerAddress.plain(),
                     multisigAddresses: [],
                     shouldFilterOptionChange: false,
+                    blacklistedContacts: rootGetters['addressBook/getAddressBook'].getBlackListedContacts(),
                 });
             }
         },
@@ -521,6 +523,7 @@ export default {
                 currentSignerAddress: currentSignerAddress.plain(),
                 multisigAddresses: [],
                 shouldFilterOptionChange: false,
+                blacklistedContacts: rootGetters['addressBook/getAddressBook'].getBlackListedContacts(),
             });
         },
 
@@ -595,6 +598,7 @@ export default {
                 currentSignerAddress: currentSignerAddress.plain(),
                 multisigAddresses: [],
                 shouldFilterOptionChange: false,
+                blacklistedContacts: rootGetters['addressBook/getAddressBook'].getBlackListedContacts(),
             });
         },
     },

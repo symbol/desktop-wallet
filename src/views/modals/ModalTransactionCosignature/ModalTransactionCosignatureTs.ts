@@ -567,6 +567,7 @@ export class ModalTransactionCosignatureTs extends Vue {
             address: this.transaction.signer.address.plain(),
             isBlackListed: true,
         });
+        this.$store.dispatch('transaction/LOAD_TRANSACTIONS');
         this.show = false;
         this.$emit('blacklist');
         if (!this.addressExists) {
@@ -579,6 +580,7 @@ export class ModalTransactionCosignatureTs extends Vue {
         
         if (contact) {
             this.$store.dispatch('addressBook/REMOVE_CONTACT', contact.id);
+            this.$store.dispatch('transaction/LOAD_TRANSACTIONS');
         }
 
         this.show = false;
