@@ -15,43 +15,6 @@
  */
 @import '../../views/resources/css/variables.less';
 
-.account-switch-container {
-    @passiveTextColor: #73747a;
-
-    .account-switch-body-container {
-        width: 100%;
-        height: 100%;
-        display: grid;
-        grid-template-columns: 100%;
-        grid-auto-rows: 0.7rem;
-        position: relative;
-        .active-background {
-            color: @black;
-        }
-
-        .inactive-background {
-            color: @grayLight;
-        }        
-    }
-
-    .account-switch-footer-container {
-        padding: 0.3rem 0.3rem;
-        display: grid;
-        grid-template-columns: 50% 50%;
-        grid-template-rows: 100%;
-        text-align: center;
-        font-size: @normalFont;
-        font-family: @symbolFont;
-        line-height: 22px;
-        color: @purpleLightest;
-
-        .address-book-action-button {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    }
-}
 
 .contact-item {
     padding: 0.1rem 0.25rem 0.1rem 0.45rem;

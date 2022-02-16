@@ -45,8 +45,8 @@
             </div>
         </div>
 
-        <div class="account-switch-footer-container bottom-buttons">
-            <span type="button" class="add-account pointer button" @click="hasAddAccountModal = true">
+        <div class="account-switch-footer-container">
+            <span type="button" class="action-button pointer button" @click="hasAddAccountModal = true">
                 <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" />
                 {{ $t('add_contact') }}
             </span>
@@ -56,18 +56,17 @@
                 class="account-switch-header-right-container"
                 @click="hasBackupProfileModal = true"
             >
-                <span type="button" class="back-up pointer button" @click="downloadAddressBook">
+                <span type="button" class="action-button pointer button" @click="downloadAddressBook">
                     <img src="@/views/resources/img/newicons/Download.svg" class="icon-left-button" />
                     {{ $t('backup_address_book') }}
                 </span>
             </div>
 
             <div
-                v-if="addressBook.getAllContacts().length === 0"
                 class="account-switch-header-right-container"
                 @click="hasImportProfileModal = true"
             >
-                <span type="button" class="back-up pointer button" @click="hasImportProfileModal = true">
+                <span type="button" class="action-button pointer button" @click="hasImportProfileModal = true">
                     <img src="@/views/resources/img/navbar/import.svg" class="icon-left-button" />
                     {{ $t('import_address_book') }}
                 </span>
