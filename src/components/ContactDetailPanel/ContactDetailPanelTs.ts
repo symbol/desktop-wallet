@@ -67,14 +67,14 @@ export class ContactDetailPanelTs extends Vue {
     public showBlackWhiteListConfirmModal = false;
     public saveProperty(propName: string) {
         return (newVal: string) => {
+            let contact = {...this.selectedContact};
             if (propName === 'address') {
-                const plainAddress = Address.createFromRawAddress(this.selectedContact.address).plain();
-                this.selectedContact[propName] = plainAddress;
-                this.$forceUpdate();
+                const plainAddress = Address.createFromRawAddress(newVal).plain();
+                contact[propName] = plainAddress;
             } else {
-                this.selectedContact[propName] = newVal;
+                contact[propName] = newVal;
             }
-            this.$store.dispatch('addressBook/UPDATE_CONTACT', { id: this.selectedContact.id, contact: this.selectedContact });
+            this.$store.dispatch('addressBook/UPDATE_CONTACT', { id: this.selectedContact.id, contact });
         };
     }
 
