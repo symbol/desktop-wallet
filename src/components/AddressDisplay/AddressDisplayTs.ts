@@ -15,7 +15,7 @@
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { Address, NamespaceId } from 'symbol-sdk';
+import { Address, NamespaceId, NetworkType } from 'symbol-sdk';
 import { networkConfig } from '@/config';
 
 @Component({
@@ -49,6 +49,12 @@ export class AddressDisplayTs extends Vue {
      * @var {string}
      */
     public rawAddress: string = '';
+
+    /**
+     * Network Type
+     * @var {NetworkType}
+     */
+    public networkType: NetworkType;
 
     /**
      * Hook called when the component is mounted
