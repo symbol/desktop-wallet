@@ -1148,7 +1148,7 @@
     "white_list_contact_confirmation_message": "Are you sure you want to whitelist \"{contactName}\"?",
     "black_list_contact_confirmation_title": "Blacklist contact",
     "white_list_contact_confirmation_title": "Whitelist contact",
-    "blacklisted_transactions": "Show blacklisted transactions",
+    "blacklisted_transactions": "Show blocked transactions",
     "see_blacklist_label": "See blacklist",
     "added_to_blacklist": "Added to blacklist",
     "blacklist_popup_description": "Your blacklist lets you save cryptocurrency addresses that are known scammers. These addresses will be automatically blocked.",
