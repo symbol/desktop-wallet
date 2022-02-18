@@ -58,7 +58,7 @@
     position: absolute;
     left: -0.3rem;
     right: -0.3rem;
-    height: 3rem;
+    height: 3.3rem;
 }
 
 .address-book-panel {
@@ -98,6 +98,30 @@
         &:first-of-type {
             width: 0.35rem;
             height: 0.35rem;
+        }
+    }
+
+    .unknown-address {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        height: 0.2rem;
+        font-size: @smallFont;
+        font-family: @symbolFontLight;
+        margin-right: 0.02rem;
+        margin-bottom: 0.1rem;
+        margin-top: -0.1rem;
+        text-decoration: underline;
+        cursor: pointer;
+
+        &:last-child {
+            opacity: 0.7;
+        }
+
+        img {
+            width: 0.15rem;
+            height: 0.15rem;
         }
     }
 
@@ -150,6 +174,14 @@
     background: #ff9900;
 }
 
+.caution-text {
+    position: absolute;
+    top: -0.55rem;
+    font-size: @biggestFont;
+    font-family: @symbolFontBold;
+    color: #ff9900;
+}
+
 .bg-danger {
     background: #959595;
 
@@ -162,7 +194,7 @@
     }
 }
 .inline {
-    display: inline-flex;
+    display: flex;
 }
 
 /deep/.ivu-checkbox {

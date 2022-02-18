@@ -57,10 +57,19 @@
                                     :class="{ 'bg-warning': showFormUnkownAddressAccepted, 'bg-danger': showFormBlacklistedAddress }"
                                 >
                                     <div v-if="showFormUnkownAddressOptions">
-                                        <img class="icon" :src="require('@/views/resources/img/icons/Signature.svg')" alt />
+                                        <img class="icon" src="@/views/resources/img/icons/Signature.svg" alt />
                                         <div class="title-text">{{ $t('transaction_needs_cosignature') }}</div>
                                         <div class="inline">
+                                            <div class="unknown-address">
+                                                <img class="icon" src="@/views/resources/img/icons/whitelisted_contact_d.svg" alt />
+                                            </div>
+                                            <a class="unknown-address" target="_blank" :href="signerExplorerUrl">
+                                                {{ signerAddress }}
+                                            </a>
+                                        </div>
+                                        <div class="inline">
                                             <Button
+                                                v-focus
                                                 class="button-style inverted-button right-side-button button"
                                                 html-type="submit"
                                                 @click="reject"
@@ -77,7 +86,7 @@
                                         </div>
                                     </div>
                                     <div v-else-if="showFormUnkownAddressRejected">
-                                        <img class="icon" :src="require('@/views/resources/img/icons/Signature.svg')" alt />
+                                        <img class="icon" src="@/views/resources/img/icons/malicious_actor_1_d.svg" alt />
                                         <div class="title-text">{{ $t('blacklist_address_text') }}</div>
                                         <input
                                             v-model="contactName"
@@ -99,7 +108,10 @@
                                         </div>
                                     </div>
                                     <div v-else-if="showFormUnkownAddressAccepted">
-                                        <img class="icon" :src="require('@/views/resources/img/icons/Signature.svg')" alt />
+                                        <div class="caution-text">
+                                            Caution!
+                                        </div>
+                                        <img class="icon" src="@/views/resources/img/icons/Signature.svg" alt />
                                         <div class="title-text">{{ $t('transaction_cosignature_warning_unknown_cosigner') }}</div>
                                         <Checkbox v-model="wantToProceed" class="checkbox">
                                             <span class="warning-txt">{{ $t('transaction_cosignature_warning_proceed') }}</span>
@@ -119,7 +131,7 @@
                                     <div v-else-if="showFormBlacklistedAddress">
                                         <div class="inline">
                                             <div class="blocked-address">
-                                                <img class="icon" :src="require('@/views/resources/img/icons/malicious_actor_1.svg')" alt />
+                                                <img class="icon" src="@/views/resources/img/icons/malicious_actor_1.svg" alt />
                                             </div>
                                             <div class="blocked-address">{{ signerContactName }} ({{ signerAddress }})</div>
                                         </div>

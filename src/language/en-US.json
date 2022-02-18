@@ -1062,7 +1062,7 @@
     "transaction_details": "Transaction details",
     "transaction_expired": "Transaction has expired",
     "transaction_has_cosignature": "Co-signatures received",
-    "transaction_needs_cosignature": "Transaction requires signature",
+    "transaction_needs_cosignature": "Transaction from unknown account requires signature.",
     "transaction_needs_cosignature_explain": "This multisignature transaction needs multiple parties to sign it before it is approved. Please enter your password and confirm to add your signature.",
     "transaction_needs_cosignature_explain_signed": "This transaction needs multiple parties to approve by sending co-signature. You have already sent a co-signature for this transaction. Please, wait until other co-signatories approve. You can download the QR Code and send to other co-signatories for them to sign their part easily.",
     "transaction_qr_action_desc": "Click continue to open the transfer page with these details.",

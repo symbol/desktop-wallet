@@ -30,6 +30,7 @@ import {
 } from 'symbol-sdk';
 import { mapGetters } from 'vuex';
 
+import { networkConfig } from '@/config';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
@@ -173,6 +174,10 @@ export class ModalTransactionCosignatureTs extends Vue {
             this.showFormUnkownAddressAccepted ||
             this.showFormBlacklistedAddress
         );
+    }
+
+    public get signerExplorerUrl() {
+        return networkConfig[this.networkType].explorerUrl.replace(/\/+$/, '') + '/accounts/' + this.signerAddress;
     }
 
     public get signerAddress(): string | null {
