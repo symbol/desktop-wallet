@@ -10,7 +10,7 @@
                         <FormInputEditable
                             :model="selectedContact"
                             :value="selectedContact.name"
-                            :new-value="selectedContact.name"
+                            :new-value="newName"
                             :editing="false"
                             :label="$t('contact_name')"
                             :on-edit="saveProperty('name')"
@@ -20,7 +20,7 @@
                         <FormInputEditable
                             :model="selectedContact"
                             :value="address"
-                            :new-value="address"
+                            :new-value="newAddress"
                             :editing="false"
                             :rules="validationRules.addressOrPublicKey"
                             :label="$t('contact_address')"
@@ -31,7 +31,7 @@
                         <FormInputEditable
                             :model="selectedContact"
                             :value="selectedContact.phone"
-                            :new-value="selectedContact.phone"
+                            :new-value="newPhone"
                             :editing="false"
                             :rules="''"
                             :label="$t('contact_phone')"
@@ -42,7 +42,7 @@
                         <FormInputEditable
                             :model="selectedContact"
                             :value="selectedContact.email"
-                            :new-value="selectedContact.email"
+                            :new-value="newEmail"
                             :editing="false"
                             :rules="validationRules.email"
                             :label="$t('contact_email')"
@@ -53,7 +53,7 @@
                         <FormInputEditable
                             :model="selectedContact"
                             :value="selectedContact.notes"
-                            :new-value="selectedContact.notes"
+                            :new-value="newNotes"
                             :editing="false"
                             :rules="''"
                             :label="$t('contact_notes')"
