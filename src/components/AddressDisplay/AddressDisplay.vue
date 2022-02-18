@@ -1,14 +1,12 @@
 <template>
-    <Poptip v-if="allowExplorerLink" trigger="hover">
+    <a v-if="allowExplorerLink && descriptor === rawAddress" class="link" target="_blank" :href="explorerUrl">
         {{ descriptor }}
-        <div slot="content">
-            <div slot="title" class="address">
-                {{ $t('address') }}: <span class="address-value"> {{ rawAddress }} </span>
-            </div>
-            <a class="link" target="_blank" :href="explorerUrl">{{ $t('accounts_view_explorer_description') }}</a>
-        </div>
-    </Poptip>
-
+    </a>
+    <Tooltip v-else-if="allowExplorerLink" :content="rawAddress" placement="right">
+        <a class="link" target="_blank" :href="explorerUrl">
+            {{ descriptor }}
+        </a>
+    </Tooltip>
     <span v-else>{{ descriptor }}</span>
 </template>
 
