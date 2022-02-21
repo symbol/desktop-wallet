@@ -1157,7 +1157,7 @@
     "add_contact_popup_text3": " Show in the explorer",
     "add_contact_popup_text4": "New address detected",
     "add_contact_popup_text5": "Your address book lets you save cryptocurrency addresses that you use frequently. After you add an address, you won’t have to manually enter it every time it's required and will not have as many security confirmation screens.",
-    "label_accept": "Accept...",
+    "label_accept": "Accept",
     "label_reject": "Reject",
     "blacklist_address_text": "Block this address?"
 }

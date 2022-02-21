@@ -69,7 +69,6 @@
                                         </div>
                                         <div class="inline">
                                             <Button
-                                                v-focus
                                                 class="button-style inverted-button right-side-button button"
                                                 html-type="submit"
                                                 @click="reject"
