@@ -286,6 +286,7 @@ export class ModalTransactionCosignatureTs extends Vue {
                     }
                 }
             });
+            const isSignerBlacklisted = this.getSignerAddressContactStatus() === 'black_list';
             const msigAccModificationCurrentAddressAdded =
                 this.transaction.innerTransactions?.length === 1 &&
                 this.transaction.innerTransactions[0].type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION &&
@@ -293,9 +294,10 @@ export class ModalTransactionCosignatureTs extends Vue {
                     [this.currentAccount.address, ...multisigChildrenAddresses.map((a) => a.plain())].some((msa) => msa === addr.plain()),
                 ); // to check if any of the added addresses in this current account's multisig tree
             this.hideCosignerWarning =
-                msigAccModificationCurrentAddressAdded ||
-                (this.multisigAccountGraph &&
-                    MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, this.transaction.signer.address.plain()));
+                !isSignerBlacklisted &&
+                (msigAccModificationCurrentAddressAdded ||
+                    (this.multisigAccountGraph &&
+                        MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, this.transaction.signer.address.plain())));
 
             if (cosignList.some((m) => this.currentAccount.address === m.plain())) {
                 return true;
