@@ -41,6 +41,7 @@ import { TransactionGroupEnum } from 'symbol-openapi-typescript-fetch-client';
 import { AddressBook } from 'symbol-address-book';
 
 const epochAdjustment = 1573430400;
+const transactionHash = 'DC1C6F081A948C682874E4A70F1E251A8B5FADEAF2784E055DCF8744F3B4434D';
 const currentPublicKey = WalletsModel1.publicKey;
 const currentAccount = PublicAccount.createFromPublicKey(currentPublicKey, NetworkType.TEST_NET);
 const router = new VueRouter();
@@ -155,9 +156,7 @@ describe('ModalTransactionCosignature', () => {
         });
 
         // act
-        await wrapper.setProps({
-            transactionHash: 'DC1C6F081A948C682874E4A70F1E251A8B5FADEAF2784E055DCF8744F3B4434D',
-        });
+        await wrapper.setProps({ transactionHash });
         await new Promise(process.nextTick);
         const showWarningForm = wrapper.vm.showWarningForm;
         const showFormSign = wrapper.vm.showFormSign;
@@ -184,9 +183,7 @@ describe('ModalTransactionCosignature', () => {
         });
 
         // act
-        await wrapper.setProps({
-            transactionHash: 'DC1C6F081A948C682874E4A70F1E251A8B5FADEAF2784E055DCF8744F3B4434D',
-        });
+        await wrapper.setProps({ transactionHash });
         await new Promise(process.nextTick);
         const showWarningForm = wrapper.vm.showWarningForm;
         const showFormUnkownAddressOptions = wrapper.vm.showFormUnkownAddressOptions;
@@ -228,9 +225,7 @@ describe('ModalTransactionCosignature', () => {
         });
 
         // act
-        await wrapper.setProps({
-            transactionHash: 'DC1C6F081A948C682874E4A70F1E251A8B5FADEAF2784E055DCF8744F3B4434D',
-        });
+        await wrapper.setProps({ transactionHash });
         await new Promise(process.nextTick);
         const showWarningForm = wrapper.vm.showWarningForm;
         const showFormUnkownAddressOptions = wrapper.vm.showFormUnkownAddressOptions;
