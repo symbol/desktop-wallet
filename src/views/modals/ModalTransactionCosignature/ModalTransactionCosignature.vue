@@ -80,7 +80,7 @@
                                                 html-type="submit"
                                                 @click="accept"
                                             >
-                                                {{ $t('label_accept') }}
+                                                {{ $t('sign') }}
                                             </Button>
                                         </div>
                                     </div>
