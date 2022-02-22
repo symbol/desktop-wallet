@@ -1131,7 +1131,7 @@
     "x_seconds": "{seconds}s.",
     "transaction_cosignature_warning_dont_sign": "Sign it only if you understand it. Otherwise, it can lead to the loss of all of your funds.",
     "transaction_cosignature_warning_unknown_cosigner": "You are about to sign this transaction. Please review it carefully before signing - malicious transactions can lead to a loss of funds.",
-    "transaction_cosignature_warning_proceed": "I understand",
+    "transaction_cosignature_warning_proceed": "I understand the risks and wish to continue.",
     "transaction_cosignature_warning_blocked_cosigner": "You have blocked this contact. If you wish to review this transaction, please unblock this contact from your address book.",
     "transaction_cosignature_checkbox_unblock": "I understand the risks and wish to continue.",
     "button_add_contact": "Add",
@@ -1158,7 +1158,7 @@
     "add_contact_popup_text3": " Show in the explorer",
     "add_contact_popup_text4": "New address detected",
     "add_contact_popup_text5": "Your address book lets you save cryptocurrency addresses that you use frequently. After you add an address, you won’t have to manually enter it every time it's required and will not have as many security confirmation screens.",
-    "label_accept": "Accept",
+    "label_accept": "Sign",
     "label_reject": "Reject",
     "blacklist_address_text": "Block this address?"
 }

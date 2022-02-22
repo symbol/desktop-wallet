@@ -58,7 +58,7 @@
                                 >
                                     <div v-if="showFormUnkownAddressOptions">
                                         <img class="icon" src="@/views/resources/img/icons/Signature.svg" alt />
-                                        <div class="title-text">{{ $t('transaction_needs_cosignature') }}</div>
+                                        <div class="title-text">{{ $t('transaction_needs_cosignature_unknown') }}</div>
                                         <div class="inline">
                                             <div class="unknown-address">
                                                 <img class="icon" src="@/views/resources/img/icons/whitelisted_contact_d.svg" alt />
