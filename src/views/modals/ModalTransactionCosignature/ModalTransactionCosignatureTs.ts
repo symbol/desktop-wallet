@@ -143,12 +143,12 @@ export class ModalTransactionCosignatureTs extends Vue {
     public wantToProceed = false;
     public wantToUnblock = false;
     public addressBook: AddressBook;
-    private showFormUnkownAddressOptions: boolean = false;
-    private showFormUnkownAddressRejected: boolean = false;
-    private showFormUnkownAddressAccepted: boolean = false;
-    private showFormSign: boolean = false;
-    private showFormBlacklistedAddress: boolean = false;
-    private contactName: string = '';
+    public showFormUnkownAddressOptions: boolean = false;
+    public showFormUnkownAddressRejected: boolean = false;
+    public showFormUnkownAddressAccepted: boolean = false;
+    public showFormSign: boolean = false;
+    public showFormBlacklistedAddress: boolean = false;
+    public contactName: string = '';
     /// region computed properties
     /**
      * Visibility state
@@ -216,6 +216,11 @@ export class ModalTransactionCosignatureTs extends Vue {
      * Returns whether aggregate bonded transaction is announced by NGL Finance bot
      */
     public get isOptinTransaction(): boolean {
+        // Check wether ENV provided.
+        if (!process.env.KEYS_FINANCE) {
+            return false;
+        }
+
         // Check wether the 'transaction' prop is provided.
         if (!this.transaction) {
             return false;

@@ -22,7 +22,7 @@
                 {{ $t('add_contact_popup_text4') }}
             </div>
             <input v-model="signerAddress" v-focus class="control input" :disabled="true" type="text" />
-            <input v-model="contactName" v-focus class="control input" placeholder="Alias (e.g. Jane Doe)" type="text" />
+            <input v-model="contactName" v-focus class="control input" :placeholder="$t('contact_name')" type="text" />
             <input v-model="contactNote" v-focus class="control input" :placeholder="$t('contact_notes')" type="text" />
             <button type="submit" class="control submit-button inverted-button button" :disabled="!contactName" @click="saveContact">
                 {{ $t('save') }}

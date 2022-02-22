@@ -64,5 +64,5 @@ const defaultAppConfig: AppConfig = {
     offlineNodeModelUrl: 'https://localhost:3000',
 };
 const resolvedAppConfig: AppConfig = window['appConfig'] || defaultAppConfig;
-console.log('appConfig resolved!', resolvedAppConfig);
+
 export const appConfig = resolvedAppConfig;
