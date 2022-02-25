@@ -107,9 +107,6 @@
                                         </div>
                                     </div>
                                     <div v-else-if="showFormUnkownAddressAccepted">
-                                        <div class="caution-text">
-                                            Caution!
-                                        </div>
                                         <img class="icon" src="@/views/resources/img/icons/Signature.svg" alt />
                                         <div class="title-text">{{ $t('transaction_cosignature_warning_unknown_cosigner') }}</div>
                                         <Checkbox v-model="wantToProceed" class="checkbox">
