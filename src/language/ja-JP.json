@@ -1137,8 +1137,8 @@
     "new_version_available": "新バージョンのSymbolウォレットがリリースされています！",
     "download_now": " ダウンロード中",
     "view_metadata_value": "{hexValue}（テキスト：{textValue}）",
-    "value_size_delta": "値サイズデルタ",
+    "value_size_delta": "バリューサイズデルタ",
     "value": "バリューデルタ",
-    "target": "目標",
-    "scoped_metadata_key": "スコープメタデータキー"
+    "target": "ターゲット",
+    "scoped_metadata_key": "スコープ付きメタデータキー"
 }
