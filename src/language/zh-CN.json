@@ -1132,8 +1132,13 @@
     "transaction_cosignature_warning_proceed": "我理解并请继续。",
     "lock_hash_algorithm": "哈希算法",
     "not_enough_balance": "余额不足",
-    "use_maximum_value": "使用最大值",
     "amount_value_cannot_start_with_zero": "金额值不能以 0 开头",
     "new_version_available": "新版本的 Symbol 钱包可用!",
-    "download_now": " 现在就下载"
+    "download_now": " 现在就下载",
+    "view_metadata_value": "{hexValue} (文字: {textValue})",
+    "value_size_delta": "值大小增量",
+    "value": "更改值",
+    "use_max_value": "使用最大值",
+    "scoped_metadata_key": "元数据键",
+    "target": "目标"
 }

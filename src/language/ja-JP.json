@@ -1135,5 +1135,10 @@
     "use_max_value": "最大値を使用",
     "amount_value_cannot_start_with_zero": "総量の値は0から始められません",
     "new_version_available": "新バージョンのSymbolウォレットがリリースされています！",
-    "download_now": " ダウンロード中"
+    "download_now": " ダウンロード中",
+    "view_metadata_value": "{hexValue}（テキスト：{textValue}）",
+    "value_size_delta": "バリューサイズデルタ",
+    "value": "バリューデルタ",
+    "target": "ターゲット",
+    "scoped_metadata_key": "スコープ付きメタデータキー"
 }

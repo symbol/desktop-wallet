@@ -1135,5 +1135,10 @@
     "use_max_value": "Use maximum value",
     "amount_value_cannot_start_with_zero": "Amount value cannot start with 0",
     "new_version_available": "A new version of Symbol wallet is available!",
-    "download_now": " Download now"
+    "download_now": " Download now",
+    "target": "Target",
+    "value_size_delta": "Value Size Delta",
+    "value": "Value Delta",
+    "scoped_metadata_key": "Scoped Metadata Key",
+    "view_metadata_value": "{hexValue} (Text: {textValue})"
 }

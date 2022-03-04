@@ -940,7 +940,6 @@
     "sender": "Отправитель",
     "set_account_name": "Введите имя профиля",
     "set_default_explorer": "Введенный URL недействителен, для вас был установлен URL по умолчанию.",
-    "set_explorer_link": "URL эксплорера",
     "set_network_type": "Выберите тип сети",
     "SET_UP": "Выбор ноды",
     "settings": "Настройки",
@@ -1135,5 +1134,11 @@
     "use_max_value": "Используйте максимальное значение",
     "amount_value_cannot_start_with_zero": "Значение суммы не может начинаться с 0",
     "new_version_available": "Доступна новая версия кошелька Symbol!",
-    "download_now": " скачать сейчас"
+    "download_now": " скачать сейчас",
+    "scoped_metadata_key": "Ключ Ограниченных Метаданных",
+    "target": "Таргет",
+    "value": "Дельта значения",
+    "value_size_delta": "Дельта размера значения",
+    "view_metadata_value": "{hexValue} (Текст: {textValue})",
+    "form_label_explorer_link": "URL проводника"
 }
