@@ -87,16 +87,16 @@
                                     <div v-else-if="showFormUnkownAddressRejected">
                                         <img class="icon" src="@/views/resources/img/icons/malicious_actor_1_d.svg" alt />
                                         <div class="title-text">{{ $t('blacklist_address_text') }}</div>
-                                        <input
-                                            v-model="contactName"
-                                            v-focus
-                                            class="input-style input"
-                                            :placeholder="$t('form_label_new_contact_name')"
-                                            type="text"
-                                        />
+                                        <div class="inline">
+                                            <div class="unknown-address">
+                                                <img class="icon" src="@/views/resources/img/icons/whitelisted_contact_d.svg" alt />
+                                            </div>
+                                            <a class="unknown-address" target="_blank" :href="signerExplorerUrl">
+                                                {{ signerAddress }}
+                                            </a>
+                                        </div>
                                         <Button
                                             class="button-style inverted-button right-side-button button"
-                                            :disabled="!contactName"
                                             html-type="submit"
                                             @click="blackListContact"
                                         >

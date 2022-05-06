@@ -38,6 +38,7 @@ export class AddressDisplayTs extends Vue {
         default: false,
     })
     allowExplorerLink: boolean;
+    isAddressBlocked: boolean = false;
     /**
      * Action descriptor
      * @var {string}
@@ -77,7 +78,8 @@ export class AddressDisplayTs extends Vue {
         // in case of normal transfer, display pretty address
         if (this.address instanceof Address) {
             const contact = await this.$store.dispatch('addressBook/RESOLVE_ADDRESS', this.address.plain());
-            this.descriptor = contact ? contact.name : this.address.plain();
+            this.descriptor = contact && contact.name ? contact.name : this.address.plain();
+            this.isAddressBlocked = contact ? contact.isBlackListed : false;
             this.rawAddress = this.address.plain();
         } else if (this.address instanceof NamespaceId) {
             this.descriptor = this.address.toHex();
@@ -87,7 +89,8 @@ export class AddressDisplayTs extends Vue {
             this.rawAddress = linkedAddress && linkedAddress.plain();
         } else if (typeof this.address === 'string') {
             const contact = await this.$store.dispatch('addressBook/RESOLVE_ADDRESS', this.address);
-            this.descriptor = contact ? contact.name : this.address;
+            this.descriptor = contact && contact.name ? contact.name : this.address;
+            this.isAddressBlocked = contact ? contact.isBlackListed : false;
             this.rawAddress = this.address;
         }
     }

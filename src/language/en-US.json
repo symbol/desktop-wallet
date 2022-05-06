@@ -1151,7 +1151,7 @@
     "white_list_contact_confirmation_title": "Whitelist contact",
     "blacklisted_transactions": "Show blocked transactions",
     "see_blacklist_label": "See blacklist",
-    "added_to_blacklist": "Added to blacklist",
+    "added_to_blacklist": "Added to Blacklist",
     "blacklist_popup_description": "A blacklist is a list of addressees that you do not wish to interact with. These could be associated with social engineering scams, fraud, or simply a source of spam. When an address is added to your blacklist, incoming transactions from them will be automatically blocked.",
     "add_contact_popup_text1": "Success!",
     "add_contact_popup_text2": "Transaction successfully signed. Pending to be confirmed by the network.",
@@ -1160,5 +1160,6 @@
     "add_contact_popup_text5": "Your address book lets you save cryptocurrency addresses that you use frequently. After you add an address, you won’t have to manually enter it every time it's required and will not have as many security confirmation screens.",
     "label_accept": "Sign",
     "label_reject": "Reject",
-    "blacklist_address_text": "Block this address?"
+    "blacklist_address_text": "Block this address?",
+    "blacklist_address_label": "Blocked"
 }
