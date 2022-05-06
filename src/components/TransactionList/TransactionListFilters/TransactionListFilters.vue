@@ -18,16 +18,16 @@
         </div>
         <div class="button-container">
             <Tooltip :content="$t('blacklisted_transactions')" placement="top" :transfer="true">
-                    <img
-                        class="button-blacklist"
-                        :src="
-                            isBlackListFilterActivated
-                                ? require('@/views/resources/img/icons/malicious-actor.svg')
-                                : require('@/views/resources/img/icons/malicious_actor_1.svg')
-                        "
-                        alt
-                        @click="onSelectBlackListed"
-                    />
+                <img
+                    class="button-blacklist"
+                    :src="
+                        isBlackListFilterActivated
+                            ? require('@/views/resources/img/icons/malicious-actor.svg')
+                            : require('@/views/resources/img/icons/malicious_actor_1.svg')
+                    "
+                    alt
+                    @click="onSelectBlackListed"
+                />
             </Tooltip>
         </div>
     </div>

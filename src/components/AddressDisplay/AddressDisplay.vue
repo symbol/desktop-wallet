@@ -6,7 +6,7 @@
     <Tooltip v-else-if="allowExplorerLink" :content="rawAddress" placement="right">
         <a class="address-display link" target="_blank" :href="explorerUrl">
             <span v-if="isAddressBlocked" class="blocked-tag">{{ $t('blacklist_address_label') }}</span>
-        <span>{{ descriptor }}</span>
+            <span>{{ descriptor }}</span>
         </a>
     </Tooltip>
     <span v-else class="address-display">
