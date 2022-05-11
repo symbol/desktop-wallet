@@ -1161,5 +1161,6 @@
     "label_accept": "Sign",
     "label_reject": "Reject",
     "blacklist_address_text": "Block this address?",
-    "blacklist_address_label": "Blocked"
+    "blocked_address_label": "Blocked",
+    "link_docs_scam": "Learn more about common hacks and scams"
 }

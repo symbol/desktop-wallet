@@ -1130,9 +1130,9 @@
     "ws_connection_failed": "ウォレットはSymbolチェーン上のアカウントに関するアクティビティを監視できません。別のノードを選択してみてください。",
     "x_seconds": "{seconds} 秒",
     "transaction_cosignature_warning_dont_sign": "あなたがそれを理解する場合にのみそれに署名してください。 そうでなければ、それはあなたのすべての資金の損失につながる可能性があります。",
-    "transaction_cosignature_warning_unknown_cosigner": "あなたはこのトランザクションに署名しようとしています。署名する前によく取引内容を確認してください。 - 悪意のあるトランザクションへの署名は、あなたの資産を失う可能性があります。",
+    "transaction_cosignature_warning_unknown_cosigner": "あなたが作成したものではないトランザクションに署名をしようとしています。悪意のあるトランザクションの場合、資産を全て失う恐れがあります。トランザクションは取り消す事が出来ない為、送信する総量とそれを受け取るアドレスを慎重に確認してください。",
     "transaction_cosignature_warning_proceed": "わかりました",
-    "transaction_cosignature_warning_blocked_cosigner": "このアカウントはブロックされています。この取引を確認したい場合は、アドレス帳からこのアカウントのブロックを解除してください。",
+    "transaction_cosignature_warning_blocked_cosigner": "このアドレスはブラックリストに載っているアドレスです。トランザクションを受け入れる場合は、ブラックリストからこのアドレスを削除してください。",
     "transaction_cosignature_checkbox_unblock": "リスクを理解した上で、取引を進めます。",
     "button_add_contact": "追加",
     "button_block_contact": "ブロック",
@@ -1152,7 +1152,7 @@
     "blacklisted_transactions": "ブラックリストに登録されたトランザクションを表示する",
     "see_blacklist_label": "ブラックリストを参照",
     "added_to_blacklist": "ブラックリストに追加",
-    "blacklist_popup_description": "ブラックリストを使用すると、既知の詐欺師である暗号通貨アドレスを保存できます。これらのアドレスは自動的にブロックされます。",
+    "blacklist_popup_description": "ブラックリストとは、ソーシャルエンジニア詐欺やスパムの送信元と関連している可能性がある、関わりを持ちたくないアドレスのリストです。アドレスをブラックリストに登録すると、そのアドレスからのトランザクションは自動的にブロックされます。",
     "add_contact_popup_text1": "成功!",
     "add_contact_popup_text2": "トランザクションは正常に署名されました。 ネットワークによる確認待ちです。",
     "add_contact_popup_text3": "エクスプローラーに表示",
@@ -1160,5 +1160,7 @@
     "add_contact_popup_text5": "アドレスブックを使用すると、頻繁に使用する暗号通貨アドレスを保存できます。アドレスを追加すると、必要なたびに手動で入力する必要がなくなり、セキュリティ確認画面が少なくなります。",
     "label_accept": "受け入れる...",
     "label_reject": "拒絶",
-    "blacklist_address_text": "このアドレスをブラックリストに登録する?"
+    "blacklist_address_text": "このアドレスをブラックリストに登録する?",
+    "blocked_address_label": "ブロック済",
+    "link_docs_scam": "よくあるハッキングや詐欺について"
 }
