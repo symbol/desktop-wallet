@@ -1129,6 +1129,7 @@
     "word": "단어",
     "ws_connection_failed": "Symbol 체인에서 계좌의 활동들을 모니터링 할 수 없습니다. 다른 노드를 선택해주세요.",
     "x_seconds": "{seconds}s.",
+
     "transaction_cosignature_warning_dont_sign": "이해한 경우에만 서명하십시오. 그렇지 않으면 모든 자금이 손실될 수 있습니다.",
     "transaction_cosignature_warning_unknown_cosigner": "직접 생성하지 않은 거래에 서명하는 과정입니다. 악의적인 거래는 모든 자산 손실을 초래할 수 있습니다. 거래는 되돌릴 수 없으므로 모든 금액과 수취인 주소를 주의 깊게 검토해주시길바랍니다.",
     "transaction_cosignature_warning_proceed": "이해 했어요",
@@ -1156,5 +1157,16 @@
     "label_reject": "거부",
     "blacklist_address_text": "이 주소를 차단 목록에 추가?",
     "blocked_address_label": "차단됨",
-    "link_docs_scam": "일반적인 해킹이나 스캠에 대해 알아보기"
+    "link_docs_scam": "일반적인 해킹이나 스캠에 대해 알아보기",
+    "amount_value_cannot_start_with_zero": "금액 값은 0으로 시작할 수 없습니다.",
+    "download_now": "지금 다운로드",
+    "lock_hash_algorithm": "해시 알고리즘",
+    "new_version_available": "새로운 버전의 Symbol 지갑이 출시되었습니다!",
+    "not_enough_balance": "균형이 부족하다",
+    "scoped_metadata_key": "범위 메타데이터 키",
+    "target": "표적",
+    "use_max_value": "최대값 사용",
+    "value": "가치 델타",
+    "value_size_delta": "값 크기 델타",
+    "view_metadata_value": "{hexValue}(텍스트: {textValue})"
 }

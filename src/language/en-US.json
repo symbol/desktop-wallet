@@ -1162,5 +1162,10 @@
     "label_reject": "Reject",
     "blacklist_address_text": "Block this address?",
     "blocked_address_label": "Blocked",
-    "link_docs_scam": "Learn more about common hacks and scams"
+    "link_docs_scam": "Learn more about common hacks and scams",
+    "target": "Target",
+    "value_size_delta": "Value Size Delta",
+    "value": "Value Delta",
+    "scoped_metadata_key": "Scoped Metadata Key",
+    "view_metadata_value": "{hexValue} (Text: {textValue})"
 }

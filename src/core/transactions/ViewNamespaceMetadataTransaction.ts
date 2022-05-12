@@ -15,27 +15,30 @@
  * limitations under the License.
  */
 // external dependencies
-import { NamespaceMetadataTransaction } from 'symbol-sdk';
+import { Convert, NamespaceMetadataTransaction } from 'symbol-sdk';
 
 // internal dependencies
 import { TransactionView } from './TransactionView';
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem';
-import { Formatters } from '../utils/Formatters';
+import i18n from '@/language';
 // eslint-disable-next-line max-len
 export class ViewNamespaceMetadataTransaction extends TransactionView<NamespaceMetadataTransaction> {
     /**
      * Displayed items
      */
     protected resolveDetailItems(): TransactionDetailItem[] {
-        const metadataValue = Formatters.hexToUtf8(this.transaction.value);
+        const metadataValue = i18n.t('view_metadata_value', {
+            hexValue: Convert.uint8ToHex(this.transaction.value),
+            textValue: Convert.uint8ToUtf8(this.transaction.value),
+        });
         return [
             { key: 'sender', value: this.transaction.signer.address.plain(), isAddress: true },
             // @ts-ignore
             { key: 'target', value: this.transaction.targetAddress.plain(), isAddress: true },
             { key: 'namespace', value: this.transaction.targetNamespaceId.toHex() },
-            { key: 'scopedMetadataKey', value: this.transaction.scopedMetadataKey.toHex() },
+            { key: 'value_size_delta', value: this.transaction.valueSizeDelta },
             { key: 'value', value: metadataValue },
-            { key: 'valueSizeDelta', value: this.transaction.valueSizeDelta },
+            { key: 'scoped_metadata_key', value: this.transaction.scopedMetadataKey.toHex() },
         ];
     }
 }

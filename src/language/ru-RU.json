@@ -1162,5 +1162,10 @@
     "label_reject": "Отклонить",
     "blacklist_address_text": "Занести этот адрес в черный список?",
     "blocked_address_label": "Заблокирован",
-    "link_docs_scam": "Узнайте больше о распространенных схемах мошенничества."
+    "link_docs_scam": "Узнайте больше о распространенных схемах мошенничества.",
+    "scoped_metadata_key": "Ключ Ограниченных Метаданных",
+    "target": "Таргет",
+    "value": "Дельта значения",
+    "value_size_delta": "Дельта размера значения",
+    "view_metadata_value": "{hexValue} (Текст: {textValue})"
 }

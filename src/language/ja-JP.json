@@ -216,7 +216,7 @@
     "delete_contact_confirmation_title": "連絡先を削除しますか？",
     "delete_profile": "プロファイルの削除",
     "delete_profile_confirmation_checkbox": "はい、このプロファイルを削除します。",
-    "delete_profile_confirmation_message": "バックアップせずにプロファイルを削除することはお勧めできません。資産を紛失する可能性があります。本当に \"{profileName}\" を削除しますか？",
+    "delete_profile_confirmation_message": "バックアップせずにプロファイルを削除することは推奨できません。資産を紛失する可能性があります。本当に \"{profileName}\" を削除しますか？",
     "delete_profile_confirmation_title": "プロファイルの削除",
     "delta": "変化数",
     "description": "説明",
@@ -1140,8 +1140,6 @@
     "lock_hash_algorithm": "ハッシュアルゴリズム",
     "not_enough_balance": "十分な残高がありません",
     "use_max_value": "最大値を使用",
-    "amount_value_cannot_start_with_zero": "金額の値を0から始めることはできません",
-    "new_version_available": "シンボルウォレットの新しいバージョンが利用可能になりました！",
     "download_now": " ダウンロード中",
     "tab_contact_black_list": "ブラックリスト",
     "tab_contact_white_list": "ホワイトリスト",
@@ -1162,5 +1160,12 @@
     "label_reject": "拒絶",
     "blacklist_address_text": "このアドレスをブラックリストに登録する?",
     "blocked_address_label": "ブロック済",
-    "link_docs_scam": "よくあるハッキングや詐欺について"
+    "link_docs_scam": "よくあるハッキングや詐欺について",
+    "amount_value_cannot_start_with_zero": "総量の値は0から始められません",
+    "new_version_available": "新バージョンのSymbolウォレットがリリースされています！",
+    "view_metadata_value": "{hexValue}（テキスト：{textValue}）",
+    "value_size_delta": "バリューサイズデルタ",
+    "value": "バリューデルタ",
+    "target": "ターゲット",
+    "scoped_metadata_key": "スコープ付きメタデータキー"
 }
