@@ -108,7 +108,15 @@
                                     </div>
                                     <div v-else-if="showFormUnkownAddressAccepted">
                                         <img class="icon" src="@/views/resources/img/icons/Signature.svg" alt />
-                                        <div class="title-text">{{ $t('transaction_cosignature_warning_unknown_cosigner') }}</div>
+                                        <div class="title-text">
+                                            {{ $t('transaction_cosignature_warning_unknown_cosigner') }}
+                                            <div>
+                                                <a class="link button-plain" target="_blank" :href="symbolDocsScamAlertUrl">{{
+                                                    $t('link_docs_scam')
+                                                }}</a>
+                                            </div>
+                                        </div>
+
                                         <Checkbox v-model="wantToProceed" class="checkbox">
                                             <span class="warning-txt">{{ $t('transaction_cosignature_warning_proceed') }}</span>
                                         </Checkbox>

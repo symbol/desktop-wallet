@@ -36,6 +36,7 @@ export interface AppConfig {
     };
     title: string;
     offlineNodeModelUrl: string;
+    symbolDocsScamAlertUrl: string;
 }
 
 const defaultAppConfig: AppConfig = {
@@ -62,6 +63,7 @@ const defaultAppConfig: AppConfig = {
     articlesFeedUrl: 'https://symbol.github.io/symbol-rss-feeds/',
     repositoryDataUrl: 'https://api.github.com/repos/symbol/desktop-wallet/releases/latest',
     offlineNodeModelUrl: 'https://localhost:3000',
+    symbolDocsScamAlertUrl: 'https://docs.symbol.dev/guides/account/scams-and-security.html',
 };
 const resolvedAppConfig: AppConfig = window['appConfig'] || defaultAppConfig;
 
