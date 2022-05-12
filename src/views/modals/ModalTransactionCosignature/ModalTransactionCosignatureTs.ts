@@ -533,13 +533,13 @@ export class ModalTransactionCosignatureTs extends Vue {
     public getSignerAddressContactStatus(): 'white_list' | 'black_list' | 'unknown' {
         const signerAddress = this.transaction.signer.address.plain();
         const contacts = this.addressBook.getAllContacts();
-        const signerConstact = contacts.find((contact) => contact.address === signerAddress);
+        const signerContact = contacts.find((contact) => contact.address === signerAddress);
 
-        if (!signerConstact) {
+        if (!signerContact) {
             return 'unknown';
         }
 
-        if (signerConstact.isBlackListed) {
+        if (signerContact.isBlackListed) {
             return 'black_list';
         }
 
