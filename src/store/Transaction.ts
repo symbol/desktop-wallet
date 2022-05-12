@@ -393,6 +393,7 @@ export default {
                         currentSignerAddress: currentSignerAddress.plain(),
                         multisigAddresses: multisigChildrenAddresses,
                         shouldFilterOptionChange: false,
+                        blacklistedContacts: rootGetters['addressBook/getAddressBook'].getBlackListedContacts(),
                     });
                     commit('isFetchingTransactions', false);
                 },
@@ -455,8 +456,8 @@ export default {
             });
         },
 
-        ADD_TRANSACTION(
-            { commit, getters, rootGetters },
+        async ADD_TRANSACTION(
+            { commit, getters, rootGetters, dispatch },
             { group, transaction }: { group: TransactionGroupState; transaction: Transaction },
         ) {
             if (!group) {
@@ -480,13 +481,14 @@ export default {
                     refresh: true,
                     pageInfo: getters['currentConfirmedPage'],
                 });
-
+                await dispatch('LOAD_TRANSACTIONS');
                 commit('setAllTransactions');
                 commit('filterTransactions', {
                     filterOption: null,
                     currentSignerAddress: currentSignerAddress.plain(),
                     multisigAddresses: [],
                     shouldFilterOptionChange: false,
+                    blacklistedContacts: rootGetters['addressBook/getAddressBook'].getBlackListedContacts(),
                 });
             }
         },
@@ -521,6 +523,7 @@ export default {
                 currentSignerAddress: currentSignerAddress.plain(),
                 multisigAddresses: [],
                 shouldFilterOptionChange: false,
+                blacklistedContacts: rootGetters['addressBook/getAddressBook'].getBlackListedContacts(),
             });
         },
 
@@ -595,6 +598,7 @@ export default {
                 currentSignerAddress: currentSignerAddress.plain(),
                 multisigAddresses: [],
                 shouldFilterOptionChange: false,
+                blacklistedContacts: rootGetters['addressBook/getAddressBook'].getBlackListedContacts(),
             });
         },
     },

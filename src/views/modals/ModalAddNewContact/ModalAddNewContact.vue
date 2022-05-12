@@ -1,73 +1,37 @@
 <template>
-    <div class="container">
-        <Modal
-            v-model="show"
-            :title="$t('modal_title_enter_account_name')"
-            :transfer="false"
-            class-name="modal-container"
-            :footer-hide="true"
-        >
-            <div slot="header">
-                <img :src="require('@/views/resources/img/icons/Stamp.svg')" class="img-positioning" alt />
+    <Modal v-model="show" class="modal" :transfer="false" :footer-hide="true">
+        <div class="section-transaction">
+            <img :src="require('@/views/resources/img/icons/Stamp.svg')" class="title-icon" alt />
+            <div class="title-text">
+                {{ $t('add_contact_popup_text1') }}
             </div>
-
-            <div class="modal-body">
-                <span class="title"> {{ $t('add_contact_popup_text1') }}</span>
-                <br />
-                <span class="under-title-txt"> {{ $t('add_contact_popup_text2') }}</span>
+            <div class="body-text">
+                {{ $t('add_contact_popup_text2') }}
             </div>
-
-            <a class="link-text" target="_blank" :href="explorerUrl">
-                <img :src="require('@/views/resources/img/navbar/explorer.svg')" class="explorer-img" alt />
+            <a class="explorer-link" target="_blank" :href="explorerUrl">
+                <div class="explorer-icon" />
                 {{ $t('add_contact_popup_text3') }}
             </a>
+        </div>
 
-            <br />
+        <hr class="separator" />
 
-            <hr class="horizontal-line" />
-
-            <img :src="require('@/views/resources/img/icons/address_book.svg')" alt class="img-positioning" />
-
-            <br />
-
-            <span class="title address-detected"> {{ $t('add_contact_popup_text4') }}</span>
-            <br />
-            <input
-                v-focus
-                class="input-size input-style inputs-style disabled-label"
-                :placeholder="signerAddress"
-                :disabled="true"
-                type="text"
-            />
-            <input
-                v-model="contactName"
-                v-focus
-                class="input-size input-style inputs-style"
-                placeholder="Alias (e.g. Jane Doe)"
-                type="text"
-            />
-
-            <input
-                v-model="contactNote"
-                v-focus
-                class="input-size input-style inputs-style"
-                :placeholder="$t('contact_notes')"
-                type="text"
-            />
-
-            <button
-                type="submit"
-                class="centered-button button-style submit-button inverted-button button-style"
-                :disabled="contactName === ''"
-                @click="onClickSave"
-            >
+        <div class="section-address-book">
+            <img :src="require('@/views/resources/img/icons/address_book.svg')" alt class="address-book-icon" />
+            <div class="address-book-title-text">
+                {{ $t('add_contact_popup_text4') }}
+            </div>
+            <input v-model="signerAddress" v-focus class="control input" :disabled="true" type="text" />
+            <input v-model="contactName" v-focus class="control input" :placeholder="$t('contact_name')" type="text" />
+            <input v-model="contactNote" v-focus class="control input" :placeholder="$t('contact_notes')" type="text" />
+            <button type="submit" class="control submit-button inverted-button button" :disabled="!contactName" @click="saveContact">
                 {{ $t('save') }}
             </button>
-            <span class="bottom-text">
+            <div class="address-book-description">
                 {{ $t('add_contact_popup_text5') }}
-            </span>
-        </Modal>
-    </div>
+            </div>
+        </div>
+    </Modal>
 </template>
 
 <script lang="ts">

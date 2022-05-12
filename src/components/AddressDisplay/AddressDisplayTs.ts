@@ -14,9 +14,17 @@
  *
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Address, NamespaceId } from 'symbol-sdk';
+import { mapGetters } from 'vuex';
+import { Address, NamespaceId, NetworkType } from 'symbol-sdk';
+import { networkConfig } from '@/config';
 
-@Component
+@Component({
+    computed: {
+        ...mapGetters({
+            networkType: 'network/networkType',
+        }),
+    },
+})
 export class AddressDisplayTs extends Vue {
     @Prop({
         default: null,
@@ -26,11 +34,28 @@ export class AddressDisplayTs extends Vue {
         default: false,
     })
     showAddress: boolean;
+    @Prop({
+        default: false,
+    })
+    allowExplorerLink: boolean;
+    isAddressBlocked: boolean = false;
     /**
      * Action descriptor
      * @var {string}
      */
     public descriptor: string = '';
+
+    /**
+     * Raw address
+     * @var {string}
+     */
+    public rawAddress: string = '';
+
+    /**
+     * Network Type
+     * @var {NetworkType}
+     */
+    public networkType: NetworkType;
 
     /**
      * Hook called when the component is mounted
@@ -53,12 +78,28 @@ export class AddressDisplayTs extends Vue {
         // in case of normal transfer, display pretty address
         if (this.address instanceof Address) {
             const contact = await this.$store.dispatch('addressBook/RESOLVE_ADDRESS', this.address.plain());
-            this.descriptor = contact ? contact.name : this.address.pretty();
+            this.descriptor = contact && contact.name ? contact.name : this.address.plain();
+            this.isAddressBlocked = contact ? contact.isBlackListed : false;
+            this.rawAddress = this.address.plain();
         } else if (this.address instanceof NamespaceId) {
             this.descriptor = this.address.toHex();
             const namespaceName = await this.$store.dispatch('namespace/RESOLVE_NAME', this.address);
             const linkedAddress = await this.$store.dispatch('namespace/GET_LINKED_ADDRESS', this.address);
-            this.descriptor = linkedAddress && this.showAddress ? `${namespaceName} (${linkedAddress.pretty()})` : namespaceName;
+            this.descriptor = linkedAddress && this.showAddress ? `${namespaceName} (${linkedAddress.plain()})` : namespaceName;
+            this.rawAddress = linkedAddress && linkedAddress.plain();
+        } else if (typeof this.address === 'string') {
+            const contact = await this.$store.dispatch('addressBook/RESOLVE_ADDRESS', this.address);
+            this.descriptor = contact && contact.name ? contact.name : this.address;
+            this.isAddressBlocked = contact ? contact.isBlackListed : false;
+            this.rawAddress = this.address;
         }
+    }
+
+    protected get explorerUrl(): string {
+        if (!this.rawAddress) {
+            return '';
+        }
+
+        return networkConfig[this.networkType].explorerUrl.replace(/\/+$/, '') + '/accounts/' + this.rawAddress;
     }
 }

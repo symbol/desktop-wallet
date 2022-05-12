@@ -28,7 +28,7 @@
                         ]"
                     >
                         <div class="cosignatory-address-container">
-                            <span v-if="address">{{ address.pretty() }}</span>
+                            <span v-if="address">{{ address.plain() }}</span>
                         </div>
                         <Icon
                             v-if="address && modifiable && removeModifications && removeModifications.length === 0"
@@ -57,7 +57,7 @@
                         :class="['row-cosignatory-modification-display', 'mx-1', 'pl-2', 'pr-2', 'red-background']"
                     >
                         <div class="cosignatory-address-container">
-                            <span class="cosignatory-removed">{{ address.pretty() }}</span>
+                            <span class="cosignatory-removed">{{ address.plain() }}</span>
                         </div>
                         <Icon type="ios-undo" size="21" class="icon-button" @click="onUndoModification(address)" />
                     </div>
@@ -81,7 +81,7 @@
                         ]"
                     >
                         <div class="cosignatory-address-container">
-                            <span v-if="address">{{ address.pretty() }}</span>
+                            <span v-if="address">{{ address.plain() }}</span>
                         </div>
                         <img
                             src="@/views/resources/img/icons/bin.svg"

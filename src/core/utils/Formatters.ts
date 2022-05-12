@@ -34,11 +34,11 @@ export class Formatters {
         if (!address) {
             return;
         }
-        return Address.createFromRawAddress(address).pretty();
+        return Address.createFromRawAddress(address).plain();
     };
 
     public static miniAddress = (address: Address): string => {
-        const string = address.pretty();
+        const string = address.plain();
         return `${string.substring(0, 13).toUpperCase()}***${string.substring(28).toUpperCase()}`;
     };
 

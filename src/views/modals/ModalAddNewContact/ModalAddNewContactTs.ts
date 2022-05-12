@@ -62,12 +62,12 @@ export class ModalAddNewContactTs extends Vue {
         }
     }
 
-    onClickSeeBlackList() {
+    openBlacklist() {
         this.$store.commit('addressBook/setBlackListedContactsSelected', true);
         this.$router.push({ name: 'accounts.details' });
     }
 
-    onClickSave() {
+    saveContact() {
         const contacts = this.addressBook.getAllContacts();
         const isSameAddress = contacts.some((contact) => contact.address === this.signerAddress);
 
@@ -82,15 +82,12 @@ export class ModalAddNewContactTs extends Vue {
             isBlackListed: false,
             notes: this.contactNote,
         });
+        this.$store.dispatch('transaction/LOAD_TRANSACTIONS');
         this.$emit('close');
         this.show = false;
     }
 
     public get explorerUrl() {
         return networkConfig[this.networkType].explorerUrl.replace(/\/+$/, '') + '/transactions/' + this.transactionHash;
-    }
-
-    public onSubmit() {
-        this.show = false;
     }
 }

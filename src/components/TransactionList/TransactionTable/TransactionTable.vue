@@ -8,10 +8,10 @@
             infinite-scroll-distance="5"
             class="transaction-rows-outer-container"
         >
-            <div class="transaction-rows-inner-container">
+            <div v-if="!isFetchingTransactions" class="transaction-rows-inner-container">
                 <TransactionRow
                     v-for="(transaction, index) in transactions"
-                    :key="index"
+                    :key="'tx' + index"
                     :transaction="transaction"
                     @click="$emit('click', transaction)"
                 />

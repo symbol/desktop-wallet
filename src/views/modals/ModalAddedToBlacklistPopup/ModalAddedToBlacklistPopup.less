@@ -10,36 +10,33 @@
     height: 0.5rem;
 }
 .title {
-    position: relative;
-
     font-family: @symbolFontBold;
     font-weight: bold;
     font-size: 24px;
     line-height: 33px;
-
     color: #3d064b;
 }
 .modal-body {
-    position: relative;
-    top: 0.1rem;
-
+    padding: 0.1rem 0;
     font-family: @symbolFont;
     font-size: 17px;
     line-height: 23px;
-
     color: #3d064b;
 }
-.link-text {
-    position: relative;
-    font-family: @symbolFont;
-    font-size: 17px;
-    line-height: 23px;
-    color: #4c0cbf;
-    margin: 0px 4px;
-}
+.link-blacklist {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
-.img-positioning {
-    position: relative;
-    top: 0.1rem;
-    height: 0.4rem !important;
+    img {
+        height: 0.4rem;
+    }
+
+    a {
+        font-family: @symbolFont;
+        font-size: 17px;
+        line-height: 23px;
+        color: #4c0cbf;
+        margin: 0px 0.08rem;
+    }
 }

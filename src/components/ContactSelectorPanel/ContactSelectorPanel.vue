@@ -1,80 +1,74 @@
 <template>
-    <div class="account-selector-panel">
-        <div v-auto-scroll="'active-background'" class="account-switch-body-container scroll">
-            <NavigationLinks
-                :direction="'horizontal'"
-                :items="panelItems"
-                :current-item-index="activePanel"
-                translation-prefix="tab_contact_"
-                @selected="(i) => (activePanel = i)"
-            />
-            <div v-if="activePanel == 1">
-                <div
-                    v-for="(item, index) in blackListedContacts"
-                    :key="index"
-                    :class="['contact-title', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
-                    @click="selectedContactId = item.id"
-                >
-                    <div class="contact_data">
-                        <span class="img_container">
+    <div>
+        <div class="account-selector-panel">
+            <div v-auto-scroll="'active-background'" class="account-switch-body-container scroll">
+                <NavigationLinks
+                    :direction="'horizontal'"
+                    :items="panelItems"
+                    :current-item-index="activePanel"
+                    translation-prefix="tab_contact_"
+                    @selected="(i) => (activePanel = i)"
+                />
+                <div v-if="activePanel == 1">
+                    <div
+                        v-for="(item, index) in blackListedContacts"
+                        :key="index"
+                        :class="['contact-title', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
+                        @click="selectedContactId = item.id"
+                    >
+                        <div class="contact-item">
                             <img v-if="isActiveContact(item)" src="@/views/resources/img/icons/malicious-actor.svg" alt />
-                            <img v-else src="@/views/resources/img/icons/malicious-actor.svg" class="grayed-xym-logo" alt />
-                        </span>
-                        <span class="contact_name">
-                            <p class="bold-text">{{ item.name }}</p>
-                            <p class="address">{{ item.address }}</p>
-                        </span>
+                            <img v-else src="@/views/resources/img/icons/malicious-actor.svg" class="contact-icon-inactive" alt />
+                            <span class="contact-info">
+                                <p class="trunc-text">{{ item.name }}</p>
+                                <p class="trunc-text address">{{ item.address }}</p>
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div v-else>
-                <div
-                    v-for="(item, index) in whiteListedContacts"
-                    :key="index"
-                    :class="['contact-title', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
-                    @click="selectedContactId = item.id"
-                >
-                    <div class="contact_data">
-                        <span class="img_container">
+                <div v-else>
+                    <div
+                        v-for="(item, index) in whiteListedContacts"
+                        :key="index"
+                        :class="['contact-title', isActiveContact(item) ? 'active-background' : 'inactive-background', 'pointer']"
+                        @click="selectedContactId = item.id"
+                    >
+                        <div class="contact-item">
                             <img v-if="isActiveContact(item)" src="@/views/resources/img/icons/whitelisted_contact.svg" alt />
-                            <img v-else src="@/views/resources/img/icons/whitelisted_contact.svg" class="grayed-xym-logo" alt />
-                        </span>
-                        <span class="contact_name">
-                            <p class="bold-text">{{ item.name }}</p>
-                            <p class="address">{{ item.address }}</p>
-                        </span>
+                            <img v-else src="@/views/resources/img/icons/whitelisted_contact.svg" class="contact-icon-inactive" alt />
+                            <span class="contact-info">
+                                <p class="trunc-text">{{ item.name }}</p>
+                                <p class="trunc-text address">{{ item.address }}</p>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="account-switch-footer-container bottom-buttons">
-            <span type="button" class="add-account pointer button" @click="hasAddAccountModal = true">
-                <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" />
-                {{ $t('add_contact') }}
-            </span>
-
-            <div
-                v-if="addressBook.getAllContacts().length > 0"
-                class="account-switch-header-right-container"
-                @click="hasBackupProfileModal = true"
-            >
-                <span type="button" class="back-up pointer button" @click="downloadAddressBook">
-                    <img src="@/views/resources/img/newicons/Download.svg" class="icon-left-button" />
-                    {{ $t('backup_address_book') }}
+            <div class="account-switch-footer-container">
+                <span type="button" class="action-button pointer button" @click="hasAddAccountModal = true">
+                    <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" />
+                    {{ $t('add_contact') }}
                 </span>
-            </div>
 
-            <div
-                v-if="addressBook.getAllContacts().length === 0"
-                class="account-switch-header-right-container"
-                @click="hasImportProfileModal = true"
-            >
-                <span type="button" class="back-up pointer button" @click="hasImportProfileModal = true">
-                    <img src="@/views/resources/img/navbar/import.svg" class="icon-left-button" />
-                    {{ $t('import_address_book') }}
-                </span>
+                <div
+                    v-if="addressBook.getAllContacts().length > 0"
+                    class="account-switch-header-right-container"
+                    @click="hasBackupProfileModal = true"
+                >
+                    <span type="button" class="action-button pointer button" @click="downloadAddressBook">
+                        <img src="@/views/resources/img/newicons/Download.svg" class="icon-left-button" />
+                        {{ $t('backup_address_book') }}
+                    </span>
+                </div>
+
+                <div class="account-switch-header-right-container" @click="hasImportProfileModal = true">
+                    <span type="button" class="action-button pointer button" @click="hasImportProfileModal = true">
+                        <img src="@/views/resources/img/navbar/import.svg" class="icon-left-button" />
+                        {{ $t('import_address_book') }}
+                    </span>
+                </div>
             </div>
         </div>
 

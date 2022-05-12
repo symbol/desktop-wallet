@@ -30,6 +30,7 @@ import {
 } from 'symbol-sdk';
 import { mapGetters } from 'vuex';
 
+import { networkConfig } from '@/config';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
@@ -68,6 +69,7 @@ import { AddressBook } from 'symbol-address-book';
             multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
             multisigAccountGraph: 'account/multisigAccountGraph',
             addressBook: 'addressBook/getAddressBook',
+            symbolDocsScamAlertUrl: 'app/symbolDocsScamAlertUrl',
         }),
     },
 })
@@ -130,6 +132,11 @@ export class ModalTransactionCosignatureTs extends Vue {
     public multisigAccountGraph: Map<number, MultisigAccountInfo[]>;
 
     /**
+     * Link to the Common Hacks and Scams docs page
+     */
+    public symbolDocsScamAlertUrl: string;
+
+    /**
      * Whether transaction has expired
      */
     public expired: boolean = false;
@@ -140,10 +147,14 @@ export class ModalTransactionCosignatureTs extends Vue {
     public hideCosignerWarning = false;
 
     public wantToProceed = false;
+    public wantToUnblock = false;
     public addressBook: AddressBook;
-    private transactionRejected: boolean = false;
-    private transactionAccepted: boolean = false;
-    private contactName: string = '';
+    public showFormUnkownAddressOptions: boolean = false;
+    public showFormUnkownAddressRejected: boolean = false;
+    public showFormUnkownAddressAccepted: boolean = false;
+    public showFormSign: boolean = false;
+    public showFormBlacklistedAddress: boolean = false;
+    public contactName: string = '';
     /// region computed properties
     /**
      * Visibility state
@@ -160,6 +171,31 @@ export class ModalTransactionCosignatureTs extends Vue {
         if (!val) {
             this.$emit('close');
         }
+    }
+
+    public get showWarningForm() {
+        return (
+            this.showFormUnkownAddressOptions ||
+            this.showFormUnkownAddressRejected ||
+            this.showFormUnkownAddressAccepted ||
+            this.showFormBlacklistedAddress
+        );
+    }
+
+    public get signerExplorerUrl() {
+        return networkConfig[this.networkType].explorerUrl.replace(/\/+$/, '') + '/accounts/' + this.signerAddress;
+    }
+
+    public get signerAddress(): string | null {
+        return this.transaction?.signer?.address.plain() || null;
+    }
+
+    public get signerContactName(): string | null {
+        if (!this.signerAddress) {
+            return null;
+        }
+
+        return this.addressBook.getContactByAddress(this.signerAddress)?.name || null;
     }
 
     /**
@@ -186,6 +222,11 @@ export class ModalTransactionCosignatureTs extends Vue {
      * Returns whether aggregate bonded transaction is announced by NGL Finance bot
      */
     public get isOptinTransaction(): boolean {
+        // Check wether ENV provided.
+        if (!process.env.KEYS_FINANCE) {
+            return false;
+        }
+
         // Check wether the 'transaction' prop is provided.
         if (!this.transaction) {
             return false;
@@ -256,6 +297,7 @@ export class ModalTransactionCosignatureTs extends Vue {
                     }
                 }
             });
+            const isSignerBlacklisted = this.getSignerAddressContactStatus() === 'black_list';
             const msigAccModificationCurrentAddressAdded =
                 this.transaction.innerTransactions?.length === 1 &&
                 this.transaction.innerTransactions[0].type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION &&
@@ -263,9 +305,10 @@ export class ModalTransactionCosignatureTs extends Vue {
                     [this.currentAccount.address, ...multisigChildrenAddresses.map((a) => a.plain())].some((msa) => msa === addr.plain()),
                 ); // to check if any of the added addresses in this current account's multisig tree
             this.hideCosignerWarning =
-                msigAccModificationCurrentAddressAdded ||
-                (this.multisigAccountGraph &&
-                    MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, this.transaction.signer.address.plain()));
+                !isSignerBlacklisted &&
+                (msigAccModificationCurrentAddressAdded ||
+                    (this.multisigAccountGraph &&
+                        MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, this.transaction.signer.address.plain())));
 
             if (cosignList.some((m) => this.currentAccount.address === m.plain())) {
                 return true;
@@ -373,6 +416,19 @@ export class ModalTransactionCosignatureTs extends Vue {
         }
 
         this.isLoading = false;
+        this.showCosignatureForm();
+    }
+
+    showCosignatureForm() {
+        const signerAddressContactStatus = this.getSignerAddressContactStatus();
+
+        if (signerAddressContactStatus === 'white_list') {
+            this.showFormSign = true;
+        } else if (signerAddressContactStatus === 'black_list') {
+            this.showFormBlacklistedAddress = true;
+        } else if (signerAddressContactStatus === 'unknown') {
+            this.showFormUnkownAddressOptions = true;
+        }
     }
 
     /**
@@ -469,9 +525,50 @@ export class ModalTransactionCosignatureTs extends Vue {
         this.$emit('error', error);
     }
 
-    get addressExists() {
-        const addressExists: boolean = this.addressBook.getContactByAddress(this.transaction.signer.address.plain()) !== undefined;
+    get addressExists(): boolean {
+        const addressExists = this.addressBook.getContactByAddress(this.transaction.signer.address.plain()) !== undefined;
         return addressExists;
+    }
+
+    public getSignerAddressContactStatus(): 'white_list' | 'black_list' | 'unknown' {
+        const signerAddress = this.transaction.signer.address.plain();
+        const contacts = this.addressBook.getAllContacts();
+        const signerContact = contacts.find((contact) => contact.address === signerAddress);
+
+        if (!signerContact) {
+            return 'unknown';
+        }
+
+        if (signerContact.isBlackListed) {
+            return 'black_list';
+        }
+
+        return 'white_list';
+    }
+
+    public reject() {
+        this.showFormUnkownAddressOptions = false;
+        this.showFormUnkownAddressRejected = true;
+    }
+
+    public accept() {
+        this.showFormUnkownAddressOptions = false;
+        this.showFormUnkownAddressAccepted = true;
+        this.wantToProceed = false;
+    }
+
+    public backToOptions() {
+        this.showFormUnkownAddressOptions = true;
+        this.showFormUnkownAddressRejected = false;
+        this.showFormUnkownAddressAccepted = false;
+    }
+
+    public proceedToSign() {
+        this.showFormUnkownAddressOptions = false;
+        this.showFormUnkownAddressRejected = false;
+        this.showFormUnkownAddressAccepted = false;
+        this.showFormBlacklistedAddress = false;
+        this.showFormSign = true;
     }
 
     public blackListContact() {
@@ -488,10 +585,22 @@ export class ModalTransactionCosignatureTs extends Vue {
             address: this.transaction.signer.address.plain(),
             isBlackListed: true,
         });
+        this.$store.dispatch('transaction/LOAD_TRANSACTIONS');
         this.show = false;
         this.$emit('blacklist');
         if (!this.addressExists) {
             this.$emit('signer-address', this.transaction.signer.address.plain());
         }
+    }
+
+    public unblockContact() {
+        const contact = this.addressBook.getContactByAddress(this.signerAddress);
+
+        if (contact) {
+            this.$store.dispatch('addressBook/REMOVE_CONTACT', contact.id);
+            this.$store.dispatch('transaction/LOAD_TRANSACTIONS');
+        }
+
+        this.show = false;
     }
 }

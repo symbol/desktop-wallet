@@ -19,6 +19,7 @@
                 padding-top: 0.2rem;
                 text-align: justify;
             }
+
             .emphasis {
                 color: @whiteDark;
                 font-weight: @boldest;
@@ -27,6 +28,11 @@
 
             .warning .ivu-alert-icon {
                 font-size: 0.26rem;
+            }
+
+            .link {
+                color: #fff;
+                text-decoration: underline;
             }
         }
 
@@ -54,88 +60,146 @@
     cursor: pointer;
 }
 
-.box-position-size {
-    left: -0.3rem;
-    width: 12.06rem;
-    min-height: 2.27rem;
-    right: 0;
+.warning {
     position: absolute;
-    display: block;
+    left: -0.3rem;
+    right: -0.3rem;
+    height: 3.1rem;
 }
 
-.box-section {
-    background-color: #44004e;
+.address-book-panel {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+
+    min-height: 200px;
+    background: #44004e;
+    color: #fff;
+    padding: 18.67px 80px 42.67px;
+
+    .icon {
+        width: 0.25rem;
+        height: 0.25rem;
+    }
+
+    .title-text {
+        margin-bottom: 0.1rem;
+        max-width: 6rem;
+    }
+
+    .blocked-address {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        background: #fff;
+        color: #000;
+        border-radius: 6px;
+        height: 0.35rem;
+        padding: 0 0.1rem;
+        font-size: @bigFont;
+        font-family: @symbolFontMedium;
+        margin-right: 0.08rem;
+        margin-bottom: 0.08rem;
+
+        &:first-of-type {
+            width: 0.35rem;
+            height: 0.35rem;
+        }
+    }
+
+    .unknown-address {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        height: 0.2rem;
+        font-size: @smallFont;
+        font-family: @symbolFontLight;
+        margin-right: 0.02rem;
+        margin-bottom: 0.1rem;
+        margin-top: -0.1rem;
+        text-decoration: underline;
+        cursor: pointer;
+
+        &:last-child {
+            opacity: 0.7;
+        }
+
+        img {
+            width: 0.15rem;
+            height: 0.15rem;
+        }
+    }
+
+    .button {
+        background: white;
+        color: #000;
+        width: 2.4rem;
+        height: 0.36rem !important;
+        font-size: @smallFont;
+        margin-left: 0.08rem;
+
+        &:first-of-type {
+            margin-left: 0;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+        }
+    }
+
+    .button-plain {
+        text-decoration: underline;
+        opacity: 0.7;
+        cursor: pointer;
+        margin: 0.1rem 0;
+    }
+
+    .input {
+        display: block;
+        background: white;
+        margin-left: 0.08rem;
+        margin-bottom: 0.08rem;
+        width: 2.4rem;
+        height: 0.36rem !important;
+
+        &:first-of-type {
+            margin-left: 0;
+        }
+    }
+
+    .checkbox {
+        display: block;
+        margin-bottom: 0.1rem;
+        color: #000;
+        font-weight: @bolder;
+    }
 }
 
-.box-section-accepted {
-    background-color: #f89903;
+.bg-warning {
+    background: #ff9900;
 }
 
-.action-button-style {
-    z-index: 100001;
-    background: white !important;
-    color: #44004e;
-    width: 2.3rem;
-    height: 0.4rem !important;
+.bg-danger {
+    background: #959595;
+
+    .title-text {
+        max-width: 3.4rem;
+    }
+
+    .checkbox {
+        color: #fff;
+    }
+}
+.inline {
+    display: flex;
 }
 
-.img-pad {
-    margin-bottom: 0.2rem;
+/deep/.ivu-checkbox {
+    margin-top: 2px;
+    margin-left: 2px;
 }
 
-.img-position {
-    width: 0.4rem;
-    height: 0.4rem;
-    margin-left: 0.7rem;
-}
-
-.txt-position {
-    margin-left: -0.35rem;
-    color: white;
-    font-weight: @boldest;
-}
-
-.warning-txt-position {
-    margin-left: 1.2rem;
-}
-
-.warning-txt-checkbox {
-    font-weight: bold;
-    margin-left: 0.85rem;
-    font-family: @symbolFontBold;
-}
-
-.warning-txt {
-    font-family: @symbolFontBold;
-    color: black;
-}
-
-.position-button {
-    padding-left: 0.63rem;
-}
-
-.contact-input {
-    background: white;
-    margin-left: 0.74rem;
-    margin-bottom: 0.05rem;
-    width: 2.3rem;
-    height: 0.4rem !important;
-}
-
-.rejected-button {
-    margin-left: 0.74rem;
-    width: 2.3rem;
-    height: 0.4rem !important;
-    font-weight: @symbolFontBold;
-}
-
-/deep/.ivu-checkbox-inner {
-    background: white !important;
-    box-shadow: 0px 2px 4px @primary;
-    border-radius: 2px;
-    border: none;
-}
-
-/deep/.ivu-checkbox-inner::after {
-    border-color: black;
+/deep/.ivu-checkbox-checked {
+    background-color: transparent !important;
 }

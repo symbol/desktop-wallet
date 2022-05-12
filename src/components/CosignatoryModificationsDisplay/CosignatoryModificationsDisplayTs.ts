@@ -57,7 +57,7 @@ export class CosignatoryModificationsDisplayTs extends Vue {
         addOrRemove: 'add' | 'remove';
     }[] {
         return Object.values(this.cosignatoryModifications).map(({ addOrRemove, cosignatory }) => ({
-            address: cosignatory.pretty(),
+            address: cosignatory.plain(),
             addOrRemove,
         }));
     }

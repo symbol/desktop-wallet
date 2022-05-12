@@ -39,14 +39,14 @@ export class ViewMultisigAccountModificationTransaction extends TransactionView<
         const additions = addressAdditions.map((address, index, self) => {
             return {
                 key: `${i18n.t('public_key_addition')} (${index + 1}/${self.length})`,
-                value: (address as Address).pretty(),
+                value: (address as Address).plain(),
             };
         });
 
         const deletions = addressDeletions.map((address, index, self) => {
             return {
                 key: `${i18n.t('public_key_deletion')} (${index + 1}/${self.length})`,
-                value: (address as Address).pretty(),
+                value: (address as Address).plain(),
             };
         });
 

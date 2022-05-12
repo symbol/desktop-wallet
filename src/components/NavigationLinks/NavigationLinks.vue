@@ -4,7 +4,7 @@
             'symbol-tab-container',
             direction === 'horizontal'
                 ? translationPrefix === 'tab_contact_'
-                    ? ['horizontal', 'line', 'contact-header-font-size']
+                    ? ['horizontal', 'line', 'smaller-tab-offset']
                     : 'horizontal'
                 : 'vertical',
         ]"

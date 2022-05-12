@@ -3,7 +3,7 @@
         <div class="detail-row">
             <div class="account-detail-row-3cols">
                 <span class="label">{{ $t('account_address') }}</span>
-                <span class="value accountAddress">{{ AccountModel.getObjects(account).address.pretty() }}</span>
+                <span class="value accountAddress">{{ AccountModel.getObjects(account).address.plain() }}</span>
                 <span>
                     <ButtonCopyToClipboard v-model="account.address">
                         <img src="@/views/resources/img/account/copyIcon.png" class="copy-icon" />

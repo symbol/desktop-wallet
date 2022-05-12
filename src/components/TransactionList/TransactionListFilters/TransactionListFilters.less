@@ -3,6 +3,7 @@
 .transaction-list-filters-container {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     padding: 0.15rem 0;
 
     .transaction-list-filter-container {
@@ -91,28 +92,24 @@
             }
         }
     }
-    .button-refresh-container {
+    .button-container {
+        height: 0.3rem;
         margin-right: 0.2rem;
         display: flex;
         align-items: center;
-    }
-    .button-download-container {
-        margin-right: 0.2rem;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
+        // border: 1px solid black;
+
+        .button-refresh {
+            margin-top: -0.01rem;
+        }
 
         .button-download {
-            font-size: 0.23rem;
+            font-size: 0.22rem;
             color: @primary;
         }
-        .malicious-download-clicked {
-            font-size: 0.23rem;
-            color: @primary;
-            background-color: #d5d5d8a9;
-            border: 1px solid #ff00ff;
-            border-radius: 3.5px;
-            padding-top: 0.08rem;
+
+        .button-blacklist {
+            margin-top: 0.06rem;
         }
     }
 }

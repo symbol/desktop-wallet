@@ -55,7 +55,6 @@ export class TransactionFilterService {
                 result = result.concat(confirmedTransactions);
             }
         }
-        console.log(blacklistedContacts, blacklistFilterActivated);
         if (blacklistedContacts && blacklistFilterActivated) {
             return this.filterByBlackListedContacts(transactions, blacklistedContacts);
         }

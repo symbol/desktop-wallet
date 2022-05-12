@@ -15,220 +15,47 @@
  */
 @import '../../views/resources/css/variables.less';
 
-.account-switch-container {
-    .account-switch-header-container {
-        display: grid;
-        grid-template-columns: 60% 40%;
-        grid-template-rows: 100%;
-
-        .account-switch-header-left-container {
-            padding: 0 0.4rem;
-            margin: 0.2rem 0;
-
-            .section-title {
-                font-weight: 600;
-                color: @purpleDark;
-                font-family: @symbolFont;
-            }
-        }
-
-        .account-switch-header-right-container {
-            text-align: right;
-            padding: 0.19rem 0.2rem 0 0;
-            .back-up {
-            }
-        }
-    }
-
-    @passiveTextColor: #73747a;
-
-    .account-switch-body-container {
-        width: 100%;
-        height: 100%;
-        display: grid;
-        grid-template-columns: 100%;
-        grid-auto-rows: 0.7rem;
-        position: relative;
-        .active-background {
-            color: @black;
-        }
-
-        .inactive-background {
-            color: @grayLight;
-        }
-
-        .contact-tile {
-            margin: 0 0.24rem;
-            position: relative;
-            padding: 0.14rem 0.25rem;
-            bottom: 4px;
-            .account-tile-inner-container {
-                display: grid;
-                width: 100%;
-                height: 100%;
-                display: grid;
-                grid-template-rows: 50% 50%;
-                grid-template-columns: 100%;
-                font-weight: 900;
-                overflow: hidden;
-
-                .account-tile-upper-container {
-                    .account-name {
-                        color: @white;
-                    }
-                }
-
-                .account-tile-lower-container {
-                    display: grid;
-                    width: 100%;
-                    height: 100%;
-                    display: grid;
-                    grid-template-rows: 100%;
-                    grid-template-columns: 80% 20%;
-
-                    .account-amount {
-                    }
-
-                    .account-icons {
-                        .account-icon {
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    .account-switch-footer-container {
-        padding: 0.3rem 0.3rem;
-        display: grid;
-        grid-template-columns: 50% 50%;
-        grid-template-rows: 100%;
-        text-align: center;
-        font-size: @normalFont;
-        font-family: @symbolFont;
-        line-height: 22px;
-        color: @purpleLightest;
-
-        .add-account {
-            .ivu-icon {
-                padding-right: 3px;
-                padding-bottom: 2px;
-                vertical-align: center;
-            }
-        }
-
-        .account-switch-header-right-container {
-            img {
-                width: 18px;
-                height: 16px;
-                padding-right: 5px;
-                // margin-top: 5px;
-                vertical-align: center;
-            }
-        }
-    }
-}
-
-.contact_data {
-    height: 0.65rem;
-    padding: 0.15rem 0.25rem 0.15rem 0.45rem;
+.contact-item {
+    padding: 0.1rem 0.25rem 0.1rem 0.45rem;
     display: flex;
     flex-direction: row;
-    justify-items: center;
-    justify-content: space-between;
-    align-content: center;
     align-items: center;
-    // border-bottom: 0.01rem solid @line;
     position: relative;
     color: @purpleDark;
     font-family: @symbolFontLight;
 
-    .namege_img {
-        position: absolute;
+    img {
         display: inline-block;
-        top: 0.2rem;
-
-        .mosaicIcon {
-            display: inline-block;
-            width: 0.28rem;
-            height: 0.28rem;
-            margin-left: 0.1rem;
-        }
+        height: 0.3rem;
+        margin-right: 0.1rem;
     }
 
-    .img_container {
-        display: inline-block;
-        position: absolute;
-        top: 0.23rem;
-        margin-right: 0.15rem;
-
-        img {
-            display: inline-block;
-            width: 0.42rem;
-            height: 0.4rem;
-            margin-top: -0.1rem;
-        }
-
-        img.grayed-xym-logo {
-            opacity: 0.4;
-            -webkit-filter: grayscale(100%);
-            -moz-filter: grayscale(100%);
-            -o-filter: grayscale(100%);
-            -ms-filter: grayscale(100%);
-            filter: grayscale(100%);
-        }
+    img.contact-icon-inactive {
+        opacity: 0.4;
+        -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+        -o-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+        filter: grayscale(100%);
     }
 
-    .contact_name {
-        position: relative;
-        top: 0;
-        left: 0.4rem;
-        width: 1.8rem;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        padding-left: 0.1rem;
-        font-size: 13px;
-        line-height: 120%;
+    .contact-info {
+        width: 80%;
+        flex-shrink: 1;
         font-family: @symbolFontBold;
-        letter-spacing: -0.02em;
-        margin: 5px 0px;
-        .active-background {
-            color: @black;
-        }
+        font-size: 15px;
     }
 
-    .account-type {
-        position: relative;
-        top: 0;
-        left: 0.4rem;
-        width: 1rem;
-        font-weight: 400;
-        overflow: hidden;
+    .trunc-text {
         text-overflow: ellipsis;
         white-space: nowrap;
+        overflow: hidden;
     }
 
-    .mosaic_value {
-        margin-left: 0.5rem;
-        text-align: right;
-
-        div:first-of-type {
-            font-size: 0.16rem;
-            font-weight: 400;
-            color: @blackLight;
-        }
-
-        div:nth-of-type(2) {
-            font-size: 0.16rem;
-            font-weight: 400;
-            color: @grayDark;
-        }
-    }
-
-    .small_icon {
-        width: 0.2rem;
-        height: 0.2rem;
-        margin-bottom: 0.05rem;
+    .address {
+        font-family: @symbolFont;
+        letter-spacing: -0.02em;
+        color: #886791;
     }
 }
 
@@ -246,18 +73,7 @@
     grid-auto-flow: row;
     overflow: auto;
 }
-.bold-text {
-    font-size: 13px;
-    line-height: 120%;
-}
-.address {
-    font-family: @symbolFont;
-    font-size: 12px;
-    line-height: 120%;
-    letter-spacing: -0.02em;
-    color: #886791;
-    margin: 5px 0px;
-}
+
 .bottom-buttons {
     position: absolute;
     white-space: nowrap;
