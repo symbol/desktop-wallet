@@ -87,7 +87,7 @@ import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
 import { NodeService } from '@/services/NodeService';
-import { feesConfig as defaultFeesConfig } from '@/config';
+import { feesConfig as defaultFeesConfig, networkConfig } from '@/config';
 
 export enum HarvestingAction {
     START = 1,
@@ -188,7 +188,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public activeIndex = 0;
 
     public get allNodeListUrl() {
-        return this.$store.getters['app/explorerUrl'] + 'nodes';
+        return networkConfig[this.networkType].explorerUrl.replace(/\/+$/, '') + '/nodes';
     }
 
     public get activePanel() {
