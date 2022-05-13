@@ -35,6 +35,12 @@ import { PageInfo } from '@/store/Transaction';
 // @ts-ignore
 import Pagination from '@/components/Pagination/Pagination.vue';
 import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerService';
+import { AddressBook } from 'symbol-address-book';
+// @ts-ignore
+import ModalAddedToBlacklistPopup from '@/views/modals/ModalAddedToBlacklistPopup/ModalAddedToBlacklistPopup.vue';
+// @ts-ignore
+import ModalAddNewContact from '@/views/modals/ModalAddNewContact/ModalAddNewContact.vue';
+import { Signer } from '@/store/Account';
 
 @Component({
     components: {
@@ -45,6 +51,8 @@ import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerServ
         TransactionTable,
         ModalTransactionExport,
         Pagination,
+        ModalAddedToBlacklistPopup,
+        ModalAddNewContact,
     },
     computed: {
         ...mapGetters({
@@ -53,6 +61,9 @@ import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerServ
             filteredTransactions: 'transaction/filteredTransactions',
             generationHash: 'network/generationHash',
             currentConfirmedPage: 'transaction/currentConfirmedPage',
+            addressBook: 'addressBook/getAddressBook',
+            isBlackListFilterActivated: 'transaction/isBlackListFilterActivated',
+            currentAccountSigner: 'account/currentAccountSigner',
         }),
     },
 })
@@ -115,6 +126,18 @@ export class TransactionListTs extends Vue {
     public activeTransaction: Transaction = null;
 
     /**
+     * AddressBook
+     * @var {AddressBook}
+     */
+    public addressBook: AddressBook;
+
+    /**
+     * isBlackList Transaction filter activated
+     * @var {boolean}
+     */
+    public isBlackListFilterActivated: boolean;
+
+    /**
      * Active bonded transaction (in-modal)
      * @var {AggregateTransaction}
      */
@@ -153,6 +176,16 @@ export class TransactionListTs extends Vue {
     public currentConfirmedPage: PageInfo;
 
     public timeIntervals: any[] = [];
+
+    public transactionSignerAddress: string = '';
+
+    public transactionHash: string = '';
+
+    public showBlackListPopup: boolean = false;
+
+    public showAddContactModal: boolean = true;
+
+    public currentAccountSigner: Signer;
 
     public getEmptyMessage() {
         return 'no_data_transactions';
@@ -208,7 +241,15 @@ export class TransactionListTs extends Vue {
      * @return {Transaction[]}
      */
     public getTransactions(): Transaction[] {
-        return this.paginationType === 'pagination' ? this.getCurrentPageTransactions() : this.filteredTransactions;
+        const transactions = this.paginationType === 'pagination' ? this.getCurrentPageTransactions() : this.filteredTransactions;
+        const blackListedContacts = this.addressBook.getBlackListedContacts();
+        if (this.isBlackListFilterActivated) {
+            return transactions;
+        } else {
+            return transactions.filter(
+                (transaction) => !blackListedContacts.some((contact) => contact.address === transaction.signer?.address.plain()),
+            );
+        }
     }
 
     public get hasDetailModal(): boolean {
@@ -281,6 +322,10 @@ export class TransactionListTs extends Vue {
         this.$router.push({ name: 'dashboard.index' });
     }
 
+    onCloseContactModal() {
+        this.showAddContactModal = false;
+    }
+
     /**
      * Hook called at each page change
      */
@@ -336,5 +381,25 @@ export class TransactionListTs extends Vue {
 
     public downloadTransactions() {
         this.hasTransactionExportModal = true;
+    }
+
+    public onBlackListContact() {
+        this.showBlackListPopup = true;
+    }
+
+    public onTransactionSigned(value) {
+        this.transactionSignerAddress = value[0];
+        this.transactionHash = value[1];
+    }
+
+    /**
+     * Reset blacklist transaction filter
+     */
+    destroyed() {
+        this.$store.commit('transaction/isBlackListFilterActivated', false);
+        this.$store.commit('transaction/filterTransactions', {
+            filterOption: null,
+            currentSignerAddress: this.currentAccountSigner.address.plain(),
+        });
     }
 }

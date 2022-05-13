@@ -40,6 +40,7 @@ interface AppInfoState {
     controlsDisabledMessage: string;
     faucetUrl: string;
     settings: SettingsModel;
+    symbolDocsScamAlertUrl: string;
 }
 
 const appInfoState: AppInfoState = {
@@ -53,6 +54,7 @@ const appInfoState: AppInfoState = {
     controlsDisabledMessage: '',
     faucetUrl: undefined,
     settings: undefined,
+    symbolDocsScamAlertUrl: appConfig.symbolDocsScamAlertUrl,
 };
 
 export default {
@@ -72,6 +74,7 @@ export default {
         faucetUrl: (state: AppInfoState) => state.faucetUrl,
         defaultFee: (state: AppInfoState) => state.settings?.defaultFee,
         defaultAccount: (state: AppInfoState) => state.settings?.defaultAccount,
+        symbolDocsScamAlertUrl: (state: AppInfoState) => state.symbolDocsScamAlertUrl,
     },
     mutations: {
         setInitialized: (state: AppInfoState, initialized) => {

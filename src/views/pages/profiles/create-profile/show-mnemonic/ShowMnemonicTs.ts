@@ -121,7 +121,7 @@ export default class ShowMnemonicTs extends Vue {
         const rootAccountInfo: IHDAccountInfo = {
             mnemonic: this.currentMnemonic.plain,
             rootAccountPublicKey: account.publicKey,
-            rootAccountAddress: account.address.pretty(),
+            rootAccountAddress: account.address.plain(),
         };
 
         const paperWallet = new SymbolPaperWallet(rootAccountInfo, [], this.currentProfile.networkType, this.currentProfile.generationHash);

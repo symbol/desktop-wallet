@@ -109,14 +109,14 @@
         </div>
 
         <div class="account-switch-footer-container">
-            <span type="button" class="add-account pointer button" @click="hasAddAccountModal = true">
+            <span type="button" class="action-button pointer button" @click="hasAddAccountModal = true">
                 <img src="@/views/resources/img/newicons/Add.svg" class="icon-left-button" />
                 {{ $t('button_add_account') }}
             </span>
 
             <div v-if="!isPrivateKeyProfile" class="account-switch-header-right-container" @click="hasBackupProfileModal = true">
                 <!-- <span type="button" class="back-up pointer button" @click="hasAddAccountModal = true"> -->
-                <span type="button" class="back-up pointer button">
+                <span type="button" class="action-button pointer button">
                     <img src="@/views/resources/img/newicons/Download.svg" class="icon-left-button" />
                     {{ $t('backup_profile') }}
                 </span>

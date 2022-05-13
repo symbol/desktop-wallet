@@ -38,6 +38,7 @@ import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
 // @ts-ignore
 import ModalContactCreation from '@/views/modals/ModalContactCreation/ModalContactCreation.vue';
 import { UIHelpers } from '@/core/utils/UIHelpers';
+import { CommonHelpers } from '@/core/utils/CommonHelpers';
 
 @Component({
     components: {
@@ -56,6 +57,7 @@ import { UIHelpers } from '@/core/utils/UIHelpers';
         ...mapGetters({
             addressBook: 'addressBook/getAddressBook',
             selectedContact: 'addressBook/getSelectedContact',
+            isBlackListedSelected: 'addressBook/getBlackListedContactsSelected',
         }),
     },
 })
@@ -74,11 +76,35 @@ export class ContactSelectorPanelTs extends Vue {
     public selectedContact: IContact;
 
     public hasAddAccountModal: boolean = false;
-
+    public activeIndex = 0;
     public hasImportProfileModal: boolean = false;
-
+    public panelItems = ['white_list', 'black_list'];
+    public commonHelpers = CommonHelpers;
+    public isBlackListedSelected: boolean;
     public get allContacts(): IContact[] {
         return this.addressBook.getAllContacts();
+    }
+
+    public get activePanel() {
+        return this.activeIndex;
+    }
+
+    public set activePanel(panel) {
+        this.activeIndex = panel;
+    }
+
+    /**
+     * gets blacklisted contacts
+     */
+    public get blackListedContacts(): IContact[] {
+        return this.addressBook.getBlackListedContacts();
+    }
+
+    /**
+     * gets whitelisted contacts
+     */
+    public get whiteListedContacts(): IContact[] {
+        return this.addressBook.getWhiteListedContacts();
     }
 
     public set selectedContactId(id: string) {
@@ -98,6 +124,12 @@ export class ContactSelectorPanelTs extends Vue {
 
     public downloadAddressBook() {
         UIHelpers.downloadBytesAsFile(this.addressBook.toJSON(), `address-book.json`, 'application/json');
+    }
+
+    mounted() {
+        if (this.isBlackListedSelected) {
+            this.activeIndex = 1;
+        }
     }
 
     /// end-region computed properties getter/setter

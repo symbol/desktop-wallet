@@ -32,9 +32,9 @@ export class ViewNamespaceMetadataTransaction extends TransactionView<NamespaceM
             textValue: Convert.uint8ToUtf8(this.transaction.value),
         });
         return [
-            { key: 'sender', value: this.transaction.signer.address.pretty() },
+            { key: 'sender', value: this.transaction.signer.address.plain(), isAddress: true },
             // @ts-ignore
-            { key: 'target', value: this.transaction.targetAddress.pretty() },
+            { key: 'target', value: this.transaction.targetAddress.plain(), isAddress: true },
             { key: 'namespace', value: this.transaction.targetNamespaceId.toHex() },
             { key: 'value_size_delta', value: this.transaction.valueSizeDelta },
             { key: 'value', value: metadataValue },

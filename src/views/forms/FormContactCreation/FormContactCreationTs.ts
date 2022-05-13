@@ -66,6 +66,7 @@ export class FormContactCreationTs extends Vue {
     public formItems = {
         name: '',
         address: '',
+        isBlackListed: false,
     };
 
     /**
@@ -88,8 +89,14 @@ export class FormContactCreationTs extends Vue {
      * Submit action asks for account unlock
      * @return {void}
      */
-    public onSubmit() {
+    public onSubmit(type: 'white_list' | 'black_list') {
         const address = Address.createFromRawAddress(this.formItems.address);
+
+        if (address.networkType !== this.currentProfile.networkType) {
+            this.$store.dispatch('notification/ADD_ERROR', this.$t('error_contact_does_not_match_profile'));
+            return;
+        }
+
         const contacts = this.addressBook.getAllContacts();
         const isSameAddress = contacts.some((contact) => contact.address === address.plain());
 
@@ -102,6 +109,7 @@ export class FormContactCreationTs extends Vue {
         this.$store.dispatch('addressBook/ADD_CONTACT', {
             name: this.formItems.name,
             address: address.plain(),
+            isBlackListed: type === 'black_list',
         });
         this.$emit('submit');
     }

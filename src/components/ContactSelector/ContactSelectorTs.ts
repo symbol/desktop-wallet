@@ -35,7 +35,7 @@ export class ContactSelectorTs extends Vue {
 
     /// region computed properties getter/setter
     get contactList(): IContact[] {
-        return this.addressBook.getAllContacts();
+        return this.addressBook.getWhiteListedContacts();
     }
 
     /// end-region computed properties getter/setter

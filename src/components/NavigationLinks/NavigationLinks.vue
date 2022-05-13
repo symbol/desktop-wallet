@@ -1,5 +1,14 @@
 <template>
-    <div :class="['symbol-tab-container', direction === 'horizontal' ? 'horizontal' : 'vertical']">
+    <div
+        :class="[
+            'symbol-tab-container',
+            direction === 'horizontal'
+                ? translationPrefix === 'tab_contact_'
+                    ? ['horizontal', 'line', 'smaller-tab-offset']
+                    : 'horizontal'
+                : 'vertical',
+        ]"
+    >
         <div
             v-for="(item, index) in items"
             :key="index"
@@ -8,10 +17,14 @@
             "
         >
             <span
-                :class="['nav-item', index === currentItemIndex ? 'active-item' : 'inactive-item', index === 0 ? '' : 'border']"
+                :class="[
+                    'nav-item',
+                    index === currentItemIndex ? activeLinkCssClass : inactiveLinkCssClass,
+                    index === 0 ? '' : borderCssClass,
+                ]"
                 @click="$emit('selected', index)"
             >
-                {{ $t(translationPrefix + item.toLowerCase()) }}
+                <p :class="index === currentItemIndex ? activeBorder : inActiveBorder">{{ $t(translationPrefix + item.toLowerCase()) }}</p>
             </span>
         </div>
     </div>

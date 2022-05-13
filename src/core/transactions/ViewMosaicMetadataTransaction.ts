@@ -33,9 +33,9 @@ export class ViewMosaicMetadataTransaction extends TransactionView<MosaicMetadat
         });
 
         return [
-            { key: 'sender', value: this.transaction.signer.address.pretty() },
+            { key: 'sender', value: this.transaction.signer.address.plain(), isAddress: true },
             // @ts-ignore
-            { key: 'target', value: this.transaction.targetAddress.pretty() },
+            { key: 'target', value: this.transaction.targetAddress.plain(), isAddress: true },
             { key: 'mosaic', value: this.transaction.targetMosaicId.toHex() },
             { key: 'value_size_delta', value: this.transaction.valueSizeDelta },
             { key: 'value', value: metadataValue },

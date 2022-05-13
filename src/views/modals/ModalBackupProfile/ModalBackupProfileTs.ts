@@ -127,7 +127,7 @@ export class ModalBackupProfileTs extends Vue {
             (account) =>
                 ({
                     name: account.name,
-                    address: Address.createFromRawAddress(account.address).pretty(),
+                    address: Address.createFromRawAddress(account.address).plain(),
                     publicKey: account.publicKey,
                     privateKey: Crypto.decrypt(account.encryptedPrivateKey, payload.password.value),
                 } as IAccountInfo),
@@ -179,7 +179,7 @@ export class ModalBackupProfileTs extends Vue {
         const rootAccountInfo: IHDAccountInfo = {
             mnemonic: this.plainMnemonic,
             rootAccountPublicKey: rootAccount.publicKey,
-            rootAccountAddress: rootAccount.address.pretty(),
+            rootAccountAddress: rootAccount.address.plain(),
         };
 
         const paperWallet = new SymbolPaperWallet(

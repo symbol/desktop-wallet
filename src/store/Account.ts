@@ -21,8 +21,7 @@ import { NodeService } from '@/services/NodeService';
 import { ProfileService } from '@/services/ProfileService';
 import { RESTService } from '@/services/RESTService';
 import * as _ from 'lodash';
-import { of, Subscription } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { AccountInfo, AccountNames, Address, IListener, MultisigAccountInfo, PublicAccount, RepositoryFactory } from 'symbol-sdk';
 import Vue from 'vue';
 // internal dependencies
@@ -401,23 +400,8 @@ export default {
                 if (!repositoryFactory) {
                     return;
                 }
-                const multisigAccountsInfo: MultisigAccountInfo[] = await repositoryFactory
-                    .createMultisigRepository()
-                    .getMultisigAccountGraphInfo(currentAccountAddress)
-                    .pipe(
-                        map((g) => {
-                            commit('multisigAccountGraph', g.multisigEntries);
-                            const infoFromGraph = MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
-                            commit('multisigAccountGraphInfo', infoFromGraph);
-                            return infoFromGraph;
-                        }),
-                        catchError(() => {
-                            commit('multisigAccountGraph', []);
-                            commit('multisigAccountGraphInfo', []);
-                            return of([]);
-                        }),
-                    )
-                    .toPromise();
+                const multisigAccountsInfo = await dispatch('LOAD_MULTISIG_GRAPH');
+
                 const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
                 commit('currentSignerMultisigInfo', currentSignerMultisigInfo);
             }
@@ -528,24 +512,8 @@ export default {
             const aliases = await aliasPromise;
             commit('currentAccountAliases', aliases);
 
-            const multisigAccountsInfo: MultisigAccountInfo[] = await repositoryFactory
-                .createMultisigRepository()
-                .getMultisigAccountGraphInfo(currentAccountAddress)
-                .pipe(
-                    map((g) => {
-                        // sorted array to be represented in multisig tree
-                        commit('multisigAccountGraph', g.multisigEntries);
-                        const infoFromGraph = MultisigService.getMultisigInfoFromMultisigGraphInfo(g);
-                        commit('multisigAccountGraphInfo', infoFromGraph);
-                        return infoFromGraph;
-                    }),
-                    catchError(() => {
-                        commit('multisigAccountGraph', []);
-                        commit('multisigAccountGraphInfo', []);
-                        return of([]);
-                    }),
-                )
-                .toPromise();
+            const multisigAccountsInfo = await dispatch('LOAD_MULTISIG_GRAPH');
+
             const currentAccountMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentAccountAddress));
             const currentSignerMultisigInfo = multisigAccountsInfo.find((m) => m.accountAddress.equals(currentSignerAddress));
             // update multisig flag in currentAccount
@@ -598,6 +566,38 @@ export default {
                 }
             }
             dispatch('aggregateTransaction/CLEAR_AGGREGATE_TRANSACTIONS_LIST', {}, { root: true });
+        },
+
+        async LOAD_MULTISIG_GRAPH({ commit, getters, rootGetters }): Promise<MultisigAccountInfo[]> {
+            const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory;
+            const currentAccountAddress: Address = getters.currentAccountAddress;
+
+            try {
+                const currentMultisigAccountGraphInfo = await repositoryFactory
+                    .createMultisigRepository()
+                    .getMultisigAccountGraphInfo(currentAccountAddress)
+                    .toPromise();
+
+                const currentMultisigAccountsInfo = MultisigService.getMultisigInfoFromMultisigGraphInfo(currentMultisigAccountGraphInfo);
+                const rootAddress = currentMultisigAccountsInfo.pop().accountAddress;
+
+                const rootMultisigAccountGraphInfo = await repositoryFactory
+                    .createMultisigRepository()
+                    .getMultisigAccountGraphInfo(rootAddress)
+                    .toPromise();
+
+                const rootMultisigAccountsInfo = MultisigService.getMultisigInfoFromMultisigGraphInfo(rootMultisigAccountGraphInfo);
+
+                commit('multisigAccountGraph', rootMultisigAccountGraphInfo.multisigEntries);
+                commit('multisigAccountGraphInfo', rootMultisigAccountsInfo);
+
+                return rootMultisigAccountsInfo;
+            } catch {
+                commit('multisigAccountGraph', []);
+                commit('multisigAccountGraphInfo', []);
+
+                return [];
+            }
         },
 
         UPDATE_CURRENT_ACCOUNT_NAME({ commit, getters, rootGetters }, name: string) {

@@ -27,10 +27,10 @@ export class ViewAccountMosaicRestrictionTransaction extends TransactionView<Acc
      */
     private get sender(): string {
         if (this.transaction.signer) {
-            return this.transaction.signer.address.pretty();
+            return this.transaction.signer.address.plain();
         }
         const currentSignerAddress = this.$store.getters['account/currentSignerAddress'];
-        return currentSignerAddress ? currentSignerAddress.pretty() : '';
+        return currentSignerAddress ? currentSignerAddress.plain() : '';
     }
 
     /**
@@ -38,7 +38,7 @@ export class ViewAccountMosaicRestrictionTransaction extends TransactionView<Acc
      */
     protected resolveDetailItems(): TransactionDetailItem[] {
         return [
-            { key: 'sender', value: this.sender },
+            { key: 'sender', value: this.sender, isAddress: true },
             // @ts-ignore
             {
                 key: 'Restriction Additions',

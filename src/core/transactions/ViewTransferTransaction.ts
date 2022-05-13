@@ -47,10 +47,10 @@ export class ViewTransferTransaction extends TransactionView<TransferTransaction
      */
     private get sender(): string {
         if (this.transaction.signer) {
-            return this.transaction.signer.address.pretty();
+            return this.transaction.signer.address.plain();
         }
         const currentSignerAddress = this.$store.getters['account/currentSignerAddress'];
-        return currentSignerAddress ? currentSignerAddress.pretty() : '';
+        return currentSignerAddress ? currentSignerAddress.plain() : '';
     }
 
     /**
@@ -102,7 +102,7 @@ export class ViewTransferTransaction extends TransactionView<TransferTransaction
         });
 
         return [
-            { key: 'sender', value: this.sender },
+            { key: 'sender', value: this.sender, isAddress: true },
             { key: 'transfer_target', value: this.transaction.recipientAddress, isAddress: true },
             ...mosaicItems,
             {

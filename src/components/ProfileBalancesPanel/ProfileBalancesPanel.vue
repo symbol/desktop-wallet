@@ -13,7 +13,7 @@
                 <div v-if="currentSignerAddress" class="account_address">
                     <div>
                         <div class="address-label">{{ $t('address') }}:</div>
-                        <div class="address">{{ currentSignerAddress.pretty() }}</div>
+                        <div class="address">{{ currentSignerAddress.plain() }}</div>
                     </div>
                     <div class="copy-button">
                         <ButtonCopyToClipboard :value="currentSignerAddress.plain()" type="icon-white" />

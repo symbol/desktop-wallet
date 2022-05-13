@@ -14,7 +14,7 @@
  *
  */
 // external dependencies
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // child components
 // @ts-ignore
@@ -48,15 +48,19 @@ import { Address } from 'symbol-sdk';
             selectedContact: 'addressBook/getSelectedContact',
         }),
         address: function () {
-            return Address.createFromRawAddress(this.selectedContact.address).pretty();
+            return Address.createFromRawAddress(this.selectedContact.address).plain();
         },
     },
 })
 export class ContactDetailPanelTs extends Vue {
     public addressBook: AddressBook;
-
     public selectedContact: IContact;
-
+    protected address: string;
+    protected newName: string = '';
+    protected newAddress: string = '';
+    protected newPhone: string = '';
+    protected newEmail: string = '';
+    protected newNotes: string = '';
     public showDeleteConfirmModal: boolean = false;
     /**
      * Validation rules
@@ -64,16 +68,36 @@ export class ContactDetailPanelTs extends Vue {
      */
     public validationRules = ValidationRuleset;
 
+    public showBlackWhiteListConfirmModal = false;
     public saveProperty(propName: string) {
         return (newVal: string) => {
+            const contact = { ...this.selectedContact };
+
             if (propName === 'address') {
-                const plainAddress = Address.createFromRawAddress(this.selectedContact.address).plain();
-                this.selectedContact[propName] = plainAddress;
-                this.$forceUpdate();
+                const plainAddress = Address.createFromRawAddress(newVal).plain();
+                contact[propName] = plainAddress;
             } else {
-                this.selectedContact[propName] = newVal;
+                contact[propName] = newVal;
             }
-            this.$store.dispatch('addressBook/UPDATE_CONTACT', { id: this.selectedContact.id, contact: this.selectedContact });
+
+            try {
+                this.$store.dispatch('addressBook/UPDATE_CONTACT', { id: this.selectedContact.id, contact });
+            } catch {
+                this.$store.dispatch('notification/ADD_ERROR', this.$t('error_contact_already_exists'));
+            }
+
+            this.$store.commit('addressBook/setSelectedContact', null);
+
+            this.newName = '';
+            this.newAddress = '';
+            this.newPhone = '';
+            this.newEmail = '';
+            this.newNotes = '';
+
+            this.$nextTick(() => {
+                const selectedContact = this.addressBook.getContactById(contact.id);
+                this.$store.commit('addressBook/setSelectedContact', selectedContact);
+            });
         };
     }
 
@@ -85,8 +109,27 @@ export class ContactDetailPanelTs extends Vue {
         this.showDeleteConfirmModal = val;
     }
 
+    public get showBlackWhiteListModal() {
+        return this.showBlackWhiteListConfirmModal;
+    }
+
+    public set showBlackWhiteListModal(val: boolean) {
+        this.showBlackWhiteListConfirmModal = val;
+    }
+
     public removeContact() {
         this.$store.dispatch('addressBook/REMOVE_CONTACT', this.selectedContact.id);
         this.showDeleteConfirmModal = false;
+    }
+
+    public ToggleBlackListContact() {
+        this.selectedContact.isBlackListed = !this.selectedContact?.isBlackListed;
+        this.$store.dispatch('addressBook/UPDATE_CONTACT', { id: this.selectedContact.id, contact: this.selectedContact });
+        this.showBlackWhiteListModal = false;
+    }
+
+    @Watch('addressBook', { immediate: true })
+    onContactListChange() {
+        return;
     }
 }

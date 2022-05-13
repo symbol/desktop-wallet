@@ -80,7 +80,7 @@ export class DashboardInvoicePageTs extends Vue {
         // const transfer = this.transactions.shift() as TransferTransaction
         const transfer = this.currentTransaction;
         const recipient = transfer.recipientAddress;
-        return recipient instanceof Address ? recipient.pretty() : recipient.toHex();
+        return recipient instanceof Address ? recipient.plain() : recipient.toHex();
     }
 
     /**
