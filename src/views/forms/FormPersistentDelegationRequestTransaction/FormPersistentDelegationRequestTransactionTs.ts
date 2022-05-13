@@ -132,12 +132,18 @@ export enum PublicKeyTitle {
             currentAccount: 'account/currentAccount',
             feesConfig: 'network/feesConfig',
             accountsInfo: 'account/accountsInfo',
+            symbolDocsScamAlertUrl: 'app/symbolDocsScamAlertUrl',
         }),
     },
 })
 export class FormPersistentDelegationRequestTransactionTs extends FormTransactionBase {
     @Prop({ default: null }) signerAddress: string;
     //@Prop({ default: true }) withLink: boolean;
+
+    /**
+     * Link to the Common Hacks and Scams docs page
+     */
+    public symbolDocsScamAlertUrl: string;
 
     /**
      * Formatters helpers
