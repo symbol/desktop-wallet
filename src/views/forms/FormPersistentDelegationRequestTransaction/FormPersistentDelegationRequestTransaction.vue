@@ -14,6 +14,7 @@
                         <div class="info-text">
                             <p v-if="harvestingStatus === 'INACTIVE'">
                                 {{ $t('harvesting_delegated_description') }}
+                                <a :href="symbolDocsScamAlertUrl" target="_blank"> {{ $t('link_docs_scam') }} </a>
                             </p>
                             <p v-if="harvestingStatus === 'INACTIVE'">
                                 {{ $t('harvesting_node_selection') }}
