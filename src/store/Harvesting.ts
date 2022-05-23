@@ -226,7 +226,7 @@ export default {
                     ? pollingTrials === 20 || currentSignerHarvestingModel?.delegatedHarvestingRequestFailed
                         ? HarvestingStatus.FAILED
                         : HarvestingStatus.INPROGRESS_ACTIVATION
-                    : HarvestingStatus.KEYS_LINKED;
+                    : HarvestingStatus.INACTIVE;
                 if (status === HarvestingStatus.ACTIVE && node && node[1]) {
                     // @ts-ignore
                     dispatch('UPDATE_ACCOUNT_SELECTED_HARVESTING_NODE', {

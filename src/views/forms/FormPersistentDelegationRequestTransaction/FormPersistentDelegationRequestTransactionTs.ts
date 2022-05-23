@@ -346,7 +346,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     /**
      * To get all the key link transactions
      */
-    protected getKeyLinkTransactions(transactionSigner = this.tempTransactionSigner): Observable<Transaction[]> {
+     protected getKeyLinkTransactions(transactionSigner = this.tempTransactionSigner): Observable<Transaction[]> {
         const maxFee = UInt64.fromUint(this.formItems.maxFee) || UInt64.fromUint(this.feesConfig.fast);
         const txs: Transaction[] = [];
 
@@ -356,51 +356,51 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
          STOP =>  unlink all (linked keys)
          SWAP =>  unlink(linked) + link all (new keys)
          */
-        if (this.isAccountKeyLinked && !this.currentSignerHarvestingModel?.encRemotePrivateKey) {
+        if (this.action == HarvestingAction.STOP) {
             const accountUnlinkTx = this.createAccountKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys?.linked.publicKey,
                 LinkAction.Unlink,
                 maxFee,
             );
-            txs.push(accountUnlinkTx);
-        }
-        if (this.isVrfKeyLinked && !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
             const vrfUnlinkTx = this.createVrfKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys?.vrf.publicKey,
                 LinkAction.Unlink,
                 maxFee,
             );
-            txs.push(vrfUnlinkTx);
-        }
-        if (this.isNodeKeyLinked) {
             const nodeUnLinkTx = this.createNodeKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys?.node.publicKey,
                 LinkAction.Unlink,
                 maxFee,
             );
+            
+            txs.push(accountUnlinkTx);
+            txs.push(vrfUnlinkTx);
             txs.push(nodeUnLinkTx);
         }
 
         if (this.action !== HarvestingAction.STOP) {
-            if (!this.isAccountKeyLinked || !this.currentSignerHarvestingModel?.encRemotePrivateKey) {
-                const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
-                txs.push(accountKeyLinkTx);
-            }
-            if (!this.isVrfKeyLinked || !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
-                const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
-                txs.push(vrfKeyLinkTx);
-            }
+            const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
+            const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
+            const nodeLinkTx = this.createNodeKeyLinkTx(this.formItems.nodeModel.nodePublicKey, LinkAction.Link, maxFee);
 
-            if (!this.isNodeKeyLinked) {
-                const nodeLinkTx = this.createNodeKeyLinkTx(this.formItems.nodeModel.nodePublicKey, LinkAction.Link, maxFee);
-                txs.push(nodeLinkTx);
-            }
+            txs.push(accountKeyLinkTx);
+            txs.push(vrfKeyLinkTx);
+            txs.push(nodeLinkTx);
         }
 
         if (txs.length > 0) {
             if (this.action === HarvestingAction.START) {
                 this.remotePrivateKeyTemp = this.newRemoteAccount?.privateKey;
                 this.vrfPrivateKeyTemp = this.newVrfKeyAccount?.privateKey;
+                const persistentDelegationReqTx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
+                    this.createDeadline(this.isMultisigMode() ? 24 : 2),
+                    this.remotePrivateKeyTemp,
+                    this.vrfPrivateKeyTemp,
+                    this.formItems.nodeModel.nodePublicKey,
+                    this.networkType,
+                    maxFee,
+                );
+                txs.push(persistentDelegationReqTx);
             }
             if (this.isMultisigMode()) {
                 return this.toMultiSigAggregate(txs, maxFee, transactionSigner);
