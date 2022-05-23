@@ -2,7 +2,7 @@
     <div class="form-persistent-delegation-request">
         <NavigationLinks
             :direction="'horizontal'"
-            :items="['delegated_harvesting']"
+            :items="['delegated_harvesting', 'key_links']"
             :current-item-index="activePanel"
             translation-prefix="tab_harvesting_"
             @selected="(i) => (activePanel = i)"
