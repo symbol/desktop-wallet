@@ -21,7 +21,7 @@ const options = {
 };
 const wrapper = shallowMount(ButtonCopyToClipboard, options);
 
-const vm = wrapper.vm as ButtonCopyToClipboard;
+const vm = wrapper.vm as any;
 describe('ButtonCopyToClipboard', () => {
     test('receive a property "value" correctly', () => {
         expect(vm.value).toBe('123');

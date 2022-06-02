@@ -139,6 +139,6 @@ export class FormTransactionConfirmationTs extends Vue {
     }
 
     public onSubmit() {
-        (this.$refs.unlockForm as FormProfileUnlock).processVerification();
+        (this.$refs.unlockForm as any).processVerification();
     }
 }

@@ -33,14 +33,17 @@ describe('AmountDisplay', () => {
         amountDisplayTs = amountDisplay.vm as AmountDisplayTs;
     });
 
+    const localDecimalSeparator = Number(0.0).toFixed(1).toLocaleString().substring(1, 2);
+    const expectedFractionalPart = localDecimalSeparator + '234';
+
     [
         { input: 0, integerPart: '0', fractionalPart: '' },
         { input: 1, integerPart: '1', fractionalPart: '' },
-        { input: 1.234, integerPart: '1', fractionalPart: '.234' },
-        { input: 0.234, integerPart: '0', fractionalPart: '.234' },
+        { input: 1.234, integerPart: '1', fractionalPart: expectedFractionalPart },
+        { input: 0.234, integerPart: '0', fractionalPart: expectedFractionalPart },
         { input: -1, integerPart: '-1', fractionalPart: '' },
-        { input: -1.234, integerPart: '-1', fractionalPart: '.234' },
-        { input: -0.234, integerPart: '-0', fractionalPart: '.234' },
+        { input: -1.234, integerPart: '-1', fractionalPart: expectedFractionalPart },
+        { input: -0.234, integerPart: '-0', fractionalPart: expectedFractionalPart },
     ].forEach((testCase) =>
         test(`${testCase.input} should be displayed correctly`, async () => {
             amountDisplay.setProps({ value: testCase.input });

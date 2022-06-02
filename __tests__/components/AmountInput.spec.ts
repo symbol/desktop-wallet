@@ -1,4 +1,3 @@
-//@ts-ignore
 import AmountInput from '@/components/AmountInput/AmountInput.vue';
 import { ValidationProvider, extend, validate } from 'vee-validate';
 
@@ -115,7 +114,7 @@ describe('AmountInput', () => {
             value: '10.12345678',
         });
         await flushPromises();
-        expect((wrapper.vm as AmountInput).relativeValue).toBe('10.12345678');
+        expect(wrapper.vm.relativeValue).toBe('10.12345678');
     });
     test.skip('output correctly', async () => {
         wrapper.find('.input-style').setValue('10.1234567');
