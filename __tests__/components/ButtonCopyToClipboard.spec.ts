@@ -2,6 +2,7 @@ import i18n from '@/language/index';
 import Vuex from 'vuex';
 //@ts-ignore
 import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue';
+import { ButtonCopyToClipboardTs } from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboardTs';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import { UIHelpers } from '@/core/utils/UIHelpers';
 const localVue = createLocalVue();
@@ -21,7 +22,7 @@ const options = {
 };
 const wrapper = shallowMount(ButtonCopyToClipboard, options);
 
-const vm = wrapper.vm as any;
+const vm = wrapper.vm as ButtonCopyToClipboardTs;
 describe('ButtonCopyToClipboard', () => {
     test('receive a property "value" correctly', () => {
         expect(vm.value).toBe('123');

@@ -26,6 +26,7 @@ import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
 // @ts-ignore
 import FormProfileUnlock from '@/views/forms/FormProfileUnlock/FormProfileUnlock.vue';
+import { FormProfileUnlockTs } from '@/views/forms/FormProfileUnlock/FormProfileUnlockTs';
 // @ts-ignore
 import HardwareConfirmationButton from '@/components/HardwareConfirmationButton/HardwareConfirmationButton.vue';
 import { TransactionCommand } from '@/services/TransactionCommand';
@@ -139,6 +140,6 @@ export class FormTransactionConfirmationTs extends Vue {
     }
 
     public onSubmit() {
-        (this.$refs.unlockForm as any).processVerification();
+        (this.$refs.unlockForm as FormProfileUnlockTs).processVerification();
     }
 }

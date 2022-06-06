@@ -29,28 +29,32 @@ describe('AmountDisplay', () => {
     let amountDisplayTs: AmountDisplayTs;
 
     beforeEach(() => {
-        amountDisplay = shallowMount(AmountDisplay, componentOptions);
+        amountDisplay = shallowMount(AmountDisplay, { ...componentOptions });
         amountDisplayTs = amountDisplay.vm as AmountDisplayTs;
     });
 
-    const localDecimalSeparator = Number(0.0).toFixed(1).toLocaleString().substring(1, 2);
-    const expectedFractionalPart = localDecimalSeparator + '234';
-
     [
-        { input: 0, integerPart: '0', fractionalPart: '' },
-        { input: 1, integerPart: '1', fractionalPart: '' },
-        { input: 1.234, integerPart: '1', fractionalPart: expectedFractionalPart },
-        { input: 0.234, integerPart: '0', fractionalPart: expectedFractionalPart },
-        { input: -1, integerPart: '-1', fractionalPart: '' },
-        { input: -1.234, integerPart: '-1', fractionalPart: expectedFractionalPart },
-        { input: -0.234, integerPart: '-0', fractionalPart: expectedFractionalPart },
-    ].forEach((testCase) =>
-        test(`${testCase.input} should be displayed correctly`, async () => {
-            amountDisplay.setProps({ value: testCase.input });
-            await flushPromises();
+        { locale: 'us-EN', decimalSeparator: '.' },
+        { locale: 'pl-PL', decimalSeparator: ',' },
+    ].forEach((testLocale) => {
+        const locale = testLocale.locale;
+        const expectedFractionalPart = testLocale.decimalSeparator + '234';
+        [
+            { input: 0, integerPart: '0', fractionalPart: '' },
+            { input: 1, integerPart: '1', fractionalPart: '' },
+            { input: 1.234, integerPart: '1', fractionalPart: expectedFractionalPart },
+            { input: 0.234, integerPart: '0', fractionalPart: expectedFractionalPart },
+            { input: -1, integerPart: '-1', fractionalPart: '' },
+            { input: -1.234, integerPart: '-1', fractionalPart: expectedFractionalPart },
+            { input: -0.234, integerPart: '-0', fractionalPart: expectedFractionalPart },
+        ].forEach((testCase) =>
+            test(`${testCase.input} should be displayed correctly in locale: ${locale}`, async () => {
+                amountDisplay.setProps({ value: testCase.input, locale });
+                await flushPromises();
 
-            expect(amountDisplayTs.integerPart).toEqual(testCase.integerPart);
-            expect(amountDisplayTs.fractionalPart).toEqual(testCase.fractionalPart);
-        }),
-    );
+                expect(amountDisplayTs.integerPart).toEqual(testCase.integerPart);
+                expect(amountDisplayTs.fractionalPart).toEqual(testCase.fractionalPart);
+            }),
+        );
+    });
 });
