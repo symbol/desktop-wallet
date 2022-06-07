@@ -18,6 +18,7 @@ import { getComponent } from '@MOCKS/Components';
 import AccountStore from '@/store/Account';
 // @ts-ignore
 import AccountSelectorField from '@/components/AccountSelectorField/AccountSelectorField.vue';
+import { AccountSelectorFieldTs } from '@/components/AccountSelectorField/AccountSelectorFieldTs';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 
 describe('components/AccountSelectorField', () => {
@@ -31,7 +32,7 @@ describe('components/AccountSelectorField', () => {
                     currentAccount: null,
                 },
             );
-            const component = wrapper.vm as AccountSelectorField;
+            const component = wrapper.vm as AccountSelectorFieldTs;
 
             // act
             const actual = component.currentAccountIdentifier;
@@ -52,7 +53,7 @@ describe('components/AccountSelectorField', () => {
                     value: account.id,
                 },
             );
-            const component = wrapper.vm as AccountSelectorField;
+            const component = wrapper.vm as AccountSelectorFieldTs;
 
             // act
             const actual = component.currentAccountIdentifier;
@@ -68,7 +69,7 @@ describe('components/AccountSelectorField', () => {
         test('do nothing given empty identifier', () => {
             // prepare
             const wrapper = getComponent(AccountSelectorField, { account: AccountStore }, {});
-            const component = wrapper.vm as AccountSelectorField;
+            const component = wrapper.vm as AccountSelectorFieldTs;
 
             // act
             component.currentAccountIdentifier = '';
@@ -86,7 +87,7 @@ describe('components/AccountSelectorField', () => {
                     knownAccounts: [],
                 },
             );
-            const component = wrapper.vm as AccountSelectorField;
+            const component = wrapper.vm as AccountSelectorFieldTs;
 
             // act
             const actual = component.currentAccounts;

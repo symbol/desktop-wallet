@@ -38,11 +38,15 @@ export class AmountDisplayTs extends Vue {
 
     @Prop({ default: 'normal' }) size: 'normal' | 'smaller' | 'bigger' | 'biggest';
 
+    @Prop({ default: Intl.DateTimeFormat().resolvedOptions().locale }) locale: string;
+
     public networkConfiguration: NetworkConfigurationModel;
 
     /// region computed properties getter/setter
     get integerPart(): string {
-        return this.value >= 0 ? Math.floor(this.value).toLocaleString() : '-' + Math.floor(this.value * -1).toLocaleString();
+        return this.value >= 0
+            ? Math.floor(this.value).toLocaleString(this.locale)
+            : '-' + Math.floor(this.value * -1).toLocaleString(this.locale);
     }
 
     get fractionalPart(): string {
@@ -54,7 +58,7 @@ export class AmountDisplayTs extends Vue {
             maximumFractionDigits: decimals,
         };
         // remove leftmost 0 and rightmost 0s
-        return rest.toLocaleString(undefined, formatOptions).replace(/^0/, '');
+        return rest.toLocaleString(this.locale, formatOptions).replace(/^0/, '');
     }
 
     /**

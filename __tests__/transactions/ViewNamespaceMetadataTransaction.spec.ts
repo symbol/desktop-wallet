@@ -59,8 +59,8 @@ describe('transactions/ViewNamespaceMetadataTransaction', () => {
             expect(view).toBeDefined();
             expect(view.transaction).toBeDefined();
             expect(view.detailItems).toEqual([
-                { key: 'sender', value: account.address.pretty() },
-                { key: 'target', value: account.address.pretty() },
+                { key: 'sender', value: account.address.plain(), isAddress: true },
+                { key: 'target', value: account.address.plain(), isAddress: true },
                 { key: 'namespace', value: namespaceId.toHex() },
                 { key: 'value_size_delta', value: valueBytes.length },
                 { key: 'value', value: metadataValue },

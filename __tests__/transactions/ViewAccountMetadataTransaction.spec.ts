@@ -57,8 +57,8 @@ describe('transactions/ViewAccountMetadataTransaction', () => {
             expect(view).toBeDefined();
             expect(view.transaction).toBeDefined();
             expect(view.detailItems).toEqual([
-                { key: 'sender', value: account.address.pretty() },
-                { key: 'target', value: account.address.pretty() },
+                { key: 'sender', value: account.address.plain(), isAddress: true },
+                { key: 'target', value: account.address.plain(), isAddress: true },
                 { key: 'value_size_delta', value: valueBytes.length },
                 { key: 'value', value: metadataValue },
                 { key: 'scoped_metadata_key', value: scopedMetadataKey.toHex() },
