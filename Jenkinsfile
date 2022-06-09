@@ -8,5 +8,5 @@ defaultCiPipeline {
 	dockerImageName = 'symbolplatform/symbol-desktop-wallet'
 
 	codeCoverageTool = 'nyc'
-	minimumCodeCoverage = 27
+	minimumCodeCoverage = 22
 }
