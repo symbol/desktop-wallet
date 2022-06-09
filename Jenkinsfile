@@ -6,4 +6,7 @@ defaultCiPipeline {
 
 	publisher = 'docker'
 	dockerImageName = 'symbolplatform/symbol-desktop-wallet'
+
+	codeCoverageTool = 'nyc'
+	minimumCodeCoverage = 22
 }
