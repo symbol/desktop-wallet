@@ -27,8 +27,6 @@ import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
 import PageNavigator from '@/components/PageNavigator/PageNavigator.vue';
 // @ts-ignore
-import WindowControls from '@/components/WindowControls/WindowControls.vue';
-// @ts-ignore
 import PeerSelector from '@/components/PeerSelector/PeerSelector.vue';
 // @ts-ignore
 import LanguageSelector from '@/components/LanguageSelector/LanguageSelector.vue';
@@ -60,7 +58,6 @@ import { networkConfig } from '@/config';
         AppLogo,
         ErrorTooltip,
         PageNavigator,
-        WindowControls,
         PeerSelector,
         LanguageSelector,
         AccountSelectorField,

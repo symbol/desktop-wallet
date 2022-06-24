@@ -22,9 +22,6 @@
                         <!--<AppLogo class="level-item" />-->
                     </div>
 
-                    <!--OCA99: These are window controls for electron. Disabling them for now. Not sure if they should be here.-->
-                    <!--<WindowControls />-->
-
                     <div class="level-right">
                         <ImportQRButton v-if="!!currentAccount" class="level-item navbar-item" valid-qr-types="[1, 3, 4, 8, 9]" />
                         <AccountLinks
