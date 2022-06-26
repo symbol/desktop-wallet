@@ -32,8 +32,6 @@ import AccountAddressDisplay from '@/components/AccountAddressDisplay/AccountAdd
 // @ts-ignore
 import AccountPublicKeyDisplay from '@/components/AccountPublicKeyDisplay/AccountPublicKeyDisplay.vue';
 // @ts-ignore
-import AccountActions from '@/components/AccountActions/AccountActions.vue';
-// @ts-ignore
 import AccountLinks from '@/components/AccountLinks/AccountLinks.vue';
 // @ts-ignore
 import AccountAliasDisplay from '@/components/AccountAliasDisplay/AccountAliasDisplay.vue';
@@ -60,7 +58,6 @@ import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
         ProtectedPrivateKeyDisplay,
         ImportanceScoreDisplay,
         AccountContactQR,
-        AccountActions,
         AccountLinks,
         AccountAddressDisplay,
         AccountPublicKeyDisplay,
