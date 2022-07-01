@@ -1,7 +1,7 @@
 <template>
     <FormRow class-name="emphasis" :no-label="noLabel">
         <template v-slot:label>
-            <div v-if="!noLabel">{{ $t(label) }}:</div>
+            <div v-if="!noLabel" class="label">{{ $t(label) }}:</div>
         </template>
         <template v-slot:inputs>
             <div class="inputs-container select-container">
@@ -22,6 +22,6 @@
 </template>
 
 <script lang="ts">
-import { AccountSignerSelectorTs } from './AccountSignerSelector';
+import { AccountSignerSelectorTs } from './AccountSignerSelectorTs';
 export default class AccountSignerSelector extends AccountSignerSelectorTs {}
 </script>

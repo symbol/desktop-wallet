@@ -50,7 +50,7 @@ export type Signer = {
 };
 
 // Account state typing
-interface AccountState {
+export interface AccountState {
     initialized: boolean;
     currentAccount: AccountModel;
     currentAccountAddress: Address;

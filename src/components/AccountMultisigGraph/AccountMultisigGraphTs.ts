@@ -34,10 +34,6 @@ export class AccountMultisigGraphTs extends Vue {
     })
     account: AccountModel;
 
-    @Prop({
-        default: null,
-    })
-    visible: boolean;
     public multisigAccountGraphInfo: Map<number, MultisigAccountInfo[]>;
     public knownAccounts: AccountModel[];
 
