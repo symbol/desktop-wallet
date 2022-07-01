@@ -13,32 +13,23 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-// internal dependencies
-// @ts-ignore
 import AccountAddressDisplay from '@/components/AccountAddressDisplay/AccountAddressDisplay.vue';
 import { AccountAddressDisplayTs } from '@/components/AccountAddressDisplay/AccountAddressDisplayTs';
 import { getComponent } from '@MOCKS/Components';
 
 describe('components/AccountAddressDisplay', () => {
-    const getAccountAddressDisplayValue = (addressProp) => {
+    const getAccountAddressDisplayValue = (address) => {
         // Arrange:
-        const wrapper = getComponent(
-            AccountAddressDisplay,
-            {},
-            {},
-            {
-                address: addressProp,
-            },
-        );
+        const wrapper = getComponent(AccountAddressDisplay, {}, {}, { address });
         const component = wrapper.vm as AccountAddressDisplayTs;
 
         // Act:
-        const actual = component.prettyAddress;
+        const actual = component.plainAddress;
 
         return actual;
     };
 
-    test('return empty string given no address', () => {
+    test('returns empty string given no address', () => {
         // Arrange + Act:
         const actual = getAccountAddressDisplayValue(null);
 
@@ -47,7 +38,7 @@ describe('components/AccountAddressDisplay', () => {
         expect(actual.length).toBe(0);
     });
 
-    test('return given pretty address', () => {
+    test('returns plain value of given address', () => {
         // Arrange + Act:
         const address = 'TBWALHG5EOT6JUWYUAWT6GYMRASATJVQBYH2XDY';
         const actual = getAccountAddressDisplayValue(address);

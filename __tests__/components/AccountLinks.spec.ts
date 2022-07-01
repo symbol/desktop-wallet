@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-// internal dependencies
-// @ts-ignore
 import AccountLinks from '@/components/AccountLinks/AccountLinks.vue';
 import { AccountLinksTs } from '@/components/AccountLinks/AccountLinksTs';
 import { AccountModel } from '@/core/database/entities/AccountModel';
@@ -40,13 +38,12 @@ describe('components/AccountLinks', () => {
     const mockAppStore = {
         namespaced: true,
         getters: {
-            explorerUrl: () => 'http://testnet.symbol.fyi/',
-            faucetUrl: () => 'http://https://testnet.symbol.tools/',
+            explorerUrl: () => 'https://testnet.symbol.fyi/',
+            faucetUrl: () => 'https://testnet.symbol.tools/',
         },
     };
 
     const getAccountLinksWrapper = (accountModel?: AccountModel, title?: string, link?: string, icon?: string) => {
-        // Arrange:
         const wrapper = getComponent(
             AccountLinks,
             { network: mockNetworkStore, app: mockAppStore },
@@ -66,7 +63,7 @@ describe('components/AccountLinks', () => {
         const wrapper = getAccountLinksWrapper(accountModel);
         const component = wrapper.vm as AccountLinksTs;
 
-        // Assert:
+        // Act + Assert:
         expect(component.explorerUrl).toContain(accountAddress.plain());
         expect(component.faucetUrl).toContain(accountAddress.plain());
     });
@@ -78,7 +75,7 @@ describe('components/AccountLinks', () => {
         const link = 'faucet-link';
         const wrapper = getAccountLinksWrapper(accountModel, title, link, icon);
 
-        // Assert:
+        // Act + Assert:
         expect(wrapper.find('a').text()).toBe(title);
         expect(wrapper.find('a').attributes('href')).toBe(link);
         expect(wrapper.find('img').attributes('src')).toBe(icon);

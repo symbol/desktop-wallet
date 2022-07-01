@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-// internal dependencies
-// @ts-ignore
 import AccountMetadataDisplay from '@/components/AccountMetadataDisplay/AccountMetadataDisplay.vue';
 import { AccountMetadataDisplayTs } from '@/components/AccountMetadataDisplay/AccountMetadataDisplayTs';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
@@ -95,8 +93,7 @@ describe('components/AccountMetadataDisplay', () => {
         expect(wrapper.find('select option').exists()).toBeFalsy();
     });
 
-    // TODO refactor following 2 methods
-    test('metadata view detail button emits event on click', async () => {
+    const testDetailButtonEmitsEventOnClick = async (buttonIndex: number, eventName) => {
         // Arrange:
         const value = 'someValue';
         const metadataList = [
@@ -112,31 +109,17 @@ describe('components/AccountMetadataDisplay', () => {
 
         // Act:
         const wrapper = getAccountMetadataDisplayWrapper(metadataList, true);
-        await wrapper.find('img').trigger('click');
+        await wrapper.findAll('img').at(buttonIndex).trigger('click');
 
         // Assert:
-        expect(wrapper.emitted('on-view-metadata')).toBeDefined();
+        expect(wrapper.emitted(eventName)).toBeDefined();
+    };
+
+    test('metadata view detail button emits event on click', async () => {
+        testDetailButtonEmitsEventOnClick(0, 'on-view-metadata');
     });
 
     test('metadata edit detail button emits event on click', async () => {
-        // Arrange:
-        const value = 'someValue';
-        const metadataList = [
-            {
-                metadataId: 'meta',
-                sourceAddress: '',
-                targetAddress: '',
-                metadataType: MetadataType.Account,
-                value,
-                scopedMetadataKey: 'key',
-            },
-        ];
-
-        // Act:
-        const wrapper = getAccountMetadataDisplayWrapper(metadataList, true);
-        await wrapper.findAll('img').at(1).trigger('click');
-
-        // Assert:
-        expect(wrapper.emitted('on-edit-metadata')).toBeDefined();
+        testDetailButtonEmitsEventOnClick(1, 'on-edit-metadata');
     });
 });

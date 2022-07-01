@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-// internal dependencies
-// @ts-ignore
 jest.mock('@/views/forms/FormAliasTransaction/FormAliasTransaction.vue');
 jest.mock('@/views/forms/FormExtendNamespaceDurationTransaction/FormExtendNamespaceDurationTransaction.vue');
 jest.mock('@/views/forms/FormMosaicSupplyChangeTransaction/FormMosaicSupplyChangeTransaction.vue');
@@ -25,12 +23,11 @@ import { TableAssetType } from '@/components/TableDisplay/TableAssetType';
 import { Signer } from '@/store/Account';
 import Restriction, { RestrictionState } from '@/store/Restriction';
 import { AccountRestrictionTxType } from '@/views/forms/FormAccountRestrictionTransaction/FormAccountRestrictionTransactionTs';
-import { simpleWallet1, WalletsModel1 } from '@MOCKS/Accounts';
+import { simpleWallet1 } from '@MOCKS/Accounts';
 import { getComponent } from '@MOCKS/Components';
 import { Address, AddressRestrictionFlag } from 'symbol-sdk';
 
 describe('components/AccountRestrictionsList', () => {
-    const accountModel = WalletsModel1;
     const accountAddress = simpleWallet1.address;
     const accountSigner = {
         label: '',
@@ -81,6 +78,7 @@ describe('components/AccountRestrictionsList', () => {
             },
         },
     };
+
     const getAccountRestrictionsListWrapper = (
         assetType?: TableAssetType,
         restrictionTxType?: AccountRestrictionTxType,

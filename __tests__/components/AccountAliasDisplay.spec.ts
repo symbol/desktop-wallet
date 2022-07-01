@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-// internal dependencies
-// @ts-ignore
 import AccountAliasDisplay from '@/components/AccountAliasDisplay/AccountAliasDisplay.vue';
 import { AccountAliasDisplayTs } from '@/components/AccountAliasDisplay/AccountAliasDisplayTs';
 import Account from '@/store/Account';

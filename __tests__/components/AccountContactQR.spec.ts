@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-// internal dependencies
-// @ts-ignore
 import AccountContactQR from '@/components/AccountContactQR/AccountContactQR.vue';
 import { AccountContactQRTs } from '@/components/AccountContactQR/AccountContactQRTs';
 import { AccountModel } from '@/core/database/entities/AccountModel';

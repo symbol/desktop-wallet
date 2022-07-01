@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-// internal dependencies
-// @ts-ignore
 import AccountNameDisplay from '@/components/AccountNameDisplay/AccountNameDisplay.vue';
 import { AccountNameDisplayTs } from '@/components/AccountNameDisplay/AccountNameDisplayTs';
 import { AccountModel } from '@/core/database/entities/AccountModel';

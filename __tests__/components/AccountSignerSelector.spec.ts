@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-// internal dependencies
-// @ts-ignore
 import AccountSignerSelector from '@/components/AccountSignerSelector/AccountSignerSelector.vue';
 import { AccountSignerSelectorTs } from '@/components/AccountSignerSelector/AccountSignerSelectorTs';
 import { AccountModel } from '@/core/database/entities/AccountModel';

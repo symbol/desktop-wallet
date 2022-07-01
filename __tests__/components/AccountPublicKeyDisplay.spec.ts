@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-// internal dependencies
-// @ts-ignore
 import AccountPublicKeyDisplay from '@/components/AccountPublicKeyDisplay/AccountPublicKeyDisplay.vue';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { WalletsModel1 } from '@MOCKS/Accounts';

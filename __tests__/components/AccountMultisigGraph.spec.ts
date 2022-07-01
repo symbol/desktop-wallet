@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-// internal dependencies
-// @ts-ignore
 import AccountMultisigGraph from '@/components/AccountMultisigGraph/AccountMultisigGraph.vue';
 import { AccountMultisigGraphTs } from '@/components/AccountMultisigGraph/AccountMultisigGraphTs';
 import { AccountModel } from '@/core/database/entities/AccountModel';
