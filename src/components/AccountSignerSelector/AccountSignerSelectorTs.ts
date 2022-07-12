@@ -79,7 +79,7 @@ export class AccountSignerSelectorTs extends Vue {
             return;
         }
 
-        if (!this.currentAccount || account.id !== this.currentAccount.id) {
+        if (account.id !== this.currentAccount.id) {
             await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account);
         }
     }

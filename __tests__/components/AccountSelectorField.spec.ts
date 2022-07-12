@@ -24,7 +24,7 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
 describe('components/AccountSelectorField', () => {
     describe('getter for property "currentAccountIdentifier" should', () => {
         test('return empty string given no currentAccount and no value', () => {
-            // prepare
+            // Arrange:
             const wrapper = getComponent(
                 AccountSelectorField,
                 { account: AccountStore },
@@ -34,16 +34,16 @@ describe('components/AccountSelectorField', () => {
             );
             const component = wrapper.vm as AccountSelectorFieldTs;
 
-            // act
+            // Act:
             const actual = component.currentAccountIdentifier;
 
-            // assert
+            // Assert:
             expect(actual).toBeDefined();
             expect(actual.length).toBe(0);
         });
 
         test('return account identifier given value', () => {
-            // prepare
+            // Arrange:
             const account = { id: '5678' } as AccountModel;
             const wrapper = getComponent(
                 AccountSelectorField,
@@ -55,10 +55,25 @@ describe('components/AccountSelectorField', () => {
             );
             const component = wrapper.vm as AccountSelectorFieldTs;
 
-            // act
+            // Act:
             const actual = component.currentAccountIdentifier;
 
-            // assert
+            // Assert:
+            expect(actual).toBeDefined();
+            expect(actual.length).toBe(4);
+            expect(actual).toBe('5678');
+        });
+
+        test('return current account identifier when given no value', () => {
+            // Arrange:
+            const account = { id: '5678' } as AccountModel;
+            const wrapper = getComponent(AccountSelectorField, { account: AccountStore }, { currentAccount: account }, {});
+            const component = wrapper.vm as AccountSelectorFieldTs;
+
+            // Act:
+            const actual = component.currentAccountIdentifier;
+
+            // Assert:
             expect(actual).toBeDefined();
             expect(actual.length).toBe(4);
             expect(actual).toBe('5678');
@@ -67,19 +82,31 @@ describe('components/AccountSelectorField', () => {
 
     describe('setter for property "currentAccountIdentifier" should', () => {
         test('do nothing given empty identifier', () => {
-            // prepare
+            // Arrange:
             const wrapper = getComponent(AccountSelectorField, { account: AccountStore }, {});
             const component = wrapper.vm as AccountSelectorFieldTs;
 
-            // act
+            // Act:
             component.currentAccountIdentifier = '';
             expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
+        });
+
+        test('emit input value when non-empty identifier set', () => {
+            // Arrange:
+            const wrapper = getComponent(AccountSelectorField, { account: AccountStore }, {});
+            const component = wrapper.vm as AccountSelectorFieldTs;
+
+            // Act:
+            component.currentAccountIdentifier = '5678';
+
+            // Assert:
+            expect(wrapper.emitted('input')).toStrictEqual([['5678']]);
         });
     });
 
     describe('getter for property "currentAccounts" should', () => {
         test('return empty array given no knownAccounts', () => {
-            // prepare
+            // Arrange:
             const wrapper = getComponent(
                 AccountSelectorField,
                 { account: AccountStore },
@@ -89,10 +116,10 @@ describe('components/AccountSelectorField', () => {
             );
             const component = wrapper.vm as AccountSelectorFieldTs;
 
-            // act
+            // Act:
             const actual = component.currentAccounts;
 
-            // assert
+            // Assert:
             expect(actual).toBeDefined();
             expect(actual.length).toBe(0);
         });

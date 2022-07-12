@@ -24,8 +24,6 @@ import AddressQR from '@/components/AddressQR/AddressQR.vue';
 // @ts-ignore
 import AccountAddressDisplay from '@/components/AccountAddressDisplay/AccountAddressDisplay.vue';
 // @ts-ignore
-import AccountActions from '@/components/AccountActions/AccountActions.vue';
-// @ts-ignore
 import FormInputEditable from '@/components/FormInputEditable/FormInputEditable.vue';
 // @ts-ignore
 import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
@@ -37,7 +35,6 @@ import { Address } from 'symbol-sdk';
     components: {
         AccountNameDisplay,
         AddressQR,
-        AccountActions,
         AccountAddressDisplay,
         FormInputEditable,
         ModalConfirm,

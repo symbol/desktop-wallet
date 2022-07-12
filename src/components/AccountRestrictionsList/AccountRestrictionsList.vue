@@ -15,7 +15,7 @@
         <div class="body-section-container">
             <div class="table-header-container columns">
                 <div
-                    v-for="({ name, label, type }, index) in tableFields"
+                    v-for="({ name, label }, index) in tableFields"
                     :key="index"
                     :class="['table-header-item', `${name}-header`]"
                     @click="setSortedBy(name)"
@@ -27,7 +27,7 @@
                         :type="sortedBy.direction === 'asc' ? 'md-arrow-dropup' : 'md-arrow-dropdown'"
                     />
                 </div>
-                <!-- Enmpty header for the action button column -->
+                <!-- Empty header for the action button column -->
                 <div>&nbsp;</div>
             </div>
             <div class="table-body-container">
@@ -44,11 +44,6 @@
                     />
                 </div>
                 <div v-else-if="!isLoading && (!displayedValues || displayedValues.length === 0)" class="no-data-outer-container">
-                    <!--<div class="no-data-message-container">
-                    <div>
-                        {{ assetType === 'mosaic' ? $t('no_data_mosaics') : $t('no_data_namespaces') }}
-                    </div>
-                </div>-->
                     <div class="no-data-inner-container">
                         <div v-for="item in nodata" :key="item">
                             &nbsp;

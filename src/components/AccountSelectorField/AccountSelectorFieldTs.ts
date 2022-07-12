@@ -87,11 +87,6 @@ export class AccountSelectorFieldTs extends Vue {
         }
 
         this.$emit('input', id);
-
-        const account = this.accountService.getAccount(id);
-        if (!account) {
-            return;
-        }
     }
 
     public get currentAccounts(): AccountModel[] {
