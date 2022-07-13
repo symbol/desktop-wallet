@@ -1051,6 +1051,7 @@
     "transaction_descriptor_16964": "马赛克元数据",
     "transaction_descriptor_16972": "Link node key",
     "transaction_descriptor_16973": "改变马赛克供应量",
+    "transaction_descriptor_17229": "回收",
     "transaction_descriptor_16974": "地址别名",
     "transaction_descriptor_16976": "账户马赛克约束",
     "transaction_descriptor_16977": "马赛克地址约束",

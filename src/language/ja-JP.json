@@ -1051,6 +1051,7 @@
     "transaction_descriptor_16964": "モザイクメタデータ",
     "transaction_descriptor_16972": "ノードキーリンク",
     "transaction_descriptor_16973": "モザイク供給変更",
+    "transaction_descriptor_17229": "回収",
     "transaction_descriptor_16974": "アドレスエイリアス",
     "transaction_descriptor_16976": "アカウントモザイク制限",
     "transaction_descriptor_16977": "モザイクアドレス制限",

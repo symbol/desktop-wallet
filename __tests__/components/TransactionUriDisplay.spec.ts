@@ -1,4 +1,4 @@
-import { Transaction, TransferTransaction, Deadline, NamespaceId, PlainMessage, NetworkType, TransactionMapping } from 'symbol-sdk';
+import { Transaction, TransferTransaction, Deadline, NamespaceId, PlainMessage, NetworkType } from 'symbol-sdk';
 import { getComponent } from '@MOCKS/Components';
 import TransactionUriDisplay from '@/components/TransactionUri/TransactionUriDisplay/TransactionUriDisplay.vue';
 import TransactionUriDisplayTs from '@/components/TransactionUri/TransactionUriDisplay/TransactionUriDisplayTs';

@@ -1051,6 +1051,7 @@
     "transaction_descriptor_16964": "Mosaic metadata",
     "transaction_descriptor_16972": "Node Key Link",
     "transaction_descriptor_16973": "Mosaic supply change",
+    "transaction_descriptor_17229": "Reclaim",
     "transaction_descriptor_16974": "Address alias",
     "transaction_descriptor_16976": "Account mosaic restriction",
     "transaction_descriptor_16977": "Mosaic address restriction",
