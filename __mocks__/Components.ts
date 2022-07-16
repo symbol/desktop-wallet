@@ -17,10 +17,13 @@ import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import { createStore } from '@MOCKS/Store';
 import i18n from '@/language/index';
+import clickOutsideDirective from '@/directives/clickOutside';
 
 /// region globals
 const localVue = createLocalVue();
 localVue.use(Vuex);
+localVue.directive('click-outside', clickOutsideDirective);
+
 /// end-region globals
 
 /// region helpers
