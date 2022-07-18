@@ -35,7 +35,7 @@ export class TransactionTableTs extends Vue {
     public nodata = [...Array(10).keys()];
 
     /**
-     * Whether transactios are currently being fetched
+     * Whether transactions are currently being fetched
      * @protected
      * @type {boolean}
      */
@@ -58,7 +58,7 @@ export class TransactionTableTs extends Vue {
     /**
      * Whether it is currently fetching more transactions from repository
      */
-    protected get isFetchingMoreTransctions(): boolean {
+    protected get isFetchingMoreTransactions(): boolean {
         return this.isFetchingTransactions && this.currentConfirmedPage.pageNumber > 1;
     }
 }

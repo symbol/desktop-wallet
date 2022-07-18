@@ -1,7 +1,7 @@
 <template>
     <div class="transaction-table-container">
         <TransactionListHeader />
-        <Spin v-if="isFetchingTransactions && !isFetchingMoreTransctions" size="large" fix class="absolute" />
+        <Spin v-if="isFetchingTransactions && !isFetchingMoreTransactions" size="large" fix class="absolute" />
         <div
             v-infinite-scroll="loadMore"
             infinite-scroll-disabled="infiniteScrollDisabled"
@@ -15,7 +15,7 @@
                     :transaction="transaction"
                     @click="$emit('click', transaction)"
                 />
-                <div v-if="paginationType === 'scroll' && isFetchingMoreTransctions">
+                <div v-if="paginationType === 'scroll' && isFetchingMoreTransactions">
                     <Spin size="large" />
                 </div>
             </div>
