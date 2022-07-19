@@ -36,11 +36,6 @@ export class ActionDisplayTs extends Vue {
      * @type {Transaction}
      */
     @Prop({ default: null }) transaction: Transaction;
-    /**
-     * Transaction type from SDK
-     * @type {TransactionType}
-     */
-    public transactionType = TransactionType;
 
     /**
      * Whether the transaction is the Opt-in Payment
@@ -49,23 +44,20 @@ export class ActionDisplayTs extends Vue {
     @Prop({ default: false }) isOptinPayoutTransaction: boolean;
 
     /**
+     * Transaction type from SDK
+     * @type {TransactionType}
+     */
+    public transactionType = TransactionType;
+    /**
      * @protected
      * @type {boolean}
      */
     protected address: Address;
 
     /**
-     * Whether the transaction needs a cosignature
-     * // @TODO
-     * @protected
-     * @type {boolean}
-     */
-    protected needsCosignature: boolean = false;
-
-    /**
      * Returns transaction type label
      */
-    protected getTransactionType() {
+    public get transactionDescription() {
         if (this.transaction instanceof TransferTransaction && this.transaction.message instanceof PersistentHarvestingDelegationMessage) {
             return i18n.t('transaction_descriptor_harvesting');
         }

@@ -29,16 +29,20 @@ export class AddressDisplayTs extends Vue {
     @Prop({
         default: null,
     })
-    address: Address | NamespaceId;
+    address: Address | NamespaceId | string;
+
     @Prop({
         default: false,
     })
     showAddress: boolean;
+
     @Prop({
         default: false,
     })
     allowExplorerLink: boolean;
+
     isAddressBlocked: boolean = false;
+
     /**
      * Action descriptor
      * @var {string}
@@ -76,26 +80,21 @@ export class AddressDisplayTs extends Vue {
             return;
         }
         // in case of normal transfer, display pretty address
-        if (this.address instanceof Address) {
-            const contact = await this.$store.dispatch('addressBook/RESOLVE_ADDRESS', this.address.plain());
-            this.descriptor = contact && contact.name ? contact.name : this.address.plain();
+        if (this.address instanceof Address || typeof this.address === 'string') {
+            this.rawAddress = this.address instanceof Address ? this.address.plain() : this.address;
+            const contact = await this.$store.dispatch('addressBook/RESOLVE_ADDRESS', this.rawAddress);
+            this.descriptor = contact && contact.name ? contact.name : this.rawAddress;
             this.isAddressBlocked = contact ? contact.isBlackListed : false;
-            this.rawAddress = this.address.plain();
-        } else if (this.address instanceof NamespaceId) {
-            this.descriptor = this.address.toHex();
+        } else {
+            // instanceof this.address is NamespaceId
             const namespaceName = await this.$store.dispatch('namespace/RESOLVE_NAME', this.address);
             const linkedAddress = await this.$store.dispatch('namespace/GET_LINKED_ADDRESS', this.address);
             this.descriptor = linkedAddress && this.showAddress ? `${namespaceName} (${linkedAddress.plain()})` : namespaceName;
             this.rawAddress = linkedAddress && linkedAddress.plain();
-        } else if (typeof this.address === 'string') {
-            const contact = await this.$store.dispatch('addressBook/RESOLVE_ADDRESS', this.address);
-            this.descriptor = contact && contact.name ? contact.name : this.address;
-            this.isAddressBlocked = contact ? contact.isBlackListed : false;
-            this.rawAddress = this.address;
         }
     }
 
-    protected get explorerUrl(): string {
+    public get explorerUrl(): string {
         if (!this.rawAddress) {
             return '';
         }

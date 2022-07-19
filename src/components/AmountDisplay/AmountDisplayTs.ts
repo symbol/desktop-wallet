@@ -52,7 +52,7 @@ export class AmountDisplayTs extends Vue {
     get fractionalPart(): string {
         const absoluteValue = Math.abs(this.value);
         const rest = absoluteValue - Math.floor(absoluteValue);
-        const decimals = this.decimals === undefined ? this.networkConfiguration.maxMosaicDivisibility || 6 : this.decimals;
+        const decimals = this.decimals ?? this.networkConfiguration.maxMosaicDivisibility;
         const formatOptions = {
             minimumFractionDigits: 0,
             maximumFractionDigits: decimals,
