@@ -73,7 +73,7 @@ describe('components/AddressDisplay', () => {
         expect(component.explorerUrl).toBe('');
     });
 
-    const testAddressDisplayInstanceAddressOrString = (type: string, addressObj: Address | string | NamespaceId) => {
+    const testAddressDisplayInstanceAddressOrString = (type: string, addressObj: Address | string) => {
         describe(`instance is ${type}`, () => {
             const rawAddress = addressObj instanceof Address ? addressObj.plain() : addressObj;
             test('renders address display when no contact in the address book', async () => {
