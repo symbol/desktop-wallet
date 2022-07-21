@@ -37,6 +37,7 @@ export const getComponent = (
     stateChanges?: { [field: string]: any },
     propsData?: { [field: string]: any },
     stubsData?: { [field: string]: any },
+    dispatch?: () => any,
 ) => {
     // - format store module overwrites
     const modules = Object.keys(storeModules)
@@ -56,7 +57,7 @@ export const getComponent = (
         }, {});
 
     // - create fake store
-    const store = createStore({ modules });
+    const store = createStore({ modules }, dispatch);
     const params = {
         store,
         i18n,

@@ -24,9 +24,9 @@ localVue.use(Vuex);
  * @internal
  * @param {any} storeOptions
  */
-export const createStore = (storeOptions?: any) => {
+export const createStore = (storeOptions?: any, dispatch?: any) => {
     const store = new Vuex.Store(storeOptions);
-    store.dispatch = jest.fn();
+    store.dispatch = dispatch ?? jest.fn();
     store.commit = jest.fn();
     return store;
 };

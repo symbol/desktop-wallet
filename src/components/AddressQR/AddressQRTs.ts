@@ -47,13 +47,9 @@ export class AddressQRTs extends Vue {
         if (!this.contact) {
             return null;
         }
+        const addressObj = Address.createFromRawAddress(this.contact.address);
 
-        try {
-            const addressObj = Address.createFromRawAddress(this.contact.address);
-            return new AddressQR(this.contact.name, this.contact.address, addressObj.networkType, this.generationHash);
-        } catch (error) {
-            return null;
-        }
+        return new AddressQR(this.contact.name, this.contact.address, addressObj.networkType, this.generationHash);
     }
 
     get downloadName(): string {

@@ -16,7 +16,7 @@
 // external dependencies
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { Address, NetworkType, PublicAccount, RepositoryFactory } from 'symbol-sdk';
+import { Address, NetworkType, PublicAccount } from 'symbol-sdk';
 // internal dependencies
 import { AddressValidator, PublicKeyValidator } from '@/core/validation/validators';
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
@@ -40,7 +40,6 @@ import { FilterHelpers } from '@/core/utils/FilterHelpers';
     },
     computed: {
         ...mapGetters({
-            repositoryFactory: 'network/repositoryFactory',
             networkType: 'network/networkType',
         }),
     },
@@ -51,13 +50,6 @@ export class AddCosignatoryInputTs extends Vue {
      * @var {ValidationRuleset}
      */
     public validationRules = ValidationRuleset;
-
-    /**
-     * Current peer
-     * @private
-     * @type {string}
-     */
-    private repositoryFactory: RepositoryFactory;
 
     /**
      * Current network type
@@ -99,9 +91,6 @@ export class AddCosignatoryInputTs extends Vue {
      * @return {void}
      */
     private addCosignerFromPublicKey(): void {
-        if (!this.cosignatory) {
-            return;
-        }
         const publicAccount = PublicAccount.createFromPublicKey(this.cosignatory, this.networkType);
         this.$emit('added', publicAccount.address);
     }
