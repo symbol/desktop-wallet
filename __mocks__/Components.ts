@@ -15,12 +15,14 @@
  */
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
+import VueRouter from 'vue-router';
 import { createStore } from '@MOCKS/Store';
 import i18n from '@/language/index';
 
 /// region globals
 const localVue = createLocalVue();
 localVue.use(Vuex);
+localVue.use(VueRouter);
 /// end-region globals
 
 /// region helpers
@@ -39,6 +41,7 @@ export const getComponent = (
     stubsData?: { [field: string]: any },
     dispatch?: () => any,
     mocks?: { [field: string]: any },
+    useRouter?: boolean,
 ) => {
     // - format store module overwrites
     const modules = Object.keys(storeModules)
@@ -72,6 +75,10 @@ export const getComponent = (
 
     if (stubsData && Object.keys(stubsData).length) {
         params['stubs'] = stubsData;
+    }
+
+    if (useRouter) {
+        params['router'] = new VueRouter();
     }
 
     // - mount component
