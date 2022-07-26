@@ -23,7 +23,7 @@ import i18n from '@/language';
 @Component({
     computed: {
         ...mapGetters({
-            multisigAccountGraphInfo: 'account/multisigAccountGraph',
+            multisigAccountGraphInfo: 'account/rootMultisigAccountGraph',
             knownAccounts: 'account/knownAccounts',
         }),
     },

@@ -57,6 +57,7 @@ export interface AccountState {
     currentAccountMultisigInfo: MultisigAccountInfo;
     multisigAccountGraph: MultisigAccountInfo[][];
     multisigAccountGraphInfo: MultisigAccountInfo[];
+    rootMultisigAccountGraph: MultisigAccountInfo[][];
     isCosignatoryMode: boolean;
     signers: Signer[];
     currentAccountSigner: Signer;
@@ -102,6 +103,7 @@ const accountState: AccountState = {
     currentRecipient: null,
     multisigAccountGraph: null,
     multisigAccountGraphInfo: null,
+    rootMultisigAccountGraph: null,
     addressesList: [],
     optInAddressesList: [],
     selectedAddressesToInteract: [],
@@ -145,6 +147,7 @@ export default {
         currentAccountAliases: (state: AccountState) => state.currentAccountAliases,
         multisigAccountGraph: (state: AccountState) => state.multisigAccountGraph,
         multisigAccountGraphInfo: (state: AccountState) => state.multisigAccountGraphInfo,
+        rootMultisigAccountGraph: (state: AccountState) => state.rootMultisigAccountGraph,
         addressesList: (state: AccountState) => state.addressesList,
         optInAddressesList: (state: AccountState) => state.optInAddressesList,
         selectedAddressesToInteract: (state: AccountState) => state.selectedAddressesToInteract,
@@ -215,6 +218,9 @@ export default {
         },
         multisigAccountGraphInfo: (state: AccountState, multisigAccountGraphInfo) => {
             state.multisigAccountGraphInfo = multisigAccountGraphInfo;
+        },
+        rootMultisigAccountGraph: (state: AccountState, rootMultisigAccountGraph) => {
+            state.rootMultisigAccountGraph = rootMultisigAccountGraph;
         },
         updateSubscriptions: (state: AccountState, payload: { address: string; subscriptions: SubscriptionType }) => {
             const { address, subscriptions } = payload;
@@ -579,22 +585,23 @@ export default {
                     .toPromise();
 
                 const currentMultisigAccountsInfo = MultisigService.getMultisigInfoFromMultisigGraphInfo(currentMultisigAccountGraphInfo);
-                const rootAddress = currentMultisigAccountsInfo.pop().accountAddress;
+                const rootAddressIndex = currentMultisigAccountsInfo.length - 1;
+                const rootAddress = currentMultisigAccountsInfo[rootAddressIndex].accountAddress;
 
                 const rootMultisigAccountGraphInfo = await repositoryFactory
                     .createMultisigRepository()
                     .getMultisigAccountGraphInfo(rootAddress)
                     .toPromise();
 
-                const rootMultisigAccountsInfo = MultisigService.getMultisigInfoFromMultisigGraphInfo(rootMultisigAccountGraphInfo);
+                commit('rootMultisigAccountGraph', rootMultisigAccountGraphInfo.multisigEntries);
+                commit('multisigAccountGraph', currentMultisigAccountGraphInfo.multisigEntries);
+                commit('multisigAccountGraphInfo', currentMultisigAccountsInfo);
 
-                commit('multisigAccountGraph', rootMultisigAccountGraphInfo.multisigEntries);
-                commit('multisigAccountGraphInfo', rootMultisigAccountsInfo);
-
-                return rootMultisigAccountsInfo;
+                return currentMultisigAccountsInfo;
             } catch {
                 commit('multisigAccountGraph', []);
                 commit('multisigAccountGraphInfo', []);
+                commit('rootMultisigAccountGraph', []);
 
                 return [];
             }
