@@ -68,6 +68,7 @@ import { AddressBook } from 'symbol-address-book';
             currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
             multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
             multisigAccountGraph: 'account/multisigAccountGraph',
+            rootMultisigAccountGraph: 'account/rootMultisigAccountGraph',
             addressBook: 'addressBook/getAddressBook',
             symbolDocsScamAlertUrl: 'app/symbolDocsScamAlertUrl',
         }),
@@ -130,6 +131,7 @@ export class ModalTransactionCosignatureTs extends Vue {
     public currentAccountMultisigInfo: MultisigAccountInfo;
 
     public multisigAccountGraph: Map<number, MultisigAccountInfo[]>;
+    public rootMultisigAccountGraph: Map<number, MultisigAccountInfo[]>;
 
     /**
      * Link to the Common Hacks and Scams docs page
@@ -317,7 +319,8 @@ export class ModalTransactionCosignatureTs extends Vue {
                 if (c) {
                     return (
                         c.plain() === this.currentAccount.address ||
-                        (this.multisigAccountGraph && MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, c.plain()))
+                        (this.multisigAccountGraph && MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, c.plain())) ||
+                        (this.rootMultisigAccountGraph && MultisigService.isAddressInMultisigTree(this.rootMultisigAccountGraph, c.plain()))
                     );
                 }
                 return false;
