@@ -120,12 +120,12 @@ describe('components/AccountMultisigGraph', () => {
     const mockAccountStore = {
         namespaced: true,
         state: {
-            multisigAccountGraph: undefined,
+            rootMultisigAccountGraph: undefined,
             knownAccounts: [],
         },
         getters: {
-            multisigAccountGraph: (state) => {
-                return state.multisigAccountGraph;
+            rootMultisigAccountGraph: (state) => {
+                return state.rootMultisigAccountGraph;
             },
             knownAccounts: (state) => {
                 return state.knownAccounts;
@@ -155,7 +155,7 @@ describe('components/AccountMultisigGraph', () => {
         // Arrange:
         const account = ({ address: msigAddress } as unknown) as AccountModel;
         const stateChanges = {
-            multisigAccountGraph: [],
+            rootMultisigAccountGraph: [],
         } as Partial<AccountState>;
 
         // Act:
@@ -169,7 +169,7 @@ describe('components/AccountMultisigGraph', () => {
         // Arrange:
         const account = ({ address: cosig1Address } as unknown) as AccountModel;
         const stateChanges = {
-            multisigAccountGraph: (multisigAccounts as unknown) as MultisigAccountInfo[][],
+            rootMultisigAccountGraph: (multisigAccounts as unknown) as MultisigAccountInfo[][],
             knownAccounts: [{ name: 'myAccount', address: cosig1Address }],
         } as Partial<AccountState>;
 
