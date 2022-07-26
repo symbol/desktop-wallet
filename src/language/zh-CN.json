@@ -1056,6 +1056,7 @@
     "transaction_descriptor_16977": "马赛克地址约束",
     "transaction_descriptor_16978": "密证",
     "transaction_descriptor_17220": "命名空间元数据",
+    "transaction_descriptor_17229": "马赛克供应撤销",
     "transaction_descriptor_17230": "马赛克别名",
     "transaction_descriptor_17232": "账户操作约束",
     "transaction_descriptor_harvesting": "委托收获",

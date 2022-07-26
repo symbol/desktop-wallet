@@ -1056,6 +1056,7 @@
     "transaction_descriptor_16977": "모자이크 주소 제한",
     "transaction_descriptor_16978": "비밀 증명",
     "transaction_descriptor_17220": "네임스페이스 메타데이터",
+    "transaction_descriptor_17229": "모자이크 공급 취소",
     "transaction_descriptor_17230": "모자이크 별명",
     "transaction_descriptor_17232": "계좌 작업 제한",
     "transaction_descriptor_harvesting": "델리게이트 하베스팅",
