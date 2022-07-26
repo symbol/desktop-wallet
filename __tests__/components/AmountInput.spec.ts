@@ -159,7 +159,8 @@ describe('AmountInput', () => {
 
     test('use maximum balance when the selected account is regular', async () => {
         // Arrange:
-        const maxBalance = '15';
+        const selectedMosaic = mosaicsMock[0];
+        const maxBalance = (selectedMosaic.balance / Math.pow(10, selectedMosaic.divisibility)).toString();
 
         // Act:
         wrapper.find('button').trigger('click');
@@ -233,6 +234,6 @@ describe('AmountInput', () => {
         const component = wrapper.vm as AmountInputTs;
 
         // Assert:
-        expect(component.validationRules.divisibility).toBe('required|min_value:0|max_value:6|integer');
+        expect(component.validationRules.amount).toContain('maxDecimals:6');
     });
 });
