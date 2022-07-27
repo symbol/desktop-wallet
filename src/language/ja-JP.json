@@ -1056,6 +1056,7 @@
     "transaction_descriptor_16977": "モザイクアドレス制限",
     "transaction_descriptor_16978": "シークレットプルーフ",
     "transaction_descriptor_17220": "ネームスペースメタデータ",
+    "transaction_descriptor_17229": "モザイク供給の取り消し",
     "transaction_descriptor_17230": "モザイクエイリアス",
     "transaction_descriptor_17232": "アカウント操作制限",
     "transaction_descriptor_harvesting": "デリゲートハーベスティング",
