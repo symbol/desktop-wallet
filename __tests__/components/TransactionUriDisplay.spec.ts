@@ -2,13 +2,12 @@ import { Transaction, TransferTransaction, Deadline, NamespaceId, PlainMessage, 
 import { getComponent } from '@MOCKS/Components';
 import TransactionUriDisplay from '@/components/TransactionUri/TransactionUriDisplay/TransactionUriDisplay.vue';
 import TransactionUriDisplayTs from '@/components/TransactionUri/TransactionUriDisplay/TransactionUriDisplayTs';
-import { TransactionURI } from 'symbol-uri-scheme';
 
 describe('components/TransactionUri/TransactionUriDisplay', () => {
     test('returns transaction uri', () => {
         // Arrange:
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.createFromDTO('1'),
             new NamespaceId('alias'),
             [],
             PlainMessage.create('test-message'),
@@ -28,14 +27,9 @@ describe('components/TransactionUri/TransactionUriDisplay', () => {
 
         const component = wrapper.vm as TransactionUriDisplayTs;
 
-        transferTransaction.serialize();
-
-        jest.spyOn(TransactionURI.prototype, 'build').mockImplementation();
-
-        // Act:
-        component.transactionURI;
-
-        // Assert:
-        expect(TransactionURI.prototype.build).toHaveBeenCalled();
+        // Act + Assert:
+        expect(component.transactionURI).toBe(
+            'web+symbol://transaction?data=AD000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001985441000000000000000001000000000000009930E8142B432878EC0000000000000000000000000000000D0000000000000000746573742D6D657373616765',
+        );
     });
 });

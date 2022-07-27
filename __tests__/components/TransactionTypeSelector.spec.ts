@@ -44,15 +44,19 @@ describe('components/TransactionTypeSelector', () => {
         ]);
     });
 
-    test('returns new value when user selected', () => {
+    test('returns new value when user selected', async () => {
         // Arrange:
         const wrapper = getTransactionTypeSelectorWrapper();
         const component = wrapper.vm as TransactionTypeSelectorTs;
 
         // Act:
-        component.chosenValue = 'ADDRESS_ALIAS';
+        component.chosenValue = 16974;
+        wrapper.setProps({ value: 16974 });
+
+        await component.$nextTick();
 
         // Assert:
-        expect(wrapper.emitted().input[0]).toEqual(['ADDRESS_ALIAS']);
+        expect(component.chosenValue).toBe(16974);
+        expect(wrapper.emitted().input[0]).toEqual([16974]);
     });
 });

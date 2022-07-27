@@ -22,23 +22,23 @@ export default class TransactionTypeSelectorTs extends Vue {
      * Value set by the parent component's v-model
      * @type {string}
      */
-    @Prop({ default: null }) value: string;
+    @Prop({ default: null }) value: number;
 
     @Prop({ default: false }) readonly disabled!: boolean;
 
     /// region computed properties getter/setter
     /**
      * Value set by the parent component
-     * @type {string}
+     * @type {number}
      */
-    get chosenValue(): string {
+    get chosenValue(): number {
         return this.value;
     }
 
     /**
      * Emit value change
      */
-    set chosenValue(newValue: string) {
+    set chosenValue(newValue: number) {
         this.$emit('input', newValue);
     }
 
