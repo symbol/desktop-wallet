@@ -26,7 +26,6 @@ interface TreeNode {
     title: string;
     selected: boolean;
     children: TreeNode[];
-    expand: boolean;
     multisig?: {
         minApproval: number;
         minRemoval: number;
@@ -118,7 +117,6 @@ export class AccountMultisigGraphTs extends Vue {
             selected,
             children,
             multisig,
-            expand: true,
         };
     }
 
