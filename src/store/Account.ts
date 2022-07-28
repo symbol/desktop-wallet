@@ -57,7 +57,6 @@ export interface AccountState {
     currentAccountMultisigInfo: MultisigAccountInfo;
     multisigAccountGraph: MultisigAccountInfo[][];
     multisigAccountGraphInfo: MultisigAccountInfo[];
-    rootMultisigAccountGraph: MultisigAccountInfo[][];
     isCosignatoryMode: boolean;
     signers: Signer[];
     currentAccountSigner: Signer;
@@ -103,7 +102,6 @@ const accountState: AccountState = {
     currentRecipient: null,
     multisigAccountGraph: null,
     multisigAccountGraphInfo: null,
-    rootMultisigAccountGraph: null,
     addressesList: [],
     optInAddressesList: [],
     selectedAddressesToInteract: [],
@@ -147,7 +145,6 @@ export default {
         currentAccountAliases: (state: AccountState) => state.currentAccountAliases,
         multisigAccountGraph: (state: AccountState) => state.multisigAccountGraph,
         multisigAccountGraphInfo: (state: AccountState) => state.multisigAccountGraphInfo,
-        rootMultisigAccountGraph: (state: AccountState) => state.rootMultisigAccountGraph,
         addressesList: (state: AccountState) => state.addressesList,
         optInAddressesList: (state: AccountState) => state.optInAddressesList,
         selectedAddressesToInteract: (state: AccountState) => state.selectedAddressesToInteract,
@@ -218,9 +215,6 @@ export default {
         },
         multisigAccountGraphInfo: (state: AccountState, multisigAccountGraphInfo) => {
             state.multisigAccountGraphInfo = multisigAccountGraphInfo;
-        },
-        rootMultisigAccountGraph: (state: AccountState, rootMultisigAccountGraph) => {
-            state.rootMultisigAccountGraph = rootMultisigAccountGraph;
         },
         updateSubscriptions: (state: AccountState, payload: { address: string; subscriptions: SubscriptionType }) => {
             const { address, subscriptions } = payload;
@@ -585,23 +579,40 @@ export default {
                     .toPromise();
 
                 const currentMultisigAccountsInfo = MultisigService.getMultisigInfoFromMultisigGraphInfo(currentMultisigAccountGraphInfo);
-                const rootAddressIndex = currentMultisigAccountsInfo.length - 1;
-                const rootAddress = currentMultisigAccountsInfo[rootAddressIndex].accountAddress;
+                const rootMultisigAccountGraph = new Map(currentMultisigAccountGraphInfo.multisigEntries);
 
-                const rootMultisigAccountGraphInfo = await repositoryFactory
-                    .createMultisigRepository()
-                    .getMultisigAccountGraphInfo(rootAddress)
-                    .toPromise();
+                for (const [currentLevel, multisigAccountInfos] of currentMultisigAccountGraphInfo.multisigEntries) {
+                    if (currentLevel < 0) {
+                        for (const multisigAccountInfo of multisigAccountInfos) {
+                            const fetchedMultisigAccountGraphInfo = await repositoryFactory
+                                .createMultisigRepository()
+                                .getMultisigAccountGraphInfo(multisigAccountInfo.accountAddress)
+                                .toPromise();
 
-                commit('rootMultisigAccountGraph', rootMultisigAccountGraphInfo.multisigEntries);
-                commit('multisigAccountGraph', currentMultisigAccountGraphInfo.multisigEntries);
-                commit('multisigAccountGraphInfo', currentMultisigAccountsInfo);
+                            fetchedMultisigAccountGraphInfo.multisigEntries.forEach((fetchedMultisigAccountInfos, fetchedLevel) => {
+                                const currentMultisigAccountInfos = rootMultisigAccountGraph.get(currentLevel + fetchedLevel) || [];
+                                const newMultisigAccountInfos = [...currentMultisigAccountInfos, ...fetchedMultisigAccountInfos];
+                                const filteredMultisigAccountInfos = _.uniqBy(newMultisigAccountInfos, (item) =>
+                                    item.accountAddress.plain(),
+                                );
+
+                                rootMultisigAccountGraph.set(currentLevel + fetchedLevel, filteredMultisigAccountInfos);
+                            });
+                        }
+                    }
+                }
+
+                const rootMultisigAccountsInfo = MultisigService.getMultisigInfoFromMultisigGraphInfo({
+                    multisigEntries: rootMultisigAccountGraph,
+                });
+
+                commit('multisigAccountGraph', rootMultisigAccountGraph);
+                commit('multisigAccountGraphInfo', rootMultisigAccountsInfo);
 
                 return currentMultisigAccountsInfo;
             } catch {
                 commit('multisigAccountGraph', []);
                 commit('multisigAccountGraphInfo', []);
-                commit('rootMultisigAccountGraph', []);
 
                 return [];
             }

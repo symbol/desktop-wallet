@@ -120,12 +120,12 @@ describe('components/AccountMultisigGraph', () => {
     const mockAccountStore = {
         namespaced: true,
         state: {
-            rootMultisigAccountGraph: undefined,
+            multisigAccountGraph: undefined,
             knownAccounts: [],
         },
         getters: {
-            rootMultisigAccountGraph: (state) => {
-                return state.rootMultisigAccountGraph;
+            multisigAccountGraph: (state) => {
+                return state.multisigAccountGraph;
             },
             knownAccounts: (state) => {
                 return state.knownAccounts;
@@ -155,7 +155,7 @@ describe('components/AccountMultisigGraph', () => {
         // Arrange:
         const account = ({ address: msigAddress } as unknown) as AccountModel;
         const stateChanges = {
-            rootMultisigAccountGraph: [],
+            multisigAccountGraph: [],
         } as Partial<AccountState>;
 
         // Act:
@@ -169,7 +169,7 @@ describe('components/AccountMultisigGraph', () => {
         // Arrange:
         const account = ({ address: cosig1Address } as unknown) as AccountModel;
         const stateChanges = {
-            rootMultisigAccountGraph: (multisigAccounts as unknown) as MultisigAccountInfo[][],
+            multisigAccountGraph: (multisigAccounts as unknown) as MultisigAccountInfo[][],
             knownAccounts: [{ name: 'myAccount', address: cosig1Address }],
         } as Partial<AccountState>;
 
@@ -178,13 +178,7 @@ describe('components/AccountMultisigGraph', () => {
         const component = wrapper.vm as AccountMultisigGraphTs;
 
         // Assert:
-        expect(component.multisigGraphTree[0].info.accountAddress.address).toBe(msigAddress);
-        expect(component.multisigGraphTree[0].info.cosignatoryAddresses[0].address).toBe(cosig1Address);
-        expect(component.multisigGraphTree[0].info.cosignatoryAddresses[1].address).toBe(cosig2Address);
-        expect(component.multisigGraphTree[0].children[0].info.accountAddress.address).toBe(cosig1Address);
-        expect(component.multisigGraphTree[0].children[1].info.accountAddress.address).toBe(cosig2Address);
-        expect(component.multisigGraphTree[0].children[0].children[0].info.accountAddress.address).toBe(cosig11Address);
-        expect(component.multisigGraphTree[0].children[1].children[0].info.accountAddress.address).toBe(cosig21Address);
-        expect(component.multisigGraphTree[0].children[0].selected).toBe(true);
+        expect(component.dataset[0].name).toBe(msigAddress);
+        expect(component.dataset[0].children[0].selected).toBe(true);
     });
 });
