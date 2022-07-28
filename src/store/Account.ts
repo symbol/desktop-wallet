@@ -609,7 +609,7 @@ export default {
                 commit('multisigAccountGraph', rootMultisigAccountGraph);
                 commit('multisigAccountGraphInfo', rootMultisigAccountsInfo);
 
-                return currentMultisigAccountsInfo;
+                return rootMultisigAccountsInfo;
             } catch {
                 commit('multisigAccountGraph', []);
                 commit('multisigAccountGraphInfo', []);

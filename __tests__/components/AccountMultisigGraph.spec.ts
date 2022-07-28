@@ -18,7 +18,7 @@ import { AccountMultisigGraphTs } from '@/components/AccountMultisigGraph/Accoun
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { AccountState } from '@/store/Account';
 import { getComponent } from '@MOCKS/Components';
-import { MultisigAccountInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { AddressBook } from 'symbol-address-book';
 import { Address, MultisigAccountInfo } from 'symbol-sdk';
 
 describe('components/AccountMultisigGraph', () => {
@@ -27,105 +27,67 @@ describe('components/AccountMultisigGraph', () => {
     const cosig2Address = 'TD2KY5BKECF6YKSWSTGMUHFP66GG33S5MG6UOYQ';
     const cosig11Address = 'TDYEWBAMEW27OODEODPQ4OKYFEU6N24NC4O7KZA';
     const cosig21Address = 'TCZCGIGFXU5LW7BCUQCXVVYS6JJDHJWONYVVGXY';
+    const randomAddress = 'TCZ1234FXU5LW7BCUQCXVVYS6JJDHJWONYVVGXY';
+    const mockAddressBook = new AddressBook([
+        {
+            id: '0',
+            name: 'contact name',
+            address: cosig2Address,
+        },
+    ]);
 
-    const multisigAccountGraphInfosDTO = [
+    const multisigAccounts = [
         {
-            level: 0,
-            multisigEntries: [
-                {
-                    multisig: {
-                        version: 1,
-                        accountAddress: msigAddress,
-                        minApproval: 2,
-                        minRemoval: 1,
-                        cosignatoryAddresses: [cosig1Address, cosig2Address],
-                        multisigAddresses: [],
-                    },
-                },
-            ],
+            version: 1,
+            accountAddress: Address.createFromRawAddress(msigAddress),
+            minApproval: 2,
+            minRemoval: 1,
+            cosignatoryAddresses: [Address.createFromRawAddress(cosig1Address), Address.createFromRawAddress(cosig2Address)],
+            multisigAddresses: [],
         },
         {
-            level: 1,
-            multisigEntries: [
-                {
-                    multisig: {
-                        version: 1,
-                        accountAddress: cosig1Address,
-                        minApproval: 1,
-                        minRemoval: 1,
-                        cosignatoryAddresses: [cosig11Address],
-                        multisigAddresses: [msigAddress],
-                    },
-                },
-                {
-                    multisig: {
-                        version: 1,
-                        accountAddress: cosig2Address,
-                        minApproval: 1,
-                        minRemoval: 1,
-                        cosignatoryAddresses: [cosig21Address],
-                        multisigAddresses: [msigAddress],
-                    },
-                },
-            ],
+            version: 1,
+            accountAddress: Address.createFromRawAddress(cosig1Address),
+            minApproval: 1,
+            minRemoval: 1,
+            cosignatoryAddresses: [Address.createFromRawAddress(cosig11Address)],
+            multisigAddresses: [Address.createFromRawAddress(msigAddress)],
         },
         {
-            level: 2,
-            multisigEntries: [
-                {
-                    multisig: {
-                        version: 1,
-                        accountAddress: cosig21Address,
-                        minApproval: 0,
-                        minRemoval: 0,
-                        cosignatoryAddresses: [],
-                        multisigAddresses: [cosig2Address],
-                    },
-                },
-                {
-                    multisig: {
-                        version: 1,
-                        accountAddress: cosig11Address,
-                        minApproval: 0,
-                        minRemoval: 0,
-                        cosignatoryAddresses: [],
-                        multisigAddresses: [cosig1Address],
-                    },
-                },
-            ],
+            version: 1,
+            accountAddress: Address.createFromRawAddress(cosig2Address),
+            minApproval: 1,
+            minRemoval: 1,
+            cosignatoryAddresses: [Address.createFromRawAddress(cosig21Address)],
+            multisigAddresses: [Address.createFromRawAddress(msigAddress)],
+        },
+        {
+            version: 1,
+            accountAddress: Address.createFromRawAddress(cosig21Address),
+            minApproval: 0,
+            minRemoval: 0,
+            cosignatoryAddresses: [],
+            multisigAddresses: [Address.createFromRawAddress(cosig2Address)],
+        },
+        {
+            version: 1,
+            accountAddress: Address.createFromRawAddress(cosig11Address),
+            minApproval: 0,
+            minRemoval: 0,
+            cosignatoryAddresses: [],
+            multisigAddresses: [Address.createFromRawAddress(cosig1Address), Address.createFromRawAddress(randomAddress)],
         },
     ];
-
-    const toMultisigAccountInfo = (dto: MultisigAccountInfoDTO): MultisigAccountInfo => {
-        return new MultisigAccountInfo(
-            dto.multisig.version || 1,
-            Address.createFromRawAddress(dto.multisig.accountAddress),
-            dto.multisig.minApproval,
-            dto.multisig.minRemoval,
-            dto.multisig.cosignatoryAddresses.map((cosigner) => Address.createFromRawAddress(cosigner)),
-            dto.multisig.multisigAddresses.map((multisig) => Address.createFromRawAddress(multisig)),
-        );
-    };
-    const multisigAccounts = new Map<number, MultisigAccountInfo[]>();
-
-    multisigAccountGraphInfosDTO.map((multisigAccountGraphInfoDTO) => {
-        multisigAccounts.set(
-            multisigAccountGraphInfoDTO.level,
-            multisigAccountGraphInfoDTO.multisigEntries.map((multisigAccountInfoDTO) => {
-                return toMultisigAccountInfo(multisigAccountInfoDTO);
-            }),
-        );
-    });
 
     const mockAccountStore = {
         namespaced: true,
         state: {
-            multisigAccountGraph: undefined,
+            multisigAccountGraphInfo: undefined,
             knownAccounts: [],
         },
         getters: {
-            multisigAccountGraph: (state) => {
-                return state.multisigAccountGraph;
+            multisigAccountGraphInfo: (state) => {
+                return state.multisigAccountGraphInfo;
             },
             knownAccounts: (state) => {
                 return state.knownAccounts;
@@ -133,11 +95,26 @@ describe('components/AccountMultisigGraph', () => {
         },
     };
 
-    const getAccountMultisigGraphWrapper = (account: AccountModel, stateChanges?: AccountState) => {
-        const wrapper = getComponent(AccountMultisigGraph, { account: mockAccountStore }, stateChanges, {
+    const mockAddressBookStore = {
+        namespaced: true,
+        getters: {
+            getAddressBook: () => {
+                return mockAddressBook;
+            },
+        },
+    };
+
+    const mockStore = {
+        account: mockAccountStore,
+        addressBook: mockAddressBookStore,
+    };
+
+    const getAccountMultisigGraphWrapper = (account: AccountModel, stateChanges?: AccountState, stubs?: Record<string, any>) => {
+        const props = {
             account,
-        });
-        return wrapper;
+        };
+
+        return getComponent(AccountMultisigGraph, mockStore, stateChanges, props, stubs);
     };
 
     test('renders account multisig graph component when multisig account graph is undefined', () => {
@@ -165,20 +142,80 @@ describe('components/AccountMultisigGraph', () => {
         expect(wrapper.find('span.label').exists()).toBeTruthy();
     });
 
-    test('current account is selected in multisig graph', () => {
+    test('current account is selected in multisig graph', async () => {
         // Arrange:
         const account = ({ address: cosig1Address } as unknown) as AccountModel;
         const stateChanges = {
-            multisigAccountGraph: (multisigAccounts as unknown) as MultisigAccountInfo[][],
+            multisigAccountGraphInfo: (multisigAccounts as unknown) as MultisigAccountInfo[],
             knownAccounts: [{ name: 'myAccount', address: cosig1Address }],
         } as Partial<AccountState>;
 
         // Act:
         const wrapper = getAccountMultisigGraphWrapper(account, stateChanges as AccountState);
         const component = wrapper.vm as AccountMultisigGraphTs;
+        await component.$nextTick();
 
         // Assert:
-        expect(component.dataset[0].name).toBe(msigAddress);
+        expect(component.dataset[0].title).toContain(msigAddress);
         expect(component.dataset[0].children[0].selected).toBe(true);
+    });
+
+    test('center graph view', () => {
+        // Arrange:
+        const account = ({ address: cosig1Address } as unknown) as AccountModel;
+        const stateChanges = {
+            multisigAccountGraph: [],
+        } as Partial<AccountState>;
+        const stubs = {
+            VueTree: {
+                template: '<div class="graph-view"><div/><svg/></div>',
+            },
+        };
+        const mockSetAttribute = jest.fn();
+        const mockRemToPixels = jest.fn().mockReturnValue(2);
+        const expectedStyles = `transform: scale(1) translate(2px, 0px); transform-origin: center center;`;
+
+        // Act:
+        const wrapper = getAccountMultisigGraphWrapper(account, stateChanges as AccountState, stubs);
+        const component = wrapper.vm as AccountMultisigGraphTs;
+        const vueTreeChildren = (component.$refs['VueTree'] as Vue).$el.children;
+        vueTreeChildren[0].setAttribute = mockSetAttribute;
+        vueTreeChildren[1].setAttribute = mockSetAttribute;
+        component['remToPixels'] = mockRemToPixels;
+        component['centerGraph']();
+
+        // Assert:
+        expect(mockSetAttribute).toBeCalledTimes(2);
+        expect(mockSetAttribute).nthCalledWith(1, 'style', expectedStyles);
+        expect(mockSetAttribute).nthCalledWith(2, 'style', expectedStyles);
+    });
+
+    test('show graph modal', () => {
+        // Arrange:
+        const account = ({ address: cosig1Address } as unknown) as AccountModel;
+        const stateChanges = {
+            multisigAccountGraph: [],
+        } as Partial<AccountState>;
+        const mockUpdateGraphConfig = jest.fn();
+        const mockCenterGraph = jest.fn();
+        const stubs = {
+            VueTree: {
+                template: '<div class="graph-view"><div/><svg/></div>',
+            },
+        };
+
+        // Act:
+        const wrapper = getAccountMultisigGraphWrapper(account, stateChanges as AccountState, stubs);
+        const graphViewElement = wrapper.find('.graph-view');
+        const component = wrapper.vm as AccountMultisigGraphTs;
+        component['updateGraphConfig'] = mockUpdateGraphConfig;
+        component['centerGraph'] = mockCenterGraph;
+        component['showGraphModal']();
+
+        // Assert:
+        expect(mockUpdateGraphConfig).toBeCalledTimes(1);
+        expect(mockCenterGraph).toBeCalledTimes(1);
+        expect(component.isGraphModalShown).toBe(true);
+        expect(graphViewElement.exists()).toBeTruthy();
     });
 });

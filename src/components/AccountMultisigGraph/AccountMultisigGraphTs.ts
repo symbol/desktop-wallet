@@ -69,8 +69,8 @@ export class AccountMultisigGraphTs extends Vue {
         const tree: TreeNode[] = [];
         const hashTable = {};
         this.multisigAccountGraphInfo.forEach((multisigAccountInfo) => {
-            const plainAddress = multisigAccountInfo.accountAddress.plain();
-            hashTable[plainAddress] = {
+            const address = multisigAccountInfo.accountAddress.plain();
+            hashTable[address] = {
                 ...multisigAccountInfo,
                 children: [],
             };
@@ -155,8 +155,8 @@ export class AccountMultisigGraphTs extends Vue {
         const offsetX = this.remToPixels(5.8);
         const stylePositionCeneter = `transform: scale(1) translate(${offsetX}px, 0px); transform-origin: center center;`;
         const vueTree = this.$refs['VueTree'] as Vue;
-        (vueTree.$refs.domContainer as Element).setAttribute('style', stylePositionCeneter);
-        (vueTree.$refs.svg as Element).setAttribute('style', stylePositionCeneter);
+        vueTree.$el.children[0].setAttribute('style', stylePositionCeneter);
+        vueTree.$el.children[1].setAttribute('style', stylePositionCeneter);
     }
 
     private updateGraphConfig() {
@@ -175,6 +175,5 @@ export class AccountMultisigGraphTs extends Vue {
 
     created() {
         this.updateGraphConfig();
-        this.centerGraph();
     }
 }
