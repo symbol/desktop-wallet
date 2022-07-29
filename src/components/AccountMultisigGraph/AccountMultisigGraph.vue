@@ -6,7 +6,6 @@
                 {{ $t('show_button') }}
             </button>
             <div class="account-detail-row-3cols">
-                <tree v-for="(root, index) in dataset" :key="'ms-tr' + index" :expand="true" :expand-node="true" :data="[root]" />
                 <Modal v-model="isGraphModalShown" :title="$t('multisig_account_graph')" :footer-hide="true">
                     <VueTree
                         ref="VueTree"
