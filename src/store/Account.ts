@@ -578,7 +578,6 @@ export default {
                     .getMultisigAccountGraphInfo(currentAccountAddress)
                     .toPromise();
 
-                const currentMultisigAccountsInfo = MultisigService.getMultisigInfoFromMultisigGraphInfo(currentMultisigAccountGraphInfo);
                 const rootMultisigAccountGraph = new Map(currentMultisigAccountGraphInfo.multisigEntries);
 
                 for (const [currentLevel, multisigAccountInfos] of currentMultisigAccountGraphInfo.multisigEntries) {

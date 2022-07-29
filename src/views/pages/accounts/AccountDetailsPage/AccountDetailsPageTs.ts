@@ -224,7 +224,7 @@ export class AccountDetailsPageTs extends Vue {
     }
 
     public get hasAccountMultisigGraph(): boolean {
-        return this.currentAccount && (this.currentAccount.isMultisig || !!this.currentSigner.parentSigners?.length);
+        return this.currentAccount?.isMultisig || !!this.currentSigner.parentSigners?.length;
     }
 
     public get isLedger(): boolean {
