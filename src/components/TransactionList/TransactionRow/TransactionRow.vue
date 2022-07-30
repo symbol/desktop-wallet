@@ -22,7 +22,7 @@
                 />
 
                 <!-- Mosaic icon for non native mosaics. -->
-                <div v-if="hasNonNativeMosaic()" class="extend-icon-holder">
+                <div v-if="hasNonNativeMosaic()" class="extend-icon-holder mosaic-icon">
                     <Tooltip placement="right">
                         <img :src="getMosaicsIcon()" />
                         <div slot="content">
@@ -39,7 +39,7 @@
                 </div>
 
                 <!-- Message icon on transaction list -->
-                <div v-if="hasMessage()" class="extend-icon-holder">
+                <div v-if="hasMessage()" class="extend-icon-holder message">
                     <Tooltip placement="right">
                         <img :src="getEnvelopeIcon()" />
                         <div slot="content">
