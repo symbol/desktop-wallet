@@ -62,7 +62,7 @@ describe('store/Account', () => {
             expectedMultisigAccountGraph: Map<number, MultisigAccountInfoProperties[]> | Array<any>,
             expectedMultisigAccountGraphInfo: MultisigAccountInfoProperties[],
         ) => {
-            // Arrange
+            // Arrange:
             const repositoryFactory = createMockRepositoryFactory(mockMultisigAccountGraphInfoPromise);
             const getters = {
                 currentAccountAddress: account1.address,
@@ -79,17 +79,17 @@ describe('store/Account', () => {
             //@ts-ignore
             jest.spyOn(MultisigService, 'getMultisigInfoFromMultisigGraphInfo').mockReturnValue(rootMultisigAccountsInfo);
 
-            // Act
+            // Act:
             const result = await AccountStore.actions.LOAD_MULTISIG_GRAPH(storeContext);
 
-            // Assert
+            // Assert:
             expect(commit).toHaveBeenNthCalledWith(1, 'multisigAccountGraph', expectedMultisigAccountGraph);
             expect(commit).toHaveBeenNthCalledWith(2, 'multisigAccountGraphInfo', expectedMultisigAccountGraphInfo);
             expect(result).toEqual(expectedResult);
         };
 
         test('load full multisig tree', async () => {
-            // Arrange
+            // Arrange:
             const multisigAccountsInfo = [createMultisigAccountsInfo(address1)];
             const currentMultisigAccountGraphInfo = {
                 multisigEntries: new Map([
@@ -119,7 +119,7 @@ describe('store/Account', () => {
             const expectedMultisigAccountGraph = fullMultisigAccountGraphInfo.multisigEntries;
             const expectedMultisigAccountGraphInfo = multisigAccountsInfo;
 
-            // Act + Assert;
+            // Act + Assert:
             await runLoadMultisigGraphTest(
                 mockMultisigAccountGraphInfoPromise,
                 rootMultisigAccountsInfo,
@@ -130,14 +130,14 @@ describe('store/Account', () => {
         });
 
         test('handle error', async () => {
-            // Arrange
+            // Arrange:
             const mockMultisigAccountGraphInfoPromise = jest.fn().mockRejectedValue(null);
             const rootMultisigAccountsInfo = [];
             const expectedResult = [];
             const expectedMultisigAccountGraph = [];
             const expectedMultisigAccountGraphInfo = [];
 
-            // Act + Assert;
+            // Act + Assert:
             await runLoadMultisigGraphTest(
                 mockMultisigAccountGraphInfoPromise,
                 rootMultisigAccountsInfo,
