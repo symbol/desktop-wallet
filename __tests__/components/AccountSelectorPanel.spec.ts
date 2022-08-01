@@ -90,7 +90,7 @@ describe('components/AccountSelectorPanel', () => {
         const wrapper = getAccountSelectorPanelWrapper(stateChanges);
 
         // Assert:
-        expect(wrapper.find('div').exists()).toBeTruthy();
+        expect(wrapper.find('div').exists()).toBe(true);
     });
 
     test('current account identifier is set when account is selected', async () => {

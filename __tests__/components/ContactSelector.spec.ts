@@ -57,6 +57,7 @@ describe('components/ContactSelector', () => {
         // Arrange:
         const wrapper = getContactSelectorWrapper();
         const component = wrapper.vm as ContactSelectorTs;
+        component.poptipVisible = true;
 
         // Act:
         wrapper.find('ul li').trigger('click');
@@ -64,7 +65,6 @@ describe('components/ContactSelector', () => {
 
         // Assert:
         expect(wrapper.emitted('change')[0][0]).toBe(contactList[0].id);
-        // @ts-ignore - accessing private property
         expect(component.poptipVisible).toBe(false);
     });
 
