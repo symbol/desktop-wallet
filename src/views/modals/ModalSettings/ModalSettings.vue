@@ -28,6 +28,10 @@
                     <FormNodeEdit />
                 </div>
 
+                <div v-if="knownTabs[currentTabIndex] === 'ADVANCED' && !!currentAccount">
+                    <FormAdvancedSettings />
+                </div>
+
                 <div v-if="knownTabs[currentTabIndex] === 'ABOUT' && !!currentAccount">
                     <AboutPage />
                 </div>
