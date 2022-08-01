@@ -216,6 +216,6 @@ describe('components/AccountMultisigGraph', () => {
         expect(mockUpdateGraphConfig).toBeCalledTimes(1);
         expect(mockCenterGraph).toBeCalledTimes(1);
         expect(component.isGraphModalShown).toBe(true);
-        expect(graphViewElement.exists()).toBeTruthy();
+        expect(graphViewElement.exists()).toBe(true);
     });
 });
