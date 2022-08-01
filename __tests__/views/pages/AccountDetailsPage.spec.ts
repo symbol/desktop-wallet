@@ -120,7 +120,7 @@ describe('pages/AccountDetailsPage', () => {
 
         test('hide component when current signer is not multisig cosigner ', async () => {
             // Arrange:
-            const currentAccount = null;
+            const currentAccount = WalletsModel1;
             const currentSigner = defaultSigner;
             const shouldComponentBeShown = false;
 
