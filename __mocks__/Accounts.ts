@@ -34,6 +34,7 @@ export const account2Params = {
 };
 
 export const account1 = Account.createFromPrivateKey(account1Params.privateKey, account1Params.networkType);
+export const account2 = Account.createFromPrivateKey(account2Params.privateKey, account2Params.networkType);
 
 export const simpleWallet1 = SimpleWallet.createFromPrivateKey(
     account1Params.accountName,
@@ -69,7 +70,7 @@ export const WalletsModel2: AccountModel = {
     name: account2Params.accountName,
     type: AccountType.SEED,
     address: simpleWallet2.address.plain(),
-    publicKey: account1.publicKey,
+    publicKey: account2.publicKey,
     encryptedPrivateKey: simpleWallet2.encryptedPrivateKey,
     path: "m/44'/1'/1'/0'/0'",
     isMultisig: false,
