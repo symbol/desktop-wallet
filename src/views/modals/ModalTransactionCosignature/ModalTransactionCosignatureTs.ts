@@ -69,6 +69,7 @@ import { AddressBook } from 'symbol-address-book';
             multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
             multisigAccountGraph: 'account/multisigAccountGraph',
             addressBook: 'addressBook/getAddressBook',
+            allowUnknownMultisigTransactions: 'app/allowUnknownMultisigTransactions',
             symbolDocsScamAlertUrl: 'app/symbolDocsScamAlertUrl',
         }),
     },
@@ -130,6 +131,8 @@ export class ModalTransactionCosignatureTs extends Vue {
     public currentAccountMultisigInfo: MultisigAccountInfo;
 
     public multisigAccountGraph: Map<number, MultisigAccountInfo[]>;
+
+    public allowUnknownMultisigTransactions: boolean;
 
     /**
      * Link to the Common Hacks and Scams docs page

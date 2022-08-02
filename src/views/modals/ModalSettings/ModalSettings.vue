@@ -29,7 +29,7 @@
                 </div>
 
                 <div v-if="knownTabs[currentTabIndex] === 'ADVANCED' && !!currentAccount">
-                    <FormAdvancedSettings />
+                    <FormAdvancedSettings @close="close" />
                 </div>
 
                 <div v-if="knownTabs[currentTabIndex] === 'ABOUT' && !!currentAccount">

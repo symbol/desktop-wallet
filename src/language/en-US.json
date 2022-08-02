@@ -1066,6 +1066,7 @@
     "transaction_expired": "Transaction has expired",
     "transaction_has_cosignature": "Co-signatures received",
     "transaction_needs_cosignature": "Transaction awaiting signature.",
+    "transaction_needs_cosignature_unknown_prohibited": "This transaction was created by an unknown address and awaiting signature. Malicious transactions can result in a total loss of funds. Please carefully review all amounts and recipient addresses, as transactions are not reversable. If you understand the risks and wish to continue, please add the signer to the address book (white list). Please reject this transaction if you don't trust it. Also you can turn off this sequrity protection in the advanced settings.",
     "transaction_needs_cosignature_unknown": "A transaction from an unknown account is awaiting signature.",
     "transaction_needs_cosignature_explain": "This multisignature transaction needs multiple parties to sign it before it is approved. Please enter your password and confirm to add your signature.",
     "transaction_needs_cosignature_explain_signed": "This transaction needs multiple parties to approve by sending co-signature. You have already sent a co-signature for this transaction. Please, wait until other co-signatories approve. You can download the QR Code and send to other co-signatories for them to sign their part easily.",

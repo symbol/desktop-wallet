@@ -57,32 +57,53 @@
                                     :class="{ 'bg-warning': showFormUnkownAddressAccepted, 'bg-danger': showFormBlacklistedAddress }"
                                 >
                                     <div v-if="showFormUnkownAddressOptions">
-                                        <img class="icon" src="@/views/resources/img/icons/Signature.svg" alt />
-                                        <div class="title-text">{{ $t('transaction_needs_cosignature_unknown') }}</div>
-                                        <div class="inline">
-                                            <div class="unknown-address">
-                                                <img class="icon" src="@/views/resources/img/icons/whitelisted_contact_d.svg" alt />
+                                        <template v-if="allowUnknownMultisigTransactions">
+                                            <img class="icon" src="@/views/resources/img/icons/Signature.svg" alt />
+                                            <div class="title-text">{{ $t('transaction_needs_cosignature_unknown') }}</div>
+                                            <div class="inline">
+                                                <div class="unknown-address">
+                                                    <img class="icon" src="@/views/resources/img/icons/whitelisted_contact_d.svg" alt />
+                                                </div>
+                                                <a class="unknown-address" target="_blank" :href="signerExplorerUrl">
+                                                    {{ signerAddress }}
+                                                </a>
                                             </div>
-                                            <a class="unknown-address" target="_blank" :href="signerExplorerUrl">
-                                                {{ signerAddress }}
-                                            </a>
-                                        </div>
-                                        <div class="inline">
-                                            <Button
-                                                class="button-style inverted-button right-side-button button"
-                                                html-type="submit"
-                                                @click="reject"
-                                            >
-                                                {{ $t('label_reject') }}
-                                            </Button>
-                                            <Button
-                                                class="button-style inverted-button right-side-button button"
-                                                html-type="submit"
-                                                @click="accept"
-                                            >
-                                                {{ $t('sign') }}
-                                            </Button>
-                                        </div>
+                                            <div class="inline">
+                                                <Button
+                                                    class="button-style inverted-button right-side-button button"
+                                                    html-type="submit"
+                                                    @click="reject"
+                                                >
+                                                    {{ $t('label_reject') }}
+                                                </Button>
+                                                <Button
+                                                    class="button-style inverted-button right-side-button button"
+                                                    html-type="submit"
+                                                    @click="accept"
+                                                >
+                                                    {{ $t('sign') }}
+                                                </Button>
+                                            </div>
+                                        </template>
+                                        <template v-else>
+                                            <img class="icon" src="@/views/resources/img/icons/Signature.svg" alt />
+                                            <div class="title-text">{{ $t('transaction_needs_cosignature_unknown_prohibited') }}
+                                                <div>
+                                                    <a class="link button-plain" target="_blank" :href="symbolDocsScamAlertUrl">{{
+                                                        $t('link_docs_scam')
+                                                    }}</a>
+                                                </div>
+                                            </div>
+                                            <div class="inline">
+                                                <Button
+                                                    class="button-style inverted-button right-side-button button"
+                                                    html-type="submit"
+                                                    @click="reject"
+                                                >
+                                                    {{ $t('label_reject') }}
+                                                </Button>
+                                            </div>
+                                        </template>
                                     </div>
                                     <div v-else-if="showFormUnkownAddressRejected">
                                         <img class="icon" src="@/views/resources/img/icons/malicious_actor_1_d.svg" alt />
