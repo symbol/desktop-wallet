@@ -17,8 +17,7 @@ import MessageInput from '@/components/MessageInput/MessageInput.vue';
 import { MessageInputTs } from '@/components/MessageInput/MessageInputTs';
 import { getComponent } from '@MOCKS/Components';
 
-const messageInputTs = new MessageInputTs();
-type Props = typeof messageInputTs.$props;
+type Props = InstanceType<typeof MessageInputTs>['$props'];
 
 describe('components/MessageInput', () => {
     const StubComponent = {

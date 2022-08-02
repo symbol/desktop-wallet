@@ -20,8 +20,7 @@ import { getComponent } from '@MOCKS/Components';
 import { WalletsModel1, account1 } from '@MOCKS/Accounts';
 import { Account, Address, EncryptedMessage, NamespaceId, PlainMessage, PublicAccount, UnresolvedAddress } from 'symbol-sdk';
 
-const messageDisplayTs = new MessageDisplayTs();
-type Props = typeof messageDisplayTs.$props;
+type Props = InstanceType<typeof MessageDisplayTs>['$props'];
 
 describe('components/MessageDisplay', () => {
     const networkType = 152;
