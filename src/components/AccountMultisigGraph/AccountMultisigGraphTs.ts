@@ -14,17 +14,37 @@
  *
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
-// internal dependencies
+import VueTree from '@ssthouse/vue-tree-chart';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { mapGetters } from 'vuex';
+import { AddressBook } from 'symbol-address-book';
 import { MultisigAccountInfo } from 'symbol-sdk';
 import i18n from '@/language';
 
+interface TreeNode {
+    name: string;
+    title: string;
+    selected: boolean;
+    children: TreeNode[];
+    multisig?: {
+        minApproval: number;
+        minRemoval: number;
+    };
+}
+
+interface MultisigAccountInfoWithChildren extends MultisigAccountInfo {
+    children: TreeNode[];
+}
+
 @Component({
+    components: {
+        VueTree,
+    },
     computed: {
         ...mapGetters({
-            multisigAccountGraphInfo: 'account/multisigAccountGraph',
+            multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
             knownAccounts: 'account/knownAccounts',
+            addressBook: 'addressBook/getAddressBook',
         }),
     },
 })
@@ -34,73 +54,127 @@ export class AccountMultisigGraphTs extends Vue {
     })
     account: AccountModel;
 
-    public multisigAccountGraphInfo: Map<number, MultisigAccountInfo[]>;
+    public multisigAccountGraphInfo: MultisigAccountInfo[];
     public knownAccounts: AccountModel[];
+    public addressBook: AddressBook;
+    public graphConfig = {};
+    public isGraphModalShown = false;
 
-    get multisigGraphTree(): any[] {
-        if (this.multisigAccountGraphInfo?.size) {
-            return this.getMultisigDisplayGraph(this.multisigAccountGraphInfo);
+    get dataset(): TreeNode[] {
+        if (!this.multisigAccountGraphInfo?.length) {
+            return [];
         }
-        return [];
-    }
 
-    public getMultisigDisplayGraph(multisigEntries: Map<number, MultisigAccountInfo[]>): any[] {
-        const firstLevelNumber = [...multisigEntries.keys()].sort()[0];
-        const firstLevel = multisigEntries.get(firstLevelNumber);
-        const graph = [];
-        for (const entry of firstLevel) {
-            graph.push({
-                info: entry,
-                address: entry.accountAddress.plain(),
-                title: this.getAccountLabel(entry, this.knownAccounts),
-                children: [this.getMultisigDisplayGraphChildren(firstLevelNumber + 1, entry, multisigEntries)],
-                selected: this.account.address === entry.accountAddress.plain(),
-            });
-        }
-        return graph[0].children;
-    }
-
-    private getMultisigDisplayGraphChildren(
-        level: number,
-        info: MultisigAccountInfo,
-        multisigEntries: Map<number, MultisigAccountInfo[]>,
-    ): any {
-        const entries = multisigEntries.get(level);
-        if (!entries) {
-            return {
-                info: info,
-                address: info.accountAddress.plain(),
-                title: this.getAccountLabel(info, this.knownAccounts),
+        const tree: TreeNode[] = [];
+        const hashTable = {};
+        const sortedMultisigAccountGraphInfo = this.multisigAccountGraphInfo.sort((a, b) =>
+            a.accountAddress.plain() > b.accountAddress.plain() ? 1 : b.accountAddress.plain() > a.accountAddress.plain() ? -1 : 0,
+        );
+        sortedMultisigAccountGraphInfo.forEach((multisigAccountInfo) => {
+            const address = multisigAccountInfo.accountAddress.plain();
+            hashTable[address] = {
+                ...multisigAccountInfo,
                 children: [],
-                selected: this.account.address === info.accountAddress.plain(),
             };
-        }
-        const children = [];
-        for (const entry of entries) {
-            const isFromParent = entry.multisigAddresses.find((address) => address.plain() === info.accountAddress.plain());
-            if (isFromParent) {
-                children.push(this.getMultisigDisplayGraphChildren(level + 1, entry, multisigEntries));
+        });
+        sortedMultisigAccountGraphInfo.forEach((multisigAccountInfo) => {
+            const address = multisigAccountInfo.accountAddress.plain();
+
+            if (multisigAccountInfo.multisigAddresses.length) {
+                const parentPlainAddresses = multisigAccountInfo.multisigAddresses.map((address) => address.plain());
+                parentPlainAddresses.forEach((parentAddress) => {
+                    const treeNode = this.multisigAccountInfoToTreeNode(hashTable[address]);
+                    hashTable[parentAddress]?.children.push(treeNode);
+                });
+            } else {
+                const treeNode = this.multisigAccountInfoToTreeNode(hashTable[address]);
+                tree.push(treeNode);
             }
+        });
+
+        return tree;
+    }
+
+    private multisigAccountInfoToTreeNode(info: MultisigAccountInfoWithChildren): TreeNode {
+        const address = info.accountAddress.plain();
+        const name = this.getAccountLabel(address, true);
+        const selected = this.account.address === address;
+        const children = info.children;
+        const cosignatoryAddressesCount = info.cosignatoryAddresses.length;
+        let multisig = null;
+        let title = this.getAccountLabel(address, false);
+
+        if (cosignatoryAddressesCount > 0) {
+            multisig = {
+                minApproval: `${i18n.t('form_label_min_approval')}: ${info.minApproval}`,
+                minRemoval: `${i18n.t('form_label_min_removal')}: ${info.minRemoval}`,
+            };
+            title += `
+                ${info.minApproval} of ${info.cosignatoryAddresses.length} ${i18n.t('label_for_approvals')}
+                ${info.minRemoval} of ${info.cosignatoryAddresses.length} ${i18n.t('label_for_removals')}`;
         }
+
         return {
-            info: info,
-            address: info.accountAddress.plain(),
-            title: this.getAccountLabel(info, this.knownAccounts),
-            children: children,
-            selected: this.account.address === info.accountAddress.plain(),
+            name,
+            title,
+            selected,
+            children,
+            multisig,
         };
     }
 
-    getAccountLabel(info: MultisigAccountInfo, accounts: AccountModel[]): string {
-        const account = accounts.find((wlt) => info.accountAddress.plain() === wlt.address);
-        const addressOrName = (account && account.name) || info.accountAddress.plain();
-        return (
-            addressOrName +
-            (info.isMultisig()
-                ? `\n
-        ${info.minApproval} of ${info.cosignatoryAddresses.length} ${i18n.t('label_for_approvals')} \n
-        ${info.minRemoval} of ${info.cosignatoryAddresses.length} ${i18n.t('label_for_removals')}`
-                : '')
-        );
+    private getAccountLabel(address: string, shortenAddress: boolean): string {
+        const contact = this.addressBook.getContactByAddress(address);
+
+        if (contact) {
+            return contact.name;
+        }
+
+        const account = this.knownAccounts.find((knownAccount) => address === knownAccount.address);
+
+        if (account) {
+            return account.name;
+        }
+
+        if (shortenAddress) {
+            const addressStart = address.substring(0, 5);
+            const addressEnd = address.slice(-5);
+
+            return `${addressStart}...${addressEnd}`;
+        }
+
+        return address;
+    }
+
+    public showGraphModal() {
+        this.isGraphModalShown = true;
+        this.updateGraphConfig();
+        this.centerGraph();
+    }
+
+    private centerGraph() {
+        const offsetX = this.remToPixels(5.8);
+        const stylePositionCeneter = `transform: scale(1) translate(${offsetX}px, 0px); transform-origin: center center;`;
+        const vueTree = this.$refs['VueTree'] as Vue;
+        vueTree.$el.children[0].setAttribute('style', stylePositionCeneter);
+        vueTree.$el.children[1].setAttribute('style', stylePositionCeneter);
+    }
+
+    private updateGraphConfig() {
+        this.graphConfig = {
+            nodeWidth: this.remToPixels(2),
+            nodeHeight: this.remToPixels(1),
+            levelHeight: this.remToPixels(1),
+            linkStyle: 'streight',
+            collapseEnabled: false,
+        };
+    }
+
+    private remToPixels(rem: number): number {
+        return Math.round(rem * parseFloat(getComputedStyle(document.documentElement).fontSize));
+    }
+
+    created() {
+        this.updateGraphConfig();
     }
 }
