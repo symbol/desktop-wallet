@@ -19,7 +19,7 @@ describe('TransactionList/TransactionListFilters', () => {
                 currentAccount: null,
                 currentAccountSigner: currentSigner,
                 addressBook: addressBookMock,
-                isBlackListFilterActivated: isBlackListFilterActivated,
+                isBlackListFilterActivated,
                 signers: [],
             },
             {},
@@ -62,41 +62,49 @@ describe('TransactionList/TransactionListFilters', () => {
         expect(vm.$store.dispatch).not.toBeCalled();
     });
 
-    test("store commit 'transaction/filterTransactions' with blacklisted contacts", () => {
-        // Arrange:
-        const wrapper = getTransactionListFilterWrapper(false);
-        const vm = wrapper.vm as TransactionListFiltersTs;
+    describe('onSelectBlackListed', () => {
+        test('toggle isBlackListFilterActivated to true', () => {
+            // Arrange:
+            const wrapper = getTransactionListFilterWrapper(false);
+            const vm = wrapper.vm as TransactionListFiltersTs;
 
-        // Act:
-        // @ts-ignore
-        vm.onSelectBlackListed();
+            jest.spyOn(vm, 'refresh');
 
-        // Assert:
-        expect(vm.$store.commit).toBeCalledWith('transaction/filterTransactions', {
-            filterOption: null,
-            currentSignerAddress: currentSigner.address.plain(),
-            multisigAddresses: [],
-            shouldFilterOptionChange: false,
-            blacklistedContacts: addressBookMock.getBlackListedContacts(),
+            // Act:
+            // @ts-ignore
+            vm.onSelectBlackListed();
+
+            // Assert:
+            expect(vm.$store.commit).toBeCalledWith('transaction/filterTransactions', {
+                filterOption: null,
+                currentSignerAddress: currentSigner.address.plain(),
+                multisigAddresses: [],
+                shouldFilterOptionChange: false,
+                blacklistedContacts: addressBookMock.getBlackListedContacts(),
+            });
+            expect(vm.$store.commit).toBeCalledWith('transaction/isBlackListFilterActivated', true);
+            expect(vm.refresh).toBeCalled();
         });
-        expect(vm.$store.commit).toBeCalledWith('transaction/isBlackListFilterActivated', true);
-    });
 
-    test("store commit 'transaction/filterTransactions'", () => {
-        // Arrange:
-        const wrapper = getTransactionListFilterWrapper(true);
-        const vm = wrapper.vm as TransactionListFiltersTs;
+        test('toggle isBlackListFilterActivated to false', () => {
+            // Arrange:
+            const wrapper = getTransactionListFilterWrapper(true);
+            const vm = wrapper.vm as TransactionListFiltersTs;
 
-        // Act:
-        // @ts-ignore
-        vm.onSelectBlackListed();
+            jest.spyOn(vm, 'refresh');
 
-        // Assert:
-        expect(vm.$store.commit).toBeCalledWith('transaction/filterTransactions', {
-            currentSignerAddress: currentSigner.address.plain(),
-            filterOption: null,
+            // Act:
+            // @ts-ignore
+            vm.onSelectBlackListed();
+
+            // Assert:
+            expect(vm.$store.commit).toBeCalledWith('transaction/filterTransactions', {
+                currentSignerAddress: currentSigner.address.plain(),
+                filterOption: null,
+            });
+            expect(vm.$store.commit).toBeCalledWith('transaction/isBlackListFilterActivated', false);
+            expect(vm.refresh).toBeCalled();
         });
-        expect(vm.$store.commit).toBeCalledWith('transaction/isBlackListFilterActivated', false);
     });
 
     test('returns emit downloadTransactions', () => {
