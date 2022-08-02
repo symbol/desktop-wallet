@@ -55,6 +55,12 @@ export class DurationInputTs extends Vue {
     @Prop({ default: 'form_label_duration' }) label: string;
 
     /**
+     * the toggle for the display of realativeTime
+     * @type boolean
+     */
+    @Prop({ default: false }) showRelativeTime: boolean;
+
+    /**
      * Validation rules
      * @var {ValidationRuleset}
      */
@@ -64,12 +70,6 @@ export class DurationInputTs extends Vue {
      * Injected network configuration.
      */
     private networkConfiguration: NetworkConfigurationModel;
-
-    /**
-     * the toggle for the display of realativeTime
-     * @type boolean
-     */
-    @Prop({ default: false }) showRelativeTime: boolean;
 
     /// region computed properties getter/setter
     public get chosenValue(): string {
