@@ -23,7 +23,7 @@ const maxFeeSelectorTs = new MaxFeeSelectorTs();
 type Props = typeof maxFeeSelectorTs.$props;
 
 describe('components/MaxFeeSelector', () => {
-    const getMaxFeeSelectorWrapper = (props: Props, isNetworkCurrencyLoaded = true) => {
+    const getMaxFeeSelectorWrapper = (props: Props, isNetworkCurrencyLoaded = true, path?: string) => {
         const defaultFee = networkMock.fees.fast;
         const networkMosaicName = networkMock.currency.name;
         const networkCurrency = {
@@ -63,8 +63,13 @@ describe('components/MaxFeeSelector', () => {
                 },
             },
         };
+        const mocks = {
+            $route: {
+                fullPath: path
+            }
+        };
 
-        return getComponent(MaxFeeSelector, mockStore, {}, props, {}, null, {}, true);
+        return getComponent(MaxFeeSelector, mockStore, {}, props, {}, null, mocks);
     };
 
     describe('dropdown fees options', () => {
@@ -162,9 +167,7 @@ describe('components/MaxFeeSelector', () => {
             };
 
             // Act:
-            const wrapper = getMaxFeeSelectorWrapper(props);
-
-            wrapper.vm.$router.push(routePath);
+            const wrapper = getMaxFeeSelectorWrapper(props, true, routePath);
             await wrapper.vm.$nextTick();
 
             // Assert:
