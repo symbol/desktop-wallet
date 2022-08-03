@@ -13,7 +13,6 @@
             </span>
         </div>
         <router-view />
-        <DisabledUiOverlay />
         <SpinnerLoading v-if="hasLoadingOverlay" />
     </div>
 </template>
