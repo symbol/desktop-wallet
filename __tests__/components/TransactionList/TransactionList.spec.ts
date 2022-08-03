@@ -136,6 +136,7 @@ describe('TransactionList', () => {
             props,
             {},
             jest.fn(),
+            null,
             true,
         );
     };
