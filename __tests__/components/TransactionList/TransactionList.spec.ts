@@ -470,8 +470,6 @@ describe('TransactionList', () => {
             expect(vm.transactionHash).toBe(mockTransactionHash);
         });
 
-        test('returns signed transaction info when successfully signed', () => {});
-
         test('destroyed transaction list components', () => {
             // Arrange:
             const accountSigner = {
