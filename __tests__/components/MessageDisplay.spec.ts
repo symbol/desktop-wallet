@@ -107,21 +107,21 @@ describe('components/MessageDisplay', () => {
     });
 
     describe('onAccountUnlocked()', () => {
-        const runUnlockAccountTest = async (
-            recipient: UnresolvedAddress,
-            linkedAddress: Address | null,
-            decryptAddress: Address | null,
-            expectGetLinkedAddressToBeDispatched: boolean,
-            expectAddErrorToBeDispatched: boolean,
-            expecDecryptMessageToBeCalled: boolean,
-        ) => {
+        const runUnlockAccountTest = async (options: {
+            recipient: UnresolvedAddress;
+            linkedAddress: Address | null;
+            decryptAddress: Address | null;
+            expectGetLinkedAddressToBeDispatched: boolean;
+            expectAddErrorToBeDispatched: boolean;
+            expectDecryptMessageToBeCalled: boolean;
+        }) => {
             // Arrange:
             const currentAccount = account1;
             const message = PlainMessage.create('message');
             const unannounced = false;
             const props = {
                 message,
-                recipient,
+                recipient: options.recipient,
                 unannounced,
             };
             const mockDispatch = jest.fn().mockImplementation(() => Promise.resolve());
@@ -129,7 +129,7 @@ describe('components/MessageDisplay', () => {
             const mockT = jest.fn().mockImplementation((_) => _);
 
             // Act:
-            const wrapper = getMessageDisplayWrapper(props, null, linkedAddress, mockDispatch);
+            const wrapper = getMessageDisplayWrapper(props, null, options.linkedAddress, mockDispatch);
             const vm = wrapper.vm as MessageDisplayTs;
             vm['decryptMessage'] = mockDecryptMessage;
             vm['$t'] = mockT;
@@ -137,13 +137,13 @@ describe('components/MessageDisplay', () => {
             await new Promise(process.nextTick);
 
             // Assert:
-            if (expectGetLinkedAddressToBeDispatched) {
-                expect(mockDispatch).toHaveBeenNthCalledWith(1, 'namespace/GET_LINKED_ADDRESS', recipient);
+            if (options.expectGetLinkedAddressToBeDispatched) {
+                expect(mockDispatch).toHaveBeenNthCalledWith(1, 'namespace/GET_LINKED_ADDRESS', options.recipient);
             } else {
-                expect(mockDispatch).not.toHaveBeenNthCalledWith(1, 'namespace/GET_LINKED_ADDRESS', recipient);
+                expect(mockDispatch).not.toHaveBeenNthCalledWith(1, 'namespace/GET_LINKED_ADDRESS', options.recipient);
             }
 
-            if (expectAddErrorToBeDispatched) {
+            if (options.expectAddErrorToBeDispatched) {
                 expect(mockDispatch).toHaveBeenNthCalledWith(
                     2,
                     'notification/ADD_ERROR',
@@ -157,10 +157,10 @@ describe('components/MessageDisplay', () => {
                 );
             }
 
-            if (expecDecryptMessageToBeCalled) {
-                expect(mockDecryptMessage).toBeCalledWith(currentAccount.privateKey, decryptAddress);
+            if (options.expectDecryptMessageToBeCalled) {
+                expect(mockDecryptMessage).toBeCalledWith(currentAccount.privateKey, options.decryptAddress);
             } else {
-                expect(mockDecryptMessage).not.toBeCalledWith(currentAccount.privateKey, decryptAddress);
+                expect(mockDecryptMessage).not.toBeCalledWith(currentAccount.privateKey, options.decryptAddress);
             }
         };
 
@@ -171,17 +171,17 @@ describe('components/MessageDisplay', () => {
             const decryptAddress = linkedAddress;
             const expectGetLinkedAddressToBeDispatched = true;
             const expectAddErrorToBeDispatched = false;
-            const expecDecryptMessageToBeCalled = true;
+            const expectDecryptMessageToBeCalled = true;
 
             // Act + Assert:
-            await runUnlockAccountTest(
+            await runUnlockAccountTest({
                 recipient,
                 linkedAddress,
                 decryptAddress,
                 expectGetLinkedAddressToBeDispatched,
                 expectAddErrorToBeDispatched,
-                expecDecryptMessageToBeCalled,
-            );
+                expectDecryptMessageToBeCalled,
+            });
         });
 
         test('recipient is instance of NamespaceId and no linkedAddress is provided', async () => {
@@ -191,17 +191,17 @@ describe('components/MessageDisplay', () => {
             const decryptAddress = null;
             const expectGetLinkedAddressToBeDispatched = true;
             const expectAddErrorToBeDispatched = true;
-            const expecDecryptMessageToBeCalled = false;
+            const expectDecryptMessageToBeCalled = false;
 
             // Act + Assert:
-            await runUnlockAccountTest(
+            await runUnlockAccountTest({
                 recipient,
                 linkedAddress,
                 decryptAddress,
                 expectGetLinkedAddressToBeDispatched,
                 expectAddErrorToBeDispatched,
-                expecDecryptMessageToBeCalled,
-            );
+                expectDecryptMessageToBeCalled,
+            });
         });
 
         test('recipient is instance of Address', async () => {
@@ -211,17 +211,17 @@ describe('components/MessageDisplay', () => {
             const decryptAddress = account1.address;
             const expectGetLinkedAddressToBeDispatched = false;
             const expectAddErrorToBeDispatched = false;
-            const expecDecryptMessageToBeCalled = true;
+            const expectDecryptMessageToBeCalled = true;
 
             // Act + Assert:
-            await runUnlockAccountTest(
+            await runUnlockAccountTest({
                 recipient,
                 linkedAddress,
                 decryptAddress,
                 expectGetLinkedAddressToBeDispatched,
                 expectAddErrorToBeDispatched,
-                expecDecryptMessageToBeCalled,
-            );
+                expectDecryptMessageToBeCalled,
+            });
         });
     });
 
