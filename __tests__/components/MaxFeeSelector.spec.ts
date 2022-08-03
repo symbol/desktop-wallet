@@ -64,7 +64,7 @@ describe('components/MaxFeeSelector', () => {
             },
         };
 
-        return getComponent(MaxFeeSelector, mockStore, {}, props, {}, null, true);
+        return getComponent(MaxFeeSelector, mockStore, {}, props, {}, null, {}, true);
     };
 
     describe('dropdown fees options', () => {
