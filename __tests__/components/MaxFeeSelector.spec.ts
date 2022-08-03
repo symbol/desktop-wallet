@@ -65,8 +65,8 @@ describe('components/MaxFeeSelector', () => {
         };
         const mocks = {
             $route: {
-                fullPath: path
-            }
+                fullPath: path,
+            },
         };
 
         return getComponent(MaxFeeSelector, mockStore, {}, props, {}, null, mocks);
