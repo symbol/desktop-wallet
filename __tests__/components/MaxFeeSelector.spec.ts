@@ -106,7 +106,7 @@ describe('components/MaxFeeSelector', () => {
             // Assert:
             options.wrappers.forEach((option, index) => {
                 expect(option.text()).toBe(expectedOptions[index].label);
-                expect(option.text()).toBe(expectedOptions[index].label);
+                expect(option.attributes()['value']).toBe(expectedOptions[index].value);
             });
         });
 
@@ -232,6 +232,169 @@ describe('components/MaxFeeSelector', () => {
 
             // Act + Assert:
             runChosenMaxFeeTest(value, expectedChosenMaxFee);
+        });
+    });
+
+    describe('fees calculated', () => {
+        test('return array of calculated fees', () => {
+            // Arrange:
+            const props = {
+                fastFee: 100,
+                averageFee: 80,
+                slowFee: 50,
+                slowestFee: 20,
+            };
+            const expectedFeesCalculated = [
+                {
+                    calculatedFee: 80,
+                    label: 'Average: 0.00008 symbol.xym',
+                    maxFee: 10,
+                },
+                {
+                    calculatedFee: 0,
+                    label: 'No Fee: 0 symbol.xym',
+                    maxFee: 0,
+                },
+                {
+                    calculatedFee: 50,
+                    label: 'Slow: 0.00005 symbol.xym',
+                    maxFee: 5,
+                },
+                {
+                    calculatedFee: 20,
+                    label: 'Slowest: 0.00002 symbol.xym',
+                    maxFee: 1,
+                },
+                {
+                    calculatedFee: 100,
+                    label: 'Fast: 0.0001 symbol.xym',
+                    maxFee: 20,
+                },
+            ];
+
+            // Act:
+            const vm = getMaxFeeSelectorWrapper(props).vm as MaxFeeSelectorTs;
+            const result = vm.feesCalculated;
+
+            // Assert:
+            expect(result).toEqual(expectedFeesCalculated);
+        });
+    });
+
+    describe('get label', () => {
+        const runGetLabelTest = (props: Props, argument: [string, number], expectedResult) => {
+            // Arrange:
+            const mockGetFormattedRelative = jest.fn().mockImplementation((value) => value);
+            const mockT = jest.fn().mockImplementation((value) => ({
+                toString: () => value,
+            }));
+
+            // Act:
+            const vm = getMaxFeeSelectorWrapper(props).vm as MaxFeeSelectorTs;
+            vm['getFormattedRelative'] = mockGetFormattedRelative;
+            vm['$t'] = mockT;
+            const result = vm['getLabel'](argument);
+
+            // Assert:
+            expect(result).toBe(expectedResult);
+        };
+
+        test('return label for calculated average fee', () => {
+            // Arrange:
+            const props = {
+                averageFee: 11,
+            };
+            const argument: [string, number] = ['average', 10];
+            const expectedResult = 'fee_speed_average: 11 symbol.xym';
+
+            // Act + Assert:
+            runGetLabelTest(props, argument, expectedResult);
+        });
+
+        test('return label for default average fee', () => {
+            // Arrange:
+            const props = {};
+            const argument: [string, number] = ['average', 10];
+            const expectedResult = 'fee_speed_average';
+
+            // Act + Assert:
+            runGetLabelTest(props, argument, expectedResult);
+        });
+
+        test('return label for calculated fast fee', () => {
+            // Arrange:
+            const props = {
+                fastFee: 15,
+            };
+            const argument: [string, number] = ['fast', 20];
+            const expectedResult = 'fee_speed_fast: 15 symbol.xym';
+
+            // Act + Assert:
+            runGetLabelTest(props, argument, expectedResult);
+        });
+
+        test('return label for default fast fee', () => {
+            // Arrange:
+            const props = {};
+            const argument: [string, number] = ['fast', 20];
+            const expectedResult = 'fee_speed_fast';
+
+            // Act + Assert:
+            runGetLabelTest(props, argument, expectedResult);
+        });
+
+        test('return label for calculated slow fee', () => {
+            // Arrange:
+            const props = {
+                slowFee: 6,
+            };
+            const argument: [string, number] = ['slow', 5];
+            const expectedResult = 'fee_speed_slow: 6 symbol.xym';
+
+            // Act + Assert:
+            runGetLabelTest(props, argument, expectedResult);
+        });
+
+        test('return label for default slow fee', () => {
+            // Arrange:
+            const props = {};
+            const argument: [string, number] = ['slow', 5];
+            const expectedResult = 'fee_speed_slow';
+
+            // Act + Assert:
+            runGetLabelTest(props, argument, expectedResult);
+        });
+
+        test('return label for calculated slowest fee', () => {
+            // Arrange:
+            const props = {
+                slowestFee: 6,
+            };
+            const argument: [string, number] = ['slowest', 1];
+            const expectedResult = 'fee_speed_slowest: 6 symbol.xym';
+
+            // Act + Assert:
+            runGetLabelTest(props, argument, expectedResult);
+        });
+
+        test('return label for default slowest fee', () => {
+            // Arrange:
+            const props = {};
+            const argument: [string, number] = ['slowest', 1];
+            const expectedResult = 'fee_speed_slowest';
+
+            // Act + Assert:
+            runGetLabelTest(props, argument, expectedResult);
+        });
+
+        test('return label for custom fee', () => {
+            // Arrange:
+            const props = {};
+            const argument: [string, number] = ['no_fee', 0];
+            const expectedResult = 'fee_speed_no_fee: 0 symbol.xym';
+
+            // Act + Assert:
+            runGetLabelTest(props, argument, expectedResult);
         });
     });
 });

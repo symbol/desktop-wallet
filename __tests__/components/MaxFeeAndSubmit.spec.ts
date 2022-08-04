@@ -127,4 +127,57 @@ describe('components/MaxFeeAndSubmit', () => {
             runValueChangeTest(selectorEventToEmit, expectedEventToBeEmmited);
         });
     });
+
+    describe('calculated fees', () => {
+        const runCalculatedFeesTest = (getterName, expectedValue) => {
+            // Arrange:
+            const props = {
+                value: 10,
+                size: 12,
+            };
+
+            // Act:
+            const wrapper = getMaxFeeAndSubmitWrapper(props);
+            const result = wrapper.vm[getterName];
+
+            // Assert:
+            expect(result).toEqual(expectedValue);
+        };
+
+        test('average fee', () => {
+            // Arrange:
+            const getterName = 'averageFee';
+            const expectedValue = 90;
+
+            // Act + Assert:
+            runCalculatedFeesTest(getterName, expectedValue);
+        });
+
+        test('slow fee', () => {
+            // Arrange:
+            const getterName = 'slowFee';
+            const expectedValue = 54;
+
+            // Act + Assert:
+            runCalculatedFeesTest(getterName, expectedValue);
+        });
+
+        test('slowest fee', () => {
+            // Arrange:
+            const getterName = 'slowestFee';
+            const expectedValue = 12;
+
+            // Act + Assert:
+            runCalculatedFeesTest(getterName, expectedValue);
+        });
+
+        test('fast fee', () => {
+            // Arrange:
+            const getterName = 'fastFee';
+            const expectedValue = 120;
+
+            // Act + Assert:
+            runCalculatedFeesTest(getterName, expectedValue);
+        });
+    });
 });
