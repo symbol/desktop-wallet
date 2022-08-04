@@ -707,17 +707,17 @@ describe('TransactionList/TransactionRow', () => {
             {
                 transactionType: 'other transaction deadline in 6 hours',
                 mockTransaction: mockTransferTransaction(),
-                expectedDate: '2019-11-11 06:00:00',
+                expectedDate: '2019-11-10 22:00:00',
             },
             {
                 transactionType: 'Aggregate Bond transaction deadline in 48 hours',
                 mockTransaction: mockAggregateTransaction(),
-                expectedDate: '2019-11-09 08:00:00',
+                expectedDate: '2019-11-09 00:00:00',
             },
             {
                 transactionType: 'Hash Lock transaction deadline in 6 hours',
                 mockTransaction: hashLockTransaction,
-                expectedDate: '2019-11-11 02:00:00',
+                expectedDate: '2019-11-10 18:00:00',
             },
         ];
 
