@@ -17,7 +17,7 @@ import { TransactionType } from 'symbol-sdk';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
-export default class TransactionTypeSelectorTs extends Vue {
+export default class OperationRestrictionTransactionTypeSelectorTs extends Vue {
     /**
      * Value set by the parent component's v-model
      * @type {string}
@@ -46,6 +46,8 @@ export default class TransactionTypeSelectorTs extends Vue {
      * Returns sorted TransactionType list
      */
     public get transactionTypeList() {
+        // ACCOUNT_OPERATION_RESTRICTION will be excluded from the list
+        // because Account Operation Restriction Transaction is not supported
         return Object.entries(TransactionType)
             .filter((e) => !(parseInt(e[0]) >= 0) && e[0] !== 'RESERVED' && e[1] !== TransactionType.ACCOUNT_OPERATION_RESTRICTION)
             .sort((e1, e2) => e1[0].localeCompare(e2[0]));

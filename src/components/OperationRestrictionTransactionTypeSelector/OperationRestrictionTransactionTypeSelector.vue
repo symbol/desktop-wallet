@@ -9,11 +9,11 @@
 </template>
 
 <script lang="ts">
-import TransactionTypeSelectorTs from './TransactionTypeSelectorTs';
+import OperationRestrictionTransactionTypeSelectorTs from './OperationRestrictionTransactionTypeSelectorTs';
 
-export default class TransactionTypeSelector extends TransactionTypeSelectorTs {}
+export default class OperationRestrictionTransactionTypeSelector extends OperationRestrictionTransactionTypeSelectorTs {}
 </script>
 
 <style lang="less" scoped>
-@import './TransactionTypeSelector.less';
+@import './OperationRestrictionTransactionTypeSelector.less';
 </style>

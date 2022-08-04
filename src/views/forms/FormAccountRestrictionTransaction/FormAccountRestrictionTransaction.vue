@@ -51,7 +51,10 @@
                                 class="row-metadata-input inputs-container"
                             >
                                 <ErrorTooltip :errors="errors">
-                                    <TransactionTypeSelector v-model="formItems.transactionType" :disabled="isDeleteMode" />
+                                    <OperationRestrictionTransactionTypeSelector
+                                        v-model="formItems.transactionType"
+                                        :disabled="isDeleteMode"
+                                    />
                                 </ErrorTooltip>
                             </ValidationProvider>
                         </template>

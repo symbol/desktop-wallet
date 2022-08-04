@@ -1,16 +1,16 @@
 import { getComponent } from '@MOCKS/Components';
-import TransactionTypeSelector from '@/components/TransactionTypeSelector/TransactionTypeSelector.vue';
-import TransactionTypeSelectorTs from '@/components/TransactionTypeSelector/TransactionTypeSelectorTs';
+import OperationRestrictionTransactionTypeSelector from '@/components/OperationRestrictionTransactionTypeSelector/OperationRestrictionTransactionTypeSelector.vue';
+import OperationRestrictionTransactionTypeSelectorTs from '@/components/OperationRestrictionTransactionTypeSelector/OperationRestrictionTransactionTypeSelectorTs';
 
-describe('components/TransactionTypeSelector', () => {
+describe('components/OperationRestrictionTransactionTypeSelector', () => {
     const getTransactionTypeSelectorWrapper = () => {
-        return getComponent(TransactionTypeSelector, {}, {}, { value: null, disabled: false }, {});
+        return getComponent(OperationRestrictionTransactionTypeSelector, {}, {}, { value: null, disabled: false }, {});
     };
 
     test('returns sorted transaction type list', () => {
         // Arrange:
         const wrapper = getTransactionTypeSelectorWrapper();
-        const component = wrapper.vm as TransactionTypeSelectorTs;
+        const component = wrapper.vm as OperationRestrictionTransactionTypeSelectorTs;
 
         // Act:
         const list = component.transactionTypeList;
@@ -47,7 +47,7 @@ describe('components/TransactionTypeSelector', () => {
     test('returns new value when user selected', async () => {
         // Arrange:
         const wrapper = getTransactionTypeSelectorWrapper();
-        const component = wrapper.vm as TransactionTypeSelectorTs;
+        const component = wrapper.vm as OperationRestrictionTransactionTypeSelectorTs;
 
         // Act:
         component.chosenValue = 16974;
