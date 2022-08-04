@@ -15,6 +15,6 @@ export default class TransactionUriDisplayTs extends Vue {
     @Prop({ default: null }) readonly transaction?: Transaction;
 
     public get transactionURI() {
-        return new TransactionURI(this.transaction?.serialize(), TransactionMapping.createFromPayload).build();
+        return new TransactionURI(this.transaction.serialize(), TransactionMapping.createFromPayload).build();
     }
 }
