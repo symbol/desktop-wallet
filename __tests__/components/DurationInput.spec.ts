@@ -15,9 +15,11 @@
  */
 import DurationInput from '@/components/DurationInput/DurationInput.vue';
 import { DurationInputTs } from '@/components/DurationInput/DurationInputTs';
+import { networkConfig } from '@/config';
 import { StandardValidationRules } from '@/core/validation/StandardValidationRules';
 import i18n from '@/language/index';
 import { createLocalVue, mount } from '@vue/test-utils';
+import { NetworkType } from 'symbol-sdk';
 import { ValidationProvider } from 'vee-validate';
 import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
@@ -100,9 +102,43 @@ describe('components/DurationInput', () => {
         const chosenValue = '20000';
         const wrapper = getDurationInputWrapper({ showRelativeTime: true, targetAsset: 'namespace', value: '10000' });
         const component = wrapper.vm as DurationInputTs;
+
+        // Act:
         component.chosenValue = chosenValue;
 
         // Assert:
         expect(wrapper.emitted('input')[0][0]).toBe(chosenValue);
+    });
+
+    // TODO test for validationRule
+    test('duration validation rule when the target asset is mosaic', async () => {
+        // Arrange:
+        const wrapper = getDurationInputWrapper({ targetAsset: 'mosaic', value: '10000' });
+        const component = wrapper.vm as DurationInputTs;
+
+        // Act:
+        const durationValidationRule = component.validationRule;
+
+        // Assert:
+        expect(durationValidationRule).toContain(
+            `max_value:${networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.maxMosaicDuration}`,
+        );
+    });
+
+    test('duration validation rule when the target asset is namespace', async () => {
+        // Arrange:
+        const wrapper = getDurationInputWrapper({ targetAsset: 'namespace', value: '10000' });
+        const component = wrapper.vm as DurationInputTs;
+
+        // Act:
+        const durationValidationRule = component.validationRule;
+
+        // Assert:
+        expect(durationValidationRule).toContain(
+            `min_value:${
+                networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.minNamespaceDuration /
+                networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.blockGenerationTargetTime
+            }`,
+        );
     });
 });
