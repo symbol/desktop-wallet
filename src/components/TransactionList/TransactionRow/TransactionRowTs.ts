@@ -392,7 +392,7 @@ export class TransactionRowTs extends Vue {
         return '';
     }
 
-    private get hasMissSignatures(): boolean {
+    private get hasMissingSignatures(): boolean {
         //merkleComponentHash ==='000000000000...' present that the transaction is still lack of signature
         const { type, transactionInfo } = this.transaction;
         if (type === TransactionType.AGGREGATE_BONDED) {
@@ -414,7 +414,7 @@ export class TransactionRowTs extends Vue {
         if (
             this.transaction instanceof AggregateTransaction &&
             this.transaction.type === TransactionType.AGGREGATE_BONDED &&
-            this.hasMissSignatures
+            this.hasMissingSignatures
         ) {
             this.transactionSigningFlag = true;
             try {

@@ -770,8 +770,8 @@ describe('components/TransactionList/TransactionRow', () => {
         );
     });
 
-    describe('hasMissSignatures', () => {
-        const runBasicMissSignaturesTests = (transaction, expectedResult) => {
+    describe('hasMissingSignatures', () => {
+        const runBasicMissingSignaturesTests = (transaction, expectedResult) => {
             // Arrange:
             const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile, currentAccount: WalletsModel1 }, { transaction });
 
@@ -779,28 +779,19 @@ describe('components/TransactionList/TransactionRow', () => {
 
             // Act + Assert:
             // @ts-ignore - for private method
-            expect(vm.hasMissSignatures).toBe(expectedResult);
+            expect(vm.hasMissingSignatures).toBe(expectedResult);
         };
 
         test('returns false when transaction type is not aggregate bonded', () => {
-            runBasicMissSignaturesTests(mockTransferTransaction(), false);
+            runBasicMissingSignaturesTests(createMockTransferTransaction(), false);
         });
 
         test('returns false when aggregate bonded transaction signed', () => {
-            runBasicMissSignaturesTests(mockAggregateTransaction(), false);
+            runBasicMissingSignaturesTests(createMockAggregateTransaction(), false);
         });
 
         test('returns true when aggregate bonded transaction missing signature', () => {
-            // Arrange:
-            const mockTransactionInfo = new TransactionInfo(
-                UInt64.fromUint(2),
-                0,
-                '1',
-                '3A4B36EDFD3126D3911916497A9243336AE56B60B5CEB9410B4191D7338201CD',
-                '0'.repeat(64),
-            );
-
-            runBasicMissSignaturesTests(mockAggregateTransaction([], [], mockTransactionInfo), true);
+            runBasicMissingSignaturesTests(createMockAggregateTransaction([], [], '0'.repeat(64)), true);
         });
     });
 
@@ -812,7 +803,7 @@ describe('components/TransactionList/TransactionRow', () => {
             const vm = wrapper.vm as TransactionRowTs;
 
             // @ts-ignore - for private method
-            jest.spyOn(vm, 'hasMissSignatures', 'get').mockReturnValue(true);
+            jest.spyOn(vm, 'hasMissingSignatures', 'get').mockReturnValue(true);
             jest.spyOn(vm, 'needsCosignature');
 
             // Act:
@@ -845,7 +836,7 @@ describe('components/TransactionList/TransactionRow', () => {
             const vm = wrapper.vm as TransactionRowTs;
 
             // @ts-ignore - for private method
-            jest.spyOn(vm, 'hasMissSignatures', 'get').mockReturnValue(true);
+            jest.spyOn(vm, 'hasMissingSignatures', 'get').mockReturnValue(true);
             jest.spyOn(vm, 'needsCosignature');
 
             // Act:
