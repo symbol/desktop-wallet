@@ -32,7 +32,7 @@ export class ErrorTooltipTs extends Vue {
         if (!this.errors.length) {
             return null;
         }
-        return this.errors.shift() || null;
+        return this.errors.shift();
     }
 
     /**
