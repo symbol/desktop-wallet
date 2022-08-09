@@ -154,7 +154,7 @@ describe('components/TransactionList', () => {
     // Todo: checkUnspentHashLocks, unable test on setInterval
 
     describe('countPages', () => {
-        test('returns 0 when transactions exists', () => {
+        test('returns 0 when transaction exists', () => {
             // Arrange:
             const wrapper = getTransactionListWrapper({
                 filteredTransactions: [],
@@ -167,7 +167,7 @@ describe('components/TransactionList', () => {
             expect(vm.totalCountItems).toBe(0);
         });
 
-        test('returns page number when transactions exists', () => {
+        test('returns page number when transaction exists', () => {
             // Arrange:
             const wrapper = getTransactionListWrapper({
                 filteredTransactions: [createMockTransferTransaction(), createMockTransferTransaction()],
@@ -427,7 +427,7 @@ describe('components/TransactionList', () => {
     });
 
     describe('onCloseContactModal', () => {
-        test('set showAddContactModal to false for close contact modal', () => {
+        test('set showAddContactModal to false to close contact modal', () => {
             // Arrange:
             const wrapper = getTransactionListWrapper();
             const vm = wrapper.vm as TransactionListTs;

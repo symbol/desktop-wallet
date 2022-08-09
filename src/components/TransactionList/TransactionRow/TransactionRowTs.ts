@@ -142,7 +142,7 @@ export class TransactionRowTs extends Vue {
     /// end-region computed properties getter/setter
 
     /**
-     * Verify is optin payout transaction
+     * Returns true if the row contains an optin payout transaction.
      */
     public get isOptinPayoutTransaction(): boolean {
         if (!this.transaction) {

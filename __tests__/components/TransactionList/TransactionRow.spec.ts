@@ -99,7 +99,7 @@ describe('components/TransactionList/TransactionRow', () => {
         );
     };
 
-    const mockAccountAddressRestrictionTransaction = (restrictionAdditions: UnresolvedAddress[] = []) => {
+    const createMockAccountAddressRestrictionTransaction = (restrictionAdditions: UnresolvedAddress[] = []) => {
         return new AccountAddressRestrictionTransaction(
             NetworkType.TEST_NET,
             1,
@@ -113,7 +113,7 @@ describe('components/TransactionList/TransactionRow', () => {
         );
     };
 
-    const mockMultisigAccountModificationTransaction = (addressAdditions: UnresolvedAddress[] = []) => {
+    const createMockMultisigAccountModificationTransaction = (addressAdditions: UnresolvedAddress[] = []) => {
         return new MultisigAccountModificationTransaction(
             NetworkType.TEST_NET,
             1,
@@ -258,7 +258,7 @@ describe('components/TransactionList/TransactionRow', () => {
             // Arrange:
             const wrapper = getTransactionRowWrapper(
                 { currentProfile: testnetProfile },
-                { transaction: mockAccountAddressRestrictionTransaction() },
+                { transaction: createMockAccountAddressRestrictionTransaction() },
             );
 
             const vm = wrapper.vm as TransactionRowTs;
@@ -311,7 +311,7 @@ describe('components/TransactionList/TransactionRow', () => {
             // Arrange:
             const wrapper = getTransactionRowWrapper(
                 { currentProfile: testnetProfile },
-                { transaction: mockAccountAddressRestrictionTransaction() },
+                { transaction: createMockAccountAddressRestrictionTransaction() },
             );
 
             const vm = wrapper.vm as TransactionRowTs;
@@ -394,7 +394,7 @@ describe('components/TransactionList/TransactionRow', () => {
             expect(isAmountShowTicker).toBe(false);
         });
 
-        test('hide message icon when message does not in included transaction', () => {
+        test('hide message icon when included transaction does not have message', () => {
             // Arrange:
             const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile }, { transaction: createMockTransferTransaction() });
 
@@ -423,7 +423,7 @@ describe('components/TransactionList/TransactionRow', () => {
             runBasicMessageTests(PlainMessage.create('0'.repeat(45)), '0000000000000000000000000000000000000000...');
         });
 
-        test('display mosaic icon when mosaics list contain non network mosaic', () => {
+        test('display mosaic icon when mosaics list contains non network mosaic', () => {
             // Arrange:
             const wrapper = getTransactionRowWrapper(
                 { currentProfile: testnetProfile },
@@ -478,7 +478,7 @@ describe('components/TransactionList/TransactionRow', () => {
         });
 
         test('returns empty non network mosaic when transaction type is non transfer transaction', () => {
-            runBasicNonMosaicListTests(mockAccountAddressRestrictionTransaction(), []);
+            runBasicNonMosaicListTests(createMockAccountAddressRestrictionTransaction(), []);
         });
     });
 
@@ -574,8 +574,8 @@ describe('components/TransactionList/TransactionRow', () => {
         test("set transactionSigningFlag to false when transaction's cosigner is not required for the current account.", () => {
             // Arrange:
             const aggregateTransaction = createMockAggregateTransaction([
-                mockMultisigAccountModificationTransaction(),
-                mockAccountAddressRestrictionTransaction(),
+                createMockMultisigAccountModificationTransaction(),
+                createMockAccountAddressRestrictionTransaction(),
             ]);
 
             runBasicNeedsCosignatureTests(aggregateTransaction, false);
@@ -604,8 +604,10 @@ describe('components/TransactionList/TransactionRow', () => {
             );
 
             const aggregateTransaction = createMockAggregateTransaction([
-                mockMultisigAccountModificationTransaction([Address.createFromPublicKey(WalletsModel1.publicKey, NetworkType.TEST_NET)]),
-                mockAccountAddressRestrictionTransaction([Address.createFromRawAddress(WalletsModel2.address)]),
+                createMockMultisigAccountModificationTransaction([
+                    Address.createFromPublicKey(WalletsModel1.publicKey, NetworkType.TEST_NET),
+                ]),
+                createMockAccountAddressRestrictionTransaction([Address.createFromRawAddress(WalletsModel2.address)]),
                 accountMetadata,
                 createMockTransferTransaction(),
             ]);
@@ -701,11 +703,11 @@ describe('components/TransactionList/TransactionRow', () => {
             expect(vm.isOptinPayoutTransaction).toBe(true);
         };
 
-        test('returns true when transaction is belong optin payout (testnet)', async () => {
+        test('returns true when transaction is optin payout (testnet)', async () => {
             runIsOptinPayoutTransactionTests({ currentProfile: testnetProfile, currentAccount: WalletsModel1 });
         });
 
-        test('returns true when transaction is belong optin payout (mainnet)', async () => {
+        test('returns true when transaction is optin payout (mainnet)', async () => {
             runIsOptinPayoutTransactionTests({ currentProfile: getTestProfile('profile_mainnet'), currentAccount: WalletsModel2 });
         });
     });
@@ -766,7 +768,7 @@ describe('components/TransactionList/TransactionRow', () => {
             expect(vm.needsCosignature).not.toBeCalled();
         };
 
-        test('is called needsCosignature when transaction status confirmed', async () => {
+        test('is calls needsCosignature when transaction status confirmed', async () => {
             // Arrange:
             const aggregateTransaction = createMockAggregateTransaction();
 
@@ -805,7 +807,7 @@ describe('components/TransactionList/TransactionRow', () => {
             });
         });
 
-        test('is skip needsCosignature when transaction status failed', async () => {
+        test('is skips needsCosignature when transaction status failed', async () => {
             // Arrange:
             const aggregateTransaction = createMockAggregateTransaction();
 
