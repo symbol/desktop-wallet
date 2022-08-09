@@ -32,8 +32,19 @@ describe('TransactionList/TransactionTable', () => {
     });
 
     describe('isFetchingMoreTransactions', () => {
-        const runBasicIsFetchingMoreTransactionsTest = (wrapper, expectedResult) => {
+        const runBasicIsFetchingMoreTransactionsTest = (isFetchingTransactions, pageNumber, expectedResult) => {
             // Arrange:
+            const wrapper = getTransactionTableWrapper(
+                {
+                    isFetchingTransactions,
+                    currentConfirmedPage: {
+                        pageNumber,
+                        isLastPage: false,
+                    },
+                },
+                { transactions: [] },
+            );
+
             const vm = wrapper.vm as TransactionTableTs;
 
             // Act:
@@ -45,35 +56,15 @@ describe('TransactionList/TransactionTable', () => {
         };
 
         test('returns true when isFetchingTransactions is true and page number more than 1', () => {
-            // Arrange:
-            const wrapper = getTransactionTableWrapper(
-                {
-                    isFetchingTransactions: true,
-                    currentConfirmedPage: {
-                        pageNumber: 2,
-                        isLastPage: false,
-                    },
-                },
-                { transactions: [] },
-            );
-
-            runBasicIsFetchingMoreTransactionsTest(wrapper, true);
+            runBasicIsFetchingMoreTransactionsTest(true, 2, true);
         });
 
         test('returns false when isFetchingTransactions is false and page number less than 1', () => {
-            // Arrange:
-            const wrapper = getTransactionTableWrapper(
-                {
-                    isFetchingTransactions: false,
-                    currentConfirmedPage: {
-                        pageNumber: 1,
-                        isLastPage: false,
-                    },
-                },
-                { transactions: [] },
-            );
+            runBasicIsFetchingMoreTransactionsTest(false, 0, false);
+        });
 
-            runBasicIsFetchingMoreTransactionsTest(wrapper, false);
+        test('returns false when isFetchingTransactions is true and page number less than 1', () => {
+            runBasicIsFetchingMoreTransactionsTest(true, 0, false);
         });
     });
 
@@ -82,19 +73,28 @@ describe('TransactionList/TransactionTable', () => {
             // Arrange:
             const vm = wrapper.vm as TransactionTableTs;
 
-            // Act:
+            // Act + Assert:
             // @ts-ignore
-            const result = vm.infiniteScrollDisabled;
-
-            // Assert:
-            expect(result).toBe(expectedResult);
+            expect(vm.infiniteScrollDisabled).toBe(expectedResult);
         };
 
-        test('returns true when paginationType is not scroll', () => {
+        test('returns true when paginationType is pagination', () => {
             // Arrange:
             const wrapper = getTransactionTableWrapper(
                 {
                     isFetchingTransactions: false,
+                },
+                { transactions: [], paginationType: 'pagination' },
+            );
+
+            runBasicInfiniteScrollDisabledTest(wrapper, true);
+        });
+
+        test('returns true when paginationType is pagination with isFetchingTransactions is true', () => {
+            // Arrange:
+            const wrapper = getTransactionTableWrapper(
+                {
+                    isFetchingTransactions: true,
                 },
                 { transactions: [], paginationType: 'pagination' },
             );

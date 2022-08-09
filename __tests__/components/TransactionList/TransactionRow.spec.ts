@@ -55,17 +55,11 @@ describe('components/TransactionList/TransactionRow', () => {
     const mockSignature =
         'F4E954AEC49B99E2773A3B05273A31BE25683F852559CF11BDB61DE47195D82BC5DE9ED61C966F1668769CE782F8673E7F0C65099D967E3E806EE9AD27F3D70D';
     const mockDeadline = Deadline.createFromDTO('1');
-    const mockTransactionInfo = new TransactionInfo(
-        UInt64.fromUint(2),
-        0,
-        '1',
-        '3A4B36EDFD3126D3911916497A9243336AE56B60B5CEB9410B4191D7338201CD',
-        '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
-    );
+    const mockMerkleComponentHash = '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7';
 
     const dispatch = jest.fn();
 
-    const mockTransferTransaction = (mosaics: Mosaic[] = [], message: Message = EmptyMessage) => {
+    const createMockTransferTransaction = (mosaics: Mosaic[] = [], message: Message = EmptyMessage) => {
         return new TransferTransaction(
             NetworkType.TEST_NET,
             1,
@@ -80,10 +74,10 @@ describe('components/TransactionList/TransactionRow', () => {
         );
     };
 
-    const mockAggregateTransaction = (
+    const createMockAggregateTransaction = (
         innerTransactions: InnerTransaction[] = [],
         cosignatures: AggregateTransactionCosignature[] = [],
-        transactionInfo: TransactionInfo = mockTransactionInfo,
+        merkleComponentHash: string = mockMerkleComponentHash,
     ) => {
         return new AggregateTransaction(
             NetworkType.TEST_NET,
@@ -95,7 +89,13 @@ describe('components/TransactionList/TransactionRow', () => {
             cosignatures,
             mockSignature,
             PublicAccount.createFromPublicKey(currentSigner.publicKey, NetworkType.TEST_NET),
-            transactionInfo,
+            new TransactionInfo(
+                UInt64.fromUint(2),
+                0,
+                '1',
+                '3A4B36EDFD3126D3911916497A9243336AE56B60B5CEB9410B4191D7338201CD',
+                merkleComponentHash,
+            ),
         );
     };
 
@@ -207,75 +207,51 @@ describe('components/TransactionList/TransactionRow', () => {
     };
 
     describe('transaction icon column', () => {
-        // Todo: Currently unable return icon url.
         test('returns unconfirmed transactions icon', () => {
             // Arrange:
-            const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile }, { transaction: mockTransferTransaction() });
+            const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile }, { transaction: createMockTransferTransaction() });
 
             const vm = wrapper.vm as TransactionRowTs;
 
-            jest.spyOn(vm, 'getTransactionStatusIcon');
             jest.spyOn(vm.transaction, 'isConfirmed').mockReturnValue(false);
-            2;
 
-            // Act:
-            vm.getIcon();
-
-            // Assert:
-            expect(vm.getTransactionStatusIcon).toHaveBeenCalled();
+            // Act + Assert:
+            expect(vm.getIcon()).toBe('dashboardUnconfirmed.png');
         });
 
         test('returns confirmed outgoing transactions icon', () => {
             // Arrange:
-            const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile }, { transaction: mockTransferTransaction() });
+            const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile }, { transaction: createMockTransferTransaction() });
 
             const vm = wrapper.vm as TransactionRowTs;
 
-            jest.spyOn(vm, 'getTransactionStatusIcon');
-            jest.spyOn(vm.transaction, 'isConfirmed').mockReturnValue(true);
-
-            // Act:
-            vm.getIcon();
-
-            // Assert:
-            expect(vm.getTransactionStatusIcon).not.toHaveBeenCalled();
+            // Act + Assert:
+            expect(vm.getIcon()).toBe('outgoing.png');
         });
 
         test('returns confirmed incoming transactions icon', () => {
             // Arrange:
-            const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile }, { transaction: mockTransferTransaction() });
+            const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile }, { transaction: createMockTransferTransaction() });
 
             const vm = wrapper.vm as TransactionRowTs;
 
-            jest.spyOn(vm, 'getTransactionStatusIcon');
-            jest.spyOn(vm.transaction, 'isConfirmed').mockReturnValue(true);
             jest.spyOn(vm.view, 'isIncoming', 'get').mockReturnValue(true);
 
-            // Act:
-            vm.getIcon();
-
-            // Assert:
-            expect(vm.getTransactionStatusIcon).not.toHaveBeenCalled();
+            // Act + Assert:
+            expect(vm.getIcon()).toBe('incoming.png');
         });
 
         test('returns optin transactions icon', () => {
             // Arrange:
-            const wrapper = getTransactionRowWrapper(
-                { currentProfile: testnetProfile },
-                { transaction: mockAccountAddressRestrictionTransaction() },
-            );
+            const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile }, { transaction: createMockAggregateTransaction() });
 
             const vm = wrapper.vm as TransactionRowTs;
 
-            jest.spyOn(vm, 'getTransactionStatusIcon');
             jest.spyOn(vm.transaction, 'isConfirmed').mockReturnValue(true);
             jest.spyOn(vm, 'isOptinPayoutTransaction', 'get').mockReturnValue(true);
 
-            // Act:
-            vm.getIcon();
-
-            // Assert:
-            expect(vm.getTransactionStatusIcon).not.toHaveBeenCalled();
+            // Act + Assert:
+            expect(vm.getIcon()).toBe('optin-transaction.png');
         });
 
         test('returns other transactions icon', () => {
@@ -287,19 +263,50 @@ describe('components/TransactionList/TransactionRow', () => {
 
             const vm = wrapper.vm as TransactionRowTs;
 
-            jest.spyOn(vm, 'getTransactionStatusIcon');
             jest.spyOn(vm.transaction, 'isConfirmed').mockReturnValue(true);
             jest.spyOn(vm, 'isOptinPayoutTransaction', 'get').mockReturnValue(false);
 
-            // Act:
-            vm.getIcon();
-
-            // Assert:
-            expect(vm.getTransactionStatusIcon).not.toHaveBeenCalled();
+            // Act + Assert:
+            expect(vm.getIcon()).toBe('account-restriction.png');
         });
     });
 
     describe('transaction amount column', () => {
+        const runBasicMessageTests = (message, expectMessagePayload) => {
+            // Arrange:
+            const wrapper = getTransactionRowWrapper(
+                { currentProfile: testnetProfile },
+                {
+                    transaction: createMockTransferTransaction([new Mosaic(new MosaicId('461A9811A1DC1FBB'), UInt64.fromUint(0))], message),
+                },
+            );
+
+            const vm = wrapper.vm as TransactionRowTs;
+
+            // Act:
+            const hasMessage = vm.hasMessage();
+
+            // Assert:
+            expect(hasMessage).toBe(true);
+            expect(vm.messagePayload).toBe(expectMessagePayload);
+            expect(wrapper.find('.extend-icon-holder.message').exists()).toBe(true);
+        };
+
+        const runBasicNonMosaicListTests = (transaction, expectedResult) => {
+            const wrapper = getTransactionRowWrapper(
+                { currentProfile: testnetProfile, networkMosaicId: networkMock.currency.mosaicIdHex, balanceMosaics: mosaicsMock },
+                { transaction },
+            );
+
+            const vm = wrapper.vm as TransactionRowTs;
+
+            // Act:
+            const mosaicList = vm.nonNativeMosaicList();
+
+            // Act + Assert:
+            expect(mosaicList).toEqual(expectedResult);
+        };
+
         test('returns amount 0 when transaction type non transfer transactions', () => {
             // Arrange:
             const wrapper = getTransactionRowWrapper(
@@ -311,7 +318,7 @@ describe('components/TransactionList/TransactionRow', () => {
 
             // Act:
             const amount = vm.getAmount();
-            const color = vm.getAmountColor();
+            const amountColor = vm.getAmountColor();
             const mosaicId = vm.getAmountMosaicId();
             const hasMessage = vm.hasMessage();
             const hasNetworkMosaic = vm.hasNetworkMosaic();
@@ -319,7 +326,7 @@ describe('components/TransactionList/TransactionRow', () => {
 
             // Assert:
             expect(amount).toBe(0);
-            expect(color).toBe(undefined);
+            expect(amountColor).toBe(undefined);
             expect(mosaicId).toBe(undefined);
             expect(hasMessage).toBe(false);
             expect(hasNetworkMosaic).toBe(false);
@@ -332,7 +339,7 @@ describe('components/TransactionList/TransactionRow', () => {
             const wrapper = getTransactionRowWrapper(
                 { currentProfile: testnetProfile, networkMosaicId: networkMock.currency.mosaicIdHex },
                 {
-                    transaction: mockTransferTransaction([
+                    transaction: createMockTransferTransaction([
                         new Mosaic(new MosaicId(networkMock.currency.mosaicIdHex), UInt64.fromUint(100)),
                     ]),
                 },
@@ -344,14 +351,14 @@ describe('components/TransactionList/TransactionRow', () => {
 
             // Act:
             const amount = vm.getAmount();
-            const color = vm.getAmountColor();
+            const amountColor = vm.getAmountColor();
             const hasNetworkMosaic = vm.hasNetworkMosaic();
             const getAmountMosaicId = vm.getAmountMosaicId();
             const isAmountShowTicker = vm.isAmountShowTicker();
 
             // Assert:
             expect(amount).toBe(-100);
-            expect(color).toBe('red');
+            expect(amountColor).toBe('red');
             expect(hasNetworkMosaic).toBe(true);
             expect(getAmountMosaicId.toHex()).toBe('091F837E059AE13C');
             expect(isAmountShowTicker).toBe(false);
@@ -362,7 +369,7 @@ describe('components/TransactionList/TransactionRow', () => {
             const wrapper = getTransactionRowWrapper(
                 { currentProfile: testnetProfile, networkMosaicId: networkMock.currency.mosaicIdHex },
                 {
-                    transaction: mockTransferTransaction([
+                    transaction: createMockTransferTransaction([
                         new Mosaic(new MosaicId(networkMock.currency.mosaicIdHex), UInt64.fromUint(100)),
                     ]),
                 },
@@ -387,32 +394,9 @@ describe('components/TransactionList/TransactionRow', () => {
             expect(isAmountShowTicker).toBe(false);
         });
 
-        test('display message icon', () => {
+        test('hide message icon when message does not in included transaction', () => {
             // Arrange:
-            const wrapper = getTransactionRowWrapper(
-                { currentProfile: testnetProfile },
-                {
-                    transaction: mockTransferTransaction(
-                        [new Mosaic(new MosaicId('461A9811A1DC1FBB'), UInt64.fromUint(0))],
-                        PlainMessage.create('test-message'),
-                    ),
-                },
-            );
-
-            const vm = wrapper.vm as TransactionRowTs;
-
-            // Act:
-            const hasMessage = vm.hasMessage();
-
-            // Assert:
-            expect(hasMessage).toBe(true);
-            expect(vm.messagePayload).toBe('test-message');
-            expect(wrapper.find('.extend-icon-holder.message').exists()).toBe(true);
-        });
-
-        test('hide message icon', () => {
-            // Arrange:
-            const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile }, { transaction: mockTransferTransaction() });
+            const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile }, { transaction: createMockTransferTransaction() });
 
             const vm = wrapper.vm as TransactionRowTs;
 
@@ -424,45 +408,27 @@ describe('components/TransactionList/TransactionRow', () => {
             expect(wrapper.find('.extend-icon-holder.message').exists()).toBe(false);
         });
 
-        test('returns encrypted message title when message type is EncryptedMessage', () => {
+        test('display message icon when message type is PlanMessage', () => {
+            runBasicMessageTests(PlainMessage.create('test-message'), 'test-message');
+        });
+
+        test('display message icon when message type is EncryptedMessage', () => {
             // Arrange:
             const recipient = getTestAccount('remoteTestnetRecipient');
 
-            const wrapper = getTransactionRowWrapper(
-                { currentProfile: testnetProfile },
-                {
-                    transaction: mockTransferTransaction(
-                        [],
-                        EncryptedMessage.create('test', recipient.publicAccount, currentSigner.privateKey),
-                    ),
-                },
-            );
-
-            const vm = wrapper.vm as TransactionRowTs;
-
-            // Act + Assert:
-            expect(vm.messagePayload).toBe('Encrypted message');
+            runBasicMessageTests(EncryptedMessage.create('test', recipient.publicAccount, currentSigner.privateKey), 'Encrypted message');
         });
 
         test('returns message payload in truncate when message length over 40', () => {
-            // Arrange:
-            const wrapper = getTransactionRowWrapper(
-                { currentProfile: testnetProfile },
-                { transaction: mockTransferTransaction([], PlainMessage.create('0'.repeat(45))) },
-            );
-
-            const vm = wrapper.vm as TransactionRowTs;
-
-            // Act + Assert:
-            expect(vm.messagePayload).toBe('0000000000000000000000000000000000000000...');
+            runBasicMessageTests(PlainMessage.create('0'.repeat(45)), '0000000000000000000000000000000000000000...');
         });
 
-        test('display mosaic icon when mosaic excluded network mosaic', () => {
+        test('display mosaic icon when mosaics list contain non network mosaic', () => {
             // Arrange:
             const wrapper = getTransactionRowWrapper(
                 { currentProfile: testnetProfile },
                 {
-                    transaction: mockTransferTransaction([new Mosaic(new MosaicId('461A9811A1DC1FBB'), UInt64.fromUint(0))]),
+                    transaction: createMockTransferTransaction([new Mosaic(new MosaicId('461A9811A1DC1FBB'), UInt64.fromUint(0))]),
                 },
             );
 
@@ -493,41 +459,26 @@ describe('components/TransactionList/TransactionRow', () => {
 
             const mosaics = mockMosaic.map((mosaic) => new Mosaic(new MosaicId(mosaic.idHex), UInt64.fromUint(mosaic.amount)));
 
-            const wrapper = getTransactionRowWrapper(
-                { currentProfile: testnetProfile, networkMosaicId: networkMock.currency.mosaicIdHex, balanceMosaics: mosaicsMock },
-                { transaction: mockTransferTransaction(mosaics) },
-            );
-
-            const vm = wrapper.vm as TransactionRowTs;
-
-            // Act:
-            const mosaicList = vm.nonNativeMosaicList();
-
-            // Act + Assert:
-            expect(mosaicList).toEqual([
+            runBasicNonMosaicListTests(createMockTransferTransaction(mosaics), [
                 { name: '461A9811A1DC1FBB', relativeAmount: '100' },
                 { name: '119C8A107ACADD5F', relativeAmount: '0.1' },
                 { name: '2C56C7D764F17B09', relativeAmount: '100' },
                 { name: '5B2DCC92C3B0FFD8', relativeAmount: '100' },
                 { name: '4A1D5DA123186518', relativeAmount: '100' },
             ]);
-            expect(mosaicList.length).toBe(5);
+        });
+
+        test('returns empty non network mosaic when mosaics only contain network mosaic', () => {
+            // Arrange:
+            const mockMosaic = [{ idHex: networkMock.currency.mosaicIdHex, amount: 100 }];
+
+            const mosaics = mockMosaic.map((mosaic) => new Mosaic(new MosaicId(mosaic.idHex), UInt64.fromUint(mosaic.amount)));
+
+            runBasicNonMosaicListTests(createMockTransferTransaction(mosaics), []);
         });
 
         test('returns empty non network mosaic when transaction type is non transfer transaction', () => {
-            // Arrange:
-            const wrapper = getTransactionRowWrapper(
-                { currentProfile: testnetProfile },
-                { transaction: mockAccountAddressRestrictionTransaction() },
-            );
-
-            const vm = wrapper.vm as TransactionRowTs;
-
-            // Act:
-            const mosaicList = vm.nonNativeMosaicList();
-
-            // Act + Assert:
-            expect(mosaicList).toEqual([]);
+            runBasicNonMosaicListTests(mockAccountAddressRestrictionTransaction(), []);
         });
     });
 
@@ -574,7 +525,7 @@ describe('components/TransactionList/TransactionRow', () => {
 
             const wrapper = getTransactionRowWrapper(
                 { currentProfile: testnetProfile, currentAccount: WalletsModel1, currentAccountMultisigInfo: multisigAccountInfo },
-                { transaction: mockAggregateTransaction() },
+                { transaction: createMockAggregateTransaction() },
             );
 
             const vm = wrapper.vm as TransactionRowTs;
@@ -587,11 +538,11 @@ describe('components/TransactionList/TransactionRow', () => {
             expect(vm.transactionSigningFlag).toBe(false);
         });
 
-        test('set transactionSigningFlag to false when non condition meet', () => {
+        test('set transactionSigningFlag to false when transaction type is not aggregate bonded', () => {
             // Arrange:
             const wrapper = getTransactionRowWrapper(
                 { currentProfile: testnetProfile, currentAccount: WalletsModel1 },
-                { transaction: mockAggregateTransaction() },
+                { transaction: createMockTransferTransaction() },
             );
 
             const vm = wrapper.vm as TransactionRowTs;
@@ -606,8 +557,8 @@ describe('components/TransactionList/TransactionRow', () => {
 
         test('set transactionSigningFlag to false when transaction signed by current account', () => {
             // Arrange:
-            const aggregateTransaction = mockAggregateTransaction(
-                [mockTransferTransaction()],
+            const aggregateTransaction = createMockAggregateTransaction(
+                [createMockTransferTransaction()],
                 [
                     new AggregateTransactionCosignature(
                         '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E068007B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
@@ -620,9 +571,9 @@ describe('components/TransactionList/TransactionRow', () => {
             runBasicNeedsCosignatureTests(aggregateTransaction, false);
         });
 
-        test('set transactionSigningFlag to false when cosignerAddresses excluded current account', () => {
+        test("set transactionSigningFlag to false when transaction's cosigner is not required for the current account.", () => {
             // Arrange:
-            const aggregateTransaction = mockAggregateTransaction([
+            const aggregateTransaction = createMockAggregateTransaction([
                 mockMultisigAccountModificationTransaction(),
                 mockAccountAddressRestrictionTransaction(),
             ]);
@@ -630,9 +581,9 @@ describe('components/TransactionList/TransactionRow', () => {
             runBasicNeedsCosignatureTests(aggregateTransaction, false);
         });
 
-        test('set transactionSigningFlag to false when cosignList excluded current account', () => {
+        test("set transactionSigningFlag to false when transaction's signer is not required for the current account", () => {
             // Arrange:
-            const aggregateTransaction = mockAggregateTransaction();
+            const aggregateTransaction = createMockAggregateTransaction();
 
             runBasicNeedsCosignatureTests(aggregateTransaction, false);
         });
@@ -652,11 +603,11 @@ describe('components/TransactionList/TransactionRow', () => {
                 PublicAccount.createFromPublicKey(currentSigner.publicKey, NetworkType.TEST_NET),
             );
 
-            const aggregateTransaction = mockAggregateTransaction([
+            const aggregateTransaction = createMockAggregateTransaction([
                 mockMultisigAccountModificationTransaction([Address.createFromPublicKey(WalletsModel1.publicKey, NetworkType.TEST_NET)]),
                 mockAccountAddressRestrictionTransaction([Address.createFromRawAddress(WalletsModel2.address)]),
                 accountMetadata,
-                mockTransferTransaction(),
+                createMockTransferTransaction(),
             ]);
 
             runBasicNeedsCosignatureTests(aggregateTransaction, true);
@@ -706,12 +657,12 @@ describe('components/TransactionList/TransactionRow', () => {
         const preparedData = [
             {
                 transactionType: 'other transaction deadline in 6 hours',
-                mockTransaction: mockTransferTransaction(),
+                mockTransaction: createMockTransferTransaction(),
                 expectedDate: '2019-11-10 22:00:00',
             },
             {
                 transactionType: 'Aggregate Bond transaction deadline in 48 hours',
-                mockTransaction: mockAggregateTransaction(),
+                mockTransaction: createMockAggregateTransaction(),
                 expectedDate: '2019-11-09 00:00:00',
             },
             {
@@ -725,11 +676,11 @@ describe('components/TransactionList/TransactionRow', () => {
     });
 
     describe('isOptinPayoutTransaction', () => {
-        test('returns false when transaction is not exist', async () => {
+        test('returns false when transaction does not exist', async () => {
             // Arrange:
             const wrapper = getTransactionRowWrapper(
                 { currentProfile: testnetProfile, currentAccount: WalletsModel1 },
-                { transaction: mockTransferTransaction() },
+                { transaction: createMockTransferTransaction() },
             );
 
             const vm = wrapper.vm as TransactionRowTs;
@@ -742,7 +693,7 @@ describe('components/TransactionList/TransactionRow', () => {
 
         const runIsOptinPayoutTransactionTests = (state) => {
             // Arrange:
-            const wrapper = getTransactionRowWrapper(state, { transaction: mockAggregateTransaction() });
+            const wrapper = getTransactionRowWrapper(state, { transaction: createMockAggregateTransaction() });
 
             const vm = wrapper.vm as TransactionRowTs;
 
@@ -761,7 +712,7 @@ describe('components/TransactionList/TransactionRow', () => {
 
     test('returns explorer url link', () => {
         // Arrange:
-        const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile }, { transaction: mockTransferTransaction() });
+        const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile }, { transaction: createMockTransferTransaction() });
         const vm = wrapper.vm as TransactionRowTs;
 
         // Act + Assert:
@@ -796,7 +747,7 @@ describe('components/TransactionList/TransactionRow', () => {
     });
 
     describe('fetchTransaction', () => {
-        const runBasicFetchTransactionTests = async (transaction, expectedResult) => {
+        const runBasicFetchTransactionTests = async (transaction) => {
             // Arrange:
             const wrapper = getTransactionRowWrapper({ currentProfile: testnetProfile, currentAccount: WalletsModel1 }, { transaction });
 
@@ -812,13 +763,12 @@ describe('components/TransactionList/TransactionRow', () => {
 
             // Assert:
             // @ts-ignore - for private method
-            expect(vm.transactionSigningFlag).toBe(expectedResult);
             expect(vm.needsCosignature).not.toBeCalled();
         };
 
-        test('needsCosignature called when transaction status confirmed', async () => {
+        test('is called needsCosignature when transaction status confirmed', async () => {
             // Arrange:
-            const aggregateTransaction = mockAggregateTransaction();
+            const aggregateTransaction = createMockAggregateTransaction();
 
             dispatch.mockImplementation((type: string) => {
                 if (type === 'transaction/FETCH_TRANSACTION_STATUS') {
@@ -846,11 +796,18 @@ describe('components/TransactionList/TransactionRow', () => {
             // Assert:
             // @ts-ignore - for private method
             expect(vm.needsCosignature).toHaveBeenCalled();
+            expect(vm.$store.dispatch).toHaveBeenCalledWith('transaction/FETCH_TRANSACTION_STATUS', {
+                transactionHash: aggregateTransaction.transactionInfo.hash,
+            });
+            expect(vm.$store.dispatch).toHaveBeenCalledWith('transaction/LOAD_TRANSACTION_DETAILS', {
+                group: TransactionGroupEnum.Confirmed,
+                transactionHash: aggregateTransaction.transactionInfo.hash,
+            });
         });
 
-        test('needsCosignature not called  when transaction status failed', async () => {
+        test('is skip needsCosignature when transaction status failed', async () => {
             // Arrange:
-            const aggregateTransaction = mockAggregateTransaction();
+            const aggregateTransaction = createMockAggregateTransaction();
 
             dispatch.mockImplementation((type: string) => {
                 if (type === 'transaction/FETCH_TRANSACTION_STATUS') {
@@ -860,12 +817,12 @@ describe('components/TransactionList/TransactionRow', () => {
                 }
             });
 
-            await runBasicFetchTransactionTests(aggregateTransaction, true);
+            await runBasicFetchTransactionTests(aggregateTransaction);
         });
 
         test('throw error when fetch transaction failed', async () => {
             // Arrange:
-            const aggregateTransaction = mockAggregateTransaction();
+            const aggregateTransaction = createMockAggregateTransaction();
 
             dispatch.mockImplementation((type: string) => {
                 if (type === 'transaction/FETCH_TRANSACTION_STATUS') {
@@ -873,7 +830,7 @@ describe('components/TransactionList/TransactionRow', () => {
                 }
             });
 
-            await runBasicFetchTransactionTests(aggregateTransaction, true);
+            await runBasicFetchTransactionTests(aggregateTransaction);
         });
     });
 });

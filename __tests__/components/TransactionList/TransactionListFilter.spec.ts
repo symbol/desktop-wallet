@@ -116,7 +116,6 @@ describe('TransactionList/TransactionListFilters', () => {
         vm.downloadTransactions();
 
         // Assert:
-        expect(wrapper.emitted('downloadTransactions')).toBeTruthy();
         expect(wrapper.emitted('downloadTransactions')).toEqual([[]]);
     });
 });
