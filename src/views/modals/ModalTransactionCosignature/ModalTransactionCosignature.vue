@@ -87,11 +87,15 @@
                                         </template>
                                         <template v-else>
                                             <img class="icon" src="@/views/resources/img/icons/Signature.svg" alt />
-                                            <div class="title-text">{{ $t('transaction_needs_cosignature_unknown_prohibited') }}
-                                                <div>
-                                                    <a class="link button-plain" target="_blank" :href="symbolDocsScamAlertUrl">{{
-                                                        $t('link_docs_scam')
-                                                    }}</a>
+                                            <div class="title-text">
+                                                <div class="title-text title-text--bolder">{{ $t('transaction_needs_cosignature_unknown_prohibited_part1') }}</div>
+                                                <div class="title-text">
+                                                    {{ $t('transaction_needs_cosignature_unknown_prohibited_part2') }}
+                                                    <div>
+                                                        <a class="link button-plain" target="_blank" :href="symbolDocsScamAlertUrl">{{
+                                                            $t('link_docs_scam')
+                                                        }}</a>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="inline">
@@ -175,6 +179,13 @@
                                     </div>
                                 </div>
                             </span>
+                        </div>
+                        <div class="transaction-details-main-container">
+                            <Alert
+                                type="warning"
+                                :visible="showUnknownSignerAlert"
+                                :value="$t('sign_unknown_multisig_transactions_alert')"
+                            />
                         </div>
                         <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
                         <FormProfileUnlock

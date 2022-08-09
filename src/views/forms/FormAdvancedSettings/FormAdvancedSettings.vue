@@ -5,9 +5,17 @@
                 <form class="form-container" onsubmit="event.preventDefault()" autocomplete="off">
                     <FormRow>
                         <template v-slot:label> 
-                            {{ $t('form_label_allow_unknown_multisig_tx') }}: 
+                            {{ $t('form_label_allow_unknown_multisig_tx') }}:
+
+                                <div>
+                                    <a class="link" target="_blank" :href="symbolDocsScamAlertUrl">{{
+                                        $t('link_docs_scam')
+                                    }}</a>
+                                </div>
+             
                         </template>
                         <template v-slot:inputs>
+                            
                             <div class="inputs-container select-container">
                                 <div class="form-switch">
                                     <i-select
@@ -25,11 +33,11 @@
                                     </i-select>
                                 </div>
                             </div>
-                            <div class="inputs-container">
+                            <div class="inputs-container alert-container">
                                 <Alert
                                     type="warning"
                                     :visible="allowUnknownMultisigTransactions"
-                                    :value="$t('allow_unknown_multisig_transactions_warning')"
+                                    :value="$t('allow_unknown_multisig_transactions_alert')"
                                 />
                             </div>
                         </template>
@@ -71,6 +79,16 @@ export default class FormAdvancedSettings extends FormAdvancedSettingsTs {}
 </script>
 
 <style lang="less" scoped>
+a {
+    color: #f0f;
+    font-size: 0.15rem;
+    text-decoration: underline;
+
+    &:hover {
+        color: #f0f5;
+    }
+}
+
 .advanced-settings-container {
     display: block;
     width: 100%;
@@ -113,6 +131,10 @@ export default class FormAdvancedSettings extends FormAdvancedSettingsTs {}
 .form-switch {
     -webkit-app-region: no-drag;
     position: relative;
+}
+
+.alert-container {
+    height: auto;
 }
 
 /deep/ .form-row {
