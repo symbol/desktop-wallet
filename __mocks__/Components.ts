@@ -23,7 +23,6 @@ import VueRouter from 'vue-router';
 /// region globals
 const localVue = createLocalVue();
 localVue.use(Vuex);
-localVue.use(VueRouter);
 localVue.directive('click-outside', clickOutsideDirective);
 
 /// end-region globals
@@ -44,7 +43,6 @@ export const getComponent = (
     stubsData?: { [field: string]: any },
     dispatch?: () => any,
     mocks?: { [field: string]: any },
-    useRouter?: boolean,
 ) => {
     // - format store module overwrites
     const modules = Object.keys(storeModules)
@@ -78,10 +76,6 @@ export const getComponent = (
 
     if (stubsData && Object.keys(stubsData).length) {
         params['stubs'] = stubsData;
-    }
-
-    if (useRouter) {
-        params['router'] = new VueRouter();
     }
 
     // - mount component

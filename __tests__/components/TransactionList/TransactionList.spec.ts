@@ -126,9 +126,11 @@ describe('components/TransactionList', () => {
         const mocks = {
             $route: {
                 params: {
-                    transaction: false,
+                    transaction: undefined,
                 },
-                fullPath: 'path',
+            },
+            $router: {
+                push: jest.fn(),
             },
         };
 
@@ -143,10 +145,9 @@ describe('components/TransactionList', () => {
             },
             state,
             props,
-            {},
-            jest.fn(),
-            null,
-            true,
+            undefined,
+            undefined,
+            mocks,
         );
     };
 
