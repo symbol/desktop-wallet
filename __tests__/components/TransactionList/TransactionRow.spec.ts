@@ -36,7 +36,7 @@ import {
 } from 'symbol-sdk';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
-describe('TransactionList/TransactionRow', () => {
+describe('components/TransactionList/TransactionRow', () => {
     beforeEach(() => {
         process.env.KEYS_FINANCE = JSON.stringify({
             testnet: [
@@ -750,11 +750,11 @@ describe('TransactionList/TransactionRow', () => {
             expect(vm.isOptinPayoutTransaction).toBe(true);
         };
 
-        test('returns true when transaction announced by NGL (testnet)', async () => {
+        test('returns true when transaction is belong optin payout (testnet)', async () => {
             runIsOptinPayoutTransactionTests({ currentProfile: testnetProfile, currentAccount: WalletsModel1 });
         });
 
-        test('returns true when transaction announced by NGL (mainnet)', async () => {
+        test('returns true when transaction is belong optin payout (mainnet)', async () => {
             runIsOptinPayoutTransactionTests({ currentProfile: getTestProfile('profile_mainnet'), currentAccount: WalletsModel2 });
         });
     });

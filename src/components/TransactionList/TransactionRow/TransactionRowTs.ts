@@ -142,7 +142,7 @@ export class TransactionRowTs extends Vue {
     /// end-region computed properties getter/setter
 
     /**
-     * Returns whether aggregate bonded transaction is announced by NGL Finance
+     * Verify is optin payout transaction
      */
     public get isOptinPayoutTransaction(): boolean {
         if (!this.transaction) {

@@ -38,7 +38,7 @@ describe('TransactionList/TransactionListFilters', () => {
         const vm = wrapper.vm as TransactionListFiltersTs;
 
         // Act:
-        // @ts-ignore
+        // @ts-ignore - this is a private method
         vm.onSignerSelectorChange(address);
 
         // Assert:
@@ -55,7 +55,7 @@ describe('TransactionList/TransactionListFilters', () => {
         const vm = wrapper.vm as TransactionListFiltersTs;
 
         // Act:
-        // @ts-ignore
+        // @ts-ignore - for protected method
         vm.onSignerSelectorChange();
 
         // Assert:
