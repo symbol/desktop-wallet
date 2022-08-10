@@ -110,7 +110,6 @@ describe('components/DurationInput', () => {
         expect(wrapper.emitted('input')[0][0]).toBe(chosenValue);
     });
 
-    // TODO test for validationRule
     test('duration validation rule when the target asset is mosaic', async () => {
         // Arrange:
         const wrapper = getDurationInputWrapper({ targetAsset: 'mosaic', value: '10000' });

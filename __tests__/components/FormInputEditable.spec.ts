@@ -86,6 +86,7 @@ describe('components/FormInputEditable', () => {
         // Assert:
         expect(component.value).toBe(newAccountName);
         expect(props.onEdit).toHaveBeenCalledWith(newAccountName);
+        expect(component.editing).toBe(false);
     };
 
     test('complete editing with success when value is not empty', async () => {
@@ -117,5 +118,27 @@ describe('components/FormInputEditable', () => {
         // Assert:
         expect(component.editing).toBe(false);
         expect(props.onEdit).not.toHaveBeenCalled();
+        expect(props.value).toBe(props.value);
+    });
+
+    test('it is in editing mode', async () => {
+        // Arrange:
+        const props = {
+            value: 'myAccountName',
+            model: {},
+            label: 'myLabel',
+            rules: '',
+            onEdit: jest.fn(),
+        };
+        const newAccountName = 'myNewAccountName';
+        const wrapper = getFormInputEditableWrapper(props);
+        const component = wrapper.vm as FormInputEditableTs;
+
+        // Act:
+        await wrapper.find('button').trigger('click');
+        await wrapper.find('input').setValue(newAccountName);
+
+        // Assert:
+        expect(component.editing).toBe(true);
     });
 });

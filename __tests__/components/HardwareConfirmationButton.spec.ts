@@ -80,13 +80,8 @@ describe('components/HardwareConfirmationButton', () => {
         const expectedResult = { success: false, payload: { error: 'PAYLOAD_ERROR' } };
         jest.spyOn(TrezorConnect, 'nemSignTransaction').mockResolvedValue(expectedResult);
 
-        // Act:
-        try {
-            await component.signTransaction(transaction).toPromise();
-        } catch (error) {
-            // Assert:
-            expect(error.message).toBe(expectedResult.payload.error);
-        }
+        // Act + Assert:
+        expect(component.signTransaction(transaction).toPromise()).rejects.toThrow(expectedResult.payload.error);
     });
 
     test('throws not implemented error when cosign a transaction', async () => {
@@ -95,11 +90,6 @@ describe('components/HardwareConfirmationButton', () => {
         const component = wrapper.vm as HardwareConfirmationButtonTs;
 
         // Act + Assert:
-        try {
-            await component.signCosignatureTransaction(undefined).toPromise();
-        } catch (error) {
-            expect(error.message).toBe('Not Implemented!!!');
-        }
-        // expect(component.signCosignatureTransaction(undefined).toPromise()).rejects.toThrow(new Error('Not Implemented!!!'));
+        expect(component.signCosignatureTransaction(undefined).toPromise()).rejects.toThrow('Not Implemented!!!');
     });
 });
