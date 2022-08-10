@@ -366,7 +366,7 @@ describe('components/TransactionList', () => {
             // Assert:
             expect(vm.activePartialTransaction).toEqual(undefined);
             expect(vm.hasCosignatureModal).toBe(false);
-            expect(vm.$route.name).toBe('dashboard.index');
+            expect(vm.$router.push).toHaveBeenCalledWith({ name: 'dashboard.index' });
         });
     });
 

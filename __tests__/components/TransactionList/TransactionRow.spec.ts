@@ -768,7 +768,7 @@ describe('components/TransactionList/TransactionRow', () => {
             expect(vm.needsCosignature).not.toBeCalled();
         };
 
-        test('is calls needsCosignature when transaction status confirmed', async () => {
+        test('calls needsCosignature when transaction status confirmed', async () => {
             // Arrange:
             const aggregateTransaction = createMockAggregateTransaction();
 
@@ -807,7 +807,7 @@ describe('components/TransactionList/TransactionRow', () => {
             });
         });
 
-        test('is skips needsCosignature when transaction status failed', async () => {
+        test('skips needsCosignature when transaction status failed', async () => {
             // Arrange:
             const aggregateTransaction = createMockAggregateTransaction();
 

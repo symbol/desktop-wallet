@@ -45,7 +45,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 /// region UI plugins
 Vue.use(iView, { locale });
 Vue.use(moment as any);
-Vue.use(Router);
+
+// to avoid vue-router use in unit test
+// https://v1.test-utils.vuejs.org/guides/using-with-vue-router.html#mocking-route-and-router
+if (!process || process.env.NODE_ENV !== 'test') {
+    Vue.use(Router);
+}
+
 Vue.use(VueRx);
 Vue.use(VueNumber);
 VeeValidateSetup.initialize();
