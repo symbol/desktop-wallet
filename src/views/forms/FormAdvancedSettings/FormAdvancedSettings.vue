@@ -4,28 +4,23 @@
             <span class="advanced-settings-content">
                 <form class="form-container" onsubmit="event.preventDefault()" autocomplete="off">
                     <FormRow>
-                        <template v-slot:label> 
+                        <template v-slot:label>
                             {{ $t('form_label_allow_unknown_multisig_tx') }}:
-
-                                <div>
-                                    <a class="link" target="_blank" :href="symbolDocsScamAlertUrl">{{
-                                        $t('link_docs_scam')
-                                    }}</a>
-                                </div>
-             
+                            <div>
+                                <a class="link" target="_blank" :href="symbolDocsScamAlertUrl">{{ $t('link_docs_scam') }}</a>
+                            </div>
                         </template>
                         <template v-slot:inputs>
-                            
                             <div class="inputs-container select-container">
                                 <div class="form-switch">
                                     <i-select
-                                        v-model="allowUnknownMultisigTransactions" 
+                                        v-model="allowUnknownMultisigTransactions"
                                         class="select-size select-style"
                                         @change="onChange"
                                     >
-                                        <i-option 
-                                            v-for="({ label, value }, index) in allowUnknownMultisigTransactionsOptions" 
-                                            :key="index + label" 
+                                        <i-option
+                                            v-for="({ label, value }, index) in allowUnknownMultisigTransactionsOptions"
+                                            :key="index + label"
                                             :value="value"
                                         >
                                             {{ label }}
@@ -36,7 +31,7 @@
                             <div class="inputs-container alert-container">
                                 <Alert
                                     type="warning"
-                                    :visible="allowUnknownMultisigTransactions"
+                                    :visible="!!allowUnknownMultisigTransactions"
                                     :value="$t('allow_unknown_multisig_transactions_alert')"
                                 />
                             </div>
@@ -45,11 +40,7 @@
                 </form>
                 <div class="form-row form-row-submit">
                     <div>
-                        <button
-                            class="button-style button danger-button pl-2 pr-2 confirm-reset"
-                            type="reset"
-                            @click.prevent="reset"
-                        >
+                        <button class="button-style button danger-button pl-2 pr-2 confirm-reset" type="reset" @click.prevent="reset">
                             {{ $t('reset') }}
                         </button>
                         <button

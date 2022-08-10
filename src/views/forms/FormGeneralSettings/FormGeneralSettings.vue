@@ -1,7 +1,7 @@
 <template>
     <div class="h-100">
         <FormWrapper class="general-settings-container" :whitelisted="true">
-            <ValidationObserver class="general-settings-content" ref="observer" v-slot="{ handleSubmit }">
+            <ValidationObserver ref="observer" v-slot="{ handleSubmit }" class="general-settings-content">
                 <form class="form-container" onsubmit="event.preventDefault()" autocomplete="off">
                     <FormRow>
                         <template v-slot:label> {{ $t('form_label_default_account') }}: </template>
@@ -52,11 +52,7 @@
                 <div class="form-row form-submit">
                     <DeleteProfileButton @logout="logout" />
                     <div>
-                        <button
-                            class="button-style button danger-button pl-2 pr-2 confirm-reset"
-                            type="reset"
-                            @click.prevent="resetForm"
-                        >
+                        <button class="button-style button danger-button pl-2 pr-2 confirm-reset" type="reset" @click.prevent="resetForm">
                             {{ $t('reset') }}
                         </button>
                         <button

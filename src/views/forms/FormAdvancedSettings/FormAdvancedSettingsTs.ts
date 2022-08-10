@@ -22,7 +22,6 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 import FormLabel from '@/components/FormLabel/FormLabel.vue';
 import { SettingsModel } from '@/core/database/entities/SettingsModel';
-import { AccountModel } from '@/core/database/entities/AccountModel';
 
 @Component({
     components: {
@@ -30,19 +29,16 @@ import { AccountModel } from '@/core/database/entities/AccountModel';
         FormLabel,
         FormRow,
         FormWrapper,
-        ModalFormProfileUnlock, 
+        ModalFormProfileUnlock,
     },
     computed: {
         ...mapGetters({
             settings: 'app/settings',
-            knownAccounts: 'account/knownAccounts',
-            networkType: 'network/networkType',
         }),
     },
 })
 export class FormAdvancedSettingsTs extends Vue {
     public settings: SettingsModel;
-    public knownAccounts: AccountModel[];
     public showProfileUnlockModal: boolean = false;
     public formValues = {
         allowUnknownMultisigTransactions: false,
@@ -71,14 +67,13 @@ export class FormAdvancedSettingsTs extends Vue {
     }
 
     public reset() {
-        console.log('reset')
         Object.assign(this.formValues, this.settings);
     }
 
     public submit() {
         this.showProfileUnlockModal = true;
     }
-    
+
     public async onAccountUnlocked() {
         try {
             await this.$store.dispatch('app/SET_SETTINGS', this.formValues);

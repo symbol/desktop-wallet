@@ -178,7 +178,7 @@ export class ModalTransactionCosignatureTs extends Vue {
         }
     }
 
-    public get showUnknownSignerAlert() {
+    public get showKnownSignerAlert() {
         const signerAddressContactStatus = this.getSignerAddressContactStatus();
 
         return this.hideCosignerWarning || signerAddressContactStatus === 'white_list';
