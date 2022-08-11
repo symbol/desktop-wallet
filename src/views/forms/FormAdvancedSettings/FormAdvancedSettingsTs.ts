@@ -34,11 +34,13 @@ import { SettingsModel } from '@/core/database/entities/SettingsModel';
     computed: {
         ...mapGetters({
             settings: 'app/settings',
+            symbolDocsScamAlertUrl: 'app/symbolDocsScamAlertUrl',
         }),
     },
 })
 export class FormAdvancedSettingsTs extends Vue {
     public settings: SettingsModel;
+    public symbolDocsScamAlertUrl: string;
     public showProfileUnlockModal: boolean = false;
     public formValues = {
         allowUnknownMultisigTransactions: false,
