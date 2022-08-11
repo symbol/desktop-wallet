@@ -68,7 +68,7 @@
                                                     {{ signerAddress }}
                                                 </a>
                                             </div>
-                                            <div class="inline">
+                                            <div id="unknown-signer-form-options" class="inline">
                                                 <Button
                                                     class="button-style inverted-button right-side-button button"
                                                     html-type="submit"
@@ -87,7 +87,7 @@
                                         </template>
                                         <template v-else>
                                             <img class="icon" src="@/views/resources/img/icons/Signature.svg" alt />
-                                            <div class="title-text">
+                                            <div id="unknown-signer-warning-form-disabled" class="title-text">
                                                 <div class="title-text title-text--bolder">
                                                     {{ $t('transaction_needs_cosignature_unknown_prohibited_part1') }}
                                                 </div>

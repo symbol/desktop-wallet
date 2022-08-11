@@ -22,6 +22,7 @@ import iView from 'view-design';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import ModalTransactionCosignature from '@/views/modals/ModalTransactionCosignature/ModalTransactionCosignature.vue';
 import { ModalTransactionCosignatureTs } from '@/views/modals/ModalTransactionCosignature/ModalTransactionCosignatureTs.ts';
+import { MultisigService } from '@/services/MultisigService';
 import { WalletsModel1, getTestAccount } from '@MOCKS/Accounts';
 import { networkMock } from '@MOCKS/network';
 import { getTestProfile } from '@MOCKS/profiles';
@@ -59,7 +60,7 @@ function createAggregateBondedTransaction(signerAccount, targetAccount) {
         PlainMessage.create(''),
         NetworkType.TEST_NET,
     );
-    return AggregateTransaction.createBonded(
+    const aggregateTransaction = AggregateTransaction.createBonded(
         Deadline.create(epochAdjustment),
         [transferTransaction.toAggregate(targetAccount)],
         NetworkType.TEST_NET,
@@ -68,9 +69,19 @@ function createAggregateBondedTransaction(signerAccount, targetAccount) {
         null,
         signerAccount,
     );
+    ((aggregateTransaction as unknown) as any).transactionInfo = {
+        merkleComponentHash: '000000000000',
+    };
+
+    return aggregateTransaction;
 }
 
-function createStore(transaction: Transaction, transactionGroup: TransactionGroupEnum, addressBook: AddressBook) {
+function createStore(
+    transaction: Transaction,
+    transactionGroup: TransactionGroupEnum,
+    addressBook?: AddressBook,
+    allowUnknownMultisigTransactions?: boolean,
+) {
     const accountModule = {
         namespaced: true,
         getters: {
@@ -84,12 +95,19 @@ function createStore(transaction: Transaction, transactionGroup: TransactionGrou
                     requiredCosignatures: 0,
                 };
             },
+            multisigAccountGraph: () => [],
         },
     };
     const addressBookModule = {
         namespaced: true,
         getters: {
             getAddressBook: () => addressBook,
+        },
+    };
+    const appModule = {
+        namespaced: true,
+        getters: {
+            allowUnknownMultisigTransactions: () => allowUnknownMultisigTransactions,
         },
     };
     const transactionModule = {
@@ -123,6 +141,7 @@ function createStore(transaction: Transaction, transactionGroup: TransactionGrou
         modules: {
             account: accountModule,
             addressBook: addressBookModule,
+            app: appModule,
             network: networkModule,
             profile: profileModule,
             transaction: transactionModule,
@@ -243,5 +262,133 @@ describe('ModalTransactionCosignature', () => {
         expect(showFormBlacklistedAddress).toBe(true);
 
         wrapper.destroy();
+    });
+
+    describe('allowUnknownMultisigTransactions', () => {
+        const signerAccount = getTestAccount('cosigner1').publicAccount;
+
+        const runAllowUnknownMultisigTransactionsTest = async (
+            allowUnknownMultisigTransactions: boolean,
+            expectations: {
+                warningToBeShown: boolean;
+                formToBeShown: boolean;
+            },
+        ) => {
+            // Arrange:
+            const addressBook = new AddressBook([]);
+            const aggregateTransaction = createAggregateBondedTransaction(signerAccount, currentAccount);
+            const store = createStore(aggregateTransaction, TransactionGroupEnum.Partial, addressBook, allowUnknownMultisigTransactions);
+
+            // Act:
+            const wrapper = shallowMount(ModalTransactionCosignature, {
+                localVue,
+                i18n,
+                store,
+                router,
+            });
+            const component = wrapper.vm as ModalTransactionCosignatureTs;
+            await wrapper.setProps({ transactionHash });
+            await new Promise(process.nextTick);
+            const warningElement = wrapper.find('#unknown-signer-warning-form-disabled');
+            const formElement = wrapper.find('#unknown-signer-form-options');
+
+            // Assert:
+            expect(component.allowUnknownMultisigTransactions).toBe(expectations.formToBeShown);
+            expect(warningElement.exists()).toBe(expectations.warningToBeShown);
+            expect(formElement.exists()).toBe(expectations.formToBeShown);
+        };
+
+        test('render form when positive', async () => {
+            // Arrange
+            const allowUnknownMultisigTransactions = true;
+            const expectations = {
+                warningToBeShown: false,
+                formToBeShown: true,
+            };
+
+            // Act + Assert:
+            await runAllowUnknownMultisigTransactionsTest(allowUnknownMultisigTransactions, expectations);
+        });
+
+        test('render warning when negative', async () => {
+            // Arrange
+            const allowUnknownMultisigTransactions = false;
+            const expectations = {
+                warningToBeShown: true,
+                formToBeShown: false,
+            };
+
+            // Act + Assert:
+            await runAllowUnknownMultisigTransactionsTest(allowUnknownMultisigTransactions, expectations);
+        });
+    });
+
+    describe('showKnownSignerAlert', () => {
+        const signerAccount = getTestAccount('cosigner1').publicAccount;
+
+        const runKnownSignerAlertTest = async (
+            addressBook: AddressBook,
+            isAddressInMultisigTree: boolean,
+            expectAlertToBeShown: boolean,
+        ) => {
+            // Arrange:
+            const aggregateTransaction = createAggregateBondedTransaction(signerAccount, currentAccount);
+            const store = createStore(aggregateTransaction, TransactionGroupEnum.Partial, addressBook);
+            jest.spyOn(MultisigService, 'isAddressInMultisigTree').mockReturnValue(isAddressInMultisigTree);
+
+            // Act:
+            const wrapper = shallowMount(ModalTransactionCosignature, {
+                localVue,
+                i18n,
+                store,
+                router,
+            });
+            const component = wrapper.vm as ModalTransactionCosignatureTs;
+            await wrapper.setProps({ transactionHash });
+            await new Promise(process.nextTick);
+            const alertElement = wrapper.find('alert-stub');
+            const isAlertRendered = !!alertElement.attributes('visible');
+
+            // Assert:
+            expect(component.showKnownSignerAlert).toBe(expectAlertToBeShown);
+            expect(isAlertRendered).toBe(expectAlertToBeShown);
+        };
+
+        test('positive when signer is a member of multisig tree', async () => {
+            // Arrange
+            const addressBook = new AddressBook([]);
+            const isAddressInMultisigTree = true;
+            const expectAlertToBeShown = true;
+
+            // Act + Assert:
+            await runKnownSignerAlertTest(addressBook, isAddressInMultisigTree, expectAlertToBeShown);
+        });
+
+        test('positive when signer is whitelisted', async () => {
+            // Arrange
+            const addressBook = new AddressBook([
+                {
+                    id: '0',
+                    name: 'Signer',
+                    address: signerAccount.address.plain(),
+                    isBlackListed: false,
+                },
+            ]);
+            const isAddressInMultisigTree = false;
+            const expectAlertToBeShown = true;
+
+            // Act + Assert:
+            await runKnownSignerAlertTest(addressBook, isAddressInMultisigTree, expectAlertToBeShown);
+        });
+
+        test('negative when signer is not a member of multisig tree and not whitelisted', async () => {
+            // Arrange
+            const addressBook = new AddressBook([]);
+            const isAddressInMultisigTree = false;
+            const expectAlertToBeShown = false;
+
+            // Act + Assert:
+            await runKnownSignerAlertTest(addressBook, isAddressInMultisigTree, expectAlertToBeShown);
+        });
     });
 });

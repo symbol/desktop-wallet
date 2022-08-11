@@ -60,11 +60,11 @@ describe('forms/FormAdvancedSettings', () => {
             const component = wrapper.vm as FormAdvancedSettingsTs;
             const alertElement = wrapper.find('alert-stub');
             const controlValue = component.allowUnknownMultisigTransactions;
-            const isAlertrendered = !!alertElement.attributes('visible');
+            const isAlertRendered = !!alertElement.attributes('visible');
 
             // Assert:
             expect(controlValue).toBe(expectations.controlValue);
-            expect(isAlertrendered).toBe(expectations.alertToBeRendered);
+            expect(isAlertRendered).toBe(expectations.alertToBeRendered);
         };
 
         test('render negative value', () => {

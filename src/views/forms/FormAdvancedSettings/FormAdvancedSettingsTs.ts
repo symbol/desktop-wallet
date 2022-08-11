@@ -16,12 +16,12 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { NotificationType } from '@/core/utils/NotificationType';
-import Alert from '@/components/Alert/Alert.vue';
-import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
-import FormRow from '@/components/FormRow/FormRow.vue';
-import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
-import FormLabel from '@/components/FormLabel/FormLabel.vue';
 import { SettingsModel } from '@/core/database/entities/SettingsModel';
+import Alert from '@/components/Alert/Alert.vue';
+import FormLabel from '@/components/FormLabel/FormLabel.vue';
+import FormRow from '@/components/FormRow/FormRow.vue';
+import FormWrapper from '@/components/FormWrapper/FormWrapper.vue';
+import ModalFormProfileUnlock from '@/views/modals/ModalFormProfileUnlock/ModalFormProfileUnlock.vue';
 
 @Component({
     components: {
