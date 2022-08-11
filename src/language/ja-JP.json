@@ -1134,7 +1134,7 @@
     "word": "文字",
     "ws_connection_failed": "ウォレットはSymbolチェーン上のアカウントに関するアクティビティを監視できません。別のノードを選択してみてください。",
     "x_seconds": "{seconds} 秒",
-    "sign_unknown_multisig_transactions_alert": "取引は元に戻すことができないため、すべての金額と受取人のアドレスを慎重に確認してください。",
+    "sign_known_multisig_transactions_alert": "取引は元に戻すことができないため、すべての金額と受取人のアドレスを慎重に確認してください。",
     "allow_unknown_multisig_transactions_alert": "警告: あなたが署名すると、あなたの資金を不明なアドレス(アカウント)に送るマルチシグ（連署）トランザクションを誰でも開始することができます。",
     "transaction_cosignature_warning_dont_sign": "あなたがそれを理解する場合にのみそれに署名してください。 そうでなければ、それはあなたのすべての資金の損失につながる可能性があります。",
     "transaction_cosignature_warning_unknown_cosigner": "あなたが作成したものではないトランザクションに署名をしようとしています。悪意のあるトランザクションの場合、資産を全て失う恐れがあります。トランザクションは取り消す事が出来ない為、送信する総量とそれを受け取るアドレスを慎重に確認してください。",

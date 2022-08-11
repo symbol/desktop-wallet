@@ -183,7 +183,7 @@
                             </span>
                         </div>
                         <div class="transaction-details-main-container">
-                            <Alert type="warning" :visible="showKnownSignerAlert" :value="$t('sign_unknown_multisig_transactions_alert')" />
+                            <Alert type="warning" :visible="showKnownSignerAlert" :value="$t('sign_known_multisig_transactions_alert')" />
                         </div>
                         <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
                         <FormProfileUnlock
