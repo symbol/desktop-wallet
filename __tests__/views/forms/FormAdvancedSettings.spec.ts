@@ -90,6 +90,24 @@ describe('forms/FormAdvancedSettings', () => {
             // Act + Assert:
             runAllowUnknownMultisigTransactionsTest(settingsValue, expectations);
         });
+
+        test('render options', async () => {
+            // Arrange:
+            const expectedOptions = [
+                { value: 0, label: 'Disallow' },
+                { value: 1, label: 'Allow' },
+            ];
+
+            // Act:
+            const wrapper = getAccountMultisigGraphWrapper(false);
+            const optionElements = wrapper.findAll('i-option');
+
+            // Assert:
+            optionElements.wrappers.forEach((option, index) => {
+                expect(option.text()).toBe(expectedOptions[index].label);
+                expect(option.attributes('value')).toBe(expectedOptions[index].value.toString());
+            });
+        });
     });
 
     describe('onChange()', () => {
@@ -153,7 +171,7 @@ describe('forms/FormAdvancedSettings', () => {
             mockDispatch: jest.Mock,
             expectations: {
                 dispatchCalls: [string, any][];
-                eventsToBeEmitted: [string, any][];
+                eventsToBeEmitted: Record<string, any[]>;
             },
         ) => {
             // Act:
@@ -165,6 +183,7 @@ describe('forms/FormAdvancedSettings', () => {
 
             // Assert:
             expect(mockDispatch.mock.calls).toEqual(expectations.dispatchCalls);
+            expect(wrapper.emitted()).toEqual(expectations.eventsToBeEmitted);
         };
 
         test('update store and emit submit events', async () => {
@@ -176,7 +195,10 @@ describe('forms/FormAdvancedSettings', () => {
                     ['app/SET_SETTINGS', formValues],
                     ['notification/ADD_SUCCESS', NotificationType.SUCCESS_SETTINGS_UPDATED],
                 ] as [string, any][],
-                eventsToBeEmitted: [['submit', formValues], ['close']] as [string, any][],
+                eventsToBeEmitted: {
+                    submit: [[formValues]],
+                    close: [[]],
+                },
             };
 
             // Act + Assert:
@@ -185,14 +207,14 @@ describe('forms/FormAdvancedSettings', () => {
 
         test('handle error', async () => {
             // Arrange:
-            const mockDispatch = jest.fn().mockRejectedValue(null);
+            const mockDispatch = jest.fn().mockRejectedValueOnce(null);
             const formValues = {};
             const expectations = {
                 dispatchCalls: [
                     ['app/SET_SETTINGS', formValues],
                     ['notification/ADD_ERROR', 'An error happened, please try again.'],
                 ] as [string, any][],
-                eventsToBeEmitted: [] as [string, any][],
+                eventsToBeEmitted: {},
             };
 
             // Act + Assert:
