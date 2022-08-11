@@ -22,7 +22,7 @@
                 />
 
                 <!-- Mosaic icon for non native mosaics. -->
-                <div v-if="hasNonNativeMosaic()" class="extend-icon-holder">
+                <div v-if="hasNonNativeMosaic()" class="extend-icon-holder mosaic-icon">
                     <Tooltip placement="right">
                         <img :src="getMosaicsIcon()" />
                         <div slot="content">
@@ -39,7 +39,7 @@
                 </div>
 
                 <!-- Message icon on transaction list -->
-                <div v-if="hasMessage()" class="extend-icon-holder">
+                <div v-if="hasMessage()" class="extend-icon-holder message">
                     <Tooltip placement="right">
                         <img :src="getEnvelopeIcon()" />
                         <div slot="content">
@@ -55,7 +55,7 @@
         <!-- FOURTH COLUMN -->
         <div class="confirmation-cell">
             {{ getHeight() }}
-            <Tooltip v-if="hasMissSignatures && !transactionSigningFlag" :content="$t('transaction_signed')" placement="top">
+            <Tooltip v-if="hasMissingSignatures && !transactionSigningFlag" :content="$t('transaction_signed')" placement="top">
                 <Icon type="md-done-all" size="17" class="coloring" />
             </Tooltip>
         </div>

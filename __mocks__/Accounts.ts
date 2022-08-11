@@ -26,13 +26,28 @@ export const account1Params = {
     password: new Password('password1'),
 };
 
+export const account2Params = {
+    accountName: 'account2_name',
+    privateKey: '3BEA9A8E6A38178E270B65480316452DC4AB42A4B5D70523D6399DFD1876AF3B',
+    networkType: NetworkType.TEST_NET,
+    password: new Password('password2'),
+};
+
 export const account1 = Account.createFromPrivateKey(account1Params.privateKey, account1Params.networkType);
+export const account2 = Account.createFromPrivateKey(account2Params.privateKey, account2Params.networkType);
 
 export const simpleWallet1 = SimpleWallet.createFromPrivateKey(
     account1Params.accountName,
     account1Params.password,
     account1Params.privateKey,
     account1Params.networkType,
+);
+
+export const simpleWallet2 = SimpleWallet.createFromPrivateKey(
+    account2Params.accountName,
+    account2Params.password,
+    account2Params.privateKey,
+    account2Params.networkType,
 );
 
 export const WalletsModel1: AccountModel = {
@@ -52,11 +67,11 @@ export const WalletsModel2: AccountModel = {
     id: 'someId2',
     node: '',
     profileName: 'profile1',
-    name: account1Params.accountName,
+    name: account2Params.accountName,
     type: AccountType.SEED,
-    address: simpleWallet1.address.plain(),
-    publicKey: account1.publicKey,
-    encryptedPrivateKey: simpleWallet1.encryptedPrivateKey,
+    address: simpleWallet2.address.plain(),
+    publicKey: account2.publicKey,
+    encryptedPrivateKey: simpleWallet2.encryptedPrivateKey,
     path: "m/44'/1'/1'/0'/0'",
     isMultisig: false,
 };

@@ -88,9 +88,9 @@ export class TransactionListFiltersTs extends Vue {
      * @protected
      */
     protected onSelectBlackListed() {
-        const blacklistFilter: boolean = this.isBlackListFilterActivated;
-        this.$store.commit('transaction/isBlackListFilterActivated', !this.isBlackListFilterActivated);
-        if (!blacklistFilter) {
+        const blacklistFilter: boolean = !this.isBlackListFilterActivated;
+        this.$store.commit('transaction/isBlackListFilterActivated', blacklistFilter);
+        if (blacklistFilter) {
             const blackListed = this.addressBook.getBlackListedContacts();
             this.$store.commit('transaction/filterTransactions', {
                 filterOption: null,

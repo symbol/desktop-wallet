@@ -193,9 +193,6 @@ export class TransactionListTs extends Vue {
 
     /// region computed properties getter/setter
     public get countPages(): number {
-        if (!this.filteredTransactions) {
-            return 0;
-        }
         return Math.ceil([...this.filteredTransactions].length / this.pageSize);
     }
 
@@ -234,7 +231,7 @@ export class TransactionListTs extends Vue {
     }
 
     /**
-     * Returns the transctions
+     * Returns the transactions
      * If the pagination type is (infinite) scroll then returns all
      * If the pagination type is pagination(paginated) then returns the current page txs
      *
@@ -243,13 +240,14 @@ export class TransactionListTs extends Vue {
     public getTransactions(): Transaction[] {
         const transactions = this.paginationType === 'pagination' ? this.getCurrentPageTransactions() : this.filteredTransactions;
         const blackListedContacts = this.addressBook.getBlackListedContacts();
+
         if (this.isBlackListFilterActivated) {
-            return transactions;
-        } else {
             return transactions.filter(
-                (transaction) => !blackListedContacts.some((contact) => contact.address === transaction.signer?.address.plain()),
+                (transaction) => !blackListedContacts.some((contact) => contact.address === transaction.signer.address.plain()),
             );
         }
+
+        return transactions;
     }
 
     public get hasDetailModal(): boolean {
@@ -290,14 +288,6 @@ export class TransactionListTs extends Vue {
     }
 
     /**
-     * Refresh transaction list
-     * @return {void}
-     */
-    /* public async getTransactionListByOption(filter: TransactionGroupState) {
-    this.selectedOption = filter
-  } */
-
-    /**
      * Hook called when a transaction is clicked
      * @param {Transaction} transaction
      */
@@ -324,20 +314,6 @@ export class TransactionListTs extends Vue {
 
     onCloseContactModal() {
         this.showAddContactModal = false;
-    }
-
-    /**
-     * Hook called at each page change
-     */
-    public onPageChange(page: number): void {
-        if (page === this.countPages) {
-            this.loadMore();
-        } else if (page > this.countPages) {
-            page = this.countPages;
-        } else if (page < 1) {
-            page = 1;
-        }
-        this.currentPage = page;
     }
 
     /**
