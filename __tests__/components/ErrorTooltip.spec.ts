@@ -38,37 +38,59 @@ describe('components/ErrorTooltip', () => {
         expect(wrapper.find('tooltip').exists()).toBe(true);
     });
 
-    test('field error returns null when no errors', () => {
+    test('displayed error returns null when errors undefined', () => {
         // Arrange:
         const wrapper = getErrorTooltipWrapper();
         const component = wrapper.vm as ErrorTooltipTs;
 
-        // Assert:
-        expect(component.fieldError).toBe(null);
-        expect(component.displayedError).toBe('');
+        // Act + Assert:
+        expect(component.displayedError).toBe(null);
         expect(component.errored).toBe(false);
     });
 
-    test('field error returns null when errors are empty', () => {
+    test('displayed error returns null when errors are empty', () => {
         // Arrange:
         const errors = [];
         const wrapper = getErrorTooltipWrapper(errors);
         const component = wrapper.vm as ErrorTooltipTs;
 
-        // Assert:
-        expect(component.fieldError).toBe(null);
+        // Act + Assert:
+        expect(component.displayedError).toBe(null);
+        expect(component.errored).toBe(false);
     });
 
-    test('field error returns first error from error list', () => {
+    test('displayed error returns errors as concatenated string', () => {
         // Arrange:
-        const firstErrorItem = 'error 1';
-        const errors = [firstErrorItem, 'error 2'];
+        const errors = ['error 1', 'error 2'];
         const wrapper = getErrorTooltipWrapper(errors);
         const component = wrapper.vm as ErrorTooltipTs;
 
-        // Assert:
-        expect(component.fieldError).toBe(firstErrorItem);
-        expect(component.displayedError).toBe(firstErrorItem);
+        // Act + Assert:
+        expect(component.displayedError).toBe(errors.map((err) => `* ${err}`).join('\n'));
         expect(component.errored).toBe(true);
+    });
+
+    test('displayed error filters errors that are empty strings', () => {
+        // Arrange:
+        const nonEmptyErrors = ['error 1', 'error 2'];
+        const emptyErrors = ['', ' '];
+        const errors = [...nonEmptyErrors, ...emptyErrors];
+        const wrapper = getErrorTooltipWrapper(errors);
+        const component = wrapper.vm as ErrorTooltipTs;
+
+        // Act + Assert:
+        expect(component.displayedError).toBe(nonEmptyErrors.map((err) => `* ${err}`).join('\n'));
+        expect(component.errored).toBe(true);
+    });
+
+    test('displayed error returns null when errors are empty string', () => {
+        // Arrange:
+        const errors = ['', ''];
+        const wrapper = getErrorTooltipWrapper(errors);
+        const component = wrapper.vm as ErrorTooltipTs;
+
+        // Act + Assert:
+        expect(component.displayedError).toBe(null);
+        expect(component.errored).toBe(false);
     });
 });
