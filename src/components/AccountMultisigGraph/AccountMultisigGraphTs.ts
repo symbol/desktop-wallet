@@ -67,7 +67,7 @@ export class AccountMultisigGraphTs extends Vue {
 
         const tree: TreeNode[] = [];
         const hashTable = {};
-        const sortedMultisigAccountGraphInfo = this.multisigAccountGraphInfo.sort((a, b) =>
+        const sortedMultisigAccountGraphInfo = [...this.multisigAccountGraphInfo].sort((a, b) =>
             a.accountAddress.plain() > b.accountAddress.plain() ? 1 : b.accountAddress.plain() > a.accountAddress.plain() ? -1 : 0,
         );
         sortedMultisigAccountGraphInfo.forEach((multisigAccountInfo) => {
