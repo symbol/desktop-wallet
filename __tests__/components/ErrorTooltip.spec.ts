@@ -66,20 +66,18 @@ describe('components/ErrorTooltip', () => {
         const component = wrapper.vm as ErrorTooltipTs;
 
         // Act + Assert:
-        expect(component.displayedError).toBe(errors.map((err) => `* ${err}`).join('\n'));
+        expect(component.displayedError).toBe('* error 1\n* error 2');
         expect(component.errored).toBe(true);
     });
 
-    test('displayed error filters errors that are empty strings', () => {
+    test('displayed error trims errors and filters that are empty strings', () => {
         // Arrange:
-        const nonEmptyErrors = ['error 1', 'error 2'];
-        const emptyErrors = ['', ' '];
-        const errors = [...nonEmptyErrors, ...emptyErrors];
+        const errors = ['error 1', 'error 2 ', ' error 3 ', ' ', ''];
         const wrapper = getErrorTooltipWrapper(errors);
         const component = wrapper.vm as ErrorTooltipTs;
 
         // Act + Assert:
-        expect(component.displayedError).toBe(nonEmptyErrors.map((err) => `* ${err}`).join('\n'));
+        expect(component.displayedError).toBe('* error 1\n* error 2\n* error 3');
         expect(component.errored).toBe(true);
     });
 

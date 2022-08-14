@@ -33,7 +33,7 @@ export class ErrorTooltipTs extends Vue {
         if (!filteredList.length) {
             return null;
         }
-        return filteredList.map((err) => `* ${err}`).join('\n');
+        return filteredList.map((err) => `* ${err.trim()}`).join('\n');
     }
 
     /**
