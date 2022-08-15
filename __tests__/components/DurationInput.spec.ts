@@ -15,9 +15,12 @@
  */
 import DurationInput from '@/components/DurationInput/DurationInput.vue';
 import { DurationInputTs } from '@/components/DurationInput/DurationInputTs';
+import { networkConfig } from '@/config';
 import { StandardValidationRules } from '@/core/validation/StandardValidationRules';
 import i18n from '@/language/index';
+import { NetworkState } from '@/store/Network';
 import { createLocalVue, mount } from '@vue/test-utils';
+import { NetworkType } from 'symbol-sdk';
 import { ValidationProvider } from 'vee-validate';
 import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
@@ -35,21 +38,25 @@ describe('components/DurationInput', () => {
     const networkConfiguration = { blockGenerationTargetTime: 30 };
     const mockNetworkStore = {
         namespaced: true,
-        state: { networkConfiguration },
+        state: { networkType: undefined, networkConfiguration },
         getters: {
-            networkConfiguration: (state) => {
-                return state.networkConfiguration;
-            },
+            networkType: (state) => state.networkType,
+            networkConfiguration: (state) => state.networkConfiguration,
         },
     };
-    const getDurationInputWrapper = (props?: DurationInputProps) => {
+    const getDurationInputWrapper = (props?: DurationInputProps, networkStateChange?: NetworkState) => {
         const localVue = createLocalVue();
         localVue.component('ValidationProvider', ValidationProvider);
         localVue.use(Vuex);
         localVue.use(VueI18n);
+        const effectiveMockNetworkStore = { ...mockNetworkStore };
+        effectiveMockNetworkStore.state = { ...effectiveMockNetworkStore.state, ...networkStateChange };
+
         const store = new Vuex.Store({
             modules: {
-                network: mockNetworkStore,
+                network: {
+                    ...effectiveMockNetworkStore,
+                },
             },
         });
         const options = {
@@ -100,9 +107,69 @@ describe('components/DurationInput', () => {
         const chosenValue = '20000';
         const wrapper = getDurationInputWrapper({ showRelativeTime: true, targetAsset: 'namespace', value: '10000' });
         const component = wrapper.vm as DurationInputTs;
+
+        // Act:
         component.chosenValue = chosenValue;
 
         // Assert:
         expect(wrapper.emitted('input')[0][0]).toBe(chosenValue);
+    });
+
+    test('duration validation rule when the target asset is mosaic', async () => {
+        // Arrange:
+        const wrapper = getDurationInputWrapper({ targetAsset: 'mosaic', value: '10000' });
+        const component = wrapper.vm as DurationInputTs;
+
+        // Act:
+        const durationValidationRule = component.validationRule;
+
+        // Assert:
+        expect(durationValidationRule).toContain(
+            `max_value:${networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.maxMosaicDuration}`,
+        );
+    });
+
+    test('duration validation rule when the target asset is namespace', async () => {
+        // Arrange:
+        const wrapper = getDurationInputWrapper({ targetAsset: 'namespace', value: '10000' });
+        const component = wrapper.vm as DurationInputTs;
+
+        // Act:
+        const durationValidationRule = component.validationRule;
+
+        // Assert:
+        expect(durationValidationRule).toContain(
+            `min_value:${
+                networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.minNamespaceDuration /
+                networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.blockGenerationTargetTime
+            }`,
+        );
+    });
+
+    test('effective network configuration is default given no network configuration found in the store', () => {
+        // Arrange + Act:
+        const wrapper = getDurationInputWrapper();
+        const component = wrapper.vm as DurationInputTs;
+
+        // Act + Assert:
+        expect(component.effectiveNetworkConfiguration).toEqual(networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults);
+    });
+
+    test('effective network configuration is merge of network configuration from store and default configs', () => {
+        // Arrange + Act:
+        const minNamespaceDurationFromStore = 1296000;
+        const minNamespaceDurationFromDefault = networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults.minNamespaceDuration;
+        const networkState = {
+            networkConfiguration: {
+                ...networkConfig[NetworkType.MAIN_NET].networkConfigurationDefaults,
+                minNamespaceDuration: minNamespaceDurationFromStore,
+            },
+        };
+        const wrapper = getDurationInputWrapper({ targetAsset: 'namespace', value: '10000' }, networkState as NetworkState);
+        const component = wrapper.vm as DurationInputTs;
+
+        // Act + Assert:
+        expect(component.effectiveNetworkConfiguration.minNamespaceDuration).toEqual(minNamespaceDurationFromStore);
+        expect(component.effectiveNetworkConfiguration.minNamespaceDuration).not.toEqual(minNamespaceDurationFromDefault);
     });
 });

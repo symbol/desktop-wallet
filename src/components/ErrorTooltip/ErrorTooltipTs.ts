@@ -1,4 +1,4 @@
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component
 export class ErrorTooltipTs extends Vue {
@@ -15,24 +15,25 @@ export class ErrorTooltipTs extends Vue {
     @Prop() errors!: string[];
 
     /**
-     * Error message shown in the tooltip
-     * @var {string}
-     */
-    displayedError = '';
-
-    /**
-     * The string of the first error message
+     * The string representation of the error messages
+     * i.e.
+     * * Error 1
+     * * Error 2
      * @readonly
      * @type {string}
      */
-    get fieldError(): string | null {
+    get displayedError(): string | null {
         if (!this.errors) {
             return null;
         }
         if (!this.errors.length) {
             return null;
         }
-        return this.errors.shift() || null;
+        const filteredList = this.errors.filter((err) => err.trim() !== '');
+        if (!filteredList.length) {
+            return null;
+        }
+        return filteredList.map((err) => `* ${err.trim()}`).join('\n');
     }
 
     /**
@@ -41,19 +42,6 @@ export class ErrorTooltipTs extends Vue {
      * @type {boolean}
      */
     get errored(): boolean {
-        return this.fieldError !== null;
-    }
-
-    /**
-     * Sets the string shown in the tooltip
-     * (To avoid an ugly-looking behaviour,
-     * it must not switch to a falsy value or an empty string)
-     * @param {string} newValue
-     */
-    @Watch('fieldError', { immediate: true })
-    onFieldErrorChanged(newValue: string) {
-        if (newValue && newValue !== '') {
-            this.displayedError = newValue;
-        }
+        return this.displayedError !== null;
     }
 }
