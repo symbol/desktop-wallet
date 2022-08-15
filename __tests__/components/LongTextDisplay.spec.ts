@@ -36,6 +36,7 @@ describe('components/LongTextDisplay', () => {
 
     describe('lastCharsCount', () => {
         test('rightPartSize is less than text length', () => {
+            // Arrange:
             const props = {
                 rightPartSize: 2,
                 text: '123',
@@ -48,6 +49,7 @@ describe('components/LongTextDisplay', () => {
         });
 
         test('rightPartSize is greater than text length', () => {
+            // Arrange:
             const props = {
                 rightPartSize: 3,
                 text: '12',
@@ -62,6 +64,7 @@ describe('components/LongTextDisplay', () => {
 
     describe('leftPart', () => {
         test('rightPartSize is less than text length', () => {
+            // Arrange:
             const props = {
                 rightPartSize: 2,
                 text: '123456789',
@@ -74,6 +77,7 @@ describe('components/LongTextDisplay', () => {
         });
 
         test('rightPartSize is greater than text length', () => {
+            // Arrange:
             const props = {
                 rightPartSize: 10,
                 text: '123456789',
@@ -88,6 +92,7 @@ describe('components/LongTextDisplay', () => {
 
     describe('rightPart', () => {
         test('rightPartSize is less than text length', () => {
+            // Arrange:
             const props = {
                 rightPartSize: 2,
                 text: '123456789',
@@ -100,6 +105,7 @@ describe('components/LongTextDisplay', () => {
         });
 
         test('rightPartSize is greater than text length', () => {
+            // Arrange:
             const props = {
                 rightPartSize: 10,
                 text: '123456789',
