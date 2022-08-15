@@ -124,7 +124,7 @@ describe('components/TransactionDetails/TransactionOptinPayoutDetails', () => {
     };
 
     describe('referenceInnerTransactions', () => {
-        const runBasicReferenceInnerTransactionsTests = (currentAccount, innerTransactions) => {
+        const runNoReferenceInnerTransactionsTests = (currentAccount, innerTransactions) => {
             // Arrange:
             const wrapper = getTransactionOptinPayoutDetailsWrapper({
                 currentAccount,
@@ -134,6 +134,9 @@ describe('components/TransactionDetails/TransactionOptinPayoutDetails', () => {
             // Act + Assert:
             // @ts-ignore
             expect(wrapper.vm.referenceInnerTransactions).toEqual([]);
+            // @ts-ignore
+            expect(wrapper.vm.hasTransfers).toBe(false);
+            expect(wrapper.find('table').exists()).toBe(false);
         };
 
         test('returns transaction when transfer transaction included mosaic', () => {
@@ -152,43 +155,24 @@ describe('components/TransactionDetails/TransactionOptinPayoutDetails', () => {
             // Assert:
             expect(transactions.length).toBe(1);
             expect(transactions[0]).toEqual(transferTransaction);
+            // @ts-ignore
+            expect(wrapper.vm.hasTransfers).toBe(true);
+            expect(wrapper.find('table').exists()).toBe(true);
         });
 
         test('returns an empty array when transaction type is not transfer transaction', () => {
-            runBasicReferenceInnerTransactionsTests(WalletsModel1, [createMockMultisigAccountModificationTransaction()]);
+            runNoReferenceInnerTransactionsTests(WalletsModel1, [createMockMultisigAccountModificationTransaction()]);
         });
 
         test('returns an empty array when the transfer transaction does not include mosaic', () => {
-            runBasicReferenceInnerTransactionsTests(WalletsModel1, [createMockTransferTransaction()]);
+            runNoReferenceInnerTransactionsTests(WalletsModel1, [createMockTransferTransaction()]);
         });
 
         test("returns an empty array when the transaction's recipient is not current account", () => {
-            runBasicReferenceInnerTransactionsTests(WalletsModel2, [createMockTransferTransaction()]);
-        });
-    });
-
-    describe('hasTransfers', () => {
-        const runBasicHasTransfersTests = (innerTransaction, expectedResult) => {
-            // Arrange:
-            const wrapper = getTransactionOptinPayoutDetailsWrapper({
-                currentAccount: WalletsModel1,
-                transaction: createMockAggregateTransaction(innerTransaction),
-            });
-
-            // Act + Assert:
-            // @ts-ignore
-            expect(wrapper.vm.hasTransfers).toBe(expectedResult);
-            expect(wrapper.find('table').exists()).toBe(expectedResult);
-        };
-
-        test('returns true when inner transactions is not empty', () => {
             // Arrange:
             const transferTransaction = createMockTransferTransaction([new Mosaic(new MosaicId('461A9811A1DC1FBB'), UInt64.fromUint(0))]);
 
-            runBasicHasTransfersTests([transferTransaction], true);
-        });
-        test('returns false when inner transactions is empty', () => {
-            runBasicHasTransfersTests([], false);
+            runNoReferenceInnerTransactionsTests(WalletsModel2, [transferTransaction]);
         });
     });
 
@@ -253,13 +237,6 @@ describe('components/TransactionDetails/TransactionOptinPayoutDetails', () => {
                 description: 'Success! Your opt-in payment is complete.',
             });
         });
-
-        test('renders pending amount and description text when completed is false', async () => {
-            await runBasicDisplayLabelTests(false, {
-                amount: 'The amount you will receive:',
-                description: 'Your opt-in payment is being processed. You will receive the XYM coins, when this transaction is confirmed',
-            });
-        });
     });
 
     describe('transferredMosaics', () => {
@@ -299,6 +276,7 @@ describe('components/TransactionDetails/TransactionOptinPayoutDetails', () => {
             // Act + Assert:
             // @ts-ignore
             expect(wrapper.vm.amount).toEqual(expectedResult);
+            expect(wrapper.findComponent(MosaicAmountDisplay)).toBeDefined();
         };
 
         test('returns 0 when transferredMosaics is empty', () => {
@@ -310,21 +288,6 @@ describe('components/TransactionDetails/TransactionOptinPayoutDetails', () => {
             const mockMosaic = new Mosaic(new MosaicId('461A9811A1DC1FBB'), UInt64.fromUint(10));
 
             runBasicAmountTests([mockMosaic], UInt64.fromUint(10));
-        });
-    });
-
-    describe('amount component', () => {
-        test('renders MosaicAmountDisplay when amount is not null', () => {
-            // Arrange:
-            const wrapper = getTransactionOptinPayoutDetailsWrapper({
-                currentAccount: WalletsModel1,
-                transaction: createMockAggregateTransaction([
-                    createMockTransferTransaction([new Mosaic(new MosaicId('461A9811A1DC1FBB'), UInt64.fromUint(10))]),
-                ]),
-            });
-
-            // Act + Assert:
-            expect(wrapper.findComponent(MosaicAmountDisplay)).toBeDefined();
         });
 
         test('hide MosaicAmountDisplay when amount is null', () => {
@@ -385,6 +348,7 @@ describe('components/TransactionDetails/TransactionOptinPayoutDetails', () => {
 
             if (expectedResult.length > 0) {
                 expect(addressComponent.text()).toBe(expectedResult[0]);
+                expect(addressComponent.exists()).toBe(true);
             } else {
                 expect(addressComponent.exists()).toBe(false);
             }

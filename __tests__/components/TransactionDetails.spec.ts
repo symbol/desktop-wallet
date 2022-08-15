@@ -37,33 +37,14 @@ import { getTestAccount, WalletsModel1 } from '@MOCKS/Accounts';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 
 describe('components/TransactionDetails', () => {
-    const getTransactionDetailRowWrapper = (props = {}) => {
-        const mockNetworkStore = {
-            namespaced: true,
-            state: { networkConfiguration: undefined },
-            getters: {
-                networkConfiguration: () => Object.assign(new NetworkConfigurationModel(), { epochAdjustment: 1573430400 }),
-            },
-        };
-
-        return getComponent(
-            TransactionDetails,
-            {
-                network: mockNetworkStore,
-            },
-            {},
-            props,
-            {},
-            jest.fn(),
-        );
-    };
-
     const currentSigner = getTestAccount('remoteTestnet');
 
     const mockSignature =
         'F4E954AEC49B99E2773A3B05273A31BE25683F852559CF11BDB61DE47195D82BC5DE9ED61C966F1668769CE782F8673E7F0C65099D967E3E806EE9AD27F3D70D';
     const mockDeadline = Deadline.createFromDTO('1');
     const mockMerkleComponentHash = '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7';
+
+    const dispatch = jest.fn();
 
     const createMockTransferTransaction = (mosaics: Mosaic[] = [], message: Message = EmptyMessage) => {
         return new TransferTransaction(
@@ -104,10 +85,31 @@ describe('components/TransactionDetails', () => {
         );
     };
 
+    const getTransactionDetailsWrapper = (props = {}) => {
+        const mockNetworkStore = {
+            namespaced: true,
+            state: { networkConfiguration: undefined },
+            getters: {
+                networkConfiguration: () => Object.assign(new NetworkConfigurationModel(), { epochAdjustment: 1573430400 }),
+            },
+        };
+
+        return getComponent(
+            TransactionDetails,
+            {
+                network: mockNetworkStore,
+            },
+            {},
+            props,
+            {},
+            dispatch,
+        );
+    };
+
     describe('views', () => {
         const runBasicTransactionDetailViewTests = (transaction, { expectedDetailSectionTitleDisplay, expectedNumberOfDetailView }) => {
             // Arrange:
-            const wrapper = getTransactionDetailRowWrapper({
+            const wrapper = getTransactionDetailsWrapper({
                 transaction,
             });
 
@@ -119,7 +121,7 @@ describe('components/TransactionDetails', () => {
 
         test('returns empty when transaction does not exists', () => {
             // Arrange:
-            const wrapper = getTransactionDetailRowWrapper({});
+            const wrapper = getTransactionDetailsWrapper({});
 
             // Act + Assert:
             expect(wrapper.find('.transaction-details-main-container').exists()).toBe(false);
@@ -148,7 +150,7 @@ describe('components/TransactionDetails', () => {
             // Arrange:
             const mockTransaction = createMockAggregateTransaction([createMockTransferTransaction()]);
 
-            const wrapper = getTransactionDetailRowWrapper({
+            const wrapper = getTransactionDetailsWrapper({
                 transaction: mockTransaction,
             });
 
@@ -159,12 +161,21 @@ describe('components/TransactionDetails', () => {
 
             // Assert:
             expect(vm.aggregateTransaction).toEqual(mockTransaction);
+            expect(vm.$store.dispatch).not.toBeCalledWith('transaction/LOAD_TRANSACTION_DETAILS');
         });
 
         test("store dispatch 'transaction/LOAD_TRANSACTION_DETAILS' when inner transactions is missing", async () => {
             // Arrange:
-            const wrapper = getTransactionDetailRowWrapper({
-                transaction: createMockAggregateTransaction(),
+            const mockTransaction = createMockAggregateTransaction();
+
+            const wrapper = getTransactionDetailsWrapper({
+                transaction: mockTransaction,
+            });
+
+            dispatch.mockImplementation((type: string) => {
+                if (type === 'transaction/LOAD_TRANSACTION_DETAILS') {
+                    return Promise.resolve(mockTransaction);
+                }
             });
 
             const vm = wrapper.vm as TransactionDetailsTs;
@@ -177,6 +188,7 @@ describe('components/TransactionDetails', () => {
                 group: 'confirmed',
                 transactionHash: '3A4B36EDFD3126D3911916497A9243336AE56B60B5CEB9410B4191D7338201CD',
             });
+            expect(vm.aggregateTransaction).toEqual(mockTransaction);
         });
 
         test('skip set aggregateTransaction property when inner transaction and transactionInfo is missing', async () => {
@@ -193,7 +205,7 @@ describe('components/TransactionDetails', () => {
                 PublicAccount.createFromPublicKey(currentSigner.publicKey, NetworkType.TEST_NET),
             );
 
-            const wrapper = getTransactionDetailRowWrapper({
+            const wrapper = getTransactionDetailsWrapper({
                 transaction: mockTransaction,
             });
 
@@ -204,6 +216,7 @@ describe('components/TransactionDetails', () => {
 
             // Assert:
             expect(vm.aggregateTransaction).toEqual(null);
+            expect(vm.$store.dispatch).not.toBeCalledWith('transaction/LOAD_TRANSACTION_DETAILS');
         });
     });
 });
