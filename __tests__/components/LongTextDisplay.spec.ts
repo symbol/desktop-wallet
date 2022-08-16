@@ -35,7 +35,7 @@ describe('components/LongTextDisplay', () => {
     };
 
     describe('lastCharsCount', () => {
-        test('rightPartSize is less than text length', () => {
+        test('return rightPartSize when rightPartSize is less than text length', () => {
             // Arrange:
             const props = {
                 rightPartSize: 2,
@@ -48,7 +48,7 @@ describe('components/LongTextDisplay', () => {
             runGettersTest(props, getterName, expectedValue);
         });
 
-        test('rightPartSize is greater than text length', () => {
+        test('return text length when rightPartSize is greater than text length', () => {
             // Arrange:
             const props = {
                 rightPartSize: 3,
@@ -63,7 +63,7 @@ describe('components/LongTextDisplay', () => {
     });
 
     describe('leftPart', () => {
-        test('rightPartSize is less than text length', () => {
+        test('return truncated text string when rightPartSize is less than text length', () => {
             // Arrange:
             const props = {
                 rightPartSize: 2,
@@ -76,7 +76,7 @@ describe('components/LongTextDisplay', () => {
             runGettersTest(props, getterName, expectedValue);
         });
 
-        test('rightPartSize is greater than text length', () => {
+        test('return empty text string when rightPartSize is greater than text length', () => {
             // Arrange:
             const props = {
                 rightPartSize: 10,
@@ -91,7 +91,7 @@ describe('components/LongTextDisplay', () => {
     });
 
     describe('rightPart', () => {
-        test('rightPartSize is less than text length', () => {
+        test('return truncated text string when rightPartSize is less than text length', () => {
             // Arrange:
             const props = {
                 rightPartSize: 2,
@@ -104,7 +104,7 @@ describe('components/LongTextDisplay', () => {
             runGettersTest(props, getterName, expectedValue);
         });
 
-        test('rightPartSize is greater than text length', () => {
+        test('return full text string when rightPartSize is greater than text length', () => {
             // Arrange:
             const props = {
                 rightPartSize: 10,

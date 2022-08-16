@@ -41,39 +41,43 @@ describe('components/LogoutButton', () => {
         expect(spanElement.text()).toBe(expectedText);
     });
 
-    test('handle click', async () => {
-        // Arrange:
-        const mockLogout = jest.fn();
+    describe('handle click', () => {
+        test('call logout()', async () => {
+            // Arrange:
+            const mockLogout = jest.fn();
 
-        // Act:
-        const wrapper = getLogoutButtonWrapper();
-        const component = wrapper.vm as LogoutButtonTs;
-        component.logout = mockLogout;
-        component.$mount();
-        await wrapper.find('a').trigger('click');
+            // Act:
+            const wrapper = getLogoutButtonWrapper();
+            const component = wrapper.vm as LogoutButtonTs;
+            component.logout = mockLogout;
+            component.$mount();
+            await wrapper.find('a').trigger('click');
 
-        // Assert:
-        expect(mockLogout).toBeCalledTimes(1);
+            // Assert:
+            expect(mockLogout).toBeCalledTimes(1);
+        });
     });
 
-    test('logout()', async () => {
-        // Arrange:
-        const mockDispatch = jest.fn();
-        const mockRouterPush = jest.fn();
-        const expectedActionToBeDispatched = 'profile/LOG_OUT';
-        const expectedRouteToBePushed = 'profiles.login';
+    describe('logout()', () => {
+        test('dispatch profile/LOG_OUT action and navigate to profiles.login route', async () => {
+            // Arrange:
+            const mockDispatch = jest.fn();
+            const mockRouterPush = jest.fn();
+            const expectedActionToBeDispatched = 'profile/LOG_OUT';
+            const expectedRouteToBePushed = 'profiles.login';
 
-        // Act:
-        const wrapper = getLogoutButtonWrapper();
-        const component = wrapper.vm as LogoutButtonTs;
-        component.$store.dispatch = mockDispatch;
-        (component.$router as any) = {
-            push: mockRouterPush,
-        };
-        await component.logout();
+            // Act:
+            const wrapper = getLogoutButtonWrapper();
+            const component = wrapper.vm as LogoutButtonTs;
+            component.$store.dispatch = mockDispatch;
+            (component.$router as any) = {
+                push: mockRouterPush,
+            };
+            await component.logout();
 
-        // Assert:
-        expect(mockDispatch).toBeCalledWith(expectedActionToBeDispatched);
-        expect(mockRouterPush).toBeCalledWith({ name: expectedRouteToBePushed });
+            // Assert:
+            expect(mockDispatch).toBeCalledWith(expectedActionToBeDispatched);
+            expect(mockRouterPush).toBeCalledWith({ name: expectedRouteToBePushed });
+        });
     });
 });
