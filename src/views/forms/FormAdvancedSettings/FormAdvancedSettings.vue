@@ -40,8 +40,8 @@
                 </form>
                 <div class="form-row form-row-submit">
                     <div>
-                        <button class="button-style button danger-button pl-2 pr-2 confirm-reset" type="reset" @click.prevent="reset">
-                            {{ $t('reset') }}
+                        <button class="button-style button danger-button pl-2 pr-2 confirm-reset" type="reset" @click.prevent="refresh">
+                            {{ $t('cancel') }}
                         </button>
                         <button
                             class="button-style inverted-button pl-2 pr-2 confirm-reset"

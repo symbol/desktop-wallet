@@ -67,7 +67,7 @@ describe('forms/FormAdvancedSettings', () => {
             expect(isAlertRendered).toBe(expectations.alertToBeRendered);
         };
 
-        test('render negative value', () => {
+        test('render disallowed value', () => {
             // Arrange:
             const settingsValue = false;
             const expectations = {
@@ -79,7 +79,7 @@ describe('forms/FormAdvancedSettings', () => {
             runAllowUnknownMultisigTransactionsTest(settingsValue, expectations);
         });
 
-        test('render positive value', () => {
+        test('render allowed value', () => {
             // Arrange:
             const settingsValue = true;
             const expectations = {
@@ -124,11 +124,11 @@ describe('forms/FormAdvancedSettings', () => {
 
             // Assert:
             expect(component.isSubmitDisabled).toBe(false);
-            expect(buttonElement.attributes('disabled')).toBeFalsy();
+            expect(buttonElement.attributes('disabled')).toBe(undefined);
         });
     });
 
-    describe('reset()', () => {
+    describe('refresh()', () => {
         test('override formValues with data from app settings', () => {
             // Arrange:
             const settingsValue = false;
@@ -139,7 +139,7 @@ describe('forms/FormAdvancedSettings', () => {
             const wrapper = getAccountMultisigGraphWrapper(settingsValue);
             const component = wrapper.vm as FormAdvancedSettingsTs;
             component.allowUnknownMultisigTransactions = controlValue;
-            component.reset();
+            component.refresh();
             const value = component.formValues.allowUnknownMultisigTransactions;
 
             // Assert:

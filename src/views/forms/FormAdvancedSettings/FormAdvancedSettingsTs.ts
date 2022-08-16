@@ -61,14 +61,14 @@ export class FormAdvancedSettingsTs extends Vue {
     }
 
     public created() {
-        this.reset();
+        this.refresh();
     }
 
     public onChange() {
         this.isSubmitDisabled = false;
     }
 
-    public reset() {
+    public refresh() {
         Object.assign(this.formValues, this.settings);
     }
 
