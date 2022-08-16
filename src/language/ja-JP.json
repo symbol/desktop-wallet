@@ -797,8 +797,6 @@
     "optin_postlaunch_tx_completed_amount": "受信した量:",
     "optin_postlaunch_tx_completed_description": "オプトイン支払いが完了しました！",
     "optin_postlaunch_tx_nis_address": "オプトイン済みのNEM NIS1アカウント",
-    "optin_postlaunch_tx_pending_amount": "受信する量:",
-    "optin_postlaunch_tx_pending_description": "オプトイン支払いが処理されています。このトランザクションが承認されるとXYMを受け取けとります。",
     "optin_postlaunch_tx_title": "ローンチ後オプトイン",
     "option_child_account": "プロファイルのシードアカウントを作成する",
     "option_hd_account": "HDアカウントを作成する",

@@ -797,8 +797,6 @@
     "optin_postlaunch_tx_completed_amount": "The amount you have received:",
     "optin_postlaunch_tx_completed_description": "Success! Your opt-in payment is complete.",
     "optin_postlaunch_tx_nis_address": "Opted-in NEM NIS1 account",
-    "optin_postlaunch_tx_pending_amount": "The amount you will receive:",
-    "optin_postlaunch_tx_pending_description": "Your opt-in payment is being processed. You will receive the XYM coins, when this transaction is confirmed",
     "optin_postlaunch_tx_title": "Post-launch opt-in",
     "option_child_account": "I want to create a seed account for my profile",
     "option_hd_account": "I want to create HD account",

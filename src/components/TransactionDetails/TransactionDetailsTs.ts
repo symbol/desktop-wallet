@@ -55,12 +55,12 @@ export class TransactionDetailsTs extends Vue {
     @Watch('transaction', { immediate: true })
     public async refreshAggregateTransaction() {
         if (this.transaction instanceof AggregateTransaction) {
-            if ((this.transaction as AggregateTransaction).innerTransactions?.length > 0) {
+            if ((this.transaction as AggregateTransaction).innerTransactions.length > 0) {
                 this.aggregateTransaction = this.transaction as AggregateTransaction;
             } else if (!!this.transaction.transactionInfo) {
                 this.aggregateTransaction = await this.$store.dispatch('transaction/LOAD_TRANSACTION_DETAILS', {
                     group: TransactionView.getTransactionStatus(this.transaction),
-                    transactionHash: this.transaction.transactionInfo?.hash,
+                    transactionHash: this.transaction.transactionInfo.hash,
                 });
             }
         }

@@ -9,13 +9,13 @@
                     {{ $t('optin_postlaunch_tx_title') }}
                 </div>
                 <div class="content-text text-description">
-                    {{ completed ? $t('optin_postlaunch_tx_completed_description') : $t('optin_postlaunch_tx_pending_description') }}
+                    {{ $t('optin_postlaunch_tx_completed_description') }}
                 </div>
                 <div v-if="hasTransfers" class="content-text">
                     <table>
                         <tr>
                             <td class="table-header-text">
-                                {{ completed ? $t('optin_postlaunch_tx_completed_amount') : $t('optin_postlaunch_tx_pending_amount') }}
+                                {{ $t('optin_postlaunch_tx_completed_amount') }}
                             </td>
                             <td class="amount-text">
                                 <MosaicAmountDisplay
@@ -102,10 +102,6 @@ export default class TransactionOptinPayoutDetails extends Vue {
 
     private get hasTransfers(): boolean {
         return !!this.referenceInnerTransactions.length;
-    }
-
-    private get completed(): boolean {
-        return TransactionView.getTransactionStatus(this.transaction) === 'confirmed';
     }
 
     private get transferredMosaics(): Array<Mosaic> {
