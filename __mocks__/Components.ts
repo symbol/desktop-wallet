@@ -43,6 +43,7 @@ export const getComponent = (
     stubsData?: { [field: string]: any },
     dispatch?: () => any,
     mocks?: { [field: string]: any },
+    slots?: { [field: string]: any },
 ) => {
     // - format store module overwrites
     const modules = Object.keys(storeModules)
@@ -68,6 +69,7 @@ export const getComponent = (
         i18n,
         localVue,
         mocks,
+        slots,
     };
 
     if (propsData && Object.keys(propsData).length) {

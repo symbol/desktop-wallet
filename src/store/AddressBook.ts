@@ -24,7 +24,7 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
 const Lock = AwaitLock.create();
 /// end-region globals
 
-type AddressBookState = {
+export type AddressBookState = {
     initialized: boolean;
     addressBook: AddressBook;
     selectedContact: IContact;
