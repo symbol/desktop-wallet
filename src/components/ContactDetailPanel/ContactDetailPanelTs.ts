@@ -119,8 +119,8 @@ export class ContactDetailPanelTs extends Vue {
         this.showDeleteConfirmModal = false;
     }
 
-    public ToggleBlackListContact() {
-        this.selectedContact.isBlackListed = !this.selectedContact?.isBlackListed;
+    public toggleBlackListContact() {
+        this.selectedContact.isBlackListed = !this.selectedContact.isBlackListed;
         this.$store.dispatch('addressBook/UPDATE_CONTACT', { id: this.selectedContact.id, contact: this.selectedContact });
         this.showBlackWhiteListModal = false;
     }
