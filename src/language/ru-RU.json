@@ -797,8 +797,6 @@
     "optin_postlaunch_tx_completed_amount": "Сумма, которую вы получили:",
     "optin_postlaunch_tx_completed_description": "Успех! Ваш опт-ин платеж завершен.",
     "optin_postlaunch_tx_nis_address": "Прошедший Опт-Ин аккаунт NEM (NIS1)",
-    "optin_postlaunch_tx_pending_amount": "Сумма, которую вы получите:",
-    "optin_postlaunch_tx_pending_description": "Ваш опт-ин платеж обрабатывается. Вы получите монеты XYM, когда эта транзакция будет подтверждена",
     "optin_postlaunch_tx_title": "Пост Лаунч Опт-Ин",
     "option_child_account": "Я хочу создать новый сид аккаунт, для своего профиля",
     "option_hd_account": "Я хочу создать HD аккаунт",

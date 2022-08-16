@@ -797,8 +797,6 @@
     "optin_postlaunch_tx_completed_amount": "您已收到的金额：",
     "optin_postlaunch_tx_completed_description": "恭喜！您的选择加入付款已完成。",
     "optin_postlaunch_tx_nis_address": "选择加入NEM NIS1账户",
-    "optin_postlaunch_tx_pending_amount": "您将会收到的金额：",
-    "optin_postlaunch_tx_pending_description": "您的选择加入正在处理中。当交易确认后，您会获得相应的XYM。",
     "optin_postlaunch_tx_title": "发布后选择加入",
     "option_child_account": "我想为我的个人资料创建一个种子帐户",
     "option_hd_account": "我想创建一个超确定性帐户",

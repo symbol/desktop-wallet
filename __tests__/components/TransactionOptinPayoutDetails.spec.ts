@@ -123,6 +123,26 @@ describe('components/TransactionDetails/TransactionOptinPayoutDetails', () => {
         );
     };
 
+    describe('component title', () => {
+        test('renders title, amount and description label', async () => {
+            // Arrange:
+            const wrapper = getTransactionOptinPayoutDetailsWrapper({
+                currentAccount: WalletsModel1,
+                transaction: createMockAggregateTransaction(),
+            });
+
+            // @ts-ignore
+            jest.spyOn(wrapper.vm, 'hasTransfers', 'get').mockReturnValue(true);
+
+            await wrapper.vm.$nextTick();
+
+            // Act + Assert:
+            expect(wrapper.find('.title-text').text()).toBe('Post-launch opt-in');
+            expect(wrapper.find('.content-text.text-description').text()).toBe('Success! Your opt-in payment is complete.');
+            expect(wrapper.find('table .table-header-text').text()).toBe('The amount you have received:');
+        });
+    });
+
     describe('referenceInnerTransactions', () => {
         const runNoReferenceInnerTransactionsTests = (currentAccount, innerTransactions) => {
             // Arrange:
@@ -173,69 +193,6 @@ describe('components/TransactionDetails/TransactionOptinPayoutDetails', () => {
             const transferTransaction = createMockTransferTransaction([new Mosaic(new MosaicId('461A9811A1DC1FBB'), UInt64.fromUint(0))]);
 
             runNoReferenceInnerTransactionsTests(WalletsModel2, [transferTransaction]);
-        });
-    });
-
-    describe('completed', () => {
-        const runBasicDisplayLabelTests = async (mockIsCompleted, { description, amount }) => {
-            // Arrange:
-            const wrapper = getTransactionOptinPayoutDetailsWrapper({
-                currentAccount: WalletsModel1,
-                transaction: createMockAggregateTransaction(),
-            });
-
-            // @ts-ignore
-            jest.spyOn(wrapper.vm, 'hasTransfers', 'get').mockReturnValue(true);
-
-            // @ts-ignore
-            jest.spyOn(wrapper.vm, 'completed', 'get').mockReturnValue(mockIsCompleted);
-
-            await wrapper.vm.$nextTick();
-
-            // Act + Assert:
-            expect(wrapper.find('.content-text.text-description').text()).toBe(description);
-            expect(wrapper.find('table .table-header-text').text()).toBe(amount);
-        };
-
-        test('returns true when transaction is confirmed', () => {
-            // Arrange:
-            const wrapper = getTransactionOptinPayoutDetailsWrapper({
-                currentAccount: WalletsModel1,
-                transaction: createMockAggregateTransaction(),
-            });
-
-            // Act + Assert:
-            // @ts-ignore
-            expect(wrapper.vm.completed).toBe(true);
-        });
-
-        test('returns false when transaction is unconfirmed', async () => {
-            // Arrange:
-            const wrapper = getTransactionOptinPayoutDetailsWrapper({
-                currentAccount: WalletsModel1,
-                transaction: new AggregateTransaction(
-                    NetworkType.TEST_NET,
-                    TransactionType.AGGREGATE_BONDED,
-                    1,
-                    mockDeadline,
-                    UInt64.fromUint(100),
-                    [],
-                    [],
-                    mockSignature,
-                    PublicAccount.createFromPublicKey(currentSigner.publicKey, NetworkType.TEST_NET),
-                ),
-            });
-
-            // Act + Assert:
-            // @ts-ignore
-            expect(wrapper.vm.completed).toBe(false);
-        });
-
-        test('renders completed amount and description text when completed is true', async () => {
-            await runBasicDisplayLabelTests(true, {
-                amount: 'The amount you have received:',
-                description: 'Success! Your opt-in payment is complete.',
-            });
         });
     });
 
