@@ -62,6 +62,7 @@ export default {
     state: appInfoState,
     getters: {
         getInitialized: (state: AppInfoState) => state.initialized,
+        allowUnknownMultisigTransactions: (state: AppInfoState) => state.settings?.allowUnknownMultisigTransactions,
         currentTimezone: (state: AppInfoState) => state.timezone,
         language: (state: AppInfoState) => state.settings?.language,
         languages: (state: AppInfoState) => state.languages,

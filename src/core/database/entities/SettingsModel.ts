@@ -24,5 +24,6 @@ export class SettingsModel {
         public readonly language: string,
         public readonly defaultFee: number,
         public readonly defaultAccount: string,
+        public readonly allowUnknownMultisigTransactions: boolean,
     ) {}
 }

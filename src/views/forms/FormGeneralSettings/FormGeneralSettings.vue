@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="h-100">
         <FormWrapper class="general-settings-container" :whitelisted="true">
-            <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
-                <form class="form-container mt-3" onsubmit="event.preventDefault()" autocomplete="off">
+            <ValidationObserver ref="observer" v-slot="{ handleSubmit }" class="general-settings-content">
+                <form class="form-container" onsubmit="event.preventDefault()" autocomplete="off">
                     <FormRow>
                         <template v-slot:label> {{ $t('form_label_default_account') }}: </template>
                         <template v-slot:inputs>
@@ -48,31 +48,25 @@
                             </div>
                         </template>
                     </FormRow>
-
-                    <div class="form-row form-submit">
-                        <DeleteProfileButton @logout="logout" />
-                        <div>
-                            <button
-                                class="button-style button danger-button pl-2 pr-2 confirm-reset"
-                                type="reset"
-                                @click.prevent="resetForm"
-                            >
-                                {{ $t('reset') }}
-                            </button>
-                            <button
-                                class="button-style inverted-button pl-2 pr-2 confirm-reset"
-                                type="submit"
-                                :disabled="isConfirmButtonDisabled"
-                                @click="handleSubmit(onSubmit)"
-                            >
-                                {{ $t('confirm') }}
-                            </button>
-                        </div>
-                    </div>
                 </form>
+                <div class="form-row form-submit">
+                    <DeleteProfileButton @logout="logout" />
+                    <div>
+                        <button class="button-style button danger-button pl-2 pr-2 confirm-reset" type="reset" @click.prevent="resetForm">
+                            {{ $t('cancel') }}
+                        </button>
+                        <button
+                            class="button-style inverted-button pl-2 pr-2 confirm-reset"
+                            type="submit"
+                            :disabled="isConfirmButtonDisabled"
+                            @click="handleSubmit(onSubmit)"
+                        >
+                            {{ $t('confirm') }}
+                        </button>
+                    </div>
+                </div>
             </ValidationObserver>
         </FormWrapper>
-
         <ModalFormProfileUnlock
             v-if="hasAccountUnlockModal"
             :visible="hasAccountUnlockModal"
@@ -91,10 +85,18 @@ export default class FormGeneralSettings extends FormGeneralSettingsTs {}
 .general-settings-container {
     display: block;
     width: 100%;
+    height: 100%;
     clear: both;
     min-height: 1rem;
     padding-top: 0.8rem;
     padding-bottom: 0.4rem;
+}
+
+.general-settings-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 
 .form-submit {

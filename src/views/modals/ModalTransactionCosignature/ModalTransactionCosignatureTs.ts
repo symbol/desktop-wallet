@@ -35,6 +35,7 @@ import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
 // child components
+import Alert from '@/components/Alert/Alert.vue';
 // @ts-ignore
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue';
 // @ts-ignore
@@ -53,6 +54,7 @@ import { MultisigService } from '@/services/MultisigService';
 import { AddressBook } from 'symbol-address-book';
 @Component({
     components: {
+        Alert,
         TransactionDetails,
         TransactionOptinPayoutDetails,
         FormProfileUnlock,
@@ -69,6 +71,7 @@ import { AddressBook } from 'symbol-address-book';
             multisigAccountGraphInfo: 'account/multisigAccountGraphInfo',
             multisigAccountGraph: 'account/multisigAccountGraph',
             addressBook: 'addressBook/getAddressBook',
+            allowUnknownMultisigTransactions: 'app/allowUnknownMultisigTransactions',
             symbolDocsScamAlertUrl: 'app/symbolDocsScamAlertUrl',
         }),
     },
@@ -131,6 +134,8 @@ export class ModalTransactionCosignatureTs extends Vue {
 
     public multisigAccountGraph: Map<number, MultisigAccountInfo[]>;
 
+    public allowUnknownMultisigTransactions: boolean;
+
     /**
      * Link to the Common Hacks and Scams docs page
      */
@@ -171,6 +176,12 @@ export class ModalTransactionCosignatureTs extends Vue {
         if (!val) {
             this.$emit('close');
         }
+    }
+
+    public get showKnownSignerAlert() {
+        const signerAddressContactStatus = this.getSignerAddressContactStatus();
+
+        return this.hideCosignerWarning || signerAddressContactStatus === 'white_list';
     }
 
     public get showWarningForm() {
