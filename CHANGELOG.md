@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [1.0.10][v1.0.10] - 17-Aug-2022
+### Milestone: Bug fixes and security protection improvements
+
+#### Added
+- Added the blacklist/whitelist support for address book. Improved the multisig transaction co-signature form [#1739](https://github.com/symbol/desktop-wallet/issues/1739).
+- Added the scam alert link to the docs in the harvesting view [#1860](https://github.com/symbol/desktop-wallet/pull/1860).
+- Added nyc integration and enabled ci coverage check [#1869](https://github.com/symbol/desktop-wallet/pull/1869).
+- Added unit tests [#1871](https://github.com/symbol/desktop-wallet/pull/1871).
+- Added new multisig tree presentation and improved graph construction [#1881](https://github.com/symbol/desktop-wallet/pull/1881).
+- Added property to the advanced settings to allow/disallow signing multisig transactions from unknown accounts [#1880](https://github.com/symbol/desktop-wallet/issues/1880).
+- Added a signer public key field to the transaction details view [#1840](https://github.com/symbol/desktop-wallet/issues/1840).
+- Added link to explorer for addresses in the transaction details view [#1843](https://github.com/symbol/desktop-wallet/issues/1843).
+- Added option to block new contact [#1826](https://github.com/symbol/desktop-wallet/issues/1826).
+
+#### Changed
+- Removed dashes from addresses [#1841](https://github.com/symbol/desktop-wallet/pull/1841).
+
+#### Fixed
+- Improved localization in Japanese [#1819](https://github.com/symbol/desktop-wallet/pull/1819).
+- Fixed the metadata non-ascii text update failure and the view refresh issue [#1837](https://github.com/symbol/desktop-wallet/pull/1837).
+- Fixed the multisig graph sorting issue [#1890](https://github.com/symbol/desktop-wallet/pull/1890).
+- Fixed an issue with editing the contact address in address book [#1834](https://github.com/symbol/desktop-wallet/issues/1834).
+- Fixed an issue with address book import [#1827](https://github.com/symbol/desktop-wallet/issues/1827).
+- Fixed the wrong contact names presented in the transaction list [#1831](https://github.com/symbol/desktop-wallet/issues/1831).
+- Fixed the transaction detail "From" field is not replaced with a contact name [#1842](https://github.com/symbol/desktop-wallet/issues/1842).
+- Fixed the signer from multilevel multisig tree presented as an unknown account in the multisig transaction co-signature form [#1848](https://github.com/symbol/desktop-wallet/issues/1848).
+- Migrated to Jenkins and fixed failing unit tests [#1868](https://github.com/symbol/desktop-wallet/pull/1868).
+
 ## [1.0.9][v1.0.9] - 10-Dec-2021
 ### Milestone: Stabilize and bug fix
 
