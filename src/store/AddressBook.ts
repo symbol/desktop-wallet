@@ -28,12 +28,14 @@ type AddressBookState = {
     initialized: boolean;
     addressBook: AddressBook;
     selectedContact: IContact;
+    isBlackListedSelected: boolean;
 };
 
 const addressBookState: AddressBookState = {
     initialized: false,
     addressBook: null,
     selectedContact: null,
+    isBlackListedSelected: false,
 };
 
 /**
@@ -46,6 +48,7 @@ export default {
         getInitialized: (state: AddressBookState) => state.initialized,
         getAddressBook: (state: AddressBookState) => state.addressBook,
         getSelectedContact: (state: AddressBookState): IContact => state.selectedContact,
+        getBlackListedContactsSelected: (state: AddressBookState) => state.isBlackListedSelected,
     },
     mutations: {
         setInitialized: (state: AddressBookState, initialized: boolean) => {
@@ -58,6 +61,9 @@ export default {
         setSelectedContact: (state: AddressBookState, selectedContact: IContact) => {
             Vue.set(state, 'selectedContact', selectedContact);
             // state.selectedContact = selectedContact;
+        },
+        setBlackListedContactsSelected: (state: AddressBookState, isBlackListedSelected: boolean) => {
+            state.isBlackListedSelected = isBlackListedSelected;
         },
     },
     actions: {
@@ -97,7 +103,7 @@ export default {
             }
         },
 
-        async ADD_CONTACT({ commit, dispatch, getters }, contact) {
+        ADD_CONTACT({ commit, dispatch, getters }, contact) {
             const addressBook: AddressBook = getters.getAddressBook;
             addressBook.addContact(contact);
             const newAddressBook = AddressBook.fromJSON(addressBook.toJSON());
@@ -107,13 +113,18 @@ export default {
             dispatch('SAVE_ADDRESS_BOOK');
         },
 
-        async UPDATE_CONTACT({ dispatch, getters }, { id, contact }) {
+        UPDATE_CONTACT({ dispatch, getters }, { id, contact }) {
             const addressBook: AddressBook = getters.getAddressBook;
+            const contacts = addressBook.getAllContacts();
+            const isContactAlreadyExist = contacts.some((c) => c.address === contact.address && c.id !== contact.id);
+            if (isContactAlreadyExist) {
+                throw Error('Contact with provided address already exist');
+            }
             addressBook.updateContact(id, contact);
             dispatch('SAVE_ADDRESS_BOOK');
         },
 
-        async REMOVE_CONTACT({ commit, dispatch, getters }, id) {
+        REMOVE_CONTACT({ commit, dispatch, getters }, id) {
             const addressBook: AddressBook = getters.getAddressBook;
             addressBook.removeContact(id);
             const newAddressBook = AddressBook.fromJSON(addressBook.toJSON());
@@ -122,7 +133,7 @@ export default {
             dispatch('SAVE_ADDRESS_BOOK');
         },
 
-        async RESOLVE_ADDRESS({ getters }, address) {
+        RESOLVE_ADDRESS({ getters }, address) {
             const addressBook: AddressBook = getters.getAddressBook;
             return addressBook.getContactByAddress(address);
         },

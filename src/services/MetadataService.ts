@@ -27,9 +27,8 @@ import {
     MetadataTransactionService,
     MetadataSearchCriteria,
     Crypto,
-    Convert,
 } from 'symbol-sdk';
-import { from, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MetadataModel } from '@/core/database/entities/MetadataModel';
 import { MetadataModelStorage } from '@/core/database/storage/MetadataModelStorage';
@@ -54,42 +53,41 @@ export class MetadataService {
      * @param generationHash the current network generation hash.
      * @param address the current address.
      */
-    public getMetadataList(repositoryFactory: RepositoryFactory, generationHash: string, address: Address): Observable<MetadataModel[]> {
+    public async getMetadataList(repositoryFactory: RepositoryFactory, generationHash: string, address: Address): Promise<MetadataModel[]> {
         if (!address) {
-            return of([]);
+            return [];
         }
         if (!repositoryFactory) {
-            return of([]);
+            return [];
         }
         const metadataRepository = repositoryFactory.createMetadataRepository();
 
         // search where user is target
         const targetSearchCriteria: MetadataSearchCriteria = { targetAddress: address };
-        const uniquMetaArray: MetadataModel[] = [];
-        metadataRepository
+        const uniqueMetaArray: MetadataModel[] = [];
+        const targetMetaList = await metadataRepository
             .search(targetSearchCriteria)
             .pipe(map((metadataListPage) => metadataListPage.data.map((metadata) => new MetadataModel(metadata))))
-            .subscribe((t) => {
-                t.map((value) => {
-                    if (!uniquMetaArray.find((o) => o.metadataId === value.metadataId)) {
-                        uniquMetaArray.push(value);
-                    }
-                });
-            });
+            .toPromise();
+        targetMetaList.map((value) => {
+            if (!uniqueMetaArray.find((o) => o.metadataId === value.metadataId)) {
+                uniqueMetaArray.push(value);
+            }
+        });
 
         // search where user is sender of metadata
         const sourceSearchCriteria: MetadataSearchCriteria = { sourceAddress: address };
-        metadataRepository
+        const sourceMetaList = await metadataRepository
             .search(sourceSearchCriteria)
             .pipe(map((metadataListPage) => metadataListPage.data.map((metadata) => new MetadataModel(metadata))))
-            .subscribe((t) => {
-                t.map((value) => {
-                    if (!uniquMetaArray.find((o) => o.metadataId === value.metadataId)) {
-                        uniquMetaArray.push(value);
-                    }
-                });
-            });
-        return from([uniquMetaArray]);
+            .toPromise();
+
+        sourceMetaList.map((value) => {
+            if (!uniqueMetaArray.find((o) => o.metadataId === value.metadataId)) {
+                uniqueMetaArray.push(value);
+            }
+        });
+        return uniqueMetaArray;
     }
 
     /**
@@ -115,14 +113,13 @@ export class MetadataService {
 
         let metadataObservable: Observable<Transaction> = null;
 
-        const encodedValue = Convert.utf8ToHex(value);
         if (metadataType === MetadataType.Account) {
             metadataObservable = metadataTransactionService.createAccountMetadataTransaction(
                 deadline,
                 networkType,
                 targetAddress,
                 scopedMetadataKey,
-                encodedValue,
+                value,
                 sourceAddress,
                 maxFee,
             );
@@ -134,7 +131,7 @@ export class MetadataService {
                 targetAddress,
                 mosaicId,
                 scopedMetadataKey,
-                encodedValue,
+                value,
                 sourceAddress,
                 maxFee,
             );
@@ -146,7 +143,7 @@ export class MetadataService {
                 targetAddress,
                 namespaceId,
                 scopedMetadataKey,
-                encodedValue,
+                value,
                 sourceAddress,
                 maxFee,
             );

@@ -28,10 +28,10 @@ export class ViewAccountAddressRestrictionTransaction extends TransactionView<Ac
      */
     private get sender(): string {
         if (this.transaction.signer) {
-            return this.transaction.signer.address.pretty();
+            return this.transaction.signer.address.plain();
         }
         const currentSignerAddress = this.$store.getters['account/currentSignerAddress'];
-        return currentSignerAddress ? currentSignerAddress.pretty() : '';
+        return currentSignerAddress ? currentSignerAddress.plain() : '';
     }
 
     /**
@@ -39,15 +39,15 @@ export class ViewAccountAddressRestrictionTransaction extends TransactionView<Ac
      */
     protected resolveDetailItems(): TransactionDetailItem[] {
         return [
-            { key: 'sender', value: this.sender },
+            { key: 'sender', value: this.sender, isAddress: true },
             // @ts-ignore
             {
                 key: 'Restriction Additions',
-                value: this.transaction.restrictionAdditions.map((a) => (a instanceof Address ? a.pretty() : a.fullName)).join('\n') || '-',
+                value: this.transaction.restrictionAdditions.map((a) => (a instanceof Address ? a.plain() : a.fullName)).join('\n') || '-',
             },
             {
                 key: 'Restriction Deletions',
-                value: this.transaction.restrictionDeletions.map((a) => (a instanceof Address ? a.pretty() : a.fullName)).join('\n') || '-',
+                value: this.transaction.restrictionDeletions.map((a) => (a instanceof Address ? a.plain() : a.fullName)).join('\n') || '-',
             },
             { key: 'Restriction Flag', value: AddressRestrictionFlag[this.transaction.restrictionFlags] },
         ];

@@ -82,8 +82,8 @@
                             <Select v-else v-model="chosenValue" class="select-size select-style">
                                 <Option
                                     v-for="metadataModel in metadataList"
-                                    :key="metadataModel.metadataId"
-                                    :value="metadataModel.metadataId"
+                                    :key="metadataModel.scopedMetadataKey"
+                                    :value="metadataModel.scopedMetadataKey"
                                 >
                                     {{ `${metadataModel.scopedMetadataKey} : ${metadataModel.value}` }}
                                 </Option>

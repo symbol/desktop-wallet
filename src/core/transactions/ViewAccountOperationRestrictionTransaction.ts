@@ -28,10 +28,10 @@ export class ViewAccountOperationRestrictionTransaction extends TransactionView<
      */
     private get sender(): string {
         if (this.transaction.signer) {
-            return this.transaction.signer.address.pretty();
+            return this.transaction.signer.address.plain();
         }
         const currentSignerAddress = this.$store.getters['account/currentSignerAddress'];
-        return currentSignerAddress ? currentSignerAddress.pretty() : '';
+        return currentSignerAddress ? currentSignerAddress.plain() : '';
     }
 
     /**
@@ -39,7 +39,7 @@ export class ViewAccountOperationRestrictionTransaction extends TransactionView<
      */
     protected resolveDetailItems(): TransactionDetailItem[] {
         return [
-            { key: 'sender', value: this.sender },
+            { key: 'sender', value: this.sender, isAddress: true },
             // @ts-ignore
             {
                 key: 'Restriction Additions',

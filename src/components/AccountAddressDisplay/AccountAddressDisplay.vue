@@ -1,7 +1,7 @@
 <template>
     <div class="account-detail-row-3cols">
         <span class="label">{{ $t('account_address') }}:</span>
-        <div class="value accountAddress">{{ prettyAddress }}</div>
+        <div class="value accountAddress">{{ plainAddress }}</div>
         <ButtonCopyToClipboard v-model="address" type="icon-black" />
     </div>
 </template>

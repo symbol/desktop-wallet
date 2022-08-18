@@ -37,6 +37,7 @@ import * as _ from 'lodash';
 import { AwaitLock } from './AwaitLock';
 import { TransactionFilterService } from '@/services/TransactionFilterService';
 import { MultisigService } from '@/services/MultisigService';
+import { IContact } from 'symbol-address-book';
 const Lock = AwaitLock.create();
 
 export enum TransactionGroupState {
@@ -140,6 +141,7 @@ export interface TransactionState {
     partialTransactions: Transaction[];
     filterOptions: TransactionFilterOptionsState;
     currentConfirmedPage: PageInfo;
+    isBlackListFilterActivated: boolean;
 }
 
 const transactionState: TransactionState = {
@@ -152,6 +154,7 @@ const transactionState: TransactionState = {
     partialTransactions: [],
     filterOptions: new TransactionFilterOptionsState(),
     currentConfirmedPage: { pageNumber: 1, isLastPage: false },
+    isBlackListFilterActivated: false,
 };
 export default {
     namespaced: true,
@@ -168,6 +171,7 @@ export default {
         confirmedTransactions: (state: TransactionState) => state.confirmedTransactions,
         unconfirmedTransactions: (state: TransactionState) => state.unconfirmedTransactions,
         partialTransactions: (state: TransactionState) => state.partialTransactions,
+        isBlackListFilterActivated: (state: TransactionState) => state.isBlackListFilterActivated,
     },
     mutations: {
         setInitialized: (state: TransactionState, initialized: boolean) => {
@@ -175,6 +179,9 @@ export default {
         },
         isFetchingTransactions: (state: TransactionState, isFetchingTransactions: boolean) => {
             state.isFetchingTransactions = isFetchingTransactions;
+        },
+        isBlackListFilterActivated: (state: TransactionState, isBlackListFilterActivated: boolean) => {
+            state.isBlackListFilterActivated = isBlackListFilterActivated;
         },
         confirmedTransactions: (
             state: TransactionState,
@@ -217,7 +224,14 @@ export default {
                 currentSignerAddress,
                 multisigAddresses = [],
                 shouldFilterOptionChange = true,
-            }: { filterOption?: FilterOption; currentSignerAddress: string; multisigAddresses: []; shouldFilterOptionChange: boolean },
+                blacklistedContacts = [],
+            }: {
+                filterOption?: FilterOption;
+                currentSignerAddress: string;
+                multisigAddresses: [];
+                shouldFilterOptionChange: boolean;
+                blacklistedContacts?: IContact[];
+            },
         ) => {
             if (shouldFilterOptionChange) {
                 if (filterOption) {
@@ -226,10 +240,19 @@ export default {
                     state.filterOptions = new TransactionFilterOptionsState();
                 }
             }
-            state.filteredTransactions = TransactionFilterService.filter(
-                state,
-                !!multisigAddresses.length ? multisigAddresses : currentSignerAddress,
-            );
+            if (state.isBlackListFilterActivated) {
+                state.filteredTransactions = TransactionFilterService.filter(
+                    state,
+                    !!multisigAddresses.length ? multisigAddresses : currentSignerAddress,
+                    blacklistedContacts,
+                    state.isBlackListFilterActivated,
+                );
+            } else {
+                state.filteredTransactions = TransactionFilterService.filter(
+                    state,
+                    !!multisigAddresses.length ? multisigAddresses : currentSignerAddress,
+                );
+            }
         },
     },
     actions: {
@@ -370,6 +393,7 @@ export default {
                         currentSignerAddress: currentSignerAddress.plain(),
                         multisigAddresses: multisigChildrenAddresses,
                         shouldFilterOptionChange: false,
+                        blacklistedContacts: rootGetters['addressBook/getAddressBook'].getBlackListedContacts(),
                     });
                     commit('isFetchingTransactions', false);
                 },
@@ -432,8 +456,8 @@ export default {
             });
         },
 
-        ADD_TRANSACTION(
-            { commit, getters, rootGetters },
+        async ADD_TRANSACTION(
+            { commit, getters, rootGetters, dispatch },
             { group, transaction }: { group: TransactionGroupState; transaction: Transaction },
         ) {
             if (!group) {
@@ -457,13 +481,14 @@ export default {
                     refresh: true,
                     pageInfo: getters['currentConfirmedPage'],
                 });
-
+                await dispatch('LOAD_TRANSACTIONS');
                 commit('setAllTransactions');
                 commit('filterTransactions', {
                     filterOption: null,
                     currentSignerAddress: currentSignerAddress.plain(),
                     multisigAddresses: [],
                     shouldFilterOptionChange: false,
+                    blacklistedContacts: rootGetters['addressBook/getAddressBook'].getBlackListedContacts(),
                 });
             }
         },
@@ -498,6 +523,7 @@ export default {
                 currentSignerAddress: currentSignerAddress.plain(),
                 multisigAddresses: [],
                 shouldFilterOptionChange: false,
+                blacklistedContacts: rootGetters['addressBook/getAddressBook'].getBlackListedContacts(),
             });
         },
 
@@ -518,9 +544,12 @@ export default {
 
             // add actions to the dispatcher according to the transaction types
             if (
-                [TransactionType.NAMESPACE_REGISTRATION, TransactionType.MOSAIC_ALIAS, TransactionType.ADDRESS_ALIAS].some((a) =>
-                    transactionTypes.some((b) => b === a),
-                )
+                [
+                    TransactionType.NAMESPACE_REGISTRATION,
+                    TransactionType.MOSAIC_ALIAS,
+                    TransactionType.ADDRESS_ALIAS,
+                    TransactionType.NAMESPACE_METADATA,
+                ].some((a) => transactionTypes.some((b) => b === a))
             ) {
                 dispatch('namespace/LOAD_NAMESPACES', {}, { root: true });
             }
@@ -572,6 +601,7 @@ export default {
                 currentSignerAddress: currentSignerAddress.plain(),
                 multisigAddresses: [],
                 shouldFilterOptionChange: false,
+                blacklistedContacts: rootGetters['addressBook/getAddressBook'].getBlackListedContacts(),
             });
         },
     },

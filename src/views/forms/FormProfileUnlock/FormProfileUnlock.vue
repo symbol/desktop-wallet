@@ -70,4 +70,8 @@ export default class FormProfileUnlock extends FormProfileUnlockTs {}
 .ivu-btn:focus {
     box-shadow: none;
 }
+
+.form-password-margin {
+    margin-top: 1rem;
+}
 </style>

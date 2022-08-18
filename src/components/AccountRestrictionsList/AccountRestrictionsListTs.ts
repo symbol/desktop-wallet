@@ -109,7 +109,7 @@ export class AccountRestrictionsListTs extends TableDisplayTs {
         return new AccountRestrictionTableService(restrictions);
     }
 
-    protected async doRefresh() {
+    public async doRefresh() {
         await this.$store.dispatch('restriction/LOAD_ACCOUNT_RESTRICTIONS');
     }
 

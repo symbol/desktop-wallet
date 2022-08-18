@@ -26,6 +26,7 @@ import ButtonRefresh from '@/components/ButtonRefresh/ButtonRefresh.vue';
 import { Signer } from '@/store/Account';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { Address } from 'symbol-sdk';
+import { AddressBook } from 'symbol-address-book';
 
 @Component({
     components: { SignerListFilter, TransactionStatusFilter, ButtonRefresh },
@@ -33,6 +34,8 @@ import { Address } from 'symbol-sdk';
         ...mapGetters({
             currentAccount: 'account/currentAccount',
             currentAccountSigner: 'account/currentAccountSigner',
+            addressBook: 'addressBook/getAddressBook',
+            isBlackListFilterActivated: 'transaction/isBlackListFilterActivated',
         }),
     },
 })
@@ -48,6 +51,15 @@ export class TransactionListFiltersTs extends Vue {
      */
     public currentAccountSigner: Signer;
 
+    /**
+     * AddressBook
+     */
+    public addressBook: AddressBook;
+
+    /**
+     * isBlackList Transaction filter activated
+     */
+    public isBlackListFilterActivated: boolean;
     /**
      * Hook called when the signer selector has changed
      * @protected
@@ -69,5 +81,30 @@ export class TransactionListFiltersTs extends Vue {
 
     public downloadTransactions() {
         this.$emit('downloadTransactions');
+    }
+
+    /**
+     * Hook called when user want to filter transactions with blacklisted addresses
+     * @protected
+     */
+    protected onSelectBlackListed() {
+        const blacklistFilter: boolean = this.isBlackListFilterActivated;
+        this.$store.commit('transaction/isBlackListFilterActivated', !this.isBlackListFilterActivated);
+        if (!blacklistFilter) {
+            const blackListed = this.addressBook.getBlackListedContacts();
+            this.$store.commit('transaction/filterTransactions', {
+                filterOption: null,
+                currentSignerAddress: this.currentAccountSigner.address.plain(),
+                multisigAddresses: [],
+                shouldFilterOptionChange: false,
+                blacklistedContacts: blackListed,
+            });
+        } else {
+            this.$store.commit('transaction/filterTransactions', {
+                filterOption: null,
+                currentSignerAddress: this.currentAccountSigner.address.plain(),
+            });
+        }
+        this.refresh();
     }
 }

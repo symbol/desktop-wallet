@@ -140,16 +140,13 @@ export default {
             if (!currentSignerAddress) {
                 return;
             }
-            commit('isFetchingMetadata', true);
-            metadataService
-                .getMetadataList(repositoryFactory, generationHash, currentSignerAddress)
-                .subscribe((metadataList: MetadataModel[]) => {
-                    //wait till value change
-                    setTimeout(() => {
-                        commit('metadataList', metadataList);
-                    }, 2000);
-                })
-                .add(() => commit('isFetchingMetadata', false));
+            try {
+                commit('isFetchingMetadata', true);
+                const metadataList = await metadataService.getMetadataList(repositoryFactory, generationHash, currentSignerAddress);
+                commit('metadataList', metadataList);
+            } finally {
+                commit('isFetchingMetadata', false);
+            }
         },
 
         async RESOLVE_METADATA_TRANSACTIONS({ commit, rootGetters }, metadataType: MetadataType) {

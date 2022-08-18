@@ -16,6 +16,7 @@
 
 import { Transaction } from 'symbol-sdk';
 import { TransactionFilterOptionsState, TransactionState } from '@/store/Transaction';
+import { IContact } from 'symbol-address-book';
 
 /**
  * TransactionFilter used for filtering transactions by group and sent status.
@@ -26,9 +27,14 @@ export class TransactionFilterService {
      * @param state for extracting transactions filter options and list filtered by group.
      * @param currentSignerAddress selected signer address(es)
      */
-    public static filter(state: TransactionState, currentSignerAddress: string | string[]): Transaction[] {
+    public static filter(
+        state: TransactionState,
+        currentSignerAddress: string | string[],
+        blacklistedContacts: IContact[] = [],
+        blacklistFilterActivated: boolean = false,
+    ): Transaction[] {
         const { filterOptions, transactions, confirmedTransactions, unconfirmedTransactions, partialTransactions } = state;
-        if (!filterOptions.isFilterShouldBeApplied) {
+        if (!filterOptions.isFilterShouldBeApplied && !blacklistedContacts) {
             return [...transactions];
         }
 
@@ -49,10 +55,22 @@ export class TransactionFilterService {
                 result = result.concat(confirmedTransactions);
             }
         }
-
+        if (blacklistedContacts && blacklistFilterActivated) {
+            return this.filterByBlackListedContacts(transactions, blacklistedContacts);
+        }
         return this.filterByRecepient(result, filterOptions, currentSignerAddress);
     }
 
+    /**
+     * Filters transactions received from blacklisted contacts
+     * @param transactions transactions list.
+     * @param BlackListedContacts list of blacklisted contacts
+     */
+    private static filterByBlackListedContacts(transactions: Transaction[], blacklistedContacts: IContact[]) {
+        return transactions.filter((transaction) =>
+            blacklistedContacts.some((contact) => contact.address === transaction.signer?.address.plain()),
+        );
+    }
     /**
      * Filters transactions depends on selected sent status filter options.
      * @param transactions

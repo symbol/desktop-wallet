@@ -44,6 +44,9 @@ export class PageNavigatorTs extends Vue {
     }
 
     public onPageNavigate(route: Route) {
+        if (route.name == 'accounts') {
+            this.$store.commit('addressBook/setBlackListedContactsSelected', false);
+        }
         const isDuplicatedRoute = this.$route.matched.map(({ path }) => path).includes(route.path);
         !isDuplicatedRoute &&
             this.currentProfile &&

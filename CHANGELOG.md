@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [1.0.10][v1.0.10] - 17-Aug-2022
+### Milestone: Bug fixes and security protection improvements
+
+#### Added
+- Added the blacklist/whitelist support for address book. Improved the multisig transaction co-signature form [#1739](https://github.com/symbol/desktop-wallet/issues/1739).
+- Added the scam alert link to the docs in the harvesting view [#1860](https://github.com/symbol/desktop-wallet/pull/1860).
+- Added nyc integration and enabled ci coverage check [#1869](https://github.com/symbol/desktop-wallet/pull/1869).
+- Added unit tests [#1871](https://github.com/symbol/desktop-wallet/pull/1871).
+- Added new multisig tree presentation and improved graph construction [#1881](https://github.com/symbol/desktop-wallet/pull/1881).
+- Added property to the advanced settings to allow/disallow signing multisig transactions from unknown accounts [#1880](https://github.com/symbol/desktop-wallet/issues/1880).
+- Added a signer public key field to the transaction details view [#1840](https://github.com/symbol/desktop-wallet/issues/1840).
+- Added link to explorer for addresses in the transaction details view [#1843](https://github.com/symbol/desktop-wallet/issues/1843).
+- Added option to block new contact [#1826](https://github.com/symbol/desktop-wallet/issues/1826).
+
+#### Changed
+- Removed dashes from addresses [#1841](https://github.com/symbol/desktop-wallet/pull/1841).
+
+#### Fixed
+- Improved localization in Japanese [#1819](https://github.com/symbol/desktop-wallet/pull/1819).
+- Fixed the metadata non-ascii text update failure and the view refresh issue [#1837](https://github.com/symbol/desktop-wallet/pull/1837).
+- Fixed the multisig graph sorting issue [#1890](https://github.com/symbol/desktop-wallet/pull/1890).
+- Fixed an issue with editing the contact address in address book [#1834](https://github.com/symbol/desktop-wallet/issues/1834).
+- Fixed an issue with address book import [#1827](https://github.com/symbol/desktop-wallet/issues/1827).
+- Fixed the wrong contact names presented in the transaction list [#1831](https://github.com/symbol/desktop-wallet/issues/1831).
+- Fixed the transaction detail "From" field is not replaced with a contact name [#1842](https://github.com/symbol/desktop-wallet/issues/1842).
+- Fixed the signer from multilevel multisig tree presented as an unknown account in the multisig transaction co-signature form [#1848](https://github.com/symbol/desktop-wallet/issues/1848).
+- Migrated to Jenkins and fixed failing unit tests [#1868](https://github.com/symbol/desktop-wallet/pull/1868).
+
 ## [1.0.9][v1.0.9] - 10-Dec-2021
 ### Milestone: Stabilize and bug fix
 
@@ -214,7 +242,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Ledger with harvesting issues
 - Confirm buttons where dispalced
 
-## [1.0.1][1.0.1] - 29-Mar-2021
+## [1.0.1][v1.0.1] - 29-Mar-2021
 
 ### Milestone: [catapult-server@v1.0.0.0](https://github.com/symbol/catapult-server/releases/tag/v1.0.0.0)
 
@@ -223,20 +251,20 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Changed transaction fee structure to align with network transaction fees. Reduced slow and average fee multipliers.
 - Increased HashLock duration and AggregatedBonded transaction deadline to 48 hours.
 
-## [1.0.0][1.0.0] - 15-Mar-2021
+## [1.0.0][v1.0.0] - 15-Mar-2021
 
 ### Milestone: [catapult-server@v1.0.0.0](https://github.com/symbol/catapult-server/releases/tag/v1.0.0.0)
 
 - Symbol mainnet launch release.
 
-## [0.15.1][0.15.1] - 13-Mar-2021
+## [0.15.1][v0.15.1] - 13-Mar-2021
 
 ### Milestone: [catapult-server@v1.0.0.0](https://github.com/symbol/catapult-server/releases/tag/v1.0.0.0)
 
 - Pre Symbol launch release.
 - Updated experimental Symbol mainnet node with final Opt In balances
 
-## [0.15.0][0.15.0] - 11-Mar-2021
+## [0.15.0][v0.15.0] - 11-Mar-2021
 
 ### Milestone: [catapult-server@v0.10.0.8](https://github.com/symbol/catapult-server/releases/tag/v0.10.0.8)
 
@@ -817,16 +845,34 @@ NOTE: We have known issues which have been logged into github and will look for 
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
 
-[v0.13.6]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.5...v0.13.6
-[v0.13.5]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.4...v0.13.5
-[v0.13.4]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.3...v0.13.4
-[v0.13.3]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.3...v0.13.3
-[v0.13.2]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.0...v0.13.2
-[v0.13.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.11.0...v0.13.0
-[v0.12.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.11.0...v0.12.0
-[v0.11.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.10.0...v0.11.0
-[v0.10.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.9...v0.10.0
-[v0.9.9]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.8-beta1...v0.9.9
+[v1.0.10]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.10
+[v1.0.9]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.9
+[v1.0.8]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.8
+[v1.0.7]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.7
+[v1.0.6]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.6
+[v1.0.5]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.5
+[v1.0.4]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.4
+[v1.0.3]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.3
+[v1.0.2]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.2
+[v1.0.1]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.1
+[v1.0.0]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.0
+[v1.0.0]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.0-beta.2
+[v0.15.1]: https://github.com/symbol/desktop-wallet/releases/tag/v0.15.1
+[v0.15.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.15.0
+[v0.14.1]: https://github.com/symbol/desktop-wallet/releases/tag/v0.14.1
+[v0.14.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.14.0
+[v0.13.8]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.8
+[v0.13.7]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.7
+[v0.13.6]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.6
+[v0.13.5]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.5
+[v0.13.4]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.4
+[v0.13.3]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.3
+[v0.13.2]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.2
+[v0.13.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.13.0
+[v0.12.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.12.0
+[v0.11.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.11.0
+[v0.10.0]: https://github.com/symbol/desktop-wallet/releases/tag/v0.10.0
+[v0.9.9]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.9
 [v0.9.8]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.8-beta1
 [v0.9.8-beta1]: https://github.com/symbol/desktop-wallet/compare/v0.9.7-beta1...v0.9.8-beta1
 [v0.9.7]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.7-beta1
@@ -841,6 +887,3 @@ NOTE: We have known issues which have been logged into github and will look for 
 [v0.9.5-beta2]: https://github.com/symbol/desktop-wallet/compare/v0.9.5-beta1...v0.9.5-beta2
 [v0.9.5-beta1]: https://github.com/symbol/desktop-wallet/compare/v0.9.4-beta...v0.9.5-beta1
 [v0.9.4-beta]: https://github.com/symbol/desktop-wallet/releases/tag/v0.9.4-beta
-
-[v1.0.5]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.5
-[v1.0.6]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.6

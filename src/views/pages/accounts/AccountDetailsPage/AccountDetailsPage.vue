@@ -63,12 +63,7 @@
 
                         <div class="graph-row">
                             <AccountAliasDisplay :account="currentAccount" />
-
-                            <AccountMultisigGraph
-                                v-if="currentAccount && currentAccount.isMultisig"
-                                :account="currentAccount"
-                                :visible="currentAccount.isMultisig"
-                            />
+                            <AccountMultisigGraph v-if="hasAccountMultisigGraph" :account="currentAccount" />
                             <div class="bottom-buttons-container">
                                 <button
                                     v-if="isLedger"

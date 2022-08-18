@@ -52,7 +52,7 @@ export class AccountRestrictionTableService extends AssetTableService {
                 if (accountRestriction?.values) {
                     const value = accountRestriction?.values[0];
                     if (value instanceof Address) {
-                        rawValue = value.pretty();
+                        rawValue = value.plain();
                     } else if (value instanceof MosaicId) {
                         rawValue = value.toHex();
                     } else {

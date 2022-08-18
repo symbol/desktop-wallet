@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <Modal v-model="show" class-name="modal-container" :title="$t('modal_title_enter_account_name')" :transfer="false">
+        <Modal v-model="show" class-name="modal-container" :title="$t('add_contact')" :transfer="false">
             <FormContactCreation @submit="onSubmit" />
             <div slot="footer" class="modal-footer"></div>
         </Modal>

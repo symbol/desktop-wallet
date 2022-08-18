@@ -20,7 +20,7 @@ import { AwaitLock } from './AwaitLock';
 
 const Lock = AwaitLock.create();
 
-interface RestrictionState {
+export interface RestrictionState {
     initialized: boolean;
     accountRestrictions: AccountRestriction[];
     isFetchingRestrictions: boolean;

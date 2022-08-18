@@ -61,4 +61,17 @@ export class CommonHelpers {
             }
         }
     }
+    /**
+     * Truncates the string if it is too long
+     * @protected
+     * @param {string} str
+     * @returns {string}
+     */
+    public static truncate(str: string): string {
+        const maxStringLength = 15;
+        if (str.length <= maxStringLength) {
+            return str;
+        }
+        return `${str.substring(0, 9)}...${str.substring(str.length - 3)}`;
+    }
 }

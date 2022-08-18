@@ -87,7 +87,7 @@ import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
 // @ts-ignore
 import MaxFeeSelector from '@/components/MaxFeeSelector/MaxFeeSelector.vue';
 import { NodeService } from '@/services/NodeService';
-import { feesConfig as defaultFeesConfig } from '@/config';
+import { feesConfig as defaultFeesConfig, networkConfig } from '@/config';
 
 export enum HarvestingAction {
     START = 1,
@@ -132,12 +132,18 @@ export enum PublicKeyTitle {
             currentAccount: 'account/currentAccount',
             feesConfig: 'network/feesConfig',
             accountsInfo: 'account/accountsInfo',
+            symbolDocsScamAlertUrl: 'app/symbolDocsScamAlertUrl',
         }),
     },
 })
 export class FormPersistentDelegationRequestTransactionTs extends FormTransactionBase {
     @Prop({ default: null }) signerAddress: string;
     //@Prop({ default: true }) withLink: boolean;
+
+    /**
+     * Link to the Common Hacks and Scams docs page
+     */
+    public symbolDocsScamAlertUrl: string;
 
     /**
      * Formatters helpers
@@ -182,7 +188,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     public activeIndex = 0;
 
     public get allNodeListUrl() {
-        return this.$store.getters['app/explorerUrl'] + 'nodes';
+        return networkConfig[this.networkType].explorerUrl.replace(/\/+$/, '') + '/nodes';
     }
 
     public get activePanel() {

@@ -18,6 +18,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { LedgerService } from '@/services/LedgerService';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
+import { Signer } from '@/store/Account';
 // child components
 // @ts-ignore
 import AccountNameDisplay from '@/components/AccountNameDisplay/AccountNameDisplay.vue';
@@ -31,8 +32,6 @@ import AccountContactQR from '@/components/AccountContactQR/AccountContactQR.vue
 import AccountAddressDisplay from '@/components/AccountAddressDisplay/AccountAddressDisplay.vue';
 // @ts-ignore
 import AccountPublicKeyDisplay from '@/components/AccountPublicKeyDisplay/AccountPublicKeyDisplay.vue';
-// @ts-ignore
-import AccountActions from '@/components/AccountActions/AccountActions.vue';
 // @ts-ignore
 import AccountLinks from '@/components/AccountLinks/AccountLinks.vue';
 // @ts-ignore
@@ -60,7 +59,6 @@ import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
         ProtectedPrivateKeyDisplay,
         ImportanceScoreDisplay,
         AccountContactQR,
-        AccountActions,
         AccountLinks,
         AccountAddressDisplay,
         AccountPublicKeyDisplay,
@@ -76,6 +74,7 @@ import ModalConfirm from '@/views/modals/ModalConfirm/ModalConfirm.vue';
         ...mapGetters({
             defaultAccount: 'app/defaultAccount',
             currentAccount: 'account/currentAccount',
+            currentSigner: 'account/currentSigner',
             knownAccounts: 'account/knownAccounts',
             accountMetadataList: 'metadata/accountMetadataList',
             currentProfile: 'profile/currentProfile',
@@ -91,6 +90,7 @@ export class AccountDetailsPageTs extends Vue {
     public defaultAccount: string;
 
     public currentProfile: ProfileModel;
+    public currentSigner: Signer;
 
     public metadataEntry: MetadataModel;
     /**
@@ -221,6 +221,10 @@ export class AccountDetailsPageTs extends Vue {
 
     public set hasAccountUnlockModal(f: boolean) {
         this.isUnlockingAccount = f;
+    }
+
+    public get hasAccountMultisigGraph(): boolean {
+        return this.currentAccount.isMultisig || !!this.currentSigner.parentSigners?.length;
     }
 
     public get isLedger(): boolean {
