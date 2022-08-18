@@ -49,4 +49,67 @@ describe('components/MnemonicVerification', () => {
             expect(component.shuffledWordsIndexes).toStrictEqual(expectedShuffledWordsIndexes);
         });
     });
+
+    describe('onWordClicked()', () => {
+        const runOnWordClickedTest = (
+            selectedWordIndexes: number[], 
+            wordIndexToSelect: number, 
+            expectations: {
+                wordToBeAdded: boolean,
+                wordToBeRemoved: boolean
+            }
+        ) => {
+            // Arrange:
+            const words = ['Lorem', 'ipsum', 'dolor', 'sit', 'amet'];
+            const props = {
+                words,
+            };
+            const mockAddWord = jest.fn();
+            const mockRemoveWord = jest.fn();
+    
+            // Act:
+            const wrapper = getMnemonicVerificationWrapper(props);
+            const component = wrapper.vm as MnemonicVerificationTs;
+            component.selectedWordIndexes = selectedWordIndexes;
+            component.selectedWordIndexes.push = mockAddWord;
+            component.removeWord = mockRemoveWord;
+            component.onWordClicked(wordIndexToSelect);
+            
+            // Assert:
+            if (expectations.wordToBeAdded) {
+                expect(mockAddWord).toBeCalledWith(wordIndexToSelect);
+                expect(mockRemoveWord).not.toBeCalled();
+            }
+            if (expectations.wordToBeRemoved) {
+                expect(mockRemoveWord).toBeCalledWith(wordIndexToSelect);
+                expect(mockAddWord).not.toBeCalled();
+            }
+        };
+
+        test('add word to selectedWordIndexes when word is not added yet', () => {
+            // Arrange:
+            const selectedWordIndexes = []; 
+            const wordIndexToSelect = 1;
+            const expectations = {
+                wordToBeAdded: true,
+                wordToBeRemoved: false
+            };
+    
+            // Act + Assert:
+            runOnWordClickedTest(selectedWordIndexes, wordIndexToSelect, expectations);
+        });
+
+        test('remove word from selectedWordIndexes when word is already added', () => {
+            // Arrange:
+            const selectedWordIndexes = []; 
+            const wordIndexToSelect = 1;
+            const expectations = {
+                wordToBeAdded: true,
+                wordToBeRemoved: true
+            };
+    
+            // Act + Assert:
+            runOnWordClickedTest(selectedWordIndexes, wordIndexToSelect, expectations);
+        });
+    });
 });
