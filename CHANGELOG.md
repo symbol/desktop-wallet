@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
-## [1.0.10][v1.0.10] - 17-Aug-2022
+## [1.0.11][v1.0.11] - 19-Aug-2022
 ### Milestone: Bug fixes and security protection improvements
 
 #### Added
@@ -81,7 +81,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 #### Added
 
-- Added accessible terms and privacy policy links[#814](https://github.com/symbol/desktop-wallet/issues/814) 
+- Added accessible terms and privacy policy links[#814](https://github.com/symbol/desktop-wallet/issues/814)
 
 #### Changed
 - Disable Ledger profile menu item in browser version [#1590](https://github.com/symbol/desktop-wallet/issues/1590)
@@ -845,7 +845,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
 
-[v1.0.10]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.10
+[v1.0.11]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.11
 [v1.0.9]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.9
 [v1.0.8]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.8
 [v1.0.7]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.7
