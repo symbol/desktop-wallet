@@ -2,7 +2,7 @@
     "name": "symbol-desktop-wallet",
     "description": "Symbol Wallet",
     "homepage": "https://github.com/symbol/desktop-wallet",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "repository": {
         "type": "git",
         "url": "https://github.com/symbol/desktop-wallet.git"
@@ -170,7 +170,8 @@
             "buildResources": "assets",
             "output": "release"
         },
-        "npmRebuild": false
+        "npmRebuild": false,
+        "afterSign": "scripts/notarize.js"
     },
     "mac": {
         "category": "public.app-category.finance",
