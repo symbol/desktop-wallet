@@ -34,8 +34,6 @@ import AddCosignatoryInput from '@/components/AddCosignatoryInput/AddCosignatory
 // @ts-ignore
 import RemoveCosignatoryInput from '@/components/RemoveCosignatoryInput/RemoveCosignatoryInput.vue';
 // @ts-ignore
-import CosignatoryModificationsDisplay from '@/components/CosignatoryModificationsDisplay/CosignatoryModificationsDisplay.vue';
-// @ts-ignore
 import ApprovalAndRemovalInput from '@/components/ApprovalAndRemovalInput/ApprovalAndRemovalInput.vue';
 // @ts-ignore
 import MultisigCosignatoriesDisplay from '@/components/MultisigCosignatoriesDisplay/MultisigCosignatoriesDisplay.vue';
@@ -60,7 +58,6 @@ export type CosignatoryModifications = {
         SignerSelector,
         AddCosignatoryInput,
         RemoveCosignatoryInput,
-        CosignatoryModificationsDisplay,
         MaxFeeAndSubmit,
         ModalTransactionConfirmation,
         ApprovalAndRemovalInput,

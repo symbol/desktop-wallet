@@ -11,11 +11,11 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { officialIcons } from '@/views/resources/Images';
 
-type Type = 'sucess' | 'warning' | 'danger';
+export type AlertType = 'success' | 'warning' | 'danger';
 
 @Component
 export default class Alert extends Vue {
-    @Prop({ default: 'warning' }) readonly type: Type;
+    @Prop({ default: 'warning' }) readonly type: AlertType;
     @Prop() readonly value: string;
     @Prop({ default: true }) readonly visible: boolean;
 
@@ -27,7 +27,7 @@ export default class Alert extends Vue {
     }
 
     get isIconShown(): boolean {
-        return this.visible && (this.type === 'warning' || this.type === 'danger' || this.type === 'sucess');
+        return this.visible && (this.type === 'warning' || this.type === 'danger' || this.type === 'success');
     }
 
     get iconSrc(): boolean {

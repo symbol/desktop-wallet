@@ -18,7 +18,6 @@ import { mapGetters } from 'vuex';
 import { MosaicId, NetworkType } from 'symbol-sdk';
 import { ValidationProvider } from 'vee-validate';
 // internal dependencies
-import { ProfileModel } from '@/core/database/entities/ProfileModel';
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { AccountService } from '@/services/AccountService';
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
@@ -32,12 +31,7 @@ import FormLabel from '@/components/FormLabel/FormLabel.vue';
 // @ts-ignore
 import ModalFormSubAccountCreation from '@/views/modals/ModalFormSubAccountCreation/ModalFormSubAccountCreation.vue';
 // @ts-ignore
-import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
-// @ts-ignore
-import NavigationLinks from '@/components/NavigationLinks/NavigationLinks.vue';
-// @ts-ignore
 import ModalBackupProfile from '@/views/modals/ModalBackupProfile/ModalBackupProfile.vue';
-import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 import { MosaicModel } from '@/core/database/entities/MosaicModel';
 
 @Component({
@@ -47,42 +41,26 @@ import { MosaicModel } from '@/core/database/entities/MosaicModel';
         ErrorTooltip,
         FormLabel,
         ValidationProvider,
-        AmountDisplay,
         ModalBackupProfile,
-        NavigationLinks,
     },
     computed: {
         ...mapGetters({
-            currentProfile: 'profile/currentProfile',
             currentAccount: 'account/currentAccount',
             knownAccounts: 'account/knownAccounts',
             networkType: 'network/networkType',
             mosaics: 'mosaic/mosaics',
             networkMosaic: 'mosaic/networkMosaic',
-            networkCurrency: 'mosaic/networkCurrency',
             isPrivateKeyProfile: 'profile/isPrivateKeyProfile',
         }),
     },
 })
 export class AccountSelectorPanelTs extends Vue {
     /**
-     * The network currency.
-     */
-    public networkCurrency: NetworkCurrencyModel;
-
-    /**
      * Currently active networkType
      * @see {Store.Network}
      * @var {NetworkType}
      */
     public networkType: NetworkType;
-
-    /**
-     * Currently active profile
-     * @see {Store.Profile}
-     * @var {ProfileModel}
-     */
-    public currentProfile: ProfileModel;
 
     /**
      * Currently active account
@@ -138,7 +116,7 @@ export class AccountSelectorPanelTs extends Vue {
      * Hook called when the component is created
      * @return {void}
      */
-    public async created() {
+    public created() {
         this.accountService = new AccountService();
     }
 
@@ -146,7 +124,6 @@ export class AccountSelectorPanelTs extends Vue {
     public get balances(): Map<string, number> {
         const networkMosaics = this.mosaics.filter((m) => m.mosaicIdHex === this.networkMosaic.toHex());
         return Object.assign({}, ...networkMosaics.map((s) => ({ [s.addressRawPlain]: s.balance })));
-        // return this.addressesBalances
     }
 
     public get currentAccountIdentifier(): string {
@@ -167,10 +144,6 @@ export class AccountSelectorPanelTs extends Vue {
             this.$store.dispatch('account/SET_CURRENT_ACCOUNT', account);
             this.$emit('input', account.id);
         }
-    }
-
-    public get currentAccounts(): AccountModel[] {
-        return this.knownAccounts;
     }
 
     public get seedAccounts(): AccountModel[] {

@@ -28,6 +28,7 @@ export const createValidationRuleSet = ({
     maxMosaicDivisibility,
     maxMosaicDuration,
     minNamespaceDuration,
+    blockGenerationTargetTime,
 }: NetworkConfigurationModel) => {
     return {
         address: 'required|address|addressNetworkType:currentProfile',
@@ -43,9 +44,7 @@ export const createValidationRuleSet = ({
         generationHash: 'required|min:64|max:64',
         mosaicId: 'required|mosaicId',
         message: `maxMessage:${maxMessageSize}`,
-        namespaceDuration: `required|min_value:${
-            minNamespaceDuration / networkConfig[NetworkType.TEST_NET].networkConfigurationDefaults.blockGenerationTargetTime
-        }|maxNamespaceDuration`,
+        namespaceDuration: `required|min_value:${minNamespaceDuration / blockGenerationTargetTime}|maxNamespaceDuration`,
         // remove symbol from regex when rest https://github.com/nemtech/catapult-rest/issues/631 fixed
         namespaceName: {
             required: true,

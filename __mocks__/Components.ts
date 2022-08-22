@@ -17,10 +17,14 @@ import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import { createStore } from '@MOCKS/Store';
 import i18n from '@/language/index';
+import clickOutsideDirective from '@/directives/clickOutside';
+import VueRouter from 'vue-router';
 
 /// region globals
 const localVue = createLocalVue();
 localVue.use(Vuex);
+localVue.directive('click-outside', clickOutsideDirective);
+
 /// end-region globals
 
 /// region helpers
@@ -37,6 +41,9 @@ export const getComponent = (
     stateChanges?: { [field: string]: any },
     propsData?: { [field: string]: any },
     stubsData?: { [field: string]: any },
+    dispatch?: () => any,
+    mocks?: { [field: string]: any },
+    slots?: { [field: string]: any },
 ) => {
     // - format store module overwrites
     const modules = Object.keys(storeModules)
@@ -56,11 +63,13 @@ export const getComponent = (
         }, {});
 
     // - create fake store
-    const store = createStore({ modules });
+    const store = createStore({ modules }, dispatch);
     const params = {
         store,
         i18n,
         localVue,
+        mocks,
+        slots,
     };
 
     if (propsData && Object.keys(propsData).length) {

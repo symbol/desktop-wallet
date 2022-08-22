@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Component, Vue } from 'vue-property-decorator';
+import { mount } from '@vue/test-utils';
+// @ts-ignore
+import AppLogo from '@/components/AppLogo/AppLogo';
+import { appConfig } from '@/config';
 
-// internal dependencies
-import { Electron } from '@/core/utils/Electron';
+describe('components/AppLogo', () => {
+    test('renders component', () => {
+        // Arrange + Act:
+        const wrapper = mount(AppLogo);
+        const element = wrapper.find('img');
 
-@Component
-export class WindowControlsTs extends Vue {
-    /**
-     * Electron helpers
-     * @var {Electron}
-     */
-    public electronHelpers = Electron;
-}
+        // Assert:
+        expect(element.attributes('src')).toBe('symbol_logo.png');
+        expect(element.attributes('alt')).toBe(appConfig.title);
+        wrapper.destroy();
+    });
+});

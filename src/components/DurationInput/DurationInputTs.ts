@@ -15,7 +15,7 @@
  */
 import { Component, Prop, Vue } from 'vue-property-decorator';
 // internal dependencies
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
+import { createValidationRuleSet } from '@/core/validation/ValidationRuleset';
 // child components
 import { ValidationProvider } from 'vee-validate';
 // @ts-ignore
@@ -26,6 +26,8 @@ import FormRow from '@/components/FormRow/FormRow.vue';
 import { TimeHelpers } from '@/core/utils/TimeHelpers';
 import { mapGetters } from 'vuex';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
+import { networkConfig } from '@/config';
+import { NetworkType } from 'symbol-sdk';
 
 @Component({
     components: {
@@ -35,6 +37,7 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
     },
     computed: {
         ...mapGetters({
+            networkType: 'network/networkType',
             networkConfiguration: 'network/networkConfiguration',
         }),
     },
@@ -55,23 +58,37 @@ export class DurationInputTs extends Vue {
     @Prop({ default: 'form_label_duration' }) label: string;
 
     /**
+     * the toggle for the display of realativeTime
+     * @type boolean
+     */
+    @Prop({ default: false }) showRelativeTime: boolean;
+
+    /**
      * Validation rules
      * @var {ValidationRuleset}
      */
-    public validationRules = ValidationRuleset;
+    public validationRules;
+
+    /**
+     * Injected network type
+     */
+    public networkType: NetworkType;
 
     /**
      * Injected network configuration.
      */
     private networkConfiguration: NetworkConfigurationModel;
 
-    /**
-     * the toggle for the display of realativeTime
-     * @type boolean
-     */
-    @Prop({ default: false }) showRelativeTime: boolean;
+    created() {
+        this.validationRules = createValidationRuleSet(this.effectiveNetworkConfiguration);
+    }
 
     /// region computed properties getter/setter
+    public get effectiveNetworkConfiguration(): NetworkConfigurationModel {
+        const networkConfigurationDefaults = networkConfig[this.networkType || NetworkType.TEST_NET].networkConfigurationDefaults;
+        return { ...networkConfigurationDefaults, ...this.networkConfiguration };
+    }
+
     public get chosenValue(): string {
         return this.value;
     }

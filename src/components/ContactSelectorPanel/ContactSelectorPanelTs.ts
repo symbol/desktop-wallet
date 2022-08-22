@@ -81,9 +81,6 @@ export class ContactSelectorPanelTs extends Vue {
     public panelItems = ['white_list', 'black_list'];
     public commonHelpers = CommonHelpers;
     public isBlackListedSelected: boolean;
-    public get allContacts(): IContact[] {
-        return this.addressBook.getAllContacts();
-    }
 
     public get activePanel() {
         return this.activeIndex;

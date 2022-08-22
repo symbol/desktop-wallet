@@ -17,8 +17,6 @@ import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 // child components
 // @ts-ignore
-import DisabledUiOverlay from '@/components/DisabledUiOverlay/DisabledUiOverlay.vue';
-// @ts-ignore
 import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue';
 
 @Component({
@@ -29,7 +27,6 @@ import SpinnerLoading from '@/components/SpinnerLoading/SpinnerLoading.vue';
         }),
     },
     components: {
-        DisabledUiOverlay,
         SpinnerLoading,
     },
 })

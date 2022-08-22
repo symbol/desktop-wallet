@@ -34,7 +34,7 @@ import RestrictionTypeInput, { RestrictionBlockType } from '@/components/Restric
 // @ts-ignore
 import SignerSelector from '@/components/SignerSelector/SignerSelector.vue';
 // @ts-ignore
-import TransactionTypeSelector from '@/components/TransactionTypeSelector/TransactionTypeSelector.vue';
+import OperationRestrictionTransactionTypeSelector from '@/components/OperationRestrictionTransactionTypeSelector/OperationRestrictionTransactionTypeSelector.vue';
 import { AddressValidator, AliasValidator } from '@/core/validation/validators';
 // internal dependencies
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase';
@@ -80,7 +80,7 @@ export enum AccountRestrictionTxType {
         ModalFormProfileUnlock,
         RestrictionDirectionInput,
         MosaicSelector,
-        TransactionTypeSelector,
+        OperationRestrictionTransactionTypeSelector,
         ErrorTooltip,
         ValidationProvider,
     },

@@ -21,7 +21,7 @@ import { Transaction, SignedTransaction, CosignatureTransaction, CosignatureSign
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import TrezorConnect from '@/core/utils/TrezorConnect';
 import { TransactionSigner } from '@/services/TransactionAnnouncerService';
-import { from, Observable } from 'rxjs';
+import { from, Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -48,7 +48,7 @@ export class HardwareConfirmationButtonTs extends Vue implements TransactionSign
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     signCosignatureTransaction(t: CosignatureTransaction): Observable<CosignatureSignedTransaction> {
-        throw new Error('Not Implemented!!!');
+        return throwError(new Error('Not Implemented!!!'));
     }
 
     signTransaction(stagedTx: Transaction): Observable<SignedTransaction> {

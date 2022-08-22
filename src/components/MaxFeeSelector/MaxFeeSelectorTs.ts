@@ -114,9 +114,6 @@ export class MaxFeeSelectorTs extends Vue {
     multiplier: number;
 
     public created() {
-        if (!this.feesConfig) {
-            this.$store.dispatch('network/LOAD_TRANSACTION_FEES');
-        }
         this.fees = Object.entries(this.feesConfig).map((entry) => ({
             label: this.getLabel([entry[0], entry[1] as number]),
             maxFee: entry[1] as number,
@@ -152,7 +149,7 @@ export class MaxFeeSelectorTs extends Vue {
      */
     private formatLabel(labelKey: string, fee: number, mosaic: string, showAmount: boolean = true): string {
         let label = this.$t(labelKey).toString();
-        if (showAmount) {
+        if (showAmount && this.networkCurrency) {
             label += `: ${this.getFormattedRelative(fee)} ${mosaic}`;
         }
         return label;
@@ -185,12 +182,8 @@ export class MaxFeeSelectorTs extends Vue {
      * @return {number}
      */
     public getFormattedRelative(amount: number): string {
-        let relativeAmount: number;
-        if (this.networkCurrency === undefined) {
-            relativeAmount = amount;
-        } else {
-            relativeAmount = amount / Math.pow(10, this.networkCurrency.divisibility);
-        }
+        const relativeAmount = amount / Math.pow(10, this.networkCurrency.divisibility);
+
         return relativeAmount.toLocaleString(undefined, { maximumFractionDigits: this.networkCurrency.divisibility });
     }
 

@@ -142,16 +142,19 @@ export class TransactionRowTs extends Vue {
     /// end-region computed properties getter/setter
 
     /**
-     * Returns whether aggregate bonded transaction is announced by NGL Finance
+     * Returns true if the row contains an optin payout transaction.
      */
     public get isOptinPayoutTransaction(): boolean {
         if (!this.transaction) {
             return false;
         }
 
-        const networktype = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
-        const keysFinance = process.env.KEYS_FINANCE[networktype];
-        const announcerPublicKey = this.transaction.signer?.publicKey;
+        const networkType = this.currentProfile.networkType === NetworkType.MAIN_NET ? 'mainnet' : 'testnet';
+        const keysFinance =
+            typeof process.env.KEYS_FINANCE === 'string'
+                ? JSON.parse(process.env.KEYS_FINANCE)[networkType]
+                : process.env.KEYS_FINANCE[networkType];
+        const announcerPublicKey = this.transaction.signer.publicKey;
         const isAnnouncerNGLFinance = keysFinance.find(
             (financePublicKey) => financePublicKey.toUpperCase() === announcerPublicKey.toUpperCase(),
         );
@@ -207,7 +210,8 @@ export class TransactionRowTs extends Vue {
     public getAmount(): number {
         if (this.transaction.type === TransactionType.TRANSFER) {
             const transferTransaction = this.transaction as TransferTransaction;
-            const amount = transferTransaction.mosaics.find((mosaic) => mosaic.id.equals(this.networkMosaic)).amount.compact() || 0;
+            const filterNetworkMosaic = transferTransaction.mosaics.find((mosaic) => mosaic.id.equals(this.networkMosaic));
+            const amount = filterNetworkMosaic ? filterNetworkMosaic.amount.compact() : 0;
 
             if (!this.isIncomingTransaction()) {
                 return -amount;
@@ -234,7 +238,7 @@ export class TransactionRowTs extends Vue {
     public getAmountMosaicId(): MosaicId | NamespaceId | undefined {
         if (this.transaction.type === TransactionType.TRANSFER) {
             const transferTransaction = this.transaction as TransferTransaction;
-            return transferTransaction.mosaics.find((mosaic) => mosaic.id.equals(this.networkMosaic)).id || undefined;
+            return transferTransaction.mosaics.find((mosaic) => mosaic.id.equals(this.networkMosaic))?.id;
         }
         return undefined;
     }
@@ -250,9 +254,8 @@ export class TransactionRowTs extends Vue {
         // return true
         return false;
     }
-    public async needsCosignature() {
+    public needsCosignature() {
         // Multisig account can not sign
-
         const currentPubAccount = AccountModel.getObjects(this.currentAccount).publicAccount;
         if (this.transaction instanceof AggregateTransaction && this.transaction.type === TransactionType.AGGREGATE_BONDED) {
             if (this.currentAccountMultisigInfo && this.currentAccountMultisigInfo.isMultisig()) {
@@ -260,15 +263,15 @@ export class TransactionRowTs extends Vue {
                 return;
             }
             if (
-                this.aggregateTransactionDetails !== undefined &&
-                this.aggregateTransactionDetails.transactionInfo?.hash == this.transaction.transactionInfo?.hash
+                this.aggregateTransactionDetails &&
+                this.aggregateTransactionDetails.transactionInfo.hash == this.transaction.transactionInfo.hash
             ) {
                 if (this.aggregateTransactionDetails.signedByAccount(currentPubAccount)) {
                     this.transactionSigningFlag = false;
                     return;
                 }
                 const cosignList = [];
-                const cosignerAddresses = this.aggregateTransactionDetails.innerTransactions.map((t) => t.signer?.address);
+                const cosignerAddresses = this.aggregateTransactionDetails.innerTransactions.map((t) => t.signer.address);
 
                 this.aggregateTransactionDetails.innerTransactions.forEach((t) => {
                     if (t.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf()) {
@@ -279,27 +282,24 @@ export class TransactionRowTs extends Vue {
                         cosignList.push((t as AccountMetadataTransaction).targetAddress);
                     }
                 });
+
                 if (cosignList.find((m) => this.currentAccount.address === m.plain()) !== undefined) {
                     this.transactionSigningFlag = true;
                     return;
                 }
-                const cosignRequired = [...cosignList, ...cosignerAddresses].find((c) => {
-                    if (c) {
-                        return (
-                            c.plain() === this.currentAccount.address ||
-                            (this.multisigAccountGraph && MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, c.plain()))
-                        );
-                    }
-                    this.transactionSigningFlag = false;
-                    return;
-                });
+
+                const cosignRequired = [...cosignList, ...cosignerAddresses].find(
+                    (c) =>
+                        c.plain() === this.currentAccount.address ||
+                        (this.multisigAccountGraph && MultisigService.isAddressInMultisigTree(this.multisigAccountGraph, c.plain())),
+                );
+
                 this.transactionSigningFlag = cosignRequired !== undefined;
                 return;
             }
             this.transactionSigningFlag = false;
             return;
         }
-        return;
     }
 
     /**
@@ -392,13 +392,14 @@ export class TransactionRowTs extends Vue {
         return '';
     }
 
-    private get hasMissSignatures(): boolean {
+    private get hasMissingSignatures(): boolean {
         //merkleComponentHash ==='000000000000...' present that the transaction is still lack of signature
-        return (
-            this.transaction?.transactionInfo != null &&
-            this.transaction?.transactionInfo.merkleComponentHash !== undefined &&
-            this.transaction?.transactionInfo.merkleComponentHash.startsWith('000000000000')
-        );
+        const { type, transactionInfo } = this.transaction;
+        if (type === TransactionType.AGGREGATE_BONDED) {
+            return transactionInfo.merkleComponentHash.startsWith('000000000000');
+        }
+
+        return false;
     }
 
     /**
@@ -413,22 +414,23 @@ export class TransactionRowTs extends Vue {
         if (
             this.transaction instanceof AggregateTransaction &&
             this.transaction.type === TransactionType.AGGREGATE_BONDED &&
-            this.hasMissSignatures
+            this.hasMissingSignatures
         ) {
             this.transactionSigningFlag = true;
             try {
                 // first get the last status
                 const transactionStatus: TransactionStatus = (await this.$store.dispatch('transaction/FETCH_TRANSACTION_STATUS', {
-                    transactionHash: this.transaction.transactionInfo?.hash,
+                    transactionHash: this.transaction.transactionInfo.hash,
                 })) as TransactionStatus;
 
                 if (transactionStatus.group != 'failed') {
                     // fetch the transaction by using the status
                     this.aggregateTransactionDetails = (await this.$store.dispatch('transaction/LOAD_TRANSACTION_DETAILS', {
                         group: transactionStatus.group,
-                        transactionHash: this.transaction.transactionInfo?.hash,
+                        transactionHash: this.transaction.transactionInfo.hash,
                     })) as AggregateTransaction;
-                    await this.needsCosignature();
+
+                    this.needsCosignature();
                 }
             } catch (error) {
                 console.log(error);
@@ -442,7 +444,7 @@ export class TransactionRowTs extends Vue {
     public getHeight(): string {
         const transactionStatus = TransactionView.getTransactionStatus(this.transaction);
         if (transactionStatus === TransactionStatusEnum.confirmed) {
-            return this.view.info?.height.compact().toString();
+            return this.view.info.height.toString();
         } else {
             return this.$t(`transaction_status_${transactionStatus}`).toString();
         }

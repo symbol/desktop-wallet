@@ -10,8 +10,7 @@
             />
         </div>
         <div class="bottom overflow_ellipsis">
-            <span>{{ getTransactionType() }}</span>
-            <span v-if="needsCosignature" class="click-to-cosign">({{ $t('click_to_cosign') }})</span>
+            <span>{{ transactionDescription }}</span>
         </div>
     </div>
 </template>

@@ -93,7 +93,7 @@
                     ? $t('black_list_contact_confirmation_message', { contactName: selectedContact.name })
                     : $t('white_list_contact_confirmation_message', { contactName: selectedContact.name })
             "
-            @confirmed="ToggleBlackListContact"
+            @confirmed="toggleBlackListContact"
         />
     </div>
 </template>

@@ -17,11 +17,6 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { MultisigAccountInfo } from 'symbol-sdk';
 // internal dependencies
-import { ValidationRuleset } from '@/core/validation/ValidationRuleset';
-// child components
-import { ValidationProvider } from 'vee-validate';
-// @ts-ignore
-import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue';
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue';
 // configuration
@@ -30,8 +25,6 @@ import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfi
 
 @Component({
     components: {
-        ValidationProvider,
-        ErrorTooltip,
         FormRow,
     },
     computed: {
@@ -126,12 +119,6 @@ export class ApprovalAndRemovalInputTs extends Vue {
         }
         return this.multisig.minRemoval;
     }
-
-    /**
-     * Validation rules
-     * @var {ValidationRuleset}
-     */
-    protected validationRules = ValidationRuleset;
 
     /**
      * Available input choices

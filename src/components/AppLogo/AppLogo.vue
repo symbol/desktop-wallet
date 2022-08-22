@@ -1,6 +1,6 @@
 <template>
     <div class="app-logo-container">
-        <img :src="logo" alt="appTitle" />
+        <img :src="logo" :alt="appTitle" />
     </div>
 </template>
 

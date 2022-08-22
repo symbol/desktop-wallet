@@ -47,11 +47,10 @@ export class FormInputEditableTs extends Vue {
     @Prop({ default: 'required' })
     rules: string;
 
-    newValue: string;
-
     @Prop()
     onEdit: (v: string) => {};
 
+    newValue: string;
     editing: boolean = false;
 
     /**
@@ -74,6 +73,7 @@ export class FormInputEditableTs extends Vue {
         this.value = '' + this.newValue;
         this.onEdit(this.value);
     }
+
     @Watch('model', { immediate: true })
     public cancelEdition() {
         this.editing = false;

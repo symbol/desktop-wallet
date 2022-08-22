@@ -74,7 +74,7 @@ export interface ConnectingToNodeInfo {
     attemps?: number;
 }
 
-interface NetworkState {
+export interface NetworkState {
     initialized: boolean;
     currentPeer: URLInfo;
     currentPeerInfo: NodeModel;
