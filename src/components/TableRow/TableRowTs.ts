@@ -104,7 +104,7 @@ export class TableRowTs extends Vue {
     }
 
     protected get hasMetadata(): boolean {
-        return this.rowValues.metadataList && !!this.rowValues.metadataList.length;
+        return !!this.rowValues.metadataList && !!this.rowValues.metadataList.length;
     }
 
     /**

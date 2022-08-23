@@ -17,6 +17,7 @@ import TableRow from '@/components/TableRow/TableRow.vue';
 import { TableRowTs } from '@/components/TableRow/TableRowTs';
 import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
 import { getComponent } from '@MOCKS/Components';
+import { mosaicsMock } from '@MOCKS/mosaics';
 
 describe('components/TableRow', () => {
     const mockMosaicValue = {
@@ -30,7 +31,7 @@ describe('components/TableRow', () => {
                 metadataType: 2,
                 scopedMetadataKey: 'E3E5E7B070607991',
                 sourceAddress: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
-                targetAddress: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
+                targetAddress: 'TBF43DIZI62PR2W6JQBJR3AI6OZLRXJYMGHLTFI',
                 targetId: '80DE90A24D6C0CC4',
                 value: 'metadata',
             },
@@ -135,7 +136,7 @@ describe('components/TableRow', () => {
             }
         };
 
-        test('hide Poptip component when assert type is account restrictions', () => {
+        test('hide Poptip component when asset type is account restrictions', () => {
             runBasicHasAvailableActionsTests(
                 {
                     assetType: 'accountRestrictions',
@@ -172,7 +173,7 @@ describe('components/TableRow', () => {
         test('renders Poptip component when user owned asset', () => {
             runBasicHasAvailableActionsTests(
                 {
-                    ownedAssetHexIds: [mockMosaicValue.hexId],
+                    ownedAssetHexIds: [mockMosaicValue.hexId, mosaicsMock[0].mosaicIdHex, mosaicsMock[1].mosaicIdHex],
                     rowValues: mockMosaicValue,
                 },
                 true,
@@ -184,7 +185,7 @@ describe('components/TableRow', () => {
         const runBasicSupplyMutableMosaic = (params, expectedResult) => {
             // Arrange:
             const wrapper = getTableRowWrapper({
-                ownedAssetHexIds: [mockMosaicValue.hexId],
+                ownedAssetHexIds: [mockMosaicValue.hexId, mosaicsMock[0].mosaicIdHex, mosaicsMock[1].mosaicIdHex],
                 rowValues: {
                     ...mockMosaicValue,
                     ...params,
@@ -196,19 +197,19 @@ describe('components/TableRow', () => {
             // Act + Assert:
             // @ts-ignore
             expect(vm.isSupplyMutableMosaic).toBe(expectedResult);
+            expect(wrapper.find('.modify-supply').exists()).toBe(expectedResult);
+
             if (expectedResult) {
                 wrapper.find('.modify-supply').trigger('click');
                 expect(wrapper.emitted('on-show-mosaic-supply-change-form')).toBeDefined();
-            } else {
-                expect(wrapper.find('.modify-supply').exists()).toBe(expectedResult);
             }
         };
 
-        test('returns true when mosaics is support supply mutable and not expired', () => {
+        test('returns true when mosaic supports supply mutable and not expired', () => {
             runBasicSupplyMutableMosaic({}, true);
         });
 
-        test('returns false when mosaics is support supply mutable is expired', () => {
+        test('returns false when mosaic supports supply mutable is expired', () => {
             runBasicSupplyMutableMosaic(
                 {
                     expiration: 'expired',
@@ -242,16 +243,65 @@ describe('components/TableRow', () => {
             // Act + Assert:
             // @ts-ignore
             expect(vm.hasMetadata).toBe(expectedResult);
+        };
 
-            if (expectedResult) {
-                wrapper.find('.view-metadata').trigger('click');
-                wrapper.find('.edit-metadata').trigger('click');
-                expect(wrapper.emitted('on-show-metadata')).toBeDefined();
-                expect(wrapper.emitted('on-show-edit')).toBeDefined();
-            } else {
-                expect(wrapper.find('.view-metadata').exists()).toBe(expectedResult);
-                expect(wrapper.find('.edit-metadata').exists()).toBe(expectedResult);
-            }
+        const runBasicViewEditMetadataTests = (action, componentClass, expectedEvent?) => {
+            const runBasicComponentTests = (params, componentClass, expectedResult, expectedEvent?) => {
+                // Arrange:
+                const wrapper = getTableRowWrapper({
+                    ownedAssetHexIds: [mockMosaicValue.hexId, mockNamespaceRowValue.hexId],
+                    rowValues: {
+                        ...params,
+                    },
+                });
+
+                // Act + Assert:
+                expect(wrapper.find(componentClass).exists()).toBe(expectedResult);
+
+                if (expectedResult) {
+                    wrapper.find(componentClass).trigger('click');
+                    expect(wrapper.emitted(expectedEvent)).toBeDefined();
+                }
+            };
+
+            test(`able ${action} metadata when mosaic / namespace contains metadata info`, () => {
+                [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
+                    runBasicComponentTests(
+                        {
+                            ...rowValue,
+                        },
+                        componentClass,
+                        true,
+                        expectedEvent,
+                    );
+                });
+            });
+
+            test(`unable ${action} metadata when mosaic / namespace does not contain metadata info`, () => {
+                [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
+                    runBasicComponentTests(
+                        {
+                            ...rowValue,
+                            metadataList: [],
+                        },
+                        componentClass,
+                        false,
+                    );
+                });
+            });
+
+            test(`unable ${action} metadata when mosaic / namespace metadata info undefined`, () => {
+                [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
+                    runBasicComponentTests(
+                        {
+                            ...rowValue,
+                            metadataList: undefined,
+                        },
+                        componentClass,
+                        false,
+                    );
+                });
+            });
         };
 
         test('returns true when mosaic / namespace contains metadata info', () => {
@@ -275,6 +325,26 @@ describe('components/TableRow', () => {
                     false,
                 );
             });
+        });
+
+        test('returns false when mosaic / namespace metadata info undefined', () => {
+            [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
+                runBasicHasMetadataTests(
+                    {
+                        ...rowValue,
+                        metadataList: undefined,
+                    },
+                    false,
+                );
+            });
+        });
+
+        describe('viewMetadata', () => {
+            runBasicViewEditMetadataTests('view', '.view-metadata', 'on-show-metadata');
+        });
+
+        describe('editMetadata', () => {
+            runBasicViewEditMetadataTests('edit', '.edit-metadata', 'on-show-edit');
         });
     });
 
@@ -356,7 +426,6 @@ describe('components/TableRow', () => {
             expect(vm.visibleRowValues).toEqual(params);
             // @ts-ignore
             expect(vm.visibleRowValues).not.toHaveProperty('hiddenData');
-            expect(wrapper.findComponent(AmountDisplay).exists()).toBe(expectedResult);
         };
 
         test('returns mosaic value except for hiddenData property', () => {
@@ -365,6 +434,28 @@ describe('components/TableRow', () => {
 
         test('returns namespace value except for hiddenData property', () => {
             runBasicVisibleRowValues(mockNamespaceRowValue, false);
+        });
+    });
+
+    describe('AmountDisplay', () => {
+        const runBasicRenderAmountDisplayTests = (params, expectedResult) => {
+            // Arrange:
+            const wrapper = getTableRowWrapper({
+                rowValues: {
+                    ...params,
+                },
+            });
+
+            // Act + Assert:
+            expect(wrapper.findComponent(AmountDisplay).exists()).toBe(expectedResult);
+        };
+
+        test('display amount display component when provided mosaic value', () => {
+            runBasicRenderAmountDisplayTests(mockMosaicValue, true);
+        });
+
+        test('hidden amount display component when provided namespace value', () => {
+            runBasicRenderAmountDisplayTests(mockNamespaceRowValue, false);
         });
     });
 });
