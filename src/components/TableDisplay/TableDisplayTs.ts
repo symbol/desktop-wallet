@@ -330,7 +330,7 @@ export class TableDisplayTs extends Vue {
     }
 
     set showExpired(newVal: boolean) {
-        this.setFilteredBy('expiration');
+        this.filteredBy = { fieldName: 'expiration', filteringType: newVal ? 'show' : 'hide' };
     }
 
     /**
@@ -392,26 +392,13 @@ export class TableDisplayTs extends Vue {
      * Sets the default sorting state and trigger it
      */
     public setDefaultSorting(): void {
-        const defaultSort = 'asc';
+        const defaultSort = 'desc';
         const defaultField = 'namespace' === this.assetType ? 'name' : 'hexId';
 
         Vue.set(this, 'sortedBy', {
             fieldName: defaultField,
             direction: defaultSort,
         });
-
-        this.setSortedBy(defaultField);
-    }
-
-    /**
-     * Triggers table filtering by setting its filtering options
-     * @param {TableFieldNames} fieldName
-     */
-    public setFilteredBy(fieldName: string): void {
-        const filteredBy = { ...this.filteredBy };
-        const filteringType: FilteringTypes = filteredBy.fieldName === fieldName && filteredBy.filteringType === 'show' ? 'hide' : 'show';
-
-        this.filteredBy = { fieldName, filteringType };
     }
 
     /**
