@@ -55,7 +55,7 @@ export const mockNamespaceRowValue = {
             metadataType: 1,
             scopedMetadataKey: 'A14173CB00ED0041',
             sourceAddress: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
-            targetAddress: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
+            targetAddress: 'TBF43DIZI62PR2W6JQBJR3AI6OZLRXJYMGHLTFI',
             targetId: '7E77578D00C26DFC',
             value: 'metavalue',
         },
