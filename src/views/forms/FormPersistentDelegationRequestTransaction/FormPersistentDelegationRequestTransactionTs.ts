@@ -341,9 +341,9 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             : of([this.calculateSuggestedMaxFee(transaction)]);
     }
     /**
-     * To get all the key link transactions
+     * To get all the transactions in one step (key link + harvesting)
      */
-    protected getKeyLinkTransactions(transactionSigner = this.tempTransactionSigner): Observable<Transaction[]> {
+    protected getAllTransactions(transactionSigner = this.tempTransactionSigner): Observable<Transaction[]> {
         const maxFee = UInt64.fromUint(this.formItems.maxFee) || UInt64.fromUint(this.feesConfig.fast);
         const txs: Transaction[] = [];
 
@@ -480,7 +480,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         if (this.action === HarvestingAction.SINGLE_KEY) {
             return this.getSingleKeyLinkTransaction(this.type);
         } else {
-            return this.getKeyLinkTransactions();
+            return this.getAllTransactions();
         }
     }
     public announce(service: TransactionAnnouncerService, transactionSigner: TransactionSigner): Observable<Observable<BroadcastResult>[]> {
@@ -542,7 +542,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             );
         }
         // announce the keyLink txs and save the vrf and remote private keys encrypted to the storage
-        return this.getKeyLinkTransactions(transactionSigner).pipe(
+        return this.getAllTransactions(transactionSigner).pipe(
             flatMap((transactions) => {
                 Vue.set(this, 'actionStarted', true);
                 return this.signAndAnnounceTransactions(transactions, transactionSigner, service);
