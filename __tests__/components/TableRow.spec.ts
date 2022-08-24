@@ -264,7 +264,7 @@ describe('components/TableRow', () => {
                 }
             };
 
-            test(`able ${action} metadata when mosaic / namespace contains metadata info`, () => {
+            test(`can ${action} metadata when mosaic / namespace contains metadata info`, () => {
                 [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
                     runBasicComponentTests(
                         {
@@ -277,7 +277,7 @@ describe('components/TableRow', () => {
                 });
             });
 
-            test(`unable ${action} metadata when mosaic / namespace does not contain metadata info`, () => {
+            test(`cannot ${action} metadata when mosaic / namespace does not contain metadata info`, () => {
                 [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
                     runBasicComponentTests(
                         {
@@ -290,7 +290,7 @@ describe('components/TableRow', () => {
                 });
             });
 
-            test(`unable ${action} metadata when mosaic / namespace metadata info undefined`, () => {
+            test(`cannot ${action} metadata when mosaic / namespace metadata info is undefined`, () => {
                 [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
                     runBasicComponentTests(
                         {
@@ -327,7 +327,7 @@ describe('components/TableRow', () => {
             });
         });
 
-        test('returns false when mosaic / namespace metadata info undefined', () => {
+        test('returns false when mosaic / namespace metadata info is undefined', () => {
             [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
                 runBasicHasMetadataTests(
                     {
@@ -384,7 +384,7 @@ describe('components/TableRow', () => {
             );
         });
 
-        test('returns alias link when row value is mosaic and not link with namespace', () => {
+        test('returns alias link when row value is mosaic and not linked with namespace', () => {
             runBasicAliasActionLabel(
                 {
                     ...mockMosaicValue,
@@ -406,7 +406,7 @@ describe('components/TableRow', () => {
     });
 
     describe('visibleRowValues', () => {
-        const runBasicVisibleRowValues = (params, expectedResult) => {
+        const runBasicVisibleRowValues = (params) => {
             // Arrange:
             const hiddenData = {
                 value: 'value',
@@ -429,11 +429,11 @@ describe('components/TableRow', () => {
         };
 
         test('returns mosaic value except for hiddenData property', () => {
-            runBasicVisibleRowValues(mockMosaicValue, true);
+            runBasicVisibleRowValues(mockMosaicValue);
         });
 
         test('returns namespace value except for hiddenData property', () => {
-            runBasicVisibleRowValues(mockNamespaceRowValue, false);
+            runBasicVisibleRowValues(mockNamespaceRowValue);
         });
     });
 
