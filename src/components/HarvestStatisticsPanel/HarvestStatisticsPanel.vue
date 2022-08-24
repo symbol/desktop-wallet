@@ -8,6 +8,9 @@
                 <div class="level">
                     <div class="level-left">
                         <div class="level-item">
+                            <ButtonRefresh class="button-refresh" @click="refresh" />
+                        </div>
+                        <div class="level-item">
                             <div :class="harvestingStatusIndicator.cls"></div>
                         </div>
                         <div class="level-item txt-small">{{ harvestingStatusIndicator.text }}</div>

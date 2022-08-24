@@ -91,6 +91,9 @@ const initialState: HarvestingState = {
     pollingTrials: 1,
 };
 
+export const HARVESTING_STATUS_POLLING_TRIAL_LIMIT = 60;
+export const HARVESTING_STATUS_POLLING_INTERVAL_SECS = 10;
+
 const harvestingService = new HarvestingService();
 
 export default {
@@ -152,7 +155,12 @@ export default {
             commit('setPollingTrials', pollingTrials);
         },
         async FETCH_STATUS({ commit, rootGetters, dispatch }, node?: [string, NodeModel]) {
-            const currentSignerAccountInfo: AccountInfo = rootGetters['account/currentSignerAccountInfo'];
+            const csAccountInfo: AccountInfo = rootGetters['account/currentSignerAccountInfo'];
+            const repositoryFactory = rootGetters['network/repositoryFactory'];
+            const currentSignerAccountInfo = (
+                await repositoryFactory.createAccountRepository().getAccountsInfo([csAccountInfo.address]).toPromise()
+            )[0];
+
             // reset
             let status: HarvestingStatus;
             if (!currentSignerAccountInfo) {
@@ -223,7 +231,8 @@ export default {
                 status = accountUnlocked
                     ? HarvestingStatus.ACTIVE
                     : currentSignerHarvestingModel?.isPersistentDelReqSent
-                    ? pollingTrials === 20 || currentSignerHarvestingModel?.delegatedHarvestingRequestFailed
+                    ? pollingTrials === HARVESTING_STATUS_POLLING_TRIAL_LIMIT ||
+                      currentSignerHarvestingModel?.delegatedHarvestingRequestFailed
                         ? HarvestingStatus.FAILED
                         : HarvestingStatus.INPROGRESS_ACTIVATION
                     : HarvestingStatus.KEYS_LINKED;
