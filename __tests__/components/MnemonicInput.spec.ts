@@ -30,15 +30,15 @@ describe('components/MnemonicInput', () => {
             isEditing: boolean,
             wordsArrayLength: number,
             expectations: {
-                initInputToBeCalled: boolean,
-                inputWordValue: string,
-                finalIsEditingValue: boolean
-            }
+                initInputToBeCalled: boolean;
+                inputWordValue: string;
+                finalIsEditingValue: boolean;
+            },
         ) => {
             // Arrange:
             const wordsArray = new Array(wordsArrayLength).fill('word');
             const props = {
-                seed: wordsArray.join(' ')
+                seed: wordsArray.join(' '),
             };
             const mockInitInput = jest.fn();
 
@@ -50,12 +50,11 @@ describe('components/MnemonicInput', () => {
             component.userInput = input;
             const inputWord = component.inputWord;
             const finalIsEditingValue = component.isEditing;
-            
+
             // Assert:
             if (expectations.initInputToBeCalled) {
                 expect(mockInitInput).toBeCalled();
-            }
-            else {
+            } else {
                 expect(mockInitInput).not.toBeCalled();
             }
             expect(inputWord).toBe(expectations.inputWordValue);
@@ -70,7 +69,7 @@ describe('components/MnemonicInput', () => {
             const expectations = {
                 initInputToBeCalled: true,
                 inputWordValue: '',
-                finalIsEditingValue: true
+                finalIsEditingValue: true,
             };
 
             // Act + Assert:
@@ -85,14 +84,14 @@ describe('components/MnemonicInput', () => {
             const expectations = {
                 initInputToBeCalled: false,
                 inputWordValue: 'word',
-                finalIsEditingValue: true
+                finalIsEditingValue: true,
             };
 
             // Act + Assert:
             runSetUserInputTest(input, isEditing, wordsArrayLength, expectations);
         });
 
-        test('set isEditing to true when it\'s value is false', () => {
+        test("set isEditing to true when it's value is false", () => {
             // Arrange:
             const input = 'word';
             const isEditing = false;
@@ -100,7 +99,7 @@ describe('components/MnemonicInput', () => {
             const expectations = {
                 initInputToBeCalled: false,
                 inputWordValue: 'word',
-                finalIsEditingValue: true
+                finalIsEditingValue: true,
             };
 
             // Act + Assert:
@@ -108,17 +107,65 @@ describe('components/MnemonicInput', () => {
         });
     });
 
-    describe('addWord()', () => {
-        const runAddWordTest = (
-            inputWordLength: number,
+    describe('showCopyButton()', () => {
+        const runShowCopyButtonTest = (
             wordsArrayLength: number,
-            expectedWordToBeAdded: boolean
+            expectations: {
+                showCopyButton: boolean;
+                showPasteButton: boolean;
+            },
         ) => {
+            // Arrange:
+            const wordsArray = new Array(wordsArrayLength).fill('word');
+            const props = {
+                seed: wordsArray.join(' '),
+            };
+
+            // Act:
+            const wrapper = getMnemonicInputWrapper(props);
+            const component = wrapper.vm as MnemonicInputTs;
+            const result = component.showCopyButton;
+            const buttonCopyToClipboard = wrapper.find('buttoncopytoclipboard-stub');
+            const buttonPaste = wrapper.find('.paste');
+
+            // Assert:
+            expect(result).toBe(expectations.showCopyButton);
+            expect(buttonCopyToClipboard.exists()).toBe(expectations.showCopyButton);
+            expect(buttonPaste.exists()).toBe(expectations.showPasteButton);
+        };
+
+        test('show copy button when length of words is 24', () => {
+            // Arrange:
+            const wordsArrayLength = 24;
+            const expectations = {
+                showCopyButton: true,
+                showPasteButton: false,
+            };
+
+            // Act + Assert:
+            runShowCopyButtonTest(wordsArrayLength, expectations);
+        });
+
+        test('show paste button when length of words is less than 24', () => {
+            // Arrange:
+            const wordsArrayLength = 3;
+            const expectations = {
+                showCopyButton: false,
+                showPasteButton: true,
+            };
+
+            // Act + Assert:
+            runShowCopyButtonTest(wordsArrayLength, expectations);
+        });
+    });
+
+    describe('addWord()', () => {
+        const runAddWordTest = (inputWordLength: number, wordsArrayLength: number, expectedWordToBeAdded: boolean) => {
             // Arrange:
             const inputWord = new Array(inputWordLength).fill('a').join('');
             const wordsArray = new Array(wordsArrayLength).fill('word');
             const props = {
-                seed: wordsArray.join(' ')
+                seed: wordsArray.join(' '),
             };
             const mockInitInput = jest.fn();
             const mockHandleWordsArray = jest.fn();
@@ -130,14 +177,13 @@ describe('components/MnemonicInput', () => {
             component.handleWordsArray = mockHandleWordsArray;
             component.inputWord = inputWord;
             component.addWord();
-            
+
             // Assert:
             if (expectedWordToBeAdded) {
                 expect(mockInitInput).toBeCalled();
                 expect(mockHandleWordsArray).toBeCalledWith(inputWord);
                 expect(component.inputWord).toBe('');
-            }
-            else {
+            } else {
                 expect(mockInitInput).not.toBeCalled();
                 expect(mockHandleWordsArray).not.toBeCalled();
                 expect(component.inputWord).toBe(inputWord);
@@ -191,13 +237,13 @@ describe('components/MnemonicInput', () => {
             isEditing: boolean,
             isNeedPressDelTwice: boolean,
             expectations: {
-                finalIsNeedPressDelTwice: boolean,
-                wordToBeDeleted: boolean
-            }
+                finalIsNeedPressDelTwice: boolean;
+                wordToBeDeleted: boolean;
+            },
         ) => {
             // Arrange:
             const props = {
-                seed: 'word'
+                seed: 'word',
             };
             const mockInitInput = jest.fn();
             const mockHandleWordsArray = jest.fn();
@@ -211,27 +257,68 @@ describe('components/MnemonicInput', () => {
             component.isEditing = isEditing;
             component.isNeedPressDelTwice = isNeedPressDelTwice;
             component.deleteWord();
-            
+
             // Assert:
             if (expectations.wordToBeDeleted) {
                 expect(mockInitInput).toBeCalled();
                 expect(mockHandleWordsArray).toBeCalledWith();
-            }
-            else {
+            } else {
                 expect(mockInitInput).not.toBeCalled();
                 expect(mockHandleWordsArray).not.toBeCalled();
             }
             expect(component.isNeedPressDelTwice).toBe(expectations.finalIsNeedPressDelTwice);
         };
 
-        test('--', () => {
+        test('not delete word when inputWord is not empty', () => {
             // Arrange:
             const inputWord = 'word';
             const isEditing = false;
             const isNeedPressDelTwice = false;
             const expectations = {
                 finalIsNeedPressDelTwice: true,
-                wordToBeDeleted: false
+                wordToBeDeleted: false,
+            };
+
+            // Act + Assert:
+            runAddWordTest(inputWord, isEditing, isNeedPressDelTwice, expectations);
+        });
+
+        test('not delete word when isNeedPressDelTwice is true', () => {
+            // Arrange:
+            const inputWord = '';
+            const isEditing = true;
+            const isNeedPressDelTwice = true;
+            const expectations = {
+                finalIsNeedPressDelTwice: false,
+                wordToBeDeleted: false,
+            };
+
+            // Act + Assert:
+            runAddWordTest(inputWord, isEditing, isNeedPressDelTwice, expectations);
+        });
+
+        test('delete word when inputWord is empty', () => {
+            // Arrange:
+            const inputWord = '';
+            const isEditing = false;
+            const isNeedPressDelTwice = false;
+            const expectations = {
+                finalIsNeedPressDelTwice: false,
+                wordToBeDeleted: true,
+            };
+
+            // Act + Assert:
+            runAddWordTest(inputWord, isEditing, isNeedPressDelTwice, expectations);
+        });
+
+        test('delete word when inputWord is empty and isEditing is true', () => {
+            // Arrange:
+            const inputWord = '';
+            const isEditing = true;
+            const isNeedPressDelTwice = false;
+            const expectations = {
+                finalIsNeedPressDelTwice: false,
+                wordToBeDeleted: true,
             };
 
             // Act + Assert:
@@ -239,55 +326,169 @@ describe('components/MnemonicInput', () => {
         });
     });
 
-    describe('showCopyButton()', () => {
-        const runShowCopyButtonTest = (
-            wordsArrayLength: number,
-            expectations: {
-                showCopyButton: boolean,
-                showPasteButton: boolean
-            }
-        ) => {
+    describe('handleWordsArray()', () => {
+        const runHandleWordsArrayTest = (item: string, expectedWordsArray: string[]) => {
             // Arrange:
-            const wordsArray = new Array(wordsArrayLength).fill('word');
+            const wordsArray = new Array(2).fill('word');
             const props = {
-                seed: wordsArray.join(' ')
+                seed: wordsArray.join(' '),
             };
 
             // Act:
             const wrapper = getMnemonicInputWrapper(props);
             const component = wrapper.vm as MnemonicInputTs;
-            const result = component.showCopyButton;
-            const buttonCopyToClipboard = wrapper.find('buttoncopytoclipboard-stub');
-            const buttonPaste = wrapper.find('.paste');
-            
+            component.handleWordsArray(item);
+
             // Assert:
-            expect(result).toBe(expectations.showCopyButton);
-            expect(buttonCopyToClipboard.exists()).toBe(expectations.showCopyButton);
-            expect(buttonPaste.exists()).toBe(expectations.showPasteButton);
+            expect(component.wordsArray).toStrictEqual(expectedWordsArray);
+            expect(wrapper.emitted('handle-words')).toBeTruthy();
+            expect(wrapper.emitted('handle-words')[0]).toStrictEqual([expectedWordsArray]);
         };
 
-        test('show copy button when length of words is 24', () => {
+        test('add word to wordsArray when it is provided as argument', () => {
             // Arrange:
-            const wordsArrayLength = 24;
-            const expectations = {
-                showCopyButton: true,
-                showPasteButton: false
-            };
+            const item = 'AnotherWord';
+            const expectedWordsArray = ['word', 'word', 'anotherword'];
 
             // Act + Assert:
-            runShowCopyButtonTest(wordsArrayLength, expectations);
+            runHandleWordsArrayTest(item, expectedWordsArray);
         });
 
-        test('show paste button when length of words is less than 24', () => {
+        test('remove last word from wordsArray when argument is missing', () => {
             // Arrange:
-            const wordsArrayLength = 3;
-            const expectations = {
-                showCopyButton: false,
-                showPasteButton: true
-            };
+            const item = null;
+            const expectedWordsArray = ['word'];
 
             // Act + Assert:
-            runShowCopyButtonTest(wordsArrayLength, expectations);
+            runHandleWordsArrayTest(item, expectedWordsArray);
+        });
+    });
+
+    describe('handlePaste()', () => {
+        test('set seed from clipboard event', () => {
+            // Arrange:
+            const expectedClipboardData = 'clipboard data';
+            const props = {
+                seed: '',
+            };
+            const mockHandleSeed = jest.fn();
+            const clipboardEvent = {
+                clipboardData: {
+                    getData: () => ({
+                        toString: () => expectedClipboardData,
+                    }),
+                },
+            };
+
+            // Act:
+            const wrapper = getMnemonicInputWrapper(props);
+            const component = wrapper.vm as MnemonicInputTs;
+            component['handleSeed'] = mockHandleSeed;
+            component.handlePaste(clipboardEvent as any);
+
+            // Assert:
+            expect(mockHandleSeed).toBeCalledWith(expectedClipboardData);
+        });
+    });
+
+    describe('handleClickPaste()', () => {
+        test('set seed from navigator clipboard', async () => {
+            // Arrange:
+            const expectedClipboardData = 'clipboard data';
+            const props = {
+                seed: '',
+            };
+            const mockHandleSeed = jest.fn();
+            (window as any).__defineGetter__('navigator', () => ({
+                clipboard: {
+                    readText: () => Promise.resolve(expectedClipboardData),
+                },
+            }));
+
+            // Act:
+            const wrapper = getMnemonicInputWrapper(props);
+            const component = wrapper.vm as MnemonicInputTs;
+            component['handleSeed'] = mockHandleSeed;
+            await component.handleClickPaste();
+
+            // Assert:
+            expect(mockHandleSeed).toBeCalledWith(expectedClipboardData);
+        });
+    });
+
+    describe('handleSeed()', () => {
+        const runHandleSeedTest = (seed: string, wordsArrayLength: number, expectedHandleWordsArrayCalls: string[][]) => {
+            // Arrange:
+            const wordsArray = new Array(wordsArrayLength).fill('word');
+            const props = {
+                seed: wordsArray.join(' '),
+            };
+            const mockHandleWordsArray = jest.fn();
+
+            // Act:
+            const wrapper = getMnemonicInputWrapper(props);
+            const component = wrapper.vm as MnemonicInputTs;
+            component.wordsArray = wordsArray;
+            component.handleWordsArray = mockHandleWordsArray;
+            component['handleSeed'](seed);
+
+            // Assert:
+            expect(mockHandleWordsArray).toBeCalledTimes(expectedHandleWordsArrayCalls.length);
+            expect(mockHandleWordsArray.mock.calls).toEqual(expectedHandleWordsArrayCalls);
+        };
+
+        test('not add words when seed is an empty string', () => {
+            // Arrange:
+            const seed = '';
+            const wordsArrayLength = 1;
+            const expectedWordToBeAdded = [];
+
+            // Act + Assert:
+            runHandleSeedTest(seed, wordsArrayLength, expectedWordToBeAdded);
+        });
+
+        test('not add words when wordsArray length is more than 23', () => {
+            // Arrange:
+            const seed = 'lorem ipsum dolor sit';
+            const wordsArrayLength = 24;
+            const expectedWordToBeAdded = [];
+
+            // Act + Assert:
+            runHandleSeedTest(seed, wordsArrayLength, expectedWordToBeAdded);
+        });
+
+        test('add words from seed when wordsArray length is less than 24', () => {
+            // Arrange:
+            const seed = 'lorem ipsum dolor sit';
+            const wordsArrayLength = 2;
+            const expectedWordToBeAdded = [['lorem'], ['ipsum'], ['dolor'], ['sit']];
+
+            // Act + Assert:
+            runHandleSeedTest(seed, wordsArrayLength, expectedWordToBeAdded);
+        });
+    });
+
+    describe('initInput()', () => {
+        test('initialize isNeedPressDelTwice and isEditing', () => {
+            // Arrange:
+            const props = {
+                seed: '',
+            };
+            const isNeedPressDelTwice = false;
+            const isEditing = true;
+            const expectedFinalIsNeedPressDelTwice = true;
+            const expectedFinalIsEditing = false;
+
+            // Act:
+            const wrapper = getMnemonicInputWrapper(props);
+            const component = wrapper.vm as MnemonicInputTs;
+            component.isNeedPressDelTwice = isNeedPressDelTwice;
+            component.isEditing = isEditing;
+            component.initInput();
+
+            // Assert:
+            expect(component.isNeedPressDelTwice).toBe(expectedFinalIsNeedPressDelTwice);
+            expect(component.isEditing).toBe(expectedFinalIsEditing);
         });
     });
 });
