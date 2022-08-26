@@ -228,7 +228,7 @@ describe('components/MosaicAmountDisplay', () => {
             expect(result).toBe(expectedResult);
         };
 
-        test('return calculated realtive amount when absolute amount is provided', () => {
+        test('return calculated relative amount when absolute amount is provided', () => {
             // Arrange:
             const absoluteAmount = 10000000;
             const relativeAmount = null;
@@ -238,7 +238,7 @@ describe('components/MosaicAmountDisplay', () => {
             runGetAmountTest(absoluteAmount, relativeAmount, expectedResult);
         });
 
-        test('return realtive amount when absolute amount is not provided', () => {
+        test('return relative amount when absolute amount is not provided', () => {
             // Arrange:
             const absoluteAmount = null;
             const relativeAmount = 20;
@@ -248,7 +248,7 @@ describe('components/MosaicAmountDisplay', () => {
             runGetAmountTest(absoluteAmount, relativeAmount, expectedResult);
         });
 
-        test('return 0 when realtive amount nor absolute amount is provided', () => {
+        test('return 0 when relative amount nor absolute amount is provided', () => {
             // Arrange:
             const absoluteAmount = null;
             const relativeAmount = null;
@@ -299,7 +299,7 @@ describe('components/MosaicAmountDisplay', () => {
             runGetTickerTest(showTicker, useNetwork, networkCurrency, id, expectedResult);
         });
 
-        test('return network currency tiker when useNetwork is true', () => {
+        test('return network currency ticker when useNetwork is true', () => {
             // Arrange:
             const showTicker = true;
             const useNetwork = true;
@@ -311,7 +311,7 @@ describe('components/MosaicAmountDisplay', () => {
             runGetTickerTest(showTicker, useNetwork, networkCurrency, id, expectedResult);
         });
 
-        test('return empty string when when network currency tiker is unavailable', () => {
+        test('return empty string when when network currency ticker is unavailable', () => {
             // Arrange:
             const showTicker = true;
             const useNetwork = true;
