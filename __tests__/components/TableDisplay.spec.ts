@@ -19,7 +19,7 @@ import { getComponent } from '@MOCKS/Components';
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
 import { simpleWallet1, simpleWallet2 } from '@MOCKS/Accounts';
 import { mockMosaicRowValue, mosaicsMock } from '@MOCKS/mosaics';
-import { mockNamespaceRowValue, mockNamespaces } from '@MOCKS/namespaces';
+import { mockNamespaceRowValue, createMockNamespace } from '@MOCKS/namespaces';
 import { mockMetadatas } from '@MOCKS/metadatas';
 import { Signer } from '@/store/Account';
 import { Address, NamespaceId, MosaicId } from 'symbol-sdk';
@@ -135,7 +135,7 @@ describe('components/TableDisplay', () => {
 
     describe('isLoading', () => {
         const runBasicIsLoadingStatusTests = (assetType, fetchStatus) => {
-            test(`returns false fetching ${assetType} status when asset type is namespace`, () => {
+            test(`returns false fetching ${assetType} status when asset type is ${assetType}`, () => {
                 // Arrange:
                 const wrapper = getTableRowWrapper(
                     {},
@@ -146,10 +146,10 @@ describe('components/TableDisplay', () => {
                 const vm = wrapper.vm as TableDisplayTs;
 
                 // Act + Assert:
-                expect(vm[fetchStatus]).toBe(false);
+                expect(vm.isLoading).toBe(false);
             });
 
-            test(`returns true fetching ${assetType} status when asset type is namespace`, () => {
+            test(`returns true fetching ${assetType} status when asset type is ${assetType}`, () => {
                 // Arrange:
                 const wrapper = getTableRowWrapper(
                     {
@@ -200,11 +200,11 @@ describe('components/TableDisplay', () => {
             }
         };
 
-        test("store dispatch 'account/SET_CURRENT_SIGNER' when provided address", () => {
+        test("store dispatches 'account/SET_CURRENT_SIGNER' when provided address", () => {
             runBasicOnSignerSelectorChangeTests(simpleWallet1.address.plain(), true);
         });
 
-        test("store dispatch ignore 'account/SET_CURRENT_SIGNER' when address not provided", () => {
+        test("store does not dispatch 'account/SET_CURRENT_SIGNER' when address not provided", () => {
             runBasicOnSignerSelectorChangeTests(undefined, false);
         });
     });
@@ -283,30 +283,6 @@ describe('components/TableDisplay', () => {
             runBasicOwnedAssetHexIdsTests('mosaic', ['75E00B2F9BDAA7EE', '49DB04D43E714646']);
         });
     });
-
-    // Todo: unable to mock on service class
-    // describe('getService', () => {
-    //     test.only('returns mosaic service when asset type is mosaic', () => {
-    //         // Arrange:
-    //         const wrapper = getTableRowWrapper(
-    //             {},
-    //             {
-    //                 assetType: 'mosaic',
-    //             },
-    //         );
-    //         const vm = wrapper.vm as TableDisplayTs;
-
-    //         // @ts-ignore - this is a protected method
-    //         const service = vm.getService();
-
-    //         // Act + Assert:
-    //         expect(service).toHaveBeenCalledWith('MosaicTableService', {
-    //             currentHeight: 0,
-    //             mosaics: [],
-    //             networkConfiguration: { blockGenerationTargetTime: 30, epochAdjustment: 1637848847, namespaceGracePeriodDuration: 86400 },
-    //         });
-    //     });
-    // });
 
     describe('tableFields', () => {
         const runBasicTableFieldsTests = (assetType, expectedResult) => {
@@ -424,7 +400,14 @@ describe('components/TableDisplay', () => {
             },
             {
                 assetType: 'namespace',
-                state: { ownedNamespaces: mockNamespaces, currentHeight: 612920 },
+                state: {
+                    ownedNamespaces: [
+                        createMockNamespace('helloworld', 0, undefined, 611920, 621920),
+                        createMockNamespace('city.access', 1, '632B3D23282A51E8', 611920, 621920),
+                        createMockNamespace('symbolcity', 2, 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI', 611920, 621920),
+                    ],
+                    currentHeight: 612920,
+                },
                 expectedResult: [
                     {
                         hexId: '80DE90A24D6C0CC4',
@@ -462,14 +445,14 @@ describe('components/TableDisplay', () => {
                     {
                         hexId: '62FC80CAE173875059E7274E',
                         scopedMetadataKey: 'E3E5E7B070607991',
-                        targetAddress: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
+                        targetAddress: 'TBF43DIZI62PR2W6JQBJR3AI6OZLRXJYMGHLTFI',
                         targetId: '80DE90A24D6C0CC4',
                         value: 'metadata',
                     },
                     {
                         hexId: '6303F2DC6CF8F07F3107CEB9',
                         scopedMetadataKey: 'B660AB4DEF66DFFA',
-                        targetAddress: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
+                        targetAddress: 'TBF43DIZI62PR2W6JQBJR3AI6OZLRXJYMGHLTFI',
                         targetId: '4151C48416E93B75',
                         value: 'metadata',
                     },
@@ -481,7 +464,7 @@ describe('components/TableDisplay', () => {
     });
 
     describe('displayedValues', () => {
-        const runBasicFilteredDisplayedValuesTests = (assetType, params, expectedDefaultResult, expectedExpiredResult) => {
+        const runBasicExpirationFilteredTests = (assetType, params, expectedDefaultResult, expectedExpiredResult) => {
             // Arrange:
             const wrapper = getTableRowWrapper(
                 { ...params },
@@ -492,7 +475,7 @@ describe('components/TableDisplay', () => {
 
             const vm = wrapper.vm as TableDisplayTs;
 
-            test(`returns default ${assetType} when filter expiration is hide`, () => {
+            test(`returns unexpired ${assetType} when filter expiration is hide`, () => {
                 // Act + Assert:
                 expect(vm.displayedValues).toEqual(expectedDefaultResult);
             });
@@ -571,7 +554,7 @@ describe('components/TableDisplay', () => {
                 },
             ];
 
-            runBasicFilteredDisplayedValuesTests(
+            runBasicExpirationFilteredTests(
                 'mosaic',
                 { holdMosaics: mockMosaics, currentHeight: 84104 },
                 [expectedResult[1]],
@@ -582,34 +565,8 @@ describe('components/TableDisplay', () => {
         describe('namespaceAssetType', () => {
             // Arrange:
             const mockNamespaces = [
-                {
-                    namespaceIdHex: '80DE90A24D6C0CC4',
-                    name: 'helloworld',
-                    isRoot: true,
-                    ownerAddressRawPlain: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
-                    aliasType: 0,
-                    aliasTargetAddressRawPlain: undefined,
-                    aliasTargetMosaicIdHex: undefined,
-                    parentNamespaceIdHex: '',
-                    startHeight: 611920,
-                    endHeight: 612920,
-                    depth: 0,
-                    metadataList: [],
-                },
-                {
-                    namespaceIdHex: '80DE90A24D6C0CC4',
-                    name: 'city.access',
-                    isRoot: true,
-                    ownerAddressRawPlain: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
-                    aliasType: 1,
-                    aliasTargetAddressRawPlain: undefined,
-                    aliasTargetMosaicIdHex: '632B3D23282A51E8',
-                    parentNamespaceIdHex: '',
-                    startHeight: 611920,
-                    endHeight: 621920,
-                    depth: 0,
-                    metadataList: [],
-                },
+                createMockNamespace('helloworld', 0, undefined, 611920, 612920),
+                createMockNamespace('city.access', 1, '632B3D23282A51E8', 611920, 621920),
             ];
 
             const expectedResult = [
@@ -633,7 +590,7 @@ describe('components/TableDisplay', () => {
                 },
             ];
 
-            runBasicFilteredDisplayedValuesTests(
+            runBasicExpirationFilteredTests(
                 'namespace',
                 { ownedNamespaces: mockNamespaces, currentHeight: 613920 },
                 [expectedResult[1]],
@@ -658,14 +615,14 @@ describe('components/TableDisplay', () => {
                     {
                         hexId: '6303F2DC6CF8F07F3107CEB9',
                         scopedMetadataKey: 'B660AB4DEF66DFFA',
-                        targetAddress: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
+                        targetAddress: 'TBF43DIZI62PR2W6JQBJR3AI6OZLRXJYMGHLTFI',
                         targetId: '4151C48416E93B75',
                         value: 'metadata',
                     },
                     {
                         hexId: '62FC80CAE173875059E7274E',
                         scopedMetadataKey: 'E3E5E7B070607991',
-                        targetAddress: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
+                        targetAddress: 'TBF43DIZI62PR2W6JQBJR3AI6OZLRXJYMGHLTFI',
                         targetId: '80DE90A24D6C0CC4',
                         value: 'metadata',
                     },
@@ -926,7 +883,7 @@ describe('components/TableDisplay', () => {
 
             test('returns full rows when pagination type is scroll', () => {
                 // Arrange:
-                const wrapper = createWrapper('pagination');
+                const wrapper = createWrapper('scroll');
 
                 // Act + Assert:
                 expect(wrapper.currentPageRows).toEqual(expectedRows);
@@ -1264,7 +1221,7 @@ describe('components/TableDisplay', () => {
     });
 
     describe('loadMore', () => {
-        const runBasicSkipLoadMoreTests = async (assetType) => {
+        const runBasicNotLastPageTests = async (assetType) => {
             // Arrange:
             const wrapper = getTableRowWrapper(
                 {
@@ -1308,11 +1265,11 @@ describe('components/TableDisplay', () => {
         });
 
         test('skip when asset type is namespace and current page is last page', () => {
-            runBasicSkipLoadMoreTests('namespace');
+            runBasicNotLastPageTests('namespace');
         });
 
         test('skip when asset type is not namespace', () => {
-            runBasicSkipLoadMoreTests('mosaic');
+            runBasicNotLastPageTests('mosaic');
         });
     });
 
@@ -1351,23 +1308,6 @@ describe('components/TableDisplay', () => {
         test('skip refresh when isRefreshing in progress', async () => {
             await runBasicRefreshingTests(true, false);
         });
-
-        // Todo: unable to catch error for coverage
-        // test.only('skip refresh when refresh failed', async () => {
-        //     // Arrange:
-        //     const wrapper = getTableRowWrapper();
-
-        //     const vm = wrapper.vm as TableDisplayTs;
-
-        //     vm.$set(vm, 'isRefreshing', false);
-
-        //     // @ts-ignore - this is a private method
-        //     jest.spyOn(vm, 'refresh').mockRejectedValueOnce(new Error('failed'));
-
-        //     // Act + Assert:
-        //     // @ts-ignore - this is a private method
-        //     await expect(vm.onRefresh).toThrowError();
-        // });
     });
 
     describe('watchRefresh', () => {
@@ -1428,6 +1368,18 @@ describe('components/TableDisplay', () => {
             runBasicInfiniteScrollDisabledTest(wrapper, true);
         });
 
+        test('returns true when paginationType is scroll', () => {
+            // Arrange:
+            const wrapper = getTableRowWrapper(
+                {
+                    isFetchingMosaics: true,
+                },
+                { paginationType: 'scroll' },
+            );
+
+            runBasicInfiniteScrollDisabledTest(wrapper, true);
+        });
+
         test('returns false when paginationType is scroll', () => {
             // Arrange:
             const wrapper = getTableRowWrapper(
@@ -1475,6 +1427,10 @@ describe('components/TableDisplay', () => {
 
         test('returns false when isLoading is true and page number less than 1', () => {
             runBasicIsFetchingMoreTests(true, 0, false);
+        });
+
+        test('returns false when isLoading is false and page number more than 1', () => {
+            runBasicIsFetchingMoreTests(false, 2, false);
         });
     });
 });
