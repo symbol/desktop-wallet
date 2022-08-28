@@ -68,6 +68,7 @@ describe('components/SplitButton', () => {
         const dropdownComponentIcon = wrapper.findAll('icon-stub');
 
         expect(dropdownComponent.length).toBe(2);
+        expect(dropdownComponentIcon.length).toBe(2);
         expect(dropdownComponent.at(0).text()).toBe('test');
         expect(dropdownComponentIcon.at(0).attributes().type).toBe('test-icon');
         expect(dropdownComponent.at(1).text()).toBe('test1');
