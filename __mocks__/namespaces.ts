@@ -1,47 +1,29 @@
-export const mockNamespaces = [
-    {
-        namespaceIdHex: '80DE90A24D6C0CC4',
-        name: 'helloworld',
-        isRoot: true,
-        ownerAddressRawPlain: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
-        aliasType: 0,
+export const createMockNamespace = (name, aliasType, aliasTarget, startHeight, endHeight) => {
+    const aliasValue = {
         aliasTargetAddressRawPlain: undefined,
         aliasTargetMosaicIdHex: undefined,
-        parentNamespaceIdHex: '',
-        startHeight: 611920,
-        endHeight: 621920,
-        depth: 0,
-        metadataList: [],
-    },
-    {
+    };
+
+    if (aliasType === 1) {
+        aliasValue.aliasTargetMosaicIdHex = aliasTarget;
+    } else if (aliasType === 2) {
+        aliasValue.aliasTargetAddressRawPlain = aliasTarget;
+    }
+
+    return {
         namespaceIdHex: '80DE90A24D6C0CC4',
-        name: 'city.access',
-        isRoot: true,
+        name,
+        isRoot: name.split('.').length > 1 ? false : true,
         ownerAddressRawPlain: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
-        aliasType: 1,
-        aliasTargetAddressRawPlain: undefined,
-        aliasTargetMosaicIdHex: '632B3D23282A51E8',
+        aliasType,
+        ...aliasValue,
         parentNamespaceIdHex: '',
-        startHeight: 611920,
-        endHeight: 621920,
+        startHeight,
+        endHeight,
         depth: 0,
         metadataList: [],
-    },
-    {
-        namespaceIdHex: '80DE90A24D6C0CC4',
-        name: 'symbolcity',
-        isRoot: false,
-        ownerAddressRawPlain: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
-        aliasType: 2,
-        aliasTargetAddressRawPlain: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
-        aliasTargetMosaicIdHex: undefined,
-        parentNamespaceIdHex: '',
-        startHeight: 611920,
-        endHeight: 621920,
-        depth: 0,
-        metadataList: [],
-    },
-];
+    };
+};
 
 export const mockNamespaceRowValue = {
     aliasIdentifier: 'N/A',
