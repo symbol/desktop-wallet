@@ -475,7 +475,7 @@ describe('components/TableDisplay', () => {
 
             const vm = wrapper.vm as TableDisplayTs;
 
-            test(`returns unexpired ${assetType} when filter expiration is hide`, () => {
+            test(`returns only unexpired ${assetType} when filter expiration is hide`, () => {
                 // Act + Assert:
                 expect(vm.displayedValues).toEqual(expectedDefaultResult);
             });
@@ -1221,11 +1221,11 @@ describe('components/TableDisplay', () => {
     });
 
     describe('loadMore', () => {
-        const runBasicNotLastPageTests = async (assetType) => {
+        const runBasicLoadMoreTests = async (assetType, isLastPage, expectedResult) => {
             // Arrange:
             const wrapper = getTableRowWrapper(
                 {
-                    currentConfirmedPage: { pageNumber: 3, isLastPage: true },
+                    currentConfirmedPage: { pageNumber: 1, isLastPage },
                 },
                 {
                     assetType,
@@ -1237,39 +1237,27 @@ describe('components/TableDisplay', () => {
             // Act:
             vm.loadMore();
 
+            if (expectedResult) {
+                expect(vm.$store.dispatch).toBeCalledWith('namespace/LOAD_NAMESPACES', {
+                    pageNumber: 2,
+                    pageSize: 10,
+                });
+            }
+
             // Assert:
             expect(vm.$store.dispatch).not.toBeCalledWith('namespace/LOAD_NAMESPACES');
         };
 
-        test('called when asset type is namespace and current page is not last page', () => {
-            // Arrange:
-            const wrapper = getTableRowWrapper(
-                {
-                    currentConfirmedPage: { pageNumber: 1, isLastPage: false },
-                },
-                {
-                    assetType: 'namespace',
-                },
-            );
-
-            const vm = wrapper.vm as TableDisplayTs;
-
-            // Act:
-            vm.loadMore();
-
-            // Assert:
-            expect(vm.$store.dispatch).toBeCalledWith('namespace/LOAD_NAMESPACES', {
-                pageNumber: 2,
-                pageSize: 10,
-            });
+        test('store does not dispatch "namespace/LOAD_NAMESPACES" when current page is last page', () => {
+            runBasicLoadMoreTests('namespace', true, false);
         });
 
-        test('skip when asset type is namespace and current page is last page', () => {
-            runBasicNotLastPageTests('namespace');
+        test('store does not dispatch "namespace/LOAD_NAMESPACES" when asset type is mosaic and current page is not last page', () => {
+            runBasicLoadMoreTests('mosaic', false, false);
         });
 
-        test('skip when asset type is not namespace', () => {
-            runBasicNotLastPageTests('mosaic');
+        test('store dispatches "namespace/LOAD_NAMESPACES" when asset type is namespace and current page is not last page', () => {
+            runBasicLoadMoreTests('namespace', false, true);
         });
     });
 
@@ -1417,7 +1405,7 @@ describe('components/TableDisplay', () => {
             expect(result).toBe(expectedResult);
         };
 
-        test('returns true when isLoading is true and page number more than 1', () => {
+        test('returns true when isLoading is true and page number greater than 1', () => {
             runBasicIsFetchingMoreTests(true, 2, true);
         });
 
@@ -1429,7 +1417,7 @@ describe('components/TableDisplay', () => {
             runBasicIsFetchingMoreTests(true, 0, false);
         });
 
-        test('returns false when isLoading is false and page number more than 1', () => {
+        test('returns false when isLoading is false and page number greater than 1', () => {
             runBasicIsFetchingMoreTests(false, 2, false);
         });
     });

@@ -13,7 +13,7 @@ export const createMockNamespace = (name, aliasType, aliasTarget, startHeight, e
     return {
         namespaceIdHex: '80DE90A24D6C0CC4',
         name,
-        isRoot: name.split('.').length > 1 ? false : true,
+        isRoot: name.split('.').length <= 1,
         ownerAddressRawPlain: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
         aliasType,
         ...aliasValue,
