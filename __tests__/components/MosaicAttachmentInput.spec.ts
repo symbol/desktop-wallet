@@ -63,20 +63,20 @@ describe('components/MosaicAttachmentInput', () => {
 
         // Act:
         const wrapper = getMosaicAttachmentInputWrapper(props);
-        const mosaicSelector = wrapper.find('mosaicselector-stub');
+        const mosaicSelectorElement = wrapper.find('mosaicselector-stub');
         const amountInputElement = wrapper.find('amountinput-stub');
 
         // Assert:
-        expect(mosaicSelector.attributes('value')).toBe(expectedMosaicSelectorAttributes.value);
-        expect(mosaicSelector.attributes('mosaichexids')).toBe(expectedMosaicSelectorAttributes.mosaichexids);
-        expect(mosaicSelector.attributes('defaultmosaic')).toBe(expectedMosaicSelectorAttributes.defaultmosaic);
+        expect(mosaicSelectorElement.attributes('value')).toBe(expectedMosaicSelectorAttributes.value);
+        expect(mosaicSelectorElement.attributes('mosaichexids')).toBe(expectedMosaicSelectorAttributes.mosaichexids);
+        expect(mosaicSelectorElement.attributes('defaultmosaic')).toBe(expectedMosaicSelectorAttributes.defaultmosaic);
         expect(amountInputElement.attributes('value')).toBe(expectedAmountInputAttributes.value);
         expect(amountInputElement.attributes('mosaichex')).toBe(expectedAmountInputAttributes.mosaichex);
         expect(amountInputElement.attributes('selectedfeevalue')).toBe(expectedAmountInputAttributes.selectedfeevalue);
     });
 
     describe('delete button', () => {
-        const runRenderButtonTest = (isShowDelete, expectButtonToBeRendered) => {
+        const runRenderDeleteButtonTest = (isShowDelete, expectButtonToBeRendered) => {
             // Arrange:
             const props = {
                 isShowDelete,
@@ -99,7 +99,7 @@ describe('components/MosaicAttachmentInput', () => {
             const expectButtonToBeRendered = true;
 
             // Act + Assert:
-            runRenderButtonTest(isShowDelete, expectButtonToBeRendered);
+            runRenderDeleteButtonTest(isShowDelete, expectButtonToBeRendered);
         });
 
         test('does not render delete button when isShowDelete is negative', () => {
@@ -108,7 +108,7 @@ describe('components/MosaicAttachmentInput', () => {
             const expectButtonToBeRendered = false;
 
             // Act + Assert:
-            runRenderButtonTest(isShowDelete, expectButtonToBeRendered);
+            runRenderDeleteButtonTest(isShowDelete, expectButtonToBeRendered);
         });
 
         test('emit event when click', async () => {

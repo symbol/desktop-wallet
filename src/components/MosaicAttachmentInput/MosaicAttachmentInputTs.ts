@@ -90,7 +90,7 @@ export class MosaicAttachmentInputTs extends Vue {
 
         if (!this.mosaicAttachment.amount) {
             return {
-                mosaicHex: this.mosaicAttachment.mosaicHex,
+                ...this.mosaicAttachment,
                 amount: '0',
             };
         }
@@ -107,7 +107,7 @@ export class MosaicAttachmentInputTs extends Vue {
         }
 
         return {
-            mosaicHex: this.mosaicAttachment.mosaicHex,
+            ...this.mosaicAttachment,
             amount: formattedAmount,
         };
     }
