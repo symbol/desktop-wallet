@@ -216,12 +216,10 @@ describe('components/MosaicAmountDisplay', () => {
                 absoluteAmount,
                 relativeAmount,
             };
-            const divisibility = 3;
 
             // Act:
             const wrapper = getMosaicAmountDisplayWrapper(props);
             const component = wrapper.vm as MosaicAmountDisplayTs;
-            (component as any).divisibility = divisibility;
             const result = component.amount;
 
             // Assert:
@@ -248,7 +246,7 @@ describe('components/MosaicAmountDisplay', () => {
             runGetAmountTest(absoluteAmount, relativeAmount, expectedResult);
         });
 
-        test('return 0 when relative amount nor absolute amount is provided', () => {
+        test('return 0 when neither relative amount nor absolute amount is provided', () => {
             // Arrange:
             const absoluteAmount = null;
             const relativeAmount = null;
