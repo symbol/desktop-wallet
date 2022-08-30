@@ -91,7 +91,7 @@ describe('components/MnemonicInput', () => {
             runSetUserInputTest(input, isEditing, wordsArrayLength, expectations);
         });
 
-        test("set isEditing to true when it's value is false", () => {
+        test("set isEditing to true when its value is false", () => {
             // Arrange:
             const input = 'word';
             const isEditing = false;
@@ -163,34 +163,29 @@ describe('components/MnemonicInput', () => {
         const runAddWordTest = (inputWordLength: number, wordsArrayLength: number, expectedWordToBeAdded: boolean) => {
             // Arrange:
             const inputWord = new Array(inputWordLength).fill('a').join('');
-            const wordsArray = new Array(wordsArrayLength).fill('word');
+            const initialWordsArray = new Array(wordsArrayLength).fill('word');
             const props = {
-                seed: wordsArray.join(' '),
+                seed: initialWordsArray.join(' '),
             };
-            const mockInitInput = jest.fn();
-            const mockHandleWordsArray = jest.fn();
 
             // Act:
             const wrapper = getMnemonicInputWrapper(props);
             const component = wrapper.vm as MnemonicInputTs;
-            component.initInput = mockInitInput;
-            component.handleWordsArray = mockHandleWordsArray;
             component.inputWord = inputWord;
             component.addWord();
 
             // Assert:
             if (expectedWordToBeAdded) {
-                expect(mockInitInput).toBeCalled();
-                expect(mockHandleWordsArray).toBeCalledWith(inputWord);
+                const expectedWordsArray = [...initialWordsArray, inputWord];
+                expect(component.wordsArray).toStrictEqual(expectedWordsArray);
                 expect(component.inputWord).toBe('');
             } else {
-                expect(mockInitInput).not.toBeCalled();
-                expect(mockHandleWordsArray).not.toBeCalled();
+                expect(component.wordsArray).toStrictEqual(initialWordsArray);
                 expect(component.inputWord).toBe(inputWord);
             }
         };
 
-        test('not add word when input word length is less than 2', () => {
+        test('does not add word when input word length is less than 2', () => {
             // Arrange:
             const inputWordLength = 1;
             const wordsArrayLength = 1;
@@ -200,7 +195,7 @@ describe('components/MnemonicInput', () => {
             runAddWordTest(inputWordLength, wordsArrayLength, expectedWordToBeAdded);
         });
 
-        test('not add word when input word length is less than 51', () => {
+        test('does not add word when input word length is greater than 50', () => {
             // Arrange:
             const inputWordLength = 51;
             const wordsArrayLength = 1;
@@ -210,7 +205,7 @@ describe('components/MnemonicInput', () => {
             runAddWordTest(inputWordLength, wordsArrayLength, expectedWordToBeAdded);
         });
 
-        test('not add word when words array length is more than 23', () => {
+        test('does not add word when words array length is greater than 23', () => {
             // Arrange:
             const inputWordLength = 12;
             const wordsArrayLength = 24;
@@ -220,7 +215,7 @@ describe('components/MnemonicInput', () => {
             runAddWordTest(inputWordLength, wordsArrayLength, expectedWordToBeAdded);
         });
 
-        test('add word when input word length is [2, 50] and words array length is less than 24', () => {
+        test('adds word when input word length is [2, 50] and words array length is less than 24', () => {
             // Arrange:
             const inputWordLength = 23;
             const wordsArrayLength = 23;
@@ -242,17 +237,14 @@ describe('components/MnemonicInput', () => {
             },
         ) => {
             // Arrange:
+            const initialWordsArray = ['lorem', 'ipsum', 'word'];
             const props = {
-                seed: 'word',
+                seed: initialWordsArray.join(' '),
             };
-            const mockInitInput = jest.fn();
-            const mockHandleWordsArray = jest.fn();
 
             // Act:
             const wrapper = getMnemonicInputWrapper(props);
             const component = wrapper.vm as MnemonicInputTs;
-            component.initInput = mockInitInput;
-            component.handleWordsArray = mockHandleWordsArray;
             component.inputWord = inputWord;
             component.isEditing = isEditing;
             component.isNeedPressDelTwice = isNeedPressDelTwice;
@@ -260,16 +252,15 @@ describe('components/MnemonicInput', () => {
 
             // Assert:
             if (expectations.wordToBeDeleted) {
-                expect(mockInitInput).toBeCalled();
-                expect(mockHandleWordsArray).toBeCalledWith();
+                const expectedWordsArray = initialWordsArray.slice(0, 2);
+                expect(component.wordsArray).toStrictEqual(expectedWordsArray);
             } else {
-                expect(mockInitInput).not.toBeCalled();
-                expect(mockHandleWordsArray).not.toBeCalled();
+                expect(component.wordsArray).toStrictEqual(initialWordsArray);
             }
             expect(component.isNeedPressDelTwice).toBe(expectations.finalIsNeedPressDelTwice);
         };
 
-        test('not delete word when inputWord is not empty', () => {
+        test('does not delete word when inputWord is not empty', () => {
             // Arrange:
             const inputWord = 'word';
             const isEditing = false;
@@ -283,7 +274,7 @@ describe('components/MnemonicInput', () => {
             runAddWordTest(inputWord, isEditing, isNeedPressDelTwice, expectations);
         });
 
-        test('not delete word when isNeedPressDelTwice is true', () => {
+        test('does not delete word when isNeedPressDelTwice is true', () => {
             // Arrange:
             const inputWord = '';
             const isEditing = true;
@@ -297,13 +288,13 @@ describe('components/MnemonicInput', () => {
             runAddWordTest(inputWord, isEditing, isNeedPressDelTwice, expectations);
         });
 
-        test('delete word when inputWord is empty', () => {
+        test('deletes word when inputWord is empty and not editing', () => {
             // Arrange:
             const inputWord = '';
             const isEditing = false;
             const isNeedPressDelTwice = false;
             const expectations = {
-                finalIsNeedPressDelTwice: false,
+                finalIsNeedPressDelTwice: true,
                 wordToBeDeleted: true,
             };
 
@@ -311,13 +302,13 @@ describe('components/MnemonicInput', () => {
             runAddWordTest(inputWord, isEditing, isNeedPressDelTwice, expectations);
         });
 
-        test('delete word when inputWord is empty and isEditing is true', () => {
+        test('deletes word when inputWord is empty and isEditing is true', () => {
             // Arrange:
             const inputWord = '';
             const isEditing = true;
             const isNeedPressDelTwice = false;
             const expectations = {
-                finalIsNeedPressDelTwice: false,
+                finalIsNeedPressDelTwice: true,
                 wordToBeDeleted: true,
             };
 
@@ -345,7 +336,7 @@ describe('components/MnemonicInput', () => {
             expect(wrapper.emitted('handle-words')[0]).toStrictEqual([expectedWordsArray]);
         };
 
-        test('add word to wordsArray when it is provided as argument', () => {
+        test('adds word to wordsArray when it is provided as argument', () => {
             // Arrange:
             const item = 'AnotherWord';
             const expectedWordsArray = ['word', 'word', 'anotherword'];
@@ -416,8 +407,8 @@ describe('components/MnemonicInput', () => {
         });
     });
 
-    describe('handleSeed()', () => {
-        const runHandleSeedTest = (seed: string, wordsArrayLength: number, expectedHandleWordsArrayCalls: string[][]) => {
+    describe('update seed', () => {
+        const runHandleSeedTest = async (seed: string, wordsArrayLength: number, expectedHandleWordsArrayCalls: string[][]) => {
             // Arrange:
             const wordsArray = new Array(wordsArrayLength).fill('word');
             const props = {
@@ -430,41 +421,41 @@ describe('components/MnemonicInput', () => {
             const component = wrapper.vm as MnemonicInputTs;
             component.wordsArray = wordsArray;
             component.handleWordsArray = mockHandleWordsArray;
-            component['handleSeed'](seed);
+            await wrapper.setProps({seed})
 
             // Assert:
             expect(mockHandleWordsArray).toBeCalledTimes(expectedHandleWordsArrayCalls.length);
             expect(mockHandleWordsArray.mock.calls).toEqual(expectedHandleWordsArrayCalls);
         };
 
-        test('not add words when seed is an empty string', () => {
+        test('does not add words when seed is an empty string', async () => {
             // Arrange:
             const seed = '';
             const wordsArrayLength = 1;
             const expectedWordToBeAdded = [];
 
             // Act + Assert:
-            runHandleSeedTest(seed, wordsArrayLength, expectedWordToBeAdded);
+            await runHandleSeedTest(seed, wordsArrayLength, expectedWordToBeAdded);
         });
 
-        test('not add words when wordsArray length is more than 23', () => {
+        test('does not add words when wordsArray length is greater than 23', async () => {
             // Arrange:
             const seed = 'lorem ipsum dolor sit';
             const wordsArrayLength = 24;
             const expectedWordToBeAdded = [];
 
             // Act + Assert:
-            runHandleSeedTest(seed, wordsArrayLength, expectedWordToBeAdded);
+            await runHandleSeedTest(seed, wordsArrayLength, expectedWordToBeAdded);
         });
 
-        test('add words from seed when wordsArray length is less than 24', () => {
+        test('adds words from seed when wordsArray length is less than 24', async () => {
             // Arrange:
             const seed = 'lorem ipsum dolor sit';
             const wordsArrayLength = 2;
             const expectedWordToBeAdded = [['lorem'], ['ipsum'], ['dolor'], ['sit']];
 
             // Act + Assert:
-            runHandleSeedTest(seed, wordsArrayLength, expectedWordToBeAdded);
+            await runHandleSeedTest(seed, wordsArrayLength, expectedWordToBeAdded);
         });
     });
 
