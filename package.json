@@ -10,8 +10,8 @@
     "license": "Apache-2.0",
     "scripts": {
         "start": "npm run node-hid:prebuild-install && electron .",
-        "test": "TZ=UTC vue-cli-service test:unit",
-        "test:jenkins": "TZ=UTC vue-cli-service test:unit --coverage",
+        "test": "vue-cli-service test:unit",
+        "test:jenkins": "vue-cli-service test:unit --coverage",
         "dev": "vue-cli-service serve ",
         "build": "npm run build:web",
         "build:web": "rimraf dist && mkdir dist && tsc && vue-cli-service build",
