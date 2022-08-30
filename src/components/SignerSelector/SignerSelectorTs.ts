@@ -40,7 +40,7 @@ export class SignerSelectorTs extends Vue {
     isAggregate: boolean;
 
     @Prop({
-        default: () => null,
+        default: null,
     })
     rootSigner: Signer;
 
