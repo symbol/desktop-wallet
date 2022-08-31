@@ -91,7 +91,7 @@ describe('components/MnemonicInput', () => {
             runSetUserInputTest(input, isEditing, wordsArrayLength, expectations);
         });
 
-        test("set isEditing to true when its value is false", () => {
+        test('set isEditing to true when its value is false', () => {
             // Arrange:
             const input = 'word';
             const isEditing = false;
@@ -421,7 +421,7 @@ describe('components/MnemonicInput', () => {
             const component = wrapper.vm as MnemonicInputTs;
             component.wordsArray = wordsArray;
             component.handleWordsArray = mockHandleWordsArray;
-            await wrapper.setProps({seed})
+            await wrapper.setProps({ seed });
 
             // Assert:
             expect(mockHandleWordsArray).toBeCalledTimes(expectedHandleWordsArrayCalls.length);
