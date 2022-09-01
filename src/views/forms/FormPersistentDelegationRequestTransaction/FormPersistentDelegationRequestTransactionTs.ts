@@ -275,6 +275,13 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         this.$store.dispatch('harvesting/FETCH_STATUS');
     }
 
+    @Watch('currentSignerHarvestingModel', { immediate: true })
+    private async currentSignerHarvestingModelWatch(newVal: HarvestingModel, oldVal: HarvestingModel) {
+        if (oldVal?.encRemotePrivateKey !== newVal?.encRemotePrivateKey || oldVal?.encVrfPrivateKey !== newVal?.encVrfPrivateKey) {
+            this.$store.dispatch('harvesting/FETCH_STATUS');
+        }
+    }
+
     public async getNodeOperatorPublicKey() {
         const nodeInfo = await new NodeService().getNodeFromStatisticServiceByPublicKey(
             this.networkType,

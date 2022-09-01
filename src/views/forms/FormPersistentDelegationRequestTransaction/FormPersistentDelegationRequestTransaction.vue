@@ -98,14 +98,6 @@
                                 :value="$t('remote_keys_linked')"
                             />
                         </div>
-                        <!-- <FormRow class="form-warning-row" v-if="harvestingStatus !== 'INACTIVE'">
-                            <template v-slot:inputs>
-                                <div  type="warning" class="warning-node-swap">
-                                    <Icon type="ios-warning-outline" />
-                                    {{ $t('harvesting_warning_node_swap') }}
-                                </div>
-                            </template>
-                        </FormRow> -->
                         <div class="key-item separate-spacing">
                             <FormRow>
                                 <template v-slot:label> {{ $t('linked_node_public_key') }}: </template>

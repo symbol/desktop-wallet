@@ -156,6 +156,13 @@ export default {
         },
         async FETCH_STATUS({ commit, rootGetters, dispatch }, node?: [string, NodeModel]) {
             const csAccountInfo: AccountInfo = rootGetters['account/currentSignerAccountInfo'];
+            const currentSignerHarvestingModel: HarvestingModel = rootGetters['harvesting/currentSignerHarvestingModel'];
+            if (
+                currentSignerHarvestingModel?.accountAddress &&
+                csAccountInfo.address.plain() !== currentSignerHarvestingModel.accountAddress
+            ) {
+                return;
+            }
             const repositoryFactory = rootGetters['network/repositoryFactory'];
             const currentSignerAccountInfo = (
                 await repositoryFactory.createAccountRepository().getAccountsInfo([csAccountInfo.address]).toPromise()
@@ -167,7 +174,6 @@ export default {
                 commit('status', HarvestingStatus.INACTIVE);
                 return;
             }
-            const currentSignerHarvestingModel: HarvestingModel = rootGetters['harvesting/currentSignerHarvestingModel'];
             let accountUnlocked = false;
             const accountNodePublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.node?.publicKey;
             const accountRemotePublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.linked?.publicKey;
