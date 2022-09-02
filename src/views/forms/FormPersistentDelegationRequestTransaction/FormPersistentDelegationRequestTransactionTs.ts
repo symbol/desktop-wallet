@@ -358,7 +358,13 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
          START => link all (new keys) & prepare harvesting transaction
          STOP =>  unlink all (linked keys)
          */
-        if (this.isAccountKeyLinked && !this.currentSignerHarvestingModel?.encRemotePrivateKey) {
+        if (
+            this.isAccountKeyLinked &&
+            this.action === HarvestingAction.START &&
+            (!this.remoteAccountPrivateKey ||
+                Account.createFromPrivateKey(this.remoteAccountPrivateKey, this.networkType).publicKey !==
+                    this.currentSignerAccountInfo.supplementalPublicKeys?.linked.publicKey)
+        ) {
             const accountUnlinkTx = this.createAccountKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys?.linked.publicKey,
                 LinkAction.Unlink,
@@ -366,7 +372,13 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             );
             txs.push(accountUnlinkTx);
         }
-        if (this.isVrfKeyLinked && !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
+        if (
+            this.isVrfKeyLinked &&
+            this.action === HarvestingAction.START &&
+            (!this.vrfPrivateKey ||
+                Account.createFromPrivateKey(this.vrfPrivateKey, this.networkType).publicKey !==
+                    this.currentSignerAccountInfo.supplementalPublicKeys?.vrf.publicKey)
+        ) {
             const vrfUnlinkTx = this.createVrfKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys?.vrf.publicKey,
                 LinkAction.Unlink,
@@ -384,11 +396,11 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
 
         if (this.action !== HarvestingAction.STOP) {
-            if (!this.isAccountKeyLinked || !this.currentSignerHarvestingModel?.encRemotePrivateKey) {
+            if (!this.isAccountKeyLinked || !this.remoteAccountPrivateKey) {
                 const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(accountKeyLinkTx);
             }
-            if (!this.isVrfKeyLinked || !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
+            if (!this.isVrfKeyLinked || !this.vrfPrivateKey) {
                 const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(vrfKeyLinkTx);
             }
@@ -786,7 +798,11 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             return;
         }
         if (!this.isLedger) {
-            this.onSubmit();
+            if (this.currentSignerHarvestingModel?.encRemotePrivateKey && this.currentSignerHarvestingModel?.encVrfPrivateKey) {
+                this.showAccountUnlockModal();
+            } else {
+                this.onSubmit();
+            }
         } else {
             this.hasLedgerAccountUnlockModal = true;
         }
@@ -807,11 +823,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     public onConfirmStart() {
         this.isDelegatedHarvestingWarningModalShown = false;
-        if (this.currentSignerHarvestingModel?.encRemotePrivateKey && this.currentSignerHarvestingModel?.encVrfPrivateKey) {
-            this.showAccountUnlockModal();
-        } else {
-            this.onStart();
-        }
+        this.onStart();
     }
 
     public showAccountUnlockModal() {
@@ -909,7 +921,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 this.remoteAccountPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encRemotePrivateKey, password.value);
                 this.vrfPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encVrfPrivateKey, password.value);
             }
-            this.onStart();
+            this.onSubmit();
         } catch (e) {
             if (!this.currentSignerHarvestingModel?.encRemotePrivateKey || !this.currentSignerHarvestingModel?.encVrfPrivateKey) {
                 this.$store.dispatch('notification/ADD_ERROR', 'An error happened, please relink your vrf and remote keys.');
