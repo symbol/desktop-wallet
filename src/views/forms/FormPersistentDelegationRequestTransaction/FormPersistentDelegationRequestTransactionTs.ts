@@ -358,34 +358,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
          START => link all (new keys) & prepare harvesting transaction
          STOP =>  unlink all (linked keys)
          */
-        if (
-            this.isAccountKeyLinked &&
-            this.action === HarvestingAction.START &&
-            (!this.remoteAccountPrivateKey ||
-                Account.createFromPrivateKey(this.remoteAccountPrivateKey, this.networkType).publicKey !==
-                    this.currentSignerAccountInfo.supplementalPublicKeys?.linked.publicKey)
-        ) {
-            const accountUnlinkTx = this.createAccountKeyLinkTx(
-                this.currentSignerAccountInfo.supplementalPublicKeys?.linked.publicKey,
-                LinkAction.Unlink,
-                maxFee,
-            );
-            txs.push(accountUnlinkTx);
-        }
-        if (
-            this.isVrfKeyLinked &&
-            this.action === HarvestingAction.START &&
-            (!this.vrfPrivateKey ||
-                Account.createFromPrivateKey(this.vrfPrivateKey, this.networkType).publicKey !==
-                    this.currentSignerAccountInfo.supplementalPublicKeys?.vrf.publicKey)
-        ) {
-            const vrfUnlinkTx = this.createVrfKeyLinkTx(
-                this.currentSignerAccountInfo.supplementalPublicKeys?.vrf.publicKey,
-                LinkAction.Unlink,
-                maxFee,
-            );
-            txs.push(vrfUnlinkTx);
-        }
+
         if (this.isNodeKeyLinked) {
             const nodeUnLinkTx = this.createNodeKeyLinkTx(
                 this.currentSignerAccountInfo.supplementalPublicKeys?.node.publicKey,
@@ -395,22 +368,28 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             txs.push(nodeUnLinkTx);
         }
 
-        if (this.action !== HarvestingAction.STOP) {
-            if (
-                !this.isAccountKeyLinked ||
-                !this.remoteAccountPrivateKey ||
-                Account.createFromPrivateKey(this.remoteAccountPrivateKey, this.networkType).publicKey !==
-                    this.currentSignerAccountInfo.supplementalPublicKeys?.linked.publicKey
-            ) {
+        if (this.action === HarvestingAction.START) {
+            if (this.isAccountKeyLinked && !this.remoteAccountPrivateKey) {
+                const accountUnlinkTx = this.createAccountKeyLinkTx(
+                    this.currentSignerAccountInfo.supplementalPublicKeys?.linked.publicKey,
+                    LinkAction.Unlink,
+                    maxFee,
+                );
+                txs.push(accountUnlinkTx);
+            }
+            if (this.isVrfKeyLinked && !this.vrfPrivateKey) {
+                const vrfUnlinkTx = this.createVrfKeyLinkTx(
+                    this.currentSignerAccountInfo.supplementalPublicKeys?.vrf.publicKey,
+                    LinkAction.Unlink,
+                    maxFee,
+                );
+                txs.push(vrfUnlinkTx);
+            }
+            if (!this.isAccountKeyLinked || !this.remoteAccountPrivateKey) {
                 const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(accountKeyLinkTx);
             }
-            if (
-                !this.isVrfKeyLinked ||
-                !this.vrfPrivateKey ||
-                Account.createFromPrivateKey(this.vrfPrivateKey, this.networkType).publicKey !==
-                    this.currentSignerAccountInfo.supplementalPublicKeys?.vrf.publicKey
-            ) {
+            if (!this.isVrfKeyLinked || !this.vrfPrivateKey) {
                 const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(vrfKeyLinkTx);
             }
@@ -928,8 +907,29 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         try {
             if (this.currentSignerHarvestingModel?.encRemotePrivateKey && this.currentSignerHarvestingModel?.encVrfPrivateKey) {
                 this.password = password.value;
-                this.remoteAccountPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encRemotePrivateKey, password.value);
-                this.vrfPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encVrfPrivateKey, password.value);
+                const decryptedRemotePrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encRemotePrivateKey, password.value);
+                if (
+                    !decryptedRemotePrivateKey ||
+                    Account.createFromPrivateKey(decryptedRemotePrivateKey, this.networkType).publicKey !==
+                        this.currentSignerAccountInfo.supplementalPublicKeys?.linked.publicKey
+                ) {
+                    this.remoteAccountPrivateKey = null;
+                    this.saveRemoteKey(account.address.plain(), null);
+                } else {
+                    this.remoteAccountPrivateKey = decryptedRemotePrivateKey;
+                }
+
+                const decryptedVrfPrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encVrfPrivateKey, password.value);
+                if (
+                    !decryptedVrfPrivateKey ||
+                    Account.createFromPrivateKey(decryptedVrfPrivateKey, this.networkType).publicKey !==
+                        this.currentSignerAccountInfo.supplementalPublicKeys?.vrf.publicKey
+                ) {
+                    this.vrfPrivateKey = null;
+                    this.saveVrfKey(account.address.plain(), null);
+                } else {
+                    this.vrfPrivateKey = decryptedVrfPrivateKey;
+                }
             }
             this.onSubmit();
         } catch (e) {

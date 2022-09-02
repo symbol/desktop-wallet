@@ -74,7 +74,8 @@
                                         v-if="
                                             harvestingStatus !== 'INACTIVE' &&
                                             harvestingStatus !== 'KEYS_LINKED' &&
-                                            harvestingStatus !== 'FAILED'
+                                            harvestingStatus !== 'FAILED' &&
+                                            isNodeKeyLinked
                                         "
                                         type="submit"
                                         class="centered-button button-style submit-button danger-button"
