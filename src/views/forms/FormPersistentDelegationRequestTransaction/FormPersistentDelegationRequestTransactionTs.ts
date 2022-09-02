@@ -396,11 +396,21 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         }
 
         if (this.action !== HarvestingAction.STOP) {
-            if (!this.isAccountKeyLinked || !this.remoteAccountPrivateKey) {
+            if (
+                !this.isAccountKeyLinked ||
+                !this.remoteAccountPrivateKey ||
+                Account.createFromPrivateKey(this.remoteAccountPrivateKey, this.networkType).publicKey !==
+                    this.currentSignerAccountInfo.supplementalPublicKeys?.linked.publicKey
+            ) {
                 const accountKeyLinkTx = this.createAccountKeyLinkTx(this.newRemoteAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(accountKeyLinkTx);
             }
-            if (!this.isVrfKeyLinked || !this.vrfPrivateKey) {
+            if (
+                !this.isVrfKeyLinked ||
+                !this.vrfPrivateKey ||
+                Account.createFromPrivateKey(this.vrfPrivateKey, this.networkType).publicKey !==
+                    this.currentSignerAccountInfo.supplementalPublicKeys?.vrf.publicKey
+            ) {
                 const vrfKeyLinkTx = this.createVrfKeyLinkTx(this.newVrfKeyAccount.publicKey, LinkAction.Link, maxFee);
                 txs.push(vrfKeyLinkTx);
             }
