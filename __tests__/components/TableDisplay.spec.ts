@@ -1237,15 +1237,15 @@ describe('components/TableDisplay', () => {
             // Act:
             vm.loadMore();
 
+            // Assert:
             if (expectedResult) {
                 expect(vm.$store.dispatch).toBeCalledWith('namespace/LOAD_NAMESPACES', {
                     pageNumber: 2,
                     pageSize: 10,
                 });
+            } else {
+                expect(vm.$store.dispatch).not.toBeCalledWith('namespace/LOAD_NAMESPACES');
             }
-
-            // Assert:
-            expect(vm.$store.dispatch).not.toBeCalledWith('namespace/LOAD_NAMESPACES');
         };
 
         test('store does not dispatch "namespace/LOAD_NAMESPACES" when current page is last page', () => {
