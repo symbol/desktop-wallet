@@ -253,18 +253,11 @@
             @confirmed="showModalImportKey = false"
         />
         <ModalFormProfileUnlock
-            v-if="hasAccountUnlockModal || isLedger"
+            v-if="hasAccountUnlockModal"
             :visible="hasAccountUnlockModal"
             :on-success="onAccountUnlocked"
-            :message="$t('activate_delegated_harvesting_message')"
+            :message="$t(isLedger ? 'encrypt_ledger_keys_on_sign' : 'activate_delegated_harvesting_message')"
             @close="hasAccountUnlockModal = false"
-        />
-        <ModalFormProfileUnlock
-            v-if="hasLedgerAccountUnlockModal"
-            :visible="hasLedgerAccountUnlockModal"
-            :on-success="onLedgerAccountUnlocked"
-            :message="$t('encrypt_ledger_keys_on_sign')"
-            @close="hasLedgerAccountUnlockModal = false"
         />
         <ModalTransactionConfirmation
             v-if="hasConfirmationModal"

@@ -223,7 +223,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      * @var {boolean}
      */
     public isUnlockingAccount: boolean = false;
-    public isUnlockingLedgerAccount: boolean = false;
     public remoteAccountPrivateKey: string;
     public vrfPrivateKey: string;
 
@@ -786,15 +785,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
             this.$store.dispatch('notification/ADD_ERROR', this.$t('harvesting_account_has_zero_importance'));
             return;
         }
-        if (!this.isLedger) {
-            if (this.currentSignerHarvestingModel?.encRemotePrivateKey && this.currentSignerHarvestingModel?.encVrfPrivateKey) {
-                this.showAccountUnlockModal();
-            } else {
-                this.onSubmit();
-            }
-        } else {
-            this.hasLedgerAccountUnlockModal = true;
-        }
+        this.showAccountUnlockModalOrSubmit();
     }
 
     public onStop() {
@@ -815,8 +806,15 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         this.onStart();
     }
 
-    public showAccountUnlockModal() {
-        this.hasAccountUnlockModal = true;
+    public showAccountUnlockModalOrSubmit() {
+        if (
+            this.isLedger ||
+            (this.currentSignerHarvestingModel?.encRemotePrivateKey && this.currentSignerHarvestingModel?.encVrfPrivateKey)
+        ) {
+            this.hasAccountUnlockModal = true;
+        } else {
+            this.onSubmit();
+        }
     }
 
     public get hasAccountUnlockModal(): boolean {
@@ -825,14 +823,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     public set hasAccountUnlockModal(f: boolean) {
         this.isUnlockingAccount = f;
-    }
-
-    public get hasLedgerAccountUnlockModal(): boolean {
-        return this.isUnlockingLedgerAccount;
-    }
-
-    public set hasLedgerAccountUnlockModal(f: boolean) {
-        this.isUnlockingLedgerAccount = f;
     }
 
     public onSingleKeyOperation(type: string) {
@@ -860,7 +850,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     onSubmitPrivateKey(accountObject: { account: Account; type: string }) {
         if (!accountObject.account) {
             if (this.isLedger) {
-                this.hasLedgerAccountUnlockModal = true;
+                this.hasAccountUnlockModal = true;
             } else {
                 this.onSubmit();
             }
@@ -871,7 +861,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 this.newRemoteAccount = accountObject.account;
             }
             if (this.isLedger) {
-                this.hasLedgerAccountUnlockModal = true;
+                this.hasAccountUnlockModal = true;
             } else {
                 this.onSubmit();
             }
@@ -905,9 +895,9 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
      */
     public async onAccountUnlocked(_, password: Password) {
         try {
+            this.password = password.value;
             if (this.currentSignerHarvestingModel?.encRemotePrivateKey && this.currentSignerHarvestingModel?.encVrfPrivateKey) {
                 const currentSignerAccountAddress = this.currentSignerAccountInfo.address.plain();
-                this.password = password.value;
                 const decryptedRemotePrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encRemotePrivateKey, password.value);
                 if (
                     !decryptedRemotePrivateKey ||
@@ -943,11 +933,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
             console.error(e);
         }
-    }
-
-    public async onLedgerAccountUnlocked(account: Account, password: Password) {
-        this.password = password.value;
-        this.onSubmit();
     }
 
     public get isLedger(): boolean {
