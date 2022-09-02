@@ -17,52 +17,10 @@ import TableRow from '@/components/TableRow/TableRow.vue';
 import { TableRowTs } from '@/components/TableRow/TableRowTs';
 import AmountDisplay from '@/components/AmountDisplay/AmountDisplay.vue';
 import { getComponent } from '@MOCKS/Components';
-import { mosaicsMock } from '@MOCKS/mosaics';
+import { mosaicsMock, mockMosaicRowValue } from '@MOCKS/mosaics';
+import { mockNamespaceRowValue } from '@MOCKS/namespaces';
 
 describe('components/TableRow', () => {
-    const mockMosaicValue = {
-        balance: 1000,
-        divisibility: 0,
-        expiration: 'unlimited',
-        hexId: '103165893CD08625',
-        metadataList: [
-            {
-                metadataId: '62FC80CAE173875059E7274E',
-                metadataType: 2,
-                scopedMetadataKey: 'E3E5E7B070607991',
-                sourceAddress: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
-                targetAddress: 'TBF43DIZI62PR2W6JQBJR3AI6OZLRXJYMGHLTFI',
-                targetId: '80DE90A24D6C0CC4',
-                value: 'metadata',
-            },
-        ],
-        name: 'N/A',
-        restrictable: true,
-        supply: '1,000',
-        supplyMutable: true,
-        transferable: false,
-    };
-
-    const mockNamespaceRowValue = {
-        aliasIdentifier: 'N/A',
-        aliasType: 'N/A',
-        expiration: '29 d 23 h 58 m ',
-        expired: false,
-        hexId: '80DE90A24D6C0CC4',
-        metadataList: [
-            {
-                metadataId: '62FC8624E173875059E72DE1',
-                metadataType: 1,
-                scopedMetadataKey: 'A14173CB00ED0041',
-                sourceAddress: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
-                targetAddress: 'TBF43DIZI62PR2W6JQBJR3AI6OZLRXJYMGHLTFI',
-                targetId: '7E77578D00C26DFC',
-                value: 'metavalue',
-            },
-        ],
-        name: 'helloworld',
-    };
-
     const getTableRowWrapper = (prop = {}) => {
         return getComponent(TableRow, {}, {}, prop, {
             Poptip: true,
@@ -91,7 +49,7 @@ describe('components/TableRow', () => {
         });
 
         test('returns false when not namespace', () => {
-            runBasicNamespaceTests(mockMosaicValue, false);
+            runBasicNamespaceTests(mockMosaicRowValue, false);
         });
 
         test('returns false when sub namespace provided', () => {
@@ -164,7 +122,7 @@ describe('components/TableRow', () => {
             runBasicHasAvailableActionsTests(
                 {
                     ownedAssetHexIds: ['0'.repeat(16)],
-                    rowValues: mockMosaicValue,
+                    rowValues: mockMosaicRowValue,
                 },
                 false,
             );
@@ -173,8 +131,8 @@ describe('components/TableRow', () => {
         test('renders Poptip component when user owned asset', () => {
             runBasicHasAvailableActionsTests(
                 {
-                    ownedAssetHexIds: [mockMosaicValue.hexId, mosaicsMock[0].mosaicIdHex, mosaicsMock[1].mosaicIdHex],
-                    rowValues: mockMosaicValue,
+                    ownedAssetHexIds: [mockMosaicRowValue.hexId, mosaicsMock[0].mosaicIdHex, mosaicsMock[1].mosaicIdHex],
+                    rowValues: mockMosaicRowValue,
                 },
                 true,
             );
@@ -185,9 +143,9 @@ describe('components/TableRow', () => {
         const runBasicSupplyMutableMosaic = (params, expectedResult) => {
             // Arrange:
             const wrapper = getTableRowWrapper({
-                ownedAssetHexIds: [mockMosaicValue.hexId, mosaicsMock[0].mosaicIdHex, mosaicsMock[1].mosaicIdHex],
+                ownedAssetHexIds: [mockMosaicRowValue.hexId, mosaicsMock[0].mosaicIdHex, mosaicsMock[1].mosaicIdHex],
                 rowValues: {
-                    ...mockMosaicValue,
+                    ...mockMosaicRowValue,
                     ...params,
                 },
             });
@@ -232,7 +190,7 @@ describe('components/TableRow', () => {
         const runBasicHasMetadataTests = (params, expectedResult) => {
             // Arrange:
             const wrapper = getTableRowWrapper({
-                ownedAssetHexIds: [mockMosaicValue.hexId, mockNamespaceRowValue.hexId],
+                ownedAssetHexIds: [mockMosaicRowValue.hexId, mockNamespaceRowValue.hexId],
                 rowValues: {
                     ...params,
                 },
@@ -249,7 +207,7 @@ describe('components/TableRow', () => {
             const runBasicComponentTests = (params, componentClass, expectedResult, expectedEvent?) => {
                 // Arrange:
                 const wrapper = getTableRowWrapper({
-                    ownedAssetHexIds: [mockMosaicValue.hexId, mockNamespaceRowValue.hexId],
+                    ownedAssetHexIds: [mockMosaicRowValue.hexId, mockNamespaceRowValue.hexId],
                     rowValues: {
                         ...params,
                     },
@@ -265,7 +223,7 @@ describe('components/TableRow', () => {
             };
 
             test(`can ${action} metadata when mosaic / namespace contains metadata info`, () => {
-                [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
+                [mockMosaicRowValue, mockNamespaceRowValue].forEach((rowValue) => {
                     runBasicComponentTests(
                         {
                             ...rowValue,
@@ -278,7 +236,7 @@ describe('components/TableRow', () => {
             });
 
             test(`cannot ${action} metadata when mosaic / namespace does not contain metadata info`, () => {
-                [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
+                [mockMosaicRowValue, mockNamespaceRowValue].forEach((rowValue) => {
                     runBasicComponentTests(
                         {
                             ...rowValue,
@@ -291,7 +249,7 @@ describe('components/TableRow', () => {
             });
 
             test(`cannot ${action} metadata when mosaic / namespace metadata info is undefined`, () => {
-                [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
+                [mockMosaicRowValue, mockNamespaceRowValue].forEach((rowValue) => {
                     runBasicComponentTests(
                         {
                             ...rowValue,
@@ -305,7 +263,7 @@ describe('components/TableRow', () => {
         };
 
         test('returns true when mosaic / namespace contains metadata info', () => {
-            [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
+            [mockMosaicRowValue, mockNamespaceRowValue].forEach((rowValue) => {
                 runBasicHasMetadataTests(
                     {
                         ...rowValue,
@@ -316,7 +274,7 @@ describe('components/TableRow', () => {
         });
 
         test('returns false when mosaic / namespace does not contain metadata info', () => {
-            [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
+            [mockMosaicRowValue, mockNamespaceRowValue].forEach((rowValue) => {
                 runBasicHasMetadataTests(
                     {
                         ...rowValue,
@@ -328,7 +286,7 @@ describe('components/TableRow', () => {
         });
 
         test('returns false when mosaic / namespace metadata info is undefined', () => {
-            [mockMosaicValue, mockNamespaceRowValue].forEach((rowValue) => {
+            [mockMosaicRowValue, mockNamespaceRowValue].forEach((rowValue) => {
                 runBasicHasMetadataTests(
                     {
                         ...rowValue,
@@ -387,7 +345,7 @@ describe('components/TableRow', () => {
         test('returns alias link when row value is mosaic and not linked with namespace', () => {
             runBasicAliasActionLabel(
                 {
-                    ...mockMosaicValue,
+                    ...mockMosaicRowValue,
                     name: 'N/A',
                 },
                 'action_label_alias_link',
@@ -397,7 +355,7 @@ describe('components/TableRow', () => {
         test('returns alias unlink when row value is mosaic and linked with namespace', () => {
             runBasicAliasActionLabel(
                 {
-                    ...mockMosaicValue,
+                    ...mockMosaicRowValue,
                     name: mockNamespaceRowValue.name,
                 },
                 'action_label_alias_unlink',
@@ -429,7 +387,7 @@ describe('components/TableRow', () => {
         };
 
         test('returns mosaic value except for hiddenData property', () => {
-            runBasicVisibleRowValues(mockMosaicValue);
+            runBasicVisibleRowValues(mockMosaicRowValue);
         });
 
         test('returns namespace value except for hiddenData property', () => {
@@ -451,7 +409,7 @@ describe('components/TableRow', () => {
         };
 
         test('display amount display component when provided mosaic value', () => {
-            runBasicRenderAmountDisplayTests(mockMosaicValue, true);
+            runBasicRenderAmountDisplayTests(mockMosaicRowValue, true);
         });
 
         test('hidden amount display component when provided namespace value', () => {
