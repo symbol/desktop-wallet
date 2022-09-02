@@ -903,9 +903,10 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     /**
      * When account is unlocked, the sub account can be created
      */
-    public async onAccountUnlocked(account: Account, password: Password) {
+    public async onAccountUnlocked(_, password: Password) {
         try {
             if (this.currentSignerHarvestingModel?.encRemotePrivateKey && this.currentSignerHarvestingModel?.encVrfPrivateKey) {
+                const currentSignerAccountAddress = this.currentSignerAccountInfo.address.plain();
                 this.password = password.value;
                 const decryptedRemotePrivateKey = Crypto.decrypt(this.currentSignerHarvestingModel?.encRemotePrivateKey, password.value);
                 if (
@@ -914,7 +915,8 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                         this.currentSignerAccountInfo.supplementalPublicKeys?.linked.publicKey
                 ) {
                     this.remoteAccountPrivateKey = null;
-                    this.saveRemoteKey(account.address.plain(), null);
+
+                    this.saveRemoteKey(currentSignerAccountAddress, null);
                 } else {
                     this.remoteAccountPrivateKey = decryptedRemotePrivateKey;
                 }
@@ -926,7 +928,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                         this.currentSignerAccountInfo.supplementalPublicKeys?.vrf.publicKey
                 ) {
                     this.vrfPrivateKey = null;
-                    this.saveVrfKey(account.address.plain(), null);
+                    this.saveVrfKey(currentSignerAccountAddress, null);
                 } else {
                     this.vrfPrivateKey = decryptedVrfPrivateKey;
                 }
