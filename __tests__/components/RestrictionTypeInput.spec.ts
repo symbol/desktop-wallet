@@ -45,7 +45,7 @@ describe('components/RestrictionTypeInput', () => {
     });
 
     describe('onBlockTypeChange', () => {
-        test('emit input value when block type change', async () => {
+        test('emit input value when block type change', () => {
             // Arrange:
             const wrapper = getRestrictionTypeInputWrapper();
 
