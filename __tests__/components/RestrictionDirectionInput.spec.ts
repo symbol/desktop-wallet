@@ -45,7 +45,7 @@ describe('components/RestrictionDirectionInput', () => {
     });
 
     describe('onDirectionChange', () => {
-        test('emit input value when direction change', () => {
+        test('emits input value when direction change', () => {
             // Arrange:
             const wrapper = getRestrictionDirectionInputWrapper();
 
