@@ -13,7 +13,7 @@
                         <div class="level-item">
                             <div :class="harvestingStatusIndicator.cls"></div>
                         </div>
-                        <div class="level-item txt-small">{{ harvestingStatusIndicator.text }}</div>
+                        <div class="level-item txt-small" data-testid="status-text">{{ harvestingStatusIndicator.text }}</div>
                     </div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                         size="small"
                     ></Spin>
 
-                    <span v-if="!isFetchingHarvestedBlockStats">
+                    <span v-if="!isFetchingHarvestedBlockStats" data-testid="total-block-count">
                         {{ harvestedBlockStats.totalBlockCount }}
                     </span>
                 </div>
@@ -48,7 +48,7 @@
                         size="small"
                     ></Spin>
 
-                    <span v-if="!isFetchingHarvestedBlockStats">
+                    <span v-if="!isFetchingHarvestedBlockStats" data-testid="total-fees-earned">
                         {{ totalFeesEarned }}
                     </span>
                 </span>

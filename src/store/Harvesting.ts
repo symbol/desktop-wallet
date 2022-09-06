@@ -93,6 +93,7 @@ const initialState: HarvestingState = {
 
 export const HARVESTING_STATUS_POLLING_TRIAL_LIMIT = 60;
 export const HARVESTING_STATUS_POLLING_INTERVAL_SECS = 10;
+export const HARVESTING_BLOCKS_POLLING_INTERVAL_SECS = 30;
 
 const harvestingService = new HarvestingService();
 

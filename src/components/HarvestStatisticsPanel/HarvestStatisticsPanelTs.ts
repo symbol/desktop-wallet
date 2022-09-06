@@ -20,6 +20,7 @@ import { AccountInfo } from 'symbol-sdk';
 import {
     HarvestedBlockStats,
     HarvestingStatus,
+    HARVESTING_BLOCKS_POLLING_INTERVAL_SECS,
     HARVESTING_STATUS_POLLING_INTERVAL_SECS,
     HARVESTING_STATUS_POLLING_TRIAL_LIMIT,
 } from '@/store/Harvesting';
@@ -55,8 +56,8 @@ export class HarvestStatisticsPanelTs extends Vue {
     private currentSignerHarvestingModel: HarvestingModel;
     created() {
         this.refresh();
-        this.checkUnLockedAccounts();
-        this.refreshStatusBlocks();
+        this.refreshHarvestingStatusOnInterval();
+        this.refreshHarvestingBlocksOnInterval();
     }
 
     public refresh() {
@@ -89,7 +90,7 @@ export class HarvestStatisticsPanelTs extends Vue {
         }
     }
 
-    private checkUnLockedAccounts(): void {
+    private refreshHarvestingStatusOnInterval(pollingIntervalMs = HARVESTING_STATUS_POLLING_INTERVAL_SECS * 1000): void {
         Vue.nextTick(() => {
             const harvestingService = new HarvestingService();
             if (this.harvestingStatus !== HarvestingStatus.FAILED) {
@@ -107,7 +108,7 @@ export class HarvestStatisticsPanelTs extends Vue {
                             return;
                         }
                     }
-                }, HARVESTING_STATUS_POLLING_INTERVAL_SECS * 1000);
+                }, pollingIntervalMs);
             } else {
                 const harvestingModel = harvestingService.getHarvestingModel(this.currentSignerHarvestingModel.accountAddress);
                 harvestingService.updateDelegatedHarvestingRequestFailed(harvestingModel, true);
@@ -116,13 +117,13 @@ export class HarvestStatisticsPanelTs extends Vue {
         });
     }
 
-    private refreshStatusBlocks(): void {
+    private refreshHarvestingBlocksOnInterval(pollingIntervalMs = HARVESTING_BLOCKS_POLLING_INTERVAL_SECS * 1000): void {
         Vue.nextTick(() => {
             this.statsPollingInterval = setInterval(() => {
                 if (this.harvestingStatus == HarvestingStatus.ACTIVE) {
                     this.refreshHarvestingStats();
                 }
-            }, 30000);
+            }, pollingIntervalMs);
         });
     }
 
