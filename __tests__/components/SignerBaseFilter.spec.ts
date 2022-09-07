@@ -61,7 +61,7 @@ describe('components/SignerBaseFilter', () => {
         );
 
     describe('component', () => {
-        const runBasicSelectedSignerInMountTests = (props, expectResult) => {
+        const runBasicSelectedSignerInMountTests = (props, expectedResult) => {
             // Arrange:
             const wrapper = getSignerBaseFilterWrapper({
                 rootSigner: mockSigner,
@@ -71,23 +71,21 @@ describe('components/SignerBaseFilter', () => {
             const vm = wrapper.vm as SignerBaseFilterTs;
 
             // Act + Assert:
-            expect(vm.selectedSigner).toBe(expectResult);
+            expect(vm.selectedSigner).toBe(expectedResult);
         };
 
         test('renders only account in the list when parent signer does not exist', () => {
             // Arrange:
+            const { parentSigners, ...rest } = mockSigner;
+
             const wrapper = getSignerBaseFilterWrapper({
-                rootSigner: {
-                    label: 'wallet 1',
-                    address: simpleWallet1.address,
-                    multisig: false,
-                    requiredCosigApproval: 0,
-                    requiredCosigRemoval: 0,
-                },
+                rootSigner: rest,
             });
 
-            // Act + Assert:
+            // Act:
             const options = wrapper.findAll('option');
+
+            // Assert:
             expect(options.length).toBe(1);
             expect(options.at(0).text()).toBe('wallet 1');
             expect(options.at(0).attributes().value).toBe(simpleWallet1.address.plain());
@@ -118,19 +116,29 @@ describe('components/SignerBaseFilter', () => {
             expect(options.at(1).attributes().value).toBe(simpleWallet2.address.plain());
         });
 
-        test('created set selected signer to chosen signer when isAggregate is true and chosen signer does not empty', () => {
+        test('selects specified signer when isAggregate is true when specified signer is not empty', () => {
             const chosenSigner = simpleWallet2.address.plain();
             runBasicSelectedSignerInMountTests({ isAggregate: true, chosenSigner }, chosenSigner);
         });
 
-        test('created set selected signer to current signer when isAggregate is false and chosen signer is empty', () => {
+        test('selects specified signer when isAggregate is true when specified signer is empty', () => {
             const chosenSigner = '';
+            runBasicSelectedSignerInMountTests({ isAggregate: true, chosenSigner }, simpleWallet1.address.plain());
+        });
+
+        test('selects specified signer when isAggregate is false when specified signer is empty', () => {
+            const chosenSigner = '';
+            runBasicSelectedSignerInMountTests({ isAggregate: false, chosenSigner }, simpleWallet1.address.plain());
+        });
+
+        test('selects specified signer when isAggregate is false when specified signer is not empty', () => {
+            const chosenSigner = simpleWallet2.address.plain();
             runBasicSelectedSignerInMountTests({ isAggregate: false, chosenSigner }, simpleWallet1.address.plain());
         });
     });
 
     describe('onSignerChange', () => {
-        test('emit selected signer value when click on first option in selector list', () => {
+        test('emits selected signer value when click on any options in selector list', () => {
             // Arrange:
             const wrapper = getSignerBaseFilterWrapper({
                 rootSigner: mockSigner,
@@ -145,7 +153,7 @@ describe('components/SignerBaseFilter', () => {
     });
 
     describe('onCurrentSignerChange', () => {
-        test('set selected signer to current signer', () => {
+        test('sets selected signer to current signer', () => {
             // Arrange:
             const wrapper = getSignerBaseFilterWrapper({
                 rootSigner: mockSigner,

@@ -63,7 +63,7 @@ describe('components/SignerSelector', () => {
                 expect(wrapper.findComponent(SignerBaseFilter).exists()).toBe(true);
             });
 
-            test('hide signer base filter component when parent signer does not exist', () => {
+            test('hides signer base filter component when parent signer does not exist', () => {
                 // Arrange:
                 const wrapper = getSignerSelectorWrapper();
 
@@ -71,7 +71,7 @@ describe('components/SignerSelector', () => {
                 expect(wrapper.findComponent(SignerBaseFilter).exists()).toBe(false);
             });
 
-            test('display label when root signer is multisig and parent signer does not exist', () => {
+            test('displays label when root signer is multisig and parent signer does not exist', () => {
                 // Arrange:
                 const wrapper = getSignerSelectorWrapper({
                     rootSigner: {
@@ -103,7 +103,7 @@ describe('components/SignerSelector', () => {
             expect(vm.chosenSigner).toEqual(simpleWallet1.address.plain());
         });
 
-        test('set new chosen signer when new signer provided', () => {
+        test('sets new chosen signer when new signer provided', async () => {
             // Arrange:
             const newSigner = simpleWallet2.address.plain();
 
