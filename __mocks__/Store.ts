@@ -25,12 +25,12 @@ localVue.use(Vuex);
  * @param {any} storeOptions
  * @param {any} dispatch
  */
-export const createStore = (storeOptions?: any, dispatch?: any, doNotMockDispatch = false, commit?: any, doNotMockCommit = false) => {
+export const createStore = (storeOptions?: any, dispatch?: any, doMockDispatch = true, commit?: any, doMockCommit = true) => {
     const store = new Vuex.Store(storeOptions);
-    if (!doNotMockDispatch) {
+    if (doMockDispatch) {
         store.dispatch = dispatch ?? jest.fn();
     }
-    if (!doNotMockCommit) {
+    if (doMockCommit) {
         store.commit = commit ?? jest.fn();
     }
     return store;

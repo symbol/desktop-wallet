@@ -100,9 +100,9 @@ describe('components/HarvestStatisticsPanel', () => {
             },
             stateChanges,
             dispatch,
-            false,
-            undefined,
             true,
+            undefined,
+            false,
         );
 
         return {
@@ -192,7 +192,7 @@ describe('components/HarvestStatisticsPanel', () => {
         await Vue.nextTick();
         jest.advanceTimersByTime(HARVESTING_STATUS_POLLING_INTERVAL_SECS * 1000);
         await Vue.nextTick();
-        '';
+
         // Assert:
         expect(getByTestId('status-text').textContent).toBe(i18n.t(`harvesting_status_active`).toString());
     });
@@ -256,6 +256,9 @@ describe('components/HarvestStatisticsPanel', () => {
             },
             dispatch,
         );
+        // assert initial state
+        expect(getByTestId('total-block-count').textContent.trim()).toBe('1000');
+        expect(getByTestId('total-fees-earned').textContent.trim()).toBe('0');
 
         // Act:
         await Vue.nextTick();
