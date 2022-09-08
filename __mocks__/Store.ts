@@ -24,6 +24,9 @@ localVue.use(Vuex);
  * @internal
  * @param {any} storeOptions
  * @param {any} dispatch
+ * @param {boolean} doMockDispatch
+ * @param {any} commit
+ * @param {boolean} doMockCommit
  */
 export const createStore = (storeOptions?: any, dispatch?: any, doMockDispatch = true, commit?: any, doMockCommit = true) => {
     const store = new Vuex.Store(storeOptions);
@@ -42,14 +45,17 @@ export const createStore = (storeOptions?: any, dispatch?: any, doMockDispatch =
  * @param {any} storeModules
  * @param {any} stateChanges
  * @param {any} dispatch
+ * @param {boolean} doMockDispatch
+ * @param {any} commit
+ * @param {boolean} doMockCommit
  */
 export const getStore = (
     storeModules: { [name: string]: any },
     stateChanges?: { [field: string]: any },
     dispatch?: any,
-    doNotMockDispatch = false,
+    doMockDispatch = true,
     commit?: any,
-    doNotMockCommit = false,
+    doMockCommit = true,
 ) => {
     // - format store module overwrites
     const modules = Object.keys(storeModules)
@@ -71,5 +77,5 @@ export const getStore = (
         }, {});
 
     // - create store
-    return createStore({ modules }, dispatch, doNotMockDispatch, commit, doNotMockCommit);
+    return createStore({ modules }, dispatch, doMockDispatch, commit, doMockCommit);
 };
