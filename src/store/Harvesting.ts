@@ -156,17 +156,17 @@ export default {
             commit('setPollingTrials', pollingTrials);
         },
         async FETCH_STATUS({ commit, rootGetters, dispatch }, node?: [string, NodeModel]) {
-            const csAccountInfo: AccountInfo = rootGetters['account/currentSignerAccountInfo'];
+            const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
             const currentSignerHarvestingModel: HarvestingModel = rootGetters['harvesting/currentSignerHarvestingModel'];
             if (
                 currentSignerHarvestingModel?.accountAddress &&
-                csAccountInfo.address.plain() !== currentSignerHarvestingModel.accountAddress
+                currentSignerAddress.plain() !== currentSignerHarvestingModel.accountAddress
             ) {
                 return;
             }
             const repositoryFactory = rootGetters['network/repositoryFactory'];
             const currentSignerAccountInfo = (
-                await repositoryFactory.createAccountRepository().getAccountsInfo([csAccountInfo.address]).toPromise()
+                await repositoryFactory.createAccountRepository().getAccountsInfo([currentSignerAddress]).toPromise()
             )[0];
 
             // reset
