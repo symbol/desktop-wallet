@@ -116,22 +116,22 @@ describe('components/SignerBaseFilter', () => {
             expect(options.at(1).attributes().value).toBe(simpleWallet2.address.plain());
         });
 
-        test('selects specified signer when isAggregate is true when specified signer is not empty', () => {
+        test('selects specified signer when isAggregate is true and specified signer is not empty', () => {
             const chosenSigner = simpleWallet2.address.plain();
             runBasicSelectedSignerInMountTests({ isAggregate: true, chosenSigner }, chosenSigner);
         });
 
-        test('selects specified signer when isAggregate is true when specified signer is empty', () => {
+        test('selects specified signer when isAggregate is true and specified signer is empty', () => {
             const chosenSigner = '';
             runBasicSelectedSignerInMountTests({ isAggregate: true, chosenSigner }, simpleWallet1.address.plain());
         });
 
-        test('selects specified signer when isAggregate is false when specified signer is empty', () => {
+        test('selects specified signer when isAggregate is false and specified signer is empty', () => {
             const chosenSigner = '';
             runBasicSelectedSignerInMountTests({ isAggregate: false, chosenSigner }, simpleWallet1.address.plain());
         });
 
-        test('selects specified signer when isAggregate is false when specified signer is not empty', () => {
+        test('selects specified signer when isAggregate is false and specified signer is not empty', () => {
             const chosenSigner = simpleWallet2.address.plain();
             runBasicSelectedSignerInMountTests({ isAggregate: false, chosenSigner }, simpleWallet1.address.plain());
         });
