@@ -48,7 +48,7 @@ describe('components/TransactionDetailRow', () => {
     };
 
     describe('label', () => {
-        const runBasicLabelTests = (item, expectResult) => {
+        const runBasicLabelTests = (item, expectedResult) => {
             // Arrange:
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
@@ -59,7 +59,7 @@ describe('components/TransactionDetailRow', () => {
 
             // Act + Assert:
             // @ts-ignore
-            expect(wrapper.vm.label).toBe(expectResult);
+            expect(wrapper.vm.label).toBe(expectedResult);
         };
 
         test("returns key when label's key exists", () => {
