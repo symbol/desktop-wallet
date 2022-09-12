@@ -49,7 +49,7 @@ import { officialIcons } from '@/views/resources/Images';
 import { ConnectingToNodeInfo } from '@/store/Network';
 
 import i18n from '@/language';
-import { HarvestingStatus } from '@/store/Harvesting';
+import { HarvestingStatus, HARVESTING_STATUS_POLLING_TRIAL_LIMIT } from '@/store/Harvesting';
 import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
 import { networkConfig } from '@/config';
 
@@ -196,7 +196,8 @@ export class PageLayoutTs extends Vue {
         if (
             this.$route.fullPath === '/delegatedHarvesting' &&
             this.harvestingStatus === HarvestingStatus.FAILED &&
-            (this.pollingTrials === 20 || this.currentSignerHarvestingModel?.delegatedHarvestingRequestFailed)
+            (this.pollingTrials === HARVESTING_STATUS_POLLING_TRIAL_LIMIT ||
+                this.currentSignerHarvestingModel?.delegatedHarvestingRequestFailed)
         ) {
             return {
                 show: true,

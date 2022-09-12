@@ -1049,7 +1049,6 @@
     "transaction_descriptor_16964": "马赛克元数据",
     "transaction_descriptor_16972": "Link node key",
     "transaction_descriptor_16973": "改变马赛克供应量",
-    "transaction_descriptor_17229": "回收",
     "transaction_descriptor_16974": "地址别名",
     "transaction_descriptor_16976": "账户马赛克约束",
     "transaction_descriptor_16977": "马赛克地址约束",
@@ -1139,7 +1138,6 @@
     "button_unblock_contact": "解除封锁",
     "lock_hash_algorithm": "哈希算法",
     "not_enough_balance": "余额不足",
-
     "use_max_value": "使用最大值",
     "amount_value_cannot_start_with_zero": "金额值不能以 0 开头",
     "new_version_available": "新版本的 Symbol 钱包可用!",
@@ -1175,5 +1173,6 @@
     "transaction_needs_cosignature_unknown_prohibited_part1": "警告: 恶意交易可能会导致资金完全损失。",
     "transaction_needs_cosignature_unknown_prohibited_part2": "来自未知帐户的交易正在等待签名。 请仔细检查所有金额和收款人地址，因为交易不可逆的。 如果您了解风险并希望继续，请将签名者添加到地址簿（白名单）。 如果您不信任，请拒绝此交易。\n\n您可以在高级设置中关闭此安全保护。",
     "sign_known_multisig_transactions_alert": "请仔细检查所有金额和收款人地址，因为交易不可逆的。",
-    "allow_unknown_multisig_transactions_alert": "警告: 任何人都可以发起多签名交易，如果你签了此交易，你的资金将会发送到他的钱包。"
+    "allow_unknown_multisig_transactions_alert": "警告: 任何人都可以发起多签名交易，如果你签了此交易，你的资金将会发送到他的钱包。",
+    "starting": "开始..."
 }

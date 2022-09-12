@@ -86,6 +86,7 @@
     "devDependencies": {
         "@babel/compat-data": "^7.9.6",
         "@babel/core": "^7.7.2",
+        "@testing-library/vue": "^5.8.3",
         "@types/file-saver": "^2.0.1",
         "@types/jest": "^23.3.1",
         "@types/json2csv": "^5.0.1",

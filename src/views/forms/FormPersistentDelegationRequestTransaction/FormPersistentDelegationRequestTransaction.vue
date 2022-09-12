@@ -58,48 +58,31 @@
                             <template v-slot:inputs>
                                 <div class="harvesting-buttons-container">
                                     <button
-                                        v-if="harvestingStatus === 'INACTIVE'"
+                                        v-if="
+                                            harvestingStatus === 'INACTIVE' ||
+                                            harvestingStatus === 'KEYS_LINKED' ||
+                                            harvestingStatus === 'FAILED'
+                                        "
                                         type="submit"
                                         class="centered-button button-style submit-button inverted-button"
-                                        :disabled="linking"
+                                        :disabled="actionStarted"
                                         @click="handleSubmit(onStartClick())"
                                     >
-                                        {{ linking ? $t('linking') : $t('link_keys') }}
+                                        {{ actionStarted ? $t('starting') : $t('start_harvesting') }}
                                     </button>
                                     <button
-                                        v-if="!isPersistentDelReqSent && harvestingStatus !== 'INACTIVE' && harvestingStatus !== 'ACTIVE'"
-                                        class="centered-button button-style submit-button inverted-button"
-                                        :disabled="activating || linking || !isPublicAndPrivateKeysLinked"
-                                        @click="handleSubmit(onActivate())"
-                                    >
-                                        {{ activating ? $t('requesting') : $t('request_harvesting') }}
-                                    </button>
-                                    <!-- <button
-                                        v-if="isPersistentDelReqSent && harvestingStatus !== 'INACTIVE'"
-                                        type="submit"
-                                        class="centered-button button-style submit-button inverted-button"
-                                        :disabled="swapDisabled"
-                                        @click="handleSubmit(onSwap())"
-                                    >
-                                        {{ $t('swap') }}
-                                    </button> -->
-                                    <button
-                                        v-if="harvestingStatus !== 'INACTIVE' && harvestingStatus !== 'KEYS_LINKED'"
+                                        v-if="
+                                            harvestingStatus !== 'INACTIVE' &&
+                                            harvestingStatus !== 'KEYS_LINKED' &&
+                                            harvestingStatus !== 'FAILED' &&
+                                            isNodeKeyLinked
+                                        "
                                         type="submit"
                                         class="centered-button button-style submit-button danger-button"
-                                        :disabled="linking || activating"
+                                        :disabled="actionStarted"
                                         @click="handleSubmit(onStop())"
                                     >
-                                        {{ linking ? $t('stoping') : $t('stop_harvesting') }}
-                                    </button>
-                                    <button
-                                        v-if="harvestingStatus === 'KEYS_LINKED'"
-                                        type="submit"
-                                        class="centered-button secondary-outline-button button-style submit-button button"
-                                        :disabled="linking || activating"
-                                        @click="handleSubmit(onStop())"
-                                    >
-                                        {{ linking ? $t('unlinking') : $t('unlink_keys') }}
+                                        {{ actionStarted ? $t('stoping') : $t('stop_harvesting') }}
                                     </button>
                                 </div>
                             </template>
@@ -116,15 +99,7 @@
                                 :value="$t('remote_keys_linked')"
                             />
                         </div>
-                        <!-- <FormRow class="form-warning-row" v-if="harvestingStatus !== 'INACTIVE'">
-                            <template v-slot:inputs>
-                                <div  type="warning" class="warning-node-swap">
-                                    <Icon type="ios-warning-outline" />
-                                    {{ $t('harvesting_warning_node_swap') }}
-                                </div>
-                            </template>
-                        </FormRow> -->
-                        <div class="key-item separtate-spacing">
+                        <div class="key-item separate-spacing">
                             <FormRow>
                                 <template v-slot:label> {{ $t('linked_node_public_key') }}: </template>
 
@@ -194,7 +169,7 @@
                         </div>
                         <!-- link/unlink button for remote account public key -->
 
-                        <div class="key-item separtate-spacing">
+                        <div class="key-item separate-spacing">
                             <FormRow>
                                 <template v-slot:label> {{ $t('linked_remote_private_key') }}: </template>
                                 <template v-slot:inputs>
@@ -278,18 +253,11 @@
             @confirmed="showModalImportKey = false"
         />
         <ModalFormProfileUnlock
-            v-if="hasAccountUnlockModal || isLedger"
+            v-if="hasAccountUnlockModal"
             :visible="hasAccountUnlockModal"
             :on-success="onAccountUnlocked"
-            :message="$t('activate_delegated_harvesting_message')"
+            :message="$t(isLedger ? 'encrypt_ledger_keys_on_sign' : 'activate_delegated_harvesting_message')"
             @close="hasAccountUnlockModal = false"
-        />
-        <ModalFormProfileUnlock
-            v-if="hasLedgerAccountUnlockModal"
-            :visible="hasLedgerAccountUnlockModal"
-            :on-success="onLedgerAccountUnlocked"
-            :message="$t('encrypt_ledger_keys_on_sign')"
-            @close="hasLedgerAccountUnlockModal = false"
         />
         <ModalTransactionConfirmation
             v-if="hasConfirmationModal"

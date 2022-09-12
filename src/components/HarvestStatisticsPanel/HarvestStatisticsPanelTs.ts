@@ -17,11 +17,20 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 
 import { AccountInfo } from 'symbol-sdk';
-import { HarvestedBlockStats, HarvestingStatus } from '@/store/Harvesting';
+import {
+    HarvestedBlockStats,
+    HarvestingStatus,
+    HARVESTING_BLOCKS_POLLING_INTERVAL_SECS,
+    HARVESTING_STATUS_POLLING_INTERVAL_SECS,
+    HARVESTING_STATUS_POLLING_TRIAL_LIMIT,
+} from '@/store/Harvesting';
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel';
 import { HarvestingService } from '@/services/HarvestingService';
 import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
+import ButtonRefresh from '@/components/ButtonRefresh/ButtonRefresh.vue';
+
 @Component({
+    components: { ButtonRefresh },
     computed: {
         ...mapGetters({
             currentSignerAccountInfo: 'account/currentSignerAccountInfo',
@@ -47,8 +56,8 @@ export class HarvestStatisticsPanelTs extends Vue {
     private currentSignerHarvestingModel: HarvestingModel;
     created() {
         this.refresh();
-        this.checkUnLockedAccounts();
-        this.refreshStatusBlocks();
+        this.refreshHarvestingStatusOnInterval();
+        this.refreshHarvestingBlocksOnInterval();
     }
 
     public refresh() {
@@ -81,13 +90,16 @@ export class HarvestStatisticsPanelTs extends Vue {
         }
     }
 
-    private checkUnLockedAccounts(): void {
+    private refreshHarvestingStatusOnInterval(pollingIntervalMs = HARVESTING_STATUS_POLLING_INTERVAL_SECS * 1000): void {
         Vue.nextTick(() => {
             const harvestingService = new HarvestingService();
             if (this.harvestingStatus !== HarvestingStatus.FAILED) {
                 this.statusPollingInterval = setInterval(() => {
                     if (this.harvestingStatus === HarvestingStatus.INPROGRESS_ACTIVATION) {
-                        if (this.pollingTrials < 20 && !this.currentSignerHarvestingModel.delegatedHarvestingRequestFailed) {
+                        if (
+                            this.pollingTrials < HARVESTING_STATUS_POLLING_TRIAL_LIMIT &&
+                            !this.currentSignerHarvestingModel.delegatedHarvestingRequestFailed
+                        ) {
                             this.refreshHarvestingStatus();
                             this.$store.dispatch('harvesting/SET_POLLING_TRIALS', this.pollingTrials + 1);
                         } else {
@@ -96,7 +108,7 @@ export class HarvestStatisticsPanelTs extends Vue {
                             return;
                         }
                     }
-                }, 45000);
+                }, pollingIntervalMs);
             } else {
                 const harvestingModel = harvestingService.getHarvestingModel(this.currentSignerHarvestingModel.accountAddress);
                 harvestingService.updateDelegatedHarvestingRequestFailed(harvestingModel, true);
@@ -105,20 +117,21 @@ export class HarvestStatisticsPanelTs extends Vue {
         });
     }
 
-    private refreshStatusBlocks(): void {
+    private refreshHarvestingBlocksOnInterval(pollingIntervalMs = HARVESTING_BLOCKS_POLLING_INTERVAL_SECS * 1000): void {
         Vue.nextTick(() => {
             this.statsPollingInterval = setInterval(() => {
                 if (this.harvestingStatus == HarvestingStatus.ACTIVE) {
                     this.refreshHarvestingStats();
                 }
-            }, 30000);
+            }, pollingIntervalMs);
         });
     }
 
-    private destroyed() {
+    destroyed() {
         clearInterval(this.statusPollingInterval);
         clearInterval(this.statsPollingInterval);
     }
+
     public get totalFeesEarned(): string {
         const relativeAmount = this.harvestedBlockStats.totalFeesEarned.compact() / Math.pow(10, this.networkCurrency.divisibility);
         if (relativeAmount === 0) {

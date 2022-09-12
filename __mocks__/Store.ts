@@ -23,10 +23,59 @@ localVue.use(Vuex);
  * Create a fake store
  * @internal
  * @param {any} storeOptions
+ * @param {any} dispatch
+ * @param {boolean} doMockDispatch
+ * @param {any} commit
+ * @param {boolean} doMockCommit
  */
-export const createStore = (storeOptions?: any, dispatch?: any) => {
+export const createStore = (storeOptions?: any, dispatch?: any, doMockDispatch = true, commit?: any, doMockCommit = true) => {
     const store = new Vuex.Store(storeOptions);
-    store.dispatch = dispatch ?? jest.fn();
-    store.commit = jest.fn();
+    if (doMockDispatch) {
+        store.dispatch = dispatch ?? jest.fn();
+    }
+    if (doMockCommit) {
+        store.commit = commit ?? jest.fn();
+    }
     return store;
+};
+
+/**
+ * Create a fake store with store changes
+ * @internal
+ * @param {any} storeModules
+ * @param {any} stateChanges
+ * @param {any} dispatch
+ * @param {boolean} doMockDispatch
+ * @param {any} commit
+ * @param {boolean} doMockCommit
+ */
+export const getStore = (
+    storeModules: { [name: string]: any },
+    stateChanges?: { [field: string]: any },
+    dispatch?: any,
+    doMockDispatch = true,
+    commit?: any,
+    doMockCommit = true,
+) => {
+    // - format store module overwrites
+    const modules = Object.keys(storeModules)
+        .map((k) => ({
+            [k]: Object.assign({}, storeModules[k], {
+                // - map state overwrites to store module
+                state: Object.assign({}, storeModules[k].state, stateChanges),
+                // - map unmodified getters
+                getters: storeModules[k].getters,
+                mutations: storeModules[k].mutations,
+                actions: storeModules[k].actions,
+            }),
+        }))
+        .reduce((obj, item) => {
+            // - reducer to get {profile: x, account: y} format
+            const key = Object.keys(item).shift();
+            obj[key] = item[key];
+            return obj;
+        }, {});
+
+    // - create store
+    return createStore({ modules }, dispatch, doMockDispatch, commit, doMockCommit);
 };
