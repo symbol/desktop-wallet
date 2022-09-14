@@ -32,18 +32,17 @@ export class RentalFeeTs extends Vue {
         if (this.rentalEstimation) {
             switch (this.rentalType) {
                 case 'mosaic':
-                    feeAmountRaw = this.rentalEstimation?.effectiveMosaicRentalFee.compact();
+                    feeAmountRaw = this.rentalEstimation.effectiveMosaicRentalFee.compact();
                     break;
                 case 'root-namespace':
-                    feeAmountRaw = this.rentalEstimation?.effectiveRootNamespaceRentalFeePerBlock.compact() * this.duration;
+                    feeAmountRaw = this.rentalEstimation.effectiveRootNamespaceRentalFeePerBlock.compact() * this.duration;
                     break;
                 case 'child-namespace':
-                    feeAmountRaw = this.rentalEstimation?.effectiveChildNamespaceRentalFee.compact();
+                    feeAmountRaw = this.rentalEstimation.effectiveChildNamespaceRentalFee.compact();
                     break;
-                default:
-                    feeAmountRaw = 0;
             }
-            return feeAmountRaw;
         }
+
+        return feeAmountRaw;
     }
 }
