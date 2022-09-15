@@ -14,7 +14,7 @@
                 @keydown="keyDown"
             />
         </div>
-        <li :class="nextCls" @click="next">
+        <li :class="nextCls" data-testid="btn-next-page" @click="next">
             <a><i class="ivu-icon ivu-icon-ios-arrow-forward" style="margin-top: 0.055rem;"></i></a>
         </li>
     </ul>
