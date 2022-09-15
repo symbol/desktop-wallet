@@ -17,7 +17,7 @@ import RentalFee from '@/components/RentalFees/RentalFee.vue';
 import { render } from '@testing-library/vue';
 import { getStore } from '@MOCKS/Store';
 import i18n from '@/language/index';
-import { mosaicsMock } from '@MOCKS/mosaics';
+import { networkMock } from '@MOCKS/network';
 import { UInt64 } from 'symbol-sdk';
 
 describe('components/RentalFee', () => {
@@ -35,7 +35,7 @@ describe('components/RentalFee', () => {
         const mockMosaicStore = {
             namespaced: true,
             state: {
-                networkCurrency: mosaicsMock[0],
+                networkCurrency: networkMock.currency,
             },
             getters: {
                 networkCurrency: (state) => state.networkCurrency,
@@ -81,12 +81,8 @@ describe('components/RentalFee', () => {
 
         // Act + Assert:
         expect(getByText('Estimated rental fee:')).toBeDefined();
-        expect(getByTestId('fees').textContent.trim()).toContain(expectedResult);
+        expect(getByTestId('fees').textContent).toBe(`${expectedResult}   (XYM)`);
     };
-
-    it('renders default estimated rental fee when rentalFeeEstimation does not exist', () => {
-        runBasicEstimatedRentalFee({}, 'mosaic', '0');
-    });
 
     it('renders estimated rental fee when rental fees type is mosaic', () => {
         runBasicEstimatedRentalFee(createRentalFeeEstimation, 'mosaic', '50');
