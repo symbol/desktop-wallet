@@ -19,7 +19,6 @@ import Router, { RawLocation } from 'vue-router';
 import { routes } from '@/router/routes';
 import { AppRoute } from './AppRoute';
 import { TabEntry } from './TabEntry';
-import { AppStore } from '@/app/AppStore';
 import { ProfileService } from '@/services/ProfileService';
 
 /**
@@ -56,7 +55,7 @@ export class AppRouter extends Router {
                 return next(/* no-redirect */);
             }
 
-            const isAuthenticated = AppStore.getters['profile/isAuthenticated'] === true;
+            const isAuthenticated = this.app.$store.getters['profile/isAuthenticated'] === true;
             if (!isAuthenticated) {
                 return next({ name: 'profiles.login' });
             }

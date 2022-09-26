@@ -23,14 +23,14 @@ export const account1Params = {
     accountName: 'account_name',
     privateKey: '145160ba92878447cb45d6cb147d2ade035b0b47cab1b9e1551aa5679d92b314',
     networkType: NetworkType.TEST_NET,
-    password: new Password('password1'),
+    password: new Password('Password1'),
 };
 
 export const account2Params = {
     accountName: 'account2_name',
     privateKey: '3BEA9A8E6A38178E270B65480316452DC4AB42A4B5D70523D6399DFD1876AF3B',
     networkType: NetworkType.TEST_NET,
-    password: new Password('password2'),
+    password: new Password('Password1'),
 };
 
 export const account1 = Account.createFromPrivateKey(account1Params.privateKey, account1Params.networkType);

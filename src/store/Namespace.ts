@@ -103,7 +103,7 @@ export default {
             await Lock.uninitialize(callback, { getters });
         },
 
-        LOAD_NAMESPACES(
+        async LOAD_NAMESPACES(
             { commit, rootGetters },
             { pageNumber, pageSize }: { pageSize: number; pageNumber: number } = {
                 pageSize: 20,
@@ -121,7 +121,7 @@ export default {
                 return;
             }
             commit('isFetchingNamespaces', true);
-            namespaceService
+            return namespaceService
                 .getNamespaces(repositoryFactory, currentSignerAddress, { pageSize, pageNumber })
                 .subscribe(({ models, pageInfo }) => {
                     commit('namespaces', {

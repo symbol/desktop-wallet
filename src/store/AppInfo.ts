@@ -16,7 +16,6 @@
 import Vue from 'vue';
 // internal dependencies
 import i18n from '@/language';
-import app from '@/main';
 import { AwaitLock } from './AwaitLock';
 // configuration
 import { appConfig } from '@/config';
@@ -123,7 +122,7 @@ export default {
         SET_LOADING_OVERLAY({ commit }, loadingOverlay) {
             if (!loadingOverlay.show) {
                 // @ts-ignore
-                app.$Spin.hide();
+                this._vm.$Spin.hide();
             }
             commit('toggleLoadingOverlay', loadingOverlay.show);
             commit('setLoadingOverlayMessage', loadingOverlay.message);

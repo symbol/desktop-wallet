@@ -750,6 +750,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             this.networkConfiguration,
             this.transactionFees,
             this.selectedSigner.requiredCosigApproval,
+            this.clientServerTimeDifference,
         );
     }
 

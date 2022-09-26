@@ -32,7 +32,7 @@
                             </button>
                         </div>
                         <div v-for="(node, index) in filteredData" :key="index">
-                            <Option :value="node" :label="node">
+                            <Option :value="node" :label="node" role="listitem">
                                 <span>{{ node }}</span>
                             </Option>
                         </div>

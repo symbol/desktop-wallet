@@ -123,7 +123,6 @@ export enum PublicKeyTitle {
     },
     computed: {
         ...mapGetters({
-            currentHeight: 'network/currentHeight',
             currentSignerAccountInfo: 'account/currentSignerAccountInfo',
             harvestingStatus: 'harvesting/status',
             currentSignerHarvestingModel: 'harvesting/currentSignerHarvestingModel',

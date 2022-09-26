@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import Vue from 'vue';
-import Vuex from 'vuex';
 import AppInfoStore from '@/store/AppInfo';
 import DatabaseStore from '@/store/Database';
 import NetworkStore from '@/store/Network';
@@ -37,81 +35,92 @@ import { onPeerConnection } from '@/store/plugins/onPeerConnection';
 import { AwaitLock } from '@/store/AwaitLock';
 import AddressBook from '@/store/AddressBook';
 import AggregateTransaction from '@/store/AggregateTransaction';
+import _ from 'lodash';
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-const Lock = AwaitLock.create();
+const getAppStore = (vueInstance?: typeof Vue) => {
+    if (vueInstance) {
+        vueInstance.use(Vuex);
+    } else {
+        Vue.use(Vuex);
+    }
+    const Lock = AwaitLock.create();
 
-Vue.use(Vuex);
+    /**
+     * Application Store
+     *
+     * This store initializes peer connection
+     */
+    return new Vuex.Store(
+        _.cloneDeep({
+            strict: false,
+            modules: {
+                app: AppInfoStore,
+                db: DatabaseStore,
+                network: NetworkStore,
+                profile: ProfileStore,
+                account: AccountStore,
+                diagnostic: DiagnosticStore,
+                notification: NotificationStore,
+                temporary: TemporaryStore,
+                metadata: MetadataStore,
+                mosaic: MosaicStore,
+                namespace: NamespaceStore,
+                transaction: TransactionStore,
+                statistics: StatisticsStore,
+                community: CommunityStore,
+                block: BlockStore,
+                addressBook: AddressBook,
+                aggregateTransaction: AggregateTransaction,
+                harvesting: HarvestingStore,
+                restriction: RestrictionStore,
+            },
+            plugins: [onPeerConnection],
+            actions: {
+                async initialize({ dispatch, getters }) {
+                    const callback = async () => {
+                        await dispatch('app/initialize');
+                        await dispatch('db/initialize');
+                        await dispatch('diagnostic/initialize');
+                        await dispatch('notification/initialize');
+                        // Network init must happen before Mosaic init because network currency Ids
+                        // are supplied to MosaicService from the network configuration
+                        await dispatch('network/initialize');
+                        await dispatch('account/initialize');
+                        await dispatch('metadata/initialize');
+                        await dispatch('mosaic/initialize');
+                        await dispatch('namespace/initialize');
+                        await dispatch('transaction/initialize');
+                        await dispatch('addressBook/initialize');
+                        await dispatch('harvesting/initialize');
+                        await dispatch('restriction/initialize');
+                    };
 
-/**
- * Application Store
- *
- * This store initializes peer connection
- */
-const AppStore = new Vuex.Store({
-    strict: false,
-    modules: {
-        app: AppInfoStore,
-        db: DatabaseStore,
-        network: NetworkStore,
-        profile: ProfileStore,
-        account: AccountStore,
-        diagnostic: DiagnosticStore,
-        notification: NotificationStore,
-        temporary: TemporaryStore,
-        metadata: MetadataStore,
-        mosaic: MosaicStore,
-        namespace: NamespaceStore,
-        transaction: TransactionStore,
-        statistics: StatisticsStore,
-        community: CommunityStore,
-        block: BlockStore,
-        addressBook: AddressBook,
-        aggregateTransaction: AggregateTransaction,
-        harvesting: HarvestingStore,
-        restriction: RestrictionStore,
-    },
-    plugins: [onPeerConnection],
-    actions: {
-        async initialize({ dispatch, getters }) {
-            const callback = async () => {
-                await dispatch('app/initialize');
-                await dispatch('db/initialize');
-                await dispatch('diagnostic/initialize');
-                await dispatch('notification/initialize');
-                // Network init must happen before Mosaic init because network currency Ids
-                // are supplied to MosaicService from the network configuration
-                await dispatch('network/initialize');
-                await dispatch('metadata/initialize');
-                await dispatch('mosaic/initialize');
-                await dispatch('namespace/initialize');
-                await dispatch('transaction/initialize');
-                await dispatch('addressBook/initialize');
-                await dispatch('harvesting/initialize');
-                await dispatch('restriction/initialize');
-            };
+                    // aquire async lock until initialized
+                    await Lock.initialize(callback, { getters });
+                },
+                // Uninitialize the stores (call on app destroyed).
+                async uninitialize({ dispatch }) {
+                    await Promise.all([
+                        dispatch('app/uninitialize'),
+                        dispatch('network/uninitialize'),
+                        dispatch('mosaic/uninitialize'),
+                        dispatch('transaction/uninitialize'),
+                        dispatch('profile/uninitialize'),
+                        dispatch('account/uninitialize'),
+                        dispatch('metadata/uninitialize'),
+                        dispatch('namespace/uninitialize'),
+                        dispatch('notification/uninitialize'),
+                        dispatch('temporary/uninitialize'),
+                        dispatch('diagnostic/uninitialize'),
+                        dispatch('harvesting/uninitialize'),
+                        dispatch('restriction/uninitialize'),
+                    ]);
+                },
+            },
+        }),
+    );
+};
 
-            // aquire async lock until initialized
-            await Lock.initialize(callback, { getters });
-        },
-        // Uninitialize the stores (call on app destroyed).
-        async uninitialize({ dispatch }) {
-            await Promise.all([
-                dispatch('app/uninitialize'),
-                dispatch('network/uninitialize'),
-                dispatch('mosaic/uninitialize'),
-                dispatch('transaction/uninitialize'),
-                dispatch('profile/uninitialize'),
-                dispatch('account/uninitialize'),
-                dispatch('metadata/uninitialize'),
-                dispatch('namespace/uninitialize'),
-                dispatch('notification/uninitialize'),
-                dispatch('temporary/uninitialize'),
-                dispatch('diagnostic/uninitialize'),
-                dispatch('harvesting/uninitialize'),
-                dispatch('restriction/uninitialize'),
-            ]);
-        },
-    },
-});
-
-export default AppStore;
+export default getAppStore;

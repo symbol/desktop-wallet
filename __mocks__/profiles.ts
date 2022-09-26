@@ -22,7 +22,8 @@ const TEST_PROFILES = {
         profileName: 'profile1',
         hint: 'password is password',
         networkType: NetworkType.TEST_NET,
-        password: '0b831096cf25adbd7324ad2dbb3d99a829b40b53c6f76dd50fb2ef56fceded2f2kixTXdr/q/ci5PPwWVCiA==',
+        password:
+            'E9A75486736A550AF4FEA861E2378305C4A555A05094DEE1DCA2F68AFEA49CC3A50E8DE6EA131EA521311F4D6FB054A146E8282F8E35FF2E6368C1A62E909716',
         accounts: "['WalletsModel2']",
         seed:
             '4fcd1e1b896551f68c3d5314be1f8d2fad48d7b492e65ecf4ac1ac2dfc9749a08CyBF9Q5APg07qXEMWQzQIcN+/KBekkw0T2hBPfdAd5VxXkdzWikv46dIaYxyHCn9hdr839ITfgIWYnAiE54jRWfFKkDvyEZL4pchX6mAqCcc0Ew9VGFfHjKStHWFeBezrhp/MlNeSw/EbxiCFo5C2pmeSuGz5NABUXT+BoDi62gB8r6gyF9hjB8J7Lz6D4SBf6J4cvj9krCXzkkWX1jqg==',
@@ -34,7 +35,8 @@ const TEST_PROFILES = {
         profileName: 'profile_testnet',
         hint: 'password is password',
         networkType: NetworkType.TEST_NET,
-        password: '0b831096cf25adbd7324ad2dbb3d99a829b40b53c6f76dd50fb2ef56fceded2f2kixTXdr/q/ci5PPwWVCiA==',
+        password:
+            'E9A75486736A550AF4FEA861E2378305C4A555A05094DEE1DCA2F68AFEA49CC3A50E8DE6EA131EA521311F4D6FB054A146E8282F8E35FF2E6368C1A62E909716',
         accounts: "['WalletsModel2']",
         seed:
             '4fcd1e1b896551f68c3d5314be1f8d2fad48d7b492e65ecf4ac1ac2dfc9749a08CyBF9Q5APg07qXEMWQzQIcN+/KBekkw0T2hBPfdAd5VxXkdzWikv46dIaYxyHCn9hdr839ITfgIWYnAiE54jRWfFKkDvyEZL4pchX6mAqCcc0Ew9VGFfHjKStHWFeBezrhp/MlNeSw/EbxiCFo5C2pmeSuGz5NABUXT+BoDi62gB8r6gyF9hjB8J7Lz6D4SBf6J4cvj9krCXzkkWX1jqg==',
@@ -46,7 +48,8 @@ const TEST_PROFILES = {
         profileName: 'profile_testnet',
         hint: 'password is password',
         networkType: NetworkType.MAIN_NET,
-        password: '0b831096cf25adbd7324ad2dbb3d99a829b40b53c6f76dd50fb2ef56fceded2f2kixTXdr/q/ci5PPwWVCiA==',
+        password:
+            'E9A75486736A550AF4FEA861E2378305C4A555A05094DEE1DCA2F68AFEA49CC3A50E8DE6EA131EA521311F4D6FB054A146E8282F8E35FF2E6368C1A62E909716',
         accounts: "['WalletsModel2']",
         seed:
             '4fcd1e1b896551f68c3d5314be1f8d2fad48d7b492e65ecf4ac1ac2dfc9749a08CyBF9Q5APg07qXEMWQzQIcN+/KBekkw0T2hBPfdAd5VxXkdzWikv46dIaYxyHCn9hdr839ITfgIWYnAiE54jRWfFKkDvyEZL4pchX6mAqCcc0Ew9VGFfHjKStHWFeBezrhp/MlNeSw/EbxiCFo5C2pmeSuGz5NABUXT+BoDi62gB8r6gyF9hjB8J7Lz6D4SBf6J4cvj9krCXzkkWX1jqg==',

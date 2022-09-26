@@ -145,7 +145,7 @@ export class FormTransactionBase extends Vue {
 
     protected multisigAccountGraphInfo: MultisigAccountInfo[];
 
-    private clientServerTimeDifference: number;
+    protected clientServerTimeDifference: number;
 
     /**
      * Type the ValidationObserver refs
@@ -309,6 +309,7 @@ export class FormTransactionBase extends Vue {
             this.networkConfiguration,
             this.transactionFees,
             this.requiredCosignatures,
+            this.clientServerTimeDifference,
         );
     }
 
