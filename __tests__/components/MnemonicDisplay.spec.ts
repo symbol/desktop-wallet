@@ -26,10 +26,8 @@ describe('components/MnemonicDisplay', () => {
 
     test('render component', async () => {
         // Arrange:
-        const expectedWords = ['Lorem', 'ipsum', 'dolor', 'sit', 'amet'];
-        const expectedClipboardString = 'Lorem ipsum dolor sit amet';
         const props = {
-            words: expectedWords,
+            words: ['Lorem', 'ipsum', 'dolor', 'sit', 'amet'],
         };
 
         // Act:
@@ -41,6 +39,8 @@ describe('components/MnemonicDisplay', () => {
         const clipboardString = wrapper.find('buttoncopytoclipboard-stub').attributes('value');
 
         // Assert:
+        const expectedWords = ['Lorem', 'ipsum', 'dolor', 'sit', 'amet'];
+        const expectedClipboardString = 'Lorem ipsum dolor sit amet';
         expect(wordsExtractedFromElements).toStrictEqual(expectedWords);
         expect(clipboardString).toBe(expectedClipboardString);
         expect(component.waitingCopyString).toBe(expectedClipboardString);

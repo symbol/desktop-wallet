@@ -71,17 +71,17 @@ describe('components/MosaicAmountDisplay', () => {
             size: 'bigger',
             showTicker: true,
         };
-        const expectedValueAttribute = '100';
-        const expectedDecimalsAttribute = '0';
-        const expectedSizeAttribute = 'bigger';
-        const expectedShowTickerAttribute = 'true';
-        const expectedTickerAttribute = '2C56C7D764F17B09';
 
         // Act:
         const wrapper = getMosaicAmountDisplayWrapper(props);
         const amountDisplayElement = wrapper.find('amountdisplay-stub');
 
         // Assert:
+        const expectedValueAttribute = '100';
+        const expectedDecimalsAttribute = '0';
+        const expectedSizeAttribute = 'bigger';
+        const expectedShowTickerAttribute = 'true';
+        const expectedTickerAttribute = '2C56C7D764F17B09';
         expect(amountDisplayElement.attributes('value')).toBe(expectedValueAttribute);
         expect(amountDisplayElement.attributes('decimals')).toBe(expectedDecimalsAttribute);
         expect(amountDisplayElement.attributes('size')).toBe(expectedSizeAttribute);
@@ -112,9 +112,9 @@ describe('components/MosaicAmountDisplay', () => {
             // Arrange:
             const id = null;
             const networkCurrency = mockNetworkCurrency;
-            const expectedResult = true;
 
             // Act + Assert:
+            const expectedResult = true;
             runUseNetworkTest(id, networkCurrency, expectedResult);
         });
 
@@ -122,9 +122,9 @@ describe('components/MosaicAmountDisplay', () => {
             // Arrange:
             const id = new MosaicId(mockNetworkCurrency.mosaicIdHex);
             const networkCurrency = mockNetworkCurrency;
-            const expectedResult = true;
 
             // Act + Assert:
+            const expectedResult = true;
             runUseNetworkTest(id, networkCurrency, expectedResult);
         });
 
@@ -132,9 +132,9 @@ describe('components/MosaicAmountDisplay', () => {
             // Arrange:
             const id = NamespaceId.createFromEncoded(mockNetworkCurrency.namespaceIdHex);
             const networkCurrency = mockNetworkCurrency;
-            const expectedResult = true;
 
             // Act + Assert:
+            const expectedResult = true;
             runUseNetworkTest(id, networkCurrency, expectedResult);
         });
 
@@ -142,9 +142,9 @@ describe('components/MosaicAmountDisplay', () => {
             // Arrange:
             const id = NamespaceId.createFromEncoded('E84B99BA41F4AFEE');
             const networkCurrency = mockNetworkCurrency;
-            const expectedResult = false;
 
             // Act + Assert:
+            const expectedResult = false;
             runUseNetworkTest(id, networkCurrency, expectedResult);
         });
 
@@ -152,9 +152,9 @@ describe('components/MosaicAmountDisplay', () => {
             // Arrange:
             const id = NamespaceId.createFromEncoded('E84B99BA41F4AFEE');
             const networkCurrency = null;
-            const expectedResult = false;
 
             // Act + Assert:
+            const expectedResult = false;
             runUseNetworkTest(id, networkCurrency, expectedResult);
         });
     });
@@ -181,9 +181,9 @@ describe('components/MosaicAmountDisplay', () => {
             // Arrange:
             const id = null;
             const useNetwork = true;
-            const expectedResult = mockNetworkCurrency.divisibility;
 
             // Act + Assert:
+            const expectedResult = mockNetworkCurrency.divisibility;
             runGetDivisibilityTest(id, useNetwork, expectedResult);
         });
 
@@ -192,9 +192,9 @@ describe('components/MosaicAmountDisplay', () => {
             const mosaic = mosaicsMock[1];
             const id = new MosaicId(mosaic.mosaicIdHex);
             const useNetwork = false;
-            const expectedResult = mosaic.divisibility;
 
             // Act + Assert:
+            const expectedResult = mosaic.divisibility;
             runGetDivisibilityTest(id, useNetwork, expectedResult);
         });
 
@@ -202,9 +202,9 @@ describe('components/MosaicAmountDisplay', () => {
             // Arrange:
             const id = new MosaicId('100D8D4D98285200');
             const useNetwork = false;
-            const expectedResult = 100;
 
             // Act + Assert:
+            const expectedResult = 100;
             runGetDivisibilityTest(id, useNetwork, expectedResult);
         });
     });
@@ -230,9 +230,9 @@ describe('components/MosaicAmountDisplay', () => {
             // Arrange:
             const absoluteAmount = 10000000;
             const relativeAmount = null;
-            const expectedResult = 10;
 
             // Act + Assert:
+            const expectedResult = 10;
             runGetAmountTest(absoluteAmount, relativeAmount, expectedResult);
         });
 
@@ -240,9 +240,9 @@ describe('components/MosaicAmountDisplay', () => {
             // Arrange:
             const absoluteAmount = null;
             const relativeAmount = 20;
-            const expectedResult = 20;
 
             // Act + Assert:
+            const expectedResult = 20;
             runGetAmountTest(absoluteAmount, relativeAmount, expectedResult);
         });
 
@@ -250,9 +250,9 @@ describe('components/MosaicAmountDisplay', () => {
             // Arrange:
             const absoluteAmount = null;
             const relativeAmount = null;
-            const expectedResult = 0;
 
             // Act + Assert:
+            const expectedResult = 0;
             runGetAmountTest(absoluteAmount, relativeAmount, expectedResult);
         });
     });
@@ -291,9 +291,9 @@ describe('components/MosaicAmountDisplay', () => {
             const useNetwork = false;
             const networkCurrency = mockNetworkCurrency;
             const id = null;
-            const expectedResult = '';
 
             // Act + Assert:
+            const expectedResult = '';
             runGetTickerTest(showTicker, useNetwork, networkCurrency, id, expectedResult);
         });
 
@@ -303,9 +303,9 @@ describe('components/MosaicAmountDisplay', () => {
             const useNetwork = true;
             const networkCurrency = mockNetworkCurrency;
             const id = null;
-            const expectedResult = mockNetworkCurrency.ticker;
 
             // Act + Assert:
+            const expectedResult = mockNetworkCurrency.ticker;
             runGetTickerTest(showTicker, useNetwork, networkCurrency, id, expectedResult);
         });
 
@@ -318,9 +318,9 @@ describe('components/MosaicAmountDisplay', () => {
                 ticker: null,
             };
             const id = null;
-            const expectedResult = '';
 
             // Act + Assert:
+            const expectedResult = '';
             runGetTickerTest(showTicker, useNetwork, networkCurrency, id, expectedResult);
         });
 
@@ -331,9 +331,9 @@ describe('components/MosaicAmountDisplay', () => {
             const useNetwork = true;
             const networkCurrency = mockNetworkCurrency;
             const id = new MosaicId(mosaic.mosaicIdHex);
-            const expectedResult = mosaic.name;
 
             // Act + Assert:
+            const expectedResult = mosaic.name;
             runGetTickerTest(showTicker, useNetwork, networkCurrency, id, expectedResult);
         });
 
@@ -344,9 +344,9 @@ describe('components/MosaicAmountDisplay', () => {
             const useNetwork = true;
             const networkCurrency = mockNetworkCurrency;
             const id = new MosaicId(mosaic.mosaicIdHex);
-            const expectedResult = mosaic.mosaicIdHex;
 
             // Act + Assert:
+            const expectedResult = mosaic.mosaicIdHex;
             runGetTickerTest(showTicker, useNetwork, networkCurrency, id, expectedResult);
         });
     });

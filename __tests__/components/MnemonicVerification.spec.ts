@@ -33,6 +33,12 @@ describe('components/MnemonicVerification', () => {
             const props = {
                 words,
             };
+
+            // Act:
+            const wrapper = getMnemonicVerificationWrapper(props);
+            const component = wrapper.vm as MnemonicVerificationTs;
+
+            // Assert:
             const expectedShuffledWords = {
                 0: 'amet',
                 1: 'dolor',
@@ -41,12 +47,6 @@ describe('components/MnemonicVerification', () => {
                 4: 'sit',
             };
             const expectedShuffledWordsIndexes = [0, 1, 2, 3, 4];
-
-            // Act:
-            const wrapper = getMnemonicVerificationWrapper(props);
-            const component = wrapper.vm as MnemonicVerificationTs;
-
-            // Assert:
             expect(component.shuffledWords).toStrictEqual(expectedShuffledWords);
             expect(component.shuffledWordsIndexes).toStrictEqual(expectedShuffledWordsIndexes);
         });
@@ -91,12 +91,12 @@ describe('components/MnemonicVerification', () => {
             // Arrange:
             const selectedWordIndexes = [];
             const wordIndexToSelect = 1;
+
+            // Act + Assert:
             const expectations = {
                 wordToBeAdded: true,
                 wordToBeRemoved: false,
             };
-
-            // Act + Assert:
             runOnWordClickedTest(selectedWordIndexes, wordIndexToSelect, expectations);
         });
 
@@ -104,12 +104,12 @@ describe('components/MnemonicVerification', () => {
             // Arrange:
             const selectedWordIndexes = [1];
             const wordIndexToSelect = 1;
+
+            // Act + Assert:
             const expectations = {
                 wordToBeAdded: false,
                 wordToBeRemoved: true,
             };
-
-            // Act + Assert:
             runOnWordClickedTest(selectedWordIndexes, wordIndexToSelect, expectations);
         });
     });
@@ -139,9 +139,9 @@ describe('components/MnemonicVerification', () => {
             // Arrange:
             const initialSelectedWordIndexes = [1, 2, 3];
             const wordIndexToRemove = 2;
-            const expectedSelectedWordIndexes = [1, 3];
 
             // Act + Assert:
+            const expectedSelectedWordIndexes = [1, 3];
             runRemoveWordTest(initialSelectedWordIndexes, wordIndexToRemove, expectedSelectedWordIndexes);
         });
 
@@ -149,9 +149,9 @@ describe('components/MnemonicVerification', () => {
             // Arrange:
             const initialSelectedWordIndexes = [1, 4, 3];
             const wordIndexToRemove = 2;
-            const expectedSelectedWordIndexes = [1, 4, 3];
 
             // Act + Assert:
+            const expectedSelectedWordIndexes = [1, 4, 3];
             runRemoveWordTest(initialSelectedWordIndexes, wordIndexToRemove, expectedSelectedWordIndexes);
         });
     });
@@ -179,18 +179,18 @@ describe('components/MnemonicVerification', () => {
         test('emit event when correct words are selected', () => {
             // Arrange:
             const correctWordsAreSelectedReturnValue = true;
-            const expectEventToBeEmitted = true;
 
             // Act + Assert:
+            const expectEventToBeEmitted = true;
             runNextTest(correctWordsAreSelectedReturnValue, expectEventToBeEmitted);
         });
 
         test('not emit event when incorrect words are selected', () => {
             // Arrange:
             const correctWordsAreSelectedReturnValue = false;
-            const expectEventToBeEmitted = false;
 
             // Act + Assert:
+            const expectEventToBeEmitted = false;
             runNextTest(correctWordsAreSelectedReturnValue, expectEventToBeEmitted);
         });
     });
@@ -215,18 +215,18 @@ describe('components/MnemonicVerification', () => {
         test('return true when words match the sequence', () => {
             // Arrange:
             const selectedWordIndexes = [3, 2, 1, 4, 0];
-            const expectedReturnValue = true;
 
             // Act + Assert:
+            const expectedReturnValue = true;
             runСorrectWordsAreSelectedTest(selectedWordIndexes, expectedReturnValue);
         });
 
         test('return false when words does not match the sequence', () => {
             // Arrange:
             const selectedWordIndexes = [0, 1, 2, 3, 4];
-            const expectedReturnValue = false;
 
             // Act + Assert:
+            const expectedReturnValue = false;
             runСorrectWordsAreSelectedTest(selectedWordIndexes, expectedReturnValue);
         });
     });
@@ -272,13 +272,13 @@ describe('components/MnemonicVerification', () => {
             const selectedWordIndexes = [2];
             const origin = 'lorem ipsum dolor';
             const rebuilt = 'ipsum lorem';
+
+            // Act + Assert:
             const expectations = {
                 actionToBeDispatched: ['notification/ADD_WARNING', NotificationType.MNEMONIC_INCONSISTENCY_ERROR],
                 eventToBeEmitted: ['error', NotificationType.MNEMONIC_INCONSISTENCY_ERROR],
                 returnValue: false,
             };
-
-            // Act + Assert:
             runMnemonicCheckerNotificationTest(selectedWordIndexes, origin, rebuilt, expectations);
         });
 
@@ -287,13 +287,13 @@ describe('components/MnemonicVerification', () => {
             const selectedWordIndexes = [2];
             const origin = 'lorem ipsum dolor';
             const rebuilt = 'lorem ipsum';
+
+            // Act + Assert:
             const expectations = {
                 actionToBeDispatched: null,
                 eventToBeEmitted: null,
                 returnValue: true,
             };
-
-            // Act + Assert:
             runMnemonicCheckerNotificationTest(selectedWordIndexes, origin, rebuilt, expectations);
         });
 
@@ -302,13 +302,13 @@ describe('components/MnemonicVerification', () => {
             const selectedWordIndexes = new Array(24).fill(0);
             const origin = 'lorem ipsum dolor';
             const rebuilt = 'lorem ipsum';
+
+            // Act + Assert:
             const expectations = {
                 actionToBeDispatched: ['notification/ADD_SUCCESS', NotificationType.MNEMONIC_CORRECT],
                 eventToBeEmitted: null,
                 returnValue: true,
             };
-
-            // Act + Assert:
             runMnemonicCheckerNotificationTest(selectedWordIndexes, origin, rebuilt, expectations);
         });
     });
@@ -322,7 +322,6 @@ describe('components/MnemonicVerification', () => {
             const selectedWordIndexes = [2, 1];
             const origin = 'Lorem ipsum dolor sit amet';
             const rebuilt = 'ipsum dolor';
-            const expectedArguments = [origin, rebuilt];
             const mockMnemonicCheckerNotification = jest.fn();
 
             // Act:
@@ -333,6 +332,7 @@ describe('components/MnemonicVerification', () => {
             component.onSelectedMnemonicChange();
 
             // Assert:
+            const expectedArguments = [origin, rebuilt];
             expect(mockMnemonicCheckerNotification).toBeCalledWith(...expectedArguments);
         });
     });
