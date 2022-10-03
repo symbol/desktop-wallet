@@ -1,8 +1,9 @@
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import i18n from '@/language';
 import userEvent from '@testing-library/user-event';
-import { screen, within } from '@testing-library/vue';
+import { screen, waitFor, within } from '@testing-library/vue';
 import { Address, SupplementalPublicKeys } from 'symbol-sdk';
+import Vue from 'vue';
 
 export default class TestUIHelpers {
     public static getAccountsHttpResponse(
@@ -44,5 +45,16 @@ export default class TestUIHelpers {
         const passwordContainer = passwordInput.parentElement.parentElement.parentElement;
         userEvent.type(passwordInput, profilePassword);
         userEvent.click(await within(passwordContainer).findByRole('button', { name: i18n.t('confirm').toString() }));
+    }
+
+    public static async expectToastMessage(msgKey: string, type: string, msgTimeout?: number, timeout?: number) {
+        await waitFor(
+            () =>
+                expect(Vue.$toast).toHaveBeenCalledWith(i18n.t(msgKey), {
+                    ...(msgTimeout ? { timeout: msgTimeout } : {}),
+                    type,
+                }),
+            { timeout },
+        );
     }
 }

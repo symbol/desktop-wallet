@@ -107,6 +107,7 @@
                                     <AccountPublicKeyDisplay
                                         v-if="isNodeKeyLinked"
                                         :public-key="currentSignerAccountInfo.supplementalPublicKeys.node.publicKey"
+                                        data-testid="nodePublicKeyDisplay"
                                     />
                                     <Tooltip
                                         v-else
@@ -124,10 +125,17 @@
                                 v-if="!isNodeKeyLinked"
                                 :src="linkIcon"
                                 class="button-icon"
+                                data-testid="btn_linkNodeKey"
                                 @click="handleSubmit(onSingleKeyOperation('node'))"
                             />
                             <Tooltip v-else word-wrap placement="bottom" :content="$t('label_unlink_node_account_public_key')">
-                                <Icon type="md-trash" class="button-icon" size="20" @click="handleSubmit(onSingleKeyOperation('node'))" />
+                                <Icon
+                                    type="md-trash"
+                                    class="button-icon"
+                                    size="20"
+                                    data-testid="btn_unlinkNodeKey"
+                                    @click="handleSubmit(onSingleKeyOperation('node'))"
+                                />
                             </Tooltip>
                         </div>
                         <!-- link/unlink button for node public key -->
@@ -139,6 +147,7 @@
                                     <AccountPublicKeyDisplay
                                         v-if="isAccountKeyLinked"
                                         :public-key="currentSignerAccountInfo.supplementalPublicKeys.linked.publicKey"
+                                        data-testid="accountPublicKeyDisplay"
                                     />
                                     <Tooltip
                                         v-else
@@ -156,6 +165,7 @@
                                 v-if="!isAccountKeyLinked"
                                 :src="linkIcon"
                                 class="button-icon"
+                                data-testid="btn_linkAccountKey"
                                 @click="handleSubmit(onSingleKeyOperation('account'))"
                             />
                             <Tooltip v-else word-wrap placement="bottom" :content="$t('label_unlink_remote_account_public_key')">
@@ -163,6 +173,7 @@
                                     type="md-trash"
                                     class="button-icon"
                                     size="20"
+                                    data-testid="btn_unlinkAccountKey"
                                     @click="handleSubmit(onSingleKeyOperation('account'))"
                                 />
                             </Tooltip>
@@ -191,6 +202,7 @@
                                     <AccountPublicKeyDisplay
                                         v-if="isVrfKeyLinked"
                                         :public-key="currentSignerAccountInfo.supplementalPublicKeys.vrf.publicKey"
+                                        data-testid="vrfPublicKeyDisplay"
                                     />
                                     <Tooltip
                                         v-else
@@ -208,10 +220,17 @@
                                 v-if="!isVrfKeyLinked"
                                 :src="linkIcon"
                                 class="button-icon"
+                                data-testid="btn_linkVrfKey"
                                 @click="handleSubmit(onSingleKeyOperation('vrf'))"
                             />
                             <Tooltip v-else word-wrap placement="bottom" :content="$t('label_unlink_vrf_account_public_key')">
-                                <Icon type="md-trash" class="button-icon" size="20" @click="handleSubmit(onSingleKeyOperation('vrf'))" />
+                                <Icon
+                                    type="md-trash"
+                                    class="button-icon"
+                                    size="20"
+                                    data-testid="btn_unlinkVrfKey"
+                                    @click="handleSubmit(onSingleKeyOperation('vrf'))"
+                                />
                             </Tooltip>
                         </div>
 

@@ -16,28 +16,27 @@
 import { AppStoreWrapper } from '@/app/AppStore';
 import { UIBootstrapper } from '@/app/UIBootstrapper';
 import { AccountModel } from '@/core/database/entities/AccountModel';
+import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
+import { BroadcastResult } from '@/core/transactions/BroadcastResult';
 import i18n from '@/language/index';
 import router from '@/router/AppRouter';
 import { AccountService } from '@/services/AccountService';
+import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerService';
 import getAppStore from '@/store/index';
 import FormPersistentDelegationRequestTransaction from '@/views/forms/FormPersistentDelegationRequestTransaction/FormPersistentDelegationRequestTransaction.vue';
 import { account1, account2, WalletsModel1, WalletsModel2 } from '@MOCKS/Accounts';
 import { getHandlers, responses } from '@MOCKS/Http';
 import { getTestProfile } from '@MOCKS/profiles';
+import TestUIHelpers from '@MOCKS/testUtils/TestUIHelpers';
 import userEvent from '@testing-library/user-event';
-import { render, screen, waitFor } from '@testing-library/vue';
+import { render, screen, waitFor, within } from '@testing-library/vue';
 import { createLocalVue } from '@vue/test-utils';
+import WS from 'jest-websocket-mock';
 import { setupServer } from 'msw/node';
 import { of } from 'rxjs';
-import { AggregateTransaction, NetworkType, SignedTransaction, Transaction, TransactionType } from 'symbol-sdk';
-import Vue from 'vue';
+import { NetworkType, SignedTransaction, TransactionMapping } from 'symbol-sdk';
 import { VueConstructor } from 'vue/types/umd';
 import Vuex, { Store } from 'vuex';
-import WS from 'jest-websocket-mock';
-import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerService';
-import { BroadcastResult } from '@/core/transactions/BroadcastResult';
-import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
-import TestUIHelpers from '@MOCKS/testUtils/TestUIHelpers';
 
 // mock local storage
 jest.mock('@/core/database/backends/LocalStorageBackend', () => ({
@@ -62,9 +61,6 @@ afterEach(() => {
     jest.clearAllMocks();
 });
 afterAll(() => httpServer.close());
-
-// @ts-ignore
-Vue.$toast = jest.fn();
 
 describe('components/FormPersistentDelegationRequestTransaction', () => {
     const renderComponent = (localVue: VueConstructor, store: Store<unknown>) => {
@@ -131,11 +127,9 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             userEvent.click(confirmButtonInModal);
 
             // Assert:
-            expect(Vue.$toast).toHaveBeenCalledWith(i18n.t(errorKey), {
-                timeout: 6000,
-                type: 'error',
-            });
+            TestUIHelpers.expectToastMessage(errorKey, 'error', 6000);
         };
+
         test('insufficient balance error is thrown', async () => {
             const insufficientBalance = '9999000000';
             await testAccountBalance(insufficientBalance, 'harvesting_account_insufficient_balance');
@@ -175,37 +169,43 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             userEvent.click(confirmButtonInModal);
 
             // Assert:
-            waitFor(() =>
-                expect(Vue.$toast).toHaveBeenCalledWith(i18n.t('harvesting_account_has_zero_importance'), {
-                    timeout: 6000,
-                    type: 'error',
-                }),
-            );
+            TestUIHelpers.expectToastMessage('harvesting_account_has_zero_importance', 'error', 6000);
         });
+
+        const renderComponentWithAccount = async (
+            currentAccountModel: AccountModel,
+            knownAccountModels: AccountModel[],
+            expectedAccountBalance: string = sufficientAccountBalance,
+            balanceTimeout: number = 3_000,
+        ): Promise<Store<any>> => {
+            // Arrange:
+            jest.spyOn(AccountService.prototype, 'getAccountsById').mockImplementation(() => {
+                return knownAccountModels.reduce((obj, am) => {
+                    obj[am.id] = am;
+                    return obj;
+                }, {});
+            });
+            const { store } = await renderComponentWithStore(
+                currentAccountModel,
+                knownAccountModels.map((am) => am.address),
+            );
+            // since balance change event is not visible to the UI, we need to wait until it is handled
+            await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(expectedAccountBalance), {
+                timeout: balanceTimeout,
+            });
+            jest.spyOn(TransactionAnnouncerService.prototype, 'announce').mockImplementation((signedTransaction: SignedTransaction) => {
+                const transaction = TransactionMapping.createFromPayload(signedTransaction.payload);
+                return of(new BroadcastResult(signedTransaction, transaction, true));
+            });
+            return store;
+        };
 
         test('harvesting is successfully started and stopped', async () => {
             // test: start harvesting
             // Arrange:
-            jest.spyOn(AccountService.prototype, 'getAccountsById').mockImplementation(() => {
-                const obj = {};
-                obj[WalletsModel1.id] = WalletsModel1;
-                obj[WalletsModel2.id] = WalletsModel2;
-                return obj;
-            });
+            const knownAccountModels = [WalletsModel1, WalletsModel2];
             const currentAccountModel = WalletsModel1;
-            const { store } = await renderComponentWithStore(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
-            // since balance change event is not visible to the UI, we need to wait until it is handled
-            await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(sufficientAccountBalance), {
-                timeout: 3_000,
-            });
-            jest.spyOn(TransactionAnnouncerService.prototype, 'announce').mockImplementation((signedTransaction: SignedTransaction) => {
-                let transaction: Transaction;
-                if (signedTransaction.type === TransactionType.AGGREGATE_COMPLETE) {
-                    transaction = AggregateTransaction.createFromPayload(signedTransaction.payload);
-                    return of(new BroadcastResult(signedTransaction, transaction, true));
-                }
-                return of();
-            });
+            const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
             httpServer.use(
                 ...getHandlers([
                     TestUIHelpers.getAccountsHttpResponse(
@@ -245,11 +245,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             await TestUIHelpers.confirmTransactions('Password1');
 
             // Assert:
-            await waitFor(() =>
-                expect(Vue.$toast).toHaveBeenCalledWith(i18n.t('success_transactions_signed'), {
-                    type: 'success',
-                }),
-            );
+            await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
             // in order to trigger account/currentSignerAccountInfo update
             await store.dispatch('account/LOAD_ACCOUNT_INFO');
             const stopButton = await screen.findByRole('button', { name: i18n.t('stop_harvesting').toString() });
@@ -283,8 +279,72 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             await store.dispatch('account/LOAD_ACCOUNT_INFO');
 
             // Assert:
-            await waitFor(() => expect(store.getters['harvesting/status']).toBe('INACTIVE'));
+            await waitFor(() => expect(store.getters['harvesting/status']).toBe('INACTIVE'), { timeout: 10_000 });
             expect(await screen.findByRole('button', { name: i18n.t('start_harvesting').toString() })).toBeDefined();
         }, 20_000);
+
+        describe('single key link transactions', () => {
+            test.only('link/unlink node public key', async () => {
+                // Test: link action
+                // Arrange:
+                const knownAccountModels = [WalletsModel1, WalletsModel2];
+                const currentAccountModel = WalletsModel1;
+                const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
+                httpServer.use(
+                    ...getHandlers([
+                        TestUIHelpers.getAccountsHttpResponse(
+                            currentAccountModel,
+                            'post',
+                            () => {
+                                const harvestingModel: HarvestingModel = store.getters['harvesting/currentSignerHarvestingModel'];
+                                return {
+                                    node: { publicKey: harvestingModel?.selectedHarvestingNode?.nodePublicKey },
+                                };
+                            },
+                            () => sufficientAccountBalance,
+                            () => sufficientAccountImportance,
+                        ),
+                    ]),
+                );
+
+                // Act:
+                const input = await screen.findByPlaceholderText(i18n.t('form_label_network_node_url').toString());
+                await userEvent.type(input, 'https://001-joey-dual.symboltest.net:3001');
+                const keyLinksTab = await screen.findByText(i18n.t('tab_harvesting_key_links').toString());
+                userEvent.click(keyLinksTab);
+
+                expect(await screen.findByText(i18n.t('open_harvesting_keys_warning_title').toString())).toBeDefined();
+                const confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
+                userEvent.click(confirmButton);
+                expect(await screen.findByText(i18n.t('delegated_harvesting_keys_info').toString())).toBeDefined();
+                const nodeLinkButton = await screen.findByTestId('btn_linkNodeKey');
+                userEvent.click(nodeLinkButton);
+                TestUIHelpers.confirmTransactions('Password1');
+
+                // Assert:
+                await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
+                // in order to trigger account/currentSignerAccountInfo update
+                await store.dispatch('account/LOAD_ACCOUNT_INFO');
+                const currentSignerAccountInfo = store.getters['account/currentSignerAccountInfo'];
+                const nodePublicKey = currentSignerAccountInfo.supplementalPublicKeys.node.publicKey;
+                await waitFor(async () =>
+                    expect(within(await screen.findByTestId('nodePublicKeyDisplay')).findByText(nodePublicKey)).toBeDefined(),
+                );
+
+                // Test: unlink action
+                // Arrange + Act:
+                const nodeUnlinkButton = await screen.findByTestId('btn_unlinkNodeKey');
+                userEvent.click(nodeUnlinkButton);
+                TestUIHelpers.confirmTransactions('Password1');
+
+                // in order to trigger account/currentSignerAccountInfo update
+                await store.dispatch('account/LOAD_ACCOUNT_INFO');
+
+                // Assert:
+                await waitFor(async () =>
+                    expect(within(await screen.findByTestId('nodePublicKeyDisplay')).queryByText(nodePublicKey) === null),
+                );
+            });
+        });
     });
 });
