@@ -110,10 +110,10 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
     });
 
     describe('start/stop harvesting', () => {
-        test('insufficient balance error is thrown', async () => {
+        const testAccountBalance = async (balance: string, errorKey: string) => {
             // Arrange:
             const currentAccountModel = WalletsModel1;
-            const accountBalance = '9999000000';
+            const accountBalance = balance;
             httpServer.use(
                 ...getHandlers([TestUIHelpers.getAccountsHttpResponse(currentAccountModel, 'post', undefined, () => accountBalance)]),
             );
@@ -131,10 +131,19 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             userEvent.click(confirmButtonInModal);
 
             // Assert:
-            expect(Vue.$toast).toHaveBeenCalledWith(i18n.t('harvesting_account_insufficient_balance'), {
+            expect(Vue.$toast).toHaveBeenCalledWith(i18n.t(errorKey), {
                 timeout: 6000,
                 type: 'error',
             });
+        };
+        test('insufficient balance error is thrown', async () => {
+            const insufficientBalance = '9999000000';
+            await testAccountBalance(insufficientBalance, 'harvesting_account_insufficient_balance');
+        });
+
+        test('extra balance error is thrown', async () => {
+            const extraBalance = '50000000000000';
+            await testAccountBalance(extraBalance, 'harvesting_account_has_extra_balance');
         });
 
         test('importance is zero error is thrown', async () => {
