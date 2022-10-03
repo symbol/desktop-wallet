@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-class HttpResponse {
+export class HttpResponse {
     public origin: string;
     public path: string;
     public method = 'get';
@@ -16,51 +16,6 @@ export const responses: Record<string, HttpResponse[]> = {
             method: 'get',
             status: 200,
             body: [
-                {
-                    _id: '6321daaa2f25ae001456f55a',
-                    version: 16777987,
-                    publicKey: '1305799797FFA0B052327060A9AD9A86E18FACC61CF1E1CCCD0184D002315920',
-                    networkGenerationHashSeed: '7FCCD304802016BEBBCD342A332F91FF1F3BB5E902988B352697BE245F48E836',
-                    roles: 7,
-                    port: 7900,
-                    networkIdentifier: 152,
-                    host: '5.dusan.gq',
-                    friendlyName: 'dusanjp5',
-                    lastAvailable: '2022-09-14T13:44:10.012Z',
-                    hostDetail: {
-                        host: '5.dusan.gq',
-                        coordinates: { latitude: 40.7123, longitude: -74.0068 },
-                        location: 'New York, NY, United States',
-                        ip: '154.12.232.164',
-                        organization: 'Contabo Inc',
-                        as: 'AS40021 Contabo Inc.',
-                        continent: 'North America',
-                        country: 'United States',
-                        region: 'NY',
-                        city: 'New York',
-                        district: '',
-                        zip: '10004',
-                    },
-                    peerStatus: { isAvailable: true, lastStatusCheck: 1663163015049 },
-                    apiStatus: {
-                        restGatewayUrl: 'https://5.dusan.gq:3001',
-                        isAvailable: true,
-                        isHttpsEnabled: true,
-                        lastStatusCheck: 1663163015371,
-                        webSocket: { isAvailable: true, wss: true, url: 'wss://5.dusan.gq:3001/ws' },
-                        nodePublicKey: 'D76C5F7F201D6E9A878CFBFDD3841CFB251C4E274D1FA76973EFB81D39AF2CA0',
-                        chainHeight: 694613,
-                        finalization: {
-                            height: 694592,
-                            epoch: 966,
-                            point: 35,
-                            hash: 'DA8E97434800D4E90F03274C6BCE5BE6F3D1844AC08A4203E35431A4F1D60ADC',
-                        },
-                        nodeStatus: { apiNode: 'up', db: 'up' },
-                        restVersion: '2.4.0',
-                    },
-                    __v: 0,
-                },
                 {
                     _id: '6321daaa2f25ae001456f532',
                     version: 16777987,
@@ -711,7 +666,7 @@ export const responses: Record<string, HttpResponse[]> = {
                         accountType: 0,
                         supplementalPublicKeys: {},
                         activityBuckets: [],
-                        mosaics: [{ id: '3A8416DB2D53B6C8', amount: '90008686336' }],
+                        mosaics: [{ id: '3A8416DB2D53B6C8', amount: '10000000001' }],
                         importance: '10',
                         importanceHeight: '710138',
                     },
@@ -815,7 +770,7 @@ export const responses: Record<string, HttpResponse[]> = {
                         accountType: 0,
                         supplementalPublicKeys: {},
                         activityBuckets: [],
-                        mosaics: [{ id: '3A8416DB2D53B6C8', amount: '90008686336' }],
+                        mosaics: [{ id: '3A8416DB2D53B6C8', amount: '10000000001' }],
                         importance: '10',
                         importanceHeight: '710138',
                     },
@@ -974,7 +929,7 @@ export const getHandlers = (responses: HttpResponse[]) => {
                     }
                 });
             }
-            return res(ctx.status(status), ctx.json(body));
+            return res(ctx.status(status), ctx.json(typeof body === 'function' ? body() : body));
         });
     });
 };

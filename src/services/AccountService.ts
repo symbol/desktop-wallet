@@ -80,18 +80,6 @@ export class AccountService {
         return this.saveAccount(Object.assign(account, { encRemoteAccountPrivateKey }));
     }
 
-    public updateSignedPersistentDelReqTxs(account: AccountModel, signedPersistentDelReqTxs): AccountModel {
-        return this.saveAccount(Object.assign(account, { signedPersistentDelReqTxs }));
-    }
-
-    public updateIsPersistentDelReqSent(account: AccountModel, isPersistentDelReqSent: boolean): AccountModel {
-        return this.saveAccount(Object.assign(account, { isPersistentDelReqSent }));
-    }
-
-    public updateSelectedHarvestingNode(account: AccountModel, selectedHarvestingNode: NodeModel): AccountModel {
-        return this.saveAccount(Object.assign(account, { selectedHarvestingNode }));
-    }
-
     /**
      * Derive \a path using \a mnemonic pass phrase
      */
