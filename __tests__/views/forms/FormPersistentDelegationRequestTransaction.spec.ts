@@ -31,10 +31,11 @@ import TestUIHelpers from '@MOCKS/testUtils/TestUIHelpers';
 import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor, within } from '@testing-library/vue';
 import { createLocalVue } from '@vue/test-utils';
+import flushPromises from 'flush-promises';
 import WS from 'jest-websocket-mock';
 import { setupServer } from 'msw/node';
 import { of } from 'rxjs';
-import { NetworkType, SignedTransaction, TransactionMapping } from 'symbol-sdk';
+import { AccountInfo, NetworkType, SignedTransaction, TransactionMapping } from 'symbol-sdk';
 import { VueConstructor } from 'vue/types/umd';
 import Vuex, { Store } from 'vuex';
 
@@ -85,6 +86,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
         await store.dispatch('network/CONNECT', { networkType: NetworkType.TEST_NET });
         await store.dispatch('account/SET_KNOWN_ACCOUNTS', knownAccounts);
         await store.dispatch('account/SET_CURRENT_ACCOUNT', currentAccount);
+        await waitFor(() => expect(store.getters['account/currentSignerAccountInfo']).not.toBeNull());
         return store;
     };
 
@@ -281,31 +283,16 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             // Assert:
             await waitFor(() => expect(store.getters['harvesting/status']).toBe('INACTIVE'), { timeout: 10_000 });
             expect(await screen.findByRole('button', { name: i18n.t('start_harvesting').toString() })).toBeDefined();
-        }, 20_000);
+        });
 
         describe('single key link transactions', () => {
-            test.only('link/unlink node public key', async () => {
+            test('link/unlink node public key', async () => {
                 // Test: link action
                 // Arrange:
+                const nodePublicKey = '05E5C0841720AE9DA737C184429002E917F74FF7A3BF8E11AC2862C4875B3D7E';
                 const knownAccountModels = [WalletsModel1, WalletsModel2];
                 const currentAccountModel = WalletsModel1;
                 const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
-                httpServer.use(
-                    ...getHandlers([
-                        TestUIHelpers.getAccountsHttpResponse(
-                            currentAccountModel,
-                            'post',
-                            () => {
-                                const harvestingModel: HarvestingModel = store.getters['harvesting/currentSignerHarvestingModel'];
-                                return {
-                                    node: { publicKey: harvestingModel?.selectedHarvestingNode?.nodePublicKey },
-                                };
-                            },
-                            () => sufficientAccountBalance,
-                            () => sufficientAccountImportance,
-                        ),
-                    ]),
-                );
 
                 // Act:
                 const input = await screen.findByPlaceholderText(i18n.t('form_label_network_node_url').toString());
@@ -317,32 +304,201 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
                 const confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
                 userEvent.click(confirmButton);
                 expect(await screen.findByText(i18n.t('delegated_harvesting_keys_info').toString())).toBeDefined();
+                httpServer.use(
+                    ...getHandlers([
+                        TestUIHelpers.getAccountsHttpResponse(
+                            currentAccountModel,
+                            'post',
+                            () => ({
+                                node: { publicKey: nodePublicKey },
+                            }),
+                            () => sufficientAccountBalance,
+                            () => sufficientAccountImportance,
+                        ),
+                    ]),
+                );
                 const nodeLinkButton = await screen.findByTestId('btn_linkNodeKey');
                 userEvent.click(nodeLinkButton);
-                TestUIHelpers.confirmTransactions('Password1');
+                await TestUIHelpers.confirmTransactions('Password1');
 
                 // Assert:
                 await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
                 // in order to trigger account/currentSignerAccountInfo update
                 await store.dispatch('account/LOAD_ACCOUNT_INFO');
-                const currentSignerAccountInfo = store.getters['account/currentSignerAccountInfo'];
-                const nodePublicKey = currentSignerAccountInfo.supplementalPublicKeys.node.publicKey;
-                await waitFor(async () =>
-                    expect(within(await screen.findByTestId('nodePublicKeyDisplay')).findByText(nodePublicKey)).toBeDefined(),
+
+                await waitFor(
+                    async () => {
+                        return expect(
+                            (await within(await screen.findByTestId('nodePublicKeyDisplay')).findByText(nodePublicKey)).textContent,
+                        ).toBe(nodePublicKey);
+                    },
+                    { timeout: 3_000 },
                 );
 
                 // Test: unlink action
                 // Arrange + Act:
                 const nodeUnlinkButton = await screen.findByTestId('btn_unlinkNodeKey');
                 userEvent.click(nodeUnlinkButton);
-                TestUIHelpers.confirmTransactions('Password1');
+                await TestUIHelpers.confirmTransactions('Password1');
 
                 // in order to trigger account/currentSignerAccountInfo update
                 await store.dispatch('account/LOAD_ACCOUNT_INFO');
 
                 // Assert:
-                await waitFor(async () =>
-                    expect(within(await screen.findByTestId('nodePublicKeyDisplay')).queryByText(nodePublicKey) === null),
+                await waitFor(
+                    async () => expect(within(await screen.findByTestId('nodePublicKeyDisplay')).queryByText(nodePublicKey) === null),
+                    { timeout: 3_000 },
+                );
+            });
+
+            test('link/unlink account public key', async () => {
+                // Test: link action
+                // Arrange:
+                const knownAccountModels = [WalletsModel1, WalletsModel2];
+                const currentAccountModel = WalletsModel1;
+                const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
+
+                // Act:
+                const keyLinksTab = await screen.findByText(i18n.t('tab_harvesting_key_links').toString());
+                userEvent.click(keyLinksTab);
+
+                expect(await screen.findByText(i18n.t('open_harvesting_keys_warning_title').toString())).toBeDefined();
+                let confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
+                userEvent.click(confirmButton);
+                expect(await screen.findByText(i18n.t('delegated_harvesting_keys_info').toString())).toBeDefined();
+                httpServer.use(
+                    ...getHandlers([
+                        TestUIHelpers.getAccountsHttpResponse(
+                            currentAccountModel,
+                            'post',
+                            () => {
+                                const harvestingModel: HarvestingModel = store.getters['harvesting/currentSignerHarvestingModel'];
+                                return {
+                                    linked: { publicKey: harvestingModel.newRemotePublicKey },
+                                };
+                            },
+                            () => sufficientAccountBalance,
+                            () => sufficientAccountImportance,
+                        ),
+                    ]),
+                );
+                const nodeLinkButton = await screen.findByTestId('btn_linkAccountKey');
+                userEvent.click(nodeLinkButton);
+                userEvent.click(await screen.findByText('Select'));
+                userEvent.click(await screen.findByText('Generate Key'));
+                confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
+                userEvent.click(confirmButton);
+
+                await TestUIHelpers.confirmTransactions('Password1');
+
+                // Assert:
+                await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
+                // in order to trigger account/currentSignerAccountInfo update
+                await store.dispatch('account/LOAD_ACCOUNT_INFO');
+                let remoteAccountPublicKey;
+                await waitFor(
+                    async () => {
+                        const currentSignerAccountInfo: AccountInfo = store.getters['account/currentSignerAccountInfo'];
+                        if (!currentSignerAccountInfo?.supplementalPublicKeys?.linked?.publicKey) {
+                            return undefined;
+                        }
+                        remoteAccountPublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.linked?.publicKey;
+                        return expect(
+                            await within(await screen.findByTestId('accountPublicKeyDisplay')).findByText(remoteAccountPublicKey),
+                        ).toBeDefined();
+                    },
+                    { timeout: 3_000 },
+                );
+
+                // Test: unlink action
+                // Arrange + Act:
+                const nodeUnlinkButton = await screen.findByTestId('btn_unlinkAccountKey');
+                userEvent.click(nodeUnlinkButton);
+                await TestUIHelpers.confirmTransactions('Password1');
+
+                // in order to trigger account/currentSignerAccountInfo update
+                await store.dispatch('account/LOAD_ACCOUNT_INFO');
+
+                // Assert:
+                await waitFor(
+                    async () =>
+                        expect(within(await screen.findByTestId('accountPublicKeyDisplay')).queryByText(remoteAccountPublicKey) === null),
+                    { timeout: 3_000 },
+                );
+            });
+
+            test('link/unlink vrf public key', async () => {
+                // Test: link action
+                // Arrange:
+                const knownAccountModels = [WalletsModel1, WalletsModel2];
+                const currentAccountModel = WalletsModel1;
+                const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
+
+                // Act:
+                const keyLinksTab = await screen.findByText(i18n.t('tab_harvesting_key_links').toString());
+                userEvent.click(keyLinksTab);
+
+                expect(await screen.findByText(i18n.t('open_harvesting_keys_warning_title').toString())).toBeDefined();
+                let confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
+                userEvent.click(confirmButton);
+                expect(await screen.findByText(i18n.t('delegated_harvesting_keys_info').toString())).toBeDefined();
+                httpServer.use(
+                    ...getHandlers([
+                        TestUIHelpers.getAccountsHttpResponse(
+                            currentAccountModel,
+                            'post',
+                            () => {
+                                const harvestingModel: HarvestingModel = store.getters['harvesting/currentSignerHarvestingModel'];
+                                return {
+                                    vrf: { publicKey: harvestingModel.newVrfPublicKey },
+                                };
+                            },
+                            () => sufficientAccountBalance,
+                            () => sufficientAccountImportance,
+                        ),
+                    ]),
+                );
+                const nodeLinkButton = await screen.findByTestId('btn_linkVrfKey');
+                userEvent.click(nodeLinkButton);
+                userEvent.click(await screen.findByText('Select'));
+                userEvent.click(await screen.findByText('Generate Key'));
+                confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
+                userEvent.click(confirmButton);
+
+                await TestUIHelpers.confirmTransactions('Password1');
+
+                // Assert:
+                await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
+                // in order to trigger account/currentSignerAccountInfo update
+                await store.dispatch('account/LOAD_ACCOUNT_INFO');
+                let vrfPublicKey;
+                await waitFor(
+                    async () => {
+                        const currentSignerAccountInfo: AccountInfo = store.getters['account/currentSignerAccountInfo'];
+                        if (!currentSignerAccountInfo?.supplementalPublicKeys?.vrf?.publicKey) {
+                            return undefined;
+                        }
+                        vrfPublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.vrf?.publicKey;
+                        return expect(
+                            await within(await screen.findByTestId('vrfPublicKeyDisplay')).findByText(vrfPublicKey),
+                        ).toBeDefined();
+                    },
+                    { timeout: 3_000 },
+                );
+
+                // Test: unlink action
+                // Arrange + Act:
+                const nodeUnlinkButton = await screen.findByTestId('btn_unlinkVrfKey');
+                userEvent.click(nodeUnlinkButton);
+                await TestUIHelpers.confirmTransactions('Password1');
+
+                // in order to trigger account/currentSignerAccountInfo update
+                await store.dispatch('account/LOAD_ACCOUNT_INFO');
+
+                // Assert:
+                await waitFor(
+                    async () => expect(within(await screen.findByTestId('vrfPublicKeyDisplay')).queryByText(vrfPublicKey) === null),
+                    { timeout: 3_000 },
                 );
             });
         });
