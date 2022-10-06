@@ -22,7 +22,6 @@ import i18n from '@/language/index';
 import router from '@/router/AppRouter';
 import { AccountService } from '@/services/AccountService';
 import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerService';
-import getAppStore from '@/store/index';
 import FormPersistentDelegationRequestTransaction from '@/views/forms/FormPersistentDelegationRequestTransaction/FormPersistentDelegationRequestTransaction.vue';
 import { account1, account2, WalletsModel1, WalletsModel2 } from '@MOCKS/Accounts';
 import { getHandlers, responses } from '@MOCKS/Http';
@@ -31,13 +30,13 @@ import TestUIHelpers from '@MOCKS/testUtils/TestUIHelpers';
 import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor, within } from '@testing-library/vue';
 import { createLocalVue } from '@vue/test-utils';
-import flushPromises from 'flush-promises';
 import WS from 'jest-websocket-mock';
 import { setupServer } from 'msw/node';
 import { of } from 'rxjs';
-import { AccountInfo, NetworkType, SignedTransaction, TransactionMapping } from 'symbol-sdk';
+import { AccountInfo, MosaicId, NetworkType, SignedTransaction, TransactionMapping, UInt64, Address } from 'symbol-sdk';
 import { VueConstructor } from 'vue/types/umd';
 import Vuex, { Store } from 'vuex';
+import { getStore } from '@MOCKS/Store';
 
 // mock local storage
 jest.mock('@/core/database/backends/LocalStorageBackend', () => ({
@@ -78,21 +77,200 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
         };
     };
 
-    const initializeStore = async (localVue: VueConstructor, currentAccount: AccountModel, knownAccounts: string[]) => {
+    const initializeStore = async (localVue: VueConstructor, currentAccount: AccountModel, knownAccounts: string[], balance) => {
         localVue.use(Vuex);
-        const store = getAppStore(localVue);
-        await store.dispatch('initialize');
-        await store.dispatch('profile/SET_CURRENT_PROFILE', getTestProfile('profile1'));
-        await store.dispatch('network/CONNECT', { networkType: NetworkType.TEST_NET });
-        await store.dispatch('account/SET_KNOWN_ACCOUNTS', knownAccounts);
-        await store.dispatch('account/SET_CURRENT_ACCOUNT', currentAccount);
-        await waitFor(() => expect(store.getters['account/currentSignerAccountInfo']).not.toBeNull());
+
+        const mockProfileStore = {
+            namespaced: true,
+            state: {
+                currentProfile: getTestProfile('profile1'),
+            },
+            getters: {
+                currentProfile: (state) => state.currentProfile,
+            },
+        };
+
+        const mockAppStore = {
+            namespaced: true,
+            state: {
+                symbolDocsScamAlertUrl: 'https://docs.symbol.dev/guides/account/scams-and-security.html',
+            },
+            getters: {
+                symbolDocsScamAlertUrl: (state) => state.symbolDocsScamAlertUrl,
+            },
+        };
+
+        const mockAccountStore = {
+            namespaced: true,
+            state: {
+                currentSignerAccountInfo: {
+                    version: 1,
+                    recordId: '62515B77733BB95D241E063E',
+                    address: Address.createFromRawAddress(WalletsModel1.address),
+                    addressHeight: UInt64.fromUint(39557),
+                    publicKey: WalletsModel1.publicKey,
+                    publicKeyHeight: UInt64.fromUint(39567),
+                    accountType: 0,
+                    supplementalPublicKeys: {},
+                    activityBucket: [],
+                    mosaics: [],
+                    importance: UInt64.fromUint(10),
+                    importanceHeight: UInt64.fromUint(749880),
+                },
+                currentAccount,
+                accountsInfo: [
+                    {
+                        version: 1,
+                        recordId: '62E2736F4E969679ABE8394C',
+                        address: Address.createFromRawAddress(WalletsModel1.address),
+                        addressHeight: UInt64.fromUint(574998),
+                        publicKey: WalletsModel1.publicKey,
+                        publicKeyHeight: UInt64.fromUint(580264),
+                        accountType: 0,
+                        supplementalPublicKeys: {},
+                        activityBucket: [],
+                        mosaics: [],
+                        importance: UInt64.fromUint(0),
+                        importanceHeight: UInt64.fromUint(0),
+                    },
+                ],
+                currentAccountSigner: {
+                    address: Address.createFromRawAddress(WalletsModel1.address),
+                    label: WalletsModel1.address,
+                    multisig: false,
+                    requiredCosigApproval: 0,
+                    requiredCosigRemoval: 0,
+                },
+                currentAccountMultisigInfo: undefined,
+            },
+            getters: {
+                currentSignerAccountInfo: (state) => state.currentSignerAccountInfo,
+                currentAccount: (state) => state.currentAccount,
+                accountsInfo: (state) => state.accountsInfo,
+                currentAccountSigner: (state) => state.currentAccountSigner,
+                currentAccountMultisigInfo: (state) => state.currentAccountMultisigInfo,
+            },
+        };
+
+        const mockHarvestingStore = {
+            namespaced: true,
+            state: {
+                status: 'INACTIVE',
+                currentSignerHarvestingModel: {
+                    accountAddress: WalletsModel1.address,
+                    encRemotePrivateKey: null,
+                    encVrfPrivateKey: null,
+                    selectedHarvestingNode: { nodePublicKey: '' },
+                    delegatedHarvestingRequestFailed: false,
+                },
+            },
+            getters: {
+                status: (state) => state.status,
+                currentSignerHarvestingModel: (state) => state.currentSignerHarvestingModel,
+            },
+        };
+
+        const mockNetworkStore = {
+            namespaced: true,
+            state: {
+                feesConfig: {
+                    fast: 20,
+                    median: 10,
+                    slow: 5,
+                    slowest: 1,
+                    free: 0,
+                },
+                networkType: NetworkType.TEST_NET,
+                peerNodes: [
+                    {
+                        url: 'https://symbol-amino.f5.si:3001',
+                        friendlyName: 'amino',
+                        isDefault: true,
+                        networkType: 152,
+                        publicKey: 'BFD67F597C4AA2D0E06895AA206E279A4266713458EBFB5D402932DABD70221F',
+                        nodePublicKey: 'EF4DF0AF63784252784DB5E843ACE0AD242D59FBD2B03867927BB895A56063FC',
+                        wsUrl: 'wss://symbol-amino.f5.si:3001/ws',
+                    },
+                    {
+                        url: 'https://401-joey-dual.symboltest.net:3001',
+                        friendlyName: '401-joey-dual',
+                        isDefault: true,
+                        networkType: 152,
+                        publicKey: '3E9C8CCC16DDB1EDFF9F2D0BB92D3F839CCC33D38034E526DC768F7BA3958E00',
+                        nodePublicKey: 'D26336247A3D1AF89B4040C8BAF3E288209B50B9C8547587B94D020195933FA5',
+                        wsUrl: 'wss://401-joey-dual.symboltest.net:3001/ws',
+                    },
+                ],
+            },
+            getters: {
+                feesConfig: (state) => state.feesConfig,
+                networkType: (state) => state.networkType,
+                peerNodes: (state) => state.peerNodes,
+            },
+        };
+
+        const mockMosaicStore = {
+            namespaced: true,
+            state: {
+                networkBalanceMosaics: {
+                    addressRawPlain: WalletsModel1.address,
+                    ownerRawPlain: 'TBYBPULFJVOVTP26D7OAY7IVD7B4HOA6G3GGHRI',
+                    name: 'symbol.xym',
+                    isCurrencyMosaic: true,
+                    balance,
+                    metadataList: [],
+                    mosaicIdHex: '3A8416DB2D53B6C8',
+                    divisibility: 6,
+                    transferable: true,
+                    supplyMutable: false,
+                    restrictable: false,
+                    duration: 0,
+                    height: 1,
+                    supply: 7978200695367926,
+                },
+                networkMosaicName: 'symbol.xym',
+                networkCurrency: {
+                    mosaicIdHex: '3A8416DB2D53B6C8',
+                    namespaceIdHex: 'E74B99BA41F4AFEE',
+                    namespaceIdFullname: 'symbol.xym',
+                    divisibility: 6,
+                    transferable: true,
+                    supplyMutable: false,
+                    restrictable: false,
+                    ticker: 'XYM',
+                },
+                networkMosaicId: new MosaicId('3A8416DB2D53B6C8'),
+            },
+            getters: {
+                networkBalanceMosaics: (state) => state.networkBalanceMosaics,
+                networkMosaicName: (state) => state.networkMosaicName,
+                networkCurrency: (state) => state.networkCurrency,
+                networkMosaic: (state) => state.networkMosaicId,
+            },
+        };
+
+        const store = getStore(
+            {
+                profile: mockProfileStore,
+                account: mockAccountStore,
+                harvesting: mockHarvestingStore,
+                mosaic: mockMosaicStore,
+                network: mockNetworkStore,
+                app: mockAppStore,
+            },
+            {},
+            undefined,
+            true,
+            undefined,
+            false,
+        );
+
         return store;
     };
 
-    const renderComponentWithStore = async (currentAccount: AccountModel, knownAccounts: string[]) => {
+    const renderComponentWithStore = async (currentAccount: AccountModel, knownAccounts: string[], balance) => {
         const localVue = createLocalVue();
-        const store = await initializeStore(localVue, currentAccount, knownAccounts);
+        const store = await initializeStore(localVue, currentAccount, knownAccounts, balance);
         jest.spyOn(AppStoreWrapper, 'getStore').mockImplementation(() => store);
         return renderComponent(localVue, store);
     };
@@ -100,14 +278,14 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
     test('renders component', async () => {
         // Arrange + Act:
         const currentAccountModel = WalletsModel1;
-        await renderComponentWithStore(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
+        await renderComponentWithStore(currentAccountModel, [account1.address.plain(), account2.address.plain()], 0);
 
         // Assert:
         expect(await screen.findByText(i18n.t('tab_harvesting_delegated_harvesting').toString())).toBeDefined();
         expect(await screen.findByText(currentAccountModel.address)).toBeDefined();
     });
 
-    describe('start/stop harvesting', () => {
+    describe.only('start/stop harvesting', () => {
         const testAccountBalance = async (balance: string, errorKey: string) => {
             // Arrange:
             const currentAccountModel = WalletsModel1;
@@ -116,7 +294,11 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
                 ...getHandlers([TestUIHelpers.getAccountsHttpResponse(currentAccountModel, 'post', undefined, () => accountBalance)]),
             );
 
-            const { store } = await renderComponentWithStore(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
+            const { store } = await renderComponentWithStore(
+                currentAccountModel,
+                [account1.address.plain(), account2.address.plain()],
+                accountBalance,
+            );
             await screen.findByText(currentAccountModel.address);
             await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(accountBalance));
 
@@ -132,17 +314,17 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             TestUIHelpers.expectToastMessage(errorKey, 'error', 6000);
         };
 
-        test('insufficient balance error is thrown', async () => {
+        test.only('insufficient balance error is thrown', async () => {
             const insufficientBalance = '9999000000';
             await testAccountBalance(insufficientBalance, 'harvesting_account_insufficient_balance');
         });
 
-        test('extra balance error is thrown', async () => {
+        test.only('extra balance error is thrown', async () => {
             const extraBalance = '50000000000000';
             await testAccountBalance(extraBalance, 'harvesting_account_has_extra_balance');
         });
 
-        test('importance is zero error is thrown', async () => {
+        test.only('importance is zero error is thrown', async () => {
             // Arrange:
             const currentAccountModel = WalletsModel1;
             const accountImportance = '0';
@@ -158,7 +340,11 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
                 ]),
             );
 
-            const { store } = await renderComponentWithStore(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
+            const { store } = await renderComponentWithStore(
+                currentAccountModel,
+                [account1.address.plain(), account2.address.plain()],
+                sufficientAccountBalance,
+            );
             await screen.findByText(currentAccountModel.address);
             await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(sufficientAccountBalance));
 
@@ -190,6 +376,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             const { store } = await renderComponentWithStore(
                 currentAccountModel,
                 knownAccountModels.map((am) => am.address),
+                expectedAccountBalance,
             );
             // since balance change event is not visible to the UI, we need to wait until it is handled
             await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(expectedAccountBalance), {
