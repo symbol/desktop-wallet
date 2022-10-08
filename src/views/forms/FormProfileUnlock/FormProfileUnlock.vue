@@ -20,6 +20,7 @@
                                     class="input-size input-style"
                                     :disabled="isLoading"
                                     :placeholder="$t('please_enter_your_account_password')"
+                                    data-testid="unlockProfilePasswordInput"
                                 />
                             </ErrorTooltip>
                         </ValidationProvider>
@@ -29,6 +30,7 @@
                             html-type="submit"
                             :loading="isLoading"
                             :disabled="disabled"
+                            data-testid="unlockProfileConfirmButton"
                             @click="processVerification"
                         >
                             {{ $t(buttonText) }}

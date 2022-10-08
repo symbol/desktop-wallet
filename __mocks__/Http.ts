@@ -126,6 +126,26 @@ export const responses: Record<string, HttpResponse[]> = {
         },
         {
             origin: '*',
+            path: '/nodes/95A4BA6F5C3C5F5171FA428DE0AD05FA680872033689E32F3F1CDFE49AFC0AE3',
+            method: 'get',
+            status: 404,
+            body: {
+                code: 'ResourceNotFound',
+                message: "no resource exists with publicKey 'B98356E2B078F4E396E9316DAB8A1CDD2EF5CD6B66578F23F9A9BCF04D8C2A83'",
+            },
+        },
+        {
+            origin: '*',
+            path: '/nodes/21D65305070C84712FAA817E1C520C86C4553D3546E12F2B6BDE8C854AE6D9DD',
+            method: 'get',
+            status: 404,
+            body: {
+                code: 'ResourceNotFound',
+                message: "no resource exists with publicKey 'B98356E2B078F4E396E9316DAB8A1CDD2EF5CD6B66578F23F9A9BCF04D8C2A83'",
+            },
+        },
+        {
+            origin: '*',
             path: '/node/info',
             method: 'get',
             status: 200,
@@ -682,9 +702,9 @@ export const responses: Record<string, HttpResponse[]> = {
                         accountType: 0,
                         supplementalPublicKeys: {},
                         activityBuckets: [],
-                        mosaics: [{ id: '3A8416DB2D53B6C8', amount: '298686336' }],
-                        importance: '0',
-                        importanceHeight: '0',
+                        mosaics: [{ id: '3A8416DB2D53B6C8', amount: '10000000001' }],
+                        importance: '10',
+                        importanceHeight: '710138',
                     },
                     id: '6329C1CDE1738750591A36E9',
                 },
@@ -746,9 +766,9 @@ export const responses: Record<string, HttpResponse[]> = {
                         accountType: 0,
                         supplementalPublicKeys: {},
                         activityBuckets: [],
-                        mosaics: [{ id: '3A8416DB2D53B6C8', amount: '498686336' }],
-                        importance: '0',
-                        importanceHeight: '0',
+                        mosaics: [{ id: '3A8416DB2D53B6C8', amount: '10000000001' }],
+                        importance: '1',
+                        importanceHeight: '1',
                     },
                     id: '6329C1CDE1738750591A36E6',
                 },
@@ -850,9 +870,9 @@ export const responses: Record<string, HttpResponse[]> = {
                         accountType: 0,
                         supplementalPublicKeys: {},
                         activityBuckets: [],
-                        mosaics: [{ id: '3A8416DB2D53B6C8', amount: '498686336' }],
-                        importance: '0',
-                        importanceHeight: '0',
+                        mosaics: [{ id: '3A8416DB2D53B6C8', amount: '10000000001' }],
+                        importance: '1',
+                        importanceHeight: '1',
                     },
                     id: '6329C1CDE1738750591A36E6',
                 },
@@ -899,6 +919,192 @@ export const responses: Record<string, HttpResponse[]> = {
             method: 'get',
             status: 200,
             body: { data: [], pagination: { pageNumber: 1, pageSize: 20 } },
+        },
+        {
+            origin: '*',
+            path: '/account/TB2IMFLYCQFZC6NZLWVQL26FZN6BNCNBZJP7WJQ/multisig/graph',
+            method: 'get',
+            status: 200,
+            body: [
+                {
+                    level: -1,
+                    multisigEntries: [
+                        {
+                            multisig: {
+                                version: 1,
+                                accountAddress: '98F5FA3C73BF9977C49FB59595C61DB88804E866D25AE5D5',
+                                minApproval: 1,
+                                minRemoval: 1,
+                                cosignatoryAddresses: [
+                                    '9874861578140B9179B95DAB05EBC5CB7C1689A1CA5FFB26',
+                                    '98AEFDDA5FA1A6613C0474CF70E54A03117E7EC3DF591EA9',
+                                ],
+                                multisigAddresses: [],
+                            },
+                        },
+                    ],
+                },
+                {
+                    level: 0,
+                    multisigEntries: [
+                        {
+                            multisig: {
+                                version: 1,
+                                accountAddress: '9874861578140B9179B95DAB05EBC5CB7C1689A1CA5FFB26',
+                                minApproval: 0,
+                                minRemoval: 0,
+                                cosignatoryAddresses: [],
+                                multisigAddresses: ['98F5FA3C73BF9977C49FB59595C61DB88804E866D25AE5D5'],
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            origin: '*',
+            path: '/account/TD27UPDTX6MXPRE7WWKZLRQ5XCEAJ2DG2JNOLVI/multisig/graph',
+            method: 'get',
+            status: 200,
+            body: [
+                {
+                    level: 0,
+                    multisigEntries: [
+                        {
+                            multisig: {
+                                version: 1,
+                                accountAddress: '98F5FA3C73BF9977C49FB59595C61DB88804E866D25AE5D5',
+                                minApproval: 1,
+                                minRemoval: 1,
+                                cosignatoryAddresses: [
+                                    '9874861578140B9179B95DAB05EBC5CB7C1689A1CA5FFB26',
+                                    '98AEFDDA5FA1A6613C0474CF70E54A03117E7EC3DF591EA9',
+                                ],
+                                multisigAddresses: [],
+                            },
+                        },
+                    ],
+                },
+                {
+                    level: 1,
+                    multisigEntries: [
+                        {
+                            multisig: {
+                                version: 1,
+                                accountAddress: '9874861578140B9179B95DAB05EBC5CB7C1689A1CA5FFB26',
+                                minApproval: 0,
+                                minRemoval: 0,
+                                cosignatoryAddresses: [],
+                                multisigAddresses: ['98F5FA3C73BF9977C49FB59595C61DB88804E866D25AE5D5'],
+                            },
+                        },
+                        {
+                            multisig: {
+                                version: 1,
+                                accountAddress: '98AEFDDA5FA1A6613C0474CF70E54A03117E7EC3DF591EA9',
+                                minApproval: 0,
+                                minRemoval: 0,
+                                cosignatoryAddresses: [],
+                                multisigAddresses: ['98F5FA3C73BF9977C49FB59595C61DB88804E866D25AE5D5'],
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+    'multisig-2-2': [
+        {
+            origin: '*',
+            path: '/account/TB2IMFLYCQFZC6NZLWVQL26FZN6BNCNBZJP7WJQ/multisig/graph',
+            method: 'get',
+            status: 200,
+            body: [
+                {
+                    level: -1,
+                    multisigEntries: [
+                        {
+                            multisig: {
+                                version: 1,
+                                accountAddress: '98F5FA3C73BF9977C49FB59595C61DB88804E866D25AE5D5',
+                                minApproval: 2,
+                                minRemoval: 2,
+                                cosignatoryAddresses: [
+                                    '9874861578140B9179B95DAB05EBC5CB7C1689A1CA5FFB26',
+                                    '98AEFDDA5FA1A6613C0474CF70E54A03117E7EC3DF591EA9',
+                                ],
+                                multisigAddresses: [],
+                            },
+                        },
+                    ],
+                },
+                {
+                    level: 0,
+                    multisigEntries: [
+                        {
+                            multisig: {
+                                version: 1,
+                                accountAddress: '9874861578140B9179B95DAB05EBC5CB7C1689A1CA5FFB26',
+                                minApproval: 0,
+                                minRemoval: 0,
+                                cosignatoryAddresses: [],
+                                multisigAddresses: ['98F5FA3C73BF9977C49FB59595C61DB88804E866D25AE5D5'],
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            origin: '*',
+            path: '/account/TD27UPDTX6MXPRE7WWKZLRQ5XCEAJ2DG2JNOLVI/multisig/graph',
+            method: 'get',
+            status: 200,
+            body: [
+                {
+                    level: 0,
+                    multisigEntries: [
+                        {
+                            multisig: {
+                                version: 1,
+                                accountAddress: '98F5FA3C73BF9977C49FB59595C61DB88804E866D25AE5D5',
+                                minApproval: 2,
+                                minRemoval: 2,
+                                cosignatoryAddresses: [
+                                    '9874861578140B9179B95DAB05EBC5CB7C1689A1CA5FFB26',
+                                    '98AEFDDA5FA1A6613C0474CF70E54A03117E7EC3DF591EA9',
+                                ],
+                                multisigAddresses: [],
+                            },
+                        },
+                    ],
+                },
+                {
+                    level: 1,
+                    multisigEntries: [
+                        {
+                            multisig: {
+                                version: 1,
+                                accountAddress: '9874861578140B9179B95DAB05EBC5CB7C1689A1CA5FFB26',
+                                minApproval: 0,
+                                minRemoval: 0,
+                                cosignatoryAddresses: [],
+                                multisigAddresses: ['98F5FA3C73BF9977C49FB59595C61DB88804E866D25AE5D5'],
+                            },
+                        },
+                        {
+                            multisig: {
+                                version: 1,
+                                accountAddress: '98AEFDDA5FA1A6613C0474CF70E54A03117E7EC3DF591EA9',
+                                minApproval: 0,
+                                minRemoval: 0,
+                                cosignatoryAddresses: [],
+                                multisigAddresses: ['98F5FA3C73BF9977C49FB59595C61DB88804E866D25AE5D5'],
+                            },
+                        },
+                    ],
+                },
+            ],
         },
     ],
 };

@@ -41,10 +41,14 @@ export default class TestUIHelpers {
 
     public static async confirmTransactions(profilePassword: string) {
         expect(await screen.findByText(i18n.t('modal_title_transaction_confirmation').toString())).toBeDefined();
-        const passwordInput = await screen.findByPlaceholderText(i18n.t('please_enter_your_account_password').toString());
-        const passwordContainer = passwordInput.parentElement.parentElement.parentElement;
+        await this.unlockProfile(profilePassword);
+    }
+
+    public static async unlockProfile(profilePassword: string) {
+        const passwordInput = await screen.findByTestId('unlockProfilePasswordInput');
         userEvent.type(passwordInput, profilePassword);
-        userEvent.click(await within(passwordContainer).findByRole('button', { name: i18n.t('confirm').toString() }));
+        const confirmButton = await screen.findByTestId('unlockProfileConfirmButton');
+        userEvent.click(confirmButton);
     }
 
     public static async expectToastMessage(msgKey: string, type: string, msgTimeout?: number, timeout?: number) {

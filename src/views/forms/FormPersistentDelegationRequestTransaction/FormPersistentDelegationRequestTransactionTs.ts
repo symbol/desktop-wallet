@@ -430,10 +430,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return of([]);
     }
 
-    public get isAllKeysLinked(): boolean {
-        return this.isNodeKeyLinked && this.isVrfKeyLinked && this.isAccountKeyLinked;
-    }
-
     /**
      * Signs Aggregate Transaction(s) (for a multi-sig account)
      *
