@@ -18,6 +18,7 @@ import { UIBootstrapper } from '@/app/UIBootstrapper';
 import { AccountModel } from '@/core/database/entities/AccountModel';
 import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
 import { BroadcastResult } from '@/core/transactions/BroadcastResult';
+import { CommonHelpers } from '@/core/utils/CommonHelpers';
 import i18n from '@/language/index';
 import router from '@/router/AppRouter';
 import { AccountService } from '@/services/AccountService';
@@ -237,7 +238,8 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             currentAccountModel: AccountModel,
             knownAccountModels: AccountModel[],
             currentSignerAccountModel?: AccountModel,
-            unlockProfile = false,
+            needToUnlockProfile = false,
+            selectedMaxFee = 'slow',
         ) => {
             // test: start harvesting
             // Arrange:
@@ -250,11 +252,12 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             // Act:
             const input = await screen.findByPlaceholderText(i18n.t('form_label_network_node_url').toString());
             await userEvent.type(input, 'https://001-joey-dual.symboltest.net:3001');
+            await TestUIHelpers.selectMaxFee(selectedMaxFee);
             const button = await screen.findByRole('button', { name: i18n.t('start_harvesting').toString() });
             userEvent.click(button);
             const confirmButtonInModal = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
             userEvent.click(confirmButtonInModal);
-            if (unlockProfile) {
+            if (needToUnlockProfile) {
                 TestUIHelpers.unlockProfile('Password1');
             }
             await TestUIHelpers.confirmTransactions('Password1');
@@ -326,73 +329,76 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
 
             // Assert:
             await waitFor(() => expect(store.getters['harvesting/status']).toBe('INACTIVE'), { timeout: 3_000 });
+            // await waitFor(() => expect(store.getters['harvesting/currentSignerHarvestingModel'].encRemotePrivateKey).toBeNull(), {
+            //     timeout: 3_000,
+            // });
             expect(await screen.findByRole('button', { name: i18n.t('start_harvesting').toString() })).toBeDefined();
         };
 
         test('regular account - harvesting is successfully started and stopped', async () => {
             const knownAccountModels = [WalletsModel1, WalletsModel2];
             const currentAccountModel = WalletsModel1;
-            await testStartStopHarvestingWithAccount(currentAccountModel, knownAccountModels);
+            await testStartStopHarvestingWithAccount(currentAccountModel, knownAccountModels, undefined, false, 'fast');
+            await CommonHelpers.sleep(2_000);
+            await flushPromises();
         });
 
-        // test('regular account - harvesting is successfully started and stopped when account is already linked', async () => {
-        //     const knownAccountModels = [WalletsModel1, WalletsModel2];
-        //     const currentAccountModel = WalletsModel1;
-        //     const harvestingModel = {
-        //         accountAddress: 'TBUYPO5DPOWXFVB7TNMDMBRFJBG5FGTXNKKZB7I',
-        //         newEncVrfPrivateKey:
-        //             'b8483ec1d0934347dbd1cdc66259ed7bc0826834b8b89afa73678dca7818880cMjt+9kHHWs9vjFnSOnBiK6GVH0AXg0dKOVEXZyEBqqurvOIA1MQR7dzAlfSLFVPRVfIi+fG5JsPYJ4J+UdFLwDuIMNd2ZqImg0+L2/bAQ5s=',
-        //         newVrfPublicKey: '2F23F5F5768EDEE9199F0CB29FEB8508CEC3BCAF0033CD3F442D67999FC70A65',
-        //         newEncRemotePrivateKey:
-        //             '71dd0b7057fc81aa7c87966599650b06234dbcc1b8e132d045f4e28c8aa6c591De+Ujsfjrt2T6xC+R9Rl/6LdgEbOrftpmqSchCRs4sc0/SdAN3WQ2FeVPIjfNa4AeZVM21qqVU9s1zb/2u3TolqYok6SYsr+zLND3H+s+78=',
-        //         newRemotePublicKey: '1069B61D621FB818B2A756A12BCE02F1BC45AEF8E28618EF5BC1FCE8FF915838',
-        //         selectedHarvestingNode: {
-        //             url: 'https://001-joey-dual.symboltest.net:3001',
-        //             friendlyName: '001-joey-dual',
-        //             isDefault: true,
-        //             networkType: 152,
-        //             publicKey: 'AAA1922FA60DB681092CBE70A9A1BAB85745025310AE7567F95EA7FD05B3D3FC',
-        //             nodePublicKey: '05E5C0841720AE9DA737C184429002E917F74FF7A3BF8E11AC2862C4875B3D7E',
-        //             wsUrl: 'wss://001-joey-dual.symboltest.net:3001/ws',
-        //         },
-        //         delegatedHarvestingRequestFailed: false,
-        //         newSelectedHarvestingNode: {
-        //             url: 'https://001-joey-dual.symboltest.net:3001',
-        //             friendlyName: '001-joey-dual',
-        //             isDefault: true,
-        //             networkType: 152,
-        //             publicKey: 'AAA1922FA60DB681092CBE70A9A1BAB85745025310AE7567F95EA7FD05B3D3FC',
-        //             nodePublicKey: '05E5C0841720AE9DA737C184429002E917F74FF7A3BF8E11AC2862C4875B3D7E',
-        //             wsUrl: 'wss://001-joey-dual.symboltest.net:3001/ws',
-        //         },
-        //         encRemotePrivateKey:
-        //             '71dd0b7057fc81aa7c87966599650b06234dbcc1b8e132d045f4e28c8aa6c591De+Ujsfjrt2T6xC+R9Rl/6LdgEbOrftpmqSchCRs4sc0/SdAN3WQ2FeVPIjfNa4AeZVM21qqVU9s1zb/2u3TolqYok6SYsr+zLND3H+s+78=',
-        //         encVrfPrivateKey:
-        //             'b8483ec1d0934347dbd1cdc66259ed7bc0826834b8b89afa73678dca7818880cMjt+9kHHWs9vjFnSOnBiK6GVH0AXg0dKOVEXZyEBqqurvOIA1MQR7dzAlfSLFVPRVfIi+fG5JsPYJ4J+UdFLwDuIMNd2ZqImg0+L2/bAQ5s=',
-        //         isPersistentDelReqSent: false,
-        //     };
-        //     // mock harvestingmodel - harvestingService.getHarvestingModel(currentSignerAddress);
-        //     // jest.spyOn(HarvestingService.prototype, 'getHarvestingModel').mockImplementationOnce(() => harvestingModel);
-        //     new HarvestingService().saveHarvestingModel(harvestingModel);
-        //     httpServer.use(
-        //         ...getHandlers([
-        //             TestUIHelpers.getAccountsHttpResponse(
-        //                 currentAccountModel,
-        //                 'post',
-        //                 () => {
-        //                     return {
-        //                         linked: { publicKey: harvestingModel?.newRemotePublicKey },
-        //                         vrf: { publicKey: harvestingModel?.newVrfPublicKey },
-        //                         node: { publicKey: harvestingModel?.newSelectedHarvestingNode?.nodePublicKey },
-        //                     };
-        //                 },
-        //                 () => sufficientAccountBalance,
-        //                 () => sufficientAccountImportance,
-        //             ),
-        //         ]),
-        //     );
-        //     await testStartStopHarvestingWithAccount(currentAccountModel, knownAccountModels, undefined, true);
-        // });
+        test('regular account - harvesting is successfully started and stopped when account is already linked', async () => {
+            const knownAccountModels = [WalletsModel1, WalletsModel2];
+            const currentAccountModel = WalletsModel1;
+            const harvestingModel = {
+                accountAddress: 'TBUYPO5DPOWXFVB7TNMDMBRFJBG5FGTXNKKZB7I',
+                newEncVrfPrivateKey:
+                    'b8483ec1d0934347dbd1cdc66259ed7bc0826834b8b89afa73678dca7818880cMjt+9kHHWs9vjFnSOnBiK6GVH0AXg0dKOVEXZyEBqqurvOIA1MQR7dzAlfSLFVPRVfIi+fG5JsPYJ4J+UdFLwDuIMNd2ZqImg0+L2/bAQ5s=',
+                newVrfPublicKey: '2F23F5F5768EDEE9199F0CB29FEB8508CEC3BCAF0033CD3F442D67999FC70A65',
+                newEncRemotePrivateKey:
+                    '71dd0b7057fc81aa7c87966599650b06234dbcc1b8e132d045f4e28c8aa6c591De+Ujsfjrt2T6xC+R9Rl/6LdgEbOrftpmqSchCRs4sc0/SdAN3WQ2FeVPIjfNa4AeZVM21qqVU9s1zb/2u3TolqYok6SYsr+zLND3H+s+78=',
+                newRemotePublicKey: '1069B61D621FB818B2A756A12BCE02F1BC45AEF8E28618EF5BC1FCE8FF915838',
+                selectedHarvestingNode: {
+                    url: 'https://001-joey-dual.symboltest.net:3001',
+                    friendlyName: '001-joey-dual',
+                    isDefault: true,
+                    networkType: 152,
+                    publicKey: 'AAA1922FA60DB681092CBE70A9A1BAB85745025310AE7567F95EA7FD05B3D3FC',
+                    nodePublicKey: '05E5C0841720AE9DA737C184429002E917F74FF7A3BF8E11AC2862C4875B3D7E',
+                    wsUrl: 'wss://001-joey-dual.symboltest.net:3001/ws',
+                },
+                delegatedHarvestingRequestFailed: false,
+                newSelectedHarvestingNode: {
+                    url: 'https://001-joey-dual.symboltest.net:3001',
+                    friendlyName: '001-joey-dual',
+                    isDefault: true,
+                    networkType: 152,
+                    publicKey: 'AAA1922FA60DB681092CBE70A9A1BAB85745025310AE7567F95EA7FD05B3D3FC',
+                    nodePublicKey: '05E5C0841720AE9DA737C184429002E917F74FF7A3BF8E11AC2862C4875B3D7E',
+                    wsUrl: 'wss://001-joey-dual.symboltest.net:3001/ws',
+                },
+                encRemotePrivateKey:
+                    '71dd0b7057fc81aa7c87966599650b06234dbcc1b8e132d045f4e28c8aa6c591De+Ujsfjrt2T6xC+R9Rl/6LdgEbOrftpmqSchCRs4sc0/SdAN3WQ2FeVPIjfNa4AeZVM21qqVU9s1zb/2u3TolqYok6SYsr+zLND3H+s+78=',
+                encVrfPrivateKey:
+                    'b8483ec1d0934347dbd1cdc66259ed7bc0826834b8b89afa73678dca7818880cMjt+9kHHWs9vjFnSOnBiK6GVH0AXg0dKOVEXZyEBqqurvOIA1MQR7dzAlfSLFVPRVfIi+fG5JsPYJ4J+UdFLwDuIMNd2ZqImg0+L2/bAQ5s=',
+                isPersistentDelReqSent: false,
+            };
+            new HarvestingService().saveHarvestingModel(harvestingModel);
+            httpServer.use(
+                ...getHandlers([
+                    TestUIHelpers.getAccountsHttpResponse(
+                        currentAccountModel,
+                        'post',
+                        () => {
+                            return {
+                                linked: { publicKey: harvestingModel?.newRemotePublicKey },
+                                vrf: { publicKey: harvestingModel?.newVrfPublicKey },
+                                node: { publicKey: harvestingModel?.newSelectedHarvestingNode?.nodePublicKey },
+                            };
+                        },
+                        () => sufficientAccountBalance,
+                        () => sufficientAccountImportance,
+                    ),
+                ]),
+            );
+            await testStartStopHarvestingWithAccount(currentAccountModel, knownAccountModels, undefined, true);
+        });
 
         test('multisig account with 1 required cosignature - harvesting is successfully started and stopped', async () => {
             const knownAccountModels = [cosigner1AccountModel, cosigner2AccountModel, multisigAccountModel];

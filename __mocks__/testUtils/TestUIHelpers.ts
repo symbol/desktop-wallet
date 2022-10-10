@@ -61,4 +61,25 @@ export default class TestUIHelpers {
             { timeout },
         );
     }
+
+    public static async selectMaxFee(maxFeeKeyToBeSelected: string, currentSelectedMaxFeeKey = 'slow') {
+        // open the dropdown
+        userEvent.click(
+            (
+                await within(await screen.findByTestId('maxFeeSelector')).findAllByText(
+                    i18n.t(`fee_speed_${currentSelectedMaxFeeKey}`).toString(),
+                    { exact: false },
+                )
+            )[0],
+        );
+        // select the target max fee from dropdown
+        userEvent.click(
+            (
+                await within(await screen.findByTestId('maxFeeSelector')).findAllByText(
+                    i18n.t(`fee_speed_${maxFeeKeyToBeSelected}`).toString(),
+                    { exact: false },
+                )
+            )[0],
+        );
+    }
 }

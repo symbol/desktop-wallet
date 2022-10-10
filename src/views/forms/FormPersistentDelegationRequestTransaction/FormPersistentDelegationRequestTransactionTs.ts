@@ -510,19 +510,19 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         this.saveHarvestingNode(accountAddress, this.formItems.nodeModel);
 
         const txBroadcastResultSuccessHandler = (transaction: Transaction) => {
-            if (transaction?.type === TransactionType.VRF_KEY_LINK) {
+            if (transaction.type === TransactionType.VRF_KEY_LINK) {
                 // @ts-ignore
-                transaction?.linkAction === LinkAction.Link && this.vrfPrivateKeyTemp
+                transaction.linkAction === LinkAction.Link && this.vrfPrivateKeyTemp
                     ? this.saveVrfKey(accountAddress, Crypto.encrypt(this.vrfPrivateKeyTemp, this.password))
                     : this.saveVrfKey(accountAddress, null);
             }
-            if (transaction?.type === TransactionType.ACCOUNT_KEY_LINK) {
+            if (transaction.type === TransactionType.ACCOUNT_KEY_LINK) {
                 // @ts-ignore
-                transaction?.linkAction === LinkAction.Link && this.remotePrivateKeyTemp
+                transaction.linkAction === LinkAction.Link && this.remotePrivateKeyTemp
                     ? this.saveRemoteKey(accountAddress, Crypto.encrypt(this.remotePrivateKeyTemp, this.password))
                     : this.saveRemoteKey(accountAddress, null);
             }
-            if (transaction?.type === TransactionType.NODE_KEY_LINK) {
+            if (transaction.type === TransactionType.NODE_KEY_LINK) {
                 this.$store.dispatch('harvesting/SET_POLLING_TRIALS', 1);
                 this.updateHarvestingRequestStatus(accountAddress, false);
             }
@@ -868,10 +868,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     public get currentSignerAccount() {
         return PublicAccount.createFromPublicKey(this.currentSignerPublicKey, this.networkType);
-    }
-
-    private get isPersistentDelReqSent() {
-        return this.currentSignerHarvestingModel?.isPersistentDelReqSent;
     }
 
     /**
