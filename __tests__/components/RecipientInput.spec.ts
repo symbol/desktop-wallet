@@ -101,7 +101,7 @@ describe('components/RecipientInput', () => {
             runBasicOnSelectContactTests(addressBook.getAllContacts()[0].id, [['TDQG45HO3BTK22FJCDC6FOQTK3TWHJAFLXWLM4Q']]);
         });
 
-        test('skips emits when contact does not exists', () => {
+        test('skips emit when contact does not exist', () => {
             runBasicOnSelectContactTests('invalid-contact-id', undefined);
         });
     });
