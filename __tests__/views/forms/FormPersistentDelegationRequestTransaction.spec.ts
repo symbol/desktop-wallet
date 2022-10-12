@@ -13,19 +13,12 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { AppStoreWrapper } from '@/app/AppStore';
-import { UIBootstrapper } from '@/app/UIBootstrapper';
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
-import { BroadcastResult } from '@/core/transactions/BroadcastResult';
 import { CommonHelpers } from '@/core/utils/CommonHelpers';
 import i18n from '@/language/index';
-import router from '@/router/AppRouter';
-import { AccountService } from '@/services/AccountService';
 import { HarvestingService } from '@/services/HarvestingService';
 import { ProfileService } from '@/services/ProfileService';
-import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerService';
-import getAppStore from '@/store/index';
 import FormPersistentDelegationRequestTransaction from '@/views/forms/FormPersistentDelegationRequestTransaction/FormPersistentDelegationRequestTransaction.vue';
 import {
     account1,
@@ -41,21 +34,18 @@ import { getHandlers, responses } from '@MOCKS/Http';
 import { getTestProfile } from '@MOCKS/profiles';
 import TestUIHelpers from '@MOCKS/testUtils/TestUIHelpers';
 import userEvent from '@testing-library/user-event';
-import { render, screen, waitFor, within } from '@testing-library/vue';
-import { createLocalVue } from '@vue/test-utils';
+import { screen, waitFor, within } from '@testing-library/vue';
+import flushPromises from 'flush-promises';
 import WS from 'jest-websocket-mock';
 import { setupServer } from 'msw/node';
-import { of } from 'rxjs';
-import { AccountInfo, Convert, KeyPair, NetworkType, SignedTransaction, TransactionMapping } from 'symbol-sdk';
-import { VueConstructor } from 'vue/types/umd';
-import Vuex, { Store } from 'vuex';
+import { AccountInfo, Convert, KeyPair } from 'symbol-sdk';
 
 // mock local storage
 jest.mock('@/core/database/backends/LocalStorageBackend', () => ({
     LocalStorageBackend: jest.requireActual('@/core/database/backends/ObjectStorageBackend').ObjectStorageBackend,
 }));
 
-// mock http server with base responses denoted by *
+// mock http server with base responses denoted by * which are basic responses for the accounts __mock__/Accounts.ts
 const httpServer = setupServer(...getHandlers(responses['*']));
 // mock websocket server
 const websocketServer = new WS('wss://001-joey-dual.symboltest.net:3001/ws', { jsonProtocol: true });
@@ -64,108 +54,48 @@ websocketServer.on('connection', (socket) => {
     socket.send('{"uid":"FAKE_UID"}');
 });
 
-const sufficientAccountBalance = '10000000001';
-const sufficientAccountImportance = '1';
-
 beforeAll(() => httpServer.listen());
 afterEach(async () => {
-    // await flushPromises();
+    await flushPromises();
     httpServer.resetHandlers();
     jest.clearAllMocks();
 });
 afterAll(() => httpServer.close());
 
+const testProfileName = 'profile1';
+const testProfilePassword = 'Password1';
+const sufficientAccountBalance = '10000000001';
+const sufficientAccountImportance = '1';
+
 describe('components/FormPersistentDelegationRequestTransaction', () => {
-    const renderComponent = (localVue: VueConstructor, store: Store<unknown>) => {
-        const instance = render(FormPersistentDelegationRequestTransaction, {
-            store,
-            // @ts-ignore
-            router,
-            i18n,
-            localVue: UIBootstrapper.initializePlugins(localVue),
-        });
-        return {
-            ...instance,
-            store,
-        };
+    const renderPage = (currentAccount: AccountModel, knownAccounts: string[]) => {
+        return TestUIHelpers.renderComponentWithStore(
+            FormPersistentDelegationRequestTransaction,
+            currentAccount,
+            knownAccounts,
+            testProfileName,
+        );
     };
 
-    const initializeStore = async (localVue: VueConstructor, currentAccount: AccountModel, knownAccounts: string[]) => {
-        localVue.use(Vuex);
-        const store = getAppStore(localVue);
-        await store.dispatch('initialize');
-        await store.dispatch('profile/SET_CURRENT_PROFILE', getTestProfile('profile1'));
-        await store.dispatch('network/CONNECT', { networkType: NetworkType.TEST_NET });
-        await store.dispatch('account/SET_KNOWN_ACCOUNTS', knownAccounts);
-        await store.dispatch('account/SET_CURRENT_ACCOUNT', currentAccount);
-        await waitFor(() => expect(store.getters['account/currentSignerAccountInfo']).not.toBeNull());
-        return store;
-    };
-
-    const renderComponentWithStore = async (currentAccount: AccountModel, knownAccounts: string[]) => {
-        const localVue = createLocalVue();
-        const store = await initializeStore(localVue, currentAccount, knownAccounts);
-        jest.spyOn(AppStoreWrapper, 'getStore').mockImplementation(() => store);
-        return renderComponent(localVue, store);
+    const renderPageWithAccount = (currentAccount: AccountModel, knownAccounts: AccountModel[]) => {
+        return TestUIHelpers.renderComponentWithAccount(
+            FormPersistentDelegationRequestTransaction,
+            currentAccount,
+            knownAccounts,
+            testProfileName,
+            sufficientAccountBalance,
+        );
     };
 
     test('renders component', async () => {
         // Arrange + Act:
         const currentAccountModel = WalletsModel1;
-        await renderComponentWithStore(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
+        await renderPage(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
 
         // Assert:
         expect(await screen.findByText(i18n.t('tab_harvesting_delegated_harvesting').toString())).toBeDefined();
         expect(await screen.findByText(currentAccountModel.address)).toBeDefined();
     });
-
-    const renderComponentWithAccount = async (
-        currentAccountModel: AccountModel,
-        knownAccountModels: AccountModel[],
-        expectedAccountBalance: string = sufficientAccountBalance,
-        balanceTimeout: number = 3_000,
-    ): Promise<Store<any>> => {
-        // Arrange:
-        jest.spyOn(AccountService.prototype, 'getAccountsById').mockImplementation(() => {
-            return knownAccountModels.reduce((obj, am) => {
-                obj[am.id] = am;
-                return obj;
-            }, {});
-        });
-        const { store } = await renderComponentWithStore(
-            currentAccountModel,
-            knownAccountModels.map((am) => am.address),
-        );
-        // since balance change event is not visible to the UI, we need to wait until it is handled
-        await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(expectedAccountBalance), {
-            timeout: balanceTimeout,
-        });
-        jest.spyOn(TransactionAnnouncerService.prototype, 'announce').mockImplementation((signedTransaction: SignedTransaction) => {
-            const transaction = TransactionMapping.createFromPayload(signedTransaction.payload);
-            return of(new BroadcastResult(signedTransaction, transaction, true));
-        });
-        jest.spyOn(TransactionAnnouncerService.prototype, 'announceHashAndAggregateBonded').mockImplementation(
-            (_: SignedTransaction, signedAggregateTransaction: SignedTransaction) => {
-                const transaction = TransactionMapping.createFromPayload(signedAggregateTransaction.payload);
-                return of(new BroadcastResult(signedAggregateTransaction, transaction, true));
-            },
-        );
-        return store;
-    };
-
-    const selectMultisigAccount = async (currentSignerAddress: string, currentAccountAddress: string, store: Store<any>) => {
-        userEvent.click((await within(await screen.findByTestId('signerSelector')).findAllByText(currentAccountAddress))[0]);
-        userEvent.click(
-            (await within(await screen.findByTestId('signerSelector')).findAllByText(currentSignerAddress, { exact: false }))[0],
-        );
-        await waitFor(() => expect(store.getters['account/currentSignerAccountInfo'].address.plain()).toBe(currentSignerAddress));
-        await waitFor(() => expect(store.getters['harvesting/currentSignerHarvestingModel'].accountAddress).toBe(currentSignerAddress), {
-            timeout: 3_000,
-        });
-        await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(sufficientAccountBalance), {
-            timeout: 3_000,
-        });
-    };
 
     describe('start/stop harvesting', () => {
         const testAccountBalance = async (balance: string, errorKey: string) => {
@@ -176,7 +106,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
                 ...getHandlers([TestUIHelpers.getAccountsHttpResponse(currentAccountModel, 'post', undefined, () => accountBalance)]),
             );
 
-            const { store } = await renderComponentWithStore(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
+            const { store } = await renderPage(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
             await screen.findByText(currentAccountModel.address);
             await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(accountBalance));
 
@@ -218,7 +148,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
                 ]),
             );
 
-            const { store } = await renderComponentWithStore(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
+            const { store } = await renderPage(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
             await screen.findByText(currentAccountModel.address);
             await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(sufficientAccountBalance));
 
@@ -243,10 +173,15 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
         ) => {
             // test: start harvesting
             // Arrange:
-            const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
+            const store = await renderPageWithAccount(currentAccountModel, knownAccountModels);
 
             if (currentSignerAccountModel && currentAccountModel.address !== currentSignerAccountModel.address) {
-                await selectMultisigAccount(currentSignerAccountModel.address, currentAccountModel.address, store);
+                await TestUIHelpers.selectMultisigAccount(
+                    currentSignerAccountModel.address,
+                    currentAccountModel.address,
+                    store,
+                    sufficientAccountBalance,
+                );
             }
 
             // Act:
@@ -258,9 +193,9 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             const confirmButtonInModal = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
             userEvent.click(confirmButtonInModal);
             if (needToUnlockProfile) {
-                TestUIHelpers.unlockProfile('Password1');
+                TestUIHelpers.unlockProfile(testProfilePassword);
             }
-            await TestUIHelpers.confirmTransactions('Password1');
+            await TestUIHelpers.confirmTransactions(testProfilePassword);
 
             // Assert:
             await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
@@ -323,7 +258,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
 
             // Act:
             userEvent.click(stopButton);
-            await TestUIHelpers.confirmTransactions('Password1');
+            await TestUIHelpers.confirmTransactions(testProfilePassword);
             // in order to trigger account/currentSignerAccountInfo update
             await store.dispatch('account/LOAD_ACCOUNT_INFO');
 
@@ -400,6 +335,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             const knownAccountModels = [WalletsModel1, WalletsModel2];
             const currentAccountModel = WalletsModel1;
 
+            // mock node details response for the node operator
             httpServer.use(
                 ...getHandlers([
                     {
@@ -432,6 +368,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
         });
 
         test('multisig account with 1 required cosignature - harvesting is successfully started and stopped', async () => {
+            // default responses for the following accounts in __mock__/Http.ts for 1 of 2 approvals and 1 of 2 removals multisig structure
             const knownAccountModels = [cosigner1AccountModel, cosigner2AccountModel, multisigAccountModel];
             const currentAccountModel = cosigner1AccountModel;
             await testStartStopHarvestingWithAccount(currentAccountModel, knownAccountModels, multisigAccountModel);
@@ -454,10 +391,15 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
         // Arrange:
         const nodePublicKey = '05E5C0841720AE9DA737C184429002E917F74FF7A3BF8E11AC2862C4875B3D7E';
 
-        const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
+        const store = await renderPageWithAccount(currentAccountModel, knownAccountModels);
 
         if (currentSignerAccountModel && currentAccountModel.address !== currentSignerAccountModel.address) {
-            await selectMultisigAccount(currentSignerAccountModel.address, currentAccountModel.address, store);
+            await TestUIHelpers.selectMultisigAccount(
+                currentSignerAccountModel.address,
+                currentAccountModel.address,
+                store,
+                sufficientAccountBalance,
+            );
         }
 
         // Act:
@@ -485,7 +427,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
         );
         const nodeLinkButton = await screen.findByTestId('btn_linkNodeKey');
         userEvent.click(nodeLinkButton);
-        await TestUIHelpers.confirmTransactions('Password1');
+        await TestUIHelpers.confirmTransactions(testProfilePassword);
 
         // Assert:
         await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
@@ -505,7 +447,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
         // Arrange + Act:
         const nodeUnlinkButton = await screen.findByTestId('btn_unlinkNodeKey');
         userEvent.click(nodeUnlinkButton);
-        await TestUIHelpers.confirmTransactions('Password1');
+        await TestUIHelpers.confirmTransactions(testProfilePassword);
 
         // in order to trigger account/currentSignerAccountInfo update
         await store.dispatch('account/LOAD_ACCOUNT_INFO');
@@ -525,10 +467,15 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
     ) => {
         // Test: link action
         // Arrange:
-        const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
+        const store = await renderPageWithAccount(currentAccountModel, knownAccountModels);
 
         if (currentSignerAccountModel && currentAccountModel.address !== currentSignerAccountModel.address) {
-            await selectMultisigAccount(currentSignerAccountModel.address, currentAccountModel.address, store);
+            await TestUIHelpers.selectMultisigAccount(
+                currentSignerAccountModel.address,
+                currentAccountModel.address,
+                store,
+                sufficientAccountBalance,
+            );
         }
 
         // Act:
@@ -569,11 +516,11 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
         userEvent.click(confirmButton);
 
         if (isLedger) {
-            await TestUIHelpers.unlockProfile('Password1');
+            await TestUIHelpers.unlockProfile(testProfilePassword);
             // end of test for the ledger case
             return;
         }
-        await TestUIHelpers.confirmTransactions('Password1');
+        await TestUIHelpers.confirmTransactions(testProfilePassword);
 
         // Assert:
         await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
@@ -603,7 +550,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
         // Arrange + Act:
         const nodeUnlinkButton = await screen.findByTestId('btn_unlinkAccountKey');
         userEvent.click(nodeUnlinkButton);
-        await TestUIHelpers.confirmTransactions('Password1');
+        await TestUIHelpers.confirmTransactions(testProfilePassword);
 
         // in order to trigger account/currentSignerAccountInfo update
         await store.dispatch('account/LOAD_ACCOUNT_INFO');
@@ -622,10 +569,15 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
     ) => {
         // Test: link action
         // Arrange:
-        const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
+        const store = await renderPageWithAccount(currentAccountModel, knownAccountModels);
 
         if (currentSignerAccountModel && currentAccountModel.address !== currentSignerAccountModel.address) {
-            await selectMultisigAccount(currentSignerAccountModel.address, currentAccountModel.address, store);
+            await TestUIHelpers.selectMultisigAccount(
+                currentSignerAccountModel.address,
+                currentAccountModel.address,
+                store,
+                sufficientAccountBalance,
+            );
         }
 
         // Act:
@@ -659,7 +611,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
         confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
         userEvent.click(confirmButton);
 
-        await TestUIHelpers.confirmTransactions('Password1');
+        await TestUIHelpers.confirmTransactions(testProfilePassword);
 
         // Assert:
         await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
@@ -682,7 +634,7 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
         // Arrange + Act:
         const nodeUnlinkButton = await screen.findByTestId('btn_unlinkVrfKey');
         userEvent.click(nodeUnlinkButton);
-        await TestUIHelpers.confirmTransactions('Password1');
+        await TestUIHelpers.confirmTransactions(testProfilePassword);
 
         // in order to trigger account/currentSignerAccountInfo update
         await store.dispatch('account/LOAD_ACCOUNT_INFO');
