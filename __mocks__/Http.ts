@@ -131,7 +131,7 @@ export const responses: Record<string, HttpResponse[]> = {
             status: 404,
             body: {
                 code: 'ResourceNotFound',
-                message: "no resource exists with publicKey 'B98356E2B078F4E396E9316DAB8A1CDD2EF5CD6B66578F23F9A9BCF04D8C2A83'",
+                message: "no resource exists with publicKey '95A4BA6F5C3C5F5171FA428DE0AD05FA680872033689E32F3F1CDFE49AFC0AE3'",
             },
         },
         {
@@ -141,7 +141,7 @@ export const responses: Record<string, HttpResponse[]> = {
             status: 404,
             body: {
                 code: 'ResourceNotFound',
-                message: "no resource exists with publicKey 'B98356E2B078F4E396E9316DAB8A1CDD2EF5CD6B66578F23F9A9BCF04D8C2A83'",
+                message: "no resource exists with publicKey '21D65305070C84712FAA817E1C520C86C4553D3546E12F2B6BDE8C854AE6D9DD'",
             },
         },
         {

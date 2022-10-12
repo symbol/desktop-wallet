@@ -15,7 +15,7 @@
  */
 import { AppStoreWrapper } from '@/app/AppStore';
 import { UIBootstrapper } from '@/app/UIBootstrapper';
-import { AccountModel } from '@/core/database/entities/AccountModel';
+import { AccountModel, AccountType } from '@/core/database/entities/AccountModel';
 import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
 import { BroadcastResult } from '@/core/transactions/BroadcastResult';
 import { CommonHelpers } from '@/core/utils/CommonHelpers';
@@ -23,11 +23,13 @@ import i18n from '@/language/index';
 import router from '@/router/AppRouter';
 import { AccountService } from '@/services/AccountService';
 import { HarvestingService } from '@/services/HarvestingService';
+import { ProfileService } from '@/services/ProfileService';
 import { TransactionAnnouncerService } from '@/services/TransactionAnnouncerService';
 import getAppStore from '@/store/index';
 import FormPersistentDelegationRequestTransaction from '@/views/forms/FormPersistentDelegationRequestTransaction/FormPersistentDelegationRequestTransaction.vue';
 import {
     account1,
+    account1Params,
     account2,
     cosigner1AccountModel,
     cosigner2AccountModel,
@@ -41,11 +43,10 @@ import TestUIHelpers from '@MOCKS/testUtils/TestUIHelpers';
 import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor, within } from '@testing-library/vue';
 import { createLocalVue } from '@vue/test-utils';
-import flushPromises from 'flush-promises';
 import WS from 'jest-websocket-mock';
 import { setupServer } from 'msw/node';
 import { of } from 'rxjs';
-import { AccountInfo, NetworkType, SignedTransaction, TransactionMapping } from 'symbol-sdk';
+import { AccountInfo, Convert, KeyPair, NetworkType, SignedTransaction, TransactionMapping } from 'symbol-sdk';
 import { VueConstructor } from 'vue/types/umd';
 import Vuex, { Store } from 'vuex';
 
@@ -118,6 +119,54 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
         expect(await screen.findByText(currentAccountModel.address)).toBeDefined();
     });
 
+    const renderComponentWithAccount = async (
+        currentAccountModel: AccountModel,
+        knownAccountModels: AccountModel[],
+        expectedAccountBalance: string = sufficientAccountBalance,
+        balanceTimeout: number = 3_000,
+    ): Promise<Store<any>> => {
+        // Arrange:
+        jest.spyOn(AccountService.prototype, 'getAccountsById').mockImplementation(() => {
+            return knownAccountModels.reduce((obj, am) => {
+                obj[am.id] = am;
+                return obj;
+            }, {});
+        });
+        const { store } = await renderComponentWithStore(
+            currentAccountModel,
+            knownAccountModels.map((am) => am.address),
+        );
+        // since balance change event is not visible to the UI, we need to wait until it is handled
+        await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(expectedAccountBalance), {
+            timeout: balanceTimeout,
+        });
+        jest.spyOn(TransactionAnnouncerService.prototype, 'announce').mockImplementation((signedTransaction: SignedTransaction) => {
+            const transaction = TransactionMapping.createFromPayload(signedTransaction.payload);
+            return of(new BroadcastResult(signedTransaction, transaction, true));
+        });
+        jest.spyOn(TransactionAnnouncerService.prototype, 'announceHashAndAggregateBonded').mockImplementation(
+            (_: SignedTransaction, signedAggregateTransaction: SignedTransaction) => {
+                const transaction = TransactionMapping.createFromPayload(signedAggregateTransaction.payload);
+                return of(new BroadcastResult(signedAggregateTransaction, transaction, true));
+            },
+        );
+        return store;
+    };
+
+    const selectMultisigAccount = async (currentSignerAddress: string, currentAccountAddress: string, store: Store<any>) => {
+        userEvent.click((await within(await screen.findByTestId('signerSelector')).findAllByText(currentAccountAddress))[0]);
+        userEvent.click(
+            (await within(await screen.findByTestId('signerSelector')).findAllByText(currentSignerAddress, { exact: false }))[0],
+        );
+        await waitFor(() => expect(store.getters['account/currentSignerAccountInfo'].address.plain()).toBe(currentSignerAddress));
+        await waitFor(() => expect(store.getters['harvesting/currentSignerHarvestingModel'].accountAddress).toBe(currentSignerAddress), {
+            timeout: 3_000,
+        });
+        await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(sufficientAccountBalance), {
+            timeout: 3_000,
+        });
+    };
+
     describe('start/stop harvesting', () => {
         const testAccountBalance = async (balance: string, errorKey: string) => {
             // Arrange:
@@ -184,55 +233,6 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             // Assert:
             TestUIHelpers.expectToastMessage('harvesting_account_has_zero_importance', 'error', 6000);
         });
-
-        const renderComponentWithAccount = async (
-            currentAccountModel: AccountModel,
-            knownAccountModels: AccountModel[],
-            expectedAccountBalance: string = sufficientAccountBalance,
-            balanceTimeout: number = 3_000,
-        ): Promise<Store<any>> => {
-            // Arrange:
-            jest.spyOn(AccountService.prototype, 'getAccountsById').mockImplementation(() => {
-                return knownAccountModels.reduce((obj, am) => {
-                    obj[am.id] = am;
-                    return obj;
-                }, {});
-            });
-            const { store } = await renderComponentWithStore(
-                currentAccountModel,
-                knownAccountModels.map((am) => am.address),
-            );
-            // since balance change event is not visible to the UI, we need to wait until it is handled
-            await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(expectedAccountBalance), {
-                timeout: balanceTimeout,
-            });
-            jest.spyOn(TransactionAnnouncerService.prototype, 'announce').mockImplementation((signedTransaction: SignedTransaction) => {
-                const transaction = TransactionMapping.createFromPayload(signedTransaction.payload);
-                return of(new BroadcastResult(signedTransaction, transaction, true));
-            });
-            jest.spyOn(TransactionAnnouncerService.prototype, 'announceHashAndAggregateBonded').mockImplementation(
-                (_: SignedTransaction, signedAggregateTransaction: SignedTransaction) => {
-                    const transaction = TransactionMapping.createFromPayload(signedAggregateTransaction.payload);
-                    return of(new BroadcastResult(signedAggregateTransaction, transaction, true));
-                },
-            );
-            return store;
-        };
-
-        const selectMultisigAccount = async (currentSignerAddress: string, currentAccountAddress: string, store: Store<any>) => {
-            userEvent.click((await within(await screen.findByTestId('signerSelector')).findAllByText(currentAccountAddress))[0]);
-            userEvent.click(
-                (await within(await screen.findByTestId('signerSelector')).findAllByText(currentSignerAddress, { exact: false }))[0],
-            );
-            await waitFor(() => expect(store.getters['account/currentSignerAccountInfo'].address.plain()).toBe(currentSignerAddress));
-            await waitFor(
-                () => expect(store.getters['harvesting/currentSignerHarvestingModel'].accountAddress).toBe(currentSignerAddress),
-                { timeout: 3_000 },
-            );
-            await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(sufficientAccountBalance), {
-                timeout: 3_000,
-            });
-        };
 
         const testStartStopHarvestingWithAccount = async (
             currentAccountModel: AccountModel,
@@ -329,9 +329,6 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
 
             // Assert:
             await waitFor(() => expect(store.getters['harvesting/status']).toBe('INACTIVE'), { timeout: 3_000 });
-            // await waitFor(() => expect(store.getters['harvesting/currentSignerHarvestingModel'].encRemotePrivateKey).toBeNull(), {
-            //     timeout: 3_000,
-            // });
             expect(await screen.findByRole('button', { name: i18n.t('start_harvesting').toString() })).toBeDefined();
         };
 
@@ -340,7 +337,6 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             const currentAccountModel = WalletsModel1;
             await testStartStopHarvestingWithAccount(currentAccountModel, knownAccountModels, undefined, false, 'fast');
             await CommonHelpers.sleep(2_000);
-            await flushPromises();
         });
 
         test('regular account - harvesting is successfully started and stopped when account is already linked', async () => {
@@ -400,6 +396,41 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             await testStartStopHarvestingWithAccount(currentAccountModel, knownAccountModels, undefined, true);
         });
 
+        test('regular account - when account is a node operator', async () => {
+            const knownAccountModels = [WalletsModel1, WalletsModel2];
+            const currentAccountModel = WalletsModel1;
+
+            httpServer.use(
+                ...getHandlers([
+                    {
+                        origin: '*',
+                        path: '/nodes/B98356E2B078F4E396E9316DAB8A1CDD2EF5CD6B66578F23F9A9BCF04D8C2A83',
+                        method: 'get',
+                        status: 200,
+                        body: {
+                            peerStatus: { isAvailable: true, lastStatusCheck: 1663685153698 },
+                            apiStatus: {
+                                restGatewayUrl: 'https://001-joey-dual.symboltest.net:3001',
+                                nodePublicKey: '05E5C0841720AE9DA737C184429002E917F74FF7A3BF8E11AC2862C4875B3D7E',
+                                nodeStatus: { apiNode: 'up', db: 'up' },
+                                restVersion: '2.4.0',
+                            },
+                            _id: '6329d2442f25ae00142e4ca3',
+                            version: 16777987,
+                            publicKey: 'B98356E2B078F4E396E9316DAB8A1CDD2EF5CD6B66578F23F9A9BCF04D8C2A83',
+                            networkGenerationHashSeed: '7FCCD304802016BEBBCD342A332F91FF1F3BB5E902988B352697BE245F48E836',
+                            networkIdentifier: 152,
+                            host: '001-joey-dual.symboltest.net',
+                            friendlyName: '001-joey-dual',
+                            lastAvailable: '2022-09-20T14:46:28.694Z',
+                            __v: 0,
+                        },
+                    },
+                ]),
+            );
+            await testStartStopHarvestingWithAccount(currentAccountModel, knownAccountModels, undefined, true);
+        });
+
         test('multisig account with 1 required cosignature - harvesting is successfully started and stopped', async () => {
             const knownAccountModels = [cosigner1AccountModel, cosigner2AccountModel, multisigAccountModel];
             const currentAccountModel = cosigner1AccountModel;
@@ -412,275 +443,307 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             const currentAccountModel = cosigner1AccountModel;
             await testStartStopHarvestingWithAccount(currentAccountModel, knownAccountModels, multisigAccountModel);
         });
+    });
 
-        const testLinkUnlinkNodePublicKey = async (
-            currentAccountModel: AccountModel,
-            knownAccountModels: AccountModel[],
-            currentSignerAccountModel?: AccountModel,
-        ) => {
-            // Test: link action
-            // Arrange:
-            const nodePublicKey = '05E5C0841720AE9DA737C184429002E917F74FF7A3BF8E11AC2862C4875B3D7E';
+    const testLinkUnlinkNodePublicKey = async (
+        currentAccountModel: AccountModel,
+        knownAccountModels: AccountModel[],
+        currentSignerAccountModel?: AccountModel,
+    ) => {
+        // Test: link action
+        // Arrange:
+        const nodePublicKey = '05E5C0841720AE9DA737C184429002E917F74FF7A3BF8E11AC2862C4875B3D7E';
 
-            const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
+        const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
 
-            if (currentSignerAccountModel && currentAccountModel.address !== currentSignerAccountModel.address) {
-                await selectMultisigAccount(currentSignerAccountModel.address, currentAccountModel.address, store);
-            }
+        if (currentSignerAccountModel && currentAccountModel.address !== currentSignerAccountModel.address) {
+            await selectMultisigAccount(currentSignerAccountModel.address, currentAccountModel.address, store);
+        }
 
-            // Act:
-            const input = await screen.findByPlaceholderText(i18n.t('form_label_network_node_url').toString());
-            await userEvent.type(input, 'https://001-joey-dual.symboltest.net:3001');
-            const keyLinksTab = await screen.findByText(i18n.t('tab_harvesting_key_links').toString());
-            userEvent.click(keyLinksTab);
+        // Act:
+        const input = await screen.findByPlaceholderText(i18n.t('form_label_network_node_url').toString());
+        await userEvent.type(input, 'https://001-joey-dual.symboltest.net:3001');
+        const keyLinksTab = await screen.findByText(i18n.t('tab_harvesting_key_links').toString());
+        userEvent.click(keyLinksTab);
 
-            expect(await screen.findByText(i18n.t('open_harvesting_keys_warning_title').toString())).toBeDefined();
-            const confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
-            userEvent.click(confirmButton);
-            expect(await screen.findByText(i18n.t('delegated_harvesting_keys_info').toString())).toBeDefined();
-            httpServer.use(
-                ...getHandlers([
-                    TestUIHelpers.getAccountsHttpResponse(
-                        currentSignerAccountModel ? currentSignerAccountModel : currentAccountModel,
-                        'post',
-                        () => ({
-                            node: { publicKey: nodePublicKey },
-                        }),
-                        () => sufficientAccountBalance,
-                        () => sufficientAccountImportance,
-                    ),
-                ]),
-            );
-            const nodeLinkButton = await screen.findByTestId('btn_linkNodeKey');
-            userEvent.click(nodeLinkButton);
-            await TestUIHelpers.confirmTransactions('Password1');
+        expect(await screen.findByText(i18n.t('open_harvesting_keys_warning_title').toString())).toBeDefined();
+        const confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
+        userEvent.click(confirmButton);
+        expect(await screen.findByText(i18n.t('delegated_harvesting_keys_info').toString())).toBeDefined();
+        httpServer.use(
+            ...getHandlers([
+                TestUIHelpers.getAccountsHttpResponse(
+                    currentSignerAccountModel ? currentSignerAccountModel : currentAccountModel,
+                    'post',
+                    () => ({
+                        node: { publicKey: nodePublicKey },
+                    }),
+                    () => sufficientAccountBalance,
+                    () => sufficientAccountImportance,
+                ),
+            ]),
+        );
+        const nodeLinkButton = await screen.findByTestId('btn_linkNodeKey');
+        userEvent.click(nodeLinkButton);
+        await TestUIHelpers.confirmTransactions('Password1');
 
-            // Assert:
-            await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
-            // in order to trigger account/currentSignerAccountInfo update
-            await store.dispatch('account/LOAD_ACCOUNT_INFO');
+        // Assert:
+        await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
+        // in order to trigger account/currentSignerAccountInfo update
+        await store.dispatch('account/LOAD_ACCOUNT_INFO');
 
-            await waitFor(
-                async () => {
-                    return expect(
-                        (await within(await screen.findByTestId('nodePublicKeyDisplay')).findByText(nodePublicKey)).textContent,
-                    ).toBe(nodePublicKey);
-                },
-                { timeout: 3_000 },
-            );
+        await waitFor(
+            async () => {
+                return expect((await within(await screen.findByTestId('nodePublicKeyDisplay')).findByText(nodePublicKey)).textContent).toBe(
+                    nodePublicKey,
+                );
+            },
+            { timeout: 3_000 },
+        );
 
-            // Test: unlink action
-            // Arrange + Act:
-            const nodeUnlinkButton = await screen.findByTestId('btn_unlinkNodeKey');
-            userEvent.click(nodeUnlinkButton);
-            await TestUIHelpers.confirmTransactions('Password1');
+        // Test: unlink action
+        // Arrange + Act:
+        const nodeUnlinkButton = await screen.findByTestId('btn_unlinkNodeKey');
+        userEvent.click(nodeUnlinkButton);
+        await TestUIHelpers.confirmTransactions('Password1');
 
-            // in order to trigger account/currentSignerAccountInfo update
-            await store.dispatch('account/LOAD_ACCOUNT_INFO');
+        // in order to trigger account/currentSignerAccountInfo update
+        await store.dispatch('account/LOAD_ACCOUNT_INFO');
 
-            // Assert:
-            await waitFor(
-                async () => expect(within(await screen.findByTestId('nodePublicKeyDisplay')).queryByText(nodePublicKey) === null),
-                { timeout: 3_000 },
-            );
-        };
+        // Assert:
+        await waitFor(async () => expect(within(await screen.findByTestId('nodePublicKeyDisplay')).queryByText(nodePublicKey) === null), {
+            timeout: 3_000,
+        });
+    };
 
-        const testLinkUnlinkAccountPublicKey = async (
-            currentAccountModel: AccountModel,
-            knownAccountModels: AccountModel[],
-            currentSignerAccountModel?: AccountModel,
-        ) => {
-            // Test: link action
-            // Arrange:
-            const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
+    const testLinkUnlinkAccountPublicKey = async (
+        currentAccountModel: AccountModel,
+        knownAccountModels: AccountModel[],
+        currentSignerAccountModel?: AccountModel,
+        privateKeyToBeImported?: string,
+        isLedger = false,
+    ) => {
+        // Test: link action
+        // Arrange:
+        const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
 
-            if (currentSignerAccountModel && currentAccountModel.address !== currentSignerAccountModel.address) {
-                await selectMultisigAccount(currentSignerAccountModel.address, currentAccountModel.address, store);
-            }
+        if (currentSignerAccountModel && currentAccountModel.address !== currentSignerAccountModel.address) {
+            await selectMultisigAccount(currentSignerAccountModel.address, currentAccountModel.address, store);
+        }
 
-            // Act:
-            const keyLinksTab = await screen.findByText(i18n.t('tab_harvesting_key_links').toString());
-            userEvent.click(keyLinksTab);
+        // Act:
+        const keyLinksTab = await screen.findByText(i18n.t('tab_harvesting_key_links').toString());
+        userEvent.click(keyLinksTab);
 
-            expect(await screen.findByText(i18n.t('open_harvesting_keys_warning_title').toString())).toBeDefined();
-            let confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
-            userEvent.click(confirmButton);
-            expect(await screen.findByText(i18n.t('delegated_harvesting_keys_info').toString())).toBeDefined();
-            httpServer.use(
-                ...getHandlers([
-                    TestUIHelpers.getAccountsHttpResponse(
-                        currentSignerAccountModel ? currentSignerAccountModel : currentAccountModel,
-                        'post',
-                        () => {
-                            const harvestingModel: HarvestingModel = store.getters['harvesting/currentSignerHarvestingModel'];
-                            return {
-                                linked: { publicKey: harvestingModel.newRemotePublicKey },
-                            };
-                        },
-                        () => sufficientAccountBalance,
-                        () => sufficientAccountImportance,
-                    ),
-                ]),
-            );
-            const nodeLinkButton = await screen.findByTestId('btn_linkAccountKey');
-            userEvent.click(nodeLinkButton);
-            userEvent.click(await screen.findByText('Select'));
+        expect(await screen.findByText(i18n.t('open_harvesting_keys_warning_title').toString())).toBeDefined();
+        let confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
+        userEvent.click(confirmButton);
+        expect(await screen.findByText(i18n.t('delegated_harvesting_keys_info').toString())).toBeDefined();
+        httpServer.use(
+            ...getHandlers([
+                TestUIHelpers.getAccountsHttpResponse(
+                    currentSignerAccountModel ? currentSignerAccountModel : currentAccountModel,
+                    'post',
+                    () => {
+                        const harvestingModel: HarvestingModel = store.getters['harvesting/currentSignerHarvestingModel'];
+                        return {
+                            linked: { publicKey: harvestingModel.newRemotePublicKey },
+                        };
+                    },
+                    () => sufficientAccountBalance,
+                    () => sufficientAccountImportance,
+                ),
+            ]),
+        );
+        const nodeLinkButton = await screen.findByTestId('btn_linkAccountKey');
+        userEvent.click(nodeLinkButton);
+        userEvent.click(await screen.findByText('Select'));
+        if (privateKeyToBeImported) {
+            userEvent.click(await screen.findByText(i18n.t('import_key_manually').toString()));
+            const privateKeyInput = await screen.findByTestId('privateKey');
+            await userEvent.type(privateKeyInput, privateKeyToBeImported);
+        } else {
             userEvent.click(await screen.findByText(i18n.t('generate_random_public_key').toString()));
-            confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
-            userEvent.click(confirmButton);
+        }
+        confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
+        userEvent.click(confirmButton);
 
-            await TestUIHelpers.confirmTransactions('Password1');
+        if (isLedger) {
+            await TestUIHelpers.unlockProfile('Password1');
+            // end of test for the ledger case
+            return;
+        }
+        await TestUIHelpers.confirmTransactions('Password1');
 
-            // Assert:
-            await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
-            // in order to trigger account/currentSignerAccountInfo update
-            await store.dispatch('account/LOAD_ACCOUNT_INFO');
-            let remoteAccountPublicKey;
-            await waitFor(
-                async () => {
-                    const currentSignerAccountInfo: AccountInfo = store.getters['account/currentSignerAccountInfo'];
-                    if (!currentSignerAccountInfo?.supplementalPublicKeys?.linked?.publicKey) {
-                        return undefined;
-                    }
-                    remoteAccountPublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.linked?.publicKey;
-                    return expect(
-                        await within(await screen.findByTestId('accountPublicKeyDisplay')).findByText(remoteAccountPublicKey),
-                    ).toBeDefined();
-                },
-                { timeout: 3_000 },
-            );
+        // Assert:
+        await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
+        // in order to trigger account/currentSignerAccountInfo update
+        await store.dispatch('account/LOAD_ACCOUNT_INFO');
+        let remoteAccountPublicKey;
+        await waitFor(
+            async () => {
+                const currentSignerAccountInfo: AccountInfo = store.getters['account/currentSignerAccountInfo'];
+                if (!currentSignerAccountInfo?.supplementalPublicKeys?.linked?.publicKey) {
+                    return undefined;
+                }
+                remoteAccountPublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.linked?.publicKey;
+                if (privateKeyToBeImported) {
+                    expect(Convert.uint8ToHex(KeyPair.createKeyPairFromPrivateKeyString(privateKeyToBeImported).publicKey)).toBe(
+                        remoteAccountPublicKey,
+                    );
+                }
+                return expect(
+                    await within(await screen.findByTestId('accountPublicKeyDisplay')).findByText(remoteAccountPublicKey),
+                ).toBeDefined();
+            },
+            { timeout: 3_000 },
+        );
 
-            // Test: unlink action
-            // Arrange + Act:
-            const nodeUnlinkButton = await screen.findByTestId('btn_unlinkAccountKey');
-            userEvent.click(nodeUnlinkButton);
-            await TestUIHelpers.confirmTransactions('Password1');
+        // Test: unlink action
+        // Arrange + Act:
+        const nodeUnlinkButton = await screen.findByTestId('btn_unlinkAccountKey');
+        userEvent.click(nodeUnlinkButton);
+        await TestUIHelpers.confirmTransactions('Password1');
 
-            // in order to trigger account/currentSignerAccountInfo update
-            await store.dispatch('account/LOAD_ACCOUNT_INFO');
+        // in order to trigger account/currentSignerAccountInfo update
+        await store.dispatch('account/LOAD_ACCOUNT_INFO');
 
-            // Assert:
-            await waitFor(
-                async () =>
-                    expect(within(await screen.findByTestId('accountPublicKeyDisplay')).queryByText(remoteAccountPublicKey) === null),
-                { timeout: 3_000 },
-            );
-        };
+        // Assert:
+        await waitFor(
+            async () => expect(within(await screen.findByTestId('accountPublicKeyDisplay')).queryByText(remoteAccountPublicKey) === null),
+            { timeout: 3_000 },
+        );
+    };
 
-        const testLinkUnlinkVrfPublicKey = async (
-            currentAccountModel: AccountModel,
-            knownAccountModels: AccountModel[],
-            currentSignerAccountModel?: AccountModel,
-        ) => {
-            // Test: link action
-            // Arrange:
-            const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
+    const testLinkUnlinkVrfPublicKey = async (
+        currentAccountModel: AccountModel,
+        knownAccountModels: AccountModel[],
+        currentSignerAccountModel?: AccountModel,
+    ) => {
+        // Test: link action
+        // Arrange:
+        const store = await renderComponentWithAccount(currentAccountModel, knownAccountModels);
 
-            if (currentSignerAccountModel && currentAccountModel.address !== currentSignerAccountModel.address) {
-                await selectMultisigAccount(currentSignerAccountModel.address, currentAccountModel.address, store);
-            }
+        if (currentSignerAccountModel && currentAccountModel.address !== currentSignerAccountModel.address) {
+            await selectMultisigAccount(currentSignerAccountModel.address, currentAccountModel.address, store);
+        }
 
-            // Act:
-            const keyLinksTab = await screen.findByText(i18n.t('tab_harvesting_key_links').toString());
-            userEvent.click(keyLinksTab);
+        // Act:
+        const keyLinksTab = await screen.findByText(i18n.t('tab_harvesting_key_links').toString());
+        userEvent.click(keyLinksTab);
 
-            expect(await screen.findByText(i18n.t('open_harvesting_keys_warning_title').toString())).toBeDefined();
-            let confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
-            userEvent.click(confirmButton);
-            expect(await screen.findByText(i18n.t('delegated_harvesting_keys_info').toString())).toBeDefined();
-            httpServer.use(
-                ...getHandlers([
-                    TestUIHelpers.getAccountsHttpResponse(
-                        currentSignerAccountModel ? currentSignerAccountModel : currentAccountModel,
-                        'post',
-                        () => {
-                            const harvestingModel: HarvestingModel = store.getters['harvesting/currentSignerHarvestingModel'];
-                            return {
-                                vrf: { publicKey: harvestingModel.newVrfPublicKey },
-                            };
-                        },
-                        () => sufficientAccountBalance,
-                        () => sufficientAccountImportance,
-                    ),
-                ]),
-            );
-            const nodeLinkButton = await screen.findByTestId('btn_linkVrfKey');
-            userEvent.click(nodeLinkButton);
-            userEvent.click(await screen.findByText('Select'));
-            userEvent.click(await screen.findByText(i18n.t('generate_random_public_key').toString()));
-            confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
-            userEvent.click(confirmButton);
+        expect(await screen.findByText(i18n.t('open_harvesting_keys_warning_title').toString())).toBeDefined();
+        let confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
+        userEvent.click(confirmButton);
+        expect(await screen.findByText(i18n.t('delegated_harvesting_keys_info').toString())).toBeDefined();
+        httpServer.use(
+            ...getHandlers([
+                TestUIHelpers.getAccountsHttpResponse(
+                    currentSignerAccountModel ? currentSignerAccountModel : currentAccountModel,
+                    'post',
+                    () => {
+                        const harvestingModel: HarvestingModel = store.getters['harvesting/currentSignerHarvestingModel'];
+                        return {
+                            vrf: { publicKey: harvestingModel.newVrfPublicKey },
+                        };
+                    },
+                    () => sufficientAccountBalance,
+                    () => sufficientAccountImportance,
+                ),
+            ]),
+        );
+        const nodeLinkButton = await screen.findByTestId('btn_linkVrfKey');
+        userEvent.click(nodeLinkButton);
+        userEvent.click(await screen.findByText('Select'));
+        userEvent.click(await screen.findByText(i18n.t('generate_random_public_key').toString()));
+        confirmButton = await screen.findByRole('button', { name: i18n.t('confirm').toString() });
+        userEvent.click(confirmButton);
 
-            await TestUIHelpers.confirmTransactions('Password1');
+        await TestUIHelpers.confirmTransactions('Password1');
 
-            // Assert:
-            await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
-            // in order to trigger account/currentSignerAccountInfo update
-            await store.dispatch('account/LOAD_ACCOUNT_INFO');
-            let vrfPublicKey;
-            await waitFor(
-                async () => {
-                    const currentSignerAccountInfo: AccountInfo = store.getters['account/currentSignerAccountInfo'];
-                    if (!currentSignerAccountInfo?.supplementalPublicKeys?.vrf?.publicKey) {
-                        return undefined;
-                    }
-                    vrfPublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.vrf?.publicKey;
-                    return expect(await within(await screen.findByTestId('vrfPublicKeyDisplay')).findByText(vrfPublicKey)).toBeDefined();
-                },
-                { timeout: 3_000 },
-            );
+        // Assert:
+        await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
+        // in order to trigger account/currentSignerAccountInfo update
+        await store.dispatch('account/LOAD_ACCOUNT_INFO');
+        let vrfPublicKey;
+        await waitFor(
+            async () => {
+                const currentSignerAccountInfo: AccountInfo = store.getters['account/currentSignerAccountInfo'];
+                if (!currentSignerAccountInfo?.supplementalPublicKeys?.vrf?.publicKey) {
+                    return undefined;
+                }
+                vrfPublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.vrf?.publicKey;
+                return expect(await within(await screen.findByTestId('vrfPublicKeyDisplay')).findByText(vrfPublicKey)).toBeDefined();
+            },
+            { timeout: 3_000 },
+        );
 
-            // Test: unlink action
-            // Arrange + Act:
-            const nodeUnlinkButton = await screen.findByTestId('btn_unlinkVrfKey');
-            userEvent.click(nodeUnlinkButton);
-            await TestUIHelpers.confirmTransactions('Password1');
+        // Test: unlink action
+        // Arrange + Act:
+        const nodeUnlinkButton = await screen.findByTestId('btn_unlinkVrfKey');
+        userEvent.click(nodeUnlinkButton);
+        await TestUIHelpers.confirmTransactions('Password1');
 
-            // in order to trigger account/currentSignerAccountInfo update
-            await store.dispatch('account/LOAD_ACCOUNT_INFO');
+        // in order to trigger account/currentSignerAccountInfo update
+        await store.dispatch('account/LOAD_ACCOUNT_INFO');
 
-            // Assert:
-            await waitFor(async () => expect(within(await screen.findByTestId('vrfPublicKeyDisplay')).queryByText(vrfPublicKey) === null), {
-                timeout: 3_000,
-            });
-        };
+        // Assert:
+        await waitFor(async () => expect(within(await screen.findByTestId('vrfPublicKeyDisplay')).queryByText(vrfPublicKey) === null), {
+            timeout: 3_000,
+        });
+    };
 
-        describe('single key link transactions', () => {
-            test('regular account - link/unlink node public key', async () => {
-                const knownAccountModels = [WalletsModel1, WalletsModel2];
-                const currentAccountModel = WalletsModel1;
-                await testLinkUnlinkNodePublicKey(currentAccountModel, knownAccountModels);
-            });
+    describe('single key link transactions', () => {
+        test('regular account - link/unlink node public key', async () => {
+            const knownAccountModels = [WalletsModel1, WalletsModel2];
+            const currentAccountModel = WalletsModel1;
+            await testLinkUnlinkNodePublicKey(currentAccountModel, knownAccountModels);
+        });
 
-            test('multisig account - link/unlink node public key', async () => {
-                const knownAccountModels = [cosigner1AccountModel, cosigner2AccountModel, multisigAccountModel];
-                const currentAccountModel = cosigner1AccountModel;
-                await testLinkUnlinkNodePublicKey(currentAccountModel, knownAccountModels, multisigAccountModel);
-            });
+        test('multisig account - link/unlink node public key', async () => {
+            const knownAccountModels = [cosigner1AccountModel, cosigner2AccountModel, multisigAccountModel];
+            const currentAccountModel = cosigner1AccountModel;
+            await testLinkUnlinkNodePublicKey(currentAccountModel, knownAccountModels, multisigAccountModel);
+        });
 
-            test('regular account - link/unlink account public key', async () => {
-                const knownAccountModels = [WalletsModel1, WalletsModel2];
-                const currentAccountModel = WalletsModel1;
-                await testLinkUnlinkAccountPublicKey(currentAccountModel, knownAccountModels);
-            });
+        test('regular account - link/unlink generated account public key', async () => {
+            const knownAccountModels = [WalletsModel1, WalletsModel2];
+            const currentAccountModel = WalletsModel1;
+            await testLinkUnlinkAccountPublicKey(currentAccountModel, knownAccountModels);
+        });
 
-            test('multisig account - link/unlink account public key', async () => {
-                const knownAccountModels = [cosigner1AccountModel, cosigner2AccountModel, multisigAccountModel];
-                const currentAccountModel = cosigner1AccountModel;
-                await testLinkUnlinkAccountPublicKey(currentAccountModel, knownAccountModels, multisigAccountModel);
-            });
+        test('regular account - link/unlink imported account public key', async () => {
+            const knownAccountModels = [WalletsModel1, WalletsModel2];
+            const currentAccountModel = WalletsModel1;
+            await testLinkUnlinkAccountPublicKey(currentAccountModel, knownAccountModels, undefined, account1Params.privateKey);
+        });
 
-            test('regular account - link/unlink vrf public key', async () => {
-                const knownAccountModels = [WalletsModel1, WalletsModel2];
-                const currentAccountModel = WalletsModel1;
-                await testLinkUnlinkVrfPublicKey(currentAccountModel, knownAccountModels);
-            });
+        test('regular account - link/unlink imported account public key when using Ledger', async () => {
+            const knownAccountModels = [
+                { ...WalletsModel1, type: AccountType.LEDGER },
+                { ...WalletsModel2, type: AccountType.LEDGER },
+            ];
+            const currentAccountModel = knownAccountModels[0];
+            jest.spyOn(ProfileService.prototype, 'getProfileByName').mockImplementation((profileName) => getTestProfile(profileName));
+            await testLinkUnlinkAccountPublicKey(currentAccountModel, knownAccountModels, undefined, account1Params.privateKey, true);
+        });
 
-            test('multisig account - link/unlink vrf public key', async () => {
-                const knownAccountModels = [cosigner1AccountModel, cosigner2AccountModel, multisigAccountModel];
-                const currentAccountModel = cosigner1AccountModel;
-                await testLinkUnlinkVrfPublicKey(currentAccountModel, knownAccountModels, multisigAccountModel);
-            });
+        test('multisig account - link/unlink account public key', async () => {
+            const knownAccountModels = [cosigner1AccountModel, cosigner2AccountModel, multisigAccountModel];
+            const currentAccountModel = cosigner1AccountModel;
+            await testLinkUnlinkAccountPublicKey(currentAccountModel, knownAccountModels, multisigAccountModel);
+        });
+
+        test('regular account - link/unlink vrf public key', async () => {
+            const knownAccountModels = [WalletsModel1, WalletsModel2];
+            const currentAccountModel = WalletsModel1;
+            await testLinkUnlinkVrfPublicKey(currentAccountModel, knownAccountModels);
+        });
+
+        test('multisig account - link/unlink vrf public key', async () => {
+            const knownAccountModels = [cosigner1AccountModel, cosigner2AccountModel, multisigAccountModel];
+            const currentAccountModel = cosigner1AccountModel;
+            await testLinkUnlinkVrfPublicKey(currentAccountModel, knownAccountModels, multisigAccountModel);
         });
     });
 });

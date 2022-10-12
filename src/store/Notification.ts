@@ -57,6 +57,9 @@ export default {
         add: (state, payload: HistoryItem) => {
             // strip tags to remove XSS vulnerability
             const level = payload.level || 'warning';
+            if (typeof payload.message !== 'string') {
+                return;
+            }
             const message = FilterHelpers.stripFilter(payload.message);
             const history = state.history;
             history.push({ level: level, message: message });

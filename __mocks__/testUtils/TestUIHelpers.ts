@@ -41,7 +41,7 @@ export default class TestUIHelpers {
 
     public static async confirmTransactions(profilePassword: string) {
         expect(await screen.findByText(i18n.t('modal_title_transaction_confirmation').toString())).toBeDefined();
-        await this.unlockProfile(profilePassword);
+        return await this.unlockProfile(profilePassword);
     }
 
     public static async unlockProfile(profilePassword: string) {
@@ -49,6 +49,7 @@ export default class TestUIHelpers {
         userEvent.type(passwordInput, profilePassword);
         const confirmButton = await screen.findByTestId('unlockProfileConfirmButton');
         userEvent.click(confirmButton);
+        return;
     }
 
     public static async expectToastMessage(msgKey: string, type: string, msgTimeout?: number, timeout?: number) {
