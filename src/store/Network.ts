@@ -658,22 +658,21 @@ export default {
             commit('currentHeight', height);
         },
 
-        LOAD_TRANSACTION_FEES({ commit, rootGetters }) {
+        async LOAD_TRANSACTION_FEES({ commit, rootGetters }) {
             commit('setFeesConfig', feesConfig);
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const networkRepository = repositoryFactory.createNetworkRepository();
-            networkRepository.getTransactionFees().subscribe((fees: TransactionFees) => {
-                commit(
-                    'transactionFees',
-                    new TransactionFees(
-                        fees.averageFeeMultiplier < fees.minFeeMultiplier ? fees.minFeeMultiplier : fees.averageFeeMultiplier,
-                        fees.medianFeeMultiplier < fees.minFeeMultiplier ? fees.minFeeMultiplier : fees.medianFeeMultiplier,
-                        fees.highestFeeMultiplier,
-                        fees.lowestFeeMultiplier,
-                        fees.minFeeMultiplier,
-                    ),
-                );
-            });
+            const fees: TransactionFees = await networkRepository.getTransactionFees().toPromise();
+            commit(
+                'transactionFees',
+                new TransactionFees(
+                    fees.averageFeeMultiplier < fees.minFeeMultiplier ? fees.minFeeMultiplier : fees.averageFeeMultiplier,
+                    fees.medianFeeMultiplier < fees.minFeeMultiplier ? fees.minFeeMultiplier : fees.medianFeeMultiplier,
+                    fees.highestFeeMultiplier,
+                    fees.lowestFeeMultiplier,
+                    fees.minFeeMultiplier,
+                ),
+            );
         },
     },
 };

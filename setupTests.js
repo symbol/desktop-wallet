@@ -1,6 +1,11 @@
 import Vue from 'vue';
+import { TextEncoder, TextDecoder } from 'util';
 
 console.log('Setting up global test stubs...');
+
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 document.createRange = () => ({
     setStart: () => {
         return;

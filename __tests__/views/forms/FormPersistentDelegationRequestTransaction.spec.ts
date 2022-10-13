@@ -18,6 +18,7 @@ import { HarvestingModel } from '@/core/database/entities/HarvestingModel';
 import { CommonHelpers } from '@/core/utils/CommonHelpers';
 import i18n from '@/language/index';
 import { HarvestingService } from '@/services/HarvestingService';
+import { MultisigService } from '@/services/MultisigService';
 import { ProfileService } from '@/services/ProfileService';
 import FormPersistentDelegationRequestTransaction from '@/views/forms/FormPersistentDelegationRequestTransaction/FormPersistentDelegationRequestTransaction.vue';
 import {
@@ -38,7 +39,7 @@ import { screen, waitFor, within } from '@testing-library/vue';
 import flushPromises from 'flush-promises';
 import WS from 'jest-websocket-mock';
 import { setupServer } from 'msw/node';
-import { AccountInfo, Convert, KeyPair } from 'symbol-sdk';
+import { AccountInfo, Address, Convert, KeyPair } from 'symbol-sdk';
 
 // mock local storage
 jest.mock('@/core/database/backends/LocalStorageBackend', () => ({
@@ -60,14 +61,17 @@ afterEach(async () => {
     httpServer.resetHandlers();
     jest.clearAllMocks();
 });
-afterAll(() => httpServer.close());
+afterAll(() => {
+    httpServer.close();
+    websocketServer.close();
+});
 
 const testProfileName = 'profile1';
 const testProfilePassword = 'Password1';
 const sufficientAccountBalance = '10000000001';
 const sufficientAccountImportance = '1';
 
-describe('components/FormPersistentDelegationRequestTransaction', () => {
+describe('views/forms/FormPersistentDelegationRequestTransaction', () => {
     const renderPage = (currentAccount: AccountModel, knownAccounts: string[]) => {
         return TestUIHelpers.renderComponentWithStore(
             FormPersistentDelegationRequestTransaction,
@@ -107,7 +111,12 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             );
 
             const { store } = await renderPage(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
-            await screen.findByText(currentAccountModel.address);
+            await screen.findByText(
+                MultisigService.getAccountLabel(
+                    Address.createFromRawAddress(currentAccountModel.address),
+                    store.getters['account/knownAccounts'],
+                ),
+            );
             await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(accountBalance));
 
             // Act:
@@ -149,7 +158,12 @@ describe('components/FormPersistentDelegationRequestTransaction', () => {
             );
 
             const { store } = await renderPage(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
-            await screen.findByText(currentAccountModel.address);
+            await screen.findByText(
+                MultisigService.getAccountLabel(
+                    Address.createFromRawAddress(currentAccountModel.address),
+                    store.getters['account/knownAccounts'],
+                ),
+            );
             await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(sufficientAccountBalance));
 
             // Act:

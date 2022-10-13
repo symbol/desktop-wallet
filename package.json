@@ -12,7 +12,7 @@
         "start": "npm run node-hid:prebuild-install && electron .",
         "test": "TZ=UTC vue-cli-service test:unit --testTimeout=30000",
         "test:jenkins": "TZ=UTC vue-cli-service test:unit --coverage --testTimeout=30000",
-        "test:debug": "node --inspect-brk node_modules/.bin/vue-cli-service test:unit --watch --runInBand --testTimeout=30000",
+        "test:debug": "node --inspect-brk node_modules/.bin/vue-cli-service test:unit --watch --runInBand --testTimeout=600000",
         "dev": "vue-cli-service serve ",
         "build": "npm run build:web",
         "build:web": "rimraf dist && mkdir dist && tsc && vue-cli-service build",

@@ -51,7 +51,7 @@ export const simpleWallet2 = SimpleWallet.createFromPrivateKey(
 );
 
 export const WalletsModel1: AccountModel = {
-    id: 'someId',
+    id: 'WalletsModel1',
     node: '',
     profileName: 'profile1',
     name: account1Params.accountName,
@@ -64,7 +64,7 @@ export const WalletsModel1: AccountModel = {
 };
 
 export const WalletsModel2: AccountModel = {
-    id: 'someId2',
+    id: 'WalletsModel2',
     node: '',
     profileName: 'profile1',
     name: account2Params.accountName,

@@ -9,7 +9,7 @@
         class="inputs-container"
     >
         <ErrorTooltip :errors="errors">
-            <input v-model="relativeValue" class="input-style amount-input-size" type="text" />
+            <input v-model="relativeValue" class="input-style amount-input-size" type="text" data-testid="relativeAmount" />
             <Button
                 v-if="!isOffline && !isAggregate"
                 type="text"

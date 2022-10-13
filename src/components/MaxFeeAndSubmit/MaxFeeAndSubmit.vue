@@ -18,6 +18,7 @@
                         type="submit"
                         :class="'centered-button button-style submit-button ' + submitButtonClasses"
                         :disabled="disableSubmit"
+                        data-testid="submitButton"
                         @click="$emit('button-clicked')"
                     >
                         {{ $t(submitButtonText) }}

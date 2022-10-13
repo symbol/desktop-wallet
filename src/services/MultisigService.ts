@@ -77,7 +77,7 @@ export class MultisigService {
         }
         const currentSigner: Signer = {
             address: currentAccountAddress,
-            label: this.getAccountLabel(currentAccountAddress, knownAccounts),
+            label: MultisigService.getAccountLabel(currentAccountAddress, knownAccounts),
             multisig: currentMultisigAccountInfo?.isMultisig() || false,
             requiredCosigApproval: Math.max(childMinApproval || 0, currentMultisigAccountInfo?.minApproval || 0),
             requiredCosigRemoval: Math.max(childMinRemoval || 0, currentMultisigAccountInfo?.minRemoval || 0),
@@ -191,7 +191,7 @@ export class MultisigService {
         return false;
     }
 
-    private getAccountLabel(address: Address, accounts: AccountModel[]): string {
+    public static getAccountLabel(address: Address, accounts: AccountModel[]): string {
         const account = accounts.find((wlt) => address.plain() === wlt.address);
         return (account && account.name) || address.plain();
     }
