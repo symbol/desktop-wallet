@@ -21,10 +21,6 @@ import { networkMock } from '@MOCKS/network';
 
 describe('components/QRCode/UploadQRCode', () => {
     const getUploadQRCodeWrapper = (state = {}, props = {}) => {
-        const StubComponent = {
-            template: '<div><slot /></div>',
-        };
-
         const networkStore = {
             namespaced: true,
             state: { feesConfig: undefined },
@@ -130,13 +126,13 @@ describe('components/QRCode/UploadQRCode', () => {
         const runBasicOnTabClickTests = (name, expectResult) => {
             it(`set scanActive to ${expectResult} when name is ${name}`, async () => {
                 // Arrange:
-                const wrapper = getUploadQRCodeWrapper(
-                    {},
-                    {
-                        scanActive: !expectResult,
-                    },
-                );
+                const wrapper = getUploadQRCodeWrapper({}, {});
+
                 const vm = wrapper.vm as UploadQRCodeTs;
+
+                wrapper.setData({
+                    scanActive: !expectResult,
+                });
 
                 // Act:
                 vm.onTabClick(name);
