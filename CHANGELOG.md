@@ -7,8 +7,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ### Milestone: Dependency version upgrade
 
 #### Changed
-- Updated symbol-sdk version to 2.0.3
-
+- Upgraded the dependency `symbol-sdk` version to `v2.0.3`
 
 ## [1.0.11][v1.0.11] - 19-Aug-2022
 ### Milestone: Bug fixes and security protection improvements
