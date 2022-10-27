@@ -2,7 +2,7 @@
     "name": "symbol-desktop-wallet",
     "description": "Symbol Wallet",
     "homepage": "https://github.com/symbol/desktop-wallet",
-    "version": "1.0.12",
+    "version": "1.0.13",
     "repository": {
         "type": "git",
         "url": "https://github.com/symbol/desktop-wallet.git"
