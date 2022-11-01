@@ -20,6 +20,9 @@ import { QRCodeType } from 'symbol-qr-library';
 import { networkMock } from '@MOCKS/network';
 
 describe('components/QRCode/UploadQRCode', () => {
+    beforeEach(() => {
+        URL.createObjectURL = jest.fn();
+    });
     const getUploadQRCodeWrapper = (state = {}, props = {}) => {
         const networkStore = {
             namespaced: true,
@@ -147,7 +150,7 @@ describe('components/QRCode/UploadQRCode', () => {
     });
 
     describe('onBeforeUpload', () => {
-        it('process image qr and pass data to qrcodeCapture', () => {
+        it('process image qr and pass data to qrcodeCapture', async (done) => {
             // Arrange:
             const wrapper = getUploadQRCodeWrapper({}, {});
             const vm = wrapper.vm as UploadQRCodeTs;
@@ -158,26 +161,36 @@ describe('components/QRCode/UploadQRCode', () => {
 
             vm.$refs.qrcodeCapture.onChangeInput = jest.fn();
 
-            const fileReaderSpy = jest.spyOn(FileReader.prototype, 'readAsDataURL').mockImplementation(() => null);
+            // create image file
+            const imageData =
+                'iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAAIElEQVRoge3BAQEAAACCIP+vbkhAAQAAAAAAAAAAwKMBJ0IAAWSOMT4AAAAASUVORK5CYII=';
+            const dataURI = `data:image/png;base64,${imageData}`;
 
-            const file = {
-                name: 'invoice_qr.png',
-                size: 50000,
+            // convert image to byte
+            const binary = atob(imageData);
+            const array = [];
+            for (let i = 0; i < binary.length; i++) {
+                array.push(binary.charCodeAt(i));
+            }
+
+            const file = new File([new Uint8Array(array)], 'invoice_qr.png', {
                 type: 'image/png',
-            };
+            });
 
             // Act:
-            vm.onBeforeUpload(file);
+            const result = await vm.onBeforeUpload(file);
 
             // Assert:
+            expect(result).toBe(false);
             expect(vm.invalidType).toBe(false);
             expect(vm.imageFileName).toBe('invoice_qr.png');
+            expect(vm.image).toBe(dataURI);
             expect(vm.$refs.qrcodeCapture.onChangeInput).toHaveBeenCalledWith({
                 target: {
                     files: [file],
                 },
             });
-            expect(fileReaderSpy).toHaveBeenCalledWith(file);
+            done();
         });
     });
 });
