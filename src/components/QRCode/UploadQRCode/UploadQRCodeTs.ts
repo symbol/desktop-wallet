@@ -109,7 +109,7 @@ export default class UploadQRCodeTs extends Vue {
      * It intercepts the upload process and pass the file to qrcodeCapture component
      * @param file uploaded
      */
-    public onBeforeUpload(file) {
+    public async onBeforeUpload(file) {
         this.reset();
         const evt = {
             target: {
@@ -118,14 +118,21 @@ export default class UploadQRCodeTs extends Vue {
         };
         this.$refs.qrcodeCapture.onChangeInput(evt); // to pass the evt to qrcode image decoder
         this.imageFileName = file.name;
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload = (event) => {
-            // called once readAsDataURL is completed
-            this.image = event.target.result as string;
-        };
+        this.image = await this.readFile(file);
 
         return false; //return false now since we have the file passed to qrcodeCapture component
+    }
+
+    private readFile(file): Promise<string> {
+        return new Promise((resolve) => {
+            const fileReader = new FileReader();
+
+            fileReader.readAsDataURL(file);
+            fileReader.onload = (event) => {
+                const result = event.target.result as string;
+                resolve(result);
+            };
+        });
     }
 
     private reset() {
