@@ -21,3 +21,4 @@ document.createRange = () => ({
 
 // eslint-disable-next-line no-undef
 Vue.$toast = jest.fn();
+URL.createObjectURL = jest.fn();
