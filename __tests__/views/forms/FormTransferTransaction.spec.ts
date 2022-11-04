@@ -1,133 +1,152 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils';
-import Vuex from 'vuex';
-import VueRouter from 'vue-router';
+import { AccountModel } from '@/core/database/entities/AccountModel';
 import i18n from '@/language';
-import VueI18n from 'vue-i18n';
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel';
-
-//@ts-ignore
 import FormTransferTransaction from '@/views/forms/FormTransferTransaction/FormTransferTransaction.vue';
-import { WalletsModel1 } from '@MOCKS/Accounts';
-import { networkMock } from '@MOCKS/network';
-import { PublicAccount, MosaicId, Address, NetworkType } from 'symbol-sdk';
+import {
+    account1,
+    account2,
+    cosigner1AccountModel,
+    cosigner2AccountModel,
+    multisigAccountModel,
+    WalletsModel1,
+    WalletsModel2,
+} from '@MOCKS/Accounts';
+import { getHandlers, responses } from '@MOCKS/Http';
+import TestUIHelpers from '@MOCKS/testUtils/TestUIHelpers';
+import userEvent from '@testing-library/user-event';
+import { fireEvent, screen, waitFor } from '@testing-library/vue';
+import flushPromises from 'flush-promises';
+import WS from 'jest-websocket-mock';
+import { setupServer } from 'msw/node';
 
-const localVue = createLocalVue();
-localVue.use(Vuex);
-localVue.use(VueI18n);
-localVue.use(VueRouter);
+// mock local storage
+jest.mock('@/core/database/backends/LocalStorageBackend', () => ({
+    LocalStorageBackend: jest.requireActual('@/core/database/backends/ObjectStorageBackend').ObjectStorageBackend,
+}));
 
-/* fake store */
-const networkModule = {
-    namespaced: true,
-    getters: {
-        currentHeight: () => 100,
-        feesConfig: () => networkMock.fees,
-        networkConfiguration: () => new NetworkConfigurationModel(),
-        epochAdjustment: () => 0,
-        networkType: () => NetworkType.TEST_NET,
-    },
-};
-
-const mosaicModule = {
-    namespaced: true,
-    getters: {
-        balanceMosaics: () => [
-            {
-                mosaicIdHex: networkMock.currency.mosaicIdHex,
-                balance: 0,
-            },
-        ],
-        mosaics: () => [],
-        networkMosaic: () => new MosaicId(networkMock.currency.mosaicIdHex),
-        networkCurrency: () => {
-            return {
-                mosaicIdHex: networkMock.currency.mosaicIdHex,
-                namespaceIdHex: networkMock.currency.mosaicIdHex,
-                namespaceIdFullname: networkMock.currency.name,
-                divisibility: networkMock.currency.divisibility,
-                transferable: networkMock.currency.transferable,
-                supplyMutable: networkMock.currency.supplyMutable,
-                restrictable: networkMock.currency.restrictable,
-                ticker: networkMock.currency.name,
-            };
-        },
-    },
-};
-
-const accountModule = {
-    namespaced: true,
-    getters: {
-        currentAccount: () => WalletsModel1,
-        knownAccounts: () => [WalletsModel1],
-        currentRecipient: () => PublicAccount.createFromPublicKey('0'.repeat(64), 152),
-        currentSigner: () => {
-            return {
-                label: 'test-1',
-                address: Address.createFromRawAddress(WalletsModel1.address),
-                multisig: WalletsModel1.isMultisig,
-                requiredCosignatures: 0,
-            };
-        },
-    },
-};
-
-const appModule = {
-    namespaced: true,
-    getters: {
-        defaultFee: () => networkMock.fees,
-    },
-};
-
-const store = new Vuex.Store({
-    modules: {
-        network: networkModule,
-        mosaic: mosaicModule,
-        account: accountModule,
-        app: appModule,
-    },
-});
-store.commit = jest.fn();
-store.dispatch = jest.fn();
-
-const router = new VueRouter();
-
-const options = {
-    localVue,
-    i18n,
-    store,
-    router,
-};
-let wrapper;
-let vm;
-beforeEach(() => {
-    wrapper = shallowMount(FormTransferTransaction, options);
-    vm = wrapper.vm;
-});
-afterEach(() => {
-    wrapper.destroy();
-    vm = undefined;
+// mock http server with base responses denoted by * which are basic responses for the accounts __mock__/Accounts.ts
+const httpServer = setupServer(...getHandlers(responses['*']));
+// mock websocket server
+const websocketServer = new WS('wss://001-joey-dual.symboltest.net:3001/ws', { jsonProtocol: true });
+websocketServer.on('connection', (socket) => {
+    console.log('Websocket client connected!');
+    socket.send('{"uid":"FAKE_UID"}');
 });
 
-describe('FormTransferTransaction', () => {
-    it('getTransactions method should return correct absolut amount (network currency).', async () => {
-        // arrange
-        const amount = '1.123456';
-        wrapper.setData({
-            formItems: {
-                attachedMosaics: [
-                    {
-                        uid: 123,
-                        mosaicHex: networkMock.currency.mosaicIdHex,
-                        amount,
-                    },
-                ],
-            },
+beforeAll(() => httpServer.listen());
+afterEach(async () => {
+    await flushPromises();
+    httpServer.resetHandlers();
+    jest.clearAllMocks();
+});
+afterAll(() => {
+    httpServer.close();
+    websocketServer.close();
+});
+
+const testProfileName = 'profile1';
+const testProfilePassword = 'Password1';
+const sufficientAccountBalance = '10000000001';
+
+describe('views/forms/FormTransferTransaction', () => {
+    const renderPage = (currentAccount: AccountModel, knownAccounts: string[]) => {
+        return TestUIHelpers.renderComponentWithStore(FormTransferTransaction, currentAccount, knownAccounts, testProfileName);
+    };
+
+    const renderPageWithAccount = (currentAccount: AccountModel, knownAccounts: AccountModel[]) => {
+        return TestUIHelpers.renderComponentWithAccount(
+            FormTransferTransaction,
+            currentAccount,
+            knownAccounts,
+            testProfileName,
+            sufficientAccountBalance,
+        );
+    };
+
+    test('renders component', async () => {
+        // Arrange + Act:
+        const currentAccountModel = WalletsModel1;
+        await renderPage(currentAccountModel, [account1.address.plain(), account2.address.plain()]);
+
+        // Assert:
+        expect(await screen.findByText(i18n.t('sender').toString() + ':')).toBeDefined();
+        expect(await screen.findByText(currentAccountModel.address)).toBeDefined();
+        const sendButton = (await screen.findByTestId('submitButton')) as HTMLButtonElement;
+        await waitFor(async () => expect(sendButton.disabled).toBe(false), {
+            timeout: 10_000,
+        });
+    });
+
+    const testSignTxWithAccount = async (
+        currentAccountModel: AccountModel,
+        knownAccountModels: AccountModel[],
+        recipientAddress: string,
+        encryptMessage = false,
+        currentSignerAccountModel?: AccountModel,
+    ) => {
+        // Arrange:
+        const store = await renderPageWithAccount(currentAccountModel, knownAccountModels);
+
+        if (currentSignerAccountModel && currentAccountModel.address !== currentSignerAccountModel.address) {
+            await TestUIHelpers.selectMultisigAccount(
+                currentSignerAccountModel.address,
+                currentAccountModel.address,
+                store,
+                sufficientAccountBalance,
+            );
+        }
+
+        const recipientInput = await screen.findByPlaceholderText(i18n.t('placeholder_address_or_alias').toString());
+        await userEvent.type(recipientInput, recipientAddress);
+
+        const amountInput = (await screen.findByTestId('relativeAmount')) as HTMLInputElement;
+        fireEvent.update(amountInput, '1');
+
+        const messageInput = await screen.findByPlaceholderText(i18n.t('please_enter_notes').toString());
+        userEvent.type(messageInput, 'Here is a message');
+
+        if (encryptMessage) {
+            const encryptMessageCheckbox = await screen.findByTestId('encryptMessage');
+            userEvent.click(encryptMessageCheckbox);
+            TestUIHelpers.unlockProfile(testProfilePassword);
+        }
+
+        const sendButton = (await screen.findByTestId('submitButton')) as HTMLButtonElement;
+        await waitFor(async () => expect(sendButton.disabled).toBe(false), {
+            timeout: 10_000,
         });
 
-        // act
-        const tx = vm.getTransactions();
+        // Act:
+        userEvent.click(sendButton);
 
-        // assert
-        expect(Number(amount) * Math.pow(10, networkMock.currency.divisibility)).toBe(tx[0].mosaics[0].amount.compact());
+        // Assert:
+        await TestUIHelpers.confirmTransactions(testProfilePassword);
+        await TestUIHelpers.expectToastMessage('success_transactions_signed', 'success');
+    };
+
+    test('regular account - sign transaction successfully', async () => {
+        // Arrange + Act:
+        const knownAccountModels = [WalletsModel1, WalletsModel2];
+        const currentAccountModel = WalletsModel1;
+        const recipientAddress = currentAccountModel.address;
+
+        await testSignTxWithAccount(currentAccountModel, knownAccountModels, recipientAddress);
+    });
+
+    test('regular account - encrypt message and sign transaction successfully', async () => {
+        // Arrange + Act:
+        const knownAccountModels = [WalletsModel1, WalletsModel2];
+        const currentAccountModel = WalletsModel1;
+        const recipientAddress = currentAccountModel.address;
+
+        await testSignTxWithAccount(currentAccountModel, knownAccountModels, recipientAddress, true);
+    });
+
+    test('multisig account - sign transaction successfully', async () => {
+        // Arrange + Act:
+        const knownAccountModels = [cosigner1AccountModel, cosigner2AccountModel, multisigAccountModel];
+        const currentAccountModel = cosigner1AccountModel;
+        const recipientAddress = currentAccountModel.address;
+
+        await testSignTxWithAccount(currentAccountModel, knownAccountModels, recipientAddress, false, multisigAccountModel);
     });
 });

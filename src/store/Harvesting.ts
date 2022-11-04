@@ -266,7 +266,6 @@ export default {
             }
 
             const targetAddress = currentSignerAddress;
-            // for testing => const targetAddress = Address.createFromRawAddress('TD5YTEJNHOMHTMS6XESYAFYUE36COQKPW6MQQQY');
 
             commit('isFetchingHarvestedBlocks', true);
 

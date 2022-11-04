@@ -136,13 +136,15 @@ export class NetworkNodeSelectorTs extends Vue {
         if (this.value?.nodePublicKey) {
             this.fetchAndSetNodeModel(this.networkType, this.value.nodePublicKey);
         }
-        // add selected nodes
-        const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect;
 
         await this.$store.dispatch('network/LOAD_PEER_NODES');
+    }
 
-        // remove the duplicate item in array.
-        this.customNodeData = [...new Set(this.peerNodes.map((n) => n.url).concat(currentNodeUrl))];
+    @Watch('peerNodes', { immediate: true })
+    protected async watchPeerNodes(newVal: NodeModel[]) {
+        // add selected nodes
+        const currentNodeUrl = this.currentProfile.selectedNodeUrlToConnect;
+        this.customNodeData = [...new Set(newVal.map((n) => n.url).concat(currentNodeUrl))];
         this.filteredData = this.customNodeData;
     }
 
@@ -157,7 +159,7 @@ export class NetworkNodeSelectorTs extends Vue {
         }
     }
     @Watch('formNodeUrl', { immediate: true })
-    protected nodeUrlWatcher(newInput: string, oldInput: string) {
+    protected async nodeUrlWatcher(newInput: string, oldInput: string) {
         if (newInput === oldInput) {
             return;
         }
@@ -165,6 +167,10 @@ export class NetworkNodeSelectorTs extends Vue {
         this.customNodeUrl = newInput;
         if (newInput) {
             this.filteredData = this.customNodeData.filter((n) => n.toLowerCase().includes(newInput.toLowerCase()));
+            if (this.filteredData?.length === 1) {
+                await this.fetchNodePublicKey(this.filteredData[0]);
+                this.hideList = true;
+            }
         }
         if (!this.formNodeUrl) {
             this.filteredData = this.customNodeData;

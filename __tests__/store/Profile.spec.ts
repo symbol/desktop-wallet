@@ -46,7 +46,7 @@ describe('store/Profile', () => {
 
             // assert
             expect(dispatch).toHaveBeenCalled();
-            expect(dispatch).toHaveBeenCalledWith('account/uninitialize', { address: undefined }, { root: true });
+            expect(dispatch).toHaveBeenCalledWith('account/uninitialize', { root: true });
             expect(dispatch).toHaveBeenCalledWith('account/SET_KNOWN_ACCOUNTS', [], { root: true });
             expect(dispatch).toHaveBeenCalledWith('account/RESET_CURRENT_ACCOUNT', undefined, { root: true });
             expect(dispatch).toHaveBeenCalledWith('RESET_STATE');

@@ -24,7 +24,6 @@ import { URLHelpers } from '@/core/utils/URLHelpers';
 import { URLInfo } from '@/core/utils/URLInfo';
 // configuration
 import { UrlValidator } from '@/core/validation/validators';
-import app from '@/main';
 import { NetworkService } from '@/services/NetworkService';
 import { NodeService } from '@/services/NodeService';
 import { ProfileService } from '@/services/ProfileService';
@@ -519,7 +518,7 @@ export default {
                 'app/SET_LOADING_OVERLAY',
                 {
                     show: true,
-                    message: `${app.$t('info_connecting_peer', {
+                    message: `${this._vm.$t('info_connecting_peer', {
                         peerUrl: currentPeerUrl,
                     })}`,
                     disableCloseButton: true,
@@ -539,7 +538,7 @@ export default {
                 console.log(e);
                 await dispatch(
                     'notification/ADD_ERROR',
-                    `${app.$t('error_peer_connection_went_wrong', {
+                    `${this._vm.$t('error_peer_connection_went_wrong', {
                         peerUrl: currentPeerUrl,
                     })}`,
                     { root: true },
@@ -659,22 +658,21 @@ export default {
             commit('currentHeight', height);
         },
 
-        LOAD_TRANSACTION_FEES({ commit, rootGetters }) {
+        async LOAD_TRANSACTION_FEES({ commit, rootGetters }) {
             commit('setFeesConfig', feesConfig);
             const repositoryFactory: RepositoryFactory = rootGetters['network/repositoryFactory'];
             const networkRepository = repositoryFactory.createNetworkRepository();
-            networkRepository.getTransactionFees().subscribe((fees: TransactionFees) => {
-                commit(
-                    'transactionFees',
-                    new TransactionFees(
-                        fees.averageFeeMultiplier < fees.minFeeMultiplier ? fees.minFeeMultiplier : fees.averageFeeMultiplier,
-                        fees.medianFeeMultiplier < fees.minFeeMultiplier ? fees.minFeeMultiplier : fees.medianFeeMultiplier,
-                        fees.highestFeeMultiplier,
-                        fees.lowestFeeMultiplier,
-                        fees.minFeeMultiplier,
-                    ),
-                );
-            });
+            const fees: TransactionFees = await networkRepository.getTransactionFees().toPromise();
+            commit(
+                'transactionFees',
+                new TransactionFees(
+                    fees.averageFeeMultiplier < fees.minFeeMultiplier ? fees.minFeeMultiplier : fees.averageFeeMultiplier,
+                    fees.medianFeeMultiplier < fees.minFeeMultiplier ? fees.minFeeMultiplier : fees.medianFeeMultiplier,
+                    fees.highestFeeMultiplier,
+                    fees.lowestFeeMultiplier,
+                    fees.minFeeMultiplier,
+                ),
+            );
         },
     },
 };

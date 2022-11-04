@@ -15,8 +15,52 @@
  */
 import Vue from 'vue';
 import { Electron } from '@/core/utils/Electron';
+import Router from 'vue-router';
+import VueRx from 'vue-rx';
+import moment from 'vue-moment';
+import iView from 'view-design';
+import locale from 'view-design/dist/locale/en-US';
+import 'view-design/dist/styles/iview.css';
+import infiniteScroll from 'vue-infinite-scroll';
+import Toast from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
+
+// internal dependencies
+import VueNumber from 'vue-number-animation';
+import { VeeValidateSetup } from '@/core/validation/VeeValidateSetup';
+import clickOutsideDirective from '@/directives/clickOutside';
+import { PluginOptions } from 'vue-toastification/dist/types/src/types';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faFileCsv } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export class UIBootstrapper {
+    public static initializePlugins(clazz: typeof Vue): typeof Vue {
+        /// region UI plugins
+        clazz.use(iView, { locale });
+        clazz.use(moment as any);
+        clazz.use(Router);
+
+        clazz.use(VueRx);
+        clazz.use(VueNumber);
+        VeeValidateSetup.initialize();
+        clazz.use(infiniteScroll);
+        const toastDefaultOptions: PluginOptions = {
+            closeButton: false,
+            timeout: 3000,
+            transition: 'Vue-Toastification__fade',
+            transitionDuration: 300,
+        };
+        clazz.use(Toast, toastDefaultOptions);
+        library.add(faFileCsv);
+        clazz.component('font-awesome-icon', FontAwesomeIcon);
+        /// end-region UI plugins
+
+        /// directives
+        clazz.directive('click-outside', clickOutsideDirective);
+        return clazz;
+    }
+
     /**
      * Bootstrap a Vue app instance
      * @param {Vue} app

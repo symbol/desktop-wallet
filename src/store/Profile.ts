@@ -92,7 +92,7 @@ export default {
         async LOG_OUT({ dispatch, rootGetters }): Promise<void> {
             const currentAccount = rootGetters['account/currentAccount'];
             if (currentAccount) {
-                await dispatch('account/uninitialize', { address: currentAccount.address }, { root: true });
+                await dispatch('account/uninitialize', { root: true });
             }
             await dispatch('network/UNSUBSCRIBE', undefined, { root: true });
             await dispatch('account/SET_KNOWN_ACCOUNTS', [], { root: true });

@@ -5,7 +5,7 @@ import { Account, Address, NetworkType, Password, NamespaceId } from 'symbol-sdk
 // internal dependencies
 import { ProfileService } from '@/services/ProfileService';
 import { NotificationType } from '@/core/utils/NotificationType';
-import { AppStore } from '@/app/AppStore';
+import { AppStoreWrapper } from '@/app/AppStore';
 // configuration
 import { networkConfig, appConfig } from '@/config';
 import {
@@ -96,8 +96,8 @@ export class CustomValidationRules {
                     return true;
                 }
                 if (isValidAlias) {
-                    await AppStore.dispatch('namespace/GET_LINKED_ADDRESS', new NamespaceId(value));
-                    return !!AppStore.getters['namespace/linkedAddress'];
+                    await AppStoreWrapper.getStore().dispatch('namespace/GET_LINKED_ADDRESS', new NamespaceId(value));
+                    return !!AppStoreWrapper.getStore().getters['namespace/linkedAddress'];
                 }
                 return false;
             },
@@ -146,7 +146,7 @@ export class CustomValidationRules {
                     return false;
                 }
 
-                const currentProfile: ProfileModel = AppStore.getters['profile/currentProfile'];
+                const currentProfile: ProfileModel = AppStoreWrapper.getStore().getters['profile/currentProfile'];
                 const currentHash = currentProfile.password;
                 const inputHash = ProfileService.getPasswordHash(new Password(value));
                 return inputHash === currentHash;
@@ -159,7 +159,7 @@ export class CustomValidationRules {
                 const accountService = new AccountService();
 
                 // - fetch current profile accounts
-                const currentProfile: ProfileModel = AppStore.getters['profile/currentProfile'];
+                const currentProfile: ProfileModel = AppStoreWrapper.getStore().getters['profile/currentProfile'];
                 const knownAccounts = Object.values(accountService.getKnownAccounts(currentProfile.accounts));
                 return undefined === knownAccounts.find((w) => value === w.name);
             },
@@ -181,7 +181,7 @@ export class CustomValidationRules {
         extend('addressOrPublicKey', {
             validate: (value) => {
                 const isValidAddress = AddressValidator.validate(value);
-                const currentProfile: ProfileModel = AppStore.getters['profile/currentProfile'];
+                const currentProfile: ProfileModel = AppStoreWrapper.getStore().getters['profile/currentProfile'];
                 const isValidPublicKey = PublicKeyValidator.validate(value, currentProfile.networkType);
                 if (isValidAddress || isValidPublicKey) {
                     return true;

@@ -15,10 +15,10 @@
  */
 import Vue from 'vue';
 // internal dependencies
-import app from '@/main';
 import { AwaitLock } from './AwaitLock';
 import { FilterHelpers } from '../core/utils/FilterHelpers';
 import { TYPE } from 'vue-toastification';
+import i18n from '@/language';
 
 const Lock = AwaitLock.create();
 
@@ -57,13 +57,16 @@ export default {
         add: (state, payload: HistoryItem) => {
             // strip tags to remove XSS vulnerability
             const level = payload.level || 'warning';
+            if (typeof payload.message !== 'string') {
+                return;
+            }
             const message = FilterHelpers.stripFilter(payload.message);
             const history = state.history;
             history.push({ level: level, message: message });
             Vue.set(state, 'history', history);
 
             /// region trigger notice UI
-            app.$toast(app.$t(message), { type: level as TYPE, timeout: level === 'error' ? 6000 : undefined });
+            Vue.$toast(i18n.t(message), { type: level as TYPE, timeout: level === 'error' ? 6000 : undefined });
             /// end-region trigger notice UI
         },
     },

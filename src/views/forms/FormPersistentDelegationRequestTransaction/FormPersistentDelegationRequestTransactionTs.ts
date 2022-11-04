@@ -123,7 +123,6 @@ export enum PublicKeyTitle {
     },
     computed: {
         ...mapGetters({
-            currentHeight: 'network/currentHeight',
             currentSignerAccountInfo: 'account/currentSignerAccountInfo',
             harvestingStatus: 'harvesting/status',
             currentSignerHarvestingModel: 'harvesting/currentSignerHarvestingModel',
@@ -431,10 +430,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         return of([]);
     }
 
-    public get isAllKeysLinked(): boolean {
-        return this.isNodeKeyLinked && this.isVrfKeyLinked && this.isAccountKeyLinked;
-    }
-
     /**
      * Signs Aggregate Transaction(s) (for a multi-sig account)
      *
@@ -514,32 +509,34 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
         // pre-store selected harvesting node in local
         this.saveHarvestingNode(accountAddress, this.formItems.nodeModel);
 
+        const txBroadcastResultSuccessHandler = (transaction: Transaction) => {
+            if (transaction.type === TransactionType.VRF_KEY_LINK) {
+                // @ts-ignore
+                transaction.linkAction === LinkAction.Link && this.vrfPrivateKeyTemp
+                    ? this.saveVrfKey(accountAddress, Crypto.encrypt(this.vrfPrivateKeyTemp, this.password))
+                    : this.saveVrfKey(accountAddress, null);
+            }
+            if (transaction.type === TransactionType.ACCOUNT_KEY_LINK) {
+                // @ts-ignore
+                transaction.linkAction === LinkAction.Link && this.remotePrivateKeyTemp
+                    ? this.saveRemoteKey(accountAddress, Crypto.encrypt(this.remotePrivateKeyTemp, this.password))
+                    : this.saveRemoteKey(accountAddress, null);
+            }
+            if (transaction.type === TransactionType.NODE_KEY_LINK) {
+                this.$store.dispatch('harvesting/SET_POLLING_TRIALS', 1);
+                this.updateHarvestingRequestStatus(accountAddress, false);
+            }
+        };
         if (this.action === HarvestingAction.SINGLE_KEY) {
             return this.getSingleKeyLinkTransaction(this.type, transactionSigner).pipe(
                 flatMap((transactions) => {
                     return this.signAndAnnounceTransactions(transactions, transactionSigner, service);
                 }),
                 tap((resArr) => {
-                    resArr[0].subscribe((res) => {
+                    resArr[0].subscribe(async (res) => {
                         if (res.success) {
-                            // @ts-ignore
-                            if (res.transaction?.type === TransactionType.VRF_KEY_LINK) {
-                                // @ts-ignore
-                                res.transaction?.linkAction === LinkAction.Link
-                                    ? this.saveVrfKey(accountAddress, Crypto.encrypt(this.vrfPrivateKeyTemp, this.password))
-                                    : this.saveVrfKey(accountAddress, null);
-                            }
-                            if (res.transaction?.type === TransactionType.ACCOUNT_KEY_LINK) {
-                                // @ts-ignore
-                                res.transaction?.linkAction === LinkAction.Link
-                                    ? this.saveRemoteKey(accountAddress, Crypto.encrypt(this.remotePrivateKeyTemp, this.password))
-                                    : this.saveRemoteKey(accountAddress, null);
-                            }
-                            if (res.transaction?.type === TransactionType.NODE_KEY_LINK) {
-                                this.$store.dispatch('harvesting/SET_POLLING_TRIALS', 1);
-                                this.updateHarvestingRequestStatus(accountAddress, false);
-                            }
-                            this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
+                            txBroadcastResultSuccessHandler(res.transaction);
+                            await this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
                                 accountAddress,
                                 isPersistentDelReqSent: false,
                             });
@@ -555,27 +552,14 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
                 return this.signAndAnnounceTransactions(transactions, transactionSigner, service);
             }),
             tap((resArr) =>
-                resArr[0].subscribe((res) => {
+                resArr[0].subscribe(async (res) => {
                     if (res.success) {
                         // @ts-ignore
                         res.transaction?.innerTransactions.forEach((val) => {
-                            if (val.type === TransactionType.ACCOUNT_KEY_LINK) {
-                                val.linkAction === LinkAction.Link && this.remotePrivateKeyTemp
-                                    ? this.saveRemoteKey(accountAddress, Crypto.encrypt(this.remotePrivateKeyTemp, this.password))
-                                    : this.saveRemoteKey(accountAddress, null);
-                            }
-                            if (val.type === TransactionType.VRF_KEY_LINK) {
-                                val.linkAction == LinkAction.Link && this.vrfPrivateKeyTemp
-                                    ? this.saveVrfKey(accountAddress, Crypto.encrypt(this.vrfPrivateKeyTemp, this.password))
-                                    : this.saveVrfKey(accountAddress, null);
-                            }
-                            if (val.type === TransactionType.NODE_KEY_LINK) {
-                                this.$store.dispatch('harvesting/SET_POLLING_TRIALS', 1);
-                                this.updateHarvestingRequestStatus(accountAddress, false);
-                            }
+                            txBroadcastResultSuccessHandler(val);
                         });
 
-                        this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
+                        await this.$store.dispatch('harvesting/UPDATE_ACCOUNT_IS_PERSISTENT_DEL_REQ_SENT', {
                             accountAddress,
                             isPersistentDelReqSent: this.action === HarvestingAction.START,
                         });
@@ -884,10 +868,6 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
 
     public get currentSignerAccount() {
         return PublicAccount.createFromPublicKey(this.currentSignerPublicKey, this.networkType);
-    }
-
-    private get isPersistentDelReqSent() {
-        return this.currentSignerHarvestingModel?.isPersistentDelReqSent;
     }
 
     /**

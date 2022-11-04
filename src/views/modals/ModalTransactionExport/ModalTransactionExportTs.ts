@@ -97,7 +97,7 @@ export class ModalTransactionExportTs extends Vue {
      */
     public onDownloadTx() {
         const transactions = this.getTransactions();
-        CSVHelpers.exportCSV(transactions, 'transactions');
+        CSVHelpers.exportCSV(this.$store, transactions, 'transactions');
     }
 
     /**
