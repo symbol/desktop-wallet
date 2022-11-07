@@ -46,6 +46,8 @@ describe('components/TransactionDetails/TransactionOptinPayoutDetails', () => {
     const mockSignature =
         'F4E954AEC49B99E2773A3B05273A31BE25683F852559CF11BDB61DE47195D82BC5DE9ED61C966F1668769CE782F8673E7F0C65099D967E3E806EE9AD27F3D70D';
     const mockDeadline = Deadline.createFromDTO('1');
+    const mockTimestamp = UInt64.fromUint(1);
+    const mockFeeMultiplier = 100;
 
     const dispatch = jest.fn();
 
@@ -60,7 +62,14 @@ describe('components/TransactionDetails/TransactionOptinPayoutDetails', () => {
             message,
             mockSignature,
             PublicAccount.createFromPublicKey(currentSigner.publicKey, NetworkType.TEST_NET),
-            new TransactionInfo(UInt64.fromUint(2), 0, '1', '3A4B36EDFD3126D3911916497A9243336AE56B60B5CEB9410B4191D7338201CD'),
+            new TransactionInfo(
+                UInt64.fromUint(2),
+                0,
+                '1',
+                mockTimestamp,
+                mockFeeMultiplier,
+                '3A4B36EDFD3126D3911916497A9243336AE56B60B5CEB9410B4191D7338201CD',
+            ),
         );
     };
 
@@ -79,6 +88,8 @@ describe('components/TransactionDetails/TransactionOptinPayoutDetails', () => {
                 UInt64.fromUint(2),
                 0,
                 '1',
+                mockTimestamp,
+                mockFeeMultiplier,
                 '3A4B36EDFD3126D3911916497A9243336AE56B60B5CEB9410B4191D7338201CD',
                 '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
             ),
