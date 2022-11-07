@@ -22,13 +22,23 @@ describe('components/TransactionList', () => {
     const mockSignature =
         'F4E954AEC49B99E2773A3B05273A31BE25683F852559CF11BDB61DE47195D82BC5DE9ED61C966F1668769CE782F8673E7F0C65099D967E3E806EE9AD27F3D70D';
     const mockDeadline = Deadline.createFromDTO('1');
+    const mockTimestamp = UInt64.fromUint(1);
+    const mockFeeMultiplier = 100;
 
     const mockSignerAddress = PublicAccount.createFromPublicKey(WalletsModel1.publicKey, NetworkType.TEST_NET);
 
     const mockTransactionHash = '3A4B36EDFD3126D3911916497A9243336AE56B60B5CEB9410B4191D7338201CD';
     const mockMerkleComponentHash = '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7';
 
-    const mockTransactionInfo = new TransactionInfo(UInt64.fromUint(2), 0, '1', mockTransactionHash, mockMerkleComponentHash);
+    const mockTransactionInfo = new TransactionInfo(
+        UInt64.fromUint(2),
+        0,
+        '1',
+        mockTimestamp,
+        mockFeeMultiplier,
+        mockTransactionHash,
+        mockMerkleComponentHash,
+    );
 
     const createMockTransferTransaction = (signerPublicAccount: PublicAccount = mockSignerAddress) => {
         return new TransferTransaction(
@@ -41,7 +51,7 @@ describe('components/TransactionList', () => {
             EmptyMessage,
             mockSignature,
             signerPublicAccount,
-            new TransactionInfo(UInt64.fromUint(2), 0, mockTransactionHash, mockMerkleComponentHash),
+            new TransactionInfo(UInt64.fromUint(2), 0, '1', mockTimestamp, mockFeeMultiplier, mockTransactionHash, mockMerkleComponentHash),
         );
     };
 

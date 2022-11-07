@@ -25,6 +25,8 @@ export const transferTransaction = new TransferTransaction(
         UInt64.fromUint(108907),
         0,
         '',
+        UInt64.fromUint(1566230400),
+        100,
         '9661088F22C2DC72E76EE2B0F07BFC0D8E98EEE0CC8AE274362EDBB44F164F16',
         '9661088F22C2DC72E76EE2B0F07BFC0D8E98EEE0CC8AE274362EDBB44F164F16',
     ),
