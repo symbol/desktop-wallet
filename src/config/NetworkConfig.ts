@@ -69,12 +69,12 @@ export const defaultTestnetNetworkConfig: NetworkConfig = {
         maxCosignedAccountsPerAccount: 25,
         maxMessageSize: 1024,
         maxMosaicAtomicUnits: 8999999999000000,
-        currencyMosaicId: '3A8416DB2D53B6C8',
-        harvestingMosaicId: '3A8416DB2D53B6C8',
+        currencyMosaicId: '72C0212E67A08BCE',
+        harvestingMosaicId: '72C0212E67A08BCE',
         defaultDynamicFeeMultiplier: 100,
-        epochAdjustment: 1637848847,
+        epochAdjustment: 1667250467,
         totalChainImportance: 7842928625000000,
-        generationHash: '7FCCD304802016BEBBCD342A332F91FF1F3BB5E902988B352697BE245F48E836',
+        generationHash: '49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4',
     },
 };
 
