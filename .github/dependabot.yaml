@@ -1,0 +1,14 @@
+version: 2
+updates:
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: sunday
+    target-branch: dev
+    labels: [dependencies]
+    versioning-strategy: increase
+    commit-message:
+      prefix: '[dependency]'
+
