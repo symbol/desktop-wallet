@@ -1147,7 +1147,7 @@
     "lock_hash_algorithm": "ハッシュアルゴリズム",
     "not_enough_balance": "十分な残高がありません",
     "use_max_value": "最大値を使用",
-    "download_now": " ダウンロード中",
+    "download_now": " ダウンロードはこちら",
     "tab_contact_black_list": "ブラックリスト",
     "tab_contact_white_list": "ホワイトリスト",
     "black_list_contact_confirmation_message": "\"{contactName}\" をブラックリストに登録してもよろしいですか？",
