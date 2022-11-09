@@ -125,7 +125,7 @@
         "json-schema": ">=0.4.0",
         "less": "^3.0.4",
         "less-loader": "^4.1.0",
-        "moment-timezone": "^0.5.26",
+        "moment-timezone": "^0.5.38",
         "node-notifier": ">=8.0.1",
         "node-pre-gyp": "^0.13.0",
         "npm-build-zip": "^1.0.2",
