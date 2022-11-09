@@ -11,4 +11,3 @@ updates:
     versioning-strategy: increase
     commit-message:
       prefix: '[dependency]'
-
