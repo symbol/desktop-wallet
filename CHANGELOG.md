@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.13][v1.0.13] - 03-Nov-2022
+### Milestone: Testnet reset
+
+#### Changed
+- Updated Testnet generation hash after the testnet network reset.
+
+## [1.0.12][v1.0.12] - 25-Oct-2022
+### Milestone: Dependency version upgrade
+
+#### Changed
+- Upgraded the dependency `symbol-sdk` version to `v2.0.3`
 
 ## [1.0.11][v1.0.11] - 19-Aug-2022
 ### Milestone: Bug fixes and security protection improvements
@@ -845,6 +856,8 @@ NOTE: We have known issues which have been logged into github and will look for 
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
 
+[v1.0.13]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.13
+[v1.0.12]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.12
 [v1.0.11]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.11
 [v1.0.9]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.9
 [v1.0.8]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.8
