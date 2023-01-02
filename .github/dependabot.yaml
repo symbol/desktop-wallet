@@ -11,3 +11,6 @@ updates:
     versioning-strategy: increase
     commit-message:
       prefix: '[dependency]'
+    ignore:
+      - dependency-name: "vue-responsive-video-background-player"
+        versions: ["2.x", "3.x"]
