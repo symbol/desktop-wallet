@@ -332,9 +332,7 @@ export class ModalTransactionConfirmationTs extends Vue {
         // - log about unlock success
         this.$store.dispatch('diagnostic/ADD_INFO', `Account ${account.address.plain()} unlocked successfully.`);
         // - get transaction stage config
-        if (this.$route.path === '/delegatedHarvesting') {
-            this.$emit('unlocked', password);
-        }
+        this.$emit('unlocked', password);
         return this.onSigner(new AccountTransactionSigner(account));
     }
 

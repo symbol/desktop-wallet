@@ -61,7 +61,7 @@
                     <FormRow v-if="!selectedSigner.multisig && !isAggregate && !isLedger && !hideEncryption">
                         <template v-slot:inputs>
                             <div class="inputs-container checkboxes">
-                                <Checkbox v-model="formItems.encryptMessage" @input="onEncryptionChange">
+                                <Checkbox v-model="formItems.encryptMessage" data-testid="encryptMessage" @input="onEncryptionChange">
                                     {{ $t('encrypt_message') }}
                                 </Checkbox>
                             </div>
@@ -75,7 +75,7 @@
                         :hide-submit="hideSubmit"
                         :submit-button-text="submitButtonText"
                         :calculated-recommended-fee="calculatedRecommendedFee"
-                        :disable-submit="currentAccount.isMultisig"
+                        :disable-submit="!submitButtonEnabled"
                         :size="transactionSize"
                         @selected-fee="onSelectFeeValue"
                         @button-clicked="handleSubmit(onSubmit)"

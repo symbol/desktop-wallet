@@ -17,5 +17,6 @@ export const networkMock = {
         duration: 0,
         height: 1,
         supply: 7841148552567058,
+        ticker: 'XYM',
     },
 };

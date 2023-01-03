@@ -145,7 +145,11 @@ export class FormTransactionBase extends Vue {
 
     protected multisigAccountGraphInfo: MultisigAccountInfo[];
 
-    private clientServerTimeDifference: number;
+    protected clientServerTimeDifference: number;
+
+    protected transactionFeesLoadingFinished = false;
+
+    protected clientServerTimeDifferenceLoadingFinished = false;
 
     /**
      * Type the ValidationObserver refs
@@ -179,8 +183,12 @@ export class FormTransactionBase extends Vue {
      * @return {void}
      */
     public async created() {
-        this.$store.dispatch('network/LOAD_TRANSACTION_FEES');
-        this.$store.dispatch('network/SET_CLIENT_SERVER_TIME_DIFFERENCE');
+        this.$store.dispatch('network/LOAD_TRANSACTION_FEES').finally(() => {
+            Vue.set(this, 'transactionFeesLoadingFinished', true);
+        });
+        this.$store.dispatch('network/SET_CLIENT_SERVER_TIME_DIFFERENCE').finally(() => {
+            Vue.set(this, 'clientServerTimeDifferenceLoadingFinished', true);
+        });
         this.resetForm();
     }
 
@@ -309,6 +317,7 @@ export class FormTransactionBase extends Vue {
             this.networkConfiguration,
             this.transactionFees,
             this.requiredCosignatures,
+            this.clientServerTimeDifference,
         );
     }
 
@@ -372,5 +381,9 @@ export class FormTransactionBase extends Vue {
      */
     public onConfirmationCancel() {
         this.hasConfirmationModal = false;
+    }
+
+    public get submitButtonEnabled(): boolean {
+        return !!(this.transactionFeesLoadingFinished && this.clientServerTimeDifferenceLoadingFinished && !this.currentAccount.isMultisig);
     }
 }

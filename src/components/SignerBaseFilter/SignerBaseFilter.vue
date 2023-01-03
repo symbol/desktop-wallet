@@ -1,6 +1,6 @@
 <template>
     <div class="transaction-filter">
-        <Select v-model="selectedSigner" size="large" prefix="ios-home" @input="onSignerChange">
+        <Select v-model="selectedSigner" size="large" prefix="ios-home" data-testid="signerSelector" @input="onSignerChange">
             <Icon slot="prefix" type="ios-people" size="0" />
             <Option :key="rootSigner.address.plain()" :value="rootSigner.address.plain()">
                 {{ rootSigner.label }}

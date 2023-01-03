@@ -20,10 +20,11 @@ const TEST_PROFILES = {
     profile1: {
         generationHash: 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
         profileName: 'profile1',
-        hint: 'password is password',
+        hint: 'password is Password1',
         networkType: NetworkType.TEST_NET,
-        password: '0b831096cf25adbd7324ad2dbb3d99a829b40b53c6f76dd50fb2ef56fceded2f2kixTXdr/q/ci5PPwWVCiA==',
-        accounts: "['WalletsModel2']",
+        password:
+            '61A73C554FD0A2024EB3BFFB06A597EF5095764AB049D8440C683F0CCD4E77D5A737FA90358664006CFA13C3B839028E63FC82F77E652730524C111EFAC95073',
+        accounts: "['WalletsModel1']",
         seed:
             '4fcd1e1b896551f68c3d5314be1f8d2fad48d7b492e65ecf4ac1ac2dfc9749a08CyBF9Q5APg07qXEMWQzQIcN+/KBekkw0T2hBPfdAd5VxXkdzWikv46dIaYxyHCn9hdr839ITfgIWYnAiE54jRWfFKkDvyEZL4pchX6mAqCcc0Ew9VGFfHjKStHWFeBezrhp/MlNeSw/EbxiCFo5C2pmeSuGz5NABUXT+BoDi62gB8r6gyF9hjB8J7Lz6D4SBf6J4cvj9krCXzkkWX1jqg==',
         termsAndConditionsApproved: true,
@@ -32,9 +33,10 @@ const TEST_PROFILES = {
     profile_testnet: {
         generationHash: '3B5E1FA6445653C971A50687E75E6D09FB30481055E3990C84B25E9222DC1155',
         profileName: 'profile_testnet',
-        hint: 'password is password',
+        hint: 'password is Password1',
         networkType: NetworkType.TEST_NET,
-        password: '0b831096cf25adbd7324ad2dbb3d99a829b40b53c6f76dd50fb2ef56fceded2f2kixTXdr/q/ci5PPwWVCiA==',
+        password:
+            '61A73C554FD0A2024EB3BFFB06A597EF5095764AB049D8440C683F0CCD4E77D5A737FA90358664006CFA13C3B839028E63FC82F77E652730524C111EFAC95073',
         accounts: "['WalletsModel2']",
         seed:
             '4fcd1e1b896551f68c3d5314be1f8d2fad48d7b492e65ecf4ac1ac2dfc9749a08CyBF9Q5APg07qXEMWQzQIcN+/KBekkw0T2hBPfdAd5VxXkdzWikv46dIaYxyHCn9hdr839ITfgIWYnAiE54jRWfFKkDvyEZL4pchX6mAqCcc0Ew9VGFfHjKStHWFeBezrhp/MlNeSw/EbxiCFo5C2pmeSuGz5NABUXT+BoDi62gB8r6gyF9hjB8J7Lz6D4SBf6J4cvj9krCXzkkWX1jqg==',
@@ -44,9 +46,10 @@ const TEST_PROFILES = {
     profile_mainnet: {
         generationHash: '3B5E1FA6445653C971A50687E75E6D09FB30481055E3990C84B25E9222DC1155',
         profileName: 'profile_testnet',
-        hint: 'password is password',
+        hint: 'password is Password1',
         networkType: NetworkType.MAIN_NET,
-        password: '0b831096cf25adbd7324ad2dbb3d99a829b40b53c6f76dd50fb2ef56fceded2f2kixTXdr/q/ci5PPwWVCiA==',
+        password:
+            '61A73C554FD0A2024EB3BFFB06A597EF5095764AB049D8440C683F0CCD4E77D5A737FA90358664006CFA13C3B839028E63FC82F77E652730524C111EFAC95073',
         accounts: "['WalletsModel2']",
         seed:
             '4fcd1e1b896551f68c3d5314be1f8d2fad48d7b492e65ecf4ac1ac2dfc9749a08CyBF9Q5APg07qXEMWQzQIcN+/KBekkw0T2hBPfdAd5VxXkdzWikv46dIaYxyHCn9hdr839ITfgIWYnAiE54jRWfFKkDvyEZL4pchX6mAqCcc0Ew9VGFfHjKStHWFeBezrhp/MlNeSw/EbxiCFo5C2pmeSuGz5NABUXT+BoDi62gB8r6gyF9hjB8J7Lz6D4SBf6J4cvj9krCXzkkWX1jqg==',

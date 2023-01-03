@@ -35,4 +35,5 @@ module.exports = {
         '!**/*.d.ts',
         '!**/*.less',
     ],
+    setupFiles: ['./setupTests'],
 };

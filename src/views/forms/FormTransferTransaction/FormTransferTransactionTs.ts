@@ -750,6 +750,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             this.networkConfiguration,
             this.transactionFees,
             this.selectedSigner.requiredCosigApproval,
+            this.clientServerTimeDifference,
         );
     }
 
@@ -769,6 +770,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
         this.hasAccountUnlockModal = false;
         this.$store.dispatch('account/GET_RECIPIENT', null);
     }
+
     /**
      * emit formItems values to aggregate transaction form to be saved in storage
      */
@@ -779,6 +781,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
             this.$emit('txInput', this.formItems);
         }
     }
+
     /**
      * on select fee
      */
@@ -787,8 +790,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     }
 
     async created() {
-        this.$store.dispatch('network/LOAD_TRANSACTION_FEES');
-        this.$store.dispatch('network/SET_CLIENT_SERVER_TIME_DIFFERENCE');
         if (this.isAggregate && this.value) {
             Object.assign(this.formItems, this.value);
             if (this.formItems.attachedMosaics.length) {
@@ -799,6 +800,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
         this.isMounted = true;
     }
+
     /**
      * watch title to change form items on select different transactions
      */
@@ -816,6 +818,7 @@ export class FormTransferTransactionTs extends FormTransactionBase {
     public onSignedOfflineTransaction(signedTransaction: SignedTransaction) {
         this.$emit('txSigned', signedTransaction);
     }
+
     async beforeUpdate() {
         const signerChanged: boolean = this.formItems.signerAddress !== this.selectedSigner.address.plain();
         if (signerChanged) {

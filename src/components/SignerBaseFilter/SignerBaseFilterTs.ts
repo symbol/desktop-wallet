@@ -47,12 +47,12 @@ export class SignerBaseFilterTs extends Vue {
     }
 
     public getParentSignerItems(signer: Signer, level: number): SignerItem[] {
-        if (!signer?.parentSigners) {
+        if (!signer.parentSigners) {
             return [];
         }
         const signerItems: SignerItem[] = [];
         for (const parentSigner of signer.parentSigners) {
-            signerItems.push(new SignerItem(parentSigner.parentSigners?.length > 0, parentSigner, level));
+            signerItems.push(new SignerItem(parentSigner.parentSigners.length > 0, parentSigner, level));
             signerItems.push(...this.getParentSignerItems(parentSigner, level + 1));
         }
         return signerItems;

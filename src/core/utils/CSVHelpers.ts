@@ -15,11 +15,11 @@
  */
 import { Parser } from 'json2csv';
 import FileSaver from 'file-saver';
-import store from '@/store/index.ts';
 import { TransactionViewFactory } from '@/core/transactions/TransactionViewFactory';
 import { TransactionView } from '@/core/transactions/TransactionView';
 import { AggregateTransaction, Transaction, TransactionType } from 'symbol-sdk';
 import * as _ from 'lodash';
+import { Store } from 'vuex/types/index';
 
 export class CSVHelpers {
     protected static views: TransactionView<Transaction>[] = [];
@@ -27,10 +27,11 @@ export class CSVHelpers {
 
     /**
      * returns object of a parsed aggregate transaction
+     * @param application store
      * @param transaction aggregate transaction
      * returns new array with parsed aggregate transaction objects
      */
-    private static constructAggregateTransactionsObject(transaction: AggregateTransaction) {
+    private static constructAggregateTransactionsObject(store: Store<any>, transaction: AggregateTransaction) {
         let merged = {};
         const result = {};
         this.views = [
@@ -60,10 +61,11 @@ export class CSVHelpers {
 
     /**
      * Constructs transaction object
+     * @param application store
      * @param transaction a transaction
      * returns object of a parsed transaction
      */
-    private static constructTransactionsObject(transaction: Transaction) {
+    private static constructTransactionsObject(store: Store<any>, transaction: Transaction) {
         this.views = [TransactionViewFactory.getView(store, transaction)];
         const result = {};
         const value = this.views[0].headerItems.concat(this.views[0].detailItems);
@@ -83,18 +85,19 @@ export class CSVHelpers {
 
     /**
      * Export to csv file
-     * @param data array of parssed transactions
+     * @param application store
+     * @param data array of parsed transactions
      * returns new array with parsed transaction objects
      */
 
-    private static prepareTransactions(data: []): any[] {
+    private static prepareTransactions(store: Store<any>, data: []): any[] {
         this.transactionsArray = [];
         data.forEach((transaction) => {
             let result = {};
             if (transaction['type'] == TransactionType.AGGREGATE_BONDED || transaction['type'] == TransactionType.AGGREGATE_COMPLETE) {
-                result = this.constructAggregateTransactionsObject(transaction);
+                result = this.constructAggregateTransactionsObject(store, transaction);
             } else {
-                result = this.constructTransactionsObject(transaction);
+                result = this.constructTransactionsObject(store, transaction);
             }
             this.transactionsArray.push(result);
         });
@@ -103,12 +106,13 @@ export class CSVHelpers {
 
     /**
      * Export to csv file
+     * @param application store
      * @param data The json data
      * @param filename Prefix the name of the CSV file
      */
-    public static exportCSV(data: any, filename: string) {
+    public static exportCSV(store: Store<any>, data: any, filename: string) {
         const json2csvParser = new Parser();
-        const parsedTransactions = this.prepareTransactions(data);
+        const parsedTransactions = this.prepareTransactions(store, data);
         const csvData = json2csvParser.parse(parsedTransactions);
         const blob = new Blob(['\uFEFF' + csvData], { type: 'text/plain;charset=utf-8;' });
         const exportFilename = `${filename}-${Date.now()}.csv`;

@@ -91,6 +91,10 @@ const initialState: HarvestingState = {
     pollingTrials: 1,
 };
 
+export const HARVESTING_STATUS_POLLING_TRIAL_LIMIT = 60;
+export const HARVESTING_STATUS_POLLING_INTERVAL_SECS = 10;
+export const HARVESTING_BLOCKS_POLLING_INTERVAL_SECS = 30;
+
 const harvestingService = new HarvestingService();
 
 export default {
@@ -152,14 +156,25 @@ export default {
             commit('setPollingTrials', pollingTrials);
         },
         async FETCH_STATUS({ commit, rootGetters, dispatch }, node?: [string, NodeModel]) {
-            const currentSignerAccountInfo: AccountInfo = rootGetters['account/currentSignerAccountInfo'];
+            const currentSignerAddress: Address = rootGetters['account/currentSignerAddress'];
+            const currentSignerHarvestingModel: HarvestingModel = rootGetters['harvesting/currentSignerHarvestingModel'];
+            if (
+                currentSignerHarvestingModel?.accountAddress &&
+                currentSignerAddress.plain() !== currentSignerHarvestingModel.accountAddress
+            ) {
+                return;
+            }
+            const repositoryFactory = rootGetters['network/repositoryFactory'];
+            const currentSignerAccountInfo = (
+                await repositoryFactory.createAccountRepository().getAccountsInfo([currentSignerAddress]).toPromise()
+            )[0];
+
             // reset
             let status: HarvestingStatus;
             if (!currentSignerAccountInfo) {
                 commit('status', HarvestingStatus.INACTIVE);
                 return;
             }
-            const currentSignerHarvestingModel: HarvestingModel = rootGetters['harvesting/currentSignerHarvestingModel'];
             let accountUnlocked = false;
             const accountNodePublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.node?.publicKey;
             const accountRemotePublicKey = currentSignerAccountInfo?.supplementalPublicKeys?.linked?.publicKey;
@@ -223,7 +238,8 @@ export default {
                 status = accountUnlocked
                     ? HarvestingStatus.ACTIVE
                     : currentSignerHarvestingModel?.isPersistentDelReqSent
-                    ? pollingTrials === 20 || currentSignerHarvestingModel?.delegatedHarvestingRequestFailed
+                    ? pollingTrials === HARVESTING_STATUS_POLLING_TRIAL_LIMIT ||
+                      currentSignerHarvestingModel?.delegatedHarvestingRequestFailed
                         ? HarvestingStatus.FAILED
                         : HarvestingStatus.INPROGRESS_ACTIVATION
                     : HarvestingStatus.KEYS_LINKED;
@@ -250,7 +266,6 @@ export default {
             }
 
             const targetAddress = currentSignerAddress;
-            // for testing => const targetAddress = Address.createFromRawAddress('TD5YTEJNHOMHTMS6XESYAFYUE36COQKPW6MQQQY');
 
             commit('isFetchingHarvestedBlocks', true);
 

@@ -1049,7 +1049,6 @@
     "transaction_descriptor_16964": "Mosaic 메타데이터",
     "transaction_descriptor_16972": "노드 키 연결",
     "transaction_descriptor_16973": "모자이크 공급량 변경",
-    "transaction_descriptor_17229": "복구",
     "transaction_descriptor_16974": "주소 별명",
     "transaction_descriptor_16976": "계좌 모자이크 제한",
     "transaction_descriptor_16977": "모자이크 주소 제한",
@@ -1129,7 +1128,6 @@
     "word": "단어",
     "ws_connection_failed": "Symbol 체인에서 계좌의 활동들을 모니터링 할 수 없습니다. 다른 노드를 선택해주세요.",
     "x_seconds": "{seconds}s.",
-
     "transaction_cosignature_warning_dont_sign": "이해한 경우에만 서명하십시오. 그렇지 않으면 모든 자금이 손실될 수 있습니다.",
     "transaction_cosignature_warning_unknown_cosigner": "직접 생성하지 않은 거래에 서명하는 과정입니다. 악의적인 거래는 모든 자산 손실을 초래할 수 있습니다. 거래는 되돌릴 수 없으므로 모든 금액과 수취인 주소를 주의 깊게 검토해주시길바랍니다.",
     "transaction_cosignature_warning_proceed": "이해 했어요",
@@ -1175,5 +1173,6 @@
     "transaction_needs_cosignature_unknown_prohibited_part1": "주의: 악의적인 거래로 인해 자금이 완전히 손실될 수 있습니다.",
     "transaction_needs_cosignature_unknown_prohibited_part2": "이 거래는 알 수없는 주소로 작성되었으며 서명 대기 상태입니다. 거래는 취소 할 수 없으므로 모든 금액과 수취인 주소를 신중하게 확인하십시오. 위험 거래를 계속 진행하려면 서명자를 주소록(화이트리스트)에 추가하고 신뢰할 수 없는 경우 이 거래를 거부하십시오. 상세설정에서 이 보안보호를 해제할 수 있습니다",
     "sign_known_multisig_transactions_alert": "거래는 되돌릴 수 없으므로  금액과 수취인 주소를 신중하게 확인하십시오.",
-    "allow_unknown_multisig_transactions_alert": "경고 : 다중 서명 트랜잭션에 서명하게 되면, 누구던지 당신의 자금을 모두 그들의 지갑으로 전송할 수 있습니다."
+    "allow_unknown_multisig_transactions_alert": "경고 : 다중 서명 트랜잭션에 서명하게 되면, 누구던지 당신의 자금을 모두 그들의 지갑으로 전송할 수 있습니다.",
+    "starting": "시작 중..."
 }

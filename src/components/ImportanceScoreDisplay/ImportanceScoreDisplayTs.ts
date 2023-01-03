@@ -1,5 +1,5 @@
 /*
- * (C) Symbol Contributors 2021
+ * (C) Symbol Contributors 2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ export class ImportanceScoreDisplayTs extends Vue {
 
         const importance = accountInfo.importance.compact();
 
-        const relativeImportance = importance > 0 ? importance / this.networkConfiguration.totalChainImportance : importance;
+        const relativeImportance = importance / this.networkConfiguration.totalChainImportance;
 
         const divisibility = this.networkCurrency.divisibility;
         const formatOptions: Intl.NumberFormatOptions = {

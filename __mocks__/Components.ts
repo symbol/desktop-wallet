@@ -15,10 +15,9 @@
  */
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
-import { createStore } from '@MOCKS/Store';
+import { getStore } from '@MOCKS/Store';
 import i18n from '@/language/index';
 import clickOutsideDirective from '@/directives/clickOutside';
-import VueRouter from 'vue-router';
 
 /// region globals
 const localVue = createLocalVue();
@@ -45,25 +44,7 @@ export const getComponent = (
     mocks?: { [field: string]: any },
     slots?: { [field: string]: any },
 ) => {
-    // - format store module overwrites
-    const modules = Object.keys(storeModules)
-        .map((k) => ({
-            [k]: Object.assign({}, storeModules[k], {
-                // - map state overwrites to store module
-                state: Object.assign({}, storeModules[k].state, stateChanges),
-                // - map unmodified getters
-                getters: storeModules[k].getters,
-            }),
-        }))
-        .reduce((obj, item) => {
-            // - reducer to get {profile: x, account: y} format
-            const key = Object.keys(item).shift();
-            obj[key] = item[key];
-            return obj;
-        }, {});
-
-    // - create fake store
-    const store = createStore({ modules }, dispatch);
+    const store = getStore(storeModules, stateChanges, dispatch);
     const params = {
         store,
         i18n,
@@ -84,4 +65,5 @@ export const getComponent = (
     const wrapper = shallowMount(component, params);
     return wrapper;
 };
+
 /// end-region helpers

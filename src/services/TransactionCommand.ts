@@ -34,7 +34,6 @@ import { Observable, of } from 'rxjs';
 import { AccountTransactionSigner, TransactionAnnouncerService, TransactionSigner } from '@/services/TransactionAnnouncerService';
 import { BroadcastResult } from '@/core/transactions/BroadcastResult';
 import { flatMap, map } from 'rxjs/operators';
-import { AppStore } from '@/app/AppStore';
 
 export enum TransactionCommandMode {
     SIMPLE = 'SIMPLE',
@@ -58,6 +57,7 @@ export class TransactionCommand {
         public readonly networkConfiguration: NetworkConfigurationModel,
         public readonly transactionFees: TransactionFees,
         public readonly requiredCosignatures: number,
+        public readonly clientServerTimeDifference: number,
     ) {
         this.tempAccount = Account.generateNewAccount(this.networkType);
         this.tempTransactionSigner = new AccountTransactionSigner(this.tempAccount);
@@ -221,7 +221,6 @@ export class TransactionCommand {
 
     protected createDeadline(deadlineInHours = 2): Deadline {
         const deadline = Deadline.create(this.epochAdjustment, deadlineInHours);
-        const clientServerTimeDifference = AppStore.getters['network/clientServerTimeDifference'];
-        return Deadline.createFromAdjustedValue(deadline.adjustedValue + clientServerTimeDifference);
+        return Deadline.createFromAdjustedValue(deadline.adjustedValue + this.clientServerTimeDifference);
     }
 }

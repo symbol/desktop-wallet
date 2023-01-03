@@ -33,6 +33,7 @@
                                                 type="text"
                                                 name="privateKey"
                                                 class="input-size input-style"
+                                                data-testid="privateKey"
                                             />
                                         </ErrorTooltip>
                                     </ValidationProvider>

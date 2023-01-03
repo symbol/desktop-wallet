@@ -290,3 +290,26 @@ export const mosaicsMock = [
         supply: 500000000,
     },
 ];
+
+export const mockMosaicRowValue = {
+    balance: 1000,
+    divisibility: 0,
+    expiration: 'unlimited',
+    hexId: '103165893CD08625',
+    metadataList: [
+        {
+            metadataId: '62FC80CAE173875059E7274E',
+            metadataType: 2,
+            scopedMetadataKey: 'E3E5E7B070607991',
+            sourceAddress: 'TCABUWAK5WMJ26ZPERMGWBOWAJF4XPNCJOWPAAI',
+            targetAddress: 'TBF43DIZI62PR2W6JQBJR3AI6OZLRXJYMGHLTFI',
+            targetId: '80DE90A24D6C0CC4',
+            value: 'metadata',
+        },
+    ],
+    name: 'N/A',
+    restrictable: true,
+    supply: 1000,
+    supplyMutable: true,
+    transferable: false,
+};

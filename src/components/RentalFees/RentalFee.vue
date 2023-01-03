@@ -5,7 +5,12 @@
             <template v-slot:inputs>
                 <div class="inputs-container display-grid">
                     <div class="display-value">
-                        <MosaicAmountDisplay :absolute-amount="rentalFeeAmount || 0" :color="'red'" :show-ticker="true" />
+                        <MosaicAmountDisplay
+                            :absolute-amount="rentalFeeAmount || 0"
+                            :color="'red'"
+                            :show-ticker="true"
+                            data-testid="fees"
+                        />
                     </div>
                 </div>
             </template>

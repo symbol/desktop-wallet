@@ -100,17 +100,11 @@ export class TableRowTs extends Vue {
      * @type {boolean}
      */
     protected get isSupplyMutableMosaic(): boolean {
-        if (Object.keys(this.rowValues).indexOf('supply') === -1) {
-            return false;
-        }
-        if (!this.rowValues.supplyMutable) {
-            return false;
-        }
-        return this.rowValues.expiration !== 'expired';
+        return this.rowValues.expiration !== 'expired' && this.rowValues.supplyMutable;
     }
 
     protected get hasMetadata(): boolean {
-        return this.rowValues.metadataList && this.rowValues.metadataList.length;
+        return !!this.rowValues.metadataList && !!this.rowValues.metadataList.length;
     }
 
     /**
@@ -119,11 +113,8 @@ export class TableRowTs extends Vue {
      * @returns {string}
      */
     protected get aliasActionLabel(): string {
-        if (this.isNamespace) {
-            if (this.rowValues.aliasType === 'N/A') {
-                return 'action_label_alias_link';
-            }
-            return 'action_label_alias_unlink';
+        if (this.isNamespace && this.rowValues.aliasType === 'N/A') {
+            return 'action_label_alias_link';
         }
         if (this.rowValues.name === 'N/A') {
             return 'action_label_alias_link';

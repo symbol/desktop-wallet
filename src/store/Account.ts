@@ -281,21 +281,42 @@ export default {
          *    skipTransactions: boolean,
          * }
          */
-        async initialize({ commit, getters }, { address }) {
+        async initialize({ commit, getters }) {
             const callback = async () => {
-                if (!address || !address.length) {
-                    return;
-                }
                 commit('setInitialized', true);
             };
             await Lock.initialize(callback, { getters });
         },
-        async uninitialize({ commit, dispatch, getters }, { address }) {
+        async uninitialize({ commit, dispatch, getters }) {
             const callback = async () => {
                 // close websocket connections
-                await dispatch('UNSUBSCRIBE', address);
+                await dispatch('UNSUBSCRIBE', getters['currentAccountAddress']);
                 await dispatch('transaction/RESET_TRANSACTIONS', {}, { root: true });
                 commit('setInitialized', false);
+                commit('currentAccount', null);
+                commit('currentAccountAddress', null);
+                commit('currentAccountMultisigInfo', null);
+                commit('currentAccountAliases', null);
+                commit('isCosignatoryMode', false);
+                commit('signers', []);
+                commit('currentAccountSigner', null);
+                commit('currentSigner', null);
+                commit('currentSignerAddress', null);
+                commit('currentSignerPublicKey', null);
+                commit('currentSignerMultisigInfo', null);
+                commit('knownAccounts', []);
+                commit('knownAddresses', []);
+                commit('accountsInfo', []);
+                commit('multisigAccountsInfo', []);
+                commit('subscriptions', {});
+                commit('currentRecipient', null);
+                commit('multisigAccountGraph', null);
+                commit('multisigAccountGraphInfo', null);
+                commit('resetAddressesList', []);
+                commit('resetOptInAddressesList', []);
+                commit('resetSelectedAddressesToInteract', []);
+                commit('resetSelectedAddressesOptInToInteract', []);
+                commit('listener', undefined);
             };
             await Lock.uninitialize(callback, { getters });
         },
@@ -380,8 +401,8 @@ export default {
 
             if (reset) {
                 await dispatch('LOAD_ACCOUNT_INFO');
-                dispatch('namespace/LOAD_NAMESPACES', {}, { root: true });
-                dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
+                await dispatch('namespace/LOAD_NAMESPACES', {}, { root: true });
+                await dispatch('mosaic/LOAD_MOSAICS', {}, { root: true });
             } else {
                 const currentSigner = getters.signers.find((s) => s.address.equals(currentSignerAddress));
                 if (currentSigner) {
@@ -419,6 +440,7 @@ export default {
                 if (nodes && nodes.length && navigator.onLine) {
                     dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS', {}, { root: true });
                 }
+                dispatch('network/LOAD_PEER_NODES', {}, { root: true });
             }
             if (unsubscribeWS) {
                 if (previousSignerAddress) {
@@ -638,22 +660,6 @@ export default {
                     commit('currentSigner', s);
                 }
             });
-        },
-
-        UPDATE_CURRENT_ACCOUNT_REMOTE_ACCOUNT({ commit, getters, rootGetters, dispatch }, encRemoteAccountPrivateKey: string) {
-            const currentAccount: AccountModel = getters.currentAccount;
-            if (!currentAccount) {
-                return;
-            }
-            const currentProfile: ProfileModel = rootGetters['profile/currentProfile'];
-            if (!currentProfile) {
-                return;
-            }
-            const accountService = new AccountService();
-            accountService.updateRemoteAccount(currentAccount, encRemoteAccountPrivateKey);
-            const knownAccounts = accountService.getKnownAccounts(currentProfile.accounts);
-            commit('knownAccounts', knownAccounts);
-            dispatch('LOAD_ACCOUNT_INFO');
         },
 
         DELETE_CURRENT_ACCOUNT({ commit, rootGetters }, account: AccountModel) {
