@@ -16,7 +16,6 @@
 import { mapGetters } from 'vuex';
 import { Component, Vue } from 'vue-property-decorator';
 import { NetworkType, Password } from 'symbol-sdk';
-import VideoBackground from 'vue-responsive-video-background-player';
 
 // internal dependencies
 import { $eventBus } from '@/events';
@@ -52,7 +51,6 @@ import { VersionCheckerService, LatestVersionObject } from '@/services/VersionCh
         ValidationProvider,
         ValidationObserver,
         LanguageSelector,
-        VideoBackground,
     },
 })
 export default class LoginPageTs extends Vue {
