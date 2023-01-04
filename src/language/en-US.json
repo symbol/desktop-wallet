@@ -1059,7 +1059,6 @@
     "transaction_descriptor_16977": "Mosaic address restriction",
     "transaction_descriptor_16978": "Secret proof",
     "transaction_descriptor_17220": "Namespace metadata",
-    "transaction_descriptor_17229": "Mosaic supply revocation",
     "transaction_descriptor_17230": "Mosaic alias",
     "transaction_descriptor_17232": "Account operation restriction",
     "transaction_descriptor_harvesting": "Delegated Harvesting",
