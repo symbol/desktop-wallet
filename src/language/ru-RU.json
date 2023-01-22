@@ -646,6 +646,8 @@
     "linking": "Связывание...",
     "loading": "Загрузка...",
     "locked_mosaic": "закрытая мозаика",
+    "reclaim_source": "Отправитель",
+    "reclaim_target": "К",
     "login": "Авторизоваться",
     "login_to_symbol_account": "Войдите в свой профиль Symbol",
     "logout": "Выйти из системы",

@@ -646,6 +646,8 @@
     "linking": "키 연결중...",
     "loading": "로딩중...",
     "locked_mosaic": "잠긴 모자이크",
+    "reclaim_source": "보내는 이",
+    "reclaim_target": "받는 곳",
     "login": "로그인",
     "login_to_symbol_account": "Symbol 프로필에 접속해보세요",
     "logout": "로그아웃",

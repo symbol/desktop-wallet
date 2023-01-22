@@ -383,6 +383,7 @@ export const transactionTypeToIcon = {
     [TransactionType.MOSAIC_ALIAS]: officialIcons.namespaceTransaction,
     [TransactionType.MOSAIC_DEFINITION]: officialIcons.mosaicTransaction,
     [TransactionType.MOSAIC_SUPPLY_CHANGE]: officialIcons.mosaicTransaction,
+    [TransactionType.MOSAIC_SUPPLY_REVOCATION]: officialIcons.mosaicTransaction,
     [TransactionType.MULTISIG_ACCOUNT_MODIFICATION]: officialIcons.multipleParties,
     [TransactionType.AGGREGATE_COMPLETE]: officialIcons.aggregateTransaction,
     [TransactionType.AGGREGATE_BONDED]: officialIcons.aggregateTransaction,

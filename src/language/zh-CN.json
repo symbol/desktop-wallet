@@ -646,6 +646,8 @@
     "linking": "链接中...",
     "loading": "加载中...",
     "locked_mosaic": "锁定马赛克",
+    "reclaim_source": "发送者",
+    "reclaim_target": "至",
     "login": "登 录",
     "login_to_symbol_account": "登录到您的Symbol帐户",
     "logout": "登出",
