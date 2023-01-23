@@ -447,6 +447,7 @@ export default {
             const currentNetworkType = currentProfile ? currentProfile.networkType : networkType;
             commit('networkModel', networkModel);
             commit('networkConfiguration', networkModel.networkConfiguration);
+            commit('setFeesConfig', feesConfig);
             commit('transactionFees', networkModel.transactionFees);
             commit('networkType', networkType);
             commit('epochAdjustment', networkModel.networkConfiguration.epochAdjustment);
