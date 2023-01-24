@@ -45,6 +45,8 @@ import Vue from 'vue';
 // internal dependencies
 import { $eventBus } from '../events';
 import { AwaitLock } from './AwaitLock';
+import i18n from '@/language';
+
 const Lock = AwaitLock.create();
 
 /// region custom types
@@ -445,6 +447,7 @@ export default {
             const currentNetworkType = currentProfile ? currentProfile.networkType : networkType;
             commit('networkModel', networkModel);
             commit('networkConfiguration', networkModel.networkConfiguration);
+            commit('setFeesConfig', feesConfig);
             commit('transactionFees', networkModel.transactionFees);
             commit('networkType', networkType);
             commit('epochAdjustment', networkModel.networkConfiguration.epochAdjustment);
@@ -518,7 +521,7 @@ export default {
                 'app/SET_LOADING_OVERLAY',
                 {
                     show: true,
-                    message: `${this._vm.$t('info_connecting_peer', {
+                    message: `${i18n.t('info_connecting_peer', {
                         peerUrl: currentPeerUrl,
                     })}`,
                     disableCloseButton: true,
@@ -538,7 +541,7 @@ export default {
                 console.log(e);
                 await dispatch(
                     'notification/ADD_ERROR',
-                    `${this._vm.$t('error_peer_connection_went_wrong', {
+                    `${i18n.t('error_peer_connection_went_wrong', {
                         peerUrl: currentPeerUrl,
                     })}`,
                     { root: true },
