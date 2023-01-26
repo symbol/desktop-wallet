@@ -24,7 +24,7 @@ export class ViewMosaicSupplyRevocationTransaction extends TransactionView<Mosai
      * Displayed items
      */
     protected resolveDetailItems(): TransactionDetailItem[] {
-        const color = this.isIncomingReclaim ? 'green' : 'red';
+        const color = this.isMosaicOwner ? 'green' : 'red';
         const attachedMosaic: AttachedMosaic = {
             id: this.transaction.mosaic.id,
             mosaicHex: this.transaction.mosaic.id.toHex(),
@@ -41,7 +41,7 @@ export class ViewMosaicSupplyRevocationTransaction extends TransactionView<Mosai
         ];
     }
 
-    private get isIncomingReclaim() {
+    private get isMosaicOwner() {
         const currentSignerAddress = this.$store.getters['account/currentSignerAddress'];
         return currentSignerAddress && currentSignerAddress.equals(this.transaction.signer.address);
     }
