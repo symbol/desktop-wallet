@@ -37,12 +37,14 @@ import {
     PersistentHarvestingDelegationMessage,
     SecretLockTransaction,
     SecretProofTransaction,
+    MosaicSupplyRevocationTransaction,
 } from 'symbol-sdk';
 import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction';
 import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction';
 import { ViewMultisigAccountModificationTransaction } from '@/core/transactions/ViewMultisigAccountModificationTransaction';
 import { ViewMosaicDefinitionTransaction } from '@/core/transactions/ViewMosaicDefinitionTransaction';
 import { ViewMosaicSupplyChangeTransaction } from '@/core/transactions/ViewMosaicSupplyChangeTransaction';
+import { ViewMosaicSupplyRevocationTransaction } from '@/core/transactions/ViewMosaicSupplyRevocationTransaction';
 import { ViewNamespaceRegistrationTransaction } from '@/core/transactions/ViewNamespaceRegistrationTransaction';
 import { ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction';
 import { ViewAliasTransaction } from '@/core/transactions/ViewAliasTransaction';
@@ -107,6 +109,8 @@ export class TransactionViewFactory {
                 return new ViewMosaicDefinitionTransaction($store, transaction as MosaicDefinitionTransaction);
             case TransactionType.MOSAIC_SUPPLY_CHANGE:
                 return new ViewMosaicSupplyChangeTransaction($store, transaction as MosaicSupplyChangeTransaction);
+            case TransactionType.MOSAIC_SUPPLY_REVOCATION:
+                return new ViewMosaicSupplyRevocationTransaction($store, transaction as MosaicSupplyRevocationTransaction);
             case TransactionType.NAMESPACE_REGISTRATION:
                 return new ViewNamespaceRegistrationTransaction($store, transaction as NamespaceRegistrationTransaction);
             case TransactionType.TRANSFER: {

@@ -648,6 +648,8 @@
     "linking": "Linking...",
     "loading": "Loading...",
     "locked_mosaic": "locked mosaic",
+    "reclaim_source": "From",
+    "reclaim_target": "To",
     "login": "Log in",
     "login_to_symbol_account": "Log in to your Symbol profile",
     "logout": "Log out",
