@@ -54,6 +54,10 @@ export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefin
                 value: mosaicFlags.restrictable,
             },
             {
+                key: 'table_header_revokable',
+                value: mosaicFlags.revokable,
+            },
+            {
                 key: 'estimated_rental_fee',
                 value: {
                     amount: this.$store.getters['network/rentalFeeEstimation'].effectiveMosaicRentalFee.compact(),

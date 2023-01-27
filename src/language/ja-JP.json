@@ -1010,6 +1010,7 @@
     "table_header_hex_id": "Id",
     "table_header_name": "名前",
     "table_header_restrictable": "制限可",
+    "table_header_revokable": "取消可能",
     "table_header_scoped_key": "スコープメタデータキー",
     "table_header_status": "状態",
     "table_header_supply": "供給量",

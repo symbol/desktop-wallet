@@ -1007,6 +1007,7 @@
     "table_header_hex_id": "Id",
     "table_header_name": "이름",
     "table_header_restrictable": "제한 기능",
+    "table_header_revokable": "철회 가능",
     "table_header_scoped_key": "ScopedMetadataKey",
     "table_header_status": "상태",
     "table_header_supply": "총 공급량",

@@ -1007,6 +1007,7 @@
     "table_header_hex_id": "ID",
     "table_header_name": "别名",
     "table_header_restrictable": "限制性",
+    "table_header_revokable": "撤销",
     "table_header_scoped_key": "元数据Key",
     "table_header_status": "状态",
     "table_header_supply": "可供应量",

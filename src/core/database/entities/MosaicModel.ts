@@ -31,6 +31,7 @@ export class MosaicModel {
     public readonly transferable: boolean;
     public readonly supplyMutable: boolean;
     public readonly restrictable: boolean;
+    public readonly revokable: boolean;
     public readonly duration: number;
     public readonly height: number;
     public readonly supply: number;
@@ -49,6 +50,7 @@ export class MosaicModel {
         this.transferable = mosaicInfo.isTransferable();
         this.supplyMutable = mosaicInfo.isSupplyMutable();
         this.restrictable = mosaicInfo.isRestrictable();
+        this.revokable = mosaicInfo.flags.revokable;
         this.duration = mosaicInfo.duration.compact();
         this.height = mosaicInfo.startHeight.compact();
         this.supply = mosaicInfo.supply.compact();

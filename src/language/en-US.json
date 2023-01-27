@@ -1011,6 +1011,7 @@
     "table_header_hex_id": "Id",
     "table_header_name": "Name",
     "table_header_restrictable": "Restrictable",
+    "table_header_revokable": "Revokable",
     "table_header_scoped_key": "ScopedMetadataKey",
     "table_header_status": "status",
     "table_header_supply": "Supply",
