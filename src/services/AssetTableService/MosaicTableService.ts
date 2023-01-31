@@ -44,6 +44,7 @@ export class MosaicTableService extends AssetTableService {
             { name: 'transferable', label: 'table_header_transferable' },
             { name: 'supplyMutable', label: 'table_header_supply_mutable' },
             { name: 'restrictable', label: 'table_header_restrictable' },
+            { name: 'revokable', label: 'table_header_revokable' },
         ];
     }
 
@@ -73,6 +74,7 @@ export class MosaicTableService extends AssetTableService {
                     transferable: mosaicInfo.transferable,
                     supplyMutable: mosaicInfo.supplyMutable,
                     restrictable: mosaicInfo.restrictable,
+                    revokable: mosaicInfo.revokable,
                     metadataList: mosaicInfo.metadataList || [],
                 };
             })

@@ -1007,6 +1007,7 @@
     "table_header_hex_id": "Id",
     "table_header_name": "Имя",
     "table_header_restrictable": "Ограниченный",
+    "table_header_revokable": "Подлежит отмене",
     "table_header_scoped_key": "Скопированный ключ метаданных",
     "table_header_status": "Статус",
     "table_header_supply": "Поставка",
