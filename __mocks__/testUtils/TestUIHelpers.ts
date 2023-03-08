@@ -188,12 +188,15 @@ export default class TestUIHelpers {
         userEvent.click(
             (await within(await screen.findByTestId('signerSelector')).findAllByText(currentSignerAddress, { exact: false }))[0],
         );
-        await waitFor(() => expect(store.getters['account/currentSignerAccountInfo'].address.plain()).toBe(currentSignerAddress));
-        await waitFor(() => expect(store.getters['harvesting/currentSignerHarvestingModel'].accountAddress).toBe(currentSignerAddress), {
-            timeout: 3_000,
-        });
-        await waitFor(() => expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(expectedAccountBalance), {
-            timeout: 3_000,
-        });
+        await waitFor(
+            () => {
+                expect(store.getters['account/currentSignerAccountInfo'].address.plain()).toBe(currentSignerAddress);
+                expect(store.getters['harvesting/currentSignerHarvestingModel'].accountAddress).toBe(currentSignerAddress);
+                expect(store.getters['mosaic/networkBalanceMosaics'].balance.toString()).toBe(expectedAccountBalance);
+            },
+            {
+                timeout: 3_000,
+            },
+        );
     }
 }
