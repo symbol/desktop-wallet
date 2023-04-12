@@ -60,7 +60,7 @@
         "json2csv": "^5.0.1",
         "lodash": "^4.17.20",
         "request": "^2.88.0",
-        "rss-parser": "^3.7.3",
+        "rss-parser": "^3.13.0",
         "rxjs": "^6.6.7",
         "symbol-sdk": "^2.0.4",
         "symbol-statistics-service-typescript-fetch-client": "1.1.3",
