@@ -25,6 +25,17 @@ import { Address } from 'symbol-sdk';
 import { AccountType } from 'symbol-sdk';
 import { SupplementalPublicKeys } from 'symbol-sdk';
 import { networkConfig } from '@/config';
+import { AccountLinkNetworkProperties } from 'symbol-sdk/dist/src/model/network/AccountLinkNetworkProperties';
+import { AggregateNetworkProperties } from 'symbol-sdk/dist/src/model/network/AggregateNetworkProperties';
+import { HashLockNetworkProperties } from 'symbol-sdk/dist/src/model/network/HashLockNetworkProperties';
+import { SecretLockNetworkProperties } from 'symbol-sdk/dist/src/model/network/SecretLockNetworkProperties';
+import { MetadataNetworkProperties } from 'symbol-sdk/dist/src/model/network/MetadataNetworkProperties';
+import { MosaicNetworkProperties } from 'symbol-sdk/dist/src/model/network/MosaicNetworkProperties';
+import { MultisigNetworkProperties } from 'symbol-sdk/dist/src/model/network/MultisigNetworkProperties';
+import { NamespaceNetworkProperties } from 'symbol-sdk/dist/src/model/network/NamespaceNetworkProperties';
+import { AccountRestrictionNetworkProperties } from 'symbol-sdk/dist/src/model/network/AccountRestrictionNetworkProperties';
+import { MosaicRestrictionNetworkProperties } from 'symbol-sdk/dist/src/model/network/MosaicRestrictionNetworkProperties';
+import { TransferNetworkProperties } from 'symbol-sdk/dist/src/model/network/TransferNetworkProperties';
 
 export const OfflineUrl = 'http://mock:3000';
 
@@ -77,7 +88,30 @@ export const OfflineNetworkProperties = {
             'TDGY4DD2U4YQQGERFMDQYHPYS6M7LHIF6XUCJ4Q',
             "6'000",
         ),
-        new PluginProperties(),
+        new PluginProperties(
+            new AccountLinkNetworkProperties('to trigger plugin load'),
+            new AggregateNetworkProperties('100', '25', false, true, '48h'),
+            new HashLockNetworkProperties("10'000'000", '2d'),
+            new SecretLockNetworkProperties('365d', '0', '1024'),
+            new MetadataNetworkProperties('1024'),
+            new MosaicNetworkProperties("1'000", '3650d', '6', 'TA53AVLYMT5HCP5TJ23CGKGTUXQHNPBTJ4Z2LIQ', '500000'),
+            new MultisigNetworkProperties('3', '25', '25'),
+            new NamespaceNetworkProperties(
+                '64',
+                '100',
+                '3',
+                '30d',
+                '1825d',
+                '1d',
+                'symbol, symbl, xym, xem, nem, user, account, org, com, biz, net, edu, mil, gov, info',
+                'TDVFW6NZN3YI6O4ZRYZHGY73KADCW4HX6IDIKZI',
+                '2',
+                '100000',
+            ),
+            new AccountRestrictionNetworkProperties('100'),
+            new MosaicRestrictionNetworkProperties('20'),
+            new TransferNetworkProperties('1024'),
+        ),
     ),
     [NetworkType.MAIN_NET]: new NetworkConfiguration(
         new NetworkProperties(
@@ -116,7 +150,30 @@ export const OfflineNetworkProperties = {
             'NAMV77WU2EUFC6FBDFBQCDQARAGUTCRFDN7YLVA',
             "6'000",
         ),
-        new PluginProperties(),
+        new PluginProperties(
+            new AccountLinkNetworkProperties('to trigger plugin load'),
+            new AggregateNetworkProperties('100', '25', false, true, '48h'),
+            new HashLockNetworkProperties("10'000'000", '2d'),
+            new SecretLockNetworkProperties('365d', '0', '1024'),
+            new MetadataNetworkProperties('1024'),
+            new MosaicNetworkProperties("1'000", '3650d', '6', 'NC733XE7DF46Q7QYLIIZBBSCJN2BEEP5FQ6PAYA', '500000'),
+            new MultisigNetworkProperties('3', '25', '25'),
+            new NamespaceNetworkProperties(
+                '64',
+                '100',
+                '3',
+                '30d',
+                '1825d',
+                '30d',
+                'symbol, symbl, xym, xem, nem, user, account, org, com, biz, net, edu, mil, gov, info',
+                'NBDTBUD6R32ZYJWDEWLJM4YMOX3OOILHGDUMTSA',
+                '2',
+                '100000',
+            ),
+            new AccountRestrictionNetworkProperties('100'),
+            new MosaicRestrictionNetworkProperties('20'),
+            new TransferNetworkProperties('1024'),
+        ),
     ),
 };
 
