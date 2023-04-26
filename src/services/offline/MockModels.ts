@@ -1,4 +1,6 @@
 import {
+    Address,
+    AccountType,
     AccountInfo,
     AccountNames,
     ChainInfo,
@@ -19,23 +21,21 @@ import {
     StorageInfo,
     TransactionFees,
     UInt64,
+    SupplementalPublicKeys,
+    AccountLinkNetworkProperties,
+    AggregateNetworkProperties,
+    HashLockNetworkProperties,
+    SecretLockNetworkProperties,
+    MetadataNetworkProperties,
+    MosaicNetworkProperties,
+    MultisigNetworkProperties,
+    NamespaceNetworkProperties,
+    AccountRestrictionNetworkProperties,
+    MosaicRestrictionNetworkProperties,
+    TransferNetworkProperties,
 } from 'symbol-sdk';
 import { NodeIdentityEqualityStrategy } from 'symbol-openapi-typescript-fetch-client';
-import { Address } from 'symbol-sdk';
-import { AccountType } from 'symbol-sdk';
-import { SupplementalPublicKeys } from 'symbol-sdk';
 import { networkConfig } from '@/config';
-import { AccountLinkNetworkProperties } from 'symbol-sdk/dist/src/model/network/AccountLinkNetworkProperties';
-import { AggregateNetworkProperties } from 'symbol-sdk/dist/src/model/network/AggregateNetworkProperties';
-import { HashLockNetworkProperties } from 'symbol-sdk/dist/src/model/network/HashLockNetworkProperties';
-import { SecretLockNetworkProperties } from 'symbol-sdk/dist/src/model/network/SecretLockNetworkProperties';
-import { MetadataNetworkProperties } from 'symbol-sdk/dist/src/model/network/MetadataNetworkProperties';
-import { MosaicNetworkProperties } from 'symbol-sdk/dist/src/model/network/MosaicNetworkProperties';
-import { MultisigNetworkProperties } from 'symbol-sdk/dist/src/model/network/MultisigNetworkProperties';
-import { NamespaceNetworkProperties } from 'symbol-sdk/dist/src/model/network/NamespaceNetworkProperties';
-import { AccountRestrictionNetworkProperties } from 'symbol-sdk/dist/src/model/network/AccountRestrictionNetworkProperties';
-import { MosaicRestrictionNetworkProperties } from 'symbol-sdk/dist/src/model/network/MosaicRestrictionNetworkProperties';
-import { TransferNetworkProperties } from 'symbol-sdk/dist/src/model/network/TransferNetworkProperties';
 
 export const OfflineUrl = 'http://mock:3000';
 
@@ -156,7 +156,7 @@ export const OfflineNetworkProperties = {
             new HashLockNetworkProperties("10'000'000", '2d'),
             new SecretLockNetworkProperties('365d', '0', '1024'),
             new MetadataNetworkProperties('1024'),
-            new MosaicNetworkProperties("1'000", '3650d', '6', 'NC733XE7DF46Q7QYLIIZBBSCJN2BEEP5FQ6PAYA', '500000'),
+            new MosaicNetworkProperties("1'000", '3650d', '6', 'NCVORTEX4XD5IQASZQEHDWUXT33XBOTBMKFDCLI', '500000'),
             new MultisigNetworkProperties('3', '25', '25'),
             new NamespaceNetworkProperties(
                 '64',
@@ -166,7 +166,7 @@ export const OfflineNetworkProperties = {
                 '1825d',
                 '30d',
                 'symbol, symbl, xym, xem, nem, user, account, org, com, biz, net, edu, mil, gov, info',
-                'NBDTBUD6R32ZYJWDEWLJM4YMOX3OOILHGDUMTSA',
+                'NCVORTEX4XD5IQASZQEHDWUXT33XBOTBMKFDCLI',
                 '2',
                 '100000',
             ),
