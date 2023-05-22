@@ -1,4 +1,6 @@
 import {
+    Address,
+    AccountType,
     AccountInfo,
     AccountNames,
     ChainInfo,
@@ -19,11 +21,20 @@ import {
     StorageInfo,
     TransactionFees,
     UInt64,
+    SupplementalPublicKeys,
+    AccountLinkNetworkProperties,
+    AggregateNetworkProperties,
+    HashLockNetworkProperties,
+    SecretLockNetworkProperties,
+    MetadataNetworkProperties,
+    MosaicNetworkProperties,
+    MultisigNetworkProperties,
+    NamespaceNetworkProperties,
+    AccountRestrictionNetworkProperties,
+    MosaicRestrictionNetworkProperties,
+    TransferNetworkProperties,
 } from 'symbol-sdk';
 import { NodeIdentityEqualityStrategy } from 'symbol-openapi-typescript-fetch-client';
-import { Address } from 'symbol-sdk';
-import { AccountType } from 'symbol-sdk';
-import { SupplementalPublicKeys } from 'symbol-sdk';
 import { networkConfig } from '@/config';
 
 export const OfflineUrl = 'http://mock:3000';
@@ -77,7 +88,30 @@ export const OfflineNetworkProperties = {
             'TDGY4DD2U4YQQGERFMDQYHPYS6M7LHIF6XUCJ4Q',
             "6'000",
         ),
-        new PluginProperties(),
+        new PluginProperties(
+            new AccountLinkNetworkProperties('to trigger plugin load'),
+            new AggregateNetworkProperties('100', '25', false, true, '48h'),
+            new HashLockNetworkProperties("10'000'000", '2d'),
+            new SecretLockNetworkProperties('365d', '0', '1024'),
+            new MetadataNetworkProperties('1024'),
+            new MosaicNetworkProperties("1'000", '3650d', '6', 'TA53AVLYMT5HCP5TJ23CGKGTUXQHNPBTJ4Z2LIQ', '500000'),
+            new MultisigNetworkProperties('3', '25', '25'),
+            new NamespaceNetworkProperties(
+                '64',
+                '100',
+                '3',
+                '30d',
+                '1825d',
+                '1d',
+                'symbol, symbl, xym, xem, nem, user, account, org, com, biz, net, edu, mil, gov, info',
+                'TDVFW6NZN3YI6O4ZRYZHGY73KADCW4HX6IDIKZI',
+                '2',
+                '100000',
+            ),
+            new AccountRestrictionNetworkProperties('100'),
+            new MosaicRestrictionNetworkProperties('20'),
+            new TransferNetworkProperties('1024'),
+        ),
     ),
     [NetworkType.MAIN_NET]: new NetworkConfiguration(
         new NetworkProperties(
@@ -116,7 +150,30 @@ export const OfflineNetworkProperties = {
             'NAMV77WU2EUFC6FBDFBQCDQARAGUTCRFDN7YLVA',
             "6'000",
         ),
-        new PluginProperties(),
+        new PluginProperties(
+            new AccountLinkNetworkProperties('to trigger plugin load'),
+            new AggregateNetworkProperties('100', '25', false, true, '48h'),
+            new HashLockNetworkProperties("10'000'000", '2d'),
+            new SecretLockNetworkProperties('365d', '0', '1024'),
+            new MetadataNetworkProperties('1024'),
+            new MosaicNetworkProperties("1'000", '3650d', '6', 'NCVORTEX4XD5IQASZQEHDWUXT33XBOTBMKFDCLI', '500000'),
+            new MultisigNetworkProperties('3', '25', '25'),
+            new NamespaceNetworkProperties(
+                '64',
+                '100',
+                '3',
+                '30d',
+                '1825d',
+                '30d',
+                'symbol, symbl, xym, xem, nem, user, account, org, com, biz, net, edu, mil, gov, info',
+                'NCVORTEX4XD5IQASZQEHDWUXT33XBOTBMKFDCLI',
+                '2',
+                '100000',
+            ),
+            new AccountRestrictionNetworkProperties('100'),
+            new MosaicRestrictionNetworkProperties('20'),
+            new TransferNetworkProperties('1024'),
+        ),
     ),
 };
 
