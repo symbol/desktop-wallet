@@ -13,7 +13,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Removed login background video and dependency [#1958](https://github.com/symbol/desktop-wallet/pull/1958)
 - Enable Dependabot automerge [#1929](https://github.com/symbol/desktop-wallet/pull/1929)
 - Added test for delegated harvesting form [#1914](https://github.com/symbol/desktop-wallet/pull/1914)
-- some dependencies upgrades
+- One step harvesting impl and unit test improvements [#1903](https://github.com/symbol/desktop-wallet/pull/1903)
+- Some dependencies upgrades
 
 #### Fixed
 - Fixed offline transaction: fill information about available plugins for mainnet and testnet [#1981](https://github.com/symbol/desktop-wallet/pull/1981)
