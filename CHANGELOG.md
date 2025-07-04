@@ -3,6 +3,27 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.1.0][v1.1.0] - 05-Jul-2025
+### Milestone: Added mosaic revokable support, language improvements and dependency upgrades
+
+#### Changed
+- Updated symbol-sdk version to 2.0.4 [#1975](https://github.com/symbol/desktop-wallet/pull/1975)
+- Improve and fix Japanese translation [#1902](https://github.com/symbol/desktop-wallet/pull/1902)
+- Improve and fix Japanese translation [#1923](https://github.com/symbol/desktop-wallet/pull/1923)
+- Removed login background video and dependency [#1958](https://github.com/symbol/desktop-wallet/pull/1958)
+- Enable Dependabot automerge [#1929](https://github.com/symbol/desktop-wallet/pull/1929)
+- Added test for delegated harvesting form [#1914](https://github.com/symbol/desktop-wallet/pull/1914)
+- some dependencies upgrades
+
+#### Fixed
+- Fixed offline transaction: fill information about available plugins for mainnet and testnet [#1981](https://github.com/symbol/desktop-wallet/pull/1981)
+- Fixed unable to switch nodes and changes the default max fee [#1969](https://github.com/symbol/desktop-wallet/pull/1969)
+- Removed duplicate message property from en-US.json [#1962](https://github.com/symbol/desktop-wallet/pull/1962)
+
+#### Added
+- Added information about mosaic revokable flag [#1971](https://github.com/symbol/desktop-wallet/pull/1971)
+- Added support for mosaic supply revocation transaction [#1967](https://github.com/symbol/desktop-wallet/pull/1967)
+
 ## [1.0.13][v1.0.13] - 03-Nov-2022
 ### Milestone: Testnet reset
 
@@ -856,6 +877,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
 
+[v1.1.0]: https://github.com/symbol/desktop-wallet/releases/tag/v1.1.0
 [v1.0.13]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.13
 [v1.0.12]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.12
 [v1.0.11]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.11
