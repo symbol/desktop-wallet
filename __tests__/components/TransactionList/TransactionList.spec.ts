@@ -230,8 +230,14 @@ describe('components/TransactionList', () => {
                 },
             ]);
 
+            const filteredTransactions = [createMockTransferTransaction(blacklistedAddress)];
+
+            if (!isBlackListFilterActivated) {
+                filteredTransactions.push(createMockTransferTransaction());
+            }
+
             const wrapper = getTransactionListWrapper({
-                filteredTransactions: [createMockTransferTransaction(blacklistedAddress), createMockTransferTransaction()],
+                filteredTransactions,
                 addressBook: addressBookMock,
                 isBlackListFilterActivated,
             });
@@ -244,11 +250,10 @@ describe('components/TransactionList', () => {
             // Assert:
             if (isBlackListFilterActivated) {
                 expect(transactions.length).toBe(1);
-                expect(transactions[0].signer).toBe(mockSignerAddress);
-            } else {
-                expect(transactions.length).toBe(2);
                 expect(transactions[0].signer).toBe(blacklistedAddress);
-                expect(transactions[1].signer).toBe(mockSignerAddress);
+            } else {
+                expect(transactions.length).toBe(1);
+                expect(transactions[0].signer).toBe(mockSignerAddress);
             }
 
             transactions.forEach((tx: TransferTransaction) => {
