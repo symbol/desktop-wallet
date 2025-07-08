@@ -2,7 +2,7 @@ defaultCiPipeline {
 	operatingSystem = ['ubuntu']
 	instanceSize = 'medium'
 
-	environment = 'javascript'
+	environment = 'node16'
 	packageId = 'wallet-desktop'
 
 	publisher = 'docker'
