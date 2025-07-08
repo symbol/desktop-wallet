@@ -160,7 +160,7 @@
     "build": {
         "appId": "io.nem.symbol.desktop-wallet",
         "extends": null,
-        "copyright": "Copyright © 2019-2021 NEM",
+        "copyright": "Copyright © 2019-2025 NEM",
         "productName": "Symbol Wallet",
         "artifactName": "${name}-${os}-${arch}-${version}.${ext}",
         "icon": "./dist/assets/icons/Icon.icns",
