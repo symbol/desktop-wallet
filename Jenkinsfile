@@ -2,7 +2,7 @@ defaultCiPipeline {
 	operatingSystem = ['ubuntu']
 	instanceSize = 'medium'
 
-	environment = 'node16'
+	ciBuildDockerfile = 'javascript.Dockerfile'
 	packageId = 'wallet-desktop'
 
 	publisher = 'docker'
