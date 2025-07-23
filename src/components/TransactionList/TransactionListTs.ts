@@ -241,7 +241,8 @@ export class TransactionListTs extends Vue {
         const transactions = this.paginationType === 'pagination' ? this.getCurrentPageTransactions() : this.filteredTransactions;
         const blackListedContacts = this.addressBook.getBlackListedContacts();
 
-        if (this.isBlackListFilterActivated) {
+        // if blacklist filter is not activated, filter out blacklisted contacts
+        if (!this.isBlackListFilterActivated) {
             return transactions.filter(
                 (transaction) => !blackListedContacts.some((contact) => contact.address === transaction.signer.address.plain()),
             );
