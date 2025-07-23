@@ -20,6 +20,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Fixed offline transaction: fill information about available plugins for mainnet and testnet [#1981](https://github.com/symbol/desktop-wallet/pull/1981)
 - Fixed unable to switch nodes and changes the default max fee [#1969](https://github.com/symbol/desktop-wallet/pull/1969)
 - Removed duplicate message property from en-US.json [#1962](https://github.com/symbol/desktop-wallet/pull/1962)
+- Fixed outdated Jenkins file [#1998](https://github.com/symbol/desktop-wallet/pull/1998)
 
 #### Added
 - Added information about mosaic revokable flag [#1971](https://github.com/symbol/desktop-wallet/pull/1971)
