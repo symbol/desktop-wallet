@@ -93,7 +93,7 @@ npm run release
 Use the following available resources to get help:
 
 - [Symbol Documentation][docs]
-- Join the community [discord group][discord], [slack group (#sig-client)][slack]
+- Join the community [discord group][discord]
 - If you found a bug, [open a new issue][issues]
 
 ## Contributing
@@ -108,7 +108,6 @@ Check [CONTRIBUTING](CONTRIBUTING.md) for information on how to contribute.
 Licensed under the [Apache License 2.0](LICENSE)
 
 [self]: https://github.com/symbol/desktop-wallet
-[docs]: https://docs.symbolplatform.com
+[docs]: https://docs.symbol.dev
 [issues]: https://github.com/symbol/desktop-wallet/issues
-[discord]: https://discord.gg/xymcity
-[slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
+[discord]: https://discord.gg/NMA9YQ55td
