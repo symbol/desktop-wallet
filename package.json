@@ -73,7 +73,7 @@
         "vue-i18n": "^8.11.2",
         "vue-infinite-scroll": "^2.0.2",
         "vue-moment": "^4.1.0",
-        "vue-number-animation": "1.0.5",
+        "vue-number-animation": "2.0.2",
         "vue-pdf": "^4.2.0",
         "vue-property-decorator": "^8.1.0",
         "vue-qrcode-reader": "^3.0.0",
