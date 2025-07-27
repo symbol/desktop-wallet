@@ -124,7 +124,7 @@
         "gsap": ">=3.6.0",
         "identity-obj-proxy": "^3.0.0",
         "jest": "^25.2.6",
-        "jest-websocket-mock": "~2.0.2",
+        "jest-websocket-mock": "~2.5.0",
         "json-schema": ">=0.4.0",
         "less": "^3.0.4",
         "less-loader": "^4.1.0",
