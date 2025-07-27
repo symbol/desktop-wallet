@@ -130,7 +130,7 @@
         "less-loader": "^4.1.0",
         "moment-timezone": "^0.5.38",
         "msw": "^0.32.0",
-        "node-notifier": ">=8.0.1",
+        "node-notifier": ">=10.0.1",
         "node-pre-gyp": "^0.13.0",
         "npm-build-zip": "^1.0.2",
         "nth-check": ">=2.0.1",
