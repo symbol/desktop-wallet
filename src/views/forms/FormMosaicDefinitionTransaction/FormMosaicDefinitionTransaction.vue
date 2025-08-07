@@ -33,6 +33,9 @@
                             <Checkbox v-model="formItems.restrictable">
                                 {{ $t('restrictable') }}
                             </Checkbox>
+                            <Checkbox v-model="formItems.revokable">
+                                {{ $t('revokable') }}
+                            </Checkbox>
                         </div>
                     </template>
                 </FormRow>
