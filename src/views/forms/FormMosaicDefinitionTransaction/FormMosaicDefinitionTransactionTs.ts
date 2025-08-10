@@ -97,6 +97,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
         supplyMutable: true,
         transferable: true,
         restrictable: true,
+        revokable: true,
         permanent: true,
         duration: 10000,
         maxFee: 0,
@@ -124,6 +125,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
         this.formItems.signerAddress = this.selectedSigner ? this.selectedSigner.address.plain() : this.currentAccount.address;
         this.formItems.supplyMutable = this.isAggregate;
         this.formItems.restrictable = false;
+        this.formItems.revokable = false;
         this.formItems.permanent = false;
         this.formItems.duration = 10000;
         this.formItems.divisibility = 0;
@@ -152,7 +154,12 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
             this.createDeadline(),
             randomNonce,
             mosaicId,
-            MosaicFlags.create(this.formItems.supplyMutable, this.formItems.transferable, this.formItems.restrictable),
+            MosaicFlags.create(
+                this.formItems.supplyMutable,
+                this.formItems.transferable,
+                this.formItems.restrictable,
+                this.formItems.revokable,
+            ),
             this.formItems.divisibility,
             UInt64.fromUint(this.formItems.duration),
             this.networkType,
@@ -185,6 +192,7 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
         this.formItems.supplyMutable = definition.flags.supplyMutable;
         this.formItems.transferable = definition.flags.transferable;
         this.formItems.restrictable = definition.flags.restrictable;
+        this.formItems.revokable = definition.flags.revokable;
         this.formItems.permanent = definition.duration.compact() === 0;
         this.formItems.duration = definition.duration.compact();
 
