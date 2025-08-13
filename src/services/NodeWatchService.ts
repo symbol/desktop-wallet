@@ -25,7 +25,7 @@ export class NodeWatchService {
 
         return {
             endpoint,
-            friendlyName: response.friendlyName,
+            friendlyName: response.name,
             mainPublicKey: response.mainPublicKey,
             nodePublicKey: response.nodePublicKey,
             isSslEnabled: response.isSslEnabled,
