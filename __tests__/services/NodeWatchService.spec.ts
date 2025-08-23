@@ -7,7 +7,7 @@ describe('services/NodeWatchService', () => {
 
     const createMockNodeResponse = () => ({
         endpoint: 'http://example.com:3000',
-        friendlyName: 'Node1',
+        name: 'Node1',
         mainPublicKey: 'mainKey1',
         nodePublicKey: 'nodeKey1',
         isSslEnabled: true,
@@ -57,7 +57,12 @@ describe('services/NodeWatchService', () => {
             );
             expect(results).toStrictEqual([
                 {
-                    ...createMockNodeResponse(),
+                    friendlyName: 'Node1',
+                    mainPublicKey: 'mainKey1',
+                    nodePublicKey: 'nodeKey1',
+                    isSslEnabled: true,
+                    isHealthy: true,
+                    restVersion: '1.0.0',
                     endpoint: 'https://example.com:3001',
                     wsUrl: 'wss://example.com:3001/ws',
                 },
@@ -104,7 +109,12 @@ describe('services/NodeWatchService', () => {
         // Assert:
         expect(mockFetch).toHaveBeenCalledWith(baseUrl + expectedUrl, {});
         expect(node).toEqual({
-            ...mockResponse,
+            friendlyName: 'Node1',
+            mainPublicKey: 'mainKey1',
+            nodePublicKey: 'nodeKey1',
+            isSslEnabled: true,
+            isHealthy: true,
+            restVersion: '1.0.0',
             endpoint: 'https://example.com:3001',
             wsUrl: 'wss://example.com:3001/ws',
         });
