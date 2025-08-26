@@ -47,13 +47,13 @@ export interface NetworkConfig {
     defaultNetworkType: number;
     explorerUrl: string;
     networkConfigurationDefaults: NetworkConfigurationDefaults;
-    statisticServiceUrl: string;
+    nodeWatchServiceUrl: string;
 }
 
 export const defaultTestnetNetworkConfig: NetworkConfig = {
     explorerUrl: 'https://testnet.symbol.fyi/',
     faucetUrl: 'https://testnet.symbol.tools/',
-    statisticServiceUrl: 'https://testnet.symbol.services',
+    nodeWatchServiceUrl: 'https://nodewatch.symbol.tools/testnet',
     defaultNetworkType: 152,
     networkConfigurationDefaults: {
         maxMosaicDivisibility: 6,
@@ -81,7 +81,7 @@ export const defaultTestnetNetworkConfig: NetworkConfig = {
 export const defaultMainnetNetworkConfig: NetworkConfig = {
     explorerUrl: 'https://symbol.fyi/',
     faucetUrl: 'https://faucet.mainnet.symboldev.network/',
-    statisticServiceUrl: 'https://symbol.services',
+    nodeWatchServiceUrl: 'https://nodewatch.symbol.tools',
     defaultNetworkType: 104,
     networkConfigurationDefaults: {
         maxMosaicDivisibility: 6,

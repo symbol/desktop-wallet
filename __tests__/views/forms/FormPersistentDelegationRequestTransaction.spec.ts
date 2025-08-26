@@ -40,16 +40,32 @@ import flushPromises from 'flush-promises';
 import WS from 'jest-websocket-mock';
 import { setupServer } from 'msw/node';
 import { AccountInfo, Address, Convert, KeyPair } from 'symbol-sdk';
+import { NodeWatchService } from '@/services/NodeWatchService';
 
 // mock local storage
 jest.mock('@/core/database/backends/LocalStorageBackend', () => ({
     LocalStorageBackend: jest.requireActual('@/core/database/backends/ObjectStorageBackend').ObjectStorageBackend,
 }));
 
+// Mock NodeWatchService responses
+const nodeResponse = {
+    endpoint: 'https://example.com:3001',
+    friendlyName: 'Node1',
+    mainPublicKey: '0'.repeat(64),
+    nodePublicKey: '0'.repeat(64),
+    isSslEnabled: true,
+    isHealthy: true,
+    restVersion: '1.0.0',
+    wsUrl: 'wss://example.com:3001/ws',
+};
+jest.spyOn(NodeWatchService.prototype, 'getNodes').mockReturnValue(Promise.resolve([nodeResponse]));
+jest.spyOn(NodeWatchService.prototype, 'getNodeByMainPublicKey').mockReturnValue(Promise.resolve(nodeResponse));
+jest.spyOn(NodeWatchService.prototype, 'getNodeByNodePublicKey').mockReturnValue(Promise.resolve(nodeResponse));
+
 // mock http server with base responses denoted by * which are basic responses for the accounts __mock__/Accounts.ts
 const httpServer = setupServer(...getHandlers(responses['*']));
 // mock websocket server
-const websocketServer = new WS('wss://001-joey-dual.symboltest.net:3001/ws', { jsonProtocol: true });
+const websocketServer = new WS('wss://example.com:3001/ws', { jsonProtocol: true });
 websocketServer.on('connection', (socket) => {
     console.log('Websocket client connected!');
     socket.send('{"uid":"FAKE_UID"}');
@@ -200,7 +216,7 @@ describe('views/forms/FormPersistentDelegationRequestTransaction', () => {
 
             // Act:
             const input = await screen.findByPlaceholderText(i18n.t('form_label_network_node_url').toString());
-            await userEvent.type(input, 'https://001-joey-dual.symboltest.net:3001');
+            await userEvent.type(input, 'https://example.com:3001');
             await TestUIHelpers.selectMaxFee(selectedMaxFee);
             const button = await screen.findByRole('button', { name: i18n.t('start_harvesting').toString() });
             userEvent.click(button);
@@ -418,7 +434,7 @@ describe('views/forms/FormPersistentDelegationRequestTransaction', () => {
 
         // Act:
         const input = await screen.findByPlaceholderText(i18n.t('form_label_network_node_url').toString());
-        await userEvent.type(input, 'https://001-joey-dual.symboltest.net:3001');
+        await userEvent.type(input, 'https://example.com:3001');
         const keyLinksTab = await screen.findByText(i18n.t('tab_harvesting_key_links').toString());
         userEvent.click(keyLinksTab);
 
