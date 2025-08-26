@@ -35,8 +35,8 @@ export class NodeWatchService {
         };
     }
 
-    async getNodes(onlySSL = true, limit = 0, order = null): Promise<NodeApiNodeInfo[]> {
-        const params = `only_ssl=${onlySSL}&limit=${limit}${order ? `&order=${order}` : ''}`;
+    async getNodes(limit = 0, order = null): Promise<NodeApiNodeInfo[]> {
+        const params = `only_ssl=true&limit=${limit}${order ? `&order=${order}` : ''}`;
 
         const [apiNodesResponse, peerNodesResponse] = await Promise.all([
             this.get(`/api/symbol/nodes/api?${params}`),

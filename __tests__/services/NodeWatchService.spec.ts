@@ -43,16 +43,16 @@ describe('services/NodeWatchService', () => {
             }
         });
 
-        const runAssertNodes = async (results, { onlySSL, limit, order }) => {
+        const runAssertNodes = async (results, { limit, order }) => {
             // Assert:
             expect(mockFetch).toHaveBeenNthCalledWith(
                 1,
-                `${baseUrl}` + `/api/symbol/nodes/api?only_ssl=${onlySSL}&limit=${limit}${order ? `&order=${order}` : ''}`,
+                `${baseUrl}` + `/api/symbol/nodes/api?only_ssl=true&limit=${limit}${order ? `&order=${order}` : ''}`,
                 {},
             );
             expect(mockFetch).toHaveBeenNthCalledWith(
                 2,
-                `${baseUrl}` + `/api/symbol/nodes/peer?only_ssl=${onlySSL}&limit=${limit}${order ? `&order=${order}` : ''}`,
+                `${baseUrl}` + `/api/symbol/nodes/peer?only_ssl=true&limit=${limit}${order ? `&order=${order}` : ''}`,
                 {},
             );
             expect(results).toStrictEqual([
@@ -75,7 +75,6 @@ describe('services/NodeWatchService', () => {
 
             // Assert:
             runAssertNodes(nodes, {
-                onlySSL: true,
                 limit: 0,
                 order: null,
             });
@@ -83,11 +82,10 @@ describe('services/NodeWatchService', () => {
 
         test('fetches nodes with parameters', async () => {
             // Act:
-            const nodes = await nodeService.getNodes(false, 10, 'random');
+            const nodes = await nodeService.getNodes(10, 'random');
 
             // Assert:
             runAssertNodes(nodes, {
-                onlySSL: false,
                 limit: 10,
                 order: 'random',
             });

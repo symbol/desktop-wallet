@@ -73,16 +73,11 @@ export class NodeService {
             .then((val) => (statisticsNodes && statisticsNodes.length ? _.uniqBy(val.concat([...statisticsNodes]), 'url') : val));
     }
 
-    public async getNodesFromNodeWatchService(
-        networkType: NetworkType,
-        limit = 30,
-        sslOnly = true,
-        isOffline?: boolean,
-    ): Promise<NodeModel[]> {
+    public async getNodesFromNodeWatchService(networkType: NetworkType, limit = 30, isOffline?: boolean): Promise<NodeModel[]> {
         if (!isOffline && navigator.onLine) {
             try {
                 const nodeWatchService = new NodeWatchService(networkType);
-                let nodeInfos = await nodeWatchService.getNodes(sslOnly, limit, 'random');
+                let nodeInfos = await nodeWatchService.getNodes(limit, 'random');
 
                 if (!nodeInfos) {
                     return undefined;

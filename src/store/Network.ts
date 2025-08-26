@@ -608,7 +608,7 @@ export default {
             const nodeService = new NodeService();
             const networkType = getters['networkType'];
             const isOffline = getters['isOfflineMode'];
-            commit('peerNodes', _.uniqBy(await nodeService.getNodesFromNodeWatchService(networkType, 100, false, isOffline), 'url'));
+            commit('peerNodes', _.uniqBy(await nodeService.getNodesFromNodeWatchService(networkType, 100, isOffline), 'url'));
         },
 
         // set current difference between server and local time
