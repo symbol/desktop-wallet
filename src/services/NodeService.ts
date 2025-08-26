@@ -134,8 +134,8 @@ export class NodeService {
 
             return this.getNodeModelByMethod(
                 networkType,
-                async (pKey) => {
-                    return await nodeWatchService.getNodeByMainPublicKey(pKey);
+                async (publicKey) => {
+                    return await nodeWatchService.getNodeByMainPublicKey(publicKey);
                 },
                 publicKey,
             );
@@ -153,8 +153,8 @@ export class NodeService {
 
             return this.getNodeModelByMethod(
                 networkType,
-                async (npKey) => {
-                    return await nodeWatchService.getNodeByNodePublicKey(npKey);
+                async (publicKey) => {
+                    return await nodeWatchService.getNodeByNodePublicKey(publicKey);
                 },
                 nodePublicKey,
             );
