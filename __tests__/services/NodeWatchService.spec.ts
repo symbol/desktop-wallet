@@ -6,7 +6,7 @@ describe('services/NodeWatchService', () => {
     (global as any).fetch = mockFetch;
 
     const createMockNodeResponse = () => ({
-        endpoint: 'http://example.com:3000',
+        endpoint: 'https://example.com:3001',
         name: 'Node1',
         mainPublicKey: 'mainKey1',
         nodePublicKey: 'nodeKey1',
