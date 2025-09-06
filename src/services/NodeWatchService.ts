@@ -20,18 +20,15 @@ export class NodeWatchService {
     }
 
     private mapResponseToNodeApiInfo(response: any): NodeApiNodeInfo {
-        const endpoint = response.endpoint.replace('http', 'https').replace('3000', '3001');
-        const wsUrl = endpoint.replace('https', 'wss') + '/ws';
-
         return {
-            endpoint,
+            endpoint: response.endpoint,
             friendlyName: response.name,
             mainPublicKey: response.mainPublicKey,
             nodePublicKey: response.nodePublicKey,
             isSslEnabled: response.isSslEnabled,
             isHealthy: response.isHealthy,
             restVersion: response.restVersion,
-            wsUrl,
+            wsUrl: response.endpoint.replace('http', 'ws') + '/ws',
         };
     }
 
