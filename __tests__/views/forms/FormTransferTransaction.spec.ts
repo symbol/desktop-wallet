@@ -17,16 +17,26 @@ import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import flushPromises from 'flush-promises';
 import WS from 'jest-websocket-mock';
 import { setupServer } from 'msw/node';
+import { NodeService } from '@/services/NodeService';
+import { NodeModel } from '@/core/database/entities/NodeModel';
+import { NetworkType } from 'symbol-sdk';
 
 // mock local storage
 jest.mock('@/core/database/backends/LocalStorageBackend', () => ({
     LocalStorageBackend: jest.requireActual('@/core/database/backends/ObjectStorageBackend').ObjectStorageBackend,
 }));
 
+// mock the NodeService to control the nodes returned
+jest.spyOn(NodeService.prototype, 'getNodesFromNodeWatchService').mockReturnValue(
+    Promise.resolve([
+        new NodeModel('https://example.com:3001', 'Node1', true, NetworkType.TEST_NET, 'mainKey1', 'nodeKey1', 'wss://example.com:3001/ws'),
+    ]),
+);
+
 // mock http server with base responses denoted by * which are basic responses for the accounts __mock__/Accounts.ts
 const httpServer = setupServer(...getHandlers(responses['*']));
 // mock websocket server
-const websocketServer = new WS('wss://001-joey-dual.symboltest.net:3001/ws', { jsonProtocol: true });
+const websocketServer = new WS('wss://example.com:3001/ws', { jsonProtocol: true });
 websocketServer.on('connection', (socket) => {
     console.log('Websocket client connected!');
     socket.send('{"uid":"FAKE_UID"}');

@@ -436,7 +436,7 @@ export default {
                 dispatch('harvesting/SET_CURRENT_SIGNER_HARVESTING_MODEL', currentSignerAddress.plain(), { root: true });
                 const networkType = rootGetters['network/networkType'];
                 const nodeService = new NodeService();
-                const nodes = await nodeService.getNodesFromStatisticService(networkType);
+                const nodes = await nodeService.getNodesFromNodeWatchService(networkType);
                 if (nodes && nodes.length && navigator.onLine) {
                     dispatch('harvesting/LOAD_HARVESTED_BLOCKS_STATS', {}, { root: true });
                 }

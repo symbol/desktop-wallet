@@ -19,11 +19,10 @@ import { ObservableHelpers } from '@/core/utils/ObservableHelpers';
 import { map, tap } from 'rxjs/operators';
 import { NodeModel } from '@/core/database/entities/NodeModel';
 import * as _ from 'lodash';
-import { appConfig, networkConfig } from '@/config';
+import { appConfig } from '@/config';
 import { NodeModelStorage } from '@/core/database/storage/NodeModelStorage';
 import { ProfileModel } from '@/core/database/entities/ProfileModel';
-import fetch from 'node-fetch';
-import { Configuration, NodeApi, NodeListFilter, NodeInfo as NodeApiNodeInfo } from 'symbol-statistics-service-typescript-fetch-client';
+import { NodeWatchService, NodeApiNodeInfo } from '@/services/NodeWatchService';
 
 /**
  * The service in charge of loading and caching anything related to Node and Peers from Rest.
@@ -47,7 +46,7 @@ export class NodeService {
         isOffline?: boolean,
     ): Promise<NodeModel[]> {
         const storedNodes = this.getKnownNodesOnly(profile);
-        const statisticsNodes = !isOffline ? await this.getNodesFromStatisticService(profile.networkType) : [];
+        const statisticsNodes = !isOffline ? await this.getNodesFromNodeWatchService(profile.networkType) : [];
         const nodeRepository = repositoryFactory.createNodeRepository();
         const nodeWsUrl =
             storedNodes.find((n) => n.url === repositoryFactoryUrl)?.wsUrl ||
@@ -74,38 +73,19 @@ export class NodeService {
             .then((val) => (statisticsNodes && statisticsNodes.length ? _.uniqBy(val.concat([...statisticsNodes]), 'url') : val));
     }
 
-    public async getNodesFromStatisticService(
-        networkType: NetworkType,
-        limit = 30,
-        sslOnly = true,
-        isOffline?: boolean,
-    ): Promise<NodeModel[]> {
-        const nodeSearchCriteria = {
-            nodeFilter: NodeListFilter.Suggested,
-            limit,
-            ...(sslOnly ? { ssl: sslOnly } : {}),
-        };
+    public async getNodesFromNodeWatchService(networkType: NetworkType, limit = 30, isOffline?: boolean): Promise<NodeModel[]> {
         if (!isOffline && navigator.onLine) {
             try {
-                let nodeInfos = await this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNodes(
-                    nodeSearchCriteria.nodeFilter,
-                    nodeSearchCriteria.limit,
-                    nodeSearchCriteria.ssl,
-                );
+                const nodeWatchService = new NodeWatchService(networkType);
+                let nodeInfos = await nodeWatchService.getNodes(limit, 'random');
+
                 if (!nodeInfos) {
                     return undefined;
                 }
-                nodeInfos = nodeInfos.filter((n) => n.apiStatus?.webSocket?.isAvailable);
+                nodeInfos = nodeInfos.filter((n) => n.endpoint !== '' && n.isSslEnabled && n.isHealthy);
+
                 return nodeInfos.map((n) =>
-                    this.createNodeModel(
-                        n.apiStatus?.restGatewayUrl,
-                        networkType,
-                        n.friendlyName,
-                        true,
-                        n.publicKey,
-                        n.apiStatus?.nodePublicKey,
-                        n.apiStatus.webSocket.url,
-                    ),
+                    this.createNodeModel(n.endpoint, networkType, n.friendlyName, true, n.mainPublicKey, n.nodePublicKey, n.wsUrl),
                 );
             } catch (error) {
                 // proceed to return
@@ -123,13 +103,13 @@ export class NodeService {
             const nodeInfo = await nodeGetter(paramValue);
             if (nodeInfo) {
                 return this.createNodeModel(
-                    nodeInfo.apiStatus?.restGatewayUrl,
+                    nodeInfo.endpoint,
                     networkType,
                     nodeInfo.friendlyName,
                     true,
-                    nodeInfo.publicKey,
-                    nodeInfo.apiStatus?.nodePublicKey,
-                    nodeInfo.apiStatus?.webSocket?.url,
+                    nodeInfo.mainPublicKey,
+                    nodeInfo.nodePublicKey,
+                    nodeInfo.wsUrl,
                 );
             }
         } catch (error) {
@@ -139,31 +119,38 @@ export class NodeService {
         return undefined;
     }
 
-    public async getNodeFromStatisticServiceByPublicKey(
+    public async getNodeFromNodeWatchServiceByMainPublicKey(
         networkType: NetworkType,
         publicKey: string,
         isOffline?: boolean,
     ): Promise<NodeModel> {
         if (!isOffline && navigator.onLine && publicKey) {
+            const nodeWatchService = new NodeWatchService(networkType);
+
             return this.getNodeModelByMethod(
                 networkType,
-                (pKey) => this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNode(pKey),
+                async (publicKey) => {
+                    return await nodeWatchService.getNodeByMainPublicKey(publicKey);
+                },
                 publicKey,
             );
         }
         return undefined;
     }
 
-    public async getNodeFromStatisticServiceByNodePublicKey(
+    public async getNodeFromNodeWatchServiceByNodePublicKey(
         networkType: NetworkType,
         nodePublicKey: string,
         isOffline?: boolean,
     ): Promise<NodeModel> {
         if (!isOffline && navigator.onLine && nodePublicKey) {
+            const nodeWatchService = new NodeWatchService(networkType);
+
             return this.getNodeModelByMethod(
                 networkType,
-                (npKey) =>
-                    this.createStatisticServiceRestClient(networkConfig[networkType].statisticServiceUrl).getNodeByNodePublicKey(npKey),
+                async (publicKey) => {
+                    return await nodeWatchService.getNodeByNodePublicKey(publicKey);
+                },
                 nodePublicKey,
             );
         }
@@ -175,11 +162,11 @@ export class NodeService {
         networkType: NetworkType,
         friendlyName: string | undefined = undefined,
         isDefault: boolean | undefined = undefined,
-        publicKey?: string,
+        mainPublicKey?: string,
         nodePublicKey?: string,
         wsUrl?: string,
     ): NodeModel {
-        return new NodeModel(url, friendlyName, isDefault, networkType, publicKey, nodePublicKey, wsUrl);
+        return new NodeModel(url, friendlyName, isDefault, networkType, mainPublicKey, nodePublicKey, wsUrl);
     }
 
     public loadNodes(profile: ProfileModel): NodeModel[] {
@@ -197,14 +184,6 @@ export class NodeService {
         this.storage.remove();
     }
 
-    public createStatisticServiceRestClient(statisticsServiceUrl: string): NodeApi {
-        return new NodeApi(
-            new Configuration({
-                fetchApi: fetch as any,
-                basePath: statisticsServiceUrl,
-            }),
-        );
-    }
     /**
      * Creates offline mock node model for offline transaction
      * @param {networkType} NetworkType

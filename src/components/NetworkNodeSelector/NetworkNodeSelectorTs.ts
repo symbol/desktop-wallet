@@ -121,7 +121,7 @@ export class NetworkNodeSelectorTs extends Vue {
     }
 
     protected async fetchAndSetNodeModel(networkType: NetworkType, nodePublicKey: string) {
-        const nodeModel = await new NodeService().getNodeFromStatisticServiceByNodePublicKey(networkType, nodePublicKey);
+        const nodeModel = await new NodeService().getNodeFromNodeWatchServiceByNodePublicKey(networkType, nodePublicKey);
         if (nodeModel) {
             this.formNodeUrl = nodeModel.url;
             Vue.set(this, 'showInputPublicKey', false);

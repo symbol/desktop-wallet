@@ -311,8 +311,8 @@ export default {
                     progressTotalNumOfNodes: 1,
                 });
                 const nodeService = new NodeService();
-                const statisticsServiceNodes = !isOffline ? await nodeService.getNodesFromStatisticService(networkType) : undefined;
-                const nodesList = statisticsServiceNodes || nodeService.loadNodes(currentProfile);
+                const nodeWatchServiceNodes = !isOffline ? await nodeService.getNodesFromNodeWatchService(networkType) : undefined;
+                const nodesList = nodeWatchServiceNodes || nodeService.loadNodes(currentProfile);
 
                 const nodeWsUrl = nodesList.find((n) => n.url === newCandidateUrl)?.wsUrl;
                 nodeNetworkModelResult = await networkService
@@ -340,8 +340,9 @@ export default {
                 return;
             } else {
                 const nodeService = new NodeService();
-                const statisticsServiceNodes = !isOffline ? await nodeService.getNodesFromStatisticService(networkType) : undefined;
-                let nodesList = statisticsServiceNodes || nodeService.loadNodes(currentProfile);
+                const nodeWatchServiceNodes = !isOffline ? await nodeService.getNodesFromNodeWatchService(networkType) : undefined;
+
+                let nodesList = nodeWatchServiceNodes || nodeService.loadNodes(currentProfile);
                 let nodeFound = false,
                     progressCurrentNodeInx = 0;
                 const numOfNodes = nodesList.length;
@@ -607,7 +608,7 @@ export default {
             const nodeService = new NodeService();
             const networkType = getters['networkType'];
             const isOffline = getters['isOfflineMode'];
-            commit('peerNodes', _.uniqBy(await nodeService.getNodesFromStatisticService(networkType, 100, false, isOffline), 'url'));
+            commit('peerNodes', _.uniqBy(await nodeService.getNodesFromNodeWatchService(networkType, 100, isOffline), 'url'));
         },
 
         // set current difference between server and local time
