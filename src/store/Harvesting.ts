@@ -208,11 +208,11 @@ export default {
             const nodeService = new NodeService();
             const networkType: NetworkType = rootGetters['network/networkType'];
             // try to find owned node with currentSignerAccountInfo.publicKey
-            let nodeInfo = await nodeService.getNodeFromStatisticServiceByPublicKey(networkType, currentSignerAccountInfo.publicKey);
+            let nodeInfo = await nodeService.getNodeFromNodeWatchServiceByMainPublicKey(networkType, currentSignerAccountInfo.publicKey);
 
             // try to find a linked node if it is not an owned node
             if (!nodeInfo && accountNodePublicKey) {
-                nodeInfo = await nodeService.getNodeFromStatisticServiceByNodePublicKey(networkType, accountNodePublicKey);
+                nodeInfo = await nodeService.getNodeFromNodeWatchServiceByNodePublicKey(networkType, accountNodePublicKey);
             }
             let unlockedAccounts: string[] = [];
 
