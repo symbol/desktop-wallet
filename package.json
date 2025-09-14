@@ -63,7 +63,7 @@
         "rss-parser": "^3.13.0",
         "rxjs": "^6.6.7",
         "symbol-sdk": "^2.0.4",
-        "trezor-connect": "^7.0.5",
+        "trezor-connect": "^8.2.12",
         "utf8": "^3.0.0",
         "vee-validate": "^3.2.3",
         "view-design": "^4.0.0",
