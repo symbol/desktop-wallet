@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.2.0][v1.2.0] - 23-Sep-2025
+### Milestone: [client-catapult@v1.0.3.9](https://github.com/symbol/symbol/releases/tag/client/catapult/v1.0.3.9)
+
+#### Changed
+- Updated symbol-sdk version to 2.0.6 [#2034](https://github.com/symbol/desktop-wallet/pull/2034)
+- Removed Statistic service and migrated to NodeWatch service [#2022](https://github.com/symbol/desktop-wallet/pull/2022)
+- Updated app icon [#2032](https://github.com/symbol/desktop-wallet/pull/2032)
+
 ## [1.1.0][v1.1.0] - 05-Jul-2025
 ### Milestone: Added mosaic revokable support, language improvements and dependency upgrades
 
@@ -879,6 +887,7 @@ NOTE: We have known issues which have been logged into github and will look for 
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
 
+[v1.2.0]: https://github.com/symbol/desktop-wallet/releases/tag/v1.2.0
 [v1.1.0]: https://github.com/symbol/desktop-wallet/releases/tag/v1.1.0
 [v1.0.13]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.13
 [v1.0.12]: https://github.com/symbol/desktop-wallet/releases/tag/v1.0.12
