@@ -1,0 +1,35 @@
+#!/bin/bash
+# Generate macOS .icns from a 1024x1024 PNG
+
+# Make sure input file exists
+if [ ! -f "icon-1024.png" ]; then
+    echo "Error: icon-1024.png not found in current directory"
+    exit 1
+fi
+
+# Create iconset folder
+mkdir -p icons.iconset
+
+# Generate required sizes
+sips -z 16 16     icon-1024.png --out icons.iconset/icon_16x16.png
+sips -z 32 32     icon-1024.png --out icons.iconset/icon_16x16@2x.png
+
+sips -z 32 32     icon-1024.png --out icons.iconset/icon_32x32.png
+sips -z 64 64     icon-1024.png --out icons.iconset/icon_32x32@2x.png
+
+sips -z 64 64     icon-1024.png --out icons.iconset/icon_64x64.png
+sips -z 128 128   icon-1024.png --out icons.iconset/icon_64x64@2x.png
+
+sips -z 128 128   icon-1024.png --out icons.iconset/icon_128x128.png
+sips -z 256 256   icon-1024.png --out icons.iconset/icon_128x128@2x.png
+
+sips -z 256 256   icon-1024.png --out icons.iconset/icon_256x256.png
+sips -z 512 512   icon-1024.png --out icons.iconset/icon_256x256@2x.png
+
+sips -z 512 512   icon-1024.png --out icons.iconset/icon_512x512.png
+cp icon-1024.png icons.iconset/icon_512x512@2x.png
+
+# Convert to .icns
+iconutil -c icns icons.iconset -o Icon.icns
+
+echo "✅ Done! Icon.icns generated."

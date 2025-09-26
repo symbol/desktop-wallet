@@ -281,7 +281,7 @@ export class FormPersistentDelegationRequestTransactionTs extends FormTransactio
     }
 
     public async getNodeOperatorPublicKey() {
-        const nodeInfo = await new NodeService().getNodeFromStatisticServiceByPublicKey(
+        const nodeInfo = await new NodeService().getNodeFromNodeWatchServiceByMainPublicKey(
             this.networkType,
             this.currentSignerAccountInfo?.publicKey,
         );
