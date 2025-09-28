@@ -307,7 +307,7 @@ describe('components/TransactionList', () => {
             vm.activePartialTransaction = createMockAggregateTransaction(null);
 
             // Act + Assert:
-            expect(vm.aggregateTransactionHash).toBe('A9683281822EED5D05FD99D3D9E2C12C8D8A8286012386BBFBDAEF5CE175977A');
+            expect(vm.aggregateTransactionHash).toBe('07F92EAA38A94011365B108E7DDDAE072360722458B359E79B63F52F88CE64AA');
         });
     });
 
