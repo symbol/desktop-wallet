@@ -34,7 +34,7 @@ describe('services/MosaicData', () => {
                     NetworkType.TEST_NET,
                 ).address,
                 1, // revision
-                MosaicFlags.create(true, true, true),
+                MosaicFlags.create(true, true, true, true),
                 3,
                 UInt64.fromUint(1000),
             );

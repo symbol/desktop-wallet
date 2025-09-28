@@ -46,6 +46,12 @@
             <div class="asset-description-text">
                 {{ $t('flags_restrictable') }}
             </div>
+            <div class="asset-description-sub-title">
+                {{ $t('revokable') }}
+            </div>
+            <div class="asset-description-text">
+                {{ $t('flags_revokable') }}
+            </div>
         </template>
     </AssetFormPageWrap>
 </template>
