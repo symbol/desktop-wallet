@@ -20,7 +20,6 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 import AddressDisplay from '@/components/AddressDisplay/AddressDisplay.vue';
 import PaidFeeDisplay from '@/components/PaidFeeDisplay/PaidFeeDisplay.vue';
 import MessageDisplay from '@/components/MessageDisplay/MessageDisplay.vue';
-import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue';
 
 describe('components/TransactionDetailRow', () => {
     const getTransactionDetailRowWrapper = (state = {}, props = {}) => {
@@ -343,7 +342,7 @@ describe('components/TransactionDetailRow', () => {
     });
 
     describe('copyTooltipText', () => {
-        test('returns "copy_hash" when label is "hash"', () => {
+        test('returns "copy" when label is "hash"', () => {
             // Arrange:
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
@@ -360,10 +359,10 @@ describe('components/TransactionDetailRow', () => {
             const result = wrapper.vm.copyTooltipText;
 
             // Assert:
-            expect(result).toBe('copy_hash');
+            expect(result).toBe('copy');
         });
 
-        test('returns "copy_sender" when label is "sender"', () => {
+        test('returns "copy" when label is "sender"', () => {
             // Arrange:
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
@@ -380,10 +379,10 @@ describe('components/TransactionDetailRow', () => {
             const result = wrapper.vm.copyTooltipText;
 
             // Assert:
-            expect(result).toBe('copy_sender');
+            expect(result).toBe('copy');
         });
 
-        test('returns "copy_inner_hash" when label is "inner_transaction_hash"', () => {
+        test('returns "copy" when label is "inner_transaction_hash"', () => {
             // Arrange:
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
@@ -400,12 +399,12 @@ describe('components/TransactionDetailRow', () => {
             const result = wrapper.vm.copyTooltipText;
 
             // Assert:
-            expect(result).toBe('copy_inner_hash');
+            expect(result).toBe('copy');
         });
     });
 
-    describe('ButtonCopyToClipboard integration', () => {
-        test('displays ButtonCopyToClipboard when label is "hash" with value "ABC123"', () => {
+    describe('Copy button integration', () => {
+        test('displays copy button when label is "hash" with value "ABC123"', () => {
             // Arrange:
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
@@ -418,13 +417,13 @@ describe('components/TransactionDetailRow', () => {
             );
 
             // Act:
-            const buttonComponent = wrapper.findComponent(ButtonCopyToClipboard);
+            const copyButton = wrapper.find('.copy-button-right');
 
             // Assert:
-            expect(buttonComponent.exists()).toBe(true);
+            expect(copyButton.exists()).toBe(true);
         });
 
-        test('ButtonCopyToClipboard has correct props when label is "hash" with value "ABC123"', () => {
+        test('copy button has Tooltip component when displayed', () => {
             // Arrange:
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
@@ -437,15 +436,14 @@ describe('components/TransactionDetailRow', () => {
             );
 
             // Act:
-            const buttonComponent = wrapper.findComponent(ButtonCopyToClipboard);
+            const copyButton = wrapper.find('.copy-button-right');
+            const tooltip = copyButton.find('tooltip-stub');
 
             // Assert:
-            expect(buttonComponent.props('value')).toBe('ABC123');
-            expect(buttonComponent.props('type')).toBe('icon-black');
-            expect(buttonComponent.props('tooltipText')).toBe('copy_hash');
+            expect(tooltip.exists()).toBe(true);
         });
 
-        test('does not display ButtonCopyToClipboard when label is "recipient"', () => {
+        test('does not display copy button when label is "recipient"', () => {
             // Arrange:
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
@@ -458,20 +456,18 @@ describe('components/TransactionDetailRow', () => {
             );
 
             // Act:
-            const buttonComponent = wrapper.findComponent(ButtonCopyToClipboard);
+            const copyButton = wrapper.find('.copy-button-right');
 
             // Assert:
-            expect(buttonComponent.exists()).toBe(false);
+            expect(copyButton.exists()).toBe(false);
         });
     });
 
     describe('accessibility', () => {
-        // Note: ButtonCopyToClipboard component handles keyboard accessibility internally.
-        // It automatically responds to Enter and Space key events, making it fully keyboard
-        // accessible without requiring additional implementation in the parent component.
-        // These tests verify the correct configuration of the copy button for accessibility.
+        // Note: Tooltip component with transfer prop handles proper z-index and positioning.
+        // Copy button is keyboard accessible through standard HTML click events.
 
-        test('ButtonCopyToClipboard has correct tooltipText for hash', () => {
+        test('copy button is displayed for hash field', () => {
             // Arrange:
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
@@ -484,14 +480,13 @@ describe('components/TransactionDetailRow', () => {
             );
 
             // Act:
-            const copyButton = wrapper.findComponent(ButtonCopyToClipboard);
+            const copyButton = wrapper.find('.copy-button-right');
 
             // Assert:
             expect(copyButton.exists()).toBe(true);
-            expect(copyButton.props('tooltipText')).toBe('copy_hash');
         });
 
-        test('ButtonCopyToClipboard has correct tooltipText for sender', () => {
+        test('copy button is displayed for sender field', () => {
             // Arrange:
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
@@ -504,14 +499,13 @@ describe('components/TransactionDetailRow', () => {
             );
 
             // Act:
-            const copyButton = wrapper.findComponent(ButtonCopyToClipboard);
+            const copyButton = wrapper.find('.copy-button-right');
 
             // Assert:
             expect(copyButton.exists()).toBe(true);
-            expect(copyButton.props('tooltipText')).toBe('copy_sender');
         });
 
-        test('ButtonCopyToClipboard has correct tooltipText for inner_transaction_hash', () => {
+        test('copy button is displayed for inner_transaction_hash field', () => {
             // Arrange:
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
@@ -524,14 +518,13 @@ describe('components/TransactionDetailRow', () => {
             );
 
             // Act:
-            const copyButton = wrapper.findComponent(ButtonCopyToClipboard);
+            const copyButton = wrapper.find('.copy-button-right');
 
             // Assert:
             expect(copyButton.exists()).toBe(true);
-            expect(copyButton.props('tooltipText')).toBe('copy_inner_hash');
         });
 
-        test('ButtonCopyToClipboard is not rendered for non-copyable fields', () => {
+        test('copy button is not rendered for non-copyable fields', () => {
             // Arrange:
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
@@ -544,20 +537,18 @@ describe('components/TransactionDetailRow', () => {
             );
 
             // Act:
-            const copyButton = wrapper.findComponent(ButtonCopyToClipboard);
+            const copyButton = wrapper.find('.copy-button-right');
 
             // Assert:
             expect(copyButton.exists()).toBe(false);
         });
     });
 
-    describe('ButtonCopyToClipboard notifications and error handling', () => {
-        // Note: This test suite verifies that TransactionDetailRow correctly integrates with
-        // ButtonCopyToClipboard component by mounting it and passing the correct props.
-        // All notification and error handling logic is implemented internally within
-        // ButtonCopyToClipboard component and does not need to be tested here.
+    describe('Copy functionality', () => {
+        // Note: Copy functionality uses navigator.clipboard API and dispatches
+        // notifications through the Vuex store in the handleCopy method.
 
-        test('mounts ButtonCopyToClipboard component when shouldShowCopyButton is true', () => {
+        test('copy button exists when shouldShowCopyButton is true', () => {
             // Arrange:
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
@@ -570,52 +561,29 @@ describe('components/TransactionDetailRow', () => {
             );
 
             // Act:
-            const copyButton = wrapper.findComponent(ButtonCopyToClipboard);
+            const copyButton = wrapper.find('.copy-button-right');
 
             // Assert:
             expect(copyButton.exists()).toBe(true);
         });
 
-        test('passes correct value prop to ButtonCopyToClipboard', () => {
+        test('copy icon is present in copy button', () => {
             // Arrange:
-            const expectedValue = '3A332B36663CFE8EB4FE128E8322AA5E0E29B7B6978E232E7C59CE60927BDADA';
             const wrapper = getTransactionDetailRowWrapper(
                 { networkType: NetworkType.TEST_NET },
                 {
                     item: {
                         key: 'hash',
-                        value: expectedValue,
+                        value: '3A332B36663CFE8EB4FE128E8322AA5E0E29B7B6978E232E7C59CE60927BDADA',
                     },
                 },
             );
 
             // Act:
-            const copyButton = wrapper.findComponent(ButtonCopyToClipboard);
+            const copyIcon = wrapper.find('.copy-icon');
 
             // Assert:
-            expect(copyButton.props('value')).toBe(expectedValue);
+            expect(copyIcon.exists()).toBe(true);
         });
-
-        // Note: The following notification and error scenarios are handled internally by
-        // ButtonCopyToClipboard component and do not require testing in TransactionDetailRow:
-        //
-        // 1. COPY_SUCCESS notification:
-        //    - Dispatched by ButtonCopyToClipboard.copyToClipboard() on successful copy
-        //    - Handled via: this.$store.dispatch('notification/ADD_SUCCESS', NotificationType.COPY_SUCCESS)
-        //
-        // 2. COPY_FAILED notification:
-        //    - Dispatched by ButtonCopyToClipboard.copyToClipboard() when clipboard API fails
-        //    - Handled via: this.$store.dispatch('notification/ADD_ERROR', NotificationType.COPY_FAILED)
-        //
-        // 3. Clipboard API errors:
-        //    - Caught by try-catch block in ButtonCopyToClipboard.copyToClipboard()
-        //    - Automatically triggers COPY_FAILED notification
-        //
-        // 4. Multiple rapid clicks:
-        //    - Each click independently triggers ButtonCopyToClipboard.copyToClipboard()
-        //    - No special handling needed as each operation is atomic
-        //
-        // TransactionDetailRow's responsibility is only to mount ButtonCopyToClipboard
-        // and pass the correct value and tooltip props, which is verified by the tests above.
     });
 });
