@@ -35,11 +35,7 @@
             </div>
             <span v-if="shouldShowCopyButton" class="copy-button-right">
                 <Tooltip :content="$t(copyTooltipText)" placement="right" transfer>
-                    <img
-                        src="@/views/resources/img/account/cloneIcon.svg"
-                        class="copy-icon"
-                        @click="handleCopy"
-                    />
+                    <img src="@/views/resources/img/account/cloneIcon.svg" class="copy-icon" @click="handleCopy" />
                 </Tooltip>
             </span>
         </div>
@@ -101,9 +97,9 @@ export default class TransactionDetailRow extends Vue {
      */
     private get copyTooltipText(): string {
         const tooltipMap: { [key: string]: string } = {
-            'hash': 'copy',
-            'sender': 'copy',
-            'inner_transaction_hash': 'copy'
+            hash: 'copy',
+            sender: 'copy',
+            inner_transaction_hash: 'copy',
         };
         return tooltipMap[this.label] || 'copy';
     }
