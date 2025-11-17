@@ -196,4 +196,394 @@ describe('components/TransactionDetailRow', () => {
             expect(element.exists()).toBe(false);
         });
     });
+
+    describe('shouldShowCopyButton', () => {
+        test('returns true when label is hash and value is ABC123', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'hash',
+                        value: 'ABC123',
+                    },
+                },
+            );
+
+            // Act:
+            // @ts-ignore
+            const result = wrapper.vm.shouldShowCopyButton;
+
+            // Assert:
+            expect(result).toBe(true);
+        });
+
+        test('returns true when label is sender and value is TALPBVKED...', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'sender',
+                        value: 'TALPBVKED...',
+                    },
+                },
+            );
+
+            // Act:
+            // @ts-ignore
+            const result = wrapper.vm.shouldShowCopyButton;
+
+            // Assert:
+            expect(result).toBe(true);
+        });
+
+        test('returns true when label is inner_transaction_hash and value is DEF456', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'inner_transaction_hash',
+                        value: 'DEF456',
+                    },
+                },
+            );
+
+            // Act:
+            // @ts-ignore
+            const result = wrapper.vm.shouldShowCopyButton;
+
+            // Assert:
+            expect(result).toBe(true);
+        });
+
+        test('returns false when label is recipient', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'recipient',
+                        value: 'TALPBVKED...',
+                    },
+                },
+            );
+
+            // Act:
+            // @ts-ignore
+            const result = wrapper.vm.shouldShowCopyButton;
+
+            // Assert:
+            expect(result).toBe(false);
+        });
+
+        test('returns false when label is hash and value is null', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'hash',
+                        value: null,
+                    },
+                },
+            );
+
+            // Act:
+            // @ts-ignore
+            const result = wrapper.vm.shouldShowCopyButton;
+
+            // Assert:
+            expect(result).toBe(false);
+        });
+
+        test('returns false when label is hash and value is empty string', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'hash',
+                        value: '',
+                    },
+                },
+            );
+
+            // Act:
+            // @ts-ignore
+            const result = wrapper.vm.shouldShowCopyButton;
+
+            // Assert:
+            expect(result).toBe(false);
+        });
+    });
+
+    describe('copyValue', () => {
+        test('returns the item value as a string', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'hash',
+                        value: 'ABC123',
+                    },
+                },
+            );
+
+            // Act:
+            // @ts-ignore
+            const result = wrapper.vm.copyValue;
+
+            // Assert:
+            expect(result).toBe('ABC123');
+        });
+    });
+
+    describe('copyTooltipText', () => {
+        test('returns "copy" when label is "hash"', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'hash',
+                        value: 'ABC123',
+                    },
+                },
+            );
+
+            // Act:
+            // @ts-ignore
+            const result = wrapper.vm.copyTooltipText;
+
+            // Assert:
+            expect(result).toBe('copy');
+        });
+
+        test('returns "copy" when label is "sender"', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'sender',
+                        value: 'TDMYLKCTEVPSRPTG4UXW47IQPCYNLW2OVWZMLGY',
+                    },
+                },
+            );
+
+            // Act:
+            // @ts-ignore
+            const result = wrapper.vm.copyTooltipText;
+
+            // Assert:
+            expect(result).toBe('copy');
+        });
+
+        test('returns "copy" when label is "inner_transaction_hash"', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'inner_transaction_hash',
+                        value: 'ABC123',
+                    },
+                },
+            );
+
+            // Act:
+            // @ts-ignore
+            const result = wrapper.vm.copyTooltipText;
+
+            // Assert:
+            expect(result).toBe('copy');
+        });
+    });
+
+    describe('Copy button integration', () => {
+        test('displays copy button when label is "hash" with value "ABC123"', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'hash',
+                        value: 'ABC123',
+                    },
+                },
+            );
+
+            // Act:
+            const copyButton = wrapper.find('.copy-button-right');
+
+            // Assert:
+            expect(copyButton.exists()).toBe(true);
+        });
+
+        test('copy button has Tooltip component when displayed', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'hash',
+                        value: 'ABC123',
+                    },
+                },
+            );
+
+            // Act:
+            const copyButton = wrapper.find('.copy-button-right');
+            const tooltip = copyButton.find('tooltip-stub');
+
+            // Assert:
+            expect(tooltip.exists()).toBe(true);
+        });
+
+        test('does not display copy button when label is "recipient"', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'recipient',
+                        value: 'TDMYLKCTEVPSRPTG4UXW47IQPCYNLW2OVWZMLGY',
+                    },
+                },
+            );
+
+            // Act:
+            const copyButton = wrapper.find('.copy-button-right');
+
+            // Assert:
+            expect(copyButton.exists()).toBe(false);
+        });
+    });
+
+    describe('accessibility', () => {
+        // Note: Tooltip component with transfer prop handles proper z-index and positioning.
+        // Copy button is keyboard accessible through standard HTML click events.
+
+        test('copy button is displayed for hash field', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'hash',
+                        value: '3A332B36663CFE8EB4FE128E8322AA5E0E29B7B6978E232E7C59CE60927BDADA',
+                    },
+                },
+            );
+
+            // Act:
+            const copyButton = wrapper.find('.copy-button-right');
+
+            // Assert:
+            expect(copyButton.exists()).toBe(true);
+        });
+
+        test('copy button is displayed for sender field', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'sender',
+                        value: 'TDMYLKCTEVPSRPTG4UXW47IQPCYNLW2OVWZMLGY',
+                    },
+                },
+            );
+
+            // Act:
+            const copyButton = wrapper.find('.copy-button-right');
+
+            // Assert:
+            expect(copyButton.exists()).toBe(true);
+        });
+
+        test('copy button is displayed for inner_transaction_hash field', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'inner_transaction_hash',
+                        value: '3A332B36663CFE8EB4FE128E8322AA5E0E29B7B6978E232E7C59CE60927BDADA',
+                    },
+                },
+            );
+
+            // Act:
+            const copyButton = wrapper.find('.copy-button-right');
+
+            // Assert:
+            expect(copyButton.exists()).toBe(true);
+        });
+
+        test('copy button is not rendered for non-copyable fields', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'other_field',
+                        value: 'some value',
+                    },
+                },
+            );
+
+            // Act:
+            const copyButton = wrapper.find('.copy-button-right');
+
+            // Assert:
+            expect(copyButton.exists()).toBe(false);
+        });
+    });
+
+    describe('Copy functionality', () => {
+        // Note: Copy functionality uses navigator.clipboard API and dispatches
+        // notifications through the Vuex store in the handleCopy method.
+
+        test('copy button exists when shouldShowCopyButton is true', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'hash',
+                        value: '3A332B36663CFE8EB4FE128E8322AA5E0E29B7B6978E232E7C59CE60927BDADA',
+                    },
+                },
+            );
+
+            // Act:
+            const copyButton = wrapper.find('.copy-button-right');
+
+            // Assert:
+            expect(copyButton.exists()).toBe(true);
+        });
+
+        test('copy icon is present in copy button', () => {
+            // Arrange:
+            const wrapper = getTransactionDetailRowWrapper(
+                { networkType: NetworkType.TEST_NET },
+                {
+                    item: {
+                        key: 'hash',
+                        value: '3A332B36663CFE8EB4FE128E8322AA5E0E29B7B6978E232E7C59CE60927BDADA',
+                    },
+                },
+            );
+
+            // Act:
+            const copyIcon = wrapper.find('.copy-icon');
+
+            // Assert:
+            expect(copyIcon.exists()).toBe(true);
+        });
+    });
 });
